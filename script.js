@@ -1,493 +1,634 @@
-const year = document.querySelector("[data-year]");
-const header = document.querySelector("[data-header]");
-const langButtons = document.querySelectorAll("[data-lang]");
-const demo = document.querySelector("[data-demo]");
-const demoButtons = document.querySelectorAll("[data-mode]");
-const routeMap = document.querySelector("[data-route-map]");
-const routeButtons = document.querySelectorAll("[data-route]");
-const routeTitle = document.querySelector("[data-route-title]");
-const routeCopy = document.querySelector("[data-route-copy]");
-const contactForm = document.querySelector("[data-contact-form]");
-const formStatus = document.querySelector("[data-form-status]");
+(() => {
+  const data = window.JL_DATA || {};
+  const doc = document;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-let currentLang = localStorage.getItem("site-language") || "fr";
-let currentDemoMode = "home";
-let currentRoute = "florida";
+  const iconMap = {
+    ambulance: "truck",
+    "monitor-dot": "monitor",
+    cctv: "camera",
+    "scan-eye": "scan-eye"
+  };
 
-const translations = {
-  fr: {
-    "nav.positioning": "Smart systems studio",
-    "nav.services": "Services",
-    "nav.demo": "Demo",
-    "nav.ambulance": "Ambulance",
-    "nav.journal": "Journal",
-    "nav.contact": "Contact",
-    "hero.eyebrow": "Studio de systèmes intelligents",
-    "hero.positioning": "Smart spaces. Private systems. Real automation.",
-    "hero.text":
-      "Des systèmes sur mesure pour maisons intelligentes, serveurs privés, caméras locales, vans connectés et tableaux de bord qui servent vraiment.",
-    "hero.cta.primary": "Parler d'un projet",
-    "hero.cta.secondary": "Voir la démo",
-    "hero.panel.title": "Architecture privée",
-    "hero.panel.item1.label": "Contrôle",
-    "hero.panel.item1.value": "Local d'abord",
-    "hero.panel.item2.label": "Accès",
-    "hero.panel.item2.value": "VPN privé",
-    "hero.panel.item3.label": "Approche",
-    "hero.panel.item3.value": "Pilotes et systèmes custom",
-    "services.kicker": "Services",
-    "services.title": "Des espaces qui comprennent ce qui se passe.",
-    "services.text":
-      "Le travail commence par des besoins réels: voir, contrôler, automatiser, sécuriser et garder les données proches de vous.",
-    "service.home.title": "Maisons intelligentes",
-    "service.home.text":
-      "Home Assistant, capteurs, éclairage, énergie, présence, scènes et interfaces simples pour les routines quotidiennes.",
-    "service.vision.title": "Vision et sécurité locale",
-    "service.vision.text":
-      "Caméras IP, Frigate, détection locale, alertes propres et accès privé sans transformer la maison en produit cloud.",
-    "service.private.title": "Serveurs et accès privé",
-    "service.private.text":
-      "Docker, Linux, sauvegardes, DNS, VPN, accès distant et bases fiables pour héberger vos propres outils.",
-    "service.mobile.title": "Vans, RV et systèmes mobiles",
-    "service.mobile.text":
-      "Énergie, réseau, surveillance, tableaux de bord et automatisation pour véhicules aménagés, ateliers mobiles et projets pilotes.",
-    "demo.kicker": "Démonstration",
-    "demo.title": "Un système intelligent doit rester lisible.",
-    "demo.text":
-      "Cette démonstration montre comment les capteurs, caméras, serveurs et dashboards peuvent être organisés autour d'une logique claire.",
-    "demo.mode.home": "Résidence",
-    "demo.mode.vision": "Vision",
-    "demo.mode.server": "Serveur",
-    "demo.mode.mobile": "Mobile",
-    "demo.readout.label": "Scénario",
-    "ambulance.kicker": "Projet en vedette",
-    "ambulance.title": "Connected Ambulance: un laboratoire mobile pour vrais systèmes.",
-    "ambulance.text":
-      "Un projet pilote personnel autour d'une ambulance connectée: énergie, réseau, caméras, accès VPN, interfaces embarquées et automatisations pensées pour bouger.",
-    "ambulance.card.title": "Ce que le projet explore",
-    "ambulance.card.item1": "Réseau embarqué et accès VPN privé.",
-    "ambulance.card.item2": "Caméras et vision locale pour surveillance autour du véhicule.",
-    "ambulance.card.item3": "Dashboard pour énergie, état, température et alertes.",
-    "ambulance.card.item4": "Base technique réutilisable pour vans, RV et ateliers mobiles.",
-    "routes.kicker": "Carte terrain",
-    "routes.title": "Routes, essais et idées mobiles.",
-    "routes.text":
-      "Une carte stylisée des trajets qui inspirent les systèmes mobiles: longues routes, retours par les États-Unis, vols, boucles locales et arrivée vers Montréal.",
-    "route.florida.short": "Floride",
-    "route.bc.short": "BC + nord USA",
-    "route.california.short": "Californie",
-    "route.hawaii.short": "Hawaii",
-    "route.costa.short": "Costa Rica + Caraïbes",
-    "process.kicker": "Processus",
-    "process.title": "Une méthode simple en cinq étapes.",
-    "process.step1.title": "Clarifier le besoin",
-    "process.step1.text": "Ce qui doit être vu, contrôlé, automatisé ou protégé.",
-    "process.step2.title": "Cartographier le système",
-    "process.step2.text": "Réseau, appareils, capteurs, permissions et contraintes physiques.",
-    "process.step3.title": "Construire un pilote",
-    "process.step3.text": "Un prototype limité, testable et compréhensible avant de grossir.",
-    "process.step4.title": "Déployer proprement",
-    "process.step4.text": "Documentation, accès, sauvegardes et interfaces utilisables.",
-    "process.step5.title": "Améliorer sur le terrain",
-    "process.step5.text": "Ajustements après usage réel, pas seulement après un plan parfait.",
-    "journal.kicker": "Journal technique",
-    "journal.title": "Notes ouvertes sur les expériences en cours.",
-    "journal.text":
-      "Pas de fausses études de cas. Le journal sert à documenter les essais, pilotes et décisions techniques au fur et à mesure.",
-    "journal.item1.tag": "Pilote",
-    "journal.item1.title": "Ambulance connectée",
-    "journal.item1.text":
-      "Réseau mobile, caméras, dashboard et accès privé dans un véhicule qui doit rester utilisable hors du garage.",
-    "journal.item2.tag": "Expérience",
-    "journal.item2.title": "Vision locale avec Frigate",
-    "journal.item2.text":
-      "Détection locale, zones utiles, alertes propres et stockage maîtrisé pour éviter la dépendance au cloud.",
-    "journal.item3.tag": "Infrastructure",
-    "journal.item3.title": "Serveur privé et VPN",
-    "journal.item3.text":
-      "Héberger des services, exposer le minimum, sauvegarder les données et garder un accès distant clair.",
-    "stack.kicker": "Stack",
-    "stack.title": "Technologies possibles selon le projet.",
-    "stack.text":
-      "La stack n'est pas une religion. Elle se choisit selon le budget, la fiabilité requise, la confidentialité et la maintenance.",
-    "contact.kicker": "Contact",
-    "contact.title": "Un projet pilote ou un système custom?",
-    "contact.text":
-      "Décrivez ce que vous voulez connecter, automatiser ou sécuriser. Le formulaire prépare un courriel; rien n'est envoyé sans votre app de mail.",
-    "form.name": "Nom",
-    "form.email": "Courriel",
-    "form.project": "Type de projet",
-    "form.project.home": "Maison intelligente",
-    "form.project.camera": "Caméras et Frigate",
-    "form.project.server": "Serveur privé / VPN",
-    "form.project.mobile": "Van, RV ou système mobile",
-    "form.project.other": "Autre système custom",
-    "form.message": "Message",
-    "form.placeholder": "Parlez-moi du lieu, des appareils, du problème et du résultat voulu.",
-    "form.submit": "Préparer le courriel",
-    "form.status": "Courriel préparé dans votre application de mail.",
-    "footer.top": "Retour en haut"
-  },
-  en: {
-    "nav.positioning": "Smart systems studio",
-    "nav.services": "Services",
-    "nav.demo": "Demo",
-    "nav.ambulance": "Ambulance",
-    "nav.journal": "Journal",
-    "nav.contact": "Contact",
-    "hero.eyebrow": "Smart systems studio",
-    "hero.positioning": "Smart spaces. Private systems. Real automation.",
-    "hero.text":
-      "Custom systems for smart homes, private servers, local cameras, connected vans and dashboards that are actually useful.",
-    "hero.cta.primary": "Discuss a project",
-    "hero.cta.secondary": "View the demo",
-    "hero.panel.title": "Private architecture",
-    "hero.panel.item1.label": "Control",
-    "hero.panel.item1.value": "Local first",
-    "hero.panel.item2.label": "Access",
-    "hero.panel.item2.value": "Private VPN",
-    "hero.panel.item3.label": "Approach",
-    "hero.panel.item3.value": "Pilots and custom systems",
-    "services.kicker": "Services",
-    "services.title": "Spaces that understand what is happening.",
-    "services.text":
-      "The work starts with real needs: seeing, controlling, automating, securing and keeping data close to you.",
-    "service.home.title": "Smart homes",
-    "service.home.text":
-      "Home Assistant, sensors, lighting, energy, presence, scenes and simple interfaces for everyday routines.",
-    "service.vision.title": "Local vision and security",
-    "service.vision.text":
-      "IP cameras, Frigate, local detection, clean alerts and private access without turning the home into a cloud product.",
-    "service.private.title": "Servers and private access",
-    "service.private.text":
-      "Docker, Linux, backups, DNS, VPN, remote access and reliable foundations for hosting your own tools.",
-    "service.mobile.title": "Vans, RVs and mobile systems",
-    "service.mobile.text":
-      "Energy, networking, monitoring, dashboards and automation for converted vehicles, mobile workshops and pilot projects.",
-    "demo.kicker": "Demonstration",
-    "demo.title": "A smart system should stay readable.",
-    "demo.text":
-      "This demo shows how sensors, cameras, servers and dashboards can be organized around clear logic.",
-    "demo.mode.home": "Residence",
-    "demo.mode.vision": "Vision",
-    "demo.mode.server": "Server",
-    "demo.mode.mobile": "Mobile",
-    "demo.readout.label": "Scenario",
-    "ambulance.kicker": "Featured project",
-    "ambulance.title": "Connected Ambulance: a mobile lab for real systems.",
-    "ambulance.text":
-      "A personal pilot project around a connected ambulance: energy, networking, cameras, VPN access, onboard interfaces and automation designed to move.",
-    "ambulance.card.title": "What the project explores",
-    "ambulance.card.item1": "Onboard networking and private VPN access.",
-    "ambulance.card.item2": "Cameras and local vision for vehicle-side awareness.",
-    "ambulance.card.item3": "Dashboard for energy, status, temperature and alerts.",
-    "ambulance.card.item4": "Reusable technical base for vans, RVs and mobile workshops.",
-    "routes.kicker": "Field map",
-    "routes.title": "Routes, testing and mobile ideas.",
-    "routes.text":
-      "A stylized map of routes that inspire mobile systems: long drives, returns through the United States, flights, local loops and arrival back toward Montreal.",
-    "route.florida.short": "Florida",
-    "route.bc.short": "BC + north USA",
-    "route.california.short": "California",
-    "route.hawaii.short": "Hawaii",
-    "route.costa.short": "Costa Rica + Caribbean",
-    "process.kicker": "Process",
-    "process.title": "A simple five-step method.",
-    "process.step1.title": "Clarify the need",
-    "process.step1.text": "What needs to be seen, controlled, automated or protected.",
-    "process.step2.title": "Map the system",
-    "process.step2.text": "Network, devices, sensors, permissions and physical constraints.",
-    "process.step3.title": "Build a pilot",
-    "process.step3.text": "A limited, testable and understandable prototype before scaling.",
-    "process.step4.title": "Deploy cleanly",
-    "process.step4.text": "Documentation, access, backups and usable interfaces.",
-    "process.step5.title": "Improve in the field",
-    "process.step5.text": "Adjustments after real use, not just after a perfect plan.",
-    "journal.kicker": "Technical journal",
-    "journal.title": "Open notes on work in progress.",
-    "journal.text":
-      "No fake case studies. The journal documents experiments, pilots and technical decisions over time.",
-    "journal.item1.tag": "Pilot",
-    "journal.item1.title": "Connected ambulance",
-    "journal.item1.text":
-      "Mobile network, cameras, dashboard and private access inside a vehicle that has to stay useful away from the garage.",
-    "journal.item2.tag": "Experiment",
-    "journal.item2.title": "Local vision with Frigate",
-    "journal.item2.text":
-      "Local detection, useful zones, clean alerts and controlled storage to avoid cloud dependence.",
-    "journal.item3.tag": "Infrastructure",
-    "journal.item3.title": "Private server and VPN",
-    "journal.item3.text":
-      "Host services, expose the minimum, back up data and keep remote access understandable.",
-    "stack.kicker": "Stack",
-    "stack.title": "Possible technologies depending on the project.",
-    "stack.text":
-      "The stack is not a religion. It is chosen around budget, reliability, privacy and maintenance.",
-    "contact.kicker": "Contact",
-    "contact.title": "A pilot project or custom system?",
-    "contact.text":
-      "Describe what you want to connect, automate or secure. The form prepares an email; nothing is sent without your mail app.",
-    "form.name": "Name",
-    "form.email": "Email",
-    "form.project": "Project type",
-    "form.project.home": "Smart home",
-    "form.project.camera": "Cameras and Frigate",
-    "form.project.server": "Private server / VPN",
-    "form.project.mobile": "Van, RV or mobile system",
-    "form.project.other": "Other custom system",
-    "form.message": "Message",
-    "form.placeholder": "Tell me about the place, devices, problem and desired outcome.",
-    "form.submit": "Prepare email",
-    "form.status": "Email prepared in your mail application.",
-    "footer.top": "Back to top"
-  }
-};
+  const qs = (selector, root = doc) => root.querySelector(selector);
+  const qsa = (selector, root = doc) => [...root.querySelectorAll(selector)];
 
-const demoModes = {
-  fr: {
-    home: {
-      title: "Résidence privée",
-      copy:
-        "Capteurs de présence, éclairage, température, énergie et scènes Home Assistant avec logique locale.",
-      nodes: ["Capteurs", "Automations", "Serveur", "Dashboard"],
-      signals: ["Présence et luminosité", "Énergie et climat", "Scènes simples", "Contrôle local"]
-    },
-    vision: {
-      title: "Caméras et Frigate",
-      copy:
-        "Détection locale, zones utiles, alertes filtrées et accès privé aux événements importants.",
-      nodes: ["Caméras", "Frigate", "Stockage", "Alertes"],
-      signals: ["Détection locale", "Zones configurées", "Événements pertinents", "Accès privé"]
-    },
-    server: {
-      title: "Serveur privé",
-      copy:
-        "Services Docker, sauvegardes, accès VPN et tableaux de bord sans exposer plus que nécessaire.",
-      nodes: ["VPN", "Services", "Backup", "Monitoring"],
-      signals: ["Accès distant", "Sauvegardes", "DNS propre", "Surface réduite"]
-    },
-    mobile: {
-      title: "Système mobile",
-      copy:
-        "Réseau embarqué, énergie, caméras et dashboard pour van, RV ou laboratoire mobile.",
-      nodes: ["Énergie", "Réseau", "Vision", "Route"],
-      signals: ["État batterie", "Lien mobile", "Caméras autour", "Mode hors ligne"]
+  const escapeHTML = (value) =>
+    String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  const renderIcon = (name) => `<i data-lucide="${iconMap[name] || name}" aria-hidden="true"></i>`;
+
+  const refreshIcons = () => {
+    if (window.lucide?.createIcons) {
+      window.lucide.createIcons({
+        attrs: {
+          "stroke-width": 2
+        }
+      });
     }
-  },
-  en: {
-    home: {
-      title: "Private residence",
-      copy:
-        "Presence sensors, lighting, temperature, energy and Home Assistant scenes with local logic.",
-      nodes: ["Sensors", "Automation", "Server", "Dashboard"],
-      signals: ["Presence and light", "Energy and climate", "Simple scenes", "Local control"]
-    },
-    vision: {
-      title: "Cameras and Frigate",
-      copy:
-        "Local detection, useful zones, filtered alerts and private access to important events.",
-      nodes: ["Cameras", "Frigate", "Storage", "Alerts"],
-      signals: ["Local detection", "Configured zones", "Relevant events", "Private access"]
-    },
-    server: {
-      title: "Private server",
-      copy:
-        "Docker services, backups, VPN access and dashboards without exposing more than needed.",
-      nodes: ["VPN", "Services", "Backup", "Monitoring"],
-      signals: ["Remote access", "Backups", "Clean DNS", "Reduced exposure"]
-    },
-    mobile: {
-      title: "Mobile system",
-      copy:
-        "Onboard networking, energy, cameras and dashboard for a van, RV or mobile lab.",
-      nodes: ["Energy", "Network", "Vision", "Route"],
-      signals: ["Battery state", "Mobile link", "Perimeter cameras", "Offline mode"]
+  };
+
+  const setActiveNavigation = () => {
+    const current = location.pathname.split("/").pop() || "index.html";
+    qsa(".main-nav a").forEach((link) => {
+      const href = link.getAttribute("href");
+      const active = href === current || (current === "" && href === "index.html");
+      link.classList.toggle("is-active", active);
+      if (active) link.setAttribute("aria-current", "page");
+    });
+  };
+
+  const initHeader = () => {
+    const header = qs("[data-header]");
+    const toggle = qs("[data-nav-toggle]");
+    const nav = qs("[data-nav]");
+
+    const onScroll = () => {
+      header?.classList.toggle("is-scrolled", window.scrollY > 18);
+      if (!prefersReducedMotion) {
+        const hero = qs("[data-hero] .hero-media");
+        if (hero) {
+          const offset = Math.min(window.scrollY * 0.08, 42);
+          hero.style.transform = `scale(1.035) translateY(${offset}px)`;
+        }
+      }
+    };
+
+    toggle?.addEventListener("click", () => {
+      const open = !nav?.classList.contains("is-open");
+      nav?.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+
+    qsa(".main-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        nav?.classList.remove("is-open");
+        toggle?.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    setActiveNavigation();
+  };
+
+  const initReveal = () => {
+    const elements = qsa(".reveal");
+    if (!elements.length) return;
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+      elements.forEach((element) => element.classList.add("is-visible"));
+      return;
     }
-  }
-};
 
-const routeData = {
-  fr: {
-    florida: {
-      title: "Floride aller-retour",
-      copy:
-        "Long trajet routier vers la Floride et retour: parfait pour penser alimentation, réseau mobile, caméra et accès distant."
-    },
-    bc: {
-      title: "BC et retour par le nord des USA",
-      copy:
-        "Grande traversée vers l'ouest, retour par les routes du nord: autonomie, navigation, connectivité et endurance du système."
-    },
-    california: {
-      title: "Californie: vol et boucle routière",
-      copy:
-        "Arrivée en avion, exploration en voiture: bon modèle pour un système mobile qui se reconnecte à plusieurs contextes."
-    },
-    hawaii: {
-      title: "Hawaii: vol et tour en voiture",
-      copy:
-        "Route isolée, conditions changeantes, boucle locale: penser dashboards simples, cartes et journal de terrain."
-    },
-    costa: {
-      title: "Costa Rica, Caraïbes, Miami, YUL",
-      copy:
-        "Segment avion, routes locales, retour par Miami puis Montréal: une inspiration pour les systèmes multi-régions et mobiles."
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.16, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    elements.forEach((element) => observer.observe(element));
+  };
+
+  const renderServices = () => {
+    const grid = qs("[data-services-grid]");
+    if (!grid || !data.services) return;
+
+    grid.innerHTML = data.services
+      .map(
+        (service) => `
+          <article class="service-card reveal">
+            ${renderIcon(service.icon)}
+            <h3>${escapeHTML(service.title)}</h3>
+            <p>${escapeHTML(service.intro)}</p>
+            <details>
+              <summary>Problèmes résolus et livrables</summary>
+              <p>Problèmes typiques</p>
+              <ul>${service.solves.map((item) => `<li>${escapeHTML(item)}</li>`).join("")}</ul>
+              <p>Exemples de livrables</p>
+              <ul>${service.deliverables.map((item) => `<li>${escapeHTML(item)}</li>`).join("")}</ul>
+            </details>
+            <a class="button button-secondary" href="contact.html">Décrire mon projet ${renderIcon("arrow-right")}</a>
+          </article>
+        `
+      )
+      .join("");
+  };
+
+  const renderSolutions = () => {
+    const grid = qs("[data-solutions-grid]");
+    if (!grid || !data.solutions) return;
+
+    grid.innerHTML = data.solutions
+      .map(
+        (solution) => `
+          <article class="solution-card reveal">
+            ${renderIcon(solution.icon)}
+            <h3>${escapeHTML(solution.title)}</h3>
+            <p>${escapeHTML(solution.text)}</p>
+            <ul>${solution.examples.map((item) => `<li>${escapeHTML(item)}</li>`).join("")}</ul>
+          </article>
+        `
+      )
+      .join("");
+  };
+
+  const renderProcess = () => {
+    const rail = qs("[data-process-rail]");
+    if (!rail || !data.process) return;
+
+    rail.innerHTML = data.process
+      .map(
+        (step) => `
+          <article class="process-step reveal">
+            <span>${escapeHTML(step.step)}</span>
+            <h3>${escapeHTML(step.title)}</h3>
+            <p>${escapeHTML(step.text)}</p>
+          </article>
+        `
+      )
+      .join("");
+  };
+
+  const renderArticleCards = (root, articles, asButtons = false) => {
+    const tag = asButtons ? "button" : "article";
+    root.innerHTML = articles
+      .map(
+        (article) => `
+          <${tag} class="article-card reveal" ${asButtons ? `type="button" data-article-slug="${escapeHTML(article.slug)}"` : ""}>
+            <div class="article-meta">
+              <span>${escapeHTML(article.category)}</span>
+              <span>${escapeHTML(article.status)}</span>
+              <span>${escapeHTML(article.minutes)} min</span>
+            </div>
+            <h3>${escapeHTML(article.title)}</h3>
+            <p>${articleBlurb(article.category)}</p>
+          </${tag}>
+        `
+      )
+      .join("");
+  };
+
+  const articleBlurb = (category) => {
+    const blurbs = {
+      "Sécurité": "Caméras, détection locale, stockage privé et alertes qui évitent le bruit.",
+      "Home Assistant": "Automatiser utilement sans perdre la simplicité ni le contrôle manuel.",
+      "Réseaux": "Organiser les accès, les objets connectés et les services privés avec méthode.",
+      "Mobile": "Adapter les systèmes intelligents aux contraintes d'un véhicule réel.",
+      "IA locale": "Explorer les assistants locaux sans prétendre que tout est déjà magique."
+    };
+    return blurbs[category] || "Note technique issue du lab et des projets en développement.";
+  };
+
+  const renderArticlePreview = () => {
+    const root = qs("[data-article-preview]");
+    if (!root || !data.articles) return;
+    renderArticleCards(root, data.articles.slice(0, 6), false);
+  };
+
+  const renderArticleList = () => {
+    const root = qs("[data-article-list]");
+    const filters = qs("[data-article-filters]");
+    if (!root || !filters || !data.articles) return;
+
+    const categories = ["Tous", ...new Set(data.articles.map((article) => article.category))];
+    filters.innerHTML = categories
+      .map((category, index) => `<button type="button" class="${index === 0 ? "is-active" : ""}" data-filter="${escapeHTML(category)}">${escapeHTML(category)}</button>`)
+      .join("");
+
+    const render = (category = "Tous") => {
+      const articles = category === "Tous" ? data.articles : data.articles.filter((article) => article.category === category);
+      renderArticleCards(root, articles, true);
+      bindArticleButtons();
+      refreshIcons();
+      initReveal();
+    };
+
+    filters.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-filter]");
+      if (!button) return;
+      qsa("button", filters).forEach((item) => item.classList.toggle("is-active", item === button));
+      render(button.dataset.filter);
+    });
+
+    render();
+  };
+
+  const bindArticleButtons = () => {
+    qsa("[data-article-slug]").forEach((button) => {
+      button.addEventListener("click", () => openArticle(button.dataset.articleSlug));
+    });
+  };
+
+  const openArticle = async (slug) => {
+    const dialog = qs("[data-article-dialog]");
+    const reader = qs("[data-article-reader]");
+    if (!dialog || !reader) return;
+
+    const article = data.articles?.find((item) => item.slug === slug);
+    reader.innerHTML = `<p class="eyebrow">Chargement</p><h1>${escapeHTML(article?.title || "Article")}</h1>`;
+
+    try {
+      const response = await fetch(`articles/${slug}.md`, { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const markdown = await response.text();
+      reader.innerHTML = `
+        <p class="eyebrow">${escapeHTML(article?.category || "Article")}</p>
+        <h1>${escapeHTML(article?.title || "Article")}</h1>
+        ${markdownToHTML(markdown)}
+      `;
+    } catch (error) {
+      reader.innerHTML = `
+        <p class="eyebrow">${escapeHTML(article?.category || "Article")}</p>
+        <h1>${escapeHTML(article?.title || "Article")}</h1>
+        <p>Impossible de charger le fichier Markdown localement. Sur GitHub Pages, l'article sera servi normalement.</p>
+      `;
     }
-  },
-  en: {
-    florida: {
-      title: "Florida round trip",
-      copy:
-        "A long drive to Florida and back: perfect for thinking about power, mobile networking, cameras and remote access."
-    },
-    bc: {
-      title: "BC and back through northern USA",
-      copy:
-        "A large westbound crossing and return through northern roads: autonomy, navigation, connectivity and system endurance."
-    },
-    california: {
-      title: "California: flight and road loop",
-      copy:
-        "Arrival by plane, exploration by car: a useful model for mobile systems that reconnect across contexts."
-    },
-    hawaii: {
-      title: "Hawaii: flight and road loop",
-      copy:
-        "Isolated roads, changing conditions, local loop: simple dashboards, maps and field journals."
-    },
-    costa: {
-      title: "Costa Rica, Caribbean, Miami, YUL",
-      copy:
-        "Flight segment, local routes, return through Miami and Montreal: inspiration for mobile, multi-region systems."
+
+    if (typeof dialog.showModal === "function") {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute("open", "");
     }
-  }
-};
+    refreshIcons();
+  };
 
-year.textContent = new Date().getFullYear();
+  const markdownToHTML = (markdown) => {
+    const withoutFrontMatter = markdown.replace(/^---[\s\S]*?---\s*/, "");
+    const lines = withoutFrontMatter.split(/\r?\n/);
+    let html = "";
+    let listOpen = false;
+    const closeList = () => {
+      if (listOpen) {
+        html += "</ul>";
+        listOpen = false;
+      }
+    };
 
-if (window.lucide) {
-  window.lucide.createIcons();
-} else {
-  window.addEventListener("load", () => window.lucide?.createIcons());
-}
-
-document.addEventListener("scroll", () => {
-  header.classList.toggle("is-scrolled", window.scrollY > 12);
-});
-
-langButtons.forEach((button) => {
-  button.addEventListener("click", () => setLanguage(button.dataset.lang));
-});
-
-demoButtons.forEach((button) => {
-  button.addEventListener("click", () => setDemoMode(button.dataset.mode));
-});
-
-routeButtons.forEach((button) => {
-  button.addEventListener("click", () => setRoute(button.dataset.route));
-});
-
-contactForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const formData = new FormData(contactForm);
-  const name = formData.get("name");
-  const email = formData.get("email");
-  const project = formData.get("project");
-  const message = formData.get("message");
-  const subject =
-    currentLang === "fr"
-      ? `Projet système intelligent - ${project}`
-      : `Smart system project - ${project}`;
-  const body =
-    currentLang === "fr"
-      ? `Nom: ${name}\nCourriel: ${email}\nProjet: ${project}\n\n${message}`
-      : `Name: ${name}\nEmail: ${email}\nProject: ${project}\n\n${message}`;
-
-  window.location.href = `mailto:contact@jameslaplume.ca?subject=${encodeURIComponent(
-    subject
-  )}&body=${encodeURIComponent(body)}`;
-  formStatus.textContent = translations[currentLang]["form.status"];
-});
-
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
+    lines.forEach((line) => {
+      if (!line.trim()) {
+        closeList();
+        return;
+      }
+      if (line.startsWith("# ")) {
+        closeList();
+        html += `<h1>${escapeHTML(line.slice(2))}</h1>`;
+      } else if (line.startsWith("## ")) {
+        closeList();
+        html += `<h2>${escapeHTML(line.slice(3))}</h2>`;
+      } else if (line.startsWith("- ")) {
+        if (!listOpen) {
+          html += "<ul>";
+          listOpen = true;
+        }
+        html += `<li>${escapeHTML(line.slice(2))}</li>`;
+      } else {
+        closeList();
+        html += `<p>${escapeHTML(line)}</p>`;
       }
     });
-  },
-  { threshold: 0.12 }
-);
+    closeList();
+    return html;
+  };
 
-document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+  const initDialogs = () => {
+    const dialog = qs("[data-article-dialog]");
+    qs("[data-close-dialog]")?.addEventListener("click", () => dialog?.close?.());
+    dialog?.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close?.();
+    });
+  };
 
-setLanguage(currentLang);
-setDemoMode(currentDemoMode);
-setRoute(currentRoute);
+  const initScenarioDemo = () => {
+    const tabs = qs("[data-scenario-tabs]");
+    if (!tabs || !data.scenarios) return;
 
-function setLanguage(lang) {
-  currentLang = lang === "en" ? "en" : "fr";
-  localStorage.setItem("site-language", currentLang);
-  document.documentElement.lang = currentLang === "fr" ? "fr-CA" : "en-CA";
+    const scenarios = Object.entries(data.scenarios);
+    tabs.innerHTML = scenarios
+      .map(([id, scenario], index) => `<button type="button" class="${index === 0 ? "is-active" : ""}" data-scenario="${id}">${escapeHTML(scenario.label)}</button>`)
+      .join("");
 
-  langButtons.forEach((button) => {
-    const isActive = button.dataset.lang === currentLang;
-    button.setAttribute("aria-pressed", String(isActive));
-  });
+    const activate = (id) => {
+      const scenario = data.scenarios[id];
+      if (!scenario) return;
+      qsa("[data-scenario]", tabs).forEach((button) => button.classList.toggle("is-active", button.dataset.scenario === id));
+      qs("[data-scenario-title]").textContent = scenario.title;
+      qs("[data-scenario-summary]").textContent = scenario.summary;
+      qs("[data-scenario-sequence]").innerHTML = scenario.sequence.map((item) => `<li>${escapeHTML(item)}</li>`).join("");
+      Object.entries(scenario.values).forEach(([key, value]) => {
+        const node = qs(`[data-value="${key}"]`);
+        if (node) node.textContent = value;
+      });
+      qsa("[data-system]").forEach((node) => {
+        node.classList.toggle("is-active", scenario.active.includes(node.dataset.system));
+      });
+    };
 
-  document.querySelectorAll("[data-i18n]").forEach((element) => {
-    const key = element.dataset.i18n;
-    const value = translations[currentLang][key];
-    if (value) element.textContent = value;
-  });
+    tabs.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-scenario]");
+      if (button) activate(button.dataset.scenario);
+    });
 
-  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
-    const key = element.dataset.i18nPlaceholder;
-    const value = translations[currentLang][key];
-    if (value) element.setAttribute("placeholder", value);
-  });
+    activate(scenarios[0][0]);
+  };
 
-  setDemoMode(currentDemoMode);
-  setRoute(currentRoute);
-}
+  const initDashboardDemo = () => {
+    const root = qs("[data-dashboard-actions]");
+    if (!root || !data.dashboardActions) return;
 
-function setDemoMode(mode) {
-  currentDemoMode = demoModes[currentLang][mode] ? mode : "home";
-  const data = demoModes[currentLang][currentDemoMode];
+    const activeMap = {
+      "home-arrival": ["light", "climate", "security", "network"],
+      "night-mode": ["light", "security", "camera"],
+      "secure-property": ["security", "camera", "network"],
+      "energy-save": ["energy", "climate", "light"],
+      "office-ready": ["light", "network", "energy"],
+      "person-detected": ["camera", "security", "network"]
+    };
 
-  demo.dataset.activeMode = currentDemoMode;
-  demoButtons.forEach((button) => {
-    button.setAttribute("aria-selected", String(button.dataset.mode === currentDemoMode));
-  });
+    root.innerHTML = data.dashboardActions
+      .map(
+        (action, index) => `
+          <button type="button" class="${index === 0 ? "is-active" : ""}" data-dashboard-action="${escapeHTML(action.id)}">
+            ${renderIcon(action.icon)}
+            <span>${escapeHTML(action.label)}</span>
+          </button>
+        `
+      )
+      .join("");
 
-  document.querySelector("[data-demo-title]").textContent = data.title;
-  document.querySelector("[data-demo-copy]").textContent = data.copy;
+    const activate = (id) => {
+      const action = data.dashboardActions.find((item) => item.id === id);
+      if (!action) return;
+      qsa("[data-dashboard-action]", root).forEach((button) => button.classList.toggle("is-active", button.dataset.dashboardAction === id));
+      qs("[data-dashboard-result]").textContent = action.result;
+      qs("[data-dashboard-changes]").innerHTML = action.changes.map((change) => `<span>${escapeHTML(change)}</span>`).join("");
+      qsa("[data-tile]").forEach((tile) => {
+        tile.classList.toggle("is-active", activeMap[id]?.includes(tile.dataset.tile));
+      });
+    };
 
-  document.querySelectorAll("[data-demo-svg]").forEach((node, index) => {
-    node.textContent = data.nodes[index];
-  });
+    root.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-dashboard-action]");
+      if (button) activate(button.dataset.dashboardAction);
+    });
 
-  const list = document.querySelector("[data-demo-signals]");
-  list.replaceChildren(
-    ...data.signals.map((signal) => {
-      const item = document.createElement("li");
-      item.textContent = signal;
-      return item;
-    })
-  );
-}
+    activate(data.dashboardActions[0].id);
+  };
 
-function setRoute(route) {
-  currentRoute = routeData[currentLang][route] ? route : "florida";
-  const data = routeData[currentLang][currentRoute];
+  const initSecurityDemo = () => {
+    const controls = qs("[data-security-controls]");
+    if (!controls || !data.securityModes) return;
 
-  routeMap.dataset.activeRoute = currentRoute;
-  routeButtons.forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.route === currentRoute);
-  });
+    controls.innerHTML = data.securityModes
+      .map((mode, index) => `<button type="button" class="${index === 0 ? "is-active" : ""}" data-security-mode="${escapeHTML(mode.id)}">${escapeHTML(mode.label)}</button>`)
+      .join("");
 
-  routeTitle.textContent = data.title;
-  routeCopy.textContent = data.copy;
-}
+    const activate = (id) => {
+      const mode = data.securityModes.find((item) => item.id === id);
+      if (!mode) return;
+      qsa("[data-security-mode]", controls).forEach((button) => button.classList.toggle("is-active", button.dataset.securityMode === id));
+      const feed = qs("[data-camera-feed]");
+      if (feed) feed.dataset.mode = id;
+      qs("[data-camera-mode-label]").textContent = mode.label;
+      qs("[data-security-title]").textContent = mode.title;
+      qs("[data-security-explanation]").textContent = mode.explanation;
+      qs("[data-security-status]").innerHTML = mode.status.map((item) => `<li>${escapeHTML(item)}</li>`).join("");
+    };
+
+    controls.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-security-mode]");
+      if (button) activate(button.dataset.securityMode);
+    });
+
+    activate(data.securityModes[0].id);
+  };
+
+  const initVehicleDemo = () => {
+    const selectors = qsa("[data-vehicle-selector]");
+    if (!selectors.length || !data.vehicleSystems) return;
+
+    selectors.forEach((selector) => {
+      selector.innerHTML = data.vehicleSystems
+        .map(
+          (system, index) => `
+            <button type="button" class="${index === 0 ? "is-active" : ""}" data-vehicle-system="${escapeHTML(system.id)}">
+              ${renderIcon(system.icon)}
+              <span>${escapeHTML(system.title)}</span>
+            </button>
+          `
+        )
+        .join("");
+    });
+
+    const activate = (id) => {
+      const system = data.vehicleSystems.find((item) => item.id === id);
+      if (!system) return;
+      qsa("[data-vehicle-system]").forEach((button) => button.classList.toggle("is-active", button.dataset.vehicleSystem === id));
+      qsa("[data-vehicle-node]").forEach((node) => node.classList.toggle("is-active", node.dataset.vehicleNode === id));
+      qsa("[data-vehicle-status]").forEach((node) => (node.textContent = system.status));
+      qsa("[data-vehicle-title]").forEach((node) => (node.textContent = system.title));
+      qsa("[data-vehicle-description]").forEach((node) => (node.textContent = system.description));
+      qsa("[data-vehicle-details]").forEach((node) => {
+        node.innerHTML = system.details.map((detail) => `<li>${escapeHTML(detail)}</li>`).join("");
+      });
+    };
+
+    qsa("[data-vehicle-system]").forEach((button) => {
+      button.addEventListener("click", () => activate(button.dataset.vehicleSystem));
+    });
+
+    activate(data.vehicleSystems[0].id);
+  };
+
+  const initRouteAtlas = () => {
+    const atlases = qsa(".route-atlas");
+    if (!atlases.length || !data.routes) return;
+
+    atlases.forEach((atlas) => {
+      const controls = qs("[data-route-controls]", atlas);
+      if (!controls) return;
+      controls.innerHTML = data.routes
+        .map((route, index) => `<button type="button" class="${index === 0 ? "is-active" : ""}" data-route="${escapeHTML(route.id)}">${escapeHTML(route.label)}</button>`)
+        .join("");
+
+      const activate = (id) => {
+        const route = data.routes.find((item) => item.id === id);
+        if (!route) return;
+        qsa("[data-route]", atlas).forEach((button) => button.classList.toggle("is-active", button.dataset.route === id));
+        qsa("[data-route-path]", atlas).forEach((path) => path.classList.toggle("is-active", path.dataset.routePath === id));
+        qs("[data-route-title]", atlas).textContent = route.label;
+        qs("[data-route-summary]", atlas).textContent = route.summary;
+        qs("[data-route-points]", atlas).innerHTML = route.points.map((point) => `<span>${escapeHTML(point)}</span>`).join("");
+      };
+
+      controls.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-route]");
+        if (button) activate(button.dataset.route);
+      });
+      activate(data.routes[0].id);
+    });
+  };
+
+  const initJarvisLab = () => {
+    const response = qs("[data-jarvis-response]");
+    const prompts = qsa("[data-jarvis-prompt]");
+    if (!response || !prompts.length) return;
+
+    const answers = {
+      "Pourquoi la lumière extérieure s'est-elle activée?":
+        "Réponse simulée: la caméra d'entrée a classé un mouvement dans la zone piétonne. La lumière a été activée pour 90 secondes, puis l'événement a été marqué dans la timeline locale.",
+      "Montre l'état des batteries du véhicule.":
+        "Réponse simulée: batterie auxiliaire à 82 %, charge solaire faible, consommation stable. Le système recommande de limiter les charges secondaires si le véhicule reste arrêté toute la nuit.",
+      "Prépare la maison pour mon arrivée.":
+        "Réponse simulée: scène arrivée prête. Hall, climat, bureau et sécurité passent dans un état confortable sans exposer l'accès publiquement.",
+      "Quelle caméra a détecté un mouvement?":
+        "Réponse simulée: caméra garage, zone entrée. Objet classé personne. Aucun flux réel n'est connecté à cette démo publique.",
+      "Est-ce que le serveur fonctionne normalement?":
+        "Réponse simulée: services principaux disponibles, VPN actif, stockage OK. Une alerte serait créée si une ressource dépassait la marge définie.",
+      "Crée un résumé énergétique.":
+        "Réponse simulée: consommation basse depuis 2 h, aucune anomalie, prochains tests recommandés sur ventilation et charge batterie."
+    };
+
+    prompts.forEach((button) => {
+      button.addEventListener("click", () => {
+        prompts.forEach((item) => item.classList.toggle("is-active", item === button));
+        response.textContent = answers[button.dataset.jarvisPrompt] || "Commande simulée prête.";
+      });
+    });
+  };
+
+  const renderLab = () => {
+    const grid = qs("[data-lab-grid]");
+    const filter = qs("[data-lab-filter]");
+    if (!grid || !filter || !data.labSystems) return;
+
+    const statuses = ["Tous", ...new Set(data.labSystems.map((item) => item.status))];
+    filter.innerHTML = statuses
+      .map((status, index) => `<button type="button" class="${index === 0 ? "is-active" : ""}" data-lab-status="${escapeHTML(status)}">${escapeHTML(status)}</button>`)
+      .join("");
+
+    const render = (status = "Tous") => {
+      const items = status === "Tous" ? data.labSystems : data.labSystems.filter((item) => item.status === status);
+      grid.innerHTML = items
+        .map(
+          (item) => `
+            <article class="lab-card reveal">
+              <span class="lab-status status-${escapeHTML(item.status)}">${escapeHTML(item.status)}</span>
+              <h3>${escapeHTML(item.name)}</h3>
+              <p>${escapeHTML(item.area)}</p>
+            </article>
+          `
+        )
+        .join("");
+      initReveal();
+    };
+
+    filter.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-lab-status]");
+      if (!button) return;
+      qsa("button", filter).forEach((item) => item.classList.toggle("is-active", item === button));
+      render(button.dataset.labStatus);
+    });
+
+    render();
+  };
+
+  const renderStack = () => {
+    const root = qs("[data-stack-cloud]");
+    if (!root || !data.stack) return;
+    root.innerHTML = data.stack.map((item) => `<span>${escapeHTML(item)}</span>`).join("");
+  };
+
+  const renderProjects = () => {
+    const grid = qs("[data-project-grid]");
+    if (!grid || !data.projects) return;
+
+    grid.innerHTML = data.projects
+      .map(
+        (project) => `
+          <article class="project-card reveal">
+            <span class="project-status">${escapeHTML(project.status)}</span>
+            <h3>${escapeHTML(project.title)}</h3>
+            <p><strong>${escapeHTML(project.type)}</strong></p>
+            <p>${escapeHTML(project.problem)}</p>
+            <details>
+              <summary>Contraintes et résultat</summary>
+              <ul>${project.constraints.map((item) => `<li>${escapeHTML(item)}</li>`).join("")}</ul>
+              <p>${escapeHTML(project.result)}</p>
+            </details>
+          </article>
+        `
+      )
+      .join("");
+  };
+
+  const renderRoadmap = () => {
+    const grid = qs("[data-roadmap-grid]");
+    if (!grid || !data.roadmap) return;
+    grid.innerHTML = data.roadmap
+      .map(
+        (item) => `
+          <article class="roadmap-card reveal">
+            <span class="project-status">${escapeHTML(item.status)}</span>
+            <h3>${escapeHTML(item.title)}</h3>
+            <p>${escapeHTML(item.note)}</p>
+          </article>
+        `
+      )
+      .join("");
+  };
+
+  const initContactForm = () => {
+    const form = qs("[data-contact-form]");
+    if (!form) return;
+    const status = qs("[data-form-status]");
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const lines = [...formData.entries()].map(([key, value]) => `${key}: ${value || "-"}`);
+      const subject = encodeURIComponent("Projet intelligent - jameslaplume.ca");
+      const body = encodeURIComponent(lines.join("\n"));
+      status.textContent = "Courriel préparé dans votre application mail.";
+      window.location.href = `mailto:contact@jameslaplume.ca?subject=${subject}&body=${body}`;
+    });
+  };
+
+  const run = () => {
+    initHeader();
+    renderServices();
+    renderSolutions();
+    renderProcess();
+    renderArticlePreview();
+    renderArticleList();
+    initDialogs();
+    initScenarioDemo();
+    initDashboardDemo();
+    initSecurityDemo();
+    initVehicleDemo();
+    initRouteAtlas();
+    initJarvisLab();
+    renderLab();
+    renderStack();
+    renderProjects();
+    renderRoadmap();
+    initContactForm();
+    refreshIcons();
+    initReveal();
+  };
+
+  if (doc.readyState === "loading") {
+    doc.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+})();

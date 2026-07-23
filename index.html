@@ -3,521 +3,532 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>James Laplume | Smart systems & automation</title>
+    <title>James Laplume | Intelligent Systems Lab</title>
     <meta
       name="description"
-      content="James Laplume conçoit des systèmes intelligents privés: Home Assistant, automatisation, caméras, serveurs, VPN, IA locale, dashboards et véhicules connectés."
+      content="Studio de systèmes intelligents pour maisons, véhicules, serveurs privés, caméras, réseaux, IA locale et tableaux de bord sur mesure."
     >
     <meta name="theme-color" content="#050608">
-    <meta property="og:title" content="James Laplume — Smart spaces. Private systems. Real automation.">
+    <meta property="og:title" content="James Laplume - Intelligent Systems Lab">
     <meta
       property="og:description"
-      content="Studio de systèmes intelligents, d'automatisation et d'infrastructure privée."
+      content="Tout connecter. Tout contrôler. Des systèmes intelligents, privés et réels."
     >
     <meta property="og:type" content="website">
-    <meta property="og:image" content="assets/hero-studio.png">
-    <link rel="preload" href="assets/hero-studio.png" as="image">
+    <meta property="og:image" content="assets/smart-home-architecture.png">
+    <link rel="preload" href="assets/smart-home-architecture.png" as="image">
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+    <script src="data/site-data.js" defer></script>
     <script src="script.js" defer></script>
   </head>
-  <body>
+  <body data-page="home">
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+
     <header class="site-header" data-header>
-      <a class="brand" href="#accueil" aria-label="James Laplume, accueil">
+      <a class="brand" href="index.html" aria-label="James Laplume, accueil">
         <span class="brand-mark" aria-hidden="true">JL</span>
         <span class="brand-copy">
           <span class="brand-name">James Laplume</span>
-          <span class="brand-line" data-i18n="nav.positioning">Smart systems studio</span>
+          <span class="brand-line">Intelligent Systems Lab</span>
         </span>
       </a>
 
-      <nav class="main-nav" aria-label="Sections">
-        <a href="#services" data-i18n="nav.services">Services</a>
-        <a href="#demo" data-i18n="nav.demo">Demo</a>
-        <a href="#ambulance" data-i18n="nav.ambulance">Ambulance</a>
-        <a href="#journal" data-i18n="nav.journal">Journal</a>
-        <a href="#contact" data-i18n="nav.contact">Contact</a>
-      </nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Ouvrir le menu" aria-expanded="false">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
 
-      <div class="language-switch" aria-label="Langue">
-        <button type="button" data-lang="fr" aria-pressed="true">FR</button>
-        <button type="button" data-lang="en" aria-pressed="false">EN</button>
-      </div>
+      <nav class="main-nav" data-nav aria-label="Navigation principale">
+        <a href="solutions.html">Solutions</a>
+        <a href="lab.html">Lab</a>
+        <a href="mobile-lab.html">Mobile Lab</a>
+        <a href="projects.html">Projets</a>
+        <a href="learn.html">Apprendre</a>
+        <a href="about.html">À propos</a>
+        <a href="contact.html">Contact</a>
+      </nav>
     </header>
 
-    <main>
-      <section id="accueil" class="hero-section" aria-labelledby="hero-title">
+    <main id="contenu">
+      <section class="hero hero-home" data-hero>
         <img
-          class="hero-image"
-          src="assets/hero-studio.png"
-          alt="Espace technique architectural avec serveur privé, panneau de contrôle, caméra et véhicule connecté."
+          class="hero-media"
+          src="assets/smart-home-architecture.png"
+          alt="Maison moderne avec éclairage intelligent, caméra extérieure et interface discrète."
         >
-        <div class="hero-overlay" aria-hidden="true"></div>
-        <div class="grid-layer" aria-hidden="true"></div>
+        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="blueprint-grid" aria-hidden="true"></div>
 
-        <div class="section-inner hero-inner">
+        <div class="section-shell hero-layout">
           <div class="hero-copy reveal">
-            <p class="eyebrow" data-i18n="hero.eyebrow">Studio de systèmes intelligents</p>
-            <h1 id="hero-title">James Laplume</h1>
-            <p class="hero-positioning" data-i18n="hero.positioning">
-              Smart spaces. Private systems. Real automation.
-            </p>
-            <p class="hero-text" data-i18n="hero.text">
-              Des systèmes sur mesure pour maisons intelligentes, serveurs privés,
-              caméras locales, vans connectés et tableaux de bord qui servent
-              vraiment.
+            <p class="eyebrow">Studio de systèmes intelligents</p>
+            <h1>Tout connecter. Tout contrôler.</h1>
+            <p class="hero-lead">
+              Des systèmes intelligents pour les maisons, les véhicules et les infrastructures privées.
+              Automatisation, sécurité, réseau, intelligence locale et interfaces sur mesure réunis dans
+              un seul environnement.
             </p>
             <div class="hero-actions">
-              <a class="button button-primary" href="#contact">
-                <span data-i18n="hero.cta.primary">Parler d'un projet</span>
+              <a class="button button-primary" href="solutions.html">
+                Explorer les systèmes
                 <i data-lucide="arrow-right" aria-hidden="true"></i>
               </a>
-              <a class="button button-secondary" href="#demo">
-                <span data-i18n="hero.cta.secondary">Voir la démo</span>
-                <i data-lucide="radar" aria-hidden="true"></i>
+              <a class="button button-secondary" href="contact.html">
+                Parler de mon projet
+                <i data-lucide="message-square" aria-hidden="true"></i>
               </a>
             </div>
           </div>
 
-          <aside class="hero-system reveal" aria-label="Aperçu système">
-            <div class="system-top">
-              <span class="signal-dot" aria-hidden="true"></span>
-              <span data-i18n="hero.panel.title">Architecture privée</span>
+          <aside class="hero-console reveal" aria-label="Aperçu d'architecture privée">
+            <div class="console-topline">
+              <span class="status-dot status-live"></span>
+              <span>Architecture privée</span>
             </div>
-            <div class="system-diagram" aria-hidden="true">
-              <span class="node node-home">Home</span>
-              <span class="node node-server">Server</span>
-              <span class="node node-camera">Vision</span>
-              <span class="node node-ai">AI</span>
-              <svg viewBox="0 0 320 210">
-                <path d="M76 62 C136 30 188 32 247 68"></path>
-                <path d="M76 62 C92 126 151 164 239 150"></path>
-                <path d="M247 68 C260 105 256 130 239 150"></path>
-                <path d="M147 111 C118 88 101 78 76 62"></path>
-                <path d="M147 111 C183 90 213 75 247 68"></path>
-                <path d="M147 111 C178 142 204 152 239 150"></path>
-              </svg>
+            <div class="signal-diagram" aria-hidden="true">
+              <span class="node node-home">Maison</span>
+              <span class="node node-vision">Vision</span>
+              <span class="node node-server">Serveur</span>
+              <span class="node node-ai">IA locale</span>
+              <span class="signal-line line-a"></span>
+              <span class="signal-line line-b"></span>
+              <span class="signal-line line-c"></span>
             </div>
-            <dl class="system-list">
+            <dl class="console-list">
               <div>
-                <dt data-i18n="hero.panel.item1.label">Contrôle</dt>
-                <dd data-i18n="hero.panel.item1.value">Local d'abord</dd>
+                <dt>Contrôle</dt>
+                <dd>Local d'abord</dd>
               </div>
               <div>
-                <dt data-i18n="hero.panel.item2.label">Accès</dt>
-                <dd data-i18n="hero.panel.item2.value">VPN privé</dd>
+                <dt>Accès</dt>
+                <dd>VPN privé</dd>
               </div>
               <div>
-                <dt data-i18n="hero.panel.item3.label">Approche</dt>
-                <dd data-i18n="hero.panel.item3.value">Pilotes et systèmes custom</dd>
+                <dt>Approche</dt>
+                <dd>Pilotes et systèmes custom</dd>
               </div>
             </dl>
           </aside>
         </div>
       </section>
 
-      <section id="services" class="services-section" aria-labelledby="services-title">
-        <div class="section-inner">
+      <section class="section intro-band">
+        <div class="section-shell split-intro">
           <div class="section-heading reveal">
-            <p class="section-kicker" data-i18n="services.kicker">Services</p>
-            <h2 id="services-title" data-i18n="services.title">
-              Des espaces qui comprennent ce qui se passe.
-            </h2>
-            <p data-i18n="services.text">
-              Le travail commence par des besoins réels: voir, contrôler,
-              automatiser, sécuriser et garder les données proches de vous.
-            </p>
+            <p class="eyebrow">Ce que ça change</p>
+            <h2>Un espace intelligent ne collectionne pas les gadgets. Il coordonne ce qui compte.</h2>
           </div>
-
-          <div class="service-grid">
-            <article class="service-card reveal">
-              <i data-lucide="home" aria-hidden="true"></i>
-              <h3 data-i18n="service.home.title">Maisons intelligentes</h3>
-              <p data-i18n="service.home.text">
-                Home Assistant, capteurs, éclairage, énergie, présence, scènes
-                et interfaces simples pour les routines quotidiennes.
-              </p>
+          <div class="intro-grid reveal">
+            <article>
+              <i data-lucide="layers-3" aria-hidden="true"></i>
+              <h3>Un système cohérent</h3>
+              <p>Lumières, climat, caméras, énergie, réseau et tableaux de bord deviennent une seule expérience.</p>
             </article>
-
-            <article class="service-card reveal">
-              <i data-lucide="cctv" aria-hidden="true"></i>
-              <h3 data-i18n="service.vision.title">Vision et sécurité locale</h3>
-              <p data-i18n="service.vision.text">
-                Caméras IP, Frigate, détection locale, alertes propres et
-                accès privé sans transformer la maison en produit cloud.
-              </p>
+            <article>
+              <i data-lucide="shield-check" aria-hidden="true"></i>
+              <h3>Privé par design</h3>
+              <p>Les données sensibles restent locales quand c'est possible, avec accès distant par VPN.</p>
             </article>
-
-            <article class="service-card reveal">
-              <i data-lucide="server" aria-hidden="true"></i>
-              <h3 data-i18n="service.private.title">Serveurs et accès privé</h3>
-              <p data-i18n="service.private.text">
-                Docker, Linux, sauvegardes, DNS, VPN, accès distant et bases
-                fiables pour héberger vos propres outils.
-              </p>
-            </article>
-
-            <article class="service-card reveal">
-              <i data-lucide="car-front" aria-hidden="true"></i>
-              <h3 data-i18n="service.mobile.title">Vans, RV et systèmes mobiles</h3>
-              <p data-i18n="service.mobile.text">
-                Énergie, réseau, surveillance, tableaux de bord et automatisation
-                pour véhicules aménagés, ateliers mobiles et projets pilotes.
-              </p>
+            <article>
+              <i data-lucide="wrench" aria-hidden="true"></i>
+              <h3>Construit pour durer</h3>
+              <p>Documentation, tests, contrôle manuel et choix d'équipement avant la magie.</p>
             </article>
           </div>
         </div>
       </section>
 
-      <section id="demo" class="demo-section" aria-labelledby="demo-title">
-        <div class="section-inner demo-layout">
-          <div class="demo-copy reveal">
-            <p class="section-kicker" data-i18n="demo.kicker">Démonstration</p>
-            <h2 id="demo-title" data-i18n="demo.title">
-              Un système intelligent doit rester lisible.
-            </h2>
-            <p data-i18n="demo.text">
-              Cette démonstration montre comment les capteurs, caméras, serveurs
-              et dashboards peuvent être organisés autour d'une logique claire.
+      <section class="section scenario-section" id="scenarios">
+        <div class="section-shell">
+          <div class="section-heading narrow reveal">
+            <p class="eyebrow">Démonstration maison</p>
+            <h2>Choisissez une scène. Le système explique ce qu'il fait.</h2>
+            <p>
+              Cette démo est simulée. Elle montre comment un espace peut réagir sans exposer de vraie installation.
             </p>
           </div>
 
-          <div class="smart-demo reveal" data-demo>
-            <div class="demo-toolbar" role="tablist" aria-label="Scénarios">
-              <button type="button" role="tab" aria-selected="true" data-mode="home">
-                <i data-lucide="house" aria-hidden="true"></i>
-                <span data-i18n="demo.mode.home">Résidence</span>
-              </button>
-              <button type="button" role="tab" aria-selected="false" data-mode="vision">
-                <i data-lucide="camera" aria-hidden="true"></i>
-                <span data-i18n="demo.mode.vision">Vision</span>
-              </button>
-              <button type="button" role="tab" aria-selected="false" data-mode="server">
-                <i data-lucide="shield-check" aria-hidden="true"></i>
-                <span data-i18n="demo.mode.server">Serveur</span>
-              </button>
-              <button type="button" role="tab" aria-selected="false" data-mode="mobile">
-                <i data-lucide="route" aria-hidden="true"></i>
-                <span data-i18n="demo.mode.mobile">Mobile</span>
-              </button>
+          <div class="scenario-workbench reveal">
+            <div class="scenario-tabs" data-scenario-tabs aria-label="Scénarios intelligents"></div>
+
+            <div class="home-model" aria-label="Modèle de maison intelligente">
+              <div class="home-room room-entry" data-system="presence">
+                <span>Entrée</span>
+                <i data-lucide="door-open" aria-hidden="true"></i>
+              </div>
+              <div class="home-room room-living" data-system="light">
+                <span>Salon</span>
+                <i data-lucide="lamp" aria-hidden="true"></i>
+              </div>
+              <div class="home-room room-office" data-system="dashboard">
+                <span>Bureau</span>
+                <i data-lucide="monitor-dot" aria-hidden="true"></i>
+              </div>
+              <div class="home-room room-climate" data-system="climate">
+                <span>Climat</span>
+                <i data-lucide="thermometer-sun" aria-hidden="true"></i>
+              </div>
+              <div class="home-room room-camera" data-system="camera">
+                <span>Caméras</span>
+                <i data-lucide="cctv" aria-hidden="true"></i>
+              </div>
+              <div class="home-room room-network" data-system="network">
+                <span>Réseau</span>
+                <i data-lucide="router" aria-hidden="true"></i>
+              </div>
+              <div class="home-room room-security" data-system="security">
+                <span>Sécurité</span>
+                <i data-lucide="shield" aria-hidden="true"></i>
+              </div>
+              <div class="home-room room-energy" data-system="energy">
+                <span>Énergie</span>
+                <i data-lucide="bolt" aria-hidden="true"></i>
+              </div>
             </div>
 
-            <div class="demo-stage">
-              <div class="demo-map" aria-label="Schéma de système intelligent">
-                <svg viewBox="0 0 720 430" role="img" aria-labelledby="demo-map-title">
-                  <title id="demo-map-title">Schéma technique: capteurs, serveur, automatisation et dashboard.</title>
-                  <defs>
-                    <filter id="softGlow">
-                      <feGaussianBlur stdDeviation="5" result="blur"></feGaussianBlur>
-                      <feMerge>
-                        <feMergeNode in="blur"></feMergeNode>
-                        <feMergeNode in="SourceGraphic"></feMergeNode>
-                      </feMerge>
-                    </filter>
-                  </defs>
-                  <path class="demo-grid-line" d="M75 78 H648 M75 172 H648 M75 266 H648 M75 360 H648"></path>
-                  <path class="demo-grid-line" d="M108 50 V390 M250 50 V390 M392 50 V390 M534 50 V390"></path>
-                  <path class="demo-link main" d="M144 132 C242 88 333 95 425 155 S566 236 608 144"></path>
-                  <path class="demo-link alt" d="M144 132 C198 245 282 296 392 286 S548 255 608 144"></path>
-                  <path class="demo-link alt" d="M144 132 C249 193 308 210 392 286"></path>
-                  <path class="demo-link alt" d="M425 155 C419 210 407 248 392 286"></path>
-                  <g class="demo-node-svg node-a" filter="url(#softGlow)">
-                    <circle cx="144" cy="132" r="42"></circle>
-                    <text x="144" y="137" text-anchor="middle" data-demo-svg="nodeA">Sensors</text>
-                  </g>
-                  <g class="demo-node-svg node-b" filter="url(#softGlow)">
-                    <circle cx="425" cy="155" r="48"></circle>
-                    <text x="425" y="160" text-anchor="middle" data-demo-svg="nodeB">Logic</text>
-                  </g>
-                  <g class="demo-node-svg node-c" filter="url(#softGlow)">
-                    <circle cx="392" cy="286" r="44"></circle>
-                    <text x="392" y="291" text-anchor="middle" data-demo-svg="nodeC">Server</text>
-                  </g>
-                  <g class="demo-node-svg node-d" filter="url(#softGlow)">
-                    <circle cx="608" cy="144" r="40"></circle>
-                    <text x="608" y="149" text-anchor="middle" data-demo-svg="nodeD">Dashboard</text>
-                  </g>
-                </svg>
+            <aside class="scenario-panel">
+              <p class="panel-label">Séquence active</p>
+              <h3 data-scenario-title>Arrivée détectée</h3>
+              <p data-scenario-summary></p>
+              <ol class="event-sequence" data-scenario-sequence></ol>
+              <div class="mini-metrics">
+                <span><strong data-value="energy">Normal</strong> énergie</span>
+                <span><strong data-value="security">Désarmé</strong> sécurité</span>
+                <span><strong data-value="comfort">22 °C</strong> confort</span>
               </div>
+            </aside>
+          </div>
+        </div>
+      </section>
 
-              <div class="demo-readout">
-                <span class="readout-label" data-i18n="demo.readout.label">Scénario</span>
-                <h3 data-demo-title>Résidence privée</h3>
-                <p data-demo-copy>
-                  Capteurs de présence, éclairage, température, énergie et scènes
-                  Home Assistant avec logique locale.
-                </p>
-                <ul class="signal-list" data-demo-signals></ul>
+      <section class="section environments-section">
+        <div class="section-shell">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Trois environnements</p>
+            <h2>Une même logique pour la maison, l'infrastructure et la route.</h2>
+          </div>
+
+          <div class="cinema-panels">
+            <a class="cinema-panel reveal" href="solutions.html">
+              <img src="assets/smart-home-architecture.png" alt="Intérieur de maison intelligente.">
+              <div>
+                <span>Maison intelligente</span>
+                <h3>Éclairage, climat, sécurité, énergie et routines quotidiennes dans une interface privée.</h3>
+              </div>
+            </a>
+            <a class="cinema-panel reveal" href="lab.html">
+              <img src="assets/systems-lab.png" alt="Laboratoire serveur privé.">
+              <div>
+                <span>Infrastructure privée</span>
+                <h3>Réseau, serveurs, caméras, sauvegardes et accès distant conçus comme une fondation fiable.</h3>
+              </div>
+            </a>
+            <a class="cinema-panel reveal" href="mobile-lab.html">
+              <img src="assets/ambulance-quebec-garage.png" alt="Ambulance québécoise Ford 2017 dans un garage.">
+              <div>
+                <span>Mobilité connectée</span>
+                <h3>Internet, énergie, caméras et contrôle intelligent pour les véhicules qui restent connectés.</h3>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section dashboard-section" id="demo">
+        <div class="section-shell">
+          <div class="section-heading narrow reveal">
+            <p class="eyebrow">Interface interactive</p>
+            <h2>Ne l'imaginez pas. Essayez-le.</h2>
+            <p>
+              Un dashboard fictif inspiré d'un système Home Assistant, construit pour montrer les réactions visibles.
+            </p>
+          </div>
+
+          <div class="dashboard-demo reveal">
+            <div class="dashboard-sidebar">
+              <div class="sidebar-heading">Scènes rapides</div>
+              <div class="dashboard-actions" data-dashboard-actions></div>
+            </div>
+
+            <div class="dashboard-main">
+              <div class="dashboard-glass">
+                <div class="dashboard-header">
+                  <div>
+                    <p>Résidence privée</p>
+                    <h3 data-dashboard-result>Entrée, climat et bureau synchronisés.</h3>
+                  </div>
+                  <span class="system-pill">Simulation publique</span>
+                </div>
+
+                <div class="tile-grid" data-dashboard-tiles>
+                  <article class="system-tile" data-tile="light">
+                    <i data-lucide="lightbulb" aria-hidden="true"></i>
+                    <span>Éclairage</span>
+                    <strong>Hall actif</strong>
+                  </article>
+                  <article class="system-tile" data-tile="climate">
+                    <i data-lucide="thermometer" aria-hidden="true"></i>
+                    <span>Climat</span>
+                    <strong>Confort</strong>
+                  </article>
+                  <article class="system-tile" data-tile="security">
+                    <i data-lucide="shield-check" aria-hidden="true"></i>
+                    <span>Sécurité</span>
+                    <strong>Présence connue</strong>
+                  </article>
+                  <article class="system-tile" data-tile="network">
+                    <i data-lucide="router" aria-hidden="true"></i>
+                    <span>Réseau</span>
+                    <strong>VPN disponible</strong>
+                  </article>
+                  <article class="system-tile" data-tile="energy">
+                    <i data-lucide="activity" aria-hidden="true"></i>
+                    <span>Énergie</span>
+                    <strong>Stable</strong>
+                  </article>
+                  <article class="system-tile" data-tile="camera">
+                    <i data-lucide="scan-eye" aria-hidden="true"></i>
+                    <span>Vision</span>
+                    <strong>Aucun événement critique</strong>
+                  </article>
+                </div>
+
+                <div class="reaction-strip" data-dashboard-changes></div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="ambulance" class="ambulance-section" aria-labelledby="ambulance-title">
-        <div class="section-inner">
-          <div class="feature-heading reveal">
-            <p class="section-kicker" data-i18n="ambulance.kicker">Projet en vedette</p>
-            <h2 id="ambulance-title" data-i18n="ambulance.title">
-              Connected Ambulance: un laboratoire mobile pour vrais systèmes.
-            </h2>
-            <p data-i18n="ambulance.text">
-              Un projet pilote personnel autour d'une ambulance connectée:
-              énergie, réseau, caméras, accès VPN, interfaces embarquées et
-              automatisations pensées pour bouger.
-            </p>
-          </div>
-
-          <div class="ambulance-grid">
-            <article class="project-panel reveal">
-              <div class="project-visual" aria-hidden="true">
-                <svg viewBox="0 0 640 360">
-                  <path class="vehicle-body" d="M96 206 H146 L174 144 H432 C482 144 518 174 534 218 H572 C596 218 612 234 612 258 V286 H76 V244 C76 222 82 206 96 206 Z"></path>
-                  <path class="vehicle-cabin" d="M438 160 H498 C516 171 528 190 534 218 H438 Z"></path>
-                  <path class="vehicle-line" d="M170 206 H424 M194 170 H378 M90 244 H606"></path>
-                  <circle class="wheel" cx="174" cy="286" r="34"></circle>
-                  <circle class="wheel" cx="504" cy="286" r="34"></circle>
-                  <path class="pulse-line" d="M128 120 C200 72 302 70 386 116 S510 174 570 110"></path>
-                  <circle class="sensor-dot" cx="128" cy="120" r="8"></circle>
-                  <circle class="sensor-dot" cx="386" cy="116" r="8"></circle>
-                  <circle class="sensor-dot" cx="570" cy="110" r="8"></circle>
-                </svg>
-              </div>
-              <div class="project-details">
-                <h3 data-i18n="ambulance.card.title">Ce que le projet explore</h3>
-                <ul>
-                  <li data-i18n="ambulance.card.item1">Réseau embarqué et accès VPN privé.</li>
-                  <li data-i18n="ambulance.card.item2">Caméras et vision locale pour surveillance autour du véhicule.</li>
-                  <li data-i18n="ambulance.card.item3">Dashboard pour énergie, état, température et alertes.</li>
-                  <li data-i18n="ambulance.card.item4">Base technique réutilisable pour vans, RV et ateliers mobiles.</li>
-                </ul>
-              </div>
-            </article>
-
-            <article class="route-atlas reveal">
-              <div class="atlas-copy">
-                <p class="mini-kicker" data-i18n="routes.kicker">Carte terrain</p>
-                <h3 data-i18n="routes.title">Routes, essais et idées mobiles.</h3>
-                <p data-i18n="routes.text">
-                  Une carte stylisée des trajets qui inspirent les systèmes
-                  mobiles: longues routes, retours par les États-Unis, vols,
-                  boucles locales et arrivée vers Montréal.
+      <section class="section vision-section">
+        <div class="section-shell">
+          <div class="vision-layout">
+            <div class="section-heading reveal">
+              <p class="eyebrow">Sécurité et vision</p>
+              <h2>Voir ce qui compte. Garder le contrôle des données.</h2>
+              <p>
+                Frigate peut analyser les caméras localement. Home Assistant reçoit les événements utiles,
+                pas chaque pixel qui bouge.
+              </p>
+              <details class="tech-details">
+                <summary>Architecture technique</summary>
+                <p>
+                  Caméras PoE vers switch local, détection Frigate, événements Home Assistant,
+                  stockage local, notifications privées et accès distant par VPN.
                 </p>
-              </div>
+              </details>
+            </div>
 
-              <div class="route-map" data-route-map data-active-route="florida">
-                <svg viewBox="0 0 1000 620" role="img" aria-labelledby="route-title route-desc">
-                  <title id="route-title">Carte stylisée des routes de James</title>
-                  <desc id="route-desc">Routes entre Montréal, Floride, Colombie-Britannique, Californie, Hawaii, Costa Rica, Caraïbes et Miami.</desc>
-                  <path class="coast coast-west" d="M178 82 C122 134 108 210 136 266 C164 322 135 392 166 456 C198 522 270 536 322 492"></path>
-                  <path class="coast coast-east" d="M758 88 C824 146 838 232 802 302 C774 356 810 408 762 470 C710 538 640 548 592 510"></path>
-                  <path class="coast gulf" d="M438 452 C505 485 592 493 682 458 C724 442 760 444 802 464"></path>
-                  <path class="coast islands" d="M804 500 C842 510 876 512 912 500"></path>
-                  <path class="route-line road" data-route-path="florida" d="M724 166 C746 252 762 350 744 438 C716 364 698 246 724 166"></path>
-                  <path class="route-line road" data-route-path="bc" d="M724 166 C588 92 384 76 202 128 C248 252 440 306 724 166"></path>
-                  <path class="route-line flight" data-route-path="california" d="M724 166 C560 182 354 234 204 356"></path>
-                  <path class="route-line road" data-route-path="california" d="M204 356 C184 398 224 438 270 414 C312 392 292 334 240 326 C220 328 210 340 204 356"></path>
-                  <path class="route-line flight" data-route-path="hawaii" d="M204 356 C128 420 80 486 70 548"></path>
-                  <path class="route-line road" data-route-path="hawaii" d="M70 548 C92 526 122 530 132 556 C112 580 82 578 70 548"></path>
-                  <path class="route-line flight" data-route-path="costa" d="M70 548 C270 592 470 590 642 548"></path>
-                  <path class="route-line road" data-route-path="costa" d="M642 548 C704 512 766 500 844 512 C812 474 772 454 744 438 C722 482 686 522 642 548"></path>
-                  <path class="route-line flight" data-route-path="costa" d="M744 438 C748 330 742 228 724 166"></path>
-                  <g class="map-points">
-                    <circle cx="724" cy="166" r="7"></circle>
-                    <circle cx="744" cy="438" r="7"></circle>
-                    <circle cx="202" cy="128" r="7"></circle>
-                    <circle cx="204" cy="356" r="7"></circle>
-                    <circle cx="70" cy="548" r="7"></circle>
-                    <circle cx="642" cy="548" r="7"></circle>
-                    <circle cx="844" cy="512" r="7"></circle>
-                  </g>
-                  <g class="map-labels">
-                    <text x="738" y="158">YUL</text>
-                    <text x="758" y="438">Miami / FL</text>
-                    <text x="166" y="114">BC</text>
-                    <text x="168" y="352">California</text>
-                    <text x="88" y="548">Hawaii</text>
-                    <text x="596" y="572">Costa Rica</text>
-                    <text x="854" y="536">Caribbean</text>
-                  </g>
-                </svg>
+            <div class="camera-sim reveal">
+              <div class="camera-feed" data-camera-feed>
+                <div class="camera-topbar">
+                  <span>Garage / Entrée</span>
+                  <span data-camera-mode-label>Personne</span>
+                </div>
+                <div class="detection-zone zone-a"></div>
+                <div class="detection-zone zone-b"></div>
+                <div class="detected-object object-person"></div>
+                <div class="detected-object object-vehicle"></div>
               </div>
-
-              <div class="route-controls" aria-label="Routes">
-                <button type="button" class="is-active" data-route="florida" data-i18n="route.florida.short">Floride</button>
-                <button type="button" data-route="bc" data-i18n="route.bc.short">BC + nord USA</button>
-                <button type="button" data-route="california" data-i18n="route.california.short">Californie</button>
-                <button type="button" data-route="hawaii" data-i18n="route.hawaii.short">Hawaii</button>
-                <button type="button" data-route="costa" data-i18n="route.costa.short">Costa Rica + Caraïbes</button>
+              <div class="camera-controls" data-security-controls></div>
+              <div class="camera-readout">
+                <h3 data-security-title>Personne détectée à l'entrée</h3>
+                <p data-security-explanation></p>
+                <ul data-security-status></ul>
               </div>
-              <div class="route-readout">
-                <strong data-route-title>Floride aller-retour</strong>
-                <p data-route-copy>
-                  Long trajet routier vers la Floride et retour: parfait pour
-                  penser alimentation, réseau mobile, caméra et accès distant.
-                </p>
-              </div>
-            </article>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="process-section" aria-labelledby="process-title">
-        <div class="section-inner">
+      <section class="section mobile-feature" id="ambulance">
+        <img class="feature-bg" src="assets/ambulance-quebec-garage.png" alt="Ambulance québécoise Ford 2017 V10 dans un garage.">
+        <div class="feature-shade" aria-hidden="true"></div>
+        <div class="section-shell mobile-feature-layout">
+          <div class="feature-copy reveal">
+            <p class="eyebrow">Projet phare - en développement</p>
+            <h2>Ambulance connectée Ford 2017 V10.</h2>
+            <p>
+              Une ambulance québécoise transformée en laboratoire intelligent mobile: showroom,
+              studio de contenu, espace connecté, plateforme de sécurité et test de fiabilité sur la route.
+            </p>
+            <a class="button button-primary" href="mobile-lab.html">
+              Voir le projet Mobile Lab
+              <i data-lucide="arrow-right" aria-hidden="true"></i>
+            </a>
+          </div>
+
+          <div class="vehicle-card reveal">
+            <div class="vehicle-shell" aria-hidden="true">
+              <svg viewBox="0 0 720 360" role="img" aria-label="Diagramme d'ambulance connectée">
+                <path class="vehicle-body" d="M82 220h82v-76h82l32-54h250c45 0 80 35 80 80v50h38v36h-64a52 52 0 0 1-101 0H248a52 52 0 0 1-101 0H82z"/>
+                <path class="vehicle-cabin" d="M82 220v-86c0-27 22-49 49-49h94v135z"/>
+                <path class="vehicle-window" d="M117 124h75v62h-82v-54c0-4 3-8 7-8z"/>
+                <path class="vehicle-module" d="M256 104h266c35 0 63 28 63 63v53H256z"/>
+                <circle class="vehicle-wheel" cx="196" cy="258" r="34"/>
+                <circle class="vehicle-wheel" cx="530" cy="258" r="34"/>
+                <g data-vehicle-node="cameras"><circle cx="578" cy="120" r="10"/><path d="M578 120l42-28"/></g>
+                <g data-vehicle-node="router"><circle cx="392" cy="122" r="10"/><path d="M392 122l-24-42"/></g>
+                <g data-vehicle-node="energy"><circle cx="454" cy="210" r="10"/><path d="M454 210l38 58"/></g>
+                <g data-vehicle-node="climate"><circle cx="300" cy="134" r="10"/><path d="M300 134l-28-42"/></g>
+                <g data-vehicle-node="assistant"><circle cx="342" cy="204" r="10"/><path d="M342 204l-58 42"/></g>
+                <g data-vehicle-node="vpn"><circle cx="540" cy="176" r="10"/><path d="M540 176l74 20"/></g>
+              </svg>
+            </div>
+            <div class="vehicle-selector" data-vehicle-selector></div>
+            <div class="vehicle-readout">
+              <span data-vehicle-status>En conception</span>
+              <h3 data-vehicle-title>Quatre caméras</h3>
+              <p data-vehicle-description></p>
+              <ul data-vehicle-details></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section route-atlas-section">
+        <div class="section-shell route-layout">
           <div class="section-heading reveal">
-            <p class="section-kicker" data-i18n="process.kicker">Processus</p>
-            <h2 id="process-title" data-i18n="process.title">Une méthode simple en cinq étapes.</h2>
-          </div>
-
-          <ol class="process-list">
-            <li class="reveal">
-              <span>01</span>
-              <h3 data-i18n="process.step1.title">Clarifier le besoin</h3>
-              <p data-i18n="process.step1.text">Ce qui doit être vu, contrôlé, automatisé ou protégé.</p>
-            </li>
-            <li class="reveal">
-              <span>02</span>
-              <h3 data-i18n="process.step2.title">Cartographier le système</h3>
-              <p data-i18n="process.step2.text">Réseau, appareils, capteurs, permissions et contraintes physiques.</p>
-            </li>
-            <li class="reveal">
-              <span>03</span>
-              <h3 data-i18n="process.step3.title">Construire un pilote</h3>
-              <p data-i18n="process.step3.text">Un prototype limité, testable et compréhensible avant de grossir.</p>
-            </li>
-            <li class="reveal">
-              <span>04</span>
-              <h3 data-i18n="process.step4.title">Déployer proprement</h3>
-              <p data-i18n="process.step4.text">Documentation, accès, sauvegardes et interfaces utilisables.</p>
-            </li>
-            <li class="reveal">
-              <span>05</span>
-              <h3 data-i18n="process.step5.title">Améliorer sur le terrain</h3>
-              <p data-i18n="process.step5.text">Ajustements après usage réel, pas seulement après un plan parfait.</p>
-            </li>
-          </ol>
-        </div>
-      </section>
-
-      <section id="journal" class="journal-section" aria-labelledby="journal-title">
-        <div class="section-inner journal-layout">
-          <div class="journal-heading reveal">
-            <p class="section-kicker" data-i18n="journal.kicker">Journal technique</p>
-            <h2 id="journal-title" data-i18n="journal.title">
-              Notes ouvertes sur les expériences en cours.
-            </h2>
-            <p data-i18n="journal.text">
-              Pas de fausses études de cas. Le journal sert à documenter les
-              essais, pilotes et décisions techniques au fur et à mesure.
+            <p class="eyebrow">Atlas de route</p>
+            <h2>Les systèmes mobiles doivent être pensés pour de vrais trajets.</h2>
+            <p>
+              Floride, Colombie-Britannique, nord des États-Unis, Californie, Hawaii,
+              Costa Rica, Caraïbes, Miami et retour YUL: la route devient une contrainte de design.
             </p>
           </div>
 
-          <div class="journal-list">
-            <article class="journal-item reveal">
-              <span data-i18n="journal.item1.tag">Pilote</span>
-              <h3 data-i18n="journal.item1.title">Ambulance connectée</h3>
-              <p data-i18n="journal.item1.text">
-                Réseau mobile, caméras, dashboard et accès privé dans un véhicule
-                qui doit rester utilisable hors du garage.
-              </p>
-            </article>
-            <article class="journal-item reveal">
-              <span data-i18n="journal.item2.tag">Expérience</span>
-              <h3 data-i18n="journal.item2.title">Vision locale avec Frigate</h3>
-              <p data-i18n="journal.item2.text">
-                Détection locale, zones utiles, alertes propres et stockage
-                maîtrisé pour éviter la dépendance au cloud.
-              </p>
-            </article>
-            <article class="journal-item reveal">
-              <span data-i18n="journal.item3.tag">Infrastructure</span>
-              <h3 data-i18n="journal.item3.title">Serveur privé et VPN</h3>
-              <p data-i18n="journal.item3.text">
-                Héberger des services, exposer le minimum, sauvegarder les données
-                et garder un accès distant clair.
-              </p>
-            </article>
+          <div class="route-atlas reveal">
+            <svg viewBox="0 0 720 430" aria-label="Carte stylisée des routes parcourues">
+              <defs>
+                <filter id="softGlow">
+                  <feGaussianBlur stdDeviation="3" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <path class="map-coast" d="M118 96c70-50 165-42 215-18 62 30 86 92 152 92 76 0 93-75 152-56"/>
+              <path class="map-coast" d="M96 242c86-35 138 8 194 13 62 6 120-36 192-8 58 22 87 72 156 49"/>
+              <path data-route-path="florida" class="route-path" d="M306 152C260 184 248 244 284 292c38 50 74 32 94 84"/>
+              <path data-route-path="bc" class="route-path" d="M310 154C236 118 154 124 96 178c-45 42-26 98 38 119 88 30 198-2 260-45"/>
+              <path data-route-path="california" class="route-path" d="M310 154c-88 52-135 136-112 190 18 42 73 48 118 18 44-29 69-78 58-121"/>
+              <path data-route-path="hawaii" class="route-path" d="M388 300c92 32 174 26 220-22 34-35 28-78-14-92"/>
+              <path data-route-path="costa" class="route-path" d="M322 168c54 72 136 110 210 106 52-2 84-28 112-72"/>
+              <g class="map-points">
+                <circle cx="310" cy="154" r="8"/><text x="326" y="151">YUL</text>
+                <circle cx="378" cy="376" r="7"/><text x="392" y="381">Floride</text>
+                <circle cx="96" cy="178" r="7"/><text x="66" y="160">BC</text>
+                <circle cx="218" cy="346" r="7"/><text x="164" y="365">Californie</text>
+                <circle cx="610" cy="278" r="7"/><text x="622" y="282">Hawaii</text>
+                <circle cx="644" cy="202" r="7"/><text x="576" y="190">Costa Rica</text>
+              </g>
+            </svg>
+            <div class="route-controls" data-route-controls></div>
+            <div class="route-readout">
+              <h3 data-route-title>Floride</h3>
+              <p data-route-summary></p>
+              <div class="route-points" data-route-points></div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="stack-section" aria-labelledby="stack-title">
-        <div class="section-inner">
+      <section class="section jarvis-section">
+        <div class="section-shell jarvis-layout">
           <div class="section-heading reveal">
-            <p class="section-kicker" data-i18n="stack.kicker">Stack</p>
-            <h2 id="stack-title" data-i18n="stack.title">Technologies possibles selon le projet.</h2>
-            <p data-i18n="stack.text">
-              La stack n'est pas une religion. Elle se choisit selon le budget,
-              la fiabilité requise, la confidentialité et la maintenance.
+            <p class="eyebrow">Jarvis Lab</p>
+            <h2>Une interface qui comprend le système derrière elle.</h2>
+            <p>
+              Projet de recherche et prototype. L'objectif n'est pas de vendre une IA magique,
+              mais d'explorer une interface locale capable d'expliquer l'état d'un système.
             </p>
           </div>
 
-          <div class="stack-grid reveal" aria-label="Technologies">
-            <span>Home Assistant</span>
-            <span>Frigate</span>
-            <span>Docker</span>
-            <span>Linux</span>
-            <span>MQTT</span>
-            <span>ESPHome</span>
-            <span>Zigbee / Z-Wave</span>
-            <span>WireGuard / Tailscale</span>
-            <span>Caddy / Nginx</span>
-            <span>Proxmox</span>
-            <span>Grafana</span>
-            <span>Local AI</span>
+          <div class="jarvis-board reveal">
+            <div class="assistant-core" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="prompt-list">
+              <button type="button" data-jarvis-prompt="Pourquoi la lumière extérieure s'est-elle activée?">Pourquoi la lumière extérieure s'est-elle activée?</button>
+              <button type="button" data-jarvis-prompt="Montre l'état des batteries du véhicule.">Montre l'état des batteries du véhicule.</button>
+              <button type="button" data-jarvis-prompt="Prépare la maison pour mon arrivée.">Prépare la maison pour mon arrivée.</button>
+              <button type="button" data-jarvis-prompt="Quelle caméra a détecté un mouvement?">Quelle caméra a détecté un mouvement?</button>
+              <button type="button" data-jarvis-prompt="Est-ce que le serveur fonctionne normalement?">Est-ce que le serveur fonctionne normalement?</button>
+              <button type="button" data-jarvis-prompt="Crée un résumé énergétique.">Crée un résumé énergétique.</button>
+            </div>
+            <div class="assistant-response">
+              <span>Prototype local</span>
+              <p data-jarvis-response>
+                Choisis une question. La réponse simulée montrera comment une interface pourrait résumer un état réel sans exposer les systèmes publics.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="contact" class="contact-section" aria-labelledby="contact-title">
-        <div class="section-inner contact-layout">
-          <div class="contact-copy reveal">
-            <p class="section-kicker" data-i18n="contact.kicker">Contact</p>
-            <h2 id="contact-title" data-i18n="contact.title">
-              Un projet pilote ou un système custom?
-            </h2>
-            <p data-i18n="contact.text">
-              Décrivez ce que vous voulez connecter, automatiser ou sécuriser.
-              Le formulaire prépare un courriel; rien n'est envoyé sans votre app de mail.
-            </p>
+      <section class="section services-section">
+        <div class="section-shell">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Services</p>
+            <h2>Des offres claires, sans prétendre être plus gros que la réalité.</h2>
+            <p>Projets pilotes, expériences sérieuses et accompagnement sur mesure.</p>
           </div>
+          <div class="service-grid" data-services-grid></div>
+        </div>
+      </section>
 
-          <form class="contact-form reveal" data-contact-form>
-            <label>
-              <span data-i18n="form.name">Nom</span>
-              <input name="name" type="text" autocomplete="name" required>
-            </label>
-            <label>
-              <span data-i18n="form.email">Courriel</span>
-              <input name="email" type="email" autocomplete="email" required>
-            </label>
-            <label>
-              <span data-i18n="form.project">Type de projet</span>
-              <select name="project">
-                <option data-i18n="form.project.home">Maison intelligente</option>
-                <option data-i18n="form.project.camera">Caméras et Frigate</option>
-                <option data-i18n="form.project.server">Serveur privé / VPN</option>
-                <option data-i18n="form.project.mobile">Van, RV ou système mobile</option>
-                <option data-i18n="form.project.other">Autre système custom</option>
-              </select>
-            </label>
-            <label>
-              <span data-i18n="form.message">Message</span>
-              <textarea name="message" rows="6" required data-i18n-placeholder="form.placeholder" placeholder="Parlez-moi du lieu, des appareils, du problème et du résultat voulu."></textarea>
-            </label>
-            <button class="button button-primary" type="submit">
-              <span data-i18n="form.submit">Préparer le courriel</span>
-              <i data-lucide="send-horizontal" aria-hidden="true"></i>
-            </button>
-            <p class="form-status" data-form-status aria-live="polite"></p>
-          </form>
+      <section class="section process-section">
+        <div class="section-shell">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Processus</p>
+            <h2>Cinq étapes pour éviter le chaos technique.</h2>
+          </div>
+          <div class="process-rail" data-process-rail></div>
+        </div>
+      </section>
+
+      <section class="section notes-section">
+        <div class="section-shell">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Journal technique</p>
+            <h2>Des notes pour documenter ce qui est construit, testé et appris.</h2>
+          </div>
+          <div class="article-grid" data-article-preview></div>
+          <div class="section-actions">
+            <a class="button button-secondary" href="learn.html">
+              Voir tous les articles
+              <i data-lucide="book-open" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact-strip">
+        <div class="section-shell contact-strip-inner reveal">
+          <div>
+            <p class="eyebrow">Contact</p>
+            <h2>Quel système voulez-vous rendre intelligent?</h2>
+          </div>
+          <a class="button button-primary" href="contact.html">
+            Décrire mon projet
+            <i data-lucide="send" aria-hidden="true"></i>
+          </a>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <span>&copy; <span data-year></span> James Laplume</span>
-      <a href="#accueil" data-i18n="footer.top">Retour en haut</a>
+      <div class="footer-grid">
+        <div>
+          <strong>James Laplume</strong>
+          <span>Intelligent Systems Lab</span>
+        </div>
+        <p>Maisons intelligentes, infrastructure privée, IA locale et ambulance connectée.</p>
+        <a href="mailto:contact@jameslaplume.ca">contact@jameslaplume.ca</a>
+      </div>
     </footer>
   </body>
 </html>

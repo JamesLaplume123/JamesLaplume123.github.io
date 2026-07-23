@@ -1,43 +1,95 @@
 # jameslaplume.ca
 
-Premium one-page website for James Laplume — smart systems, private
-infrastructure and real automation.
+Premium multi-page static website for **James Laplume - Intelligent Systems Lab**.
 
 Positioning:
 
 ```text
-James Laplume — Smart spaces. Private systems. Real automation.
+Tout connecter. Tout contrôler.
+Everything connected. Everything under your control.
 ```
 
-## Sections
+## Pages
 
-- Cinematic hero with clear positioning and CTAs
-- Four service categories
-- Interactive smart-system demonstration
-- Featured Connected Ambulance project
-- Stylized route map / field atlas
-- Five-step working process
-- Technical project journal
-- Technology stack
-- Contact form that prepares a mailto email
-- French / English language toggle
+- `index.html`: cinematic home page with interactive smart home, dashboard, security, route atlas, Jarvis Lab and service sections
+- `solutions.html`: solutions organized by customer outcomes
+- `lab.html`: technical lab, stack and honest status labels
+- `mobile-lab.html`: flagship connected ambulance project, Ford 2017 V10
+- `projects.html`: project and case-study system
+- `learn.html`: article index with filters and Markdown reader
+- `about.html`: James background and learning roadmap
+- `contact.html`: detailed contact form that prepares a mailto email
 
-## Files
+## Content System
 
-- `index.html`: page structure and French default copy
-- `styles.css`: premium dark interface, responsive layout and animations
-- `script.js`: language toggle, demo, route map state and contact form
-- `assets/hero-studio.png`: generated architectural hero image
-- `CNAME`: custom domain for GitHub Pages
-- `.nojekyll`: tells GitHub Pages to serve files as a plain static site
+Most repeatable content lives in:
+
+```text
+data/site-data.js
+```
+
+Update that file to change:
+
+- services
+- solution categories
+- smart home scenarios
+- dashboard actions
+- security demo modes
+- mobile ambulance systems
+- route atlas entries
+- process steps
+- lab status items
+- certification roadmap
+- stack chips
+- project cards
+- article metadata
+
+Technical articles live in:
+
+```text
+articles/*.md
+```
+
+To add an article:
+
+1. Create a new Markdown file in `articles/`.
+2. Add its metadata to `data/site-data.js` under `articles`.
+3. Use the same `slug` as the Markdown filename without `.md`.
+
+## Assets
+
+Main images:
+
+- `assets/smart-home-architecture.png`
+- `assets/systems-lab.png`
+- `assets/ambulance-quebec-garage.png`
+
+The ambulance image is intentionally Quebec-style and based on the requested Ford 2017 V10 project direction.
 
 ## Deployment
 
-This site is intentionally static and fast for GitHub Pages. A React build can be
-introduced later if the interactive demo becomes a larger app with real backend
-state, dashboards, authentication or API integrations.
+This site is intentionally static and fast for GitHub Pages.
+
+Required repository settings:
+
+- Repository: `JamesLaplume123/JamesLaplume123.github.io`
+- Branch: `main`
+- Source: `/`
+- Custom domain: `jameslaplume.ca`
+
+Important files:
+
+- `CNAME`: custom domain
+- `.nojekyll`: serve static files directly
 
 ## DNS
+
+Authoritative nameservers:
+
+```text
+parking1.whc.ca
+parking2.whc.ca
+```
 
 GitHub Pages apex records:
 
@@ -60,3 +112,19 @@ Mail separation:
 mail -> A -> 54.39.226.237
 @ -> MX -> mail.jameslaplume.ca.
 ```
+
+## Future Private App
+
+Public website:
+
+```text
+jameslaplume.ca
+```
+
+Future private system:
+
+```text
+app.jameslaplume.ca
+```
+
+The private system should remain behind authentication or VPN and must not expose real Home Assistant tokens, camera streams, private URLs, IP addresses or infrastructure credentials.

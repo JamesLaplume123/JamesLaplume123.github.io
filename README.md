@@ -29,6 +29,7 @@ James Laplume — Smart spaces. Private systems. Real automation.
 - `script.js`: language toggle, demo, route map state and contact form
 - `assets/hero-studio.png`: generated architectural hero image
 - `CNAME`: custom domain for GitHub Pages
+- `.nojekyll`: tells GitHub Pages to serve files as a plain static site
 
 ## Deployment
 

@@ -1,32 +1,44 @@
 # jameslaplume.ca
 
-Site personnel premium de James Laplume.
+Premium one-page website for James Laplume — smart systems, private
+infrastructure and real automation.
 
-Cette version sert de base publique pour le domaine `jameslaplume.ca`: une page
-rapide, statique, prête pour GitHub Pages, avec une direction visuelle plus
-haut de gamme et une première interface de laboratoire Jarvis.
+Positioning:
 
-## Structure
+```text
+James Laplume — Smart spaces. Private systems. Real automation.
+```
 
-- `index.html`: contenu de la page
-- `styles.css`: direction visuelle, responsive et animations
-- `script.js`: interactions du panneau Jarvis, horloge, animations et canvas
-- `assets/hero-workspace.png`: image principale
-- `CNAME`: domaine personnalisé pour GitHub Pages
+## Sections
 
-## Direction
+- Cinematic hero with clear positioning and CTAs
+- Four service categories
+- Interactive smart-system demonstration
+- Featured Connected Ambulance project
+- Stylized route map / field atlas
+- Five-step working process
+- Technical project journal
+- Technology stack
+- Contact form that prepares a mailto email
+- French / English language toggle
 
-Le site présente James comme un atelier numérique personnel:
+## Files
 
-- serveur privé
-- automatisation
-- vision, caméras et sécurité locale
-- van tech
-- futur assistant Jarvis
+- `index.html`: page structure and French default copy
+- `styles.css`: premium dark interface, responsive layout and animations
+- `script.js`: language toggle, demo, route map state and contact form
+- `assets/hero-studio.png`: generated architectural hero image
+- `CNAME`: custom domain for GitHub Pages
 
-## DNS WHC pour GitHub Pages
+## Deployment
 
-Le domaine racine utilise les quatre adresses `A` officielles de GitHub Pages:
+This site is intentionally static and fast for GitHub Pages. A React build can be
+introduced later if the interactive demo becomes a larger app with real backend
+state, dashboards, authentication or API integrations.
+
+## DNS
+
+GitHub Pages apex records:
 
 ```text
 @ -> 185.199.108.153
@@ -35,21 +47,15 @@ Le domaine racine utilise les quatre adresses `A` officielles de GitHub Pages:
 @ -> 185.199.111.153
 ```
 
-Le sous-domaine `www` pointe vers GitHub Pages:
+GitHub Pages `www`:
 
 ```text
 www -> CNAME -> JamesLaplume123.github.io
 ```
 
-Le courriel reste isolé du site:
+Mail separation:
 
 ```text
 mail -> A -> 54.39.226.237
 @ -> MX -> mail.jameslaplume.ca.
 ```
-
-## Plus tard
-
-Quand Jarvis devient une vraie application, migrer vers une structure React ou
-un backend privé sera logique. Pour l'instant, la page reste volontairement
-statique pour charger vite et se déployer simplement sur GitHub Pages.

@@ -3,280 +3,521 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>James Laplume</title>
+    <title>James Laplume | Smart systems & automation</title>
     <meta
       name="description"
-      content="Atelier numérique personnel de James Laplume: serveur, automatisation, vision, van tech et laboratoire Jarvis."
+      content="James Laplume conçoit des systèmes intelligents privés: Home Assistant, automatisation, caméras, serveurs, VPN, IA locale, dashboards et véhicules connectés."
     >
     <meta name="theme-color" content="#050608">
-    <meta property="og:title" content="James Laplume">
+    <meta property="og:title" content="James Laplume — Smart spaces. Private systems. Real automation.">
     <meta
       property="og:description"
-      content="Un atelier personnel pour bâtir Jarvis, connecter les systèmes et mettre les idées en ligne."
+      content="Studio de systèmes intelligents, d'automatisation et d'infrastructure privée."
     >
     <meta property="og:type" content="website">
-    <meta property="og:image" content="assets/hero-workspace.png">
-    <link rel="preload" href="assets/hero-workspace.png" as="image">
+    <meta property="og:image" content="assets/hero-studio.png">
+    <link rel="preload" href="assets/hero-studio.png" as="image">
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
     <script src="script.js" defer></script>
   </head>
   <body>
-    <header class="site-header" data-site-header aria-label="Navigation principale">
+    <header class="site-header" data-header>
       <a class="brand" href="#accueil" aria-label="James Laplume, accueil">
         <span class="brand-mark" aria-hidden="true">JL</span>
         <span class="brand-copy">
           <span class="brand-name">James Laplume</span>
-          <span class="brand-domain">jameslaplume.ca</span>
+          <span class="brand-line" data-i18n="nav.positioning">Smart systems studio</span>
         </span>
       </a>
+
       <nav class="main-nav" aria-label="Sections">
-        <a href="#signal">Signal</a>
-        <a href="#atelier">Atelier</a>
-        <a href="#jarvis">Jarvis</a>
-        <a href="#contact">Contact</a>
+        <a href="#services" data-i18n="nav.services">Services</a>
+        <a href="#demo" data-i18n="nav.demo">Demo</a>
+        <a href="#ambulance" data-i18n="nav.ambulance">Ambulance</a>
+        <a href="#journal" data-i18n="nav.journal">Journal</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
       </nav>
+
+      <div class="language-switch" aria-label="Langue">
+        <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
     </header>
 
     <main>
-      <section id="accueil" class="hero" aria-labelledby="hero-title">
+      <section id="accueil" class="hero-section" aria-labelledby="hero-title">
         <img
           class="hero-image"
-          src="assets/hero-workspace.png"
-          alt="Bureau moderne avec ordinateur portable, lumière chaude et paysage de montagne."
+          src="assets/hero-studio.png"
+          alt="Espace technique architectural avec serveur privé, panneau de contrôle, caméra et véhicule connecté."
         >
-        <canvas class="signal-canvas" data-signal-canvas aria-hidden="true"></canvas>
-        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="hero-overlay" aria-hidden="true"></div>
+        <div class="grid-layer" aria-hidden="true"></div>
 
-        <div class="hero-content">
-          <p class="eyebrow">Atelier numérique personnel</p>
-          <h1 id="hero-title">James Laplume</h1>
-          <p class="hero-copy">
-            Un point d'ancrage pour mes projets: serveur maison, automatisation,
-            vision, van tech et un futur Jarvis capable d'aider pour vrai.
-          </p>
-
-          <div class="hero-actions" aria-label="Actions principales">
-            <a class="button button-primary" href="#jarvis">
-              <span>Voir Jarvis</span>
-              <i data-lucide="arrow-right" aria-hidden="true"></i>
-            </a>
-            <a class="button button-ghost" href="#atelier">
-              <span>L'atelier</span>
-              <i data-lucide="cpu" aria-hidden="true"></i>
-            </a>
-          </div>
-        </div>
-
-        <aside class="hero-panel" aria-label="État du site">
-          <div class="panel-header">
-            <span class="pulse" aria-hidden="true"></span>
-            <span>Live stack</span>
-          </div>
-          <dl class="stack-list">
-            <div>
-              <dt>Domaine</dt>
-              <dd>jameslaplume.ca</dd>
-            </div>
-            <div>
-              <dt>Hébergement</dt>
-              <dd>GitHub Pages</dd>
-            </div>
-            <div>
-              <dt>DNS</dt>
-              <dd>WHC</dd>
-            </div>
-            <div>
-              <dt>Phase</dt>
-              <dd>Base publique</dd>
-            </div>
-          </dl>
-        </aside>
-      </section>
-
-      <section id="signal" class="signal-section" aria-labelledby="signal-title">
-        <div class="section-inner signal-grid">
-          <div class="section-heading reveal">
-            <p class="section-kicker">Signal</p>
-            <h2 id="signal-title">Pas un portfolio propre-propre. Un cockpit.</h2>
-          </div>
-          <div class="statement-copy reveal">
-            <p>
-              Le site commence simple, mais l'intention est claire: un espace
-              qui peut devenir tableau de bord, carnet technique, vitrine de
-              projets et porte d'entrée vers un assistant personnel.
+        <div class="section-inner hero-inner">
+          <div class="hero-copy reveal">
+            <p class="eyebrow" data-i18n="hero.eyebrow">Studio de systèmes intelligents</p>
+            <h1 id="hero-title">James Laplume</h1>
+            <p class="hero-positioning" data-i18n="hero.positioning">
+              Smart spaces. Private systems. Real automation.
             </p>
-            <p>
-              Ce n'est pas une page figée. C'est la première couche d'un système
-              qui pourra vivre sur GitHub aujourd'hui, puis sur ton propre serveur
-              quand tu voudras prendre le volant au complet.
+            <p class="hero-text" data-i18n="hero.text">
+              Des systèmes sur mesure pour maisons intelligentes, serveurs privés,
+              caméras locales, vans connectés et tableaux de bord qui servent
+              vraiment.
             </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="atelier" class="atelier-section" aria-labelledby="atelier-title">
-        <div class="section-inner">
-          <div class="section-heading wide reveal">
-            <p class="section-kicker">Atelier</p>
-            <h2 id="atelier-title">Les terrains de jeu qui vont remplir ce domaine.</h2>
-          </div>
-
-          <div class="focus-grid">
-            <article class="focus-card reveal">
-              <span class="focus-index">01</span>
-              <i data-lucide="server" aria-hidden="true"></i>
-              <h3>Serveur privé</h3>
-              <p>
-                Hébergement, DNS, sauvegardes, services maison et une base solide
-                pour reprendre le contrôle de ce qui roule chez toi.
-              </p>
-            </article>
-
-            <article class="focus-card reveal">
-              <span class="focus-index">02</span>
-              <i data-lucide="home" aria-hidden="true"></i>
-              <h3>Automatisation</h3>
-              <p>
-                Scénarios, capteurs, interfaces et routines utiles. Pas de gadget
-                gratuit: des systèmes qui rendent la journée plus fluide.
-              </p>
-            </article>
-
-            <article class="focus-card reveal">
-              <span class="focus-index">03</span>
-              <i data-lucide="camera" aria-hidden="true"></i>
-              <h3>Vision et sécurité</h3>
-              <p>
-                Caméras, surveillance locale, Frigate, flux vidéo, alertes et
-                visibilité claire sur ce qui compte.
-              </p>
-            </article>
-
-            <article class="focus-card reveal">
-              <span class="focus-index">04</span>
-              <i data-lucide="route" aria-hidden="true"></i>
-              <h3>Van tech</h3>
-              <p>
-                Idées mobiles, énergie, réseau, caméras et contrôle embarqué.
-                L'atelier peut suivre la route.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="jarvis" class="jarvis-section" aria-labelledby="jarvis-title">
-        <div class="section-inner jarvis-grid">
-          <div class="jarvis-copy reveal">
-            <p class="section-kicker">Jarvis</p>
-            <h2 id="jarvis-title">Pas juste un chatbot. Un futur centre de commande.</h2>
-            <p>
-              La première version reste volontairement légère. La suite peut
-              brancher des API, une mémoire privée, des automatisations, des
-              caméras, des notes et un vrai backend sur ton serveur.
-            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#contact">
+                <span data-i18n="hero.cta.primary">Parler d'un projet</span>
+                <i data-lucide="arrow-right" aria-hidden="true"></i>
+              </a>
+              <a class="button button-secondary" href="#demo">
+                <span data-i18n="hero.cta.secondary">Voir la démo</span>
+                <i data-lucide="radar" aria-hidden="true"></i>
+              </a>
+            </div>
           </div>
 
-          <div class="assistant-panel reveal" aria-label="Prototype Jarvis">
-            <div class="assistant-topbar">
-              <div class="traffic" aria-hidden="true">
-                <span></span>
-                <span></span>
-                <span></span>
+          <aside class="hero-system reveal" aria-label="Aperçu système">
+            <div class="system-top">
+              <span class="signal-dot" aria-hidden="true"></span>
+              <span data-i18n="hero.panel.title">Architecture privée</span>
+            </div>
+            <div class="system-diagram" aria-hidden="true">
+              <span class="node node-home">Home</span>
+              <span class="node node-server">Server</span>
+              <span class="node node-camera">Vision</span>
+              <span class="node node-ai">AI</span>
+              <svg viewBox="0 0 320 210">
+                <path d="M76 62 C136 30 188 32 247 68"></path>
+                <path d="M76 62 C92 126 151 164 239 150"></path>
+                <path d="M247 68 C260 105 256 130 239 150"></path>
+                <path d="M147 111 C118 88 101 78 76 62"></path>
+                <path d="M147 111 C183 90 213 75 247 68"></path>
+                <path d="M147 111 C178 142 204 152 239 150"></path>
+              </svg>
+            </div>
+            <dl class="system-list">
+              <div>
+                <dt data-i18n="hero.panel.item1.label">Contrôle</dt>
+                <dd data-i18n="hero.panel.item1.value">Local d'abord</dd>
               </div>
-              <span>JARVIS / preview</span>
-              <span class="topbar-time" data-clock>--:--</span>
+              <div>
+                <dt data-i18n="hero.panel.item2.label">Accès</dt>
+                <dd data-i18n="hero.panel.item2.value">VPN privé</dd>
+              </div>
+              <div>
+                <dt data-i18n="hero.panel.item3.label">Approche</dt>
+                <dd data-i18n="hero.panel.item3.value">Pilotes et systèmes custom</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section id="services" class="services-section" aria-labelledby="services-title">
+        <div class="section-inner">
+          <div class="section-heading reveal">
+            <p class="section-kicker" data-i18n="services.kicker">Services</p>
+            <h2 id="services-title" data-i18n="services.title">
+              Des espaces qui comprennent ce qui se passe.
+            </h2>
+            <p data-i18n="services.text">
+              Le travail commence par des besoins réels: voir, contrôler,
+              automatiser, sécuriser et garder les données proches de vous.
+            </p>
+          </div>
+
+          <div class="service-grid">
+            <article class="service-card reveal">
+              <i data-lucide="home" aria-hidden="true"></i>
+              <h3 data-i18n="service.home.title">Maisons intelligentes</h3>
+              <p data-i18n="service.home.text">
+                Home Assistant, capteurs, éclairage, énergie, présence, scènes
+                et interfaces simples pour les routines quotidiennes.
+              </p>
+            </article>
+
+            <article class="service-card reveal">
+              <i data-lucide="cctv" aria-hidden="true"></i>
+              <h3 data-i18n="service.vision.title">Vision et sécurité locale</h3>
+              <p data-i18n="service.vision.text">
+                Caméras IP, Frigate, détection locale, alertes propres et
+                accès privé sans transformer la maison en produit cloud.
+              </p>
+            </article>
+
+            <article class="service-card reveal">
+              <i data-lucide="server" aria-hidden="true"></i>
+              <h3 data-i18n="service.private.title">Serveurs et accès privé</h3>
+              <p data-i18n="service.private.text">
+                Docker, Linux, sauvegardes, DNS, VPN, accès distant et bases
+                fiables pour héberger vos propres outils.
+              </p>
+            </article>
+
+            <article class="service-card reveal">
+              <i data-lucide="car-front" aria-hidden="true"></i>
+              <h3 data-i18n="service.mobile.title">Vans, RV et systèmes mobiles</h3>
+              <p data-i18n="service.mobile.text">
+                Énergie, réseau, surveillance, tableaux de bord et automatisation
+                pour véhicules aménagés, ateliers mobiles et projets pilotes.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="demo" class="demo-section" aria-labelledby="demo-title">
+        <div class="section-inner demo-layout">
+          <div class="demo-copy reveal">
+            <p class="section-kicker" data-i18n="demo.kicker">Démonstration</p>
+            <h2 id="demo-title" data-i18n="demo.title">
+              Un système intelligent doit rester lisible.
+            </h2>
+            <p data-i18n="demo.text">
+              Cette démonstration montre comment les capteurs, caméras, serveurs
+              et dashboards peuvent être organisés autour d'une logique claire.
+            </p>
+          </div>
+
+          <div class="smart-demo reveal" data-demo>
+            <div class="demo-toolbar" role="tablist" aria-label="Scénarios">
+              <button type="button" role="tab" aria-selected="true" data-mode="home">
+                <i data-lucide="house" aria-hidden="true"></i>
+                <span data-i18n="demo.mode.home">Résidence</span>
+              </button>
+              <button type="button" role="tab" aria-selected="false" data-mode="vision">
+                <i data-lucide="camera" aria-hidden="true"></i>
+                <span data-i18n="demo.mode.vision">Vision</span>
+              </button>
+              <button type="button" role="tab" aria-selected="false" data-mode="server">
+                <i data-lucide="shield-check" aria-hidden="true"></i>
+                <span data-i18n="demo.mode.server">Serveur</span>
+              </button>
+              <button type="button" role="tab" aria-selected="false" data-mode="mobile">
+                <i data-lucide="route" aria-hidden="true"></i>
+                <span data-i18n="demo.mode.mobile">Mobile</span>
+              </button>
             </div>
 
-            <div class="assistant-screen">
-              <div class="assistant-log" id="assistant-log" aria-live="polite">
-                <p>
-                  <strong>Jarvis</strong>
-                  Je suis la coquille publique pour l'instant. Donne-moi un serveur,
-                  une mémoire et des permissions, puis je deviens utile.
+            <div class="demo-stage">
+              <div class="demo-map" aria-label="Schéma de système intelligent">
+                <svg viewBox="0 0 720 430" role="img" aria-labelledby="demo-map-title">
+                  <title id="demo-map-title">Schéma technique: capteurs, serveur, automatisation et dashboard.</title>
+                  <defs>
+                    <filter id="softGlow">
+                      <feGaussianBlur stdDeviation="5" result="blur"></feGaussianBlur>
+                      <feMerge>
+                        <feMergeNode in="blur"></feMergeNode>
+                        <feMergeNode in="SourceGraphic"></feMergeNode>
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  <path class="demo-grid-line" d="M75 78 H648 M75 172 H648 M75 266 H648 M75 360 H648"></path>
+                  <path class="demo-grid-line" d="M108 50 V390 M250 50 V390 M392 50 V390 M534 50 V390"></path>
+                  <path class="demo-link main" d="M144 132 C242 88 333 95 425 155 S566 236 608 144"></path>
+                  <path class="demo-link alt" d="M144 132 C198 245 282 296 392 286 S548 255 608 144"></path>
+                  <path class="demo-link alt" d="M144 132 C249 193 308 210 392 286"></path>
+                  <path class="demo-link alt" d="M425 155 C419 210 407 248 392 286"></path>
+                  <g class="demo-node-svg node-a" filter="url(#softGlow)">
+                    <circle cx="144" cy="132" r="42"></circle>
+                    <text x="144" y="137" text-anchor="middle" data-demo-svg="nodeA">Sensors</text>
+                  </g>
+                  <g class="demo-node-svg node-b" filter="url(#softGlow)">
+                    <circle cx="425" cy="155" r="48"></circle>
+                    <text x="425" y="160" text-anchor="middle" data-demo-svg="nodeB">Logic</text>
+                  </g>
+                  <g class="demo-node-svg node-c" filter="url(#softGlow)">
+                    <circle cx="392" cy="286" r="44"></circle>
+                    <text x="392" y="291" text-anchor="middle" data-demo-svg="nodeC">Server</text>
+                  </g>
+                  <g class="demo-node-svg node-d" filter="url(#softGlow)">
+                    <circle cx="608" cy="144" r="40"></circle>
+                    <text x="608" y="149" text-anchor="middle" data-demo-svg="nodeD">Dashboard</text>
+                  </g>
+                </svg>
+              </div>
+
+              <div class="demo-readout">
+                <span class="readout-label" data-i18n="demo.readout.label">Scénario</span>
+                <h3 data-demo-title>Résidence privée</h3>
+                <p data-demo-copy>
+                  Capteurs de présence, éclairage, température, énergie et scènes
+                  Home Assistant avec logique locale.
+                </p>
+                <ul class="signal-list" data-demo-signals></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="ambulance" class="ambulance-section" aria-labelledby="ambulance-title">
+        <div class="section-inner">
+          <div class="feature-heading reveal">
+            <p class="section-kicker" data-i18n="ambulance.kicker">Projet en vedette</p>
+            <h2 id="ambulance-title" data-i18n="ambulance.title">
+              Connected Ambulance: un laboratoire mobile pour vrais systèmes.
+            </h2>
+            <p data-i18n="ambulance.text">
+              Un projet pilote personnel autour d'une ambulance connectée:
+              énergie, réseau, caméras, accès VPN, interfaces embarquées et
+              automatisations pensées pour bouger.
+            </p>
+          </div>
+
+          <div class="ambulance-grid">
+            <article class="project-panel reveal">
+              <div class="project-visual" aria-hidden="true">
+                <svg viewBox="0 0 640 360">
+                  <path class="vehicle-body" d="M96 206 H146 L174 144 H432 C482 144 518 174 534 218 H572 C596 218 612 234 612 258 V286 H76 V244 C76 222 82 206 96 206 Z"></path>
+                  <path class="vehicle-cabin" d="M438 160 H498 C516 171 528 190 534 218 H438 Z"></path>
+                  <path class="vehicle-line" d="M170 206 H424 M194 170 H378 M90 244 H606"></path>
+                  <circle class="wheel" cx="174" cy="286" r="34"></circle>
+                  <circle class="wheel" cx="504" cy="286" r="34"></circle>
+                  <path class="pulse-line" d="M128 120 C200 72 302 70 386 116 S510 174 570 110"></path>
+                  <circle class="sensor-dot" cx="128" cy="120" r="8"></circle>
+                  <circle class="sensor-dot" cx="386" cy="116" r="8"></circle>
+                  <circle class="sensor-dot" cx="570" cy="110" r="8"></circle>
+                </svg>
+              </div>
+              <div class="project-details">
+                <h3 data-i18n="ambulance.card.title">Ce que le projet explore</h3>
+                <ul>
+                  <li data-i18n="ambulance.card.item1">Réseau embarqué et accès VPN privé.</li>
+                  <li data-i18n="ambulance.card.item2">Caméras et vision locale pour surveillance autour du véhicule.</li>
+                  <li data-i18n="ambulance.card.item3">Dashboard pour énergie, état, température et alertes.</li>
+                  <li data-i18n="ambulance.card.item4">Base technique réutilisable pour vans, RV et ateliers mobiles.</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="route-atlas reveal">
+              <div class="atlas-copy">
+                <p class="mini-kicker" data-i18n="routes.kicker">Carte terrain</p>
+                <h3 data-i18n="routes.title">Routes, essais et idées mobiles.</h3>
+                <p data-i18n="routes.text">
+                  Une carte stylisée des trajets qui inspirent les systèmes
+                  mobiles: longues routes, retours par les États-Unis, vols,
+                  boucles locales et arrivée vers Montréal.
                 </p>
               </div>
 
-              <div class="command-row" aria-label="Commandes rapides">
-                <button type="button" data-command="serveur">Serveur</button>
-                <button type="button" data-command="vision">Vision</button>
-                <button type="button" data-command="roadmap">Roadmap</button>
+              <div class="route-map" data-route-map data-active-route="florida">
+                <svg viewBox="0 0 1000 620" role="img" aria-labelledby="route-title route-desc">
+                  <title id="route-title">Carte stylisée des routes de James</title>
+                  <desc id="route-desc">Routes entre Montréal, Floride, Colombie-Britannique, Californie, Hawaii, Costa Rica, Caraïbes et Miami.</desc>
+                  <path class="coast coast-west" d="M178 82 C122 134 108 210 136 266 C164 322 135 392 166 456 C198 522 270 536 322 492"></path>
+                  <path class="coast coast-east" d="M758 88 C824 146 838 232 802 302 C774 356 810 408 762 470 C710 538 640 548 592 510"></path>
+                  <path class="coast gulf" d="M438 452 C505 485 592 493 682 458 C724 442 760 444 802 464"></path>
+                  <path class="coast islands" d="M804 500 C842 510 876 512 912 500"></path>
+                  <path class="route-line road" data-route-path="florida" d="M724 166 C746 252 762 350 744 438 C716 364 698 246 724 166"></path>
+                  <path class="route-line road" data-route-path="bc" d="M724 166 C588 92 384 76 202 128 C248 252 440 306 724 166"></path>
+                  <path class="route-line flight" data-route-path="california" d="M724 166 C560 182 354 234 204 356"></path>
+                  <path class="route-line road" data-route-path="california" d="M204 356 C184 398 224 438 270 414 C312 392 292 334 240 326 C220 328 210 340 204 356"></path>
+                  <path class="route-line flight" data-route-path="hawaii" d="M204 356 C128 420 80 486 70 548"></path>
+                  <path class="route-line road" data-route-path="hawaii" d="M70 548 C92 526 122 530 132 556 C112 580 82 578 70 548"></path>
+                  <path class="route-line flight" data-route-path="costa" d="M70 548 C270 592 470 590 642 548"></path>
+                  <path class="route-line road" data-route-path="costa" d="M642 548 C704 512 766 500 844 512 C812 474 772 454 744 438 C722 482 686 522 642 548"></path>
+                  <path class="route-line flight" data-route-path="costa" d="M744 438 C748 330 742 228 724 166"></path>
+                  <g class="map-points">
+                    <circle cx="724" cy="166" r="7"></circle>
+                    <circle cx="744" cy="438" r="7"></circle>
+                    <circle cx="202" cy="128" r="7"></circle>
+                    <circle cx="204" cy="356" r="7"></circle>
+                    <circle cx="70" cy="548" r="7"></circle>
+                    <circle cx="642" cy="548" r="7"></circle>
+                    <circle cx="844" cy="512" r="7"></circle>
+                  </g>
+                  <g class="map-labels">
+                    <text x="738" y="158">YUL</text>
+                    <text x="758" y="438">Miami / FL</text>
+                    <text x="166" y="114">BC</text>
+                    <text x="168" y="352">California</text>
+                    <text x="88" y="548">Hawaii</text>
+                    <text x="596" y="572">Costa Rica</text>
+                    <text x="854" y="536">Caribbean</text>
+                  </g>
+                </svg>
               </div>
-            </div>
 
-            <form class="assistant-form" id="assistant-form">
-              <label class="sr-only" for="assistant-input">Message pour Jarvis</label>
-              <input
-                id="assistant-input"
-                name="message"
-                type="text"
-                autocomplete="off"
-                placeholder="Demande quelque chose à Jarvis"
-              >
-              <button class="icon-button" type="submit" aria-label="Envoyer">
-                <i data-lucide="send-horizontal" aria-hidden="true"></i>
-              </button>
-            </form>
+              <div class="route-controls" aria-label="Routes">
+                <button type="button" class="is-active" data-route="florida" data-i18n="route.florida.short">Floride</button>
+                <button type="button" data-route="bc" data-i18n="route.bc.short">BC + nord USA</button>
+                <button type="button" data-route="california" data-i18n="route.california.short">Californie</button>
+                <button type="button" data-route="hawaii" data-i18n="route.hawaii.short">Hawaii</button>
+                <button type="button" data-route="costa" data-i18n="route.costa.short">Costa Rica + Caraïbes</button>
+              </div>
+              <div class="route-readout">
+                <strong data-route-title>Floride aller-retour</strong>
+                <p data-route-copy>
+                  Long trajet routier vers la Floride et retour: parfait pour
+                  penser alimentation, réseau mobile, caméra et accès distant.
+                </p>
+              </div>
+            </article>
           </div>
         </div>
       </section>
 
-      <section class="roadmap-section" aria-labelledby="roadmap-title">
+      <section class="process-section" aria-labelledby="process-title">
         <div class="section-inner">
           <div class="section-heading reveal">
-            <p class="section-kicker">Plan</p>
-            <h2 id="roadmap-title">Une base simple, pensée pour grossir.</h2>
+            <p class="section-kicker" data-i18n="process.kicker">Processus</p>
+            <h2 id="process-title" data-i18n="process.title">Une méthode simple en cinq étapes.</h2>
           </div>
 
-          <ol class="timeline" aria-label="Plan du site">
+          <ol class="process-list">
             <li class="reveal">
-              <span>Maintenant</span>
-              <strong>Domaine en ligne</strong>
-              <p>Une page rapide, belle, publique et branchée à GitHub Pages.</p>
+              <span>01</span>
+              <h3 data-i18n="process.step1.title">Clarifier le besoin</h3>
+              <p data-i18n="process.step1.text">Ce qui doit être vu, contrôlé, automatisé ou protégé.</p>
             </li>
             <li class="reveal">
-              <span>Ensuite</span>
-              <strong>Serveur personnel</strong>
-              <p>Déploiement sur Caddy ou nginx, logs, sauvegardes et SSL maison.</p>
+              <span>02</span>
+              <h3 data-i18n="process.step2.title">Cartographier le système</h3>
+              <p data-i18n="process.step2.text">Réseau, appareils, capteurs, permissions et contraintes physiques.</p>
             </li>
             <li class="reveal">
-              <span>Après</span>
-              <strong>Lab Jarvis</strong>
-              <p>Un backend, des permissions et des actions connectées à tes outils.</p>
+              <span>03</span>
+              <h3 data-i18n="process.step3.title">Construire un pilote</h3>
+              <p data-i18n="process.step3.text">Un prototype limité, testable et compréhensible avant de grossir.</p>
             </li>
             <li class="reveal">
-              <span>Plus loin</span>
-              <strong>Dashboard vivant</strong>
-              <p>Automatisation, caméras, notes, projets et état des systèmes.</p>
+              <span>04</span>
+              <h3 data-i18n="process.step4.title">Déployer proprement</h3>
+              <p data-i18n="process.step4.text">Documentation, accès, sauvegardes et interfaces utilisables.</p>
+            </li>
+            <li class="reveal">
+              <span>05</span>
+              <h3 data-i18n="process.step5.title">Améliorer sur le terrain</h3>
+              <p data-i18n="process.step5.text">Ajustements après usage réel, pas seulement après un plan parfait.</p>
             </li>
           </ol>
         </div>
       </section>
 
+      <section id="journal" class="journal-section" aria-labelledby="journal-title">
+        <div class="section-inner journal-layout">
+          <div class="journal-heading reveal">
+            <p class="section-kicker" data-i18n="journal.kicker">Journal technique</p>
+            <h2 id="journal-title" data-i18n="journal.title">
+              Notes ouvertes sur les expériences en cours.
+            </h2>
+            <p data-i18n="journal.text">
+              Pas de fausses études de cas. Le journal sert à documenter les
+              essais, pilotes et décisions techniques au fur et à mesure.
+            </p>
+          </div>
+
+          <div class="journal-list">
+            <article class="journal-item reveal">
+              <span data-i18n="journal.item1.tag">Pilote</span>
+              <h3 data-i18n="journal.item1.title">Ambulance connectée</h3>
+              <p data-i18n="journal.item1.text">
+                Réseau mobile, caméras, dashboard et accès privé dans un véhicule
+                qui doit rester utilisable hors du garage.
+              </p>
+            </article>
+            <article class="journal-item reveal">
+              <span data-i18n="journal.item2.tag">Expérience</span>
+              <h3 data-i18n="journal.item2.title">Vision locale avec Frigate</h3>
+              <p data-i18n="journal.item2.text">
+                Détection locale, zones utiles, alertes propres et stockage
+                maîtrisé pour éviter la dépendance au cloud.
+              </p>
+            </article>
+            <article class="journal-item reveal">
+              <span data-i18n="journal.item3.tag">Infrastructure</span>
+              <h3 data-i18n="journal.item3.title">Serveur privé et VPN</h3>
+              <p data-i18n="journal.item3.text">
+                Héberger des services, exposer le minimum, sauvegarder les données
+                et garder un accès distant clair.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="stack-section" aria-labelledby="stack-title">
+        <div class="section-inner">
+          <div class="section-heading reveal">
+            <p class="section-kicker" data-i18n="stack.kicker">Stack</p>
+            <h2 id="stack-title" data-i18n="stack.title">Technologies possibles selon le projet.</h2>
+            <p data-i18n="stack.text">
+              La stack n'est pas une religion. Elle se choisit selon le budget,
+              la fiabilité requise, la confidentialité et la maintenance.
+            </p>
+          </div>
+
+          <div class="stack-grid reveal" aria-label="Technologies">
+            <span>Home Assistant</span>
+            <span>Frigate</span>
+            <span>Docker</span>
+            <span>Linux</span>
+            <span>MQTT</span>
+            <span>ESPHome</span>
+            <span>Zigbee / Z-Wave</span>
+            <span>WireGuard / Tailscale</span>
+            <span>Caddy / Nginx</span>
+            <span>Proxmox</span>
+            <span>Grafana</span>
+            <span>Local AI</span>
+          </div>
+        </div>
+      </section>
+
       <section id="contact" class="contact-section" aria-labelledby="contact-title">
-        <div class="section-inner contact-grid">
-          <div class="reveal">
-            <p class="section-kicker">Contact</p>
-            <h2 id="contact-title">Simple. Direct. À ton nom.</h2>
+        <div class="section-inner contact-layout">
+          <div class="contact-copy reveal">
+            <p class="section-kicker" data-i18n="contact.kicker">Contact</p>
+            <h2 id="contact-title" data-i18n="contact.title">
+              Un projet pilote ou un système custom?
+            </h2>
+            <p data-i18n="contact.text">
+              Décrivez ce que vous voulez connecter, automatiser ou sécuriser.
+              Le formulaire prépare un courriel; rien n'est envoyé sans votre app de mail.
+            </p>
           </div>
-          <div class="contact-actions reveal">
-            <a class="contact-link" href="mailto:contact@jameslaplume.ca">
-              <i data-lucide="mail" aria-hidden="true"></i>
-              <span>contact@jameslaplume.ca</span>
-            </a>
-            <a class="contact-link" href="https://github.com/JamesLaplume123">
-              <i data-lucide="github" aria-hidden="true"></i>
-              <span>GitHub</span>
-            </a>
-          </div>
+
+          <form class="contact-form reveal" data-contact-form>
+            <label>
+              <span data-i18n="form.name">Nom</span>
+              <input name="name" type="text" autocomplete="name" required>
+            </label>
+            <label>
+              <span data-i18n="form.email">Courriel</span>
+              <input name="email" type="email" autocomplete="email" required>
+            </label>
+            <label>
+              <span data-i18n="form.project">Type de projet</span>
+              <select name="project">
+                <option data-i18n="form.project.home">Maison intelligente</option>
+                <option data-i18n="form.project.camera">Caméras et Frigate</option>
+                <option data-i18n="form.project.server">Serveur privé / VPN</option>
+                <option data-i18n="form.project.mobile">Van, RV ou système mobile</option>
+                <option data-i18n="form.project.other">Autre système custom</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="form.message">Message</span>
+              <textarea name="message" rows="6" required data-i18n-placeholder="form.placeholder" placeholder="Parlez-moi du lieu, des appareils, du problème et du résultat voulu."></textarea>
+            </label>
+            <button class="button button-primary" type="submit">
+              <span data-i18n="form.submit">Préparer le courriel</span>
+              <i data-lucide="send-horizontal" aria-hidden="true"></i>
+            </button>
+            <p class="form-status" data-form-status aria-live="polite"></p>
+          </form>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <span>&copy; <span id="year"></span> James Laplume</span>
-      <a href="#accueil">Retour en haut</a>
+      <span>&copy; <span data-year></span> James Laplume</span>
+      <a href="#accueil" data-i18n="footer.top">Retour en haut</a>
     </footer>
   </body>
 </html>

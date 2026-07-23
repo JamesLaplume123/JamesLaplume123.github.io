@@ -6,26 +6,33 @@
     <title>James Laplume</title>
     <meta
       name="description"
-      content="Site personnel de James Laplume: une présence web nette aujourd'hui, prête pour un laboratoire Jarvis demain."
+      content="Atelier numérique personnel de James Laplume: serveur, automatisation, vision, van tech et laboratoire Jarvis."
     >
-    <meta name="theme-color" content="#080a0a">
+    <meta name="theme-color" content="#050608">
     <meta property="og:title" content="James Laplume">
     <meta
       property="og:description"
-      content="Présence personnelle, projets et laboratoire Jarvis de James Laplume."
+      content="Un atelier personnel pour bâtir Jarvis, connecter les systèmes et mettre les idées en ligne."
     >
     <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/hero-workspace.png">
     <link rel="preload" href="assets/hero-workspace.png" as="image">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+    <script src="script.js" defer></script>
   </head>
   <body>
-    <header class="site-header" aria-label="Navigation principale">
+    <header class="site-header" data-site-header aria-label="Navigation principale">
       <a class="brand" href="#accueil" aria-label="James Laplume, accueil">
-        <span class="brand-mark">JL</span>
-        <span class="brand-name">James Laplume</span>
+        <span class="brand-mark" aria-hidden="true">JL</span>
+        <span class="brand-copy">
+          <span class="brand-name">James Laplume</span>
+          <span class="brand-domain">jameslaplume.ca</span>
+        </span>
       </a>
       <nav class="main-nav" aria-label="Sections">
-        <a href="#projets">Projets</a>
+        <a href="#signal">Signal</a>
+        <a href="#atelier">Atelier</a>
         <a href="#jarvis">Jarvis</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -36,82 +43,123 @@
         <img
           class="hero-image"
           src="assets/hero-workspace.png"
-          alt="Bureau moderne avec ordinateur portable, lumière chaude et paysage hivernal en arrière-plan."
+          alt="Bureau moderne avec ordinateur portable, lumière chaude et paysage de montagne."
         >
-        <div class="hero-shade"></div>
+        <canvas class="signal-canvas" data-signal-canvas aria-hidden="true"></canvas>
+        <div class="hero-shade" aria-hidden="true"></div>
+
         <div class="hero-content">
-          <p class="eyebrow">jameslaplume.ca</p>
-          <h1 id="hero-title">James Laplume.</h1>
+          <p class="eyebrow">Atelier numérique personnel</p>
+          <h1 id="hero-title">James Laplume</h1>
           <p class="hero-copy">
-            Un site personnel net, calme et évolutif. D'abord une présence en
-            ligne. Ensuite, un vrai espace pour les projets, le serveur et
-            Jarvis.
+            Un point d'ancrage pour mes projets: serveur maison, automatisation,
+            vision, van tech et un futur Jarvis capable d'aider pour vrai.
           </p>
+
           <div class="hero-actions" aria-label="Actions principales">
-            <a class="button button-primary" href="#projets">
-              <span>Explorer</span>
-              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                <path d="M5 12h14"></path>
-                <path d="m13 6 6 6-6 6"></path>
-              </svg>
+            <a class="button button-primary" href="#jarvis">
+              <span>Voir Jarvis</span>
+              <i data-lucide="arrow-right" aria-hidden="true"></i>
             </a>
-            <a class="button button-ghost" href="#contact">Me joindre</a>
+            <a class="button button-ghost" href="#atelier">
+              <span>L'atelier</span>
+              <i data-lucide="cpu" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <aside class="hero-panel" aria-label="État du site">
+          <div class="panel-header">
+            <span class="pulse" aria-hidden="true"></span>
+            <span>Live stack</span>
+          </div>
+          <dl class="stack-list">
+            <div>
+              <dt>Domaine</dt>
+              <dd>jameslaplume.ca</dd>
+            </div>
+            <div>
+              <dt>Hébergement</dt>
+              <dd>GitHub Pages</dd>
+            </div>
+            <div>
+              <dt>DNS</dt>
+              <dd>WHC</dd>
+            </div>
+            <div>
+              <dt>Phase</dt>
+              <dd>Base publique</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+
+      <section id="signal" class="signal-section" aria-labelledby="signal-title">
+        <div class="section-inner signal-grid">
+          <div class="section-heading reveal">
+            <p class="section-kicker">Signal</p>
+            <h2 id="signal-title">Pas un portfolio propre-propre. Un cockpit.</h2>
+          </div>
+          <div class="statement-copy reveal">
+            <p>
+              Le site commence simple, mais l'intention est claire: un espace
+              qui peut devenir tableau de bord, carnet technique, vitrine de
+              projets et porte d'entrée vers un assistant personnel.
+            </p>
+            <p>
+              Ce n'est pas une page figée. C'est la première couche d'un système
+              qui pourra vivre sur GitHub aujourd'hui, puis sur ton propre serveur
+              quand tu voudras prendre le volant au complet.
+            </p>
           </div>
         </div>
       </section>
 
-      <section class="statement-section" aria-labelledby="statement-title">
+      <section id="atelier" class="atelier-section" aria-labelledby="atelier-title">
         <div class="section-inner">
-          <p class="section-kicker">La base</p>
-          <h2 id="statement-title">
-            Simple aujourd'hui. Capable de grandir demain.
-          </h2>
-          <p class="statement-copy">
-            On commence avec un site rapide à publier sur GitHub Pages et facile
-            à brancher à ton domaine chez WHC. Quand tu seras prêt, le même site
-            pourra être servi par ton propre serveur.
-          </p>
-        </div>
-      </section>
-
-      <section id="projets" class="showcase-section" aria-labelledby="projects-title">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="section-kicker">Présence</p>
-            <h2 id="projects-title">Un espace qui ne se contente pas d'exister.</h2>
+          <div class="section-heading wide reveal">
+            <p class="section-kicker">Atelier</p>
+            <h2 id="atelier-title">Les terrains de jeu qui vont remplir ce domaine.</h2>
           </div>
 
-          <div class="showcase-list">
-            <article class="showcase-item">
-              <div>
-                <span class="showcase-number">01</span>
-                <h3>Vitrine personnelle</h3>
-              </div>
+          <div class="focus-grid">
+            <article class="focus-card reveal">
+              <span class="focus-index">01</span>
+              <i data-lucide="server" aria-hidden="true"></i>
+              <h3>Serveur privé</h3>
               <p>
-                Une page claire pour présenter ton nom, ton domaine, ton contact
-                et ce que tu veux montrer au monde.
+                Hébergement, DNS, sauvegardes, services maison et une base solide
+                pour reprendre le contrôle de ce qui roule chez toi.
               </p>
             </article>
 
-            <article class="showcase-item">
-              <div>
-                <span class="showcase-number">02</span>
-                <h3>Projets et idées</h3>
-              </div>
+            <article class="focus-card reveal">
+              <span class="focus-index">02</span>
+              <i data-lucide="home" aria-hidden="true"></i>
+              <h3>Automatisation</h3>
               <p>
-                Une structure prête pour ajouter des réalisations, des notes,
-                des essais techniques ou des pages séparées.
+                Scénarios, capteurs, interfaces et routines utiles. Pas de gadget
+                gratuit: des systèmes qui rendent la journée plus fluide.
               </p>
             </article>
 
-            <article class="showcase-item">
-              <div>
-                <span class="showcase-number">03</span>
-                <h3>Serveur plus tard</h3>
-              </div>
+            <article class="focus-card reveal">
+              <span class="focus-index">03</span>
+              <i data-lucide="camera" aria-hidden="true"></i>
+              <h3>Vision et sécurité</h3>
               <p>
-                Pas besoin de complexité au départ. La base reste portable vers
-                Caddy, nginx ou un backend complet quand le moment viendra.
+                Caméras, surveillance locale, Frigate, flux vidéo, alertes et
+                visibilité claire sur ce qui compte.
+              </p>
+            </article>
+
+            <article class="focus-card reveal">
+              <span class="focus-index">04</span>
+              <i data-lucide="route" aria-hidden="true"></i>
+              <h3>Van tech</h3>
+              <p>
+                Idées mobiles, énergie, réseau, caméras et contrôle embarqué.
+                L'atelier peut suivre la route.
               </p>
             </article>
           </div>
@@ -120,28 +168,43 @@
 
       <section id="jarvis" class="jarvis-section" aria-labelledby="jarvis-title">
         <div class="section-inner jarvis-grid">
-          <div class="jarvis-copy">
-            <p class="section-kicker">Laboratoire Jarvis</p>
-            <h2 id="jarvis-title">Une porte ouverte pour ton assistant personnel.</h2>
+          <div class="jarvis-copy reveal">
+            <p class="section-kicker">Jarvis</p>
+            <h2 id="jarvis-title">Pas juste un chatbot. Un futur centre de commande.</h2>
             <p>
-              Aujourd'hui, c'est une interface de démonstration. Plus tard, on
-              pourra lui donner un backend, une mémoire, des permissions et des
-              connexions à tes outils.
+              La première version reste volontairement légère. La suite peut
+              brancher des API, une mémoire privée, des automatisations, des
+              caméras, des notes et un vrai backend sur ton serveur.
             </p>
           </div>
 
-          <div class="assistant-panel" aria-label="Aperçu du laboratoire Jarvis">
+          <div class="assistant-panel reveal" aria-label="Prototype Jarvis">
             <div class="assistant-topbar">
-              <span class="status-line" aria-hidden="true"></span>
-              <span>Prototype local</span>
+              <div class="traffic" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <span>JARVIS / preview</span>
+              <span class="topbar-time" data-clock>--:--</span>
             </div>
-            <div class="assistant-log" id="assistant-log" aria-live="polite">
-              <p>
-                <strong>Jarvis</strong>
-                Base prête. Prochaine étape: connecter un vrai backend quand le
-                site devra agir, lire des données ou automatiser des tâches.
-              </p>
+
+            <div class="assistant-screen">
+              <div class="assistant-log" id="assistant-log" aria-live="polite">
+                <p>
+                  <strong>Jarvis</strong>
+                  Je suis la coquille publique pour l'instant. Donne-moi un serveur,
+                  une mémoire et des permissions, puis je deviens utile.
+                </p>
+              </div>
+
+              <div class="command-row" aria-label="Commandes rapides">
+                <button type="button" data-command="serveur">Serveur</button>
+                <button type="button" data-command="vision">Vision</button>
+                <button type="button" data-command="roadmap">Roadmap</button>
+              </div>
             </div>
+
             <form class="assistant-form" id="assistant-form">
               <label class="sr-only" for="assistant-input">Message pour Jarvis</label>
               <input
@@ -149,45 +212,62 @@
                 name="message"
                 type="text"
                 autocomplete="off"
-                placeholder="Ex: prépare mon prochain projet"
+                placeholder="Demande quelque chose à Jarvis"
               >
               <button class="icon-button" type="submit" aria-label="Envoyer">
-                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                  <path d="M5 12h12"></path>
-                  <path d="m12 7 5 5-5 5"></path>
-                </svg>
+                <i data-lucide="send-horizontal" aria-hidden="true"></i>
               </button>
             </form>
           </div>
         </div>
       </section>
 
-      <section class="deploy-section" aria-labelledby="deploy-title">
-        <div class="section-inner deploy-grid">
-          <div>
-            <p class="section-kicker">Mise en ligne</p>
-            <h2 id="deploy-title">GitHub d'abord. WHC pour le domaine.</h2>
+      <section class="roadmap-section" aria-labelledby="roadmap-title">
+        <div class="section-inner">
+          <div class="section-heading reveal">
+            <p class="section-kicker">Plan</p>
+            <h2 id="roadmap-title">Une base simple, pensée pour grossir.</h2>
           </div>
-          <div class="deploy-steps" aria-label="Étapes de déploiement">
-            <p><span>1</span> Publier les fichiers sur GitHub.</p>
-            <p><span>2</span> Activer GitHub Pages.</p>
-            <p><span>3</span> Pointer jameslaplume.ca dans WHC.</p>
-          </div>
+
+          <ol class="timeline" aria-label="Plan du site">
+            <li class="reveal">
+              <span>Maintenant</span>
+              <strong>Domaine en ligne</strong>
+              <p>Une page rapide, belle, publique et branchée à GitHub Pages.</p>
+            </li>
+            <li class="reveal">
+              <span>Ensuite</span>
+              <strong>Serveur personnel</strong>
+              <p>Déploiement sur Caddy ou nginx, logs, sauvegardes et SSL maison.</p>
+            </li>
+            <li class="reveal">
+              <span>Après</span>
+              <strong>Lab Jarvis</strong>
+              <p>Un backend, des permissions et des actions connectées à tes outils.</p>
+            </li>
+            <li class="reveal">
+              <span>Plus loin</span>
+              <strong>Dashboard vivant</strong>
+              <p>Automatisation, caméras, notes, projets et état des systèmes.</p>
+            </li>
+          </ol>
         </div>
       </section>
 
       <section id="contact" class="contact-section" aria-labelledby="contact-title">
         <div class="section-inner contact-grid">
-          <div>
+          <div class="reveal">
             <p class="section-kicker">Contact</p>
-            <h2 id="contact-title">On garde le lien simple.</h2>
+            <h2 id="contact-title">Simple. Direct. À ton nom.</h2>
           </div>
-          <div class="contact-actions">
+          <div class="contact-actions reveal">
             <a class="contact-link" href="mailto:contact@jameslaplume.ca">
-              contact@jameslaplume.ca
+              <i data-lucide="mail" aria-hidden="true"></i>
+              <span>contact@jameslaplume.ca</span>
             </a>
             <a class="contact-link" href="https://github.com/JamesLaplume123">
-              github.com/JamesLaplume123
+              <i data-lucide="github" aria-hidden="true"></i>
+              <span>GitHub</span>
             </a>
           </div>
         </div>
@@ -198,7 +278,5 @@
       <span>&copy; <span id="year"></span> James Laplume</span>
       <a href="#accueil">Retour en haut</a>
     </footer>
-
-    <script src="script.js"></script>
   </body>
 </html>

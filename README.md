@@ -1,27 +1,32 @@
 # jameslaplume.ca
 
-Première version statique du site personnel de James Laplume.
+Site personnel premium de James Laplume.
+
+Cette version sert de base publique pour le domaine `jameslaplume.ca`: une page
+rapide, statique, prête pour GitHub Pages, avec une direction visuelle plus
+haut de gamme et une première interface de laboratoire Jarvis.
 
 ## Structure
 
 - `index.html`: contenu de la page
-- `styles.css`: apparence du site
-- `script.js`: petite interaction du panneau Jarvis
+- `styles.css`: direction visuelle, responsive et animations
+- `script.js`: interactions du panneau Jarvis, horloge, animations et canvas
 - `assets/hero-workspace.png`: image principale
 - `CNAME`: domaine personnalisé pour GitHub Pages
 
-## Publier avec GitHub Pages
+## Direction
 
-1. Créer un dépôt GitHub public nommé `jameslaplume.ca` ou `JamesLaplume123.github.io`.
-2. Ajouter tous les fichiers de ce dossier à la racine du dépôt.
-3. Aller dans `Settings` > `Pages`.
-4. Choisir `Deploy from a branch`, branche `main`, dossier `/root`.
-5. Dans `Custom domain`, entrer `jameslaplume.ca`.
-6. Dans WHC, configurer les DNS pour GitHub Pages.
+Le site présente James comme un atelier numérique personnel:
+
+- serveur privé
+- automatisation
+- vision, caméras et sécurité locale
+- van tech
+- futur assistant Jarvis
 
 ## DNS WHC pour GitHub Pages
 
-Ajouter quatre enregistrements `A` pour le domaine racine:
+Le domaine racine utilise les quatre adresses `A` officielles de GitHub Pages:
 
 ```text
 @ -> 185.199.108.153
@@ -30,21 +35,21 @@ Ajouter quatre enregistrements `A` pour le domaine racine:
 @ -> 185.199.111.153
 ```
 
-Ajouter aussi le sous-domaine `www`:
+Le sous-domaine `www` pointe vers GitHub Pages:
 
 ```text
 www -> CNAME -> JamesLaplume123.github.io
 ```
 
-Quand GitHub confirme le domaine, activer `Enforce HTTPS`.
-
-## Plus tard sur ton serveur
-
-Ce site peut être servi tel quel avec Caddy ou nginx. Exemple de dossier:
+Le courriel reste isolé du site:
 
 ```text
-/var/www/jameslaplume.ca
+mail -> A -> 54.39.226.237
+@ -> MX -> mail.jameslaplume.ca.
 ```
 
-Le futur assistant Jarvis demandera un backend séparé pour gérer les appels API,
-les données privées, les permissions et les automatisations.
+## Plus tard
+
+Quand Jarvis devient une vraie application, migrer vers une structure React ou
+un backend privé sera logique. Pour l'instant, la page reste volontairement
+statique pour charger vite et se déployer simplement sur GitHub Pages.

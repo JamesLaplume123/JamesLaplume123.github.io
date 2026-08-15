@@ -90,7 +90,7 @@
     if (isEnglish || !document.querySelector(".home-hero")) return;
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = "/battery-live.css";
+    stylesheet.href = "/battery-live.css?v=20260815b";
     document.head.appendChild(stylesheet);
 
     const section = document.createElement("section");

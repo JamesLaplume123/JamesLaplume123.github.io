@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-15T00:45:54-04:00",
+  "updatedAt": "2026-08-15T01:20:51.3086082-04:00",
   "gateway": "Waveshare ESP32 · Bluetooth connecté",
   "batteries": [
     {
@@ -7,13 +7,20 @@
       "model": "DP04S007L4S200A · LiFePO₄ 4S · 200 A",
       "connected": true,
       "soc": 100,
-      "voltage": 13.43,
+      "capacityAh": 280,
+      "remainingAh": 280,
+      "voltage": 14.26,
       "current": 0,
       "power": 0,
-      "temperature": 19.5,
-      "energy": 3757.043,
-      "cellDelta": 0.005,
+      "temperature": 19.7,
+      "energy": 3992.8,
+      "highestCell": 3.578,
+      "lowestCell": 3.555,
+      "cellDelta": 0.023,
       "cycles": 0,
+      "balancing": true,
+      "chargingAllowed": true,
+      "dischargingAllowed": true,
       "alarm": false
     },
     {
@@ -21,14 +28,21 @@
       "model": "DP04S007L4S200A · LiFePO₄ 4S · 200 A",
       "connected": true,
       "soc": 100,
-      "voltage": 13.42,
+      "capacityAh": 280,
+      "remainingAh": 280,
+      "voltage": 13.83,
       "current": 0,
       "power": 0,
-      "temperature": 20.3,
-      "energy": 3749.548,
-      "cellDelta": 0.037,
+      "temperature": 20.4,
+      "energy": 3872.4,
+      "highestCell": 3.523,
+      "lowestCell": 3.419,
+      "cellDelta": 0.104,
       "cycles": 1,
-      "alarm": false
+      "balancing": true,
+      "chargingAllowed": false,
+      "dischargingAllowed": true,
+      "alarm": true
     }
   ]
 }

@@ -90,7 +90,7 @@
     if (isEnglish || !document.querySelector(".home-hero")) return;
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = "/battery-live.css?v=20260815b";
+    stylesheet.href = "/battery-live.css?v=20260815c";
     document.head.appendChild(stylesheet);
 
     const section = document.createElement("section");
@@ -102,9 +102,24 @@
     const metric = (value, unit) => value == null ? "En attente" : `${Number(value).toLocaleString("fr-CA", { maximumFractionDigits: 3 })} ${unit}`;
     const millivolts = (value) => value == null ? "En attente" : `${Math.round(value * 1000)} mV`;
     try {
-      const response = await fetch("/data/battery-status.json", { cache: "no-store" });
-      if (!response.ok) throw new Error("battery telemetry unavailable");
-      const status = await response.json();
+      const telemetrySources = [
+        async () => {
+          const response = await fetch("https://api.github.com/gists/073aeffc14e94afa3a516de6db8cd411", { cache: "no-store" });
+          if (!response.ok) throw new Error("public telemetry unavailable");
+          const gist = await response.json();
+          return JSON.parse(gist.files["battery-status.json"].content);
+        },
+        async () => {
+          const response = await fetch("/data/battery-status.json", { cache: "no-store" });
+          if (!response.ok) throw new Error("battery telemetry fallback unavailable");
+          return response.json();
+        }
+      ];
+      let status;
+      for (const load of telemetrySources) {
+        try { status = await load(); break; } catch (error) { /* Try the safe local snapshot. */ }
+      }
+      if (!status) throw new Error("battery telemetry unavailable");
       section.querySelector("[data-battery-gateway]").textContent = status.gateway;
       section.querySelector("[data-battery-updated]").textContent = status.updatedAt ? `Dernière lecture : ${new Date(status.updatedAt).toLocaleString("fr-CA")}` : "Télémétrie en initialisation";
       grid.innerHTML = status.batteries.map((battery, index) => `<article class="battery-live-card"><header><div><span>Batterie ${index + 1}</span><h3>${battery.name}</h3></div><em class="battery-state ${battery.alarm ? "alarm" : battery.connected ? "online" : ""}">${battery.alarm ? "Alerte" : battery.connected ? "En ligne" : "Détectée"}</em></header><div class="battery-soc" style="--soc:${Number(battery.soc || 0)}%"><strong>${metric(battery.soc, "%")}</strong><span><i></i></span></div><dl class="battery-metrics"><div><dt>Tension</dt><dd>${metric(battery.voltage, "V")}</dd></div><div><dt>Courant</dt><dd>${metric(battery.current, "A")}</dd></div><div><dt>Puissance</dt><dd>${metric(battery.power, "W")}</dd></div><div><dt>Température</dt><dd>${metric(battery.temperature, "°C")}</dd></div><div><dt>Énergie stockée</dt><dd>${metric(battery.energy, "Wh")}</dd></div><div><dt>Écart cellules</dt><dd>${millivolts(battery.cellDelta)}</dd></div></dl><p>${battery.model} · ${battery.cycles ?? "—"} cycle${battery.cycles === 1 ? "" : "s"}</p></article>`).join("");

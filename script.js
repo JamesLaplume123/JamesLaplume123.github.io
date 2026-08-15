@@ -603,6 +603,50 @@
     });
   };
 
+  const initBatteryStatus = async () => {
+    const grid = qs("[data-battery-grid]");
+    if (!grid) return;
+
+    const formatMetric = (value, unit) =>
+      value === null || value === undefined ? "En attente" : `${escapeHTML(value)}${unit ? ` ${unit}` : ""}`;
+
+    try {
+      const response = await fetch("data/battery-status.json", { cache: "no-store" });
+      if (!response.ok) throw new Error("battery status unavailable");
+      const status = await response.json();
+      qs("[data-battery-system]").textContent = status.gateway?.label || "Passerelle Bluetooth connectée";
+      qs("[data-battery-updated]").textContent = status.updatedAt
+        ? `Dernière lecture : ${new Date(status.updatedAt).toLocaleString("fr-CA")}`
+        : "Télémétrie en initialisation";
+      grid.innerHTML = status.batteries.map((battery, index) => `
+        <article class="battery-card">
+          <div class="battery-card-head">
+            <div>
+              <span>Batterie ${index + 1}</span>
+              <h3>${escapeHTML(battery.name)}</h3>
+            </div>
+            <span class="battery-state ${battery.connected ? "is-online" : ""}">
+              ${battery.connected ? "En ligne" : "Détectée"}
+            </span>
+          </div>
+          <div class="battery-charge" style="--charge:${Number(battery.soc || 0)}%">
+            <strong>${formatMetric(battery.soc, "%")}</strong>
+            <span><i></i></span>
+          </div>
+          <dl class="battery-metrics">
+            <div><dt>Tension</dt><dd>${formatMetric(battery.voltage, "V")}</dd></div>
+            <div><dt>Courant</dt><dd>${formatMetric(battery.current, "A")}</dd></div>
+            <div><dt>Puissance</dt><dd>${formatMetric(battery.power, "W")}</dd></div>
+            <div><dt>Température</dt><dd>${formatMetric(battery.temperature, "°C")}</dd></div>
+          </dl>
+          <p>${escapeHTML(battery.model)}</p>
+        </article>
+      `).join("");
+    } catch (error) {
+      grid.innerHTML = '<p class="battery-error">Les batteries sont détectées; la publication des mesures est en cours de branchement.</p>';
+    }
+  };
+
   const run = () => {
     initHeader();
     renderServices();
@@ -621,6 +665,7 @@
     renderStack();
     renderProjects();
     renderRoadmap();
+    initBatteryStatus();
     initContactForm();
     refreshIcons();
     initReveal();

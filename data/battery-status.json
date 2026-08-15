@@ -1,0 +1,28 @@
+{
+  "updatedAt": null,
+  "gateway": {
+    "label": "Waveshare ESP32 · Bluetooth connecté"
+  },
+  "batteries": [
+    {
+      "name": "BMS JBD · A",
+      "model": "DP04S007L4S200A · LiFePO₄ 4S · 200 A",
+      "connected": false,
+      "soc": null,
+      "voltage": null,
+      "current": null,
+      "power": null,
+      "temperature": null
+    },
+    {
+      "name": "BMS JBD · B",
+      "model": "DP04S007L4S200A · LiFePO₄ 4S · 200 A",
+      "connected": false,
+      "soc": null,
+      "voltage": null,
+      "current": null,
+      "power": null,
+      "temperature": null
+    }
+  ]
+}

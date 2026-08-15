@@ -386,6 +386,32 @@
         </div>
       </section>
 
+      <section class="section battery-live-section" id="batteries">
+        <div class="section-shell">
+          <div class="section-heading narrow reveal">
+            <p class="eyebrow">Mobile Lab · premier système réel</p>
+            <h2>Deux batteries. Une vue claire.</h2>
+            <p>
+              Les BMS JBD du véhicule sont détectés en Bluetooth par une passerelle Waveshare ESP32
+              et préparés pour une télémétrie publique limitée, sans exposer le réseau privé.
+            </p>
+          </div>
+
+          <div class="battery-overview reveal" data-battery-overview>
+            <div class="battery-system-bar">
+              <span class="live-dot" aria-hidden="true"></span>
+              <strong data-battery-system>Passerelle Bluetooth connectée</strong>
+              <span data-battery-updated>Télémétrie en initialisation</span>
+            </div>
+            <div class="battery-grid" data-battery-grid aria-live="polite"></div>
+            <p class="battery-privacy">
+              Données publiques prévues : charge, tension, courant et température. Aucun contrôle,
+              identifiant Bluetooth, jeton Home Assistant ou adresse privée n'est publié.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section class="section route-atlas-section">
         <div class="section-shell route-layout">
           <div class="section-heading reveal">

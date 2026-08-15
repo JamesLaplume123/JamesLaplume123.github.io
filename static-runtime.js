@@ -89,8 +89,49 @@
   }));
   if (systemButtons[0]?.getAttribute("aria-selected") === "true") renderSystemDetail(systems[isEnglish ? "en" : "fr"][0]);
 
+  const builder = document.querySelector(".builder-preview");
+  if (builder) {
+    const choiceGroups = [...builder.querySelectorAll(".choice-row")];
+    const profileButtons = [...(choiceGroups[0]?.querySelectorAll("button") || [])];
+    const voltageButtons = [...(choiceGroups[1]?.querySelectorAll("button") || [])];
+    const smartButton = builder.querySelector(".smart-toggle");
+    let profile = 1;
+    let voltage = "12";
+    let smart = true;
+    const profileNames = isEnglish ? ["Weekends", "Off-grid", "Expedition"] : ["Escapades", "Autonomie", "Expédition"];
+    const outputs = [
+      { solar: 400, storage12: "200 Ah", storage24: "100 Ah", circuits: 8, autonomy: isEnglish ? "1–2 days" : "1–2 jours" },
+      { solar: 800, storage12: "400 Ah", storage24: "200 Ah", circuits: 12, autonomy: isEnglish ? "2–3 days" : "2–3 jours" },
+      { solar: 1200, storage12: "600 Ah", storage24: "300 Ah", circuits: 16, autonomy: isEnglish ? "3–4 days" : "3–4 jours" },
+    ];
+    const renderBuilder = () => {
+      const result = outputs[profile];
+      const storage = voltage === "12" ? result.storage12 : result.storage24;
+      profileButtons.forEach((button, index) => button.classList.toggle("active", index === profile));
+      voltageButtons.forEach((button) => button.classList.toggle("active", button.textContent.trim().startsWith(voltage)));
+      smartButton?.classList.toggle("active", smart);
+      smartButton?.setAttribute("aria-pressed", String(smart));
+      const smartText = smartButton?.lastChild;
+      if (smartText) smartText.textContent = smart ? (isEnglish ? "Included" : "Inclus") : (isEnglish ? "Later" : "Plus tard");
+      const outputTitle = builder.querySelector(".builder-output > header b");
+      if (outputTitle) outputTitle.textContent = profileNames[profile] + " · " + voltage + " V";
+      const nodes = builder.querySelectorAll(".builder-schematic > div");
+      if (nodes[0]) nodes[0].querySelector("b").textContent = result.solar + " W";
+      if (nodes[2]) { nodes[2].querySelector("span").textContent = voltage + " V"; nodes[2].querySelector("b").textContent = storage; }
+      if (nodes[3]) nodes[3].querySelector("b").textContent = result.circuits + " circuits";
+      if (nodes[4]) nodes[4].style.visibility = smart ? "visible" : "hidden";
+      const metrics = builder.querySelectorAll(".builder-metrics b");
+      if (metrics[0]) metrics[0].textContent = result.solar + " W";
+      if (metrics[1]) metrics[1].textContent = storage;
+      if (metrics[2]) metrics[2].textContent = result.autonomy;
+    };
+    profileButtons.forEach((button, index) => button.addEventListener("click", () => { profile = index; renderBuilder(); }));
+    voltageButtons.forEach((button) => button.addEventListener("click", () => { voltage = button.textContent.trim().startsWith("24") ? "24" : "12"; renderBuilder(); }));
+    smartButton?.addEventListener("click", () => { smart = !smart; renderBuilder(); });
+  }
+
   const initBatteryTelemetry = async () => {
-    const isHome = Boolean(document.querySelector(".home-hero"));
+    const isHome = Boolean(document.querySelector(".home-hero, .ecosystem-hero"));
     const isAmbulanceLab = Boolean(document.querySelector(".ambulance-hero"));
     if (!isHome && !isAmbulanceLab) return;
     const locale = isEnglish ? "en-CA" : "fr-CA";
@@ -242,7 +283,7 @@
     event.preventDefault();
     if (!form.reportValidity()) return;
     const data = new FormData(form);
-    const subject = isEnglish ? "JARVIS Twin pilot application" : "Candidature pilote JARVIS Twin";
+    const subject = isEnglish ? "JARVIS project request" : "Demande de projet JARVIS";
     const labels = isEnglish
       ? { name: "Name", organization: "Organization", email: "Email", environmentType: "Environment", currentProblem: "Current problem", systemsInstalled: "Installed systems", desiredOutcome: "Desired outcome" }
       : { name: "Nom", organization: "Organisation", email: "Courriel", environmentType: "Environnement", currentProblem: "Problème actuel", systemsInstalled: "Systèmes installés", desiredOutcome: "Résultat recherché" };

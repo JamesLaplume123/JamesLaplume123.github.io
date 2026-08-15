@@ -49,7 +49,7 @@
 
   const systems = {
     fr: [
-      ["Énergie", "Solaire, batteries, alternateur et charges deviennent un seul système observable.", "Tension · courant · état de charge · production · alarmes"],
+      ["Énergie", "Deux batteries LiFePO₄ de 280 Ah sont déjà instrumentées et supervisées en lecture seule.", "560 Ah agrégés · tension · courant · cellules · équilibrage · alarmes BMS"],
       ["Caméras", "L’état des flux et du stockage est relié aux événements et aux autres dépendances.", "Disponibilité · détection · stockage · événements"],
       ["Sécurité", "Les portes, caméras et accès locaux sont documentés sans exposer le véhicule sur Internet.", "Accès · zones · événements · historique"],
       ["Climat", "Chauffage, ventilation et température sont compris avec leur consommation et leur contexte.", "Consigne · température · état · consommation"],
@@ -58,7 +58,7 @@
       ["Twin", "Le futur jumeau numérique reliera les dépendances, la chronologie et les réparations confirmées.", "Concept · prototype · développement planifié"],
     ],
     en: [
-      ["Energy", "Solar, batteries, alternator, and loads become one observable system.", "Voltage · current · state of charge · production · alerts"],
+      ["Energy", "Two 280 Ah LiFePO₄ batteries are already instrumented and monitored read-only.", "560 Ah aggregate · voltage · current · cells · balancing · BMS alerts"],
       ["Cameras", "Stream and storage health connect to events and the surrounding dependencies.", "Availability · detection · storage · events"],
       ["Security", "Doors, cameras, and local access are documented without exposing the vehicle to the Internet.", "Access · zones · events · history"],
       ["Climate", "Heating, ventilation, and temperature are understood with consumption and context.", "Setpoint · temperature · state · consumption"],
@@ -70,40 +70,128 @@
 
   const systemButtons = [...document.querySelectorAll(".systems-nav button")];
   const systemDetail = document.querySelector(".system-detail");
+  const renderSystemDetail = (item) => {
+    if (!systemDetail || !item) return;
+    const title = systemDetail.querySelector("h3");
+    const copy = systemDetail.querySelector("p");
+    const details = systemDetail.querySelector("small");
+    if (title) title.textContent = item[0];
+    if (copy) copy.textContent = item[1];
+    if (details) details.textContent = item[2];
+  };
   systemButtons.forEach((button, index) => button.addEventListener("click", () => {
     const item = systems[isEnglish ? "en" : "fr"][index];
     systemButtons.forEach((candidate, candidateIndex) => {
       candidate.classList.toggle("active", candidateIndex === index);
       candidate.setAttribute("aria-selected", String(candidateIndex === index));
     });
-    if (systemDetail) {
-      const title = systemDetail.querySelector("h3");
-      const copy = systemDetail.querySelector("p");
-      const details = systemDetail.querySelector("small");
-      if (title) title.textContent = item[0];
-      if (copy) copy.textContent = item[1];
-      if (details) details.textContent = item[2];
-    }
+    renderSystemDetail(item);
   }));
+  if (systemButtons[0]?.getAttribute("aria-selected") === "true") renderSystemDetail(systems[isEnglish ? "en" : "fr"][0]);
 
   const initBatteryTelemetry = async () => {
-    if (isEnglish || !document.querySelector(".home-hero")) return;
+    const isHome = Boolean(document.querySelector(".home-hero"));
+    const isAmbulanceLab = Boolean(document.querySelector(".ambulance-hero"));
+    if (!isHome && !isAmbulanceLab) return;
+    const locale = isEnglish ? "en-CA" : "fr-CA";
+    const copy = isEnglish
+      ? {
+          kicker: "Operational proof",
+          heading: "Live energy capacity.",
+          intro: isAmbulanceLab
+            ? "The Ambulance Lab energy system now publishes a safe, read-only view of both LiFePO₄ batteries."
+            : "Two LiFePO₄ batteries and their JBD BMS units are monitored live through the Waveshare Bluetooth gateway.",
+          gateway: "Waveshare ESP32 · Bluetooth connected",
+          initializing: "Telemetry initializing",
+          calculating: "Calculating available capacity…",
+          privacy: "Capacity, electrical measurements, temperature, cell health and BMS permissions only. No Home Assistant token, private address, control or Bluetooth identifier is published.",
+          waiting: "Pending",
+          updated: "Last reading",
+          available: "available",
+          battery: "Battery",
+          charge: "State of charge",
+          capacity: "Available capacity",
+          nominal: "nominal",
+          voltage: "Voltage",
+          current: "Current",
+          power: "Power",
+          temperature: "Temperature",
+          energy: "Stored energy",
+          cells: "Cell range",
+          balancing: "Balancing active",
+          stable: "Cells stable",
+          chargeAllowed: "Charge enabled",
+          chargeProtected: "Charge protected",
+          dischargeAllowed: "Discharge enabled",
+          dischargeProtected: "Discharge protected",
+          cycle: "cycle",
+          cycles: "cycles",
+          alarm: "BMS alert",
+          alarms: "BMS alerts",
+          healthy: "BMS healthy",
+          online: "Online",
+          detected: "Detected",
+          charging: "Charging",
+          inService: "In service",
+          error: "The batteries are detected; the public telemetry feed is temporarily unavailable."
+        }
+      : {
+          kicker: "Preuve opérationnelle",
+          heading: "Capacité énergétique en direct.",
+          intro: isAmbulanceLab
+            ? "Le système énergétique de l’Ambulance Lab publie maintenant une vue sécurisée et en lecture seule des deux batteries LiFePO₄."
+            : "Deux batteries LiFePO₄ et leurs BMS JBD sont suivis en direct par la passerelle Bluetooth Waveshare.",
+          gateway: "Waveshare ESP32 · Bluetooth connecté",
+          initializing: "Télémétrie en initialisation",
+          calculating: "Calcul de la capacité disponible…",
+          privacy: "Capacité, mesures électriques, température, santé des cellules et permissions BMS seulement. Aucun jeton Home Assistant, adresse privée, contrôle ou identifiant Bluetooth n’est publié.",
+          waiting: "En attente",
+          updated: "Dernière lecture",
+          available: "disponibles",
+          battery: "Batterie",
+          charge: "État de charge",
+          capacity: "Capacité disponible",
+          nominal: "nominaux",
+          voltage: "Tension",
+          current: "Courant",
+          power: "Puissance",
+          temperature: "Température",
+          energy: "Énergie stockée",
+          cells: "Plage des cellules",
+          balancing: "Équilibrage actif",
+          stable: "Cellules stables",
+          chargeAllowed: "Recharge autorisée",
+          chargeProtected: "Recharge protégée",
+          dischargeAllowed: "Décharge autorisée",
+          dischargeProtected: "Décharge protégée",
+          cycle: "cycle",
+          cycles: "cycles",
+          alarm: "alerte BMS",
+          alarms: "alertes BMS",
+          healthy: "BMS sains",
+          online: "En ligne",
+          detected: "Détectée",
+          charging: "En charge",
+          inService: "En service",
+          error: "Les batteries sont détectées; la télémétrie publique est temporairement indisponible."
+        };
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = "/battery-live.css?v=20260815d";
+    stylesheet.href = "/battery-live.css?v=20260815e";
     document.head.appendChild(stylesheet);
 
     const section = document.createElement("section");
     section.className = "battery-live-section";
     section.id = "batteries";
-    section.innerHTML = `<div class="battery-live-heading"><p class="section-label">Système énergétique réel</p><h2>560 Ah sous surveillance.</h2><p>Deux batteries LiFePO₄ et leurs BMS JBD sont suivis en direct par JARVIS Twin via la passerelle Bluetooth Waveshare.</p></div><div class="battery-system-bar"><div class="battery-system-identity"><i aria-hidden="true"></i><span><b data-battery-gateway>Waveshare ESP32 · Bluetooth connecté</b><small data-battery-updated>Télémétrie en initialisation</small></span></div><strong data-battery-summary>Calcul de la capacité disponible…</strong></div><div class="battery-live-grid" data-battery-grid aria-live="polite"></div><p class="battery-privacy">Capacité en Ah, mesures électriques, température et santé des cellules seulement. Aucun jeton Home Assistant, adresse privée, contrôle ou identifiant Bluetooth n’est publié.</p>`;
-    document.querySelector(".services-preview")?.before(section);
+    section.innerHTML = `<div class="battery-live-heading"><p class="section-label">${copy.kicker}</p><h2 data-battery-heading>${copy.heading}</h2><p>${copy.intro}</p></div><div class="battery-system-bar"><div class="battery-system-identity"><i aria-hidden="true"></i><span><b data-battery-gateway>${copy.gateway}</b><small data-battery-updated>${copy.initializing}</small></span></div><strong data-battery-summary>${copy.calculating}</strong></div><div class="battery-live-grid" data-battery-grid aria-live="polite"></div><p class="battery-privacy">${copy.privacy}</p>`;
+    const insertionTarget = isAmbulanceLab ? document.querySelector(".architecture-panel") : document.querySelector(".services-preview");
+    if (insertionTarget) insertionTarget.before(section); else main?.appendChild(section);
     const grid = section.querySelector("[data-battery-grid]");
-    const metric = (value, unit) => value == null ? "En attente" : `${Number(value).toLocaleString("fr-CA", { maximumFractionDigits: 3 })} ${unit}`;
-    const millivolts = (value) => value == null ? "En attente" : `${Math.round(value * 1000)} mV`;
-    const kilowattHours = (value) => value == null ? "En attente" : `${(Number(value) / 1000).toLocaleString("fr-CA", { maximumFractionDigits: 2 })} kWh`;
-    const cellRange = (battery) => battery.lowestCell == null || battery.highestCell == null ? millivolts(battery.cellDelta) : `${Number(battery.lowestCell).toLocaleString("fr-CA", { maximumFractionDigits: 3 })}–${Number(battery.highestCell).toLocaleString("fr-CA", { maximumFractionDigits: 3 })} V`;
-    const batteryState = (battery) => battery.alarm ? ["Alerte BMS", "alarm"] : Math.abs(Number(battery.current || 0)) > .25 ? [Number(battery.current) > 0 ? "En charge" : "En service", "charging"] : battery.connected ? ["En ligne", "online"] : ["Détectée", ""];
+    const metric = (value, unit) => value == null ? copy.waiting : `${Number(value).toLocaleString(locale, { maximumFractionDigits: 3 })} ${unit}`;
+    const millivolts = (value) => value == null ? copy.waiting : `${Math.round(value * 1000)} mV`;
+    const kilowattHours = (value) => value == null ? copy.waiting : `${(Number(value) / 1000).toLocaleString(locale, { maximumFractionDigits: 2 })} kWh`;
+    const cellRange = (battery) => battery.lowestCell == null || battery.highestCell == null ? millivolts(battery.cellDelta) : `${Number(battery.lowestCell).toLocaleString(locale, { maximumFractionDigits: 3 })}–${Number(battery.highestCell).toLocaleString(locale, { maximumFractionDigits: 3 })} V`;
+    const batteryState = (battery) => battery.alarm ? [isEnglish ? "BMS alert" : "Alerte BMS", "alarm"] : Math.abs(Number(battery.current || 0)) > .25 ? [Number(battery.current) > 0 ? copy.charging : copy.inService, "charging"] : battery.connected ? [copy.online, "online"] : [copy.detected, ""];
     try {
       const telemetrySources = [
         async () => {
@@ -124,14 +212,26 @@
       }
       if (!status) throw new Error("battery telemetry unavailable");
       section.querySelector("[data-battery-gateway]").textContent = status.gateway;
-      section.querySelector("[data-battery-updated]").textContent = status.updatedAt ? `Dernière lecture : ${new Date(status.updatedAt).toLocaleString("fr-CA")}` : "Télémétrie en initialisation";
+      section.querySelector("[data-battery-updated]").textContent = status.updatedAt ? `${copy.updated}: ${new Date(status.updatedAt).toLocaleString(locale)}` : copy.initializing;
       const totalAh = status.batteries.reduce((total, battery) => total + Number(battery.remainingAh || 0), 0);
       const totalEnergy = status.batteries.reduce((total, battery) => total + Number(battery.energy || 0), 0);
       const totalCurrent = status.batteries.reduce((total, battery) => total + Number(battery.current || 0), 0);
-      section.querySelector("[data-battery-summary]").textContent = `${metric(totalAh, "Ah")} disponibles · ${kilowattHours(totalEnergy)} · ${totalCurrent > 0 ? "+" : ""}${metric(totalCurrent, "A")}`;
-      grid.innerHTML = status.batteries.map((battery, index) => { const [stateLabel, stateClass] = batteryState(battery); return `<article class="battery-live-card ${battery.alarm ? "has-alarm" : ""}"><header><div><span>Batterie 0${index + 1}</span><h3>${battery.name}</h3></div><em class="battery-state ${stateClass}">${stateLabel}</em></header><div class="battery-primary"><div class="battery-soc" style="--soc:${Number(battery.soc || 0)}%"><strong>${metric(battery.soc, "%")}</strong><span><i></i></span></div><div class="battery-ah"><span>Capacité disponible</span><strong>${metric(battery.remainingAh, "Ah")}</strong><small>sur ${metric(battery.capacityAh, "Ah")} nominaux</small></div></div><dl class="battery-metrics"><div><dt>Tension</dt><dd>${metric(battery.voltage, "V")}</dd></div><div><dt>Courant</dt><dd>${Number(battery.current || 0) > 0 ? "+" : ""}${metric(battery.current, "A")}</dd></div><div><dt>Puissance</dt><dd>${metric(battery.power, "W")}</dd></div><div><dt>Température</dt><dd>${metric(battery.temperature, "°C")}</dd></div><div><dt>Énergie stockée</dt><dd>${kilowattHours(battery.energy)}</dd></div><div><dt>Plage des cellules</dt><dd>${cellRange(battery)}</dd></div></dl><footer class="battery-card-footer"><span class="${battery.balancing ? "active" : ""}"><i></i>${battery.balancing ? "Équilibrage actif" : "Cellules stables"}</span><small>${battery.cycles ?? "—"} cycle${battery.cycles === 1 ? "" : "s"}</small></footer></article>`; }).join("");
+      const alarmCount = status.batteries.filter((battery) => battery.alarm).length;
+      section.querySelector("[data-battery-heading]").textContent = isEnglish ? `${metric(totalAh, "Ah")} under supervision.` : `${metric(totalAh, "Ah")} sous surveillance.`;
+      section.querySelector("[data-battery-summary]").textContent = `${metric(totalAh, "Ah")} ${copy.available} · ${kilowattHours(totalEnergy)} · ${totalCurrent > 0 ? "+" : ""}${metric(totalCurrent, "A")} · ${alarmCount ? `${alarmCount} ${alarmCount === 1 ? copy.alarm : copy.alarms}` : copy.healthy}`;
+      if (isAmbulanceLab) {
+        systems[isEnglish ? "en" : "fr"][0] = isEnglish
+          ? ["Energy", `${status.batteries.length} LiFePO₄ batteries are reporting live through Home Assistant and the Waveshare Bluetooth gateway.`, `${metric(totalAh, "Ah")} available · ${kilowattHours(totalEnergy)} · cell health · BMS protections`]
+          : ["Énergie", `${status.batteries.length} batteries LiFePO₄ transmettent leurs mesures en direct par Home Assistant et la passerelle Bluetooth Waveshare.`, `${metric(totalAh, "Ah")} disponibles · ${kilowattHours(totalEnergy)} · santé des cellules · protections BMS`];
+        if (systemButtons[0]?.getAttribute("aria-selected") === "true") renderSystemDetail(systems[isEnglish ? "en" : "fr"][0]);
+      }
+      grid.innerHTML = status.batteries.map((battery, index) => {
+        const [stateLabel, stateClass] = batteryState(battery);
+        const cycleLabel = battery.cycles === 1 ? copy.cycle : copy.cycles;
+        return `<article class="battery-live-card ${battery.alarm ? "has-alarm" : ""}"><header><div><span>${copy.battery} 0${index + 1}</span><h3>${battery.name}</h3></div><em class="battery-state ${stateClass}">${stateLabel}</em></header><div class="battery-primary"><div class="battery-soc" style="--soc:${Number(battery.soc || 0)}%"><strong>${metric(battery.soc, "%")}</strong><span><i></i></span></div><div class="battery-ah"><span>${copy.capacity}</span><strong>${metric(battery.remainingAh, "Ah")}</strong><small>${isEnglish ? "of" : "sur"} ${metric(battery.capacityAh, "Ah")} ${copy.nominal}</small></div></div><dl class="battery-metrics"><div><dt>${copy.voltage}</dt><dd>${metric(battery.voltage, "V")}</dd></div><div><dt>${copy.current}</dt><dd>${Number(battery.current || 0) > 0 ? "+" : ""}${metric(battery.current, "A")}</dd></div><div><dt>${copy.power}</dt><dd>${metric(battery.power, "W")}</dd></div><div><dt>${copy.temperature}</dt><dd>${metric(battery.temperature, "°C")}</dd></div><div><dt>${copy.energy}</dt><dd>${kilowattHours(battery.energy)}</dd></div><div><dt>${copy.cells}</dt><dd>${cellRange(battery)}</dd></div></dl><footer class="battery-card-footer"><div class="battery-card-statuses"><span class="${battery.balancing ? "active" : ""}"><i></i>${battery.balancing ? copy.balancing : copy.stable}</span><span class="${battery.chargingAllowed ? "active" : "warning"}"><i></i>${battery.chargingAllowed ? copy.chargeAllowed : copy.chargeProtected}</span><span class="${battery.dischargingAllowed ? "active" : "warning"}"><i></i>${battery.dischargingAllowed ? copy.dischargeAllowed : copy.dischargeProtected}</span></div><small>${battery.cycles ?? "—"} ${cycleLabel}</small></footer></article>`;
+      }).join("");
     } catch (error) {
-      grid.innerHTML = '<p class="battery-live-error">Les batteries sont détectées; la publication des mesures est en cours de branchement.</p>';
+      grid.innerHTML = `<p class="battery-live-error">${copy.error}</p>`;
     }
   };
 

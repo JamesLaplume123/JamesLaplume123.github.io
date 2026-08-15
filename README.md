@@ -9,6 +9,7 @@ Site statique bilingue de **James Laplume — Intelligent Systems Lab**, publié
 | `/` | `/en/` |
 | `/jarvis-twin/` | `/en/jarvis-twin/` |
 | `/ambulance-lab/` | `/en/ambulance-lab/` |
+| `/trading-lab/` | `/en/trading-lab/` |
 | `/services/` | `/en/services/` |
 | `/about/` | `/en/about/` |
 | `/contact/` | `/en/contact/` |

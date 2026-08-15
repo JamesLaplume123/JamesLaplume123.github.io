@@ -25,6 +25,14 @@
 <priority>0.8</priority>
 </url>
 <url>
+<loc>https://jameslaplume.ca/trading-lab</loc>
+<xhtml:link rel="alternate" hreflang="fr-CA" href="https://jameslaplume.ca/trading-lab" />
+<xhtml:link rel="alternate" hreflang="en-CA" href="https://jameslaplume.ca/en/trading-lab" />
+<lastmod>2026-08-02T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
 <loc>https://jameslaplume.ca/services</loc>
 <xhtml:link rel="alternate" hreflang="fr-CA" href="https://jameslaplume.ca/services" />
 <xhtml:link rel="alternate" hreflang="en-CA" href="https://jameslaplume.ca/en/services" />
@@ -68,6 +76,14 @@
 <loc>https://jameslaplume.ca/en/ambulance-lab</loc>
 <xhtml:link rel="alternate" hreflang="fr-CA" href="https://jameslaplume.ca/ambulance-lab" />
 <xhtml:link rel="alternate" hreflang="en-CA" href="https://jameslaplume.ca/en/ambulance-lab" />
+<lastmod>2026-08-02T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://jameslaplume.ca/en/trading-lab</loc>
+<xhtml:link rel="alternate" hreflang="fr-CA" href="https://jameslaplume.ca/trading-lab" />
+<xhtml:link rel="alternate" hreflang="en-CA" href="https://jameslaplume.ca/en/trading-lab" />
 <lastmod>2026-08-02T00:00:00.000Z</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.8</priority>

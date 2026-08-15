@@ -128,4 +128,189 @@
     if (status) status.textContent = isEnglish ? "Your email application is ready to send." : "Votre candidature par courriel est prête à envoyer.";
     window.location.href = "mailto:contact@jameslaplume.ca?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
   });
+
+  const tradingRoot = document.querySelector(".trading-live-shell");
+  if (tradingRoot) {
+    const apiUrl = "https://jameslaplume-jarvis.jlap1321.chatgpt.site/api/trading/public";
+    const locale = isEnglish ? "en-CA" : "fr-CA";
+    const usd = new Intl.NumberFormat(locale, { style: "currency", currency: "USD", maximumFractionDigits: 2 });
+    const price = new Intl.NumberFormat(locale, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+    const number = new Intl.NumberFormat(locale, { maximumFractionDigits: 6 });
+    let latestReceivedAt = "";
+    let latestSnapshot = null;
+
+    const value = (selector, text) => {
+      const element = tradingRoot.querySelector(selector);
+      if (element) element.textContent = text;
+    };
+
+    const actionLabel = (action) => action === "BUY"
+      ? (isEnglish ? "BUY" : "ACHETER")
+      : action === "SELL"
+        ? (isEnglish ? "SELL" : "VENDRE")
+        : (isEnglish ? "WAIT" : "ATTENDRE");
+
+    const drawEquity = (points) => {
+      const canvas = tradingRoot.querySelector(".trading-equity-canvas");
+      if (!(canvas instanceof HTMLCanvasElement)) return;
+      const rect = canvas.getBoundingClientRect();
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.floor(rect.width * ratio));
+      canvas.height = Math.max(1, Math.floor(rect.height * ratio));
+      const context = canvas.getContext("2d");
+      if (!context) return;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      context.clearRect(0, 0, rect.width, rect.height);
+      const visible = (Array.isArray(points) ? points : []).slice(-240);
+      if (visible.length < 2) {
+        context.fillStyle = "rgba(241,238,230,.42)";
+        context.font = "12px Arial";
+        context.fillText(isEnglish ? "The curve will appear after the first readings." : "La courbe apparaîtra après les premiers relevés.", 18, rect.height / 2);
+        return;
+      }
+      const values = visible.map((point) => point.equityUsd);
+      const minimum = Math.min(...values);
+      const maximum = Math.max(...values);
+      const spread = Math.max(maximum - minimum, 1);
+      const padding = 22;
+      context.strokeStyle = "rgba(241,238,230,.10)";
+      context.lineWidth = 1;
+      for (let line = 1; line < 4; line += 1) {
+        const y = rect.height / 4 * line;
+        context.beginPath(); context.moveTo(0, y); context.lineTo(rect.width, y); context.stroke();
+      }
+      const x = (index) => padding + index / (visible.length - 1) * (rect.width - padding * 2);
+      const y = (amount) => padding + (maximum - amount) / spread * (rect.height - padding * 2);
+      const positive = values.at(-1) >= values[0];
+      const gradient = context.createLinearGradient(0, 0, 0, rect.height);
+      gradient.addColorStop(0, positive ? "rgba(98,191,255,.28)" : "rgba(231,116,104,.25)");
+      gradient.addColorStop(1, "rgba(98,191,255,0)");
+      context.beginPath();
+      visible.forEach((point, index) => index ? context.lineTo(x(index), y(point.equityUsd)) : context.moveTo(x(index), y(point.equityUsd)));
+      context.lineTo(x(visible.length - 1), rect.height - padding); context.lineTo(x(0), rect.height - padding); context.closePath();
+      context.fillStyle = gradient; context.fill();
+      context.beginPath();
+      visible.forEach((point, index) => index ? context.lineTo(x(index), y(point.equityUsd)) : context.moveTo(x(index), y(point.equityUsd)));
+      context.strokeStyle = positive ? "#62bfff" : "#e77468"; context.lineWidth = 2; context.stroke();
+    };
+
+    const renderTrading = (snapshot, receivedAtUtc) => {
+      latestSnapshot = snapshot;
+      latestReceivedAt = receivedAtUtc || snapshot.observedAtUtc;
+      const decision = tradingRoot.querySelector(".trading-decision-card");
+      const decisionStrong = decision?.querySelector(":scope > strong");
+      if (decisionStrong) {
+        decisionStrong.textContent = actionLabel(snapshot.robotAction);
+        decisionStrong.className = "action-" + snapshot.robotAction.toLowerCase();
+      }
+      const decisionReason = decision?.querySelector(":scope > p");
+      if (decisionReason) decisionReason.textContent = snapshot.decisionReason;
+      const decisionDetails = decision?.querySelectorAll("dd") || [];
+      if (decisionDetails[0]) decisionDetails[0].textContent = snapshot.rawSignal;
+      if (decisionDetails[1]) decisionDetails[1].textContent = snapshot.decisionStatus;
+      if (decisionDetails[2]) decisionDetails[2].textContent = snapshot.strategyVersion;
+
+      const gate = tradingRoot.querySelector(".trading-automation-gate");
+      if (gate) {
+        gate.className = "trading-automation-gate " + (snapshot.automationReady ? "ready" : "locked");
+        const gateTitle = gate.querySelector("b");
+        const gateCopy = gate.querySelector("p");
+        if (gateTitle) gateTitle.textContent = snapshot.automationReady
+          ? (isEnglish ? "AUTOMATION VALIDATED" : "AUTOMATISATION VALIDÉE")
+          : (isEnglish ? "ROBOT LOCKED" : "ROBOT VERROUILLÉ");
+        if (gateCopy) gateCopy.textContent = snapshot.automationReady
+          ? (isEnglish ? "Quantitative criteria allow automatic paper trading." : "Les critères quantitatifs autorisent la simulation automatique.")
+          : (snapshot.automationBlockers?.[0] || (isEnglish ? "Out-of-sample validation is incomplete." : "Validation hors échantillon incomplète."));
+      }
+
+      value(".trading-price-card strong", snapshot.lastPriceUsd > 0 ? price.format(snapshot.lastPriceUsd) : "—");
+      value(".trading-price-card p", snapshot.historyBarCount.toLocaleString(locale) + (isEnglish ? " accumulated candles" : " chandelles cumulées"));
+
+      const kpis = tradingRoot.querySelectorAll(".trading-kpis article");
+      if (kpis[0]) kpis[0].querySelector("strong").textContent = usd.format(snapshot.equityUsd);
+      if (kpis[1]) {
+        const klass = snapshot.totalPnlUsd > 0 ? "positive" : snapshot.totalPnlUsd < 0 ? "negative" : "";
+        const strong = kpis[1].querySelector("strong"); const small = kpis[1].querySelector("small");
+        if (strong) { strong.textContent = usd.format(snapshot.totalPnlUsd); strong.className = klass; }
+        if (small) { small.textContent = snapshot.totalReturnPct.toFixed(2) + " %"; small.className = klass; }
+      }
+      if (kpis[2]) {
+        kpis[2].querySelector("strong").textContent = number.format(snapshot.btcQuantity) + " BTC";
+        const opened = snapshot.positionOpenedAtUtc ? new Date(snapshot.positionOpenedAtUtc).toLocaleString(locale, { dateStyle: "short", timeStyle: "short" }) : "";
+        kpis[2].querySelector("small").textContent = snapshot.averageEntryPriceUsd
+          ? (isEnglish ? "Bought " : "Acheté ") + price.format(snapshot.averageEntryPriceUsd) + (opened ? " · " + opened : "")
+          : (isEnglish ? "No open position" : "Aucune position");
+      }
+      if (kpis[3]) {
+        kpis[3].querySelector("strong").textContent = usd.format(snapshot.feesPaidUsd);
+        kpis[3].querySelector("small").textContent = snapshot.completedTrades + (isEnglish ? " completed trade(s)" : " trade(s) terminé(s)");
+      }
+
+      value(".trading-chart-card header strong", usd.format(snapshot.equityUsd));
+      drawEquity(snapshot.points);
+      const riskRows = tradingRoot.querySelectorAll(".trading-risk-card > div b");
+      const riskValues = [
+        "-" + Math.abs(snapshot.maxDrawdownPct).toFixed(2) + " %",
+        snapshot.estimatedRoundTripCostPct.toFixed(2) + " %",
+        snapshot.maxAllocationPct.toFixed(0) + " %",
+        usd.format(snapshot.positionMarketValueUsd),
+        snapshot.breakevenPriceUsd ? price.format(snapshot.breakevenPriceUsd) : "—",
+        snapshot.stopLossUsd ? price.format(snapshot.stopLossUsd) : "—",
+        snapshot.takeProfitUsd ? price.format(snapshot.takeProfitUsd) : "—",
+      ];
+      riskRows.forEach((row, index) => { if (riskValues[index] !== undefined) row.textContent = riskValues[index]; });
+      value(".trading-risk-card > small", snapshot.costProfile);
+
+      const journal = tradingRoot.querySelector(".trading-journal");
+      const events = Array.isArray(snapshot.events) ? snapshot.events.slice().reverse().slice(0, 12) : [];
+      const count = journal?.querySelector("header > span");
+      if (count) count.textContent = events.length + (isEnglish ? " published operation(s)" : " opération(s) publiée(s)");
+      const oldList = journal?.querySelector(".trading-event-list, .trading-empty");
+      if (oldList && journal) {
+        const container = document.createElement(events.length ? "div" : "p");
+        container.className = events.length ? "trading-event-list" : "trading-empty";
+        if (!events.length) container.textContent = isEnglish
+          ? "No paper buy or sell has been published yet. The robot continues to analyze every new candle."
+          : "Aucun achat ou vente fictif publié pour le moment. Le robot continue d’analyser chaque nouvelle chandelle.";
+        events.forEach((event) => {
+          const row = document.createElement("article");
+          const cells = [
+            ["time", new Date(event.observedAtUtc).toLocaleString(locale, { dateStyle: "short", timeStyle: "short" })],
+            ["strong", event.action], ["span", number.format(event.quantityBtc) + " BTC"],
+            ["span", price.format(event.priceUsd)], ["span", (isEnglish ? "Fees " : "Frais ") + usd.format(event.feesUsd)],
+            ["p", event.reason],
+          ];
+          cells.forEach(([tag, text]) => { const cell = document.createElement(tag); cell.textContent = text; if (tag === "strong") cell.className = "action-" + event.action.toLowerCase(); row.appendChild(cell); });
+          container.appendChild(row);
+        });
+        oldList.replaceWith(container);
+      }
+    };
+
+    const updateConnection = () => {
+      const connection = tradingRoot.querySelector(".trading-connection");
+      const age = latestReceivedAt ? Math.max(0, Math.round((Date.now() - Date.parse(latestReceivedAt)) / 1000)) : null;
+      const live = Boolean(latestSnapshot && age !== null && age <= 45 && latestSnapshot.dataState === "FRESH");
+      if (connection) connection.className = "trading-connection " + (live ? "live" : "waiting");
+      value(".trading-connection b", live ? (isEnglish ? "LIVE DATA" : "DONNÉES EN DIRECT") : (isEnglish ? "SECURE CONNECTION" : "CONNEXION SÉCURISÉE"));
+      value(".trading-connection small", age !== null ? (isEnglish ? "Received " : "Reçu il y a ") + age + " s" : (isEnglish ? "Awaiting first publish" : "Premier envoi en attente"));
+    };
+
+    const loadTrading = async () => {
+      try {
+        const response = await fetch(apiUrl, { cache: "no-store", mode: "cors" });
+        const payload = await response.json();
+        if (!response.ok || !payload.available || !payload.snapshot) throw new Error("Trading data unavailable");
+        renderTrading(payload.snapshot, payload.receivedAtUtc);
+      } catch {
+        latestSnapshot = null;
+      }
+      updateConnection();
+    };
+
+    loadTrading();
+    window.setInterval(loadTrading, 10_000);
+    window.setInterval(updateConnection, 1_000);
+    window.addEventListener("resize", () => latestSnapshot && drawEquity(latestSnapshot.points));
+  }
 })();

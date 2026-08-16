@@ -1,4 +1,4 @@
 .vite/
 .assetsignore
 _headers
-assets/*.js
+.claude/

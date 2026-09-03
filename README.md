@@ -35,6 +35,8 @@ GitHub Pages reste l'hébergement statique du site. Pour du presque temps réel,
 - Option rapide Home Assistant vers GitHub Gist: `integrations/home-assistant/battery-telemetry-github-gist.yaml`
 - Configuration publique du site: `data/battery-public-config.json`
 
+Le site compare les sources publiques disponibles et garde la plus recente. Si HAOS n'a pas encore pousse de nouvelle mesure, l'instantane local sert seulement de secours et reste indique comme vieux par l'interface.
+
 Ne jamais publier de jeton Home Assistant, adresse IP privée, identifiant Bluetooth/MAC ou commande de contrôle dans le JSON public.
 
 ## Déploiement

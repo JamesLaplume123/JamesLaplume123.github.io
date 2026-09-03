@@ -262,6 +262,14 @@
       if (!status || !Array.isArray(status.batteries) || !status.batteries.length) throw new Error("battery telemetry is empty");
       return status;
     };
+    const statusTimestamp = (status) => {
+      const timestamp = status?.updatedAt ? new Date(status.updatedAt).getTime() : 0;
+      return Number.isFinite(timestamp) ? timestamp : 0;
+    };
+    const isStatusStale = (status) => {
+      const timestamp = statusTimestamp(status);
+      return Boolean(timestamp && Date.now() - timestamp > Number(telemetryConfig.batteryStaleAfterMs || 300000));
+    };
     const telemetrySources = [
       telemetryConfig.batteryStatusUrl ? async () => validateStatus(await jsonFetch(telemetryConfig.batteryStatusUrl)) : null,
       telemetryConfig.batteryGistApiUrl ? async () => {
@@ -277,7 +285,7 @@
       const batteries = status.batteries;
       const updatedDate = status.updatedAt ? new Date(status.updatedAt) : null;
       const updatedIsValid = updatedDate && !Number.isNaN(updatedDate.getTime());
-      const isStale = Boolean(updatedIsValid && Date.now() - updatedDate.getTime() > Number(telemetryConfig.batteryStaleAfterMs || 300000));
+      const isStale = isStatusStale(status);
       section.classList.toggle("battery-feed-stale", isStale);
       section.querySelector("[data-battery-gateway]").textContent = status.gateway || copy.gateway;
       section.querySelector("[data-battery-updated]").textContent = updatedIsValid ? `${copy.updated}: ${updatedDate.toLocaleString(locale)}${isStale ? ` · ${copy.stale}` : ""}` : copy.initializing;
@@ -303,12 +311,18 @@
     let hasRenderedStatus = false;
     let isLoading = false;
     const loadStatus = async () => {
+      const statuses = [];
       for (const load of telemetrySources) {
         try {
-          return await load();
+          statuses.push(await load());
         } catch (error) {
           /* Try the next safe public source. */
         }
+      }
+      if (statuses.length) {
+        const fresh = statuses.filter((status) => !isStatusStale(status));
+        const candidates = fresh.length ? fresh : statuses;
+        return candidates.sort((a, b) => statusTimestamp(b) - statusTimestamp(a))[0];
       }
       throw new Error("battery telemetry unavailable");
     };

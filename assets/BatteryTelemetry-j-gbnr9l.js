@@ -41,6 +41,16 @@ function validateStatus(status) {
   return status;
 }
 
+function statusTimestamp(status) {
+  const timestamp = status?.updatedAt ? new Date(status.updatedAt).getTime() : 0;
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
+function isStatusStale(status, config) {
+  const timestamp = statusTimestamp(status);
+  return Boolean(timestamp && Date.now() - timestamp > Number(config.batteryStaleAfterMs || DEFAULT_CONFIG.batteryStaleAfterMs));
+}
+
 async function loadGistStatus(config) {
   const gist = await fetchJson(config.batteryGistApiUrl);
   const content = gist.files?.[config.batteryGistFile]?.content;
@@ -55,12 +65,20 @@ async function loadBatteryStatus(config) {
     config.batteryFallbackUrl ? () => fetchJson(config.batteryFallbackUrl).then(validateStatus) : null,
   ].filter(Boolean);
 
+  const statuses = [];
+
   for (const load of sources) {
     try {
-      return await load();
+      statuses.push(await load());
     } catch {
       // Try the next safe public source.
     }
+  }
+
+  if (statuses.length) {
+    const fresh = statuses.filter((status) => !isStatusStale(status, config));
+    const candidates = fresh.length ? fresh : statuses;
+    return candidates.sort((a, b) => statusTimestamp(b) - statusTimestamp(a))[0];
   }
 
   throw new Error("battery telemetry unavailable");
@@ -220,7 +238,7 @@ function BatteryTelemetry({ locale, variant }) {
   const alarmCount = status ? batteries.filter((battery) => battery.alarm).length : 0;
   const updatedDate = status?.updatedAt ? new Date(status.updatedAt) : null;
   const updatedIsValid = Boolean(updatedDate && !Number.isNaN(updatedDate.getTime()));
-  const isStale = Boolean(updatedIsValid && Date.now() - updatedDate.getTime() > Number(config.batteryStaleAfterMs || DEFAULT_CONFIG.batteryStaleAfterMs));
+  const isStale = Boolean(status && isStatusStale(status, config));
   const sectionClass = [
     "battery-live-section",
     isStale ? "battery-feed-stale" : "",

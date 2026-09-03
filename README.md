@@ -31,7 +31,8 @@ Les anciennes pages HTML redirigent vers les nouvelles sections correspondantes.
 GitHub Pages reste l'hébergement statique du site. Pour du presque temps réel, Home Assistant OS doit pousser les mesures vers une petite passerelle publique sécurisée, puis le site lit cette passerelle toutes les 30 secondes.
 
 - Worker Cloudflare: `integrations/cloudflare-worker/`
-- Exemple Home Assistant: `integrations/home-assistant/battery-telemetry.yaml`
+- Exemple Home Assistant avec Worker: `integrations/home-assistant/battery-telemetry.yaml`
+- Option rapide Home Assistant vers GitHub Gist: `integrations/home-assistant/battery-telemetry-github-gist.yaml`
 - Configuration publique du site: `data/battery-public-config.json`
 
 Ne jamais publier de jeton Home Assistant, adresse IP privée, identifiant Bluetooth/MAC ou commande de contrôle dans le JSON public.

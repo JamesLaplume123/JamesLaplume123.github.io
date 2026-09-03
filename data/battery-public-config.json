@@ -1,8 +1,8 @@
 {
   "batteryStatusUrl": "",
-  "batteryGistApiUrl": "",
+  "batteryGistApiUrl": "https://api.github.com/gists/073aeffc14e94afa3a516de6db8cd411",
   "batteryGistFile": "battery-status.json",
   "batteryFallbackUrl": "/data/battery-status.json",
-  "batteryPollMs": 30000,
+  "batteryPollMs": 120000,
   "batteryStaleAfterMs": 300000
 }

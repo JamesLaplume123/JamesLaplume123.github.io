@@ -1,0 +1,87 @@
+# Option rapide: Home Assistant OS publie directement dans un GitHub Gist public.
+# C'est pratique pour demarrer sans serveur, mais ce n'est pas une vraie base
+# de donnees temps reel. Pour un flux plus robuste, utiliser le Worker Cloudflare.
+#
+# Secret a creer dans Home Assistant:
+# github_gist_authorization: "Bearer TON_GITHUB_TOKEN_AVEC_PERMISSION_GISTS_WRITE"
+#
+# Le site lit ce Gist public:
+# https://api.github.com/gists/073aeffc14e94afa3a516de6db8cd411
+
+rest_command:
+  publish_ambulance_battery_status_to_gist:
+    url: "https://api.github.com/gists/073aeffc14e94afa3a516de6db8cd411"
+    method: PATCH
+    headers:
+      authorization: !secret github_gist_authorization
+      accept: "application/vnd.github+json"
+    content_type: "application/json; charset=utf-8"
+    verify_ssl: true
+    timeout: 15
+    payload: >-
+      {% set status = {
+        "updatedAt": now().isoformat(),
+        "gateway": "Home Assistant OS · Waveshare ESP32 Bluetooth",
+        "batteries": [
+          {
+            "name": "BMS JBD · A",
+            "model": "DP04S007L4S200A · LiFePO4 4S · 200 A",
+            "connected": is_state("binary_sensor.bms_a_connected", "on"),
+            "soc": states("sensor.bms_a_soc") | float(0),
+            "capacityAh": 280,
+            "remainingAh": states("sensor.bms_a_remaining_capacity") | float(0),
+            "voltage": states("sensor.bms_a_voltage") | float(0),
+            "current": states("sensor.bms_a_current") | float(0),
+            "power": states("sensor.bms_a_power") | float(0),
+            "temperature": states("sensor.bms_a_temperature") | float(0),
+            "energy": states("sensor.bms_a_energy") | float(0),
+            "highestCell": states("sensor.bms_a_highest_cell_voltage") | float(0),
+            "lowestCell": states("sensor.bms_a_lowest_cell_voltage") | float(0),
+            "cellDelta": states("sensor.bms_a_cell_delta") | float(0),
+            "cycles": states("sensor.bms_a_cycles") | int(0),
+            "balancing": is_state("binary_sensor.bms_a_balancing", "on"),
+            "chargingAllowed": is_state("binary_sensor.bms_a_charging_allowed", "on"),
+            "dischargingAllowed": is_state("binary_sensor.bms_a_discharging_allowed", "on"),
+            "alarm": is_state("binary_sensor.bms_a_alarm", "on")
+          },
+          {
+            "name": "BMS JBD · B",
+            "model": "DP04S007L4S200A · LiFePO4 4S · 200 A",
+            "connected": is_state("binary_sensor.bms_b_connected", "on"),
+            "soc": states("sensor.bms_b_soc") | float(0),
+            "capacityAh": 280,
+            "remainingAh": states("sensor.bms_b_remaining_capacity") | float(0),
+            "voltage": states("sensor.bms_b_voltage") | float(0),
+            "current": states("sensor.bms_b_current") | float(0),
+            "power": states("sensor.bms_b_power") | float(0),
+            "temperature": states("sensor.bms_b_temperature") | float(0),
+            "energy": states("sensor.bms_b_energy") | float(0),
+            "highestCell": states("sensor.bms_b_highest_cell_voltage") | float(0),
+            "lowestCell": states("sensor.bms_b_lowest_cell_voltage") | float(0),
+            "cellDelta": states("sensor.bms_b_cell_delta") | float(0),
+            "cycles": states("sensor.bms_b_cycles") | int(0),
+            "balancing": is_state("binary_sensor.bms_b_balancing", "on"),
+            "chargingAllowed": is_state("binary_sensor.bms_b_charging_allowed", "on"),
+            "dischargingAllowed": is_state("binary_sensor.bms_b_discharging_allowed", "on"),
+            "alarm": is_state("binary_sensor.bms_b_alarm", "on")
+          }
+        ]
+      } %}
+      {{ {
+        "description": "Télémétrie publique batteries Ambulance Lab",
+        "files": {
+          "battery-status.json": {
+            "content": status | to_json
+          }
+        }
+      } | to_json }}
+
+automation:
+  - alias: "Ambulance - publier batteries dans GitHub Gist"
+    id: ambulance_publish_batteries_to_github_gist
+    mode: single
+    triggers:
+      - trigger: time_pattern
+        minutes: "/2"
+    actions:
+      - action: rest_command.publish_ambulance_battery_status_to_gist

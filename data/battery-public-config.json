@@ -1,0 +1,8 @@
+{
+  "batteryStatusUrl": "",
+  "batteryGistApiUrl": "",
+  "batteryGistFile": "battery-status.json",
+  "batteryFallbackUrl": "/data/battery-status.json",
+  "batteryPollMs": 30000,
+  "batteryStaleAfterMs": 300000
+}

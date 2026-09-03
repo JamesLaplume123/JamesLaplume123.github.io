@@ -1,0 +1,10 @@
+name = "jameslaplume-battery-telemetry"
+main = "src/index.js"
+compatibility_date = "2026-09-03"
+
+[vars]
+ALLOWED_ORIGINS = "https://jameslaplume.ca,https://www.jameslaplume.ca,http://127.0.0.1:4173,http://localhost:4173"
+
+[[kv_namespaces]]
+binding = "BATTERY_KV"
+id = "REPLACE_WITH_CLOUDFLARE_KV_NAMESPACE_ID"

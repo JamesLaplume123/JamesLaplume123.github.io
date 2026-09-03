@@ -174,6 +174,8 @@
           detected: "Detected",
           charging: "Charging",
           inService: "In service",
+          stale: "feed older than expected",
+          offline: "Public feed offline",
           error: "The batteries are detected; the public telemetry feed is temporarily unavailable."
         }
       : {
@@ -214,6 +216,8 @@
           detected: "Détectée",
           charging: "En charge",
           inService: "En service",
+          stale: "flux plus vieux que prévu",
+          offline: "Flux public hors ligne",
           error: "Les batteries sont détectées; la télémétrie publique est temporairement indisponible."
         };
     const stylesheet = document.createElement("link");
@@ -233,47 +237,105 @@
     const kilowattHours = (value) => value == null ? copy.waiting : `${(Number(value) / 1000).toLocaleString(locale, { maximumFractionDigits: 2 })} kWh`;
     const cellRange = (battery) => battery.lowestCell == null || battery.highestCell == null ? millivolts(battery.cellDelta) : `${Number(battery.lowestCell).toLocaleString(locale, { maximumFractionDigits: 3 })}–${Number(battery.highestCell).toLocaleString(locale, { maximumFractionDigits: 3 })} V`;
     const batteryState = (battery) => battery.alarm ? [isEnglish ? "BMS alert" : "Alerte BMS", "alarm"] : Math.abs(Number(battery.current || 0)) > .25 ? [Number(battery.current) > 0 ? copy.charging : copy.inService, "charging"] : battery.connected ? [copy.online, "online"] : [copy.detected, ""];
-    try {
-      const telemetrySources = [
-        async () => {
-          const response = await fetch("https://api.github.com/gists/073aeffc14e94afa3a516de6db8cd411", { cache: "no-store" });
-          if (!response.ok) throw new Error("public telemetry unavailable");
-          const gist = await response.json();
-          return JSON.parse(gist.files["battery-status.json"].content);
-        },
-        async () => {
-          const response = await fetch("/data/battery-status.json", { cache: "no-store" });
-          if (!response.ok) throw new Error("battery telemetry fallback unavailable");
-          return response.json();
-        }
-      ];
-      let status;
-      for (const load of telemetrySources) {
-        try { status = await load(); break; } catch (error) { /* Try the safe local snapshot. */ }
+    const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[character]));
+    const jsonFetch = async (url) => {
+      const response = await fetch(url, { cache: "no-store", headers: { accept: "application/json" } });
+      if (!response.ok) throw new Error("battery telemetry unavailable");
+      return response.json();
+    };
+    const loadPublicConfig = async () => {
+      try {
+        return await jsonFetch("/data/battery-public-config.json");
+      } catch (error) {
+        return {};
       }
-      if (!status) throw new Error("battery telemetry unavailable");
-      section.querySelector("[data-battery-gateway]").textContent = status.gateway;
-      section.querySelector("[data-battery-updated]").textContent = status.updatedAt ? `${copy.updated}: ${new Date(status.updatedAt).toLocaleString(locale)}` : copy.initializing;
-      const totalAh = status.batteries.reduce((total, battery) => total + Number(battery.remainingAh || 0), 0);
-      const totalEnergy = status.batteries.reduce((total, battery) => total + Number(battery.energy || 0), 0);
-      const totalCurrent = status.batteries.reduce((total, battery) => total + Number(battery.current || 0), 0);
-      const alarmCount = status.batteries.filter((battery) => battery.alarm).length;
+    };
+    const telemetryConfig = Object.assign({
+      batteryStatusUrl: "",
+      batteryGistApiUrl: "",
+      batteryGistFile: "battery-status.json",
+      batteryFallbackUrl: "/data/battery-status.json",
+      batteryPollMs: 30000,
+      batteryStaleAfterMs: 300000
+    }, await loadPublicConfig());
+    const validateStatus = (status) => {
+      if (!status || !Array.isArray(status.batteries) || !status.batteries.length) throw new Error("battery telemetry is empty");
+      return status;
+    };
+    const telemetrySources = [
+      telemetryConfig.batteryStatusUrl ? async () => validateStatus(await jsonFetch(telemetryConfig.batteryStatusUrl)) : null,
+      telemetryConfig.batteryGistApiUrl ? async () => {
+        const gist = await jsonFetch(telemetryConfig.batteryGistApiUrl);
+        const content = gist.files?.[telemetryConfig.batteryGistFile]?.content;
+        if (!content) throw new Error("battery telemetry gist file unavailable");
+        return validateStatus(JSON.parse(content));
+      } : null,
+      telemetryConfig.batteryFallbackUrl ? async () => validateStatus(await jsonFetch(telemetryConfig.batteryFallbackUrl)) : null
+    ].filter(Boolean);
+    const renderStatus = (status) => {
+      section.classList.remove("battery-feed-error");
+      const batteries = status.batteries;
+      const updatedDate = status.updatedAt ? new Date(status.updatedAt) : null;
+      const updatedIsValid = updatedDate && !Number.isNaN(updatedDate.getTime());
+      const isStale = Boolean(updatedIsValid && Date.now() - updatedDate.getTime() > Number(telemetryConfig.batteryStaleAfterMs || 300000));
+      section.classList.toggle("battery-feed-stale", isStale);
+      section.querySelector("[data-battery-gateway]").textContent = status.gateway || copy.gateway;
+      section.querySelector("[data-battery-updated]").textContent = updatedIsValid ? `${copy.updated}: ${updatedDate.toLocaleString(locale)}${isStale ? ` · ${copy.stale}` : ""}` : copy.initializing;
+      const totalAh = batteries.reduce((total, battery) => total + Number(battery.remainingAh || 0), 0);
+      const totalEnergy = batteries.reduce((total, battery) => total + Number(battery.energy || 0), 0);
+      const totalCurrent = batteries.reduce((total, battery) => total + Number(battery.current || 0), 0);
+      const alarmCount = batteries.filter((battery) => battery.alarm).length;
       section.querySelector("[data-battery-heading]").textContent = isEnglish ? `${metric(totalAh, "Ah")} under supervision.` : `${metric(totalAh, "Ah")} sous surveillance.`;
       section.querySelector("[data-battery-summary]").textContent = `${metric(totalAh, "Ah")} ${copy.available} · ${kilowattHours(totalEnergy)} · ${totalCurrent > 0 ? "+" : ""}${metric(totalCurrent, "A")} · ${alarmCount ? `${alarmCount} ${alarmCount === 1 ? copy.alarm : copy.alarms}` : copy.healthy}`;
       if (isAmbulanceLab) {
         systems[isEnglish ? "en" : "fr"][0] = isEnglish
-          ? ["Energy", `${status.batteries.length} LiFePO₄ batteries are reporting live through Home Assistant and the Waveshare Bluetooth gateway.`, `${metric(totalAh, "Ah")} available · ${kilowattHours(totalEnergy)} · cell health · BMS protections`]
-          : ["Énergie", `${status.batteries.length} batteries LiFePO₄ transmettent leurs mesures en direct par Home Assistant et la passerelle Bluetooth Waveshare.`, `${metric(totalAh, "Ah")} disponibles · ${kilowattHours(totalEnergy)} · santé des cellules · protections BMS`];
+          ? ["Energy", `${batteries.length} LiFePO₄ batteries are reporting live through Home Assistant and the Waveshare Bluetooth gateway.`, `${metric(totalAh, "Ah")} available · ${kilowattHours(totalEnergy)} · cell health · BMS protections`]
+          : ["Énergie", `${batteries.length} batteries LiFePO₄ transmettent leurs mesures en direct par Home Assistant et la passerelle Bluetooth Waveshare.`, `${metric(totalAh, "Ah")} disponibles · ${kilowattHours(totalEnergy)} · santé des cellules · protections BMS`];
         if (systemButtons[0]?.getAttribute("aria-selected") === "true") renderSystemDetail(systems[isEnglish ? "en" : "fr"][0]);
       }
-      grid.innerHTML = status.batteries.map((battery, index) => {
+      grid.innerHTML = batteries.map((battery, index) => {
         const [stateLabel, stateClass] = batteryState(battery);
         const cycleLabel = battery.cycles === 1 ? copy.cycle : copy.cycles;
-        return `<article class="battery-live-card ${battery.alarm ? "has-alarm" : ""}"><header><div><span>${copy.battery} 0${index + 1}</span><h3>${battery.name}</h3></div><em class="battery-state ${stateClass}">${stateLabel}</em></header><div class="battery-primary"><div class="battery-soc" style="--soc:${Number(battery.soc || 0)}%"><strong>${metric(battery.soc, "%")}</strong><span><i></i></span></div><div class="battery-ah"><span>${copy.capacity}</span><strong>${metric(battery.remainingAh, "Ah")}</strong><small>${isEnglish ? "of" : "sur"} ${metric(battery.capacityAh, "Ah")} ${copy.nominal}</small></div></div><dl class="battery-metrics"><div><dt>${copy.voltage}</dt><dd>${metric(battery.voltage, "V")}</dd></div><div><dt>${copy.current}</dt><dd>${Number(battery.current || 0) > 0 ? "+" : ""}${metric(battery.current, "A")}</dd></div><div><dt>${copy.power}</dt><dd>${metric(battery.power, "W")}</dd></div><div><dt>${copy.temperature}</dt><dd>${metric(battery.temperature, "°C")}</dd></div><div><dt>${copy.energy}</dt><dd>${kilowattHours(battery.energy)}</dd></div><div><dt>${copy.cells}</dt><dd>${cellRange(battery)}</dd></div></dl><footer class="battery-card-footer"><div class="battery-card-statuses"><span class="${battery.balancing ? "active" : ""}"><i></i>${battery.balancing ? copy.balancing : copy.stable}</span><span class="${battery.chargingAllowed ? "active" : "warning"}"><i></i>${battery.chargingAllowed ? copy.chargeAllowed : copy.chargeProtected}</span><span class="${battery.dischargingAllowed ? "active" : "warning"}"><i></i>${battery.dischargingAllowed ? copy.dischargeAllowed : copy.dischargeProtected}</span></div><small>${battery.cycles ?? "—"} ${cycleLabel}</small></footer></article>`;
+        const batteryName = escapeHtml(battery.name || `${copy.battery} 0${index + 1}`);
+        return `<article class="battery-live-card ${battery.alarm ? "has-alarm" : ""}"><header><div><span>${copy.battery} 0${index + 1}</span><h3>${batteryName}</h3></div><em class="battery-state ${stateClass}">${stateLabel}</em></header><div class="battery-primary"><div class="battery-soc" style="--soc:${Number(battery.soc || 0)}%"><strong>${metric(battery.soc, "%")}</strong><span><i></i></span></div><div class="battery-ah"><span>${copy.capacity}</span><strong>${metric(battery.remainingAh, "Ah")}</strong><small>${isEnglish ? "of" : "sur"} ${metric(battery.capacityAh, "Ah")} ${copy.nominal}</small></div></div><dl class="battery-metrics"><div><dt>${copy.voltage}</dt><dd>${metric(battery.voltage, "V")}</dd></div><div><dt>${copy.current}</dt><dd>${Number(battery.current || 0) > 0 ? "+" : ""}${metric(battery.current, "A")}</dd></div><div><dt>${copy.power}</dt><dd>${metric(battery.power, "W")}</dd></div><div><dt>${copy.temperature}</dt><dd>${metric(battery.temperature, "°C")}</dd></div><div><dt>${copy.energy}</dt><dd>${kilowattHours(battery.energy)}</dd></div><div><dt>${copy.cells}</dt><dd>${cellRange(battery)}</dd></div></dl><footer class="battery-card-footer"><div class="battery-card-statuses"><span class="${battery.balancing ? "active" : ""}"><i></i>${battery.balancing ? copy.balancing : copy.stable}</span><span class="${battery.chargingAllowed ? "active" : "warning"}"><i></i>${battery.chargingAllowed ? copy.chargeAllowed : copy.chargeProtected}</span><span class="${battery.dischargingAllowed ? "active" : "warning"}"><i></i>${battery.dischargingAllowed ? copy.dischargeAllowed : copy.dischargeProtected}</span></div><small>${battery.cycles ?? "—"} ${cycleLabel}</small></footer></article>`;
       }).join("");
-    } catch (error) {
-      grid.innerHTML = `<p class="battery-live-error">${copy.error}</p>`;
-    }
+    };
+    let hasRenderedStatus = false;
+    let isLoading = false;
+    const loadStatus = async () => {
+      for (const load of telemetrySources) {
+        try {
+          return await load();
+        } catch (error) {
+          /* Try the next safe public source. */
+        }
+      }
+      throw new Error("battery telemetry unavailable");
+    };
+    const renderUnavailable = () => {
+      section.classList.add("battery-feed-error");
+      section.querySelector("[data-battery-gateway]").textContent = copy.offline;
+      section.querySelector("[data-battery-updated]").textContent = copy.error;
+      if (!hasRenderedStatus) grid.innerHTML = `<p class="battery-live-error">${copy.error}</p>`;
+    };
+    const refreshTelemetry = async () => {
+      if (isLoading || document.hidden) return;
+      isLoading = true;
+      try {
+        renderStatus(await loadStatus());
+        hasRenderedStatus = true;
+      } catch (error) {
+        renderUnavailable();
+      } finally {
+        isLoading = false;
+      }
+    };
+    await refreshTelemetry();
+    const pollMs = Number(telemetryConfig.batteryPollMs || 0);
+    if (pollMs > 0) window.setInterval(refreshTelemetry, Math.max(10000, pollMs));
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) refreshTelemetry();
+    });
   };
 
   initBatteryTelemetry();

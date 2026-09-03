@@ -1,0 +1,73 @@
+# Exemple a adapter dans Home Assistant OS.
+# Remplace les entity_id par ceux de tes deux BMS JBD/Waveshare.
+# Le jeton secret doit rester dans secrets.yaml, jamais dans GitHub.
+
+rest_command:
+  publish_ambulance_battery_status:
+    url: "https://ton-worker.workers.dev/battery-status"
+    method: POST
+    headers:
+      authorization: !secret battery_telemetry_authorization
+      accept: "application/json"
+    content_type: "application/json; charset=utf-8"
+    verify_ssl: true
+    timeout: 10
+    payload: >-
+      {
+        "gateway": "Home Assistant OS · Waveshare ESP32 Bluetooth",
+        "updatedAt": "{{ now().isoformat() }}",
+        "batteries": [
+          {
+            "name": "BMS JBD · A",
+            "model": "DP04S007L4S200A · LiFePO4 4S · 200 A",
+            "connected": {{ is_state('binary_sensor.bms_a_connected', 'on') | lower }},
+            "soc": {{ states('sensor.bms_a_soc') | float(0) }},
+            "capacityAh": 280,
+            "remainingAh": {{ states('sensor.bms_a_remaining_capacity') | float(0) }},
+            "voltage": {{ states('sensor.bms_a_voltage') | float(0) }},
+            "current": {{ states('sensor.bms_a_current') | float(0) }},
+            "power": {{ states('sensor.bms_a_power') | float(0) }},
+            "temperature": {{ states('sensor.bms_a_temperature') | float(0) }},
+            "energy": {{ states('sensor.bms_a_energy') | float(0) }},
+            "highestCell": {{ states('sensor.bms_a_highest_cell_voltage') | float(0) }},
+            "lowestCell": {{ states('sensor.bms_a_lowest_cell_voltage') | float(0) }},
+            "cellDelta": {{ states('sensor.bms_a_cell_delta') | float(0) }},
+            "cycles": {{ states('sensor.bms_a_cycles') | int(0) }},
+            "balancing": {{ is_state('binary_sensor.bms_a_balancing', 'on') | lower }},
+            "chargingAllowed": {{ is_state('binary_sensor.bms_a_charging_allowed', 'on') | lower }},
+            "dischargingAllowed": {{ is_state('binary_sensor.bms_a_discharging_allowed', 'on') | lower }},
+            "alarm": {{ is_state('binary_sensor.bms_a_alarm', 'on') | lower }}
+          },
+          {
+            "name": "BMS JBD · B",
+            "model": "DP04S007L4S200A · LiFePO4 4S · 200 A",
+            "connected": {{ is_state('binary_sensor.bms_b_connected', 'on') | lower }},
+            "soc": {{ states('sensor.bms_b_soc') | float(0) }},
+            "capacityAh": 280,
+            "remainingAh": {{ states('sensor.bms_b_remaining_capacity') | float(0) }},
+            "voltage": {{ states('sensor.bms_b_voltage') | float(0) }},
+            "current": {{ states('sensor.bms_b_current') | float(0) }},
+            "power": {{ states('sensor.bms_b_power') | float(0) }},
+            "temperature": {{ states('sensor.bms_b_temperature') | float(0) }},
+            "energy": {{ states('sensor.bms_b_energy') | float(0) }},
+            "highestCell": {{ states('sensor.bms_b_highest_cell_voltage') | float(0) }},
+            "lowestCell": {{ states('sensor.bms_b_lowest_cell_voltage') | float(0) }},
+            "cellDelta": {{ states('sensor.bms_b_cell_delta') | float(0) }},
+            "cycles": {{ states('sensor.bms_b_cycles') | int(0) }},
+            "balancing": {{ is_state('binary_sensor.bms_b_balancing', 'on') | lower }},
+            "chargingAllowed": {{ is_state('binary_sensor.bms_b_charging_allowed', 'on') | lower }},
+            "dischargingAllowed": {{ is_state('binary_sensor.bms_b_discharging_allowed', 'on') | lower }},
+            "alarm": {{ is_state('binary_sensor.bms_b_alarm', 'on') | lower }}
+          }
+        ]
+      }
+
+automation:
+  - alias: "Ambulance - publier batteries sur jameslaplume.ca"
+    id: ambulance_publish_batteries_to_public_site
+    mode: single
+    triggers:
+      - trigger: time_pattern
+        seconds: "/30"
+    actions:
+      - action: rest_command.publish_ambulance_battery_status

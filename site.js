@@ -64,12 +64,12 @@
       modules: {
         src: "/media/jarvis/jarvis-modules.webp",
         fr: {
-          title: "Une plateforme modulaire, livrée par étapes.",
-          description: "Control, Knowledge, Agents, Vision, Automation et Diagnostics avancent avec des statuts honnêtes."
+          title: "Plusieurs fonctions, développées une étape à la fois.",
+          description: "Trouver l’information, relier les outils, préparer le travail et expliquer les problèmes, sans prétendre que tout est déjà terminé."
         },
         en: {
-          title: "A modular platform, delivered in stages.",
-          description: "Control, Knowledge, Agents, Vision, Automation and Diagnostics progress with honest status labels."
+          title: "Several abilities, built one step at a time.",
+          description: "Find information, connect tools, prepare work and explain problems without pretending everything is already finished."
         }
       }
     };

@@ -51,14 +51,14 @@
     const buttons = [...productStage.querySelectorAll("[data-product-view]")];
     const views = {
       assistant: {
-        src: "/media/jarvis/jarvis-assistant.webp",
+        src: "/media/jarvis/jarvis-showcase.webp",
         fr: {
-          title: "Un agent local qui connaît ses limites.",
-          description: "Conversation, outils autorisés, missions supervisées et preuve du travail dans une seule interface."
+          title: "Une demande devient une mission prête à valider.",
+          description: "JARVIS rassemble les sources autorisées, prépare le travail et attend votre approbation avant toute action externe."
         },
         en: {
-          title: "A local agent that knows its limits.",
-          description: "Conversation, authorized tools, supervised missions and proof of work in one interface."
+          title: "A request becomes a mission ready for review.",
+          description: "JARVIS gathers approved sources, prepares the work and waits for human approval before any external action."
         }
       },
       modules: {

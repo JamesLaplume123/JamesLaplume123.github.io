@@ -130,7 +130,46 @@
       const lines = isEnglish
         ? [`Name: ${name}`, `Email: ${email}`, `Company: ${company}`, `Service: ${service}`, "", message]
         : [`Nom : ${name}`, `Courriel : ${email}`, `Entreprise : ${company}`, `Service : ${service}`, "", message];
-      window.location.href = `mailto:contact@jameslaplume.ca?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`;
+      window.location.href = `mailto:laplumejames@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`;
     });
+  }
+
+  const footerBottom = document.querySelector(".footer-bottom");
+  if (footerBottom) {
+    const isEnglish = root.lang.startsWith("en");
+    const counter = document.createElement("span");
+    counter.className = "visitor-counter";
+    counter.innerHTML = `<i aria-hidden="true"></i>${isEnglish ? "Visitors" : "Visiteurs"} <b data-visitor-count aria-live="polite">—</b>`;
+    footerBottom.append(counter);
+
+    const value = counter.querySelector("[data-visitor-count]");
+    const sessionKey = "jl-visit-count";
+    const cachedCount = Number(sessionStorage.getItem(sessionKey));
+    const endpoint = new URL("https://counterapi.com/api/jameslaplume.ca/view/site");
+    endpoint.searchParams.set("unique", "true");
+
+    const showCount = (count) => {
+      value.textContent = new Intl.NumberFormat(isEnglish ? "en-CA" : "fr-CA").format(count);
+    };
+
+    if (Number.isFinite(cachedCount) && cachedCount > 0) {
+      showCount(cachedCount);
+      return;
+    }
+
+    fetch(endpoint, { mode: "cors", cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error("Counter unavailable");
+        return response.json();
+      })
+      .then((data) => {
+        const count = Number(data.value ?? data.count ?? data.data?.value);
+        if (!Number.isFinite(count)) throw new Error("Invalid counter response");
+        showCount(count);
+        sessionStorage.setItem(sessionKey, String(count));
+      })
+      .catch(() => {
+        counter.hidden = true;
+      });
   }
 })();

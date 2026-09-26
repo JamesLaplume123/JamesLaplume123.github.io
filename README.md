@@ -1,27 +1,33 @@
 # jameslaplume.ca
 
-Site statique bilingue de **James Laplume — Intelligent Systems Lab**, publié avec GitHub Pages.
+Site statique multipage de James Laplume et du projet JARVIS.
 
-## Pages
+## Structure publique
 
-| Français | English |
-| --- | --- |
-| `/` | `/en/` |
-| `/jarvis-builder/` | `/en/jarvis-builder/` |
-| `/jarvis-twin/` | `/en/jarvis-twin/` |
-| `/ambulance-lab/` | `/en/ambulance-lab/` |
-| `/trading-lab/` | `/en/trading-lab/` |
-| `/services/` | `/en/services/` |
-| `/about/` | `/en/about/` |
-| `/contact/` | `/en/contact/` |
+- `/solutions/` présente les six familles de solutions.
+- `/plateforme/` explique les capacités partagées et JARVIS Box.
+- `/ambulance-lab/` documente le laboratoire physique.
+- `/recherche/` sépare les hypothèses, essais et preuves.
+- `/vision-roadmap/` contient uniquement la vision et les horizons futurs.
+- `/confiance/`, `/a-propos/` et `/contact/` complètent le parcours.
 
-Les anciennes pages HTML redirigent vers les nouvelles sections correspondantes.
+## Reconstruction
+
+Le contenu commun et les routes sont générés par `tools/build-site.mjs`.
+
+```powershell
+node tools/build-site.mjs
+```
+
+Les pages générées restent du HTML statique compatible avec GitHub Pages. Les détails sensibles de recherche, les secrets, les données personnelles et les configurations exploitables ne doivent jamais être ajoutés à ce dépôt public.
 
 ## Fonctionnement
 
-- `static-runtime.js` contrôle la navigation mobile, l’aperçu JARVIS Builder, le diagnostic JARVIS Twin, l’explorateur de l’ambulance, la télémétrie publique et le formulaire.
-- `static-runtime.js` charge aussi la télémétrie publique des batteries, avec `data/battery-public-config.json` comme configuration et `data/battery-status.json` comme instantané de secours.
-- Le formulaire prépare un courriel structuré vers `contact@jameslaplume.ca` parce que GitHub Pages ne fournit pas de serveur applicatif.
+- `site-v3.css` contient le système visuel responsive commun.
+- `site-v3.js` contrôle le menu, les animations, le formulaire et le compteur public.
+- Le formulaire utilise FormSubmit pour transmettre les demandes à `laplumejames@gmail.com`.
+- `/en/` fournit un aperçu anglais; l’édition détaillée est maintenue en français.
+- Les anciennes pages redirigent vers les nouvelles sections correspondantes.
 - `CNAME` conserve le domaine `jameslaplume.ca`.
 - `.nojekyll` permet à GitHub Pages de servir tous les actifs tels quels.
 - `sitemap.xml`, `robots.txt` et `og.png` assurent le référencement et le partage social.

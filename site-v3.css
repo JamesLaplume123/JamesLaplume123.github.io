@@ -397,3 +397,40 @@ html,body{overflow-x:clip}
 .fabric-plan-time span{position:relative;padding-left:26px}
 .fabric-plan-time span:before{content:"";position:absolute;left:3px;top:50%;width:9px;height:9px;border:2px solid #6ccfe2;border-radius:50%;background:#151a1b;transform:translateY(-50%)}
 .fabric-plan-steps{grid-template-rows:repeat(3,minmax(64px,1fr));padding:14px 24px}
+
+/* Premium visual language shared by every JARVIS interface. */
+:where(.cap-console,.fabric-console,.personal-console,.sp-console,.platform-base-console,.ambulance-console,.platform-chat,.automation-studio,.residence-console,.jarvis-interface,.jarvis-onboarding){border-color:#465451;background:#0b1012;color:#f7f8f5;box-shadow:0 34px 90px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.05)}
+:where(.cap-topbar,.fabric-workspace>header,.personal-topbar,.sp-topbar,.platform-base-console>main>header,.ambulance-console>header,.platform-chat-header,.residence-console-head,.jarvis-interface-bar){border-color:#35413e;background:#101719}
+:where(.cap-panel,.fabric-workspace>section,.personal-panel,.sp-panel,.platform-base-console>main>section,.ambulance-console>section){background:#0e1416}
+:where(.cap-sidebar,.fabric-sidebar,.personal-sidebar,.sp-sidebar,.platform-base-console>aside){border-color:#303c39;background:#080d0f}
+:where(.cap-sidebar,.fabric-sidebar,.personal-sidebar,.sp-sidebar,.platform-base-console>aside) nav button{transition:color .2s ease,background .2s ease,border-color .2s ease,transform .2s ease}
+:where(.cap-sidebar,.fabric-sidebar,.personal-sidebar,.sp-sidebar,.platform-base-console>aside) nav button:hover{transform:translateX(2px)}
+:where(.cap-sidebar,.fabric-sidebar,.personal-sidebar,.sp-sidebar,.platform-base-console>aside) nav button.active{border-left-color:#72d7ec;background:#172326;color:#fff;box-shadow:inset 0 1px rgba(255,255,255,.04)}
+
+/* The user's voice is intentionally distinct from system output. */
+.knowledge-user,.platform-message-user p,.automation-chat-user,.demo-question{border:1px solid rgba(132,224,245,.45);border-radius:9px 9px 3px 9px;background:#146f89;color:#fff;box-shadow:0 16px 38px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.12)}
+.knowledge-user{padding:23px 26px}
+.knowledge-user>span,.automation-chat-user>span,.platform-message-user>span{color:#baf2ff;opacity:1}
+.knowledge-user p,.automation-chat-user p,.platform-message-user p,.demo-question{color:#fff;font-weight:520}
+.knowledge-user p{font-size:15px;line-height:1.6}
+.platform-message-user p{padding:18px 21px;font-size:15px;line-height:1.55}
+.automation-chat-user{padding:20px 22px;background:#146f89}
+.automation-chat-user p{font-size:12px;line-height:1.65}
+.demo-question{padding:21px 24px}
+
+/* JARVIS replies are quieter, but more legible and materially separated. */
+.knowledge-response,.automation-chat-jarvis,.platform-message-jarvis{border:1px solid #394845;border-left:2px solid #73d8ed;border-radius:4px 9px 9px 9px;background:#121a1d;box-shadow:0 18px 44px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.035)}
+.knowledge-response{padding:32px}
+.platform-message-jarvis{padding:22px 24px}
+.knowledge-response>p,.automation-chat-jarvis p,.automation-chat-jarvis ul,.platform-message-jarvis>p,.platform-message-jarvis li{color:#c7d0cc}
+.knowledge-response header strong,.automation-chat-jarvis strong,.platform-message-jarvis li b{color:#fff}
+
+/* Sharper cards, states and actions without a gaming aesthetic. */
+:where(.space-room-grid,.scene-library,.security-identities,.care-incident-grid,.care-equipment-grid,.knowledge-files,.fabric-signal-row,.personal-case-signals,.impact-goals,.impact-habits,.network-kpis,.ambulance-primary-stats,.ambulance-comfort-grid,.ambulance-vehicle-grid,.ambulance-links-grid) article{border-color:#3a4744;background:#12191b;box-shadow:inset 0 1px rgba(255,255,255,.035)}
+:where(.space-room-grid,.scene-library,.security-identities,.care-incident-grid,.care-equipment-grid,.knowledge-files,.fabric-signal-row,.impact-goals,.impact-habits) article:hover{border-color:#586a66;background:#162023}
+:where(.cap-console,.fabric-console,.personal-console,.sp-console,.platform-base-console,.ambulance-console) :is(h3,h4,strong,b){letter-spacing:0}
+:where(.cap-console,.fabric-console,.personal-console,.sp-console,.platform-base-console,.ambulance-console) :is(p,small,dd){color:#9ba8a3}
+:where(.cap-console,.fabric-console,.personal-console,.sp-console,.platform-base-console,.ambulance-console) :is(.eyebrow,[class$="-label"]){color:#77d8ed}
+:where(.space-decision,.network-recommendation,.care-decision,.knowledge-next,.personal-case-action,.fabric-action-file,.vision-proposal,.ambulance-alert-strip,.ambulance-diagnostic-note){border-left-color:#d7b96e;background:#171d1c;box-shadow:inset 0 1px rgba(255,255,255,.035)}
+:where(.space-decision,.knowledge-next,.security-proposal,.network-recommendation,.care-decision,.personal-case-action,.fabric-action-file,.vision-proposal,.ambulance-energy-grid,.ambulance-route-suggestion) button{border-radius:4px;background:#f4f5f1;color:#101414;box-shadow:0 8px 24px rgba(0,0,0,.18);transition:background .2s ease,transform .2s ease,box-shadow .2s ease}
+:where(.space-decision,.knowledge-next,.security-proposal,.network-recommendation,.care-decision,.personal-case-action,.fabric-action-file,.vision-proposal,.ambulance-energy-grid,.ambulance-route-suggestion) button:hover{background:#77d8ed;transform:translateY(-1px);box-shadow:0 11px 28px rgba(0,0,0,.25)}

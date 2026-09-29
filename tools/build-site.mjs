@@ -214,7 +214,7 @@ const solutions = [
 const navItems = [
   ['solutions', '/solutions/', 'Solutions'],
   ['plateforme', '/plateforme/', 'Plateforme'],
-  ['ambulance', '/ambulance-lab/', 'Ambulance Lab'],
+  ['ambulance', '/laboratoire-mobile/', 'Laboratoire mobile'],
   ['recherche', '/recherche/', 'Recherche'],
   ['vision', '/vision-roadmap/', 'Vision'],
   ['trust', '/confiance/', 'Confiance'],
@@ -227,7 +227,7 @@ function header(active = '', lang = 'fr-CA') {
   <header class="site-header">
     <a class="brand" href="/en/"><span class="brand-mark" aria-hidden="true"><b>JL</b></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a>
     <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-nav-toggle><span></span><span></span></button>
-    <nav class="site-nav" aria-label="Main navigation" data-nav><a href="/solutions/">Solutions</a><a href="/plateforme/">Platform</a><a href="/ambulance-lab/">Ambulance Lab</a><a href="/recherche/">Research</a><a href="/vision-roadmap/">Vision</a><a href="/confiance/">Trust</a><a href="/a-propos/">About</a><a class="nav-mobile-only" href="/">Français</a><a class="nav-mobile-only nav-contact" href="/contact/">Discuss a project</a></nav>
+    <nav class="site-nav" aria-label="Main navigation" data-nav><a href="/solutions/">Solutions</a><a href="/plateforme/">Platform</a><a href="/ambulance-lab/">Mobile Laboratory</a><a href="/recherche/">Research</a><a href="/vision-roadmap/">Vision</a><a href="/confiance/">Trust</a><a href="/a-propos/">About</a><a class="nav-mobile-only" href="/">Français</a><a class="nav-mobile-only nav-contact" href="/contact/">Discuss a project</a></nav>
     <div class="header-actions"><a class="language-link" href="/">Français</a><a class="header-cta" href="/contact/">Discuss a project</a></div>
   </header>`;
   return `<a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -242,20 +242,25 @@ function header(active = '', lang = 'fr-CA') {
 function footer(lang = 'fr-CA') {
   if (lang.startsWith('en')) return `<footer class="site-footer"><div class="footer-main shell">
     <div><a class="brand" href="/en/"><span class="brand-mark" aria-hidden="true"><b>JL</b></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a><p>Connect what exists. Understand what matters. Act with your approval.</p></div>
-    <div><h3>Explore</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">Platform</a><a href="/ambulance-lab/">Ambulance Lab</a><a href="/recherche/">Research</a></div>
+    <div><h3>Explore</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">Platform</a><a href="/ambulance-lab/">Mobile Laboratory</a><a href="/recherche/">Research</a></div>
     <div><h3>Project</h3><a href="/vision-roadmap/">Vision and roadmap</a><a href="/confiance/">Trust</a><a href="/a-propos/">About</a><a href="/contact/">Contact</a></div>
-    <div><h3>Status</h3><span>Platform under construction</span><span>Ambulance Lab under construction</span><span>Open to collaboration</span></div>
+    <div><h3>Status</h3><span>Platform under construction</span><span>Mobile laboratory under construction</span><span>Open to collaboration</span></div>
   </div><div class="footer-bottom shell"><span>© 2026 James Laplume · Québec, Canada</span><span>Detailed edition available in French</span><span>Private by design</span></div></footer>`;
   return `<footer class="site-footer"><div class="footer-main shell">
     <div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><b>JL</b></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a><p>Relier ce qui existe. Comprendre ce qui compte. Agir avec votre accord.</p></div>
-    <div><h3>Explorer</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">Plateforme</a><a href="/ambulance-lab/">Ambulance Lab</a><a href="/recherche/">Recherche</a></div>
+    <div><h3>Explorer</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">Plateforme</a><a href="/ambulance-lab/">Laboratoire mobile</a><a href="/recherche/">Recherche</a></div>
     <div><h3>Projet</h3><a href="/vision-roadmap/">Vision et feuille de route</a><a href="/confiance/">Confiance</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></div>
-    <div><h3>État</h3><span>Plateforme en construction</span><span>Ambulance Lab en construction</span><span>Ouvert aux collaborations</span></div>
+    <div><h3>État</h3><span>Plateforme en construction</span><span>Laboratoire mobile en construction</span><span>Ouvert aux collaborations</span></div>
   </div><div class="footer-bottom shell"><span>© 2026 James Laplume · Québec, Canada</span><span class="visitor-counter"><i></i> Visiteurs <b data-visitor-count>—</b></span><span>Privé par conception</span></div></footer>`;
 }
 
 function normalizeProductNaming(html) {
   return html
+    .replaceAll('/ambulance-lab/', '/laboratoire-mobile/')
+    .replaceAll('<span>AL</span><div><b>Ambulance Lab</b>', '<span>LM</span><div><b>Laboratoire mobile</b>')
+    .replaceAll('L’Ambulance Lab', 'Le laboratoire mobile JARVIS')
+    .replaceAll('l’Ambulance Lab', 'le laboratoire mobile JARVIS')
+    .replaceAll('Ambulance Lab', 'Laboratoire mobile JARVIS')
     .replaceAll('Diagnostic et JARVIS Care', 'Diagnostic & continuité')
     .replaceAll('Diagnostic et continuité', 'Diagnostic & continuité')
     .replaceAll('Diagnostics and JARVIS Care', 'Diagnostics & continuity')
@@ -265,7 +270,7 @@ function normalizeProductNaming(html) {
 
 function documentPage({ title, description, active, pathname, body, image = '/og.png', lang = 'fr-CA' }) {
   const canonical = `${baseUrl}${pathname}`;
-  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#0b0e0e"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/site-v3.css?v=20260929zx"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260929zx" defer></script></body></html>`);
+  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#0b0e0e"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/site-v3.css?v=20260929zy"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260929zy" defer></script></body></html>`);
 }
 
 function replaceSection(html, startMarker, endMarker, replacement) {
@@ -318,7 +323,7 @@ function homePage() {
   `<section class="home-control-showcase"><div class="shell"><div class="home-control-heading" data-reveal><div><p class="eyebrow">Le système JARVIS</p><h2 class="headline">Votre intelligence privée. Locale. Sous votre contrôle.</h2></div><p>JARVIS App est votre interface. JARVIS Core comprend le contexte et orchestre les actions. JARVIS Hub garde cette intelligence près de vos systèmes. Un seul produit, configuré autour de vous.</p></div><div class="jarvis-system-parts" data-reveal><div><span>01</span><strong>JARVIS App</strong><small>Votre interface sur les écrans autorisés</small></div><div><span>02</span><strong>JARVIS Core</strong><small>IA, contexte, permissions et orchestration</small></div><div><span>03</span><strong>JARVIS Hub</strong><small>L’infrastructure physique locale</small></div></div><div data-reveal>${jarvisSetup()}</div></div></section>` +
   `<section class="home-philosophy"><div class="shell"><p class="eyebrow" data-reveal>La philosophie</p><div class="philosophy-grid"><h2 data-reveal>On ne réinvente pas la roue.<span>Tout existe déjà. Ce qui manque, c’est le lien.</span></h2><div class="philosophy-copy" data-reveal><p class="philosophy-lead">Le problème n’est plus le manque d’information. C’est le trop-plein.</p><p>Applications, données, formations, conseils et appareils s’accumulent sans former un ensemble. On cherche, on compare, on hésite, puis on ne sait plus quoi faire. JARVIS relie ce qui est déjà utile, remet l’information dans son contexte et aide à choisir la prochaine action claire.</p><strong>Ne pas tout reconstruire. Relier, comprendre et aider à avancer.</strong></div></div></div></section>` +
   `<section class="section home-solutions"><div class="shell"><div class="home-solutions-heading" data-reveal><div><p class="eyebrow">Six solutions, un même noyau</p><h2 class="headline">La technologie devient utile lorsqu’elle comprend l’ensemble.</h2></div><p>Chaque solution répond à un problème précis. Elles peuvent être déployées séparément, puis partager la même identité, les mêmes permissions et le même contexte lorsque leur valeur est démontrée.</p></div>${solutionCards()}<div class="solutions-summary" data-reveal><p>Vous ne choisissez pas des modules techniques.</p><strong>Nous partons de votre environnement, de vos irritants et du résultat que vous voulez obtenir.</strong><a href="/solutions/">Comparer les six solutions <span>↗</span></a></div></div></section>` +
-  `<section class="home-lab"><div class="home-lab-media"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Visualisation conceptuelle de l’ambulance Ford 2017 dans un garage laboratoire professionnel"></div><div class="home-lab-copy" data-reveal><p class="eyebrow">La preuve dans le réel</p><h2 class="headline">L’Ambulance Lab.</h2><p>Une Ford 2017 V10 transformée en véhicule habitable et en laboratoire mobile. Ce projet oblige l’énergie, le réseau, le confort, la sécurité, le diagnostic et les automatisations à fonctionner ensemble, sur la route comme hors réseau.</p><div class="home-lab-domains"><span>Énergie</span><span>Contrôle</span><span>Réseau</span><span>Sécurité</span><span>Diagnostic</span><span>Hors ligne</span></div><a class="button button-primary" href="/ambulance-lab/">Découvrir le laboratoire <span>↗</span></a></div></section>` +
+  `<section class="home-lab"><div class="home-lab-media"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Visualisation conceptuelle de l’ambulance Ford 2017 dans un garage laboratoire professionnel"></div><div class="home-lab-copy" data-reveal><p class="eyebrow">La preuve dans le réel</p><h2 class="headline">Le laboratoire mobile JARVIS.</h2><p>Une Ford 2017 V10 transformée en véhicule habitable et en laboratoire mobile. Ce projet oblige l’énergie, le réseau, le confort, la sécurité, le diagnostic et les automatisations à fonctionner ensemble, sur la route comme hors réseau.</p><div class="home-lab-domains"><span>Énergie</span><span>Contrôle</span><span>Réseau</span><span>Sécurité</span><span>Diagnostic</span><span>Hors ligne</span></div><a class="button button-primary" href="/ambulance-lab/">Découvrir le laboratoire <span>↗</span></a></div></section>` +
   `<section class="home-destinations"><a class="home-destination home-destination-research" href="/recherche/" data-reveal><img src="/media/solutions/diagnostic-care.webp" alt="Analyse technique et diagnostic d’un système"><div><p class="eyebrow">Recherche appliquée</p><h2>Transformer les idées en preuves.</h2><p>Questions, essais, observations et limites sont documentés afin que chaque capacité progresse sur des bases vérifiables.</p><strong>Découvrir la méthode <span>↗</span></strong></div></a><a class="home-destination home-destination-vision" href="/vision-roadmap/" data-reveal><img src="/media/concept/jarvis-future-ecosystem-v1.webp" alt="Écosystème privé reliant plusieurs environnements"><div><p class="eyebrow">Vision à long terme</p><h2>Un seul JARVIS. Plusieurs environnements.</h2><p>Maison, véhicule et entreprise peuvent conserver leur autonomie tout en partageant, lorsque vous l’autorisez, la même intelligence, le même contexte et les mêmes permissions.</p><strong>Découvrir la vision <span>↗</span></strong></div></a></section>` + cta('Quel environnement devrait enfin fonctionner comme un seul système?');
   return documentPage({ title:'JARVIS | Systèmes intelligents privés — James Laplume', description:'JARVIS relie vos outils, vos informations et vos espaces dans une expérience privée, contextuelle et contrôlée.', active:'', pathname:'/', body:body.replace('<section class="home-philosophy">', homeAccessPrinciple() + '<section class="home-philosophy">'), image:'/media/concept/jarvis-hero-architecture-v1.webp' });
 }
@@ -580,7 +585,7 @@ function privateKnowledgeScene(s) {
       <div class="knowledge-product-hero"><img src="${s.image}" alt="Espace de travail privé avec documents et assistant"><div><span>Assistant privé · mission autorisée</span><h3>Poser une question. Voir la réponse, les preuves et les limites.</h3></div></div>
       <div class="knowledge-offer-definition"><div><span>Cette capacité JARVIS</span><h3>Interroger vos informations privées et obtenir une réponse vérifiable.</h3></div><article><span>Elle peut indexer</span><strong>Documents, photos, vidéos, films, courriels, CRM et dossiers autorisés</strong></article><article><span>Elle produit</span><strong>Recherche, réponses sourcées, sélections, comparaisons et dossiers</strong></article><article><span>Frontière claire</span><strong>Ici, JARVIS cherche et prépare. JARVIS Operations déclenche, écrit et exécute.</strong></article></div>
       <div class="knowledge-index-map"><div><span>Vos originaux restent où ils sont</span><strong>Ordinateur</strong><strong>NAS</strong><strong>Nuage autorisé</strong><strong>Photos et vidéos</strong><strong>Films et médias</strong></div><i>→</i><article><span>Index local privé</span><h4>Texte · métadonnées · miniatures · transcriptions · liens</h4><small>JARVIS retrouve et comprend sans déplacer toute votre bibliothèque.</small></article><i>→</i><div><span>Une seule entrée</span><strong>Recherche naturelle</strong><strong>Sources visibles</strong><strong>Actions avec permission</strong></div></div>
-      <div class="knowledge-mission-strip"><div><span>Mission active</span><strong data-knowledge-mission>Diagnostiquer un arrêt intermittent</strong></div><div><span>Dossier</span><strong data-knowledge-folder>K-041 · Ambulance Lab</strong></div><div><span>Accès permis</span><strong data-knowledge-access>Documents · photos · courriel</strong></div><div><span>Internet</span><strong class="is-closed" data-knowledge-internet>Fermé</strong></div></div>
+      <div class="knowledge-mission-strip"><div><span>Mission active</span><strong data-knowledge-mission>Diagnostiquer un arrêt intermittent</strong></div><div><span>Dossier</span><strong data-knowledge-folder>K-041 · Laboratoire mobile</strong></div><div><span>Accès permis</span><strong data-knowledge-access>Documents · photos · courriel</strong></div><div><span>Internet</span><strong class="is-closed" data-knowledge-internet>Fermé</strong></div></div>
       <div class="knowledge-case-switcher"><div><span>Contextes de travail</span><strong>Personnel, technique ou entreprise : la méthode reste la même.</strong></div><nav aria-label="Contextes de JARVIS Knowledge"><button type="button" data-knowledge-case="personal"><i>PR</i><span>Personnel</span><small>Fichiers · souvenirs</small></button><button class="active" type="button" data-knowledge-case="technical"><i>DT</i><span>Technique</span><small>Équipement · entretien</small></button><button type="button" data-knowledge-case="crm"><i>CRM</i><span>Clients</span><small>Historique · rencontre</small></button><button type="button" data-knowledge-case="contract"><i>CT</i><span>Contrats</span><small>Engagements · risques</small></button><button type="button" data-knowledge-case="finance"><i>FI</i><span>Finance</span><small>Facture · commande</small></button><button type="button" data-knowledge-case="hr"><i>RH</i><span>Équipe</span><small>Accueil · procédures</small></button></nav></div>
       <div class="knowledge-conversation knowledge-workbench">
         <div class="knowledge-user"><span>Vous</span><p data-knowledge-question>Pourquoi la génératrice s’arrête-t-elle après quelques minutes, et que puis-je vérifier sans risque?</p></div>
@@ -592,7 +597,7 @@ function privateKnowledgeScene(s) {
           <div class="knowledge-evidence-grid" data-knowledge-evidence-grid>
             <button class="knowledge-evidence-card active" type="button" data-evidence="manual"><span class="knowledge-evidence-thumb pdf"><i>PDF</i><b>E-17</b><small>p. 48</small></span><span><em>Manuel_Generatrice.pdf</em><strong>Code d’arrêt et procédure</strong><small>Document primaire · cité</small></span></button>
             <button class="knowledge-evidence-card" type="button" data-evidence="service"><span class="knowledge-evidence-thumb doc"><i>DOC</i><b>41 h</b><small>depuis l’entretien</small></span><span><em>Entretien_2026.docx</em><strong>Huile et filtre remplacés</strong><small>Rapport interne · autorisé</small></span></button>
-            <button class="knowledge-evidence-card" type="button" data-evidence="photo"><span class="knowledge-evidence-thumb photo"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Photo de l’Ambulance Lab dans le garage"></span><span><em>IMG_1842_Vue_vehicule.jpg</em><strong>Entrée d’air non visible</strong><small>Photo · preuve insuffisante</small></span></button>
+            <button class="knowledge-evidence-card" type="button" data-evidence="photo"><span class="knowledge-evidence-thumb photo"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Photo du laboratoire mobile dans le garage"></span><span><em>IMG_1842_Vue_vehicule.jpg</em><strong>Entrée d’air non visible</strong><small>Photo · preuve insuffisante</small></span></button>
             <button class="knowledge-evidence-card" type="button" data-evidence="message"><span class="knowledge-evidence-thumb msg"><i>MSG</i><b>30 cm</b><small>recommandés</small></span><span><em>Courriel_technicien.msg</em><strong>Consigne de ventilation</strong><small>Message · expéditeur connu</small></span></button>
           </div>
           <div class="knowledge-evidence-preview" data-knowledge-evidence-preview>
@@ -605,7 +610,7 @@ function privateKnowledgeScene(s) {
         </div>
       </div>
     </section>
-    <section class="cap-panel" data-demo-panel="sources" hidden><div class="cap-panel-head"><div><span>Sources autorisées</span><h3>Documents, photos, messages et liens restent séparés et traçables.</h3></div><p>JARVIS voit seulement les emplacements choisis pour la mission. Chaque réponse conserve le fichier, la date et le passage utilisé.</p></div><div class="knowledge-source-list"><article><i>PDF</i><div><b>Documentation technique</b><small>186 documents · pages et passages citables</small></div><span>Autorisé</span></article><article><i>IMG</i><div><b>Photos du dossier K-041</b><small>12 images · métadonnées conservées</small></div><span>Autorisé</span></article><article><i>MSG</i><div><b>Boîte de service</b><small>Dossier « Ambulance Lab » seulement</small></div><span>Limité</span></article><article><i>WEB</i><div><b>Liens Internet</b><small>Recherche externe désactivée pour cette mission</small></div><span class="off">Fermé</span></article></div><div class="knowledge-link-example"><span>Lien connu dans le dossier</span><strong>support.fabricant.example/generatrice/e17</strong><small>Le lien peut être conservé sans être consulté. Un accès Internet ponctuel exige une permission distincte.</small></div></section>
+    <section class="cap-panel" data-demo-panel="sources" hidden><div class="cap-panel-head"><div><span>Sources autorisées</span><h3>Documents, photos, messages et liens restent séparés et traçables.</h3></div><p>JARVIS voit seulement les emplacements choisis pour la mission. Chaque réponse conserve le fichier, la date et le passage utilisé.</p></div><div class="knowledge-source-list"><article><i>PDF</i><div><b>Documentation technique</b><small>186 documents · pages et passages citables</small></div><span>Autorisé</span></article><article><i>IMG</i><div><b>Photos du dossier K-041</b><small>12 images · métadonnées conservées</small></div><span>Autorisé</span></article><article><i>MSG</i><div><b>Boîte de service</b><small>Dossier « Laboratoire mobile » seulement</small></div><span>Limité</span></article><article><i>WEB</i><div><b>Liens Internet</b><small>Recherche externe désactivée pour cette mission</small></div><span class="off">Fermé</span></article></div><div class="knowledge-link-example"><span>Lien connu dans le dossier</span><strong>support.fabricant.example/generatrice/e17</strong><small>Le lien peut être conservé sans être consulté. Un accès Internet ponctuel exige une permission distincte.</small></div></section>
     <section class="cap-panel" data-demo-panel="files" hidden><div class="cap-panel-head"><div><span>Dossiers de travail</span><h3>La question, les preuves, la décision et le résultat restent ensemble.</h3></div><p>Chaque dossier peut être repris, vérifié ou transmis sans perdre le contexte qui a mené à la conclusion.</p></div><div class="knowledge-files"><article><span>Dossier K-041</span><h4>Arrêt intermittent de la génératrice</h4><p>4 sources · 1 vérification proposée · aucune action exécutée</p><b>Ouvert</b></article><article><span>Dossier K-040</span><h4>Résumé du manuel HVAC</h4><p>2 sources · version validée par un responsable</p><b>Validé</b></article><article><span>Dossier K-039</span><h4>Préparation d’une intervention</h4><p>6 documents · brouillon prêt à approuver</p><b>À décider</b></article></div></section>
     <section class="cap-panel" data-demo-panel="permissions" hidden><div class="cap-panel-head"><div><span>Permissions</span><h3>L’assistant reçoit une mission précise, jamais un accès général.</h3></div><p>Lire un document, citer un passage, préparer un brouillon et agir dans un système sont quatre droits distincts.</p></div><div class="permission-matrix"><div><span>Source</span><span>Lire</span><span>Citer</span><span>Préparer</span><span>Agir</span></div><div><b>Manuels techniques</b><i class="yes">Oui</i><i class="yes">Oui</i><i class="yes">Oui</i><i>Non</i></div><div><b>Courriels de service</b><i class="yes">Limité</i><i class="yes">Oui</i><i class="yes">Brouillon</i><i>Non</i></div><div><b>Internet</b><i>Non</i><i>Non</i><i>Non</i><i>Non</i></div><div><b>Systèmes réels</b><i class="yes">État</i><i class="yes">Oui</i><i class="yes">Proposer</i><i>Approbation</i></div></div></section>`}).replace('class="cap-console"', 'class="cap-console knowledge-cap-console"');
 }
@@ -747,7 +752,7 @@ function ambulancePage() {
   `<section class="section section-white"><div class="shell"><div class="section-heading" data-reveal><div><p class="eyebrow">Automatisations envisagées</p><h2 class="headline">Le comportement dépend du lieu, du moment et de la priorité.</h2></div><p>Chaque règle importante doit pouvoir être expliquée, refusée et reprise manuellement.</p></div><div class="lab-automation-list"><div><span>Stationnement</span><h3>Demander avant de produire du bruit.</h3><p>Vérifier l’heure, la position, les règles choisies et la réserve avant de proposer la génératrice.</p></div><div><span>Confort</span><h3>Préparer sans gaspiller.</h3><p>Chauffer l’eau ou climatiser au moment utile, puis réduire les charges si la projection se dégrade.</p></div><div><span>Trajet</span><h3>Anticiper l’arrêt utile.</h3><p>Rapprocher couverture Internet, eau, énergie, destination et durée de conduite prévue.</p></div><div><span>Maintenance</span><h3>Voir les dérives avant le code.</h3><p>Comparer les capteurs mécaniques, les conditions de route et l’historique avant de préparer un rapport.</p></div><div><span>Sécurité</span><h3>Adapter la vigilance au contexte.</h3><p>Différencier un arrêt connu, une présence autorisée et un événement qui mérite une vérification.</p></div><div><span>Diagnostic</span><h3>Passer du symptôme au dossier.</h3><p>Classer les causes, guider les contrôles, trouver la documentation et préparer le partage au technicien.</p></div></div></div></section>` +
   `<section class="section section-dark"><div class="intro-grid shell"><div><p class="eyebrow">La règle du laboratoire</p><h2 class="headline">Tout mesurer. Tout expliquer. Ne rien prétendre avant la preuve.</h2></div><aside class="intro-aside"><p>La télémétrie, les capteurs et les interfaces autorisées pourront aider à détecter une dérive avant l’apparition d’un code. JARVIS classera des hypothèses et préparera les prochaines vérifications.</p><strong>Une hypothèse guidée ne remplace jamais la validation d’un mécanicien ou d’un technicien qualifié.</strong></aside></div></section>` + cta('Vous souhaitez suivre le laboratoire ou contribuer à une validation?');
   body = replaceSection(body, '<section class="lab-energy', '<section class="section section-white">', ambulanceControlSection());
-  return documentPage({title:'Ambulance Lab | Laboratoire mobile JARVIS',description:'Une ambulance Ford 2017 V10 transformée en laboratoire réel pour l’énergie, le réseau, la sécurité, le diagnostic et l’automatisation.',active:'ambulance',pathname:'/ambulance-lab/',body,image:'/media/ambulance/ambulance-garage-lab-v1.webp'});
+  return documentPage({title:'Laboratoire mobile JARVIS | Projet réel',description:'Une ambulance Ford 2017 V10 transformée en laboratoire réel pour l’énergie, le réseau, la sécurité, le diagnostic et l’automatisation.',active:'ambulance',pathname:'/laboratoire-mobile/',body,image:'/media/ambulance/ambulance-garage-lab-v1.webp'});
 }
 
 function researchPage() {
@@ -903,7 +908,7 @@ await writeRoute('/', homePage());
 await writeRoute('/solutions/', solutionsHub());
 for (const solution of solutions) await writeRoute(`/solutions/${solution.slug}/`, solutionPage(solution));
 await writeRoute('/plateforme/', platformPage());
-await writeRoute('/ambulance-lab/', ambulancePage());
+await writeRoute('/laboratoire-mobile/', ambulancePage());
 await writeRoute('/recherche/', researchPage());
 await writeRoute('/vision-roadmap/', visionPage());
 await writeRoute('/confiance/', trustPage());
@@ -912,6 +917,7 @@ await writeRoute('/contact/', contactPage());
 await writeRoute('/en/', englishPage());
 
 const redirect = (target) => `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=${target}"><link rel="canonical" href="${baseUrl}${target}"><title>Redirection</title></head><body><p><a href="${target}">Continuer</a></p></body></html>`;
+await writeRoute('/ambulance-lab/', redirect('/laboratoire-mobile/'));
 await writeRoute('/services/', redirect('/solutions/'));
 await writeRoute('/jarvis-twin/', redirect('/plateforme/'));
 await writeRoute('/about/', redirect('/a-propos/'));
@@ -919,7 +925,7 @@ await writeRoute('/jarvis-builder/', redirect('/plateforme/'));
 await writeRoute('/trading-lab/', redirect('/'));
 await writeRoute('/concept-home/', redirect('/'));
 await writeRoute('/en/about/', redirect('/en/'));
-await writeRoute('/en/ambulance-lab/', redirect('/en/'));
+await writeRoute('/en/ambulance-lab/', redirect('/laboratoire-mobile/'));
 await writeRoute('/en/contact/', redirect('/contact/'));
 await writeRoute('/en/jarvis-builder/', redirect('/en/'));
 await writeRoute('/en/jarvis-twin/', redirect('/en/'));
@@ -930,9 +936,9 @@ for (const [file, target] of [
   ['about.html', '/a-propos/'],
   ['contact.html', '/contact/'],
   ['solutions.html', '/solutions/'],
-  ['projects.html', '/ambulance-lab/'],
-  ['lab.html', '/ambulance-lab/'],
-  ['mobile-lab.html', '/ambulance-lab/'],
+  ['projects.html', '/laboratoire-mobile/'],
+  ['lab.html', '/laboratoire-mobile/'],
+  ['mobile-lab.html', '/laboratoire-mobile/'],
   ['learn.html', '/recherche/'],
 ]) await writeFile(path.join(root, file), redirect(target), 'utf8');
 
@@ -944,7 +950,7 @@ const notFound = documentPage({
 });
 await writeFile(path.join(root, '404.html'), notFound, 'utf8');
 
-const urls = ['/', '/solutions/', ...solutions.map((s)=>`/solutions/${s.slug}/`), '/plateforme/', '/ambulance-lab/', '/recherche/', '/vision-roadmap/', '/confiance/', '/a-propos/', '/contact/', '/en/'];
+const urls = ['/', '/solutions/', ...solutions.map((s)=>`/solutions/${s.slug}/`), '/plateforme/', '/laboratoire-mobile/', '/recherche/', '/vision-roadmap/', '/confiance/', '/a-propos/', '/contact/', '/en/'];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((url)=>`  <url><loc>${baseUrl}${url}</loc><lastmod>2026-09-29</lastmod></url>`).join('\n')}\n</urlset>\n`;
 await writeFile(path.join(root, 'sitemap.xml'), sitemap, 'utf8');
 console.log(`Built ${urls.length} public routes.`);

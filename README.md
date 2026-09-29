@@ -5,7 +5,7 @@ Site statique multipage de James Laplume et du projet JARVIS.
 ## Structure publique
 
 - `/solutions/` présente les six familles de solutions.
-- `/plateforme/` explique les capacités partagées et JARVIS Box.
+- `/plateforme/` explique comment JARVIS App, JARVIS Core et JARVIS Hub forment une même plateforme.
 - `/ambulance-lab/` documente le laboratoire physique.
 - `/recherche/` sépare les hypothèses, essais et preuves.
 - `/vision-roadmap/` contient uniquement la vision et les horizons futurs.

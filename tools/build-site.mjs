@@ -12,10 +12,10 @@ const solutions = [
     promise: 'Un environnement qui comprend son état, s’adapte au contexte et demeure contrôlable simplement.',
     image: '/media/solutions/environnements-intelligents.webp', status: 'Concept produit · architecture en préparation',
     experienceTitle: 'Votre lieu, réuni dans une expérience claire.',
-    previewTitle: 'Voir ce qui reste à faire avant de partir.',
+    previewTitle: 'Toute la propriété. Une seule expérience.',
     localTitle: 'Les fonctions essentielles restent dans le lieu.',
     capabilityIntro: 'Le tableau de bord privilégie les états qui demandent une décision. Les protocoles et les intégrations restent en arrière-plan.',
-    previewIntro: 'Ce mode départ réunit présence, confort, énergie et sécurité dans une seule décision compréhensible.',
+    previewIntro: 'L’interface réunit les espaces, les ambiances, l’énergie et la sécurité. Chaque commande reste visible, compréhensible et réversible.',
     ctaTitle: 'Quel lieu mérite enfin de fonctionner comme un ensemble?',
     ctaCopy: 'Décrivez les appareils déjà en place, les irritants quotidiens et ce qui doit continuer de fonctionner même sans Internet.',
     problemTitle: 'Les appareils sont intelligents. Le lieu, lui, reste souvent fragmenté.',
@@ -213,11 +213,9 @@ const solutions = [
 
 const navItems = [
   ['solutions', '/solutions/', 'Solutions'],
-  ['plateforme', '/plateforme/', 'Plateforme'],
+  ['plateforme', '/plateforme/', 'JARVIS'],
   ['ambulance', '/laboratoire-mobile/', 'Laboratoire mobile'],
-  ['recherche', '/recherche/', 'Recherche'],
   ['vision', '/vision-roadmap/', 'Vision'],
-  ['trust', '/confiance/', 'Confiance'],
   ['about', '/a-propos/', 'À propos'],
 ];
 
@@ -227,7 +225,7 @@ function header(active = '', lang = 'fr-CA') {
   <header class="site-header">
     <a class="brand" href="/en/"><span class="brand-mark" aria-hidden="true"><b>JL</b></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a>
     <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-nav-toggle><span></span><span></span></button>
-    <nav class="site-nav" aria-label="Main navigation" data-nav><a href="/solutions/">Solutions</a><a href="/plateforme/">Platform</a><a href="/ambulance-lab/">Mobile Laboratory</a><a href="/recherche/">Research</a><a href="/vision-roadmap/">Vision</a><a href="/confiance/">Trust</a><a href="/a-propos/">About</a><a class="nav-mobile-only" href="/">Français</a><a class="nav-mobile-only nav-contact" href="/contact/">Discuss a project</a></nav>
+    <nav class="site-nav" aria-label="Main navigation" data-nav><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Mobile Laboratory</a><a href="/vision-roadmap/">Vision</a><a href="/a-propos/">About</a><a class="nav-mobile-only" href="/">Français</a><a class="nav-mobile-only nav-contact" href="/contact/">Discuss a project</a></nav>
     <div class="header-actions"><a class="language-link" href="/">Français</a><a class="header-cta" href="/contact/">Discuss a project</a></div>
   </header>`;
   return `<a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -242,13 +240,13 @@ function header(active = '', lang = 'fr-CA') {
 function footer(lang = 'fr-CA') {
   if (lang.startsWith('en')) return `<footer class="site-footer"><div class="footer-main shell">
     <div><a class="brand" href="/en/"><span class="brand-mark" aria-hidden="true"><b>JL</b></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a><p>Connect what exists. Understand what matters. Act with your approval.</p></div>
-    <div><h3>Explore</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">Platform</a><a href="/ambulance-lab/">Mobile Laboratory</a><a href="/recherche/">Research</a></div>
+    <div><h3>Explore</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Mobile Laboratory</a><a href="/recherche/">Research</a></div>
     <div><h3>Project</h3><a href="/vision-roadmap/">Vision and roadmap</a><a href="/confiance/">Trust</a><a href="/a-propos/">About</a><a href="/contact/">Contact</a></div>
     <div><h3>Status</h3><span>Platform under construction</span><span>Mobile laboratory under construction</span><span>Open to collaboration</span></div>
   </div><div class="footer-bottom shell"><span>© 2026 James Laplume · Québec, Canada</span><span>Detailed edition available in French</span><span>Private by design</span></div></footer>`;
   return `<footer class="site-footer"><div class="footer-main shell">
     <div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><b>JL</b></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a><p>Relier ce qui existe. Comprendre ce qui compte. Agir avec votre accord.</p></div>
-    <div><h3>Explorer</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">Plateforme</a><a href="/ambulance-lab/">Laboratoire mobile</a><a href="/recherche/">Recherche</a></div>
+    <div><h3>Explorer</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/recherche/">Recherche</a></div>
     <div><h3>Projet</h3><a href="/vision-roadmap/">Vision et feuille de route</a><a href="/confiance/">Confiance</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></div>
     <div><h3>État</h3><span>Plateforme en construction</span><span>Laboratoire mobile en construction</span><span>Ouvert aux collaborations</span></div>
   </div><div class="footer-bottom shell"><span>© 2026 James Laplume · Québec, Canada</span><span class="visitor-counter"><i></i> Visiteurs <b data-visitor-count>—</b></span><span>Privé par conception</span></div></footer>`;
@@ -258,6 +256,7 @@ function normalizeProductNaming(html) {
   return html
     .replaceAll('/ambulance-lab/', '/laboratoire-mobile/')
     .replaceAll('<span>AL</span><div><b>Ambulance Lab</b>', '<span>LM</span><div><b>Laboratoire mobile</b>')
+    .replaceAll('<span>LM</span><div><b>Laboratoire mobile</b><small>Ford 2017 V10 · véhicule laboratoire</small>', '<span>J</span><div><b>JARVIS App</b><small>Laboratoire mobile · Ford 2017 V10</small>')
     .replaceAll('L’Ambulance Lab', 'Le laboratoire mobile JARVIS')
     .replaceAll('l’Ambulance Lab', 'le laboratoire mobile JARVIS')
     .replaceAll('Ambulance Lab', 'Laboratoire mobile JARVIS')
@@ -265,12 +264,22 @@ function normalizeProductNaming(html) {
     .replaceAll('Diagnostic et continuité', 'Diagnostic & continuité')
     .replaceAll('Diagnostics and JARVIS Care', 'Diagnostics & continuity')
     .replaceAll('diagnostics with JARVIS Care', 'diagnostics & continuity')
-    .replaceAll('réseau et Care', 'réseau et Diagnostic & continuité');
+    .replaceAll('réseau et Care', 'réseau et Diagnostic & continuité')
+    .replaceAll('JARVIS Knowledge', 'IA privée et connaissances')
+    .replaceAll('JARVIS Vision', 'Sécurité intelligente')
+    .replaceAll('JARVIS Network', 'Administration réseau JARVIS')
+    .replaceAll('JARVIS Diagnostic', 'Diagnostic & continuité')
+    .replaceAll('JARVIS Enterprise · Intelligence opérationnelle', 'Automatisation d’entreprise · Intelligence opérationnelle')
+    .replaceAll('JARVIS Enterprise', 'JARVIS App')
+    .replaceAll('JARVIS Operations', 'JARVIS App')
+    .replaceAll('<button class="network-node ', '<button type="button" class="network-node ')
+    .replaceAll('<button class="network-node"', '<button type="button" class="network-node"')
+    .replaceAll('<input type="text" name="_honey"', '<label for="_honey" hidden>Laisser ce champ vide</label><input id="_honey" type="text" name="_honey"');
 }
 
 function documentPage({ title, description, active, pathname, body, image = '/og.png', lang = 'fr-CA' }) {
   const canonical = `${baseUrl}${pathname}`;
-  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#0b0e0e"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/site-v3.css?v=20260929zy"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260929zy" defer></script></body></html>`);
+  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#0b0e0e"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/site-v3.css?v=20260930b"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260930b" defer></script></body></html>`);
 }
 
 function replaceSection(html, startMarker, endMarker, replacement) {
@@ -373,7 +382,7 @@ function solutionsHub() {
 function operationsScene() {
   return `<div class="automation-studio" data-automation-studio>
     <aside class="automation-studio-nav">
-      <div class="automation-studio-brand"><span>JE</span><div><b>JARVIS Enterprise</b><small>Intelligence opérationnelle</small></div></div>
+      <div class="automation-studio-brand"><span>J</span><div><b>JARVIS App</b><small>Automatisation d’entreprise</small></div></div>
       <nav aria-label="Navigation du produit">
         <button type="button" data-ops-view="assistant"><span>Concepteur de flux</span></button>
         <button class="active" type="button" data-ops-view="automations"><span>Opérations</span><b>6</b></button>
@@ -468,23 +477,33 @@ function operationsScene() {
   </div>`;
 }
 
-function capabilityConsole({ code, title, subtitle, role = 'Utilisateur', status = 'Système local prêt', tabs, content }) {
-  return `<div class="cap-console" data-demo-tabs data-preview-root><aside class="cap-sidebar"><div class="cap-product"><span>${code}</span><div><b>${title}</b><small>${subtitle}</small></div></div><nav role="tablist" aria-label="Navigation de la démonstration">${tabs.map(([key,label,badge],index) => `<button class="${index === 0 ? 'active' : ''}" type="button" data-demo-tab="${key}" aria-selected="${index === 0 ? 'true' : 'false'}"><i></i><span>${label}</span>${badge ? `<b>${badge}</b>` : ''}</button>`).join('')}</nav><div class="cap-sidebar-state"><i></i><span>Traitement local</span><small>Internet uniquement par permission</small></div></aside><div class="cap-workspace"><header class="cap-topbar"><div><span>Aperçu conceptuel · données simulées</span><strong>${title}</strong></div><div><span>Profil actif</span><b>${role}</b><em data-preview-status>${status}</em></div></header>${content}</div></div>`;
+function capabilityConsole({ code = 'J', title, subtitle, role = 'Utilisateur', status = 'Système local prêt', tabs, content }) {
+  const capabilityNames = {
+    'JARVIS Knowledge': 'IA privée et connaissances',
+    'JARVIS Vision': 'Sécurité intelligente',
+    'JARVIS Network': 'Réseau et cybersécurité',
+    'JARVIS Care': 'Diagnostic & continuité',
+    'JARVIS Diagnostic': 'Diagnostic & continuité'
+  };
+  const capabilityTitle = capabilityNames[title] || title;
+  return `<div class="cap-console" data-demo-tabs data-preview-root><aside class="cap-sidebar"><div class="cap-product"><span>J</span><div><b>JARVIS App</b><small>${subtitle}</small></div></div><nav role="tablist" aria-label="Navigation de la démonstration">${tabs.map(([key,label,badge],index) => `<button class="${index === 0 ? 'active' : ''}" type="button" data-demo-tab="${key}" aria-selected="${index === 0 ? 'true' : 'false'}"><i></i><span>${label}</span>${badge ? `<b>${badge}</b>` : ''}</button>`).join('')}</nav><div class="cap-sidebar-state"><i></i><span>Traitement local</span><small>Internet uniquement par permission</small></div></aside><div class="cap-workspace"><header class="cap-topbar"><div><span>Capacité active</span><strong>${capabilityTitle}</strong></div><div><span>Profil actif</span><b>${role}</b><em data-preview-status>${status}</em></div></header>${content}</div></div>`;
 }
 
 function smartEnvironmentScene(s) {
   return capabilityConsole({
-    code:'JS',
-    title:'JARVIS Spaces',
-    subtitle:'Environnements intelligents',
-    tabs:[['overview','Vue maison'],['spaces','Espaces'],['scenes','Scènes'],['energy','Énergie']],
+    code:'J',
+    title:'JARVIS App',
+    subtitle:'Résidence intelligente',
+    role:'Profil principal',
+    status:'Local · privé',
+    tabs:[['overview','Aperçu'],['spaces','Espaces'],['scenes','Ambiances'],['energy','Énergie']],
     content:`
-      <nav class="residence-section-tabs" aria-label="Sections de JARVIS Spaces"><button class="active" type="button" data-demo-tab="overview">Vue maison</button><button type="button" data-demo-tab="spaces">Pièces et appareils</button><button type="button" data-demo-tab="scenes">Scènes</button><button type="button" data-demo-tab="energy">Énergie</button></nav>
+      <nav class="residence-section-tabs" aria-label="Sections de JARVIS App"><button class="active" type="button" data-demo-tab="overview">Aperçu</button><button type="button" data-demo-tab="spaces">Espaces</button><button type="button" data-demo-tab="scenes">Ambiances</button><button type="button" data-demo-tab="energy">Énergie</button></nav>
       <section class="cap-panel home-residence-panel" data-demo-panel="overview">
         <div class="residence-console" data-residence-console>
           <header class="residence-console-head">
-            <div><span>Résidence principale</span><strong>Bonsoir. La maison est prête.</strong></div>
-            <nav aria-label="Vues de la résidence"><button class="active" type="button" data-residence-view="home">Maison</button><button type="button" data-residence-view="activity">Activité</button><button type="button" data-residence-view="cameras">Caméras</button></nav>
+            <div><span>Résidence principale · Vue d’ensemble</span><strong>Bonsoir. Tout est prêt.</strong></div>
+            <nav aria-label="Vues de la résidence"><button class="active" type="button" data-residence-view="home">Propriété</button><button type="button" data-residence-view="activity">Journal</button><button type="button" data-residence-view="cameras">Caméras</button></nav>
             <div class="residence-online"><i></i><span>Local · connecté</span><b>17 h 42</b></div>
           </header>
           <div class="residence-console-body" data-residence-view-panel="home">
@@ -579,8 +598,8 @@ function smartEnvironmentScene(s) {
 }
 
 function privateKnowledgeScene(s) {
-  return capabilityConsole({code:'JK',title:'JARVIS Knowledge',subtitle:'IA privée et connaissances',tabs:[['assistant','Assistant'],['sources','Sources','8'],['files','Dossiers','3'],['permissions','Permissions']],content:`
-    <nav class="knowledge-section-tabs" aria-label="Sections de JARVIS Knowledge"><button class="active" type="button" data-demo-tab="assistant">Assistant et dossiers</button><button type="button" data-demo-tab="sources">Sources autorisées</button><button type="button" data-demo-tab="files">Dossiers enregistrés</button><button type="button" data-demo-tab="permissions">Permissions</button></nav>
+  return capabilityConsole({title:'IA privée et connaissances',subtitle:'Recherche privée et réponses sourcées',tabs:[['assistant','Assistant'],['sources','Sources','8'],['files','Dossiers','3'],['permissions','Permissions']],content:`
+    <nav class="knowledge-section-tabs" aria-label="Sections de la capacité IA privée et connaissances"><button class="active" type="button" data-demo-tab="assistant">Assistant et dossiers</button><button type="button" data-demo-tab="sources">Sources autorisées</button><button type="button" data-demo-tab="files">Dossiers enregistrés</button><button type="button" data-demo-tab="permissions">Permissions</button></nav>
     <section class="cap-panel knowledge-assistant-panel" data-demo-panel="assistant">
       <div class="knowledge-product-hero"><img src="${s.image}" alt="Espace de travail privé avec documents et assistant"><div><span>Assistant privé · mission autorisée</span><h3>Poser une question. Voir la réponse, les preuves et les limites.</h3></div></div>
       <div class="knowledge-offer-definition"><div><span>Cette capacité JARVIS</span><h3>Interroger vos informations privées et obtenir une réponse vérifiable.</h3></div><article><span>Elle peut indexer</span><strong>Documents, photos, vidéos, films, courriels, CRM et dossiers autorisés</strong></article><article><span>Elle produit</span><strong>Recherche, réponses sourcées, sélections, comparaisons et dossiers</strong></article><article><span>Frontière claire</span><strong>Ici, JARVIS cherche et prépare. JARVIS Operations déclenche, écrit et exécute.</strong></article></div>
@@ -616,8 +635,8 @@ function privateKnowledgeScene(s) {
 }
 
 function intelligentSecurityScene(s) {
-  return capabilityConsole({code:'JV',title:'JARVIS Vision',subtitle:'Sécurité intelligente',role:'Responsable',tabs:[['live','En direct','1'],['timeline','Chronologie'],['identities','Identités'],['rules','Règles']],content:`
-    <nav class="knowledge-section-tabs vision-section-tabs" aria-label="Sections de JARVIS Vision"><button class="active" type="button" data-demo-tab="live">Propriété en direct</button><button type="button" data-demo-tab="timeline">Chronologie unifiée</button><button type="button" data-demo-tab="identities">Personnes et appareils</button><button type="button" data-demo-tab="rules">Règles et permissions</button></nav>
+  return capabilityConsole({title:'Sécurité intelligente',subtitle:'Vision, accès et contexte',role:'Responsable',tabs:[['live','En direct','1'],['timeline','Chronologie'],['identities','Identités'],['rules','Règles']],content:`
+    <nav class="knowledge-section-tabs vision-section-tabs" aria-label="Sections de la capacité Sécurité intelligente"><button class="active" type="button" data-demo-tab="live">Propriété en direct</button><button type="button" data-demo-tab="timeline">Chronologie unifiée</button><button type="button" data-demo-tab="identities">Personnes et appareils</button><button type="button" data-demo-tab="rules">Règles et permissions</button></nav>
     <section class="cap-panel vision-live-panel" data-demo-panel="live">
       <div class="vision-command-bar"><div><span>JARVIS Vision</span><strong>Comprendre un événement avant d’agir.</strong></div><div class="vision-profile-switch" aria-label="Type d’environnement"><button class="active" type="button" data-vision-profile="residential">Résidence</button><button type="button" data-vision-profile="enterprise">Entreprise</button></div><aside><i></i><span data-vision-system-state>Surveillance locale active</span></aside></div>
       <div class="vision-camera-rail" data-vision-camera-rail aria-label="Caméras du site"></div>
@@ -663,7 +682,7 @@ function solutionScenario(s) {
   scenes['securite-intelligente'] = intelligentSecurityScene(s);
   scenes['reseau-resilience'] = networkResilienceSceneV2();
   scenes['diagnostic-care'] = diagnosticContinuityScene();
-  return `<section class="solution-demo section-dark" id="demonstration"><div class="solution-demo-head shell" data-reveal><div><p class="eyebrow">Aperçu interactif · données simulées</p><h2 class="headline">${s.previewTitle}</h2></div><p>${s.previewIntro}</p></div><div class="solution-demo-stage shell" data-reveal>${scenes[s.slug]}</div><div class="solution-demo-integrations shell" data-reveal><p>Compatibilités possibles selon le projet</p>${integrations}</div></section>`;
+  return `<section class="solution-demo section-dark" id="demonstration"><div class="solution-demo-head shell" data-reveal><div><p class="eyebrow">Aperçu interactif · données simulées</p><h2 class="headline">${s.previewTitle}</h2></div><p>${s.previewIntro}</p></div><div class="solution-demo-stage shell solution-demo-stage-${s.slug}" data-reveal>${scenes[s.slug]}</div><div class="solution-demo-integrations shell" data-reveal><p>Compatibilités possibles selon le projet</p>${integrations}</div></section>`;
 }
 
 function operationsEnterprisePage(s) {
@@ -711,12 +730,12 @@ function solutionPage(s) {
 }
 
 function platformArchitectureSection() {
-  return `<section class="platform-architecture section-paper" id="architecture"><div class="shell"><div class="platform-architecture-head" data-reveal><div><p class="eyebrow">Une seule architecture</p><h2 class="headline">Voir le rôle de chaque pièce.<br>Comprendre l’ensemble.</h2></div><p>JARVIS n’est ni seulement une application, ni seulement un ordinateur. L’expérience apparaît dans l’App, l’intelligence vit dans Core, le Hub l’exécute localement et vos systèmes demeurent les outils réels.</p></div><div class="platform-architecture-flow platform-architecture-flow--visual" data-reveal><article class="platform-layer-app"><span>01 · Ce que vous utilisez</span><div class="platform-app-visual"><i></i><i></i><b>Bonjour</b><small>Votre JARVIS est prêt</small></div><h3>JARVIS App</h3><p>PC, téléphone, tablette et écrans intégrés pour converser, voir, décider et approuver.</p></article><i aria-hidden="true">→</i><article class="platform-layer-core"><span>02 · Ce qui comprend</span><div class="platform-core-visual"><i></i><b>Core</b><small>Contexte · permissions · agents</small></div><h3>JARVIS Core</h3><p>Le logiciel central qui comprend la demande, vérifie les droits et coordonne les capacités.</p></article><i aria-hidden="true">→</i><article class="platform-layer-hub"><span>03 · Ce qui exécute localement</span><div class="platform-hub-visual"><img src="/media/product/jarvis-hub-v1.webp" alt="JARVIS Hub, ordinateur local professionnel"></div><h3>JARVIS Hub</h3><p>L’ordinateur professionnel sous Linux qui fait fonctionner Core et les services locaux.</p></article><i aria-hidden="true">→</i><article class="platform-layer-world"><span>04 · Ce qui existe déjà</span><div class="platform-world-visual"><img src="/media/solutions/environnements-intelligents.webp" alt="Résidence connectée"><img src="/media/solutions/jarvis-enterprise-operations-v1.webp" alt="Entreprise"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Véhicule laboratoire"></div><h3>Vos systèmes</h3><p>Maison, entreprise, véhicule, documents, logiciels et équipements restent les vrais outils.</p></article></div><div class="platform-capability-line" data-reveal><span>Une fondation commune</span><p>Environnements · IA & données · Sécurité · Entreprise · Réseau · Diagnostic & continuité</p></div></div></section>`;
+  return `<section class="platform-architecture platform-architecture-executive" id="architecture"><div class="shell"><div class="platform-architecture-head" data-reveal><div><p class="eyebrow">Le produit complet</p><h2 class="headline">Quatre rôles.<br>Un seul JARVIS.</h2></div><p>Vous utilisez l’App. Core comprend et coordonne. Le Hub exécute sur place. Vos systèmes réels continuent de faire ce qu’ils font déjà.</p></div><div class="platform-architecture-flow platform-architecture-flow--visual" data-reveal><article class="platform-layer-app"><span>Vous voyez et décidez</span><div class="platform-app-visual"><i></i><b>Bonsoir</b><small>Votre JARVIS est prêt</small></div><h3>JARVIS App</h3><p>Une interface commune sur ordinateur, téléphone, tablette et écrans intégrés.</p></article><i aria-hidden="true">→</i><article class="platform-layer-core"><span>Le système comprend</span><div class="platform-core-visual"><i></i><b>Core</b><small>Contexte · règles · agents</small></div><h3>JARVIS Core</h3><p>L’intelligence qui comprend la demande, vérifie les droits et prépare les actions.</p></article><i aria-hidden="true">→</i><article class="platform-layer-hub"><span>Le site reste autonome</span><div class="platform-hub-visual"><img src="/media/product/jarvis-hub-v1.webp" alt="JARVIS Hub intégré dans un environnement professionnel"></div><h3>JARVIS Hub</h3><p>L’infrastructure locale qui exécute Core et garde les services essentiels près du site.</p></article><i aria-hidden="true">→</i><article class="platform-layer-world"><span>Le réel répond</span><div class="platform-world-visual"><img src="/media/solutions/environnements-intelligents.webp" alt="Résidence intelligente"><img src="/media/solutions/jarvis-enterprise-operations-v1.webp" alt="Entreprise connectée"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Véhicule laboratoire"></div><h3>Vos systèmes</h3><p>Espaces, informations, logiciels et équipements existants restent les outils réels.</p></article></div><div class="platform-capability-line" data-reveal><span>La même fondation partout</span><p>Une identité · des permissions · six capacités · une trace complète</p></div></div></section>`;
 }
 
 function platformBaseExperienceSection() {
   const capabilities = ['Environnements', 'IA & données', 'Sécurité', 'Entreprise', 'Réseau', 'Diagnostic'];
-  return `<section class="platform-experience" id="experience"><div class="shell"><div class="platform-experience-head" data-reveal><div><p class="eyebrow">L’expérience de départ</p><h2 class="headline">Votre JARVIS est configuré.<br>Rien n’est encore relié.</h2></div><p>Voici l’interface de base après la création des utilisateurs, des rôles et des permissions. Les capacités sont ajoutées ensuite, selon le besoin réel.</p></div><div class="platform-base-console" data-demo-tabs data-reveal><aside><div class="platform-base-brand"><span>JL</span><div><b>JARVIS</b><small>Système privé</small></div></div><nav role="tablist"><button class="active" type="button" data-demo-tab="home" aria-selected="true">Accueil</button><button type="button" data-demo-tab="people" aria-selected="false">Utilisateurs <b>3</b></button><button type="button" data-demo-tab="permissions" aria-selected="false">Permissions</button><button type="button" data-demo-tab="capabilities" aria-selected="false">Capacités <b>0</b></button></nav><div class="platform-base-local"><i></i><span>JARVIS local prêt</span><small>Aucun système externe relié</small></div></aside><main><header><div><span>Profil principal</span><strong>Configuration initiale terminée</strong></div><em>Base JARVIS</em></header><section data-demo-panel="home"><div class="platform-base-welcome"><span>Bienvenue</span><h3>La fondation est prête. Choisissez maintenant ce que JARVIS doit réellement comprendre.</h3><p>L’App, Core et le Hub sont disponibles. Aucun accès aux documents, appareils, caméras ou logiciels n’est accordé par défaut.</p></div><div class="platform-base-foundation"><article><span>App</span><b>Interface disponible</b><small>PC · mobile · tablette</small></article><article><span>Core</span><b>Profil et règles chargés</b><small>Contexte vide par défaut</small></article><article><span>Hub</span><b>Système local prêt</b><small>Services essentiels actifs</small></article></div><div class="platform-base-next"><div><span>Prochaine étape</span><strong>Choisir une première capacité selon un besoin concret.</strong></div><button type="button" data-preview-action data-done-label="Choix enregistré">Explorer les capacités</button></div></section><section data-demo-panel="people" hidden><div class="platform-base-panel-head"><span>Utilisateurs configurés</span><h3>Chaque personne possède sa propre identité.</h3><p>Les rôles servent à simplifier l’expérience sans donner les mêmes pouvoirs à tout le monde.</p></div><div class="platform-user-list"><article><i>01</i><div><b>Profil principal</b><small>Propriétaire · décisions sensibles</small></div><span>Actif</span></article><article><i>02</i><div><b>Utilisateur résident</b><small>Contrôle quotidien autorisé</small></div><span>Actif</span></article><article><i>03</i><div><b>Invité temporaire</b><small>Aucun accès tant qu’une capacité n’est pas ajoutée</small></div><span>Préparé</span></article></div></section><section data-demo-panel="permissions" hidden><div class="platform-base-panel-head"><span>Règles de départ</span><h3>Voir, proposer et agir sont trois permissions différentes.</h3><p>Une capacité future devra déclarer exactement ses sources, ses actions et ses approbateurs.</p></div><div class="platform-permission-matrix"><div><span>Rôle</span><span>Voir</span><span>Proposer</span><span>Agir</span></div><article><b>Profil principal</b><i>Oui</i><i>Oui</i><i>Avec confirmation</i></article><article><b>Utilisateur</b><i>Selon le lieu</i><i>Oui</i><i>Actions autorisées</i></article><article><b>Invité</b><i>Limité</i><i>Non</i><i>Non</i></article></div></section><section data-demo-panel="capabilities" hidden><div class="platform-base-panel-head"><span>Capacités optionnelles</span><h3>JARVIS commence vide et se construit autour du besoin.</h3><p>Une capacité peut être configurée seule. Les autres demeurent absentes tant qu’elles n’apportent pas de valeur.</p></div><div class="platform-empty-capabilities">${capabilities.map((name, index) => `<article><i>0${index + 1}</i><b>${name}</b><small>Non configuré</small></article>`).join('')}</div></section></main></div></div></section>`;
+  return `<section class="platform-experience" id="experience"><div class="shell"><div class="platform-experience-head" data-reveal><div><p class="eyebrow">JARVIS App · expérience de base</p><h2 class="headline">Votre identité.<br>Vos règles. Votre point d’entrée.</h2></div><p>Avant toute solution, JARVIS connaît seulement les personnes, les rôles et les limites que vous avez définis. Rien d’autre n’est relié par défaut.</p></div><div class="platform-base-console platform-base-console-executive" data-demo-tabs data-reveal><aside><div class="platform-base-brand"><span>J</span><div><b>JARVIS</b><small>Système personnel</small></div></div><nav role="tablist"><button class="active" type="button" data-demo-tab="home" aria-selected="true">Accueil</button><button type="button" data-demo-tab="people" aria-selected="false">Utilisateurs <b>3</b></button><button type="button" data-demo-tab="permissions" aria-selected="false">Permissions</button><button type="button" data-demo-tab="capabilities" aria-selected="false">Capacités <b>0</b></button></nav><div class="platform-base-local"><i></i><span>JARVIS Hub prêt</span><small>Local · privé · aucun connecteur</small></div></aside><main><header><div><span>Profil principal</span><strong>JARVIS App</strong></div><em>Core actif · Hub local</em></header><section data-demo-panel="home"><div class="platform-base-hero"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="Résidence contemporaine avec infrastructure JARVIS intégrée"><div><span>Bonsoir</span><h3>Votre JARVIS est prêt.</h3><p>Aucun espace, document, appareil ou logiciel n’est encore relié.</p></div><aside><i></i><span>État du système</span><strong>Fondation disponible</strong><small>3 utilisateurs · 0 capacité active</small></aside></div><div class="platform-base-conversation"><div><span>Parler à JARVIS</span><strong>Que souhaitez-vous comprendre ou relier en premier?</strong></div><button type="button" data-preview-action data-done-label="Demande prête">Commencer une demande</button></div><div class="platform-base-foundation"><article><span>App</span><b>Votre interface</b><small>Conversation · vues · décisions</small></article><article><span>Core</span><b>Vos règles</b><small>Identité · permissions · contexte</small></article><article><span>Hub</span><b>Votre infrastructure locale</b><small>Services privés · autonomie du site</small></article></div></section><section data-demo-panel="people" hidden><div class="platform-base-panel-head"><span>Identités configurées</span><h3>Une seule interface, des responsabilités différentes.</h3><p>Chaque personne possède son propre accès. Un utilisateur quotidien ne reçoit jamais automatiquement les pouvoirs du propriétaire.</p></div><div class="platform-user-list"><article><i>01</i><div><b>Profil principal</b><small>Propriétaire · administration et décisions sensibles</small></div><span>Actif</span></article><article><i>02</i><div><b>Utilisateur autorisé</b><small>Usage quotidien · actions permises seulement</small></div><span>Actif</span></article><article><i>03</i><div><b>Invité temporaire</b><small>Accès limité dans le temps et révocable</small></div><span>Préparé</span></article></div></section><section data-demo-panel="permissions" hidden><div class="platform-base-panel-head"><span>Contrôle des actions</span><h3>Voir, proposer, approuver et exécuter ne sont pas le même pouvoir.</h3><p>Chaque capacité déclare ses sources, ses actions possibles et la personne qui doit approuver.</p></div><div class="platform-permission-matrix"><div><span>Rôle</span><span>Voir</span><span>Proposer</span><span>Agir</span></div><article><b>Profil principal</b><i>Selon les sources</i><i>Oui</i><i>Avec confirmation</i></article><article><b>Utilisateur</b><i>Selon son rôle</i><i>Oui</i><i>Actions autorisées</i></article><article><b>Invité</b><i>Limité</i><i>Non</i><i>Non</i></article></div></section><section data-demo-panel="capabilities" hidden><div class="platform-base-panel-head"><span>Six capacités disponibles</span><h3>JARVIS se construit autour du besoin, une capacité à la fois.</h3><p>Activer une capacité ne donne pas accès aux autres. Chaque connexion reste visible et révocable.</p></div><div class="platform-empty-capabilities">${capabilities.map((name, index) => `<article><i>0${index + 1}</i><b>${name}</b><small>À configurer</small></article>`).join('')}</div></section></main></div></div></section>`;
 }
 
 function platformPage() {
@@ -733,6 +752,20 @@ function platformPage() {
     .replace('La liaison de plusieurs environnements appartient à JARVIS Fabric et à la vision à long terme.', 'La coordination de plusieurs environnements appartient à JARVIS Multi-Site et à la vision à long terme.')
     .replace('Découvrir JARVIS Fabric', 'Découvrir JARVIS Multi-Site');
   return documentPage({title:'Plateforme JARVIS | App, Core et Hub',description:'Découvrez comment JARVIS App, JARVIS Core et JARVIS Hub forment une intelligence privée, locale et contrôlée.',active:'plateforme',pathname:'/plateforme/',body,image:'/media/solutions/ia-privee-connaissances.webp'});
+}
+
+function platformHubSection() {
+  return `<section class="platform-hub platform-hub-executive" id="hub"><div class="platform-hub-media"><img src="/media/product/jarvis-hub-v1.webp" alt="JARVIS Hub intégré dans une résidence haut de gamme"></div><div class="platform-hub-copy"><p class="eyebrow">JARVIS Hub · infrastructure locale</p><h2 class="headline">La présence physique de JARVIS.</h2><p>Le Hub est l’ordinateur professionnel qui garde Core près des informations, des équipements et des services qu’il doit coordonner. Il est dimensionné et intégré selon le lieu.</p><div class="platform-hub-specs"><div><span>Rôle</span><b>Exécuter JARVIS Core et les services locaux</b></div><div><span>Continuité</span><b>Maintenir les fonctions prévues même si Internet tombe</b></div><div><span>Contrôle</span><b>Rendre visibles les connexions, sauvegardes et mises à jour</b></div><div><span>Intégration</span><b>Résidence, entreprise, véhicule ou site spécialisé</b></div></div><small>Le matériel final, la redondance et la capacité sont définis pour chaque mandat. Le visuel représente la direction produit.</small></div></section>`;
+}
+
+function platformPageV2() {
+  const body = hero({eyebrow:'JARVIS · App, Core et Hub',title:'Votre système privé.<br><em>Un seul point d’entrée.</em>',lead:'Parlez à JARVIS App. JARVIS Core comprend le contexte et applique vos règles. JARVIS Hub garde l’intelligence près de vos systèmes.',image:'/media/concept/jarvis-hero-architecture-v1.webp',page:true,actions:'<a class="button button-primary" href="#experience">Voir JARVIS App <span>↓</span></a><a class="button button-ghost" href="#architecture">Comprendre l’architecture</a>',meta:[['Interface','JARVIS App'],['Intelligence','JARVIS Core'],['Sur place','JARVIS Hub']]}) +
+    platformArchitectureSection() +
+    platformBaseExperienceSection() +
+    platformHubSection() +
+    `<section class="platform-trust section-white"><div class="shell"><div class="platform-trust-head" data-reveal><div><p class="eyebrow">Le contrôle reste visible</p><h2 class="headline">Puissant ne veut pas dire opaque.</h2></div><p>JARVIS montre qui accède à quoi, ce qui peut être exécuté et quand une décision humaine est obligatoire.</p></div><div class="platform-trust-grid"><article data-reveal><span>Local d’abord</span><h3>Les fonctions essentielles restent près du site.</h3><p>Le cloud est utilisé seulement lorsqu’il apporte une valeur comprise et autorisée.</p></article><article data-reveal><span>Sources choisies</span><h3>Chaque connexion est identifiable et révocable.</h3><p>Une capacité ne reçoit jamais un accès général à tout votre environnement.</p></article><article data-reveal><span>Rôles précis</span><h3>Chaque personne agit selon ses responsabilités.</h3><p>Consulter, proposer, approuver et exécuter peuvent demander des droits différents.</p></article><article data-reveal><span>Trace complète</span><h3>Les décisions importantes restent explicables.</h3><p>Demandes, sources, approbations et résultats peuvent être conservés selon le mandat.</p></article></div><div class="platform-trust-link"><a href="/confiance/">Confiance et gouvernance <span>↗</span></a><a href="/solutions/">Explorer les six capacités <span>↗</span></a></div></div></section>` +
+    cta('Quel environnement devrait recevoir son propre JARVIS?', 'Présentez le lieu, les systèmes existants et le premier problème que vous souhaitez résoudre.');
+  return documentPage({title:'JARVIS | App, Core et Hub',description:'Découvrez comment JARVIS App, JARVIS Core et JARVIS Hub forment un système privé, local et contrôlé.',active:'plateforme',pathname:'/plateforme/',body,image:'/media/concept/jarvis-hero-architecture-v1.webp'});
 }
 
 function ambulanceControlConsole() {
@@ -907,7 +940,7 @@ async function writeRoute(route, html) {
 await writeRoute('/', homePage());
 await writeRoute('/solutions/', solutionsHub());
 for (const solution of solutions) await writeRoute(`/solutions/${solution.slug}/`, solutionPage(solution));
-await writeRoute('/plateforme/', platformPage());
+await writeRoute('/plateforme/', platformPageV2());
 await writeRoute('/laboratoire-mobile/', ambulancePage());
 await writeRoute('/recherche/', researchPage());
 await writeRoute('/vision-roadmap/', visionPage());

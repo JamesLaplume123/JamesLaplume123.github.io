@@ -408,6 +408,65 @@ html,body{overflow-x:clip}
 :where(.cap-sidebar,.fabric-sidebar,.personal-sidebar,.sp-sidebar,.platform-base-console>aside) nav button.active{border-left-color:#72d7ec;background:#172326;color:#fff;box-shadow:inset 0 1px rgba(255,255,255,.04)}
 
 /* The user's voice is intentionally distinct from system output. */
+
+/* Executive direction: approved reference for the JARVIS residence experience. */
+.residence-cap-console{grid-template-columns:188px minmax(0,1fr);border-color:#29343c;background:#060a0e;box-shadow:0 42px 110px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.04)}
+.residence-cap-console>.cap-sidebar{display:flex;border-color:#202a31;background:linear-gradient(180deg,#080d12,#05080b)}
+.residence-cap-console>.cap-sidebar .cap-product>span{border-color:#b83a45;color:#fff;background:linear-gradient(145deg,#2c1216,#0b0d10)}
+.residence-cap-console>.cap-sidebar .cap-product small{color:#768691}
+.residence-cap-console>.cap-sidebar nav button{border-left-color:transparent;color:#89969e}
+.residence-cap-console>.cap-sidebar nav button:hover{background:#0d151b;color:#fff}
+.residence-cap-console>.cap-sidebar nav button.active{border-left-color:#75c7e8;background:linear-gradient(90deg,rgba(117,199,232,.16),rgba(117,199,232,.025));color:#fff;box-shadow:none}
+.residence-cap-console>.cap-sidebar nav button.active i{background:#75c7e8;box-shadow:0 0 10px rgba(117,199,232,.55)}
+.residence-cap-console>.cap-sidebar .cap-sidebar-state i{background:#65d7b0;box-shadow:0 0 10px rgba(101,215,176,.55)}
+.residence-cap-console>.cap-sidebar .cap-sidebar-state span{color:#65d7b0}
+.residence-cap-console>.cap-workspace>.cap-topbar{min-height:68px;padding:0 24px;border-color:#202a31;background:#0b1116}
+.residence-cap-console>.cap-workspace>.cap-topbar>div:first-child span{color:#75c7e8}
+.residence-cap-console>.cap-workspace>.cap-topbar>div:last-child b{color:#fff}
+.residence-cap-console>.cap-workspace>.cap-topbar em{color:#65d7b0}
+.residence-cap-console .residence-section-tabs{display:none}
+.residence-cap-console .home-residence-panel{padding:14px;background:#080d11}
+.residence-cap-console .residence-console{border-color:#29343c;border-radius:3px;background:#080d11;box-shadow:0 30px 90px rgba(0,0,0,.45)}
+.residence-cap-console .residence-console-head{border-color:#26323a;background:#0d1419}
+.residence-cap-console .residence-console-head>div:first-child span,.residence-cap-console .residence-floorplan-title span,.residence-cap-console .residence-scenes>span,.residence-cap-console .residence-scene-note span,.residence-cap-console .residence-room-control header span,.residence-cap-console .room-temperature>span,.residence-cap-console .room-lighting span,.residence-cap-console .residence-room-control footer span,.residence-cap-console .residence-status-strip span{color:#75c7e8}
+.residence-cap-console .residence-console-head nav{border-color:#26323a;border-radius:3px;background:#070b0e}
+.residence-cap-console .residence-console-head nav button{border-radius:2px;color:#7f8c94}
+.residence-cap-console .residence-console-head nav button.active{background:#f2f5f5;color:#080b0d}
+.residence-cap-console .residence-scenes{border-color:#202a31;background:#070b0e}
+.residence-cap-console .residence-scenes>button{border-radius:2px;color:#839097}
+.residence-cap-console .residence-scenes>button:hover,.residence-cap-console .residence-scenes>button.active{border-left-color:#75c7e8;background:linear-gradient(90deg,rgba(117,199,232,.15),rgba(117,199,232,.02));color:#fff}
+.residence-cap-console .residence-scenes>button i{border-color:#34434c;color:#e4c783}
+.residence-cap-console .residence-floorplan{background:radial-gradient(circle at 48% 43%,#141c22,#070b0e 74%)}
+.residence-cap-console .residence-floorplan-title,.residence-cap-console .residence-status-strip,.residence-cap-console .residence-room-control,.residence-cap-console .residence-room-control header,.residence-cap-console .room-temperature,.residence-cap-console .room-lighting,.residence-cap-console .room-hvac{border-color:#26323a}
+.residence-cap-console .residence-room-control{background:#0b1116}
+.residence-cap-console .room-pin{border-color:rgba(255,255,255,.28);border-radius:3px;background:rgba(5,9,12,.86);color:#f3f5f4}
+.residence-cap-console .room-pin:before{background:#75c7e8;box-shadow:0 0 14px rgba(117,199,232,.82)}
+.residence-cap-console .room-pin:hover,.residence-cap-console .room-pin.active{border-color:#75c7e8;background:rgba(12,23,30,.94)}
+.residence-cap-console .room-pin b{color:#e7cb8d}
+.residence-cap-console .room-lighting input{accent-color:#75c7e8}
+.residence-cap-console .room-hvac button{border-color:#2c3941;background:#080d11;color:#7d8a92}
+.residence-cap-console .room-hvac button.active{border-color:#75c7e8;background:rgba(117,199,232,.14)}
+.residence-cap-console .room-device-list button.active i{border-color:#75c7e8;background:#10202a;color:#a8e9f8}
+.residence-cap-console .residence-room-control footer{border-color:#33414a;border-left-color:#b83a45;background:#12171b}
+.residence-cap-console .residence-room-control footer button{background:#f1f4f3;color:#070a0c}
+.residence-cap-console .residence-room-control footer button:hover{background:#75c7e8}
+.residence-cap-console .residence-activity-view,.residence-cap-console .residence-camera-view{background:#080d11}
+.residence-cap-console .residence-space-browser,.residence-cap-console .residence-scene-library,.residence-cap-console .energy-flow,.residence-cap-console .energy-loads,.residence-cap-console .residence-energy-center>aside{border-color:#29343c;border-radius:3px;background:#0b1116}
+.residence-cap-console .space-selector,.residence-cap-console .residence-scene-library>nav{border-color:#26323a;background:#070b0e}
+.residence-cap-console .space-selector button:hover,.residence-cap-console .space-selector button.active,.residence-cap-console .residence-scene-library>nav button:hover,.residence-cap-console .residence-scene-library>nav button.active{border-left-color:#75c7e8;background:#101c23;color:#fff}
+.residence-cap-console .space-detail footer,.residence-cap-console .residence-energy-center>aside{border-left-color:#b83a45;background:#12171b}
+.residence-cap-console .scene-impact>button,.residence-cap-console .residence-energy-center>aside button{background:#f1f4f3;color:#070a0c}
+.residence-cap-console .energy-loads article>i{background:linear-gradient(90deg,#75c7e8,#e2c47e)}
+.solution-demo-stage-environnements-intelligents{width:min(1540px,calc(100% - 40px));max-width:none}
+.residence-cap-console .residence-console-body{grid-template-columns:minmax(0,1fr) 270px;grid-template-areas:'scenes control' 'floor control'}
+.residence-cap-console .residence-scenes{grid-area:scenes;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:11px 14px;border-right:0;border-bottom:1px solid #202a31}
+.residence-cap-console .residence-scenes>span{display:none}
+.residence-cap-console .residence-scenes>button{grid-template-columns:30px minmax(0,1fr);min-height:55px;padding:8px 10px;border:1px solid #202a31;border-left:1px solid #202a31}
+.residence-cap-console .residence-scenes>button:hover,.residence-cap-console .residence-scenes>button.active{border-color:#75c7e8;border-left-color:#75c7e8}
+.residence-cap-console .residence-scenes>button i{width:28px;height:28px}
+.residence-cap-console .residence-scene-note{display:none}
+.residence-cap-console .residence-floorplan{grid-area:floor}
+.residence-cap-console .residence-room-control{grid-area:control}
 .knowledge-user,.platform-message-user p,.automation-chat-user,.demo-question{border:1px solid rgba(132,224,245,.45);border-radius:9px 9px 3px 9px;background:#146f89;color:#fff;box-shadow:0 16px 38px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.12)}
 .knowledge-user{padding:23px 26px}
 .knowledge-user>span,.automation-chat-user>span,.platform-message-user>span{color:#baf2ff;opacity:1}
@@ -434,3 +493,89 @@ html,body{overflow-x:clip}
 :where(.space-decision,.network-recommendation,.care-decision,.knowledge-next,.personal-case-action,.fabric-action-file,.vision-proposal,.ambulance-alert-strip,.ambulance-diagnostic-note){border-left-color:#d7b96e;background:#171d1c;box-shadow:inset 0 1px rgba(255,255,255,.035)}
 :where(.space-decision,.knowledge-next,.security-proposal,.network-recommendation,.care-decision,.personal-case-action,.fabric-action-file,.vision-proposal,.ambulance-energy-grid,.ambulance-route-suggestion) button{border-radius:4px;background:#f4f5f1;color:#101414;box-shadow:0 8px 24px rgba(0,0,0,.18);transition:background .2s ease,transform .2s ease,box-shadow .2s ease}
 :where(.space-decision,.knowledge-next,.security-proposal,.network-recommendation,.care-decision,.personal-case-action,.fabric-action-file,.vision-proposal,.ambulance-energy-grid,.ambulance-route-suggestion) button:hover{background:#77d8ed;transform:translateY(-1px);box-shadow:0 11px 28px rgba(0,0,0,.25)}
+
+/* JARVIS product page: Executive direction. */
+.platform-architecture-executive{padding:132px 0;background:#090d10;color:#f7f7f3}
+.platform-architecture-executive .platform-architecture-head>p{color:#a7b1b4}
+.platform-architecture-executive .platform-architecture-flow{grid-template-columns:1fr 34px 1fr 34px 1fr 34px 1fr;margin-top:62px}
+.platform-architecture-executive .platform-architecture-flow>article{min-height:470px;padding:22px;border-color:#29363d;background:#11171b;box-shadow:inset 0 1px rgba(255,255,255,.04)}
+.platform-architecture-executive .platform-architecture-flow>article:hover{border-color:#5c7784;background:#141c21}
+.platform-architecture-executive .platform-architecture-flow>i{color:#70cbe8}
+.platform-architecture-executive .platform-architecture-flow span{color:#77d8ed}
+.platform-architecture-executive .platform-architecture-flow h3{margin:24px 0 12px;color:#fff;font-size:27px}
+.platform-architecture-executive .platform-architecture-flow p{color:#a9b2b5;font-size:13px;line-height:1.65}
+.platform-architecture-executive .platform-architecture-flow .platform-layer-core{border-color:#6b5b39;background:linear-gradient(145deg,#181a19,#10171b)}
+.platform-architecture-executive .platform-architecture-flow .platform-layer-hub{background:#15191c}
+.platform-architecture-executive .platform-app-visual,.platform-architecture-executive .platform-core-visual,.platform-architecture-executive .platform-hub-visual,.platform-architecture-executive .platform-world-visual{height:190px;border-color:#34434a;background-color:#0b1013}
+.platform-architecture-executive .platform-app-visual{background:linear-gradient(145deg,#17232a,#080d11);box-shadow:inset 0 0 0 7px #1c282e,0 16px 38px rgba(0,0,0,.28)}
+.platform-architecture-executive .platform-app-visual:after{content:'UNE INTERFACE';position:absolute;left:22px;top:24px;color:#77d8ed;font:650 7px GeistMono}
+.platform-architecture-executive .platform-app-visual b{margin-top:54px;font-size:28px}
+.platform-architecture-executive .platform-core-visual{background:linear-gradient(145deg,#111a20,#080d11)}
+.platform-architecture-executive .platform-core-visual:before{width:76%;height:104px;border:1px solid #465962;border-radius:6px;background:linear-gradient(145deg,rgba(39,58,67,.82),rgba(14,23,28,.92));box-shadow:0 18px 35px rgba(0,0,0,.28)}
+.platform-architecture-executive .platform-core-visual:after{width:48%;height:54px;border:1px solid rgba(218,188,120,.55);border-radius:4px;background:#10171b}
+.platform-architecture-executive .platform-core-visual i{width:7px;height:7px;transform:translate(72px,-39px);background:#75d6ec;box-shadow:0 0 17px #75d6ec}
+.platform-architecture-executive .platform-hub-visual img,.platform-architecture-executive .platform-world-visual img{filter:brightness(.82) saturate(.72) contrast(1.06)}
+.platform-architecture-executive .platform-capability-line{border-color:#28343a}
+.platform-architecture-executive .platform-capability-line p{color:#d1d6d6}
+
+.platform-experience .shell{width:min(1540px,calc(100% - 40px));max-width:none}
+.platform-base-console-executive{grid-template-columns:220px minmax(0,1fr);min-height:760px;border-color:#394950;background:#0b1013;box-shadow:0 50px 120px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.05)}
+.platform-base-console-executive>aside{padding:22px 16px;background:#070c0f}
+.platform-base-console-executive .platform-base-brand>span{border-color:#ac8c50;color:#f0d798;background:linear-gradient(145deg,#1d1a14,#0d1215)}
+.platform-base-console-executive>main>header{height:72px;background:#11181c}
+.platform-base-console-executive>main>section{padding:24px}
+.platform-base-hero{position:relative;height:312px;overflow:hidden;border:1px solid #34434a;border-radius:6px;background:#0a0f12}
+.platform-base-hero>img{width:100%;height:100%;object-fit:cover;filter:brightness(.55) saturate(.7) contrast(1.07)}
+.platform-base-hero:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,9,12,.88),rgba(5,9,12,.16) 68%,rgba(5,9,12,.5))}
+.platform-base-hero>div{position:absolute;z-index:2;left:36px;bottom:32px;max-width:660px}
+.platform-base-hero>div span{color:#78d8ed;font:650 8px GeistMono;text-transform:uppercase}
+.platform-base-hero>div h3{margin:10px 0 8px;color:#fff;font-size:38px;font-weight:540}
+.platform-base-hero>div p{margin:0;color:#c7d0d2;font-size:13px}
+.platform-base-hero>aside{position:absolute;z-index:2;right:24px;top:24px;width:250px;padding:18px 20px;border:1px solid rgba(255,255,255,.18);border-radius:6px;background:rgba(10,15,18,.78);box-shadow:0 18px 42px rgba(0,0,0,.35);backdrop-filter:blur(14px)}
+.platform-base-hero>aside i{display:inline-block;width:8px;height:8px;margin-right:8px;border-radius:50%;background:#65dda1;box-shadow:0 0 16px rgba(101,221,161,.8)}
+.platform-base-hero>aside span,.platform-base-hero>aside strong,.platform-base-hero>aside small{display:block}
+.platform-base-hero>aside span{display:inline;color:#a8b4b5;font:650 7px GeistMono;text-transform:uppercase}
+.platform-base-hero>aside strong{margin-top:15px;color:#fff;font-size:15px}
+.platform-base-hero>aside small{margin-top:7px;color:#7f8b8c;font-size:9px}
+.platform-base-conversation{display:flex;align-items:center;justify-content:space-between;gap:30px;margin-top:18px;padding:22px 24px;border:1px solid #35454c;border-left:2px solid #75d5ec;border-radius:4px;background:linear-gradient(90deg,#121c21,#101619)}
+.platform-base-conversation span,.platform-base-conversation strong{display:block}
+.platform-base-conversation span{color:#78d8ed;font:650 7px GeistMono;text-transform:uppercase}
+.platform-base-conversation strong{margin-top:8px;color:#fff;font-size:16px}
+.platform-base-conversation button{min-height:44px;padding:0 20px;border:1px solid #d8bd7e;border-radius:4px;background:#f3f3ef;color:#0c1114;font-size:10px;font-weight:750;white-space:nowrap}
+.platform-base-conversation button:hover{background:#d8bd7e}
+.platform-base-console-executive .platform-base-foundation{margin-top:18px}
+.platform-base-console-executive .platform-base-foundation article{min-height:118px;background:#10171b}
+.platform-base-console-executive .platform-base-foundation b{margin-top:24px}
+.platform-base-console-executive .platform-base-next{display:none}
+
+.platform-hub-executive{min-height:780px;background:#0a0e11}
+.platform-hub-executive .platform-hub-media{position:relative}
+.platform-hub-executive .platform-hub-media:after{content:'JARVIS HUB · LOCAL INFRASTRUCTURE';position:absolute;left:38px;bottom:34px;padding:11px 14px;border-left:1px solid #d9bc78;background:rgba(6,10,12,.72);color:#f1e2bc;font:650 8px GeistMono;letter-spacing:0}
+.platform-hub-executive .platform-hub-media img{filter:brightness(.72) saturate(.66) contrast(1.08)}
+.platform-hub-executive .platform-hub-copy{background:linear-gradient(145deg,#12181c,#090e11)}
+.platform-hub-executive .platform-hub-specs{border-color:#344046}
+.platform-hub-executive .platform-hub-specs>div{border-color:#344046}
+.platform-hub-executive .platform-hub-specs span{color:#78d8ed}
+.platform-hub-executive .platform-hub-specs>div:nth-child(2) span{color:#d9bc78}
+
+/* Display copy and product previews should stay clean during demos and screenshots. */
+:is(.hero h1,.headline,.subhead,.cap-console,.ops-console,.automation-studio,.platform-base-console,.ambulance-console,.fabric-console,.personal-console,.sp-console,.residence-console){-webkit-user-select:none;user-select:none}
+::selection{background:rgba(113,208,232,.28);color:inherit}
+
+/* One product language across every capability preview. */
+.cap-product>span{border-color:#aa8a50!important;background:linear-gradient(145deg,#1c1913,#0b1114)!important;color:#f0d798!important}
+.cap-product small{color:#7fcfe5!important}
+.cap-topbar{background:linear-gradient(90deg,#10171b,#0b1115)!important}
+.cap-topbar>div:first-child span{color:#79d6eb!important}
+.cap-topbar>div:first-child strong{color:#f7f7f3!important;font-size:17px!important}
+.cap-topbar>div:last-child b{color:#e2c884!important}
+.cap-console{border-color:#3b4a50!important;box-shadow:0 46px 110px rgba(0,0,0,.5),inset 0 1px rgba(255,255,255,.04)!important}
+.cap-sidebar{background:#070c0f!important}
+.cap-sidebar nav button.active{border-left-color:#76d6eb!important;background:linear-gradient(90deg,rgba(118,214,235,.14),rgba(118,214,235,.025))!important}
+.cap-sidebar-state i{background:#61dda2!important;box-shadow:0 0 15px rgba(97,221,162,.7)!important}
+
+@media(max-width:1100px){.platform-architecture-executive .platform-architecture-flow{grid-template-columns:1fr 28px 1fr}.platform-base-hero>aside{width:220px}.platform-base-console-executive{grid-template-columns:190px minmax(0,1fr)}}
+
+/* Final presentation polish: keep executive imagery and key display copy stable in screenshots. */
+.automation-builder-head{background-image:linear-gradient(90deg,rgba(5,8,7,.95) 0%,rgba(5,8,7,.81) 48%,rgba(5,8,7,.42) 100%),url('/media/solutions/jarvis-enterprise-operations-v1.webp')!important}
+:is(.platform-experience-head h2,.platform-architecture-head h2){-webkit-user-select:none;user-select:none}

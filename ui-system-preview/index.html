@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>JARVIS - Direction visuelle</title>
+  <link rel="stylesheet" href="/ui-system-preview/preview.css">
+</head>
+<body>
+  <main class="app-shell" aria-label="Aperçu conceptuel de l'interface JARVIS">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">J<sup>AI</sup></span>
+        <div>
+          <strong>JARVIS</strong>
+          <small>Intelligence privée</small>
+        </div>
+      </div>
+
+      <nav class="primary-nav" aria-label="Navigation JARVIS">
+        <button class="active" type="button" data-section="Aperçu"><span data-lucide="layout-dashboard"></span>Aperçu</button>
+        <button type="button" data-section="Espaces"><span data-lucide="house"></span>Espaces</button>
+        <button type="button" data-section="Éclairage"><span data-lucide="lightbulb"></span>Éclairage</button>
+        <button type="button" data-section="Climat"><span data-lucide="thermometer"></span>Climat</button>
+        <button type="button" data-section="Sécurité"><span data-lucide="shield-check"></span>Sécurité</button>
+        <button type="button" data-section="Audio et vidéo"><span data-lucide="music-2"></span>Audio & vidéo</button>
+        <button type="button" data-section="Énergie"><span data-lucide="leaf"></span>Énergie</button>
+        <button type="button" data-section="Automatisations"><span data-lucide="sparkles"></span>Automatisations</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="system-state"><i></i> Système local</span>
+        <strong>Résidence principale</strong>
+        <small>Prototype interactif · données simulées</small>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div>
+          <p>JARVIS App · Résidence</p>
+          <h1>Bonsoir.</h1>
+          <span>Votre environnement est prêt pour la soirée.</span>
+        </div>
+        <div class="topbar-actions">
+          <div class="clock"><strong data-clock>19:42</strong><small data-date>Lundi 29 septembre</small></div>
+          <button type="button" aria-label="Rechercher" title="Rechercher"><span data-lucide="search"></span></button>
+          <button type="button" aria-label="Notifications" title="Notifications"><span data-lucide="bell"></span><i></i></button>
+          <button class="profile" type="button" aria-label="Profil principal">P</button>
+        </div>
+      </header>
+
+      <div class="dashboard-grid">
+        <section class="hero-card">
+          <img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="Résidence contemporaine au crépuscule">
+          <div class="hero-shade"></div>
+          <div class="hero-copy">
+            <span>Résidence principale</span>
+            <h2>Le confort, sans la complexité.</h2>
+            <p>Les systèmes restent autonomes. JARVIS les réunit dans une seule expérience.</p>
+          </div>
+          <div class="weather">
+            <span data-lucide="moon"></span>
+            <strong>18 °C</strong>
+            <small>Ciel dégagé</small>
+          </div>
+        </section>
+
+        <aside class="scene-card panel">
+          <div class="panel-label">Ambiance actuelle</div>
+          <div class="scene-heading">
+            <h2 data-scene-name>Soirée</h2>
+            <span data-lucide="chevron-down"></span>
+          </div>
+          <p data-scene-copy>Éclairage chaleureux, température confortable et terrasse prête.</p>
+          <div class="scene-options" aria-label="Choisir une ambiance">
+            <button class="active" type="button" data-scene="Soirée" data-copy="Éclairage chaleureux, température confortable et terrasse prête.">Soirée</button>
+            <button type="button" data-scene="Calme" data-copy="Lumières tamisées, audio discret et notifications réduites.">Calme</button>
+            <button type="button" data-scene="Absence" data-copy="Accès verrouillés, éclairage réduit et surveillance renforcée.">Absence</button>
+          </div>
+        </aside>
+
+        <section class="quick-area">
+          <header class="section-title">
+            <h2>Contrôles rapides</h2>
+            <span>Les commandes les plus utiles, au même endroit.</span>
+          </header>
+          <div class="quick-grid">
+            <button class="quick-control is-on" type="button" data-control="Éclairage">
+              <span data-lucide="lightbulb"></span><strong>Éclairage</strong><small>Salon · 62 %</small><i></i>
+            </button>
+            <button class="quick-control is-on" type="button" data-control="Climat">
+              <span data-lucide="thermometer"></span><strong>Climat</strong><small>Maison · 22 °C</small><i></i>
+            </button>
+            <button class="quick-control is-on" type="button" data-control="Sécurité">
+              <span data-lucide="shield-check"></span><strong>Sécurité</strong><small>Mode périmètre</small><i></i>
+            </button>
+            <button class="quick-control" type="button" data-control="Musique">
+              <span data-lucide="music-2"></span><strong>Musique</strong><small>Salon · arrêtée</small><i></i>
+            </button>
+            <button class="quick-control is-on" type="button" data-control="Piscine">
+              <span data-lucide="waves"></span><strong>Piscine</strong><small>Eau · 28 °C</small><i></i>
+            </button>
+            <button class="quick-control is-on" type="button" data-control="Stores">
+              <span data-lucide="blinds"></span><strong>Stores</strong><small>Ouverts à 40 %</small><i></i>
+            </button>
+          </div>
+        </section>
+
+        <aside class="climate-card panel">
+          <div class="panel-heading">
+            <div><span class="panel-label">Climat</span><strong>Salon</strong></div>
+            <span class="status">Confort</span>
+          </div>
+          <div class="temperature-control">
+            <button type="button" data-temp-step="-1" aria-label="Réduire la température"><span data-lucide="minus"></span></button>
+            <strong><span data-temperature>22</span><small>°C</small></strong>
+            <button type="button" data-temp-step="1" aria-label="Augmenter la température"><span data-lucide="plus"></span></button>
+          </div>
+          <div class="climate-wave" aria-hidden="true"><i></i><i></i></div>
+          <div class="mode-switch">
+            <button class="active" type="button">Confort</button>
+            <button type="button">Éco</button>
+            <button type="button">Absent</button>
+          </div>
+        </aside>
+
+        <section class="spaces-area">
+          <header class="section-title compact">
+            <h2>Espaces</h2>
+            <button type="button">Voir tous <span data-lucide="arrow-right"></span></button>
+          </header>
+          <div class="space-grid">
+            <button class="space-card selected" type="button" data-room="Salon" data-room-state="Lumières 62 % · 22 °C">
+              <img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="Salon contemporain">
+              <span><strong>Salon</strong><small>Lumières 62 % · 22 °C</small></span>
+            </button>
+            <button class="space-card" type="button" data-room="Cuisine" data-room-state="Tout est éteint">
+              <img src="/media/solutions/environnements-intelligents.webp" alt="Cuisine contemporaine">
+              <span><strong>Cuisine</strong><small>Tout est éteint</small></span>
+            </button>
+            <button class="space-card" type="button" data-room="Suite" data-room-state="Climat 21 °C · stores fermés">
+              <img src="/media/concept/jarvis-life-context-v3.webp" alt="Suite principale contemporaine">
+              <span><strong>Suite</strong><small>Climat 21 °C</small></span>
+            </button>
+            <button class="space-card" type="button" data-room="Terrasse" data-room-state="Foyer allumé · piscine 28 °C">
+              <img src="/media/solutions/jarvis-spaces-property-v3.webp" alt="Terrasse avec piscine et foyer">
+              <span><strong>Terrasse</strong><small>Foyer · piscine 28 °C</small></span>
+            </button>
+          </div>
+        </section>
+
+        <aside class="security-card panel">
+          <div class="panel-heading">
+            <div><span class="panel-label">Sécurité</span><strong>Tout est sous contrôle</strong></div>
+            <button type="button">Détails <span data-lucide="arrow-right"></span></button>
+          </div>
+          <div class="security-content">
+            <div class="security-ring"><span data-lucide="lock-keyhole"></span></div>
+            <ul>
+              <li><i></i>Portes verrouillées</li>
+              <li><i></i>Alarme activée</li>
+              <li><i></i>Caméras en ligne</li>
+              <li><i></i>Aucune anomalie</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+
+      <div class="selection-toast" aria-live="polite" data-toast>
+        <span data-lucide="check"></span>
+        <div><strong>Interface prête</strong><small>Choisissez un contrôle pour voir son état changer.</small></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="/ui-system-preview/preview.js"></script>
+</body>
+</html>

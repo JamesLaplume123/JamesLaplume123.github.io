@@ -1590,6 +1590,35 @@
       away: 'Réduire les charges non essentielles, verrouiller les accès et conserver la surveillance locale.'
     };
 
+    const vehicleVisual = consoleElement.querySelector('.ambulance-overview-visual');
+    if (vehicleVisual && !vehicleVisual.querySelector('.ambulance-zone-controls')) {
+      const zones = {
+        cab: ['Cabine', 'Route', 'Navigation, télémétrie Ford, caméra avant et recharge DC-DC.'],
+        kitchen: ['Cuisine', 'Prêt', 'Frigo 3,8 °C · prises 110 V · eau disponible.'],
+        shower: ['Douche', 'Disponible', 'Eau propre 68 % · chauffe-eau reporté · ventilation prête.'],
+        lounge: ['Salon / nuit', 'Confort', '21,4 °C · éclairage 62 % · chauffage diesel en maintien.'],
+        technical: ['Technique', 'Stable', 'Batteries 74 % · Hub local · distribution et protections.'],
+        exterior: ['Extérieur', 'Surveillé', 'Périmètre, accès, caméras et alimentation externe.']
+      };
+      const controls = document.createElement('div');
+      controls.className = 'ambulance-zone-controls';
+      controls.innerHTML = Object.entries(zones).map(([key, value], index) => `<button type="button" class="${index === 3 ? 'active' : ''}" data-vehicle-zone="${key}"><i></i><span>${value[0]}</span></button>`).join('');
+      const detail = document.createElement('div');
+      detail.className = 'ambulance-zone-detail';
+      detail.innerHTML = '<span>Zone sélectionnée</span><strong>Salon / nuit</strong><small>21,4 °C · éclairage 62 % · chauffage diesel en maintien.</small><button type="button">Ouvrir les commandes</button>';
+      vehicleVisual.append(controls, detail);
+      controls.querySelectorAll('[data-vehicle-zone]').forEach((button) => button.addEventListener('click', () => {
+        controls.querySelectorAll('button').forEach((item) => item.classList.toggle('active', item === button));
+        const [name, state, copy] = zones[button.dataset.vehicleZone];
+        detail.querySelector('strong').textContent = `${name} · ${state}`;
+        detail.querySelector('small').textContent = copy;
+      }));
+      detail.querySelector('button').addEventListener('click', () => {
+        const comfortTab = consoleElement.querySelector('[data-demo-tab="comfort"]');
+        if (comfortTab) comfortTab.click();
+      });
+    }
+
     modeButtons.forEach((button) => button.addEventListener('click', () => {
       modeButtons.forEach((item) => item.classList.toggle('active', item === button));
       if (modeLabel) modeLabel.textContent = button.dataset.label;

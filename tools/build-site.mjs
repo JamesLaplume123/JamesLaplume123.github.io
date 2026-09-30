@@ -10,7 +10,7 @@ const solutions = [
     short: 'Faire travailler ensemble les technologies d’un lieu, sans rendre son utilisation compliquée.',
     audience: 'Résidences, bâtiments, ateliers et véhicules aménagés',
     promise: 'Un environnement qui comprend son état, s’adapte au contexte et demeure contrôlable simplement.',
-    image: '/media/solutions/environnements-intelligents.webp', status: 'Concept produit · architecture en préparation',
+    image: '/media/solutions/environnements-intelligents.webp', status: 'Interface conceptuelle · fondation en construction',
     experienceTitle: 'Votre lieu, réuni dans une expérience claire.',
     previewTitle: 'Toute la propriété. Une seule expérience.',
     localTitle: 'Les fonctions essentielles restent dans le lieu.',
@@ -44,7 +44,7 @@ const solutions = [
     short: 'Parler à ses propres informations, retrouver les bonnes preuves et préparer une action avec permission.',
     audience: 'Particuliers, PME et équipes qui travaillent avec beaucoup d’information',
     promise: 'Un assistant qui travaille à partir de vos sources autorisées et montre d’où vient chaque réponse importante.',
-    image: '/media/solutions/ia-privee-connaissances.webp', status: 'Fondations JARVIS · en construction',
+    image: '/media/solutions/ia-privee-connaissances.webp', status: 'Interface conceptuelle · fondation en construction',
     experienceTitle: 'Une réponse utile commence par une source vérifiable.',
     previewTitle: 'Poser une question et retrouver les bonnes preuves.',
     localTitle: 'Vos informations restent là où vous les avez autorisées.',
@@ -78,7 +78,7 @@ const solutions = [
     short: 'Transformer caméras, accès et alarmes en événements compréhensibles plutôt qu’en notifications isolées.',
     audience: 'Résidences, entreprises et propriétés réparties sur plusieurs sites',
     promise: 'Une sécurité qui réunit le contexte, les preuves et les décisions, sans retirer le contrôle humain.',
-    image: '/media/solutions/securite-intelligente.webp', status: 'Concept produit · à valider',
+    image: '/media/solutions/securite-intelligente.webp', status: 'Interface conceptuelle · fondation en construction',
     experienceTitle: 'Moins d’alertes isolées. Plus de contexte pour décider.',
     previewTitle: 'Comprendre un événement avant de réagir.',
     localTitle: 'Les événements sensibles restent près du site.',
@@ -112,7 +112,7 @@ const solutions = [
     short: 'Faire circuler demandes, documents et approbations entre les outils que l’entreprise utilise déjà.',
     audience: 'PME, entreprises de services et équipes terrain',
     promise: 'Moins de ressaisie et d’oublis, avec des étapes visibles et des validations placées au bon endroit.',
-    image: '/media/solutions/jarvis-enterprise-operations-v1.webp', status: 'Prototype d’expérience · en conception',
+    image: '/media/solutions/jarvis-enterprise-operations-v1.webp', status: 'Interface conceptuelle · fondation en construction',
     experienceTitle: 'Une couche d’intelligence au-dessus des outils que l’entreprise utilise déjà.',
     previewTitle: 'Voir une demande devenir une action supervisée.',
     localTitle: 'Chaque connexion demeure identifiable et révocable.',
@@ -146,7 +146,7 @@ const solutions = [
     short: 'Comprendre l’infrastructure, surveiller les dépendances et conserver des accès privés fiables.',
     audience: 'Entreprises, multi-sites et environnements technologiques complexes',
     promise: 'Une vue claire du réseau et de ses risques, avant que chaque problème devienne une urgence.',
-    image: '/media/solutions/reseau-resilience.webp', status: 'Architecture technique · à structurer',
+    image: '/media/solutions/reseau-resilience.webp', status: 'Interface conceptuelle · fondation en construction',
     experienceTitle: 'Une infrastructure visible avant qu’elle devienne urgente.',
     previewTitle: 'Localiser une anomalie sans accuser tout le système.',
     localTitle: 'La visibilité du site ne dépend pas du lien extérieur.',
@@ -180,7 +180,7 @@ const solutions = [
     short: 'Passer d’un symptôme à des preuves, des vérifications et une remise en service documentée.',
     audience: 'Tous les environnements équipés, du bâtiment au véhicule',
     promise: 'Comprendre plus vite ce qui a changé, quoi vérifier et comment transmettre un dossier utile à la bonne personne.',
-    image: '/media/solutions/diagnostic-care.webp', status: 'Méthode produit · en conception',
+    image: '/media/product/jarvis-hub-v1.webp', status: 'Interface conceptuelle · fondation en construction',
     experienceTitle: 'Du symptôme au dossier utile, sans sauter aux conclusions.',
     previewTitle: 'Vérifier les causes dans le bon ordre.',
     localTitle: 'Observer, restaurer et prouver sans masquer la panne.',
@@ -223,14 +223,14 @@ function header(active = '', lang = 'fr-CA') {
   const english = lang.startsWith('en');
   if (english) return `<a class="skip-link" href="#contenu">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="/en/"><span class="brand-mark" aria-hidden="true"><b>JL</b></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a>
+    <a class="brand" href="/en/"><span class="brand-mark" aria-hidden="true"><b>J</b><i>AI</i></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a>
     <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-nav-toggle><span></span><span></span></button>
     <nav class="site-nav" aria-label="Main navigation" data-nav><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Mobile Laboratory</a><a href="/vision-roadmap/">Vision</a><a href="/a-propos/">About</a><a class="nav-mobile-only" href="/">Français</a><a class="nav-mobile-only nav-contact" href="/contact/">Discuss a project</a></nav>
     <div class="header-actions"><a class="language-link" href="/">Français</a><a class="header-cta" href="/contact/">Discuss a project</a></div>
   </header>`;
   return `<a class="skip-link" href="#contenu">Aller au contenu</a>
   <header class="site-header">
-    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><b>JL</b></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a>
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><b>J</b><i>AI</i></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a>
     <button class="nav-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" data-nav-toggle><span></span><span></span></button>
     <nav class="site-nav" aria-label="Navigation principale" data-nav>${navItems.map(([key, href, label]) => `<a${active === key ? ' class="active"' : ''} href="${href}">${label}</a>`).join('')}<a class="nav-mobile-only" href="/en/" lang="en">English</a><a class="nav-mobile-only nav-contact${active === 'contact' ? ' active' : ''}" href="/contact/">Parler du projet</a></nav>
     <div class="header-actions"><a class="language-link" href="/en/" lang="en">English</a><a class="header-cta${active === 'contact' ? ' active' : ''}" href="/contact/">Parler du projet</a></div>
@@ -239,13 +239,13 @@ function header(active = '', lang = 'fr-CA') {
 
 function footer(lang = 'fr-CA') {
   if (lang.startsWith('en')) return `<footer class="site-footer"><div class="footer-main shell">
-    <div><a class="brand" href="/en/"><span class="brand-mark" aria-hidden="true"><b>JL</b></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a><p>Connect what exists. Understand what matters. Act with your approval.</p></div>
+    <div><a class="brand" href="/en/"><span class="brand-mark" aria-hidden="true"><b>J</b><i>AI</i></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a><p>Connect what exists. Understand what matters. Act with your approval.</p></div>
     <div><h3>Explore</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Mobile Laboratory</a><a href="/recherche/">Research</a></div>
     <div><h3>Project</h3><a href="/vision-roadmap/">Vision and roadmap</a><a href="/confiance/">Trust</a><a href="/a-propos/">About</a><a href="/contact/">Contact</a></div>
     <div><h3>Status</h3><span>Platform under construction</span><span>Mobile laboratory under construction</span><span>Open to collaboration</span></div>
   </div><div class="footer-bottom shell"><span>© 2026 James Laplume · Québec, Canada</span><span>Detailed edition available in French</span><span>Private by design</span></div></footer>`;
   return `<footer class="site-footer"><div class="footer-main shell">
-    <div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><b>JL</b></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a><p>Relier ce qui existe. Comprendre ce qui compte. Agir avec votre accord.</p></div>
+    <div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><b>J</b><i>AI</i></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a><p>Relier ce qui existe. Comprendre ce qui compte. Agir avec votre accord.</p></div>
     <div><h3>Explorer</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/recherche/">Recherche</a></div>
     <div><h3>Projet</h3><a href="/vision-roadmap/">Vision et feuille de route</a><a href="/confiance/">Confiance</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></div>
     <div><h3>État</h3><span>Plateforme en construction</span><span>Laboratoire mobile en construction</span><span>Ouvert aux collaborations</span></div>
@@ -279,7 +279,7 @@ function normalizeProductNaming(html) {
 
 function documentPage({ title, description, active, pathname, body, image = '/og.png', lang = 'fr-CA' }) {
   const canonical = `${baseUrl}${pathname}`;
-  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#0b0e0e"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/site-v3.css?v=20260930b"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260930b" defer></script></body></html>`);
+  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#0b0e0e"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/site-v3.css?v=20260930d"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260930d" defer></script></body></html>`);
 }
 
 function replaceSection(html, startMarker, endMarker, replacement) {
@@ -316,7 +316,7 @@ function accessControlSection() {
 }
 
 function jarvisSetup() {
-  return `<div class="jarvis-onboarding" data-setup-demo><div class="jarvis-interface-bar"><div class="jarvis-interface-brand"><span>J<small>AI</small></span><div><b>JARVIS</b><small>Configuration privée</small></div></div><div class="jarvis-setup-progress"><i class="active"></i><i></i><i></i><i></i></div><div class="jarvis-interface-state"><i></i> JARVIS Hub connecté</div></div><div class="jarvis-setup-body"><div class="jarvis-setup-visual"><img src="/media/solutions/environnements-intelligents.webp" alt="JARVIS intégré dans une résidence contemporaine"><div><span>JARVIS Hub · infrastructure locale</span><h3>Votre intelligence privée.</h3><p>JARVIS Core comprend et orchestre les systèmes autorisés. JARVIS App vous donne une seule interface pour comprendre, décider et agir.</p></div></div><div class="jarvis-setup-panel"><div class="jarvis-setup-step" data-setup-step="0"><span>Étape 1 sur 4 · Identité et contrôle</span><h3>Configurons votre JARVIS.</h3><p>Le profil principal définit les permissions, les autres utilisateurs et les actions qui exigent une approbation.</p><label>Nom du profil<input type="text" value="Profil principal" aria-label="Nom du profil"></label><div class="setup-choice-row"><button class="selected" type="button" data-setup-choice>Personnel</button><button type="button" data-setup-choice>Entreprise</button></div></div><div class="jarvis-setup-step" data-setup-step="1" hidden><span>Étape 2 sur 4 · Environnement</span><h3>Où JARVIS fonctionnera-t-il?</h3><p>Chaque environnement conserve localement ses services essentiels, ses règles et les données choisies.</p><div class="setup-choice-list"><button class="selected" type="button" data-setup-choice><b>Résidence principale</b><small>Maison, condo ou propriété</small></button><button type="button" data-setup-choice><b>Entreprise</b><small>Bureau, atelier ou commerce</small></button><button type="button" data-setup-choice><b>Véhicule</b><small>VR, van ou unité mobile</small></button></div></div><div class="jarvis-setup-step" data-setup-step="2" hidden><span>Étape 3 sur 4 · Accès et confidentialité</span><h3>Comment JARVIS peut-il se connecter?</h3><p>Le mode peut être modifié plus tard. Chaque service externe demeure identifiable, limité et révocable.</p><div class="setup-choice-list"><button class="selected" type="button" data-setup-choice><b>Local d’abord</b><small>Internet seulement après votre accord</small></button><button type="button" data-setup-choice><b>Système fermé</b><small>Aucun service externe</small></button><button type="button" data-setup-choice><b>Hybride contrôlé</b><small>Connecteurs choisis et journalisés</small></button></div></div><div class="jarvis-setup-step" data-setup-step="3" hidden><span>Étape 4 sur 4 · Première capacité</span><h3>Par quoi doit-il commencer?</h3><p>Activez seulement ce qui répond à un besoin clair. Le reste pourra être ajouté progressivement.</p><div class="setup-choice-list"><button class="selected" type="button" data-setup-choice><b>Parler à mes informations</b><small>Documents, courriels et connaissances autorisées</small></button><button type="button" data-setup-choice><b>Comprendre mon environnement</b><small>États, appareils, énergie et sécurité</small></button><button type="button" data-setup-choice><b>Automatiser un processus</b><small>Tâches, dossiers et approbations</small></button></div></div><div class="jarvis-setup-complete" data-setup-complete hidden><span>Configuration prête</span><h3>Votre système privé est prêt.</h3><p>JARVIS Core est exécuté localement par votre JARVIS Hub. Aucune capacité ni source n’est activée sans votre choix.</p><div><i></i><b>Profil principal · Résidence · Local d’abord</b></div></div><div class="jarvis-setup-actions"><button type="button" data-setup-back disabled>Retour</button><button type="button" data-setup-next>Continuer</button></div></div></div></div>`;
+  return `<div class="jarvis-onboarding" data-setup-demo><div class="jarvis-interface-bar"><div class="jarvis-interface-brand"><span>J<small>AI</small></span><div><b>JARVIS</b><small>Configuration privée</small></div></div><div class="jarvis-setup-progress"><i class="active"></i><i></i><i></i><i></i></div><div class="jarvis-interface-state"><i></i> JARVIS Hub connecté</div></div><div class="jarvis-setup-body"><div class="jarvis-setup-visual"><img src="/media/product/jarvis-hub-v1.webp" alt="JARVIS Hub intégré dans un environnement professionnel privé"><div><span>JARVIS Hub · infrastructure locale</span><h3>Votre intelligence privée.</h3><p>JARVIS Core comprend et orchestre les systèmes autorisés. JARVIS App vous donne une seule interface pour comprendre, décider et agir.</p></div></div><div class="jarvis-setup-panel"><div class="jarvis-setup-step" data-setup-step="0"><span>Étape 1 sur 4 · Identité et contrôle</span><h3>Configurons votre JARVIS.</h3><p>Le profil principal définit les permissions, les autres utilisateurs et les actions qui exigent une approbation.</p><label>Nom du profil<input type="text" value="Profil principal" aria-label="Nom du profil"></label><div class="setup-choice-row"><button class="selected" type="button" data-setup-choice>Personnel</button><button type="button" data-setup-choice>Entreprise</button></div></div><div class="jarvis-setup-step" data-setup-step="1" hidden><span>Étape 2 sur 4 · Environnement</span><h3>Où JARVIS fonctionnera-t-il?</h3><p>Chaque environnement conserve localement ses services essentiels, ses règles et les données choisies.</p><div class="setup-choice-list"><button class="selected" type="button" data-setup-choice><b>Résidence principale</b><small>Maison, condo ou propriété</small></button><button type="button" data-setup-choice><b>Entreprise</b><small>Bureau, atelier ou commerce</small></button><button type="button" data-setup-choice><b>Véhicule</b><small>VR, van ou unité mobile</small></button></div></div><div class="jarvis-setup-step" data-setup-step="2" hidden><span>Étape 3 sur 4 · Accès et confidentialité</span><h3>Comment JARVIS peut-il se connecter?</h3><p>Le mode peut être modifié plus tard. Chaque service externe demeure identifiable, limité et révocable.</p><div class="setup-choice-list"><button class="selected" type="button" data-setup-choice><b>Local d’abord</b><small>Internet seulement après votre accord</small></button><button type="button" data-setup-choice><b>Système fermé</b><small>Aucun service externe</small></button><button type="button" data-setup-choice><b>Hybride contrôlé</b><small>Connecteurs choisis et journalisés</small></button></div></div><div class="jarvis-setup-step" data-setup-step="3" hidden><span>Étape 4 sur 4 · Première capacité</span><h3>Par quoi doit-il commencer?</h3><p>Activez seulement ce qui répond à un besoin clair. Le reste pourra être ajouté progressivement.</p><div class="setup-choice-list"><button class="selected" type="button" data-setup-choice><b>Parler à mes informations</b><small>Documents, courriels et connaissances autorisées</small></button><button type="button" data-setup-choice><b>Comprendre mon environnement</b><small>États, appareils, énergie et sécurité</small></button><button type="button" data-setup-choice><b>Automatiser un processus</b><small>Tâches, dossiers et approbations</small></button></div></div><div class="jarvis-setup-complete" data-setup-complete hidden><span>Configuration prête</span><h3>Votre système privé est prêt.</h3><p>JARVIS Core est exécuté localement par votre JARVIS Hub. Aucune capacité ni source n’est activée sans votre choix.</p><div><i></i><b>Profil principal · Résidence · Local d’abord</b></div></div><div class="jarvis-setup-actions"><button type="button" data-setup-back disabled>Retour</button><button type="button" data-setup-next>Continuer</button></div></div></div></div>`;
 }
 
 function cta(title = 'Commençons par comprendre ce qui doit mieux fonctionner.', copy = 'Présentez le problème, le lieu ou le processus. Je vous répondrai clairement sur ce qui est possible aujourd’hui, ce qui exige un pilote et ce qui appartient encore à la recherche.') {
@@ -660,11 +660,35 @@ function diagnosticCareScene() {
 }
 
 function diagnosticContinuityScene() {
+  const scope = `<div class="diagnostic-scope"><article><span>Équipement</span><strong>Appareil, capteur, énergie ou véhicule</strong></article><article><span>Infrastructure</span><strong>Réseau, caméra, accès ou serveur</strong></article><article><span>Logiciel</span><strong>Service, intégration, automatisation ou donnée</strong></article><article><span>Continuité</span><strong>Restaurer, vérifier et documenter le résultat</strong></article></div>`;
   return diagnosticCareScene()
     .replace('<span>JC</span>', '<span>JD</span>')
     .replaceAll('JARVIS Care', 'JARVIS Diagnostic')
     .replaceAll('Diagnostic et continuité', 'Diagnostic & continuité')
-    .replace('Care commence par observer et classer.', 'JARVIS commence par observer et classer.');
+    .replace('Care commence par observer et classer.', 'JARVIS commence par observer et classer.')
+    .replace('Ventilation zone cabine', 'Cafetière connectée')
+    .replace('Commande reçue, moteur immobile', 'Déconnectée après une mise à jour réseau')
+    .replace('Diagnostic en cours', 'Cause recherchée')
+    .replace('Transmission véhicule', 'Service de facturation')
+    .replace('Température plus élevée en montée', 'Synchronisation interrompue depuis 9 h 14')
+    .replace('Tendance observée', 'Continuité à vérifier')
+    .replace('Dossier C-118 · ventilation cabine', 'Dossier C-118 · cafetière connectée')
+    .replace('La commande arrive, mais le ventilateur ne démarre pas.', 'La cafetière répond localement, mais elle a disparu de l’application.')
+    .replace('Ordre reçu par le contrôleur', 'Commande locale reçue par l’appareil')
+    .replace('La scène et l’interface répondent.', 'Le bouton physique et le cycle de chauffe répondent.')
+    .replace('Batterie à 93 % · tension normale', 'Alimentation stable · appareil fonctionnel')
+    .replace('Aucun délestage actif.', 'Aucune panne électrique observée.')
+    .replace('Aucun courant après le fusible F4', 'Nouvelle adresse réseau après redémarrage')
+    .replace('Mesure locale horodatée.', 'Le connecteur utilise encore l’ancienne adresse.')
+    .replace('Inspecter F4 avant le relais et le moteur', 'Mettre à jour le connecteur, puis confirmer un cycle complet')
+    .replace('Intervention physique requise.', 'Aucun remplacement matériel requis à ce stade.')
+    .replace('Ventilation cabine</b><small>Énergie · relais · contrôleur · moteur', 'Équipements connectés</b><small>Alimentation · réseau · intégration · automatisation')
+    .replace('Ventilation cabine · diagnostic préliminaire', 'Cafetière connectée · diagnostic préliminaire')
+    .replace('Commande valide, aucun démarrage du moteur.', 'Appareil fonctionnel localement, absent de l’interface JARVIS.')
+    .replace('Tension normale avant F4, absence de courant après F4.', 'Alimentation normale, adresse réseau modifiée après redémarrage.')
+    .replace('Fusible F4 ouvert ou contact défectueux, à confirmer physiquement.', 'Connecteur lié à une ancienne adresse, à confirmer par un nouveau test.')
+    .replace('Aucune pièce remplacée et moteur non testé directement.', 'Aucune configuration modifiée et aucun cycle lancé sans approbation.')
+    .replace('<section class="cap-panel" data-demo-panel="incidents">', `<section class="cap-panel" data-demo-panel="incidents">${scope}`);
 }
 
 function solutionScenario(s) {
@@ -730,7 +754,7 @@ function solutionPage(s) {
 }
 
 function platformArchitectureSection() {
-  return `<section class="platform-architecture platform-architecture-executive" id="architecture"><div class="shell"><div class="platform-architecture-head" data-reveal><div><p class="eyebrow">Le produit complet</p><h2 class="headline">Quatre rôles.<br>Un seul JARVIS.</h2></div><p>Vous utilisez l’App. Core comprend et coordonne. Le Hub exécute sur place. Vos systèmes réels continuent de faire ce qu’ils font déjà.</p></div><div class="platform-architecture-flow platform-architecture-flow--visual" data-reveal><article class="platform-layer-app"><span>Vous voyez et décidez</span><div class="platform-app-visual"><i></i><b>Bonsoir</b><small>Votre JARVIS est prêt</small></div><h3>JARVIS App</h3><p>Une interface commune sur ordinateur, téléphone, tablette et écrans intégrés.</p></article><i aria-hidden="true">→</i><article class="platform-layer-core"><span>Le système comprend</span><div class="platform-core-visual"><i></i><b>Core</b><small>Contexte · règles · agents</small></div><h3>JARVIS Core</h3><p>L’intelligence qui comprend la demande, vérifie les droits et prépare les actions.</p></article><i aria-hidden="true">→</i><article class="platform-layer-hub"><span>Le site reste autonome</span><div class="platform-hub-visual"><img src="/media/product/jarvis-hub-v1.webp" alt="JARVIS Hub intégré dans un environnement professionnel"></div><h3>JARVIS Hub</h3><p>L’infrastructure locale qui exécute Core et garde les services essentiels près du site.</p></article><i aria-hidden="true">→</i><article class="platform-layer-world"><span>Le réel répond</span><div class="platform-world-visual"><img src="/media/solutions/environnements-intelligents.webp" alt="Résidence intelligente"><img src="/media/solutions/jarvis-enterprise-operations-v1.webp" alt="Entreprise connectée"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Véhicule laboratoire"></div><h3>Vos systèmes</h3><p>Espaces, informations, logiciels et équipements existants restent les outils réels.</p></article></div><div class="platform-capability-line" data-reveal><span>La même fondation partout</span><p>Une identité · des permissions · six capacités · une trace complète</p></div></div></section>`;
+  return `<section class="platform-architecture platform-architecture-executive" id="architecture"><div class="shell"><div class="platform-architecture-head" data-reveal><div><p class="eyebrow">Le produit complet</p><h2 class="headline">Une expérience.<br>Trois couches. Vos systèmes.</h2></div><p>Vous utilisez l’App. Core comprend et coordonne. Le Hub exécute sur place. Vos systèmes réels continuent de faire ce qu’ils font déjà.</p></div><div class="platform-architecture-flow platform-architecture-flow--visual" data-reveal><article class="platform-layer-app"><span>Vous voyez et décidez</span><div class="platform-app-visual"><i></i><b>Bonsoir</b><small>Votre JARVIS est prêt</small></div><h3>JARVIS App</h3><p>Une interface commune sur ordinateur, téléphone, tablette et écrans intégrés.</p></article><i aria-hidden="true">→</i><article class="platform-layer-core"><span>Le système comprend</span><div class="platform-core-visual"><i></i><b>Core</b><small>Contexte · règles · agents</small></div><h3>JARVIS Core</h3><p>L’intelligence qui comprend la demande, vérifie les droits et prépare les actions.</p></article><i aria-hidden="true">→</i><article class="platform-layer-hub"><span>Le site reste autonome</span><div class="platform-hub-visual"><img src="/media/product/jarvis-hub-v1.webp" alt="JARVIS Hub intégré dans un environnement professionnel"></div><h3>JARVIS Hub</h3><p>L’infrastructure locale qui exécute Core et garde les services essentiels près du site.</p></article><i aria-hidden="true">→</i><article class="platform-layer-world"><span>Le réel répond</span><div class="platform-world-visual"><img src="/media/solutions/environnements-intelligents.webp" alt="Résidence intelligente"><img src="/media/solutions/jarvis-enterprise-operations-v1.webp" alt="Entreprise connectée"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Véhicule laboratoire"></div><h3>Vos systèmes</h3><p>Espaces, informations, logiciels et équipements existants restent les outils réels.</p></article></div><div class="platform-capability-line" data-reveal><span>La même fondation partout</span><p>Une identité · des permissions · six capacités · une trace complète</p></div></div></section>`;
 }
 
 function platformBaseExperienceSection() {
@@ -801,7 +825,8 @@ function fabricImpactConsole() {
 }
 
 function multiSiteConsole() {
-  return fabricImpactConsole()
+  const clarity = `<div class="multisite-clarity"><article><span>Dans chaque lieu</span><strong>JARVIS Core comprend et agit localement.</strong><small>Chaque Hub conserve ses données, ses règles et ses fonctions essentielles.</small></article><i>+</i><article><span>Entre les lieux</span><strong>Multi-Site coordonne le contexte autorisé.</strong><small>Fabric transporte seulement l’événement nécessaire, jamais toute la base de données.</small></article><i>=</i><article><span>Résultat</span><strong>Une expérience cohérente sans dépendance centrale.</strong><small>Maison, véhicule et entreprise continuent de fonctionner seuls.</small></article></div>`;
+  return clarity + fabricImpactConsole()
     .replace('<b>JARVIS Fabric</b><small>Coordination privée</small>', '<b>JARVIS Multi-Site</b><small>Propulsé par Fabric</small>')
     .replace('Fabric actif · profil principal', 'Multi-Site actif · liaison Fabric')
     .replace('<span>Care</span><b>Deux causes probables classées</b>', '<span>Diagnostic</span><b>Deux causes probables classées</b>')
@@ -843,7 +868,7 @@ function personalOrchestrationConsole() {
 
 function networkResilienceSceneV2() {
   const executiveVisual = `<div class="network-photo-overview"><img src="/media/solutions/reseau-resilience.webp" alt="Infrastructure réseau professionnelle et propre"><div><span>Administration quotidienne</span><h3>Voir le réseau comme un service vivant, pas comme une collection d’appareils.</h3><p>Disponibilité, identité, segmentation, changements et dépendances sont réunis dans une même vue.</p></div></div>`;
-  const scope = `<div class="network-scope-bridge"><article><span>JARVIS Network</span><strong>Administrer et maintenir chaque jour</strong><small>Inventaire, Wi-Fi, VLAN, disponibilité, changements, sauvegardes et anomalies.</small></article><i>≠</i><article><span>Security Pro</span><strong>Évaluer sous mandat explicite</strong><small>OSINT, exposition, audit, pentest autorisé, preuves, correction et retest.</small></article></div><div class="network-csf-strip" aria-label="Cycle de cybersécurité inspiré du NIST CSF 2.0"><span>Gouverner</span><span>Identifier</span><span>Protéger</span><span>Détecter</span><span>Répondre</span><span>Rétablir</span></div>`;
+  const scope = `<div class="network-admin-missions"><article><span>Actifs et identités</span><strong>Qui est connecté, où et avec quel droit?</strong><small>Inventaire, propriétaire, rôle, posture et première présence.</small></article><article><span>Disponibilité</span><strong>Qu’est-ce qui ralentit ou devient instable?</strong><small>Internet, Wi-Fi, DNS, VPN, services locaux et dépendances.</small></article><article><span>Protection</span><strong>Qu’est-ce qui doit être isolé ou renforcé?</strong><small>Segmentation, configuration, accès distant et changements non attendus.</small></article><article><span>Réponse</span><strong>Que peut-on contenir sans casser le site?</strong><small>Isolement progressif, retour arrière, preuves et approbation humaine.</small></article></div><div class="network-scope-bridge"><article><span>JARVIS Network</span><strong>Administrer et maintenir chaque jour</strong><small>Inventaire, Wi-Fi, VLAN, disponibilité, changements, sauvegardes et anomalies.</small></article><i>≠</i><article><span>Security Pro</span><strong>Évaluer sous mandat explicite</strong><small>OSINT, exposition, audit, pentest autorisé, preuves, correction et retest.</small></article></div><div class="network-csf-strip" aria-label="Cycle de cybersécurité inspiré du NIST CSF 2.0"><span>Gouverner</span><span>Identifier</span><span>Protéger</span><span>Détecter</span><span>Répondre</span><span>Rétablir</span></div>`;
 
   return networkResilienceScene()
     .replace('<section class="cap-panel" data-demo-panel="overview"><div class="network-executive">', `<section class="cap-panel" data-demo-panel="overview">${executiveVisual}<div class="network-executive">`)

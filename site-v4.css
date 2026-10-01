@@ -120,6 +120,20 @@ main{overflow:hidden}
 .solution-story-media img{filter:saturate(.78) contrast(1.04)}
 .home-destination,.split-media,.platform-architecture,.platform-hub,.platform-experience,.vision-fabric,.security-pro,.life-vision{border-radius:0}
 
+/* Restore deliberate contrast inside the editorial light sections. */
+.solutions-stories-intro>p:last-child,
+.solutions-orientation-head>p,
+.solutions-foundation-head>p{color:#4f5856}
+.solution-story-copy{color:#111516}
+.solution-story-result{color:#4d5654}
+.solution-story-copy ul{border-color:#aeb4b1}
+.solution-story-copy li{color:#313937;border-color:#aeb4b1}
+.solution-story-footer>div span{color:#596562}
+.solution-story-footer>a{color:#111516;border-color:#59615f}
+.life-vision,.roadmap-section{color:#111516}
+.life-vision .headline,.roadmap-section .headline{color:#111516}
+.life-vision-head>p,.roadmap-heading>p{color:#505a57}
+
 .jarvis-interface,.automation-studio,.residence-console,.vision-console,.ops-console,.cap-console,.ambulance-console,.fabric-console,.multisite-console,.personal-console,.sp-console,.platform-base-console{
   border-color:rgba(255,255,255,.2)!important;
   border-radius:6px!important;

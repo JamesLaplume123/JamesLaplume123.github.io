@@ -93,12 +93,12 @@
       event.preventDefault();
       const button = form.querySelector('button[type="submit"]');
       const status = form.querySelector('[data-form-status]');
+      const payload = Object.fromEntries(new FormData(form).entries());
+      payload._url = window.location.href;
       button.disabled = true;
       status.textContent = 'Envoi en cours...';
 
       try {
-        const payload = Object.fromEntries(new FormData(form).entries());
-        payload._url = window.location.href;
         const response = await fetch('https://formsubmit.co/ajax/laplumejames@gmail.com', {
           method: 'POST',
           headers: {
@@ -112,7 +112,20 @@
         form.reset();
         status.textContent = 'Merci. Votre message a bien été transmis.';
       } catch {
-        status.innerHTML = 'L’envoi automatique est indisponible. Écrivez directement à <a href="mailto:laplumejames@gmail.com">laplumejames@gmail.com</a>.';
+        const subject = encodeURIComponent(`Demande depuis jameslaplume.ca · ${payload.name || 'Nouveau projet'}`);
+        const body = encodeURIComponent([
+          `Nom: ${payload.name || ''}`,
+          `Courriel: ${payload.email || ''}`,
+          `Organisation: ${payload.organization || ''}`,
+          `Profil: ${payload.profile || ''}`,
+          `Sujet: ${payload.interest || ''}`,
+          '',
+          payload.message || ''
+        ].join('\n'));
+        const fallback = document.createElement('a');
+        fallback.href = `mailto:laplumejames@gmail.com?subject=${subject}&body=${body}`;
+        fallback.textContent = 'Ouvrir votre courriel prérempli';
+        status.replaceChildren('L’envoi automatique est temporairement indisponible. ', fallback, '.');
       } finally {
         button.disabled = false;
       }

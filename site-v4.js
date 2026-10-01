@@ -97,12 +97,18 @@
       status.textContent = 'Envoi en cours...';
 
       try {
+        const payload = Object.fromEntries(new FormData(form).entries());
+        payload._url = window.location.href;
         const response = await fetch('https://formsubmit.co/ajax/laplumejames@gmail.com', {
           method: 'POST',
-          headers: { Accept: 'application/json' },
-          body: new FormData(form)
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
         });
-        if (!response.ok) throw new Error('Form unavailable');
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.success === false) throw new Error('Form unavailable');
         form.reset();
         status.textContent = 'Merci. Votre message a bien été transmis.';
       } catch {

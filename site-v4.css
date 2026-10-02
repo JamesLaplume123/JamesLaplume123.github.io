@@ -707,3 +707,155 @@ main{overflow:hidden}
   .sp-sidebar nav{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   .personal-source-flow{grid-template-columns:minmax(0,1fr)!important}
 }
+
+/* Readability pass: keep the editorial scale, but remove 6-9 px interface text. */
+.site-nav a{font-size:12px}
+.site-header .brand-copy small{font-size:9px;line-height:1.35}
+.language-link{font-size:10px}
+.header-cta{font-size:11px}
+.eyebrow,.kicker{font-size:11px;line-height:1.45}
+
+:where(
+  .v4-console,
+  .cap-console,
+  .automation-studio,
+  .platform-journey,
+  .platform-base-console,
+  .ambulance-console,
+  .multisite-console,
+  .personal-console,
+  .sp-console
+) :where(small,em,time,dt,label){
+  font-size:10px!important;
+  line-height:1.45!important;
+}
+
+:where(
+  .v4-console,
+  .cap-console,
+  .automation-studio,
+  .platform-journey,
+  .platform-base-console,
+  .ambulance-console,
+  .multisite-console,
+  .personal-console,
+  .sp-console
+) span{
+  font-size:10px!important;
+  line-height:1.4!important;
+}
+
+:where(
+  .v4-console,
+  .cap-console,
+  .automation-studio,
+  .platform-journey,
+  .platform-base-console,
+  .ambulance-console,
+  .multisite-console,
+  .personal-console,
+  .sp-console
+) p{
+  font-size:13px!important;
+  line-height:1.6!important;
+}
+
+:where(
+  .v4-console,
+  .cap-console,
+  .automation-studio,
+  .platform-journey,
+  .platform-base-console,
+  .ambulance-console,
+  .multisite-console,
+  .personal-console,
+  .sp-console
+) button{
+  font-size:11px!important;
+  line-height:1.35!important;
+}
+
+.cap-sidebar nav b,
+.automation-studio-nav nav b,
+.platform-base-console nav b,
+.personal-sidebar nav b,
+.sp-sidebar nav b{font-size:10px!important}
+
+.v4-console li b{font-size:11px}
+.v4-console>a{font-size:11px}
+.v4-environments button{font-size:11px}
+.v4-foundation{font-size:10px;line-height:1.4}
+.v4-manifesto-copy>span,
+.v4-manifesto figcaption span,
+.v4-signal,
+.v4-capability-preview>section>span,
+.v4-capability-preview>small,
+.v4-proof dt{font-size:10px}
+.v4-capability-stage>nav button span{font-size:10px!important}
+.v4-capability-stage>nav button small{font-size:11px;line-height:1.45}
+.v4-capability-stage>nav button b{font-size:14px}
+
+.site-header .brand-copy small,
+.site-footer .brand-copy small,
+.v4-foundation small,
+.solution-story-footer span,
+.solution-demo-integrations p,
+.residence-scenes i,
+.room-control-list :is(i,b),
+.residence-floorplan-title b,
+.knowledge-index-map strong,
+.knowledge-case-switcher i,
+.knowledge-preview-copy dd,
+.knowledge-evidence-thumb i,
+.knowledge-response b,
+.vision-system-flow :is(i,b,strong),
+.vision-feed-top b,
+.vision-detection strong,
+.vision-feed-bottom strong,
+.vision-event-panel strong,
+.automation-flow-library i,
+.access-lifecycle span,
+.access-roles span,
+.enterprise-metrics-label :is(span,small),
+.automation-active-role b,
+.automation-flow-toolbar b,
+.automation-flow-overview strong,
+.care-incident-grid b,
+.platform-hub-specs span,
+.platform-trust-grid span,
+.journey-app-ui i,
+.journey-core-flow b,
+.platform-capability-line span,
+.lab-system-grid span,
+.lab-automation-list span,
+.vision-subnav span,
+.life-scope span,
+.sp-sidebar i,
+.fabric-rules span,
+.sp-method :is(a,span),
+.roadmap-next em,
+.roadmap-proof span,
+.fabric-intro-image span,
+.fabric-technical-name{
+  font-size:10px!important;
+  line-height:1.4!important;
+}
+
+.vision-detection i,
+.enterprise-boundary .shell :is(span,i),
+.access-principle span,
+.diagnostic-boundary span,
+.roadmap-reality :is(span,b){font-size:10px!important;line-height:1.4!important}
+
+.knowledge-case-switcher button{min-height:104px}
+.knowledge-case-switcher button span,
+.knowledge-case-switcher button small{
+  overflow:visible!important;
+  white-space:normal!important;
+  text-overflow:clip!important;
+}
+
+@media(max-width:900px){
+  .site-nav a{font-size:11px}
+  .vision-camera-rail button span{font-size:10px!important;line-height:1.35!important}
+}

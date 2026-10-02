@@ -124,6 +124,11 @@ main{overflow:hidden}
 .solutions-stories-intro>p:last-child,
 .solutions-orientation-head>p,
 .solutions-foundation-head>p{color:#4f5856}
+.solutions-foundation{color:#111516}
+.solutions-foundation .headline,
+.solutions-foundation-list span{color:#111516}
+.solutions-foundation-list p{color:#505a57}
+.solutions-foundation .button{margin-top:48px}
 .solution-story-copy{color:#111516}
 .solution-story-result{color:#4d5654}
 .solution-story-copy ul{border-color:#aeb4b1}

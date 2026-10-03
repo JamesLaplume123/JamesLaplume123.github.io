@@ -38,10 +38,9 @@ body,button,input,select,textarea{font-variant-numeric:tabular-nums}
 }
 .site-header:after{display:none}
 .site-header .brand{min-width:260px;gap:0}
-.site-header .brand-copy{gap:6px}
-.site-header .brand-copy strong,.site-footer .brand-copy strong{position:relative;width:max-content;color:#f6f8f8;font-size:18px;font-weight:620;letter-spacing:.2em;line-height:.9}
-.site-header .brand-copy strong:after,.site-footer .brand-copy strong:after{content:"";position:absolute;right:-10px;top:1px;width:4px;height:4px;background:#64ddfa;box-shadow:0 0 10px rgba(100,221,250,.72)}
-.site-header .brand-copy small,.site-footer .brand-copy small{margin-top:0;color:#8fa2a8;font-family:var(--mono);font-size:8px;font-weight:620;letter-spacing:.31em;line-height:1;text-transform:uppercase}
+.site-header .brand-copy,.site-footer .brand-copy{gap:7px}
+.site-header .brand-copy strong,.site-footer .brand-copy strong{width:max-content;color:#f7f8f8;font-size:20px;font-weight:300;letter-spacing:.32em;line-height:.86}
+.site-header .brand-copy small,.site-footer .brand-copy small{margin-top:0;color:#68daf5;font-family:var(--mono);font-size:7px;font-weight:560;letter-spacing:.39em;line-height:1;text-transform:uppercase}
 .site-nav{gap:2px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
 .site-nav a{padding:11px 10px;border-radius:0;color:#b6bcbd;font-size:11px}
 .site-nav a:hover,.site-nav a.active{color:#fff;background:transparent}

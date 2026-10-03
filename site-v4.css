@@ -37,15 +37,11 @@ body,button,input,select,textarea{font-variant-numeric:tabular-nums}
   backdrop-filter:blur(22px) saturate(1.2);
 }
 .site-header:after{display:none}
-.site-header .brand{min-width:260px;gap:15px}
-.brand-mark{width:46px;height:46px;border:0!important;border-radius:0;background:transparent!important;box-shadow:none!important;overflow:visible}
-.brand-mark:after{display:none!important}
-.brand-mark img{display:block;width:100%;height:100%;object-fit:contain}
-.site-header .brand-mark{width:46px;height:46px;justify-content:center}
-.site-header .brand-copy{gap:5px}
-.site-header .brand-copy strong{font-size:16px;font-weight:680;letter-spacing:.13em;line-height:1}
-.site-header .brand-copy small{margin-top:0;color:#69ddfb;font-family:var(--mono);font-size:8px;font-weight:650;letter-spacing:.24em;line-height:1;text-transform:uppercase}
-.site-footer .brand-mark{width:52px;height:52px}
+.site-header .brand{min-width:260px;gap:0}
+.site-header .brand-copy{gap:6px}
+.site-header .brand-copy strong,.site-footer .brand-copy strong{position:relative;width:max-content;color:#f6f8f8;font-size:18px;font-weight:620;letter-spacing:.2em;line-height:.9}
+.site-header .brand-copy strong:after,.site-footer .brand-copy strong:after{content:"";position:absolute;right:-10px;top:1px;width:4px;height:4px;background:#64ddfa;box-shadow:0 0 10px rgba(100,221,250,.72)}
+.site-header .brand-copy small,.site-footer .brand-copy small{margin-top:0;color:#8fa2a8;font-family:var(--mono);font-size:8px;font-weight:620;letter-spacing:.31em;line-height:1;text-transform:uppercase}
 .site-nav{gap:2px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
 .site-nav a{padding:11px 10px;border-radius:0;color:#b6bcbd;font-size:11px}
 .site-nav a:hover,.site-nav a.active{color:#fff;background:transparent}
@@ -172,7 +168,6 @@ main{overflow:hidden}
 @media(max-width:1100px){
   .site-header{height:72px;padding:0 20px}
   .site-header .brand{min-width:0}
-  .site-header .brand-mark{flex:0 0 40px}
   .nav-toggle{
     position:absolute;
     z-index:3;

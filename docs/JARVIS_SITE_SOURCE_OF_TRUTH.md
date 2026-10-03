@@ -24,10 +24,10 @@ Principe:
 
 ## 2. Architecture produit
 
-### James Laplume
+### JARVIS Private Systems
 
-Le fondateur et le studio qui portent la vision, la recherche appliquee, les
-projets pilotes et le developpement du produit.
+La marque et le studio qui portent la vision, la recherche appliquee, les
+projets pilotes et le developpement du produit. James Laplume en est le fondateur.
 
 ### JARVIS
 
@@ -179,7 +179,7 @@ profil actif, du site, de la mission et de la permission accordee.
 
 ## 7. Noms a utiliser
 
-- James Laplume - Intelligent Systems Studio
+- JARVIS Private Systems
 - JARVIS
 - JARVIS App
 - JARVIS Core

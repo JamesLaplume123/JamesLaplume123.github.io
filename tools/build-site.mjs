@@ -222,14 +222,14 @@ function header(active = '', lang = 'fr-CA') {
   const english = lang.startsWith('en');
   if (english) return `<a class="skip-link" href="#contenu">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="/en/"><span class="brand-mark" aria-hidden="true"><b>J</b><i>AI</i></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a>
+    <a class="brand" href="/en/" aria-label="JARVIS Private Systems"><span class="brand-mark" aria-hidden="true"><b>J</b><i>PS</i></span><span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a>
     <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-nav-toggle><span></span><span></span></button>
     <nav class="site-nav" aria-label="Main navigation" data-nav><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Mobile Laboratory</a><a href="/vision-roadmap/">Vision</a><a class="nav-mobile-only" href="/">Français</a><a class="nav-mobile-only nav-contact" href="/contact/">Discuss a project</a></nav>
     <div class="header-actions"><a class="language-link" href="/">Français</a><a class="header-cta" href="/contact/">Discuss a project</a></div>
   </header>`;
   return `<a class="skip-link" href="#contenu">Aller au contenu</a>
   <header class="site-header">
-    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><b>J</b><i>AI</i></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a>
+    <a class="brand" href="/" aria-label="JARVIS Private Systems"><span class="brand-mark" aria-hidden="true"><b>J</b><i>PS</i></span><span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a>
     <button class="nav-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" data-nav-toggle><span></span><span></span></button>
     <nav class="site-nav" aria-label="Navigation principale" data-nav>${navItems.map(([key, href, label]) => `<a${active === key ? ' class="active"' : ''} href="${href}">${label}</a>`).join('')}<a class="nav-mobile-only" href="/en/" lang="en">English</a><a class="nav-mobile-only nav-contact${active === 'contact' ? ' active' : ''}" href="/contact/">Parler du projet</a></nav>
     <div class="header-actions"><a class="language-link" href="/en/" lang="en">English</a><a class="header-cta${active === 'contact' ? ' active' : ''}" href="/contact/">Parler du projet</a></div>
@@ -238,17 +238,17 @@ function header(active = '', lang = 'fr-CA') {
 
 function footer(lang = 'fr-CA') {
   if (lang.startsWith('en')) return `<footer class="site-footer"><div class="footer-main shell">
-    <div><a class="brand" href="/en/"><span class="brand-mark" aria-hidden="true"><b>J</b><i>AI</i></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a><p>Connect what exists. Understand what matters. Act with your approval.</p></div>
+    <div><a class="brand" href="/en/" aria-label="JARVIS Private Systems"><span class="brand-mark" aria-hidden="true"><b>J</b><i>PS</i></span><span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a><p>Connect what exists. Understand what matters. Act with your approval.</p></div>
     <div><h3>Explore</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Mobile Laboratory</a><a href="/recherche/">Research</a></div>
     <div><h3>Project</h3><a href="/vision-roadmap/">Vision and roadmap</a><a href="/confiance/">Trust</a><a href="/a-propos/">About</a><a href="/contact/">Contact</a></div>
     <div><h3>Status</h3><span>Platform under construction</span><span>Mobile laboratory under construction</span><span>Open to collaboration</span></div>
-  </div><div class="footer-bottom shell"><span>© 2026 James Laplume · Québec, Canada</span><span class="visitor-counter"><i></i> Visitors <b data-visitor-count>—</b></span><span>Private by design</span></div></footer>`;
+  </div><div class="footer-bottom shell"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span class="visitor-counter"><i></i> Visitors <b data-visitor-count>—</b></span><span>Private by design</span></div></footer>`;
   return `<footer class="site-footer"><div class="footer-main shell">
-    <div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><b>J</b><i>AI</i></span><span class="brand-copy"><strong>James Laplume</strong><small>Intelligent systems studio</small></span></a><p>Relier ce qui existe. Comprendre ce qui compte. Agir avec votre accord.</p></div>
+    <div><a class="brand" href="/" aria-label="JARVIS Private Systems"><span class="brand-mark" aria-hidden="true"><b>J</b><i>PS</i></span><span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a><p>Relier ce qui existe. Comprendre ce qui compte. Agir avec votre accord.</p></div>
     <div><h3>Explorer</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/recherche/">Recherche</a></div>
     <div><h3>Projet</h3><a href="/vision-roadmap/">Vision et feuille de route</a><a href="/confiance/">Confiance</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></div>
     <div><h3>État</h3><span>Plateforme en construction</span><span>Laboratoire mobile en construction</span><span>Ouvert aux collaborations</span></div>
-  </div><div class="footer-bottom shell"><span>© 2026 James Laplume · Québec, Canada</span><span class="visitor-counter"><i></i> Visiteurs <b data-visitor-count>—</b></span><span>Privé par conception</span></div></footer>`;
+  </div><div class="footer-bottom shell"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span class="visitor-counter"><i></i> Visiteurs <b data-visitor-count>—</b></span><span>Privé par conception</span></div></footer>`;
 }
 
 function normalizeProductNaming(html) {
@@ -278,7 +278,7 @@ function normalizeProductNaming(html) {
 
 function documentPage({ title, description, active, pathname, body, image = '/og.png', lang = 'fr-CA' }) {
   const canonical = `${baseUrl}${pathname}`;
-  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#07090b"><link rel="icon" href="/favicon.svg"><link rel="preload" href="/assets/_vinext_fonts/geist-8ac0455e797f/geist-001175b1.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-013b2f2f.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/site-v3.css?v=20260930d"><link rel="stylesheet" href="/site-v4.css?v=20261001m"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260930d" defer></script><script src="/site-v4.js?v=20260930e" defer></script></body></html>`);
+  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><meta name="application-name" content="JARVIS Private Systems"><link rel="canonical" href="${canonical}"><meta property="og:site_name" content="JARVIS Private Systems"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#07090b"><link rel="icon" href="/favicon.svg"><link rel="preload" href="/assets/_vinext_fonts/geist-8ac0455e797f/geist-001175b1.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-013b2f2f.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/site-v3.css?v=20260930d"><link rel="stylesheet" href="/site-v4.css?v=20261001m"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260930d" defer></script><script src="/site-v4.js?v=20260930e" defer></script></body></html>`);
 }
 
 function replaceSection(html, startMarker, endMarker, replacement) {
@@ -364,7 +364,7 @@ function homePage() {
     <section class="v4-vision"><img src="/media/concept/jarvis-future-ecosystem-v1.webp" alt="Écosystème JARVIS dans une architecture contemporaine"><div><p class="eyebrow">VISION À LONG TERME</p><h2>Une intelligence privée.<br>Des environnements autonomes.<br><em>Une vie plus fluide.</em></h2><a href="/vision-roadmap/">Découvrir la vision <span>→</span></a></div></section>
     ${cta('Construisons une première preuve qui compte.')}
   </div>`;
-  return documentPage({ title:'JARVIS | Systèmes intelligents privés — James Laplume', description:'JARVIS relie vos outils, vos informations et vos espaces dans une expérience privée, contextuelle et contrôlée.', active:'', pathname:'/', body, image:'/media/concept/jarvis-hero-architecture-v1.webp' });
+  return documentPage({ title:'JARVIS Private Systems | Intelligence privée et systèmes connectés', description:'JARVIS relie vos outils, vos informations et vos espaces dans une expérience privée, contextuelle et contrôlée.', active:'', pathname:'/', body, image:'/media/concept/jarvis-hero-architecture-v1.webp' });
 }
 
 function solutionsHub() {
@@ -406,7 +406,7 @@ function solutionsHub() {
   `<section class="solutions-orientation"><div class="shell"><div class="solutions-orientation-head" data-reveal><div><p class="eyebrow">Trouver le bon point d’entrée</p><h2 class="headline">Qu’est-ce qui vous ralentit aujourd’hui?</h2></div><p>Vous n’avez pas à choisir une technologie ni à comprendre toute l’architecture. Identifiez simplement le problème qui revient le plus souvent.</p></div><div class="solutions-guide" data-reveal>${guide}</div></div></section>` +
   `<section class="solutions-stories"><div class="solutions-stories-intro shell" data-reveal><p class="eyebrow">Les six solutions</p><h2 class="headline">Des résultats distincts.<br>Une expérience cohérente.</h2><p>Six points d’entrée, selon le problème à résoudre.</p></div>${stories}</section>` +
   `<section class="solutions-foundation"><div class="shell"><div class="solutions-foundation-head" data-reveal><p class="eyebrow">Une fondation commune</p><h2 class="headline">Une plateforme, pas six systèmes isolés.</h2><p>Les six capacités partagent la même identité, les mêmes permissions et la même trace. Elles s’activent selon le besoin.</p></div><a class="button button-dark" href="/plateforme/">Comprendre la plateforme <span>↗</span></a></div></section>` + cta('Quel problème mérite une première preuve concrète?');
-  return documentPage({ title:'Solutions JARVIS | James Laplume', description:'Six familles de solutions pour les environnements intelligents, l’IA privée, la sécurité, les opérations, le réseau et le diagnostic.', active:'solutions', pathname:'/solutions/', body, image:solutions[0].image });
+  return documentPage({ title:'Solutions | JARVIS Private Systems', description:'Six familles de solutions pour les environnements intelligents, l’IA privée, la sécurité, les opérations, le réseau et le diagnostic.', active:'solutions', pathname:'/solutions/', body, image:solutions[0].image });
 }
 
 function operationsScene() {
@@ -983,7 +983,7 @@ function englishPage() {
   `<section class="section section-white"><div class="intro-grid shell"><div><p class="eyebrow">English overview</p><h2 class="headline">A clear public map of an ambitious research and product vision.</h2></div><aside class="intro-aside"><p>The project is organized into six solution families: smart environments, private AI and knowledge, intelligent security, business automation, network resilience, and diagnostics with JARVIS Care.</p><strong>The detailed multi-page edition is currently maintained in French.</strong></aside></div></section>` +
   `<section class="section section-paper"><div class="shell"><div class="feature-grid">${englishSolutions.map(([n,t,p])=>`<article class="feature"><span>${n}</span><h3>${t}</h3><p>${p}</p></article>`).join('')}</div><div class="hero-actions"><a class="button button-dark" href="/solutions/">View the detailed French edition <span>↗</span></a></div></div></section>` +
   `<section class="cta-band"><div class="cta-inner shell"><div><p class="eyebrow">First conversation</p><h2 class="subhead">Let’s start with the problem that should work better.</h2></div><div><p>Share the environment, process or research question. I will clearly separate what can be demonstrated now, what needs a pilot and what remains part of the long-term vision.</p><a class="button button-primary" href="/contact/">Discuss the project <span>↗</span></a></div></div></section>`;
-  return documentPage({title:'JARVIS | Private intelligent systems',description:'JARVIS connects private AI, automation, networks and physical environments while keeping humans in control.',active:'',pathname:'/en/',body,image:'/media/concept/jarvis-hero-architecture-v1.webp',lang:'en-CA'});
+  return documentPage({title:'JARVIS Private Systems | Private intelligence and connected systems',description:'JARVIS connects private AI, automation, networks and physical environments while keeping humans in control.',active:'',pathname:'/en/',body,image:'/media/concept/jarvis-hero-architecture-v1.webp',lang:'en-CA'});
 }
 
 async function writeRoute(route, html) {
@@ -1031,7 +1031,7 @@ for (const [file, target] of [
 ]) await writeFile(path.join(root, file), redirect(target), 'utf8');
 
 const notFound = documentPage({
-  title:'Page introuvable | James Laplume',
+  title:'Page introuvable | JARVIS Private Systems',
   description:'Cette page n’existe plus ou a été déplacée.',
   active:'', pathname:'/404.html',
   body:`<section class="hero page-hero"><div class="hero-media"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt=""></div><div class="hero-inner shell"><div class="hero-copy visible"><p class="eyebrow">Erreur 404</p><h1 class="display">Cette route ne mène <em>nulle part.</em></h1><p class="lead">La page a peut-être été déplacée pendant la réorganisation du site.</p><div class="hero-actions"><a class="button button-primary" href="/">Retour à l’accueil</a><a class="button button-ghost" href="/solutions/">Voir les solutions</a></div></div></div></section>`,

@@ -1,6 +1,6 @@
 # jameslaplume.ca
 
-Site statique multipage de James Laplume et du projet JARVIS.
+Site statique multipage de JARVIS Private Systems, fondé par James Laplume.
 
 ## Structure publique
 

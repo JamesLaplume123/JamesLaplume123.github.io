@@ -218,18 +218,20 @@ const navItems = [
   ['vision', '/vision-roadmap/', 'Vision'],
 ];
 
+const brandMark = '<span class="brand-mark" aria-hidden="true"><img src="/media/brand/jarvis-private-systems-mark.svg" alt=""></span>';
+
 function header(active = '', lang = 'fr-CA') {
   const english = lang.startsWith('en');
   if (english) return `<a class="skip-link" href="#contenu">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="/en/" aria-label="JARVIS Private Systems"><span class="brand-mark" aria-hidden="true"><b>J</b><i>PS</i></span><span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a>
+    <a class="brand" href="/en/" aria-label="JARVIS Private Systems">${brandMark}<span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a>
     <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-nav-toggle><span></span><span></span></button>
     <nav class="site-nav" aria-label="Main navigation" data-nav><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Mobile Laboratory</a><a href="/vision-roadmap/">Vision</a><a class="nav-mobile-only" href="/">Français</a><a class="nav-mobile-only nav-contact" href="/contact/">Discuss a project</a></nav>
     <div class="header-actions"><a class="language-link" href="/">Français</a><a class="header-cta" href="/contact/">Discuss a project</a></div>
   </header>`;
   return `<a class="skip-link" href="#contenu">Aller au contenu</a>
   <header class="site-header">
-    <a class="brand" href="/" aria-label="JARVIS Private Systems"><span class="brand-mark" aria-hidden="true"><b>J</b><i>PS</i></span><span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a>
+    <a class="brand" href="/" aria-label="JARVIS Private Systems">${brandMark}<span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a>
     <button class="nav-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" data-nav-toggle><span></span><span></span></button>
     <nav class="site-nav" aria-label="Navigation principale" data-nav>${navItems.map(([key, href, label]) => `<a${active === key ? ' class="active"' : ''} href="${href}">${label}</a>`).join('')}<a class="nav-mobile-only" href="/en/" lang="en">English</a><a class="nav-mobile-only nav-contact${active === 'contact' ? ' active' : ''}" href="/contact/">Parler du projet</a></nav>
     <div class="header-actions"><a class="language-link" href="/en/" lang="en">English</a><a class="header-cta${active === 'contact' ? ' active' : ''}" href="/contact/">Parler du projet</a></div>
@@ -238,13 +240,13 @@ function header(active = '', lang = 'fr-CA') {
 
 function footer(lang = 'fr-CA') {
   if (lang.startsWith('en')) return `<footer class="site-footer"><div class="footer-main shell">
-    <div><a class="brand" href="/en/" aria-label="JARVIS Private Systems"><span class="brand-mark" aria-hidden="true"><b>J</b><i>PS</i></span><span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a><p>Connect what exists. Understand what matters. Act with your approval.</p></div>
+    <div><a class="brand" href="/en/" aria-label="JARVIS Private Systems">${brandMark}<span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a><p>Connect what exists. Understand what matters. Act with your approval.</p></div>
     <div><h3>Explore</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Mobile Laboratory</a><a href="/recherche/">Research</a></div>
     <div><h3>Project</h3><a href="/vision-roadmap/">Vision and roadmap</a><a href="/confiance/">Trust</a><a href="/a-propos/">About</a><a href="/contact/">Contact</a></div>
     <div><h3>Status</h3><span>Platform under construction</span><span>Mobile laboratory under construction</span><span>Open to collaboration</span></div>
   </div><div class="footer-bottom shell"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span class="visitor-counter"><i></i> Visitors <b data-visitor-count>—</b></span><span>Private by design</span></div></footer>`;
   return `<footer class="site-footer"><div class="footer-main shell">
-    <div><a class="brand" href="/" aria-label="JARVIS Private Systems"><span class="brand-mark" aria-hidden="true"><b>J</b><i>PS</i></span><span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a><p>Relier ce qui existe. Comprendre ce qui compte. Agir avec votre accord.</p></div>
+    <div><a class="brand" href="/" aria-label="JARVIS Private Systems">${brandMark}<span class="brand-copy"><strong>JARVIS</strong><small>Private Systems</small></span></a><p>Relier ce qui existe. Comprendre ce qui compte. Agir avec votre accord.</p></div>
     <div><h3>Explorer</h3><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/recherche/">Recherche</a></div>
     <div><h3>Projet</h3><a href="/vision-roadmap/">Vision et feuille de route</a><a href="/confiance/">Confiance</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></div>
     <div><h3>État</h3><span>Plateforme en construction</span><span>Laboratoire mobile en construction</span><span>Ouvert aux collaborations</span></div>
@@ -345,7 +347,6 @@ function homePage() {
         <a href="/solutions/environnements-intelligents/" data-v4-console-link>Voir cette capacité <span>→</span></a>
       </aside>
       <div class="v4-environments" role="tablist" aria-label="Choisir un environnement"><button class="active" type="button" role="tab" aria-selected="true" data-v4-environment="home">Maison</button><button type="button" role="tab" aria-selected="false" data-v4-environment="business">Entreprise</button><button type="button" role="tab" aria-selected="false" data-v4-environment="vehicle">Véhicule</button></div>
-      <div class="v4-foundation"><span>JARVIS APP</span><i></i><span>JARVIS CORE</span><i></i><span>JARVIS HUB</span><small>UNE FONDATION · PLUSIEURS ENVIRONNEMENTS</small></div>
     </section>
 
     <section class="v4-manifesto" id="plateforme">

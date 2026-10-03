@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">JARVIS Private Systems</title>
+  <desc id="desc">Monogramme J lumineux dans un anneau ouvert</desc>
   <defs>
     <linearGradient id="ring" x1="10" y1="8" x2="54" y2="57" gradientUnits="userSpaceOnUse">
       <stop stop-color="#f4e6bf"/>
@@ -13,10 +15,13 @@
       <stop stop-color="#192126"/>
       <stop offset="1" stop-color="#07090b"/>
     </radialGradient>
+    <filter id="glow" x="-300%" y="-300%" width="700%" height="700%">
+      <feGaussianBlur stdDeviation="2.4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <circle cx="32" cy="32" r="31" fill="#07090b"/>
   <circle cx="32" cy="32" r="29" fill="url(#surface)"/>
   <path d="M15.1 10.3A28 28 0 0 1 55.8 20M55.8 44A28 28 0 0 1 15.1 53.7" fill="none" stroke="url(#ring)" stroke-width="1.5" stroke-linecap="round"/>
   <path d="M25 15.5h14v23.2c0 8.2-4.9 13.3-12.3 13.3-6.5 0-11-3.7-11.7-9.7" fill="none" stroke="url(#stem)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="15" cy="42.3" r="2.35" fill="#65d9f4"/>
+  <circle cx="15" cy="42.3" r="2.35" fill="#65d9f4" filter="url(#glow)"/>
 </svg>

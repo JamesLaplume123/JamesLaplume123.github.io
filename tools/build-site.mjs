@@ -218,7 +218,7 @@ const navItems = [
   ['vision', '/vision-roadmap/', 'Vision'],
 ];
 
-const brandLockup = '<span class="brand-art" aria-hidden="true"><img src="/media/brand/jarvis-private-systems-logo.png" alt=""></span>';
+const brandLockup = '<span class="brand-signature" aria-hidden="true"><span class="brand-wordmark"><strong>JARVIS</strong><small>PRIVATE SYSTEMS</small></span></span>';
 
 function header(active = '', lang = 'fr-CA') {
   const english = lang.startsWith('en');
@@ -255,7 +255,7 @@ function footer(lang = 'fr-CA') {
 
 function normalizeProductNaming(html) {
   return html
-    .replaceAll('/site-v4.css?v=20261001m', '/site-v4.css?v=20261004a')
+    .replaceAll('/site-v4.css?v=20261001m', '/site-v4.css?v=20261004c')
     .replaceAll('/ambulance-lab/', '/laboratoire-mobile/')
     .replaceAll('<span>AL</span><div><b>Ambulance Lab</b>', '<span>LM</span><div><b>Laboratoire mobile</b>')
     .replaceAll('<span>LM</span><div><b>Laboratoire mobile</b><small>Ford 2017 V10 · véhicule laboratoire</small>', '<span>J</span><div><b>JARVIS App</b><small>Laboratoire mobile · Ford 2017 V10</small>')

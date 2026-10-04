@@ -38,10 +38,11 @@ body,button,input,select,textarea{font-variant-numeric:tabular-nums}
 }
 .site-header:after{display:none}
 .site-header .brand{min-width:260px;gap:0}
-.brand-art{position:relative;display:block;width:264px;height:62px;overflow:hidden}
-.brand-art img{position:absolute;top:52%;left:50%;width:430px;max-width:none;transform:translate(-50%,-50%)}
-.site-footer .brand-art{width:310px;height:78px}
-.site-footer .brand-art img{width:505px}
+.brand-signature{display:block;width:max-content}
+.brand-wordmark{display:grid;gap:7px}
+.brand-wordmark strong{color:#f7f9fa;font-size:20px;font-weight:320;line-height:.86;letter-spacing:.34em}
+.brand-wordmark small{color:#72d7ee;font:600 7px/1 GeistMono,monospace;letter-spacing:.48em}
+.site-footer .brand-signature{transform:scale(1.15);transform-origin:left center}
 .site-nav{gap:2px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
 .site-nav a{padding:11px 10px;border-radius:0;color:#b6bcbd;font-size:11px}
 .site-nav a:hover,.site-nav a.active{color:#fff;background:transparent}
@@ -105,8 +106,9 @@ main{overflow:hidden}
 
 .v4-proof{display:grid;grid-template-columns:1.32fr .68fr;min-height:760px;background:#d9d8d3;color:#111516}.v4-proof>div{min-height:760px;overflow:hidden}.v4-proof>div img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.8) contrast(1.04)}.v4-proof article{align-self:center;padding:72px}.v4-proof h2{margin:0 0 24px;font-size:60px;line-height:1}.v4-proof article>p:not(.eyebrow){color:#515858;font-size:15px;line-height:1.75}.v4-proof dl{display:grid;grid-template-columns:repeat(3,1fr);margin:42px 0;border-top:1px solid var(--v4-light-line);border-bottom:1px solid var(--v4-light-line)}.v4-proof dl div{padding:17px 12px;border-right:1px solid var(--v4-light-line)}.v4-proof dl div:last-child{border:0}.v4-proof dt{color:#4e7d89;font:500 7px GeistMono}.v4-proof dd{margin:7px 0 0;font-size:18px;font-weight:650}.v4-proof article>a{display:flex;justify-content:space-between;max-width:290px;padding:14px 0;border-bottom:1px solid #1d2020;font-size:11px;font-weight:700}
 .v4-vision{position:relative;min-height:760px;display:flex;align-items:center;overflow:hidden}.v4-vision>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.32) saturate(.72)}.v4-vision:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,4,5,.94),rgba(2,4,5,.48) 65%,rgba(2,4,5,.18))}.v4-vision>div{position:relative;z-index:2;width:min(var(--v4-shell),calc(100% - 150px));margin:auto}.v4-vision h2{max-width:1150px;margin:0;font-size:88px;font-weight:500;line-height:.95}.v4-vision h2 em{color:var(--v4-gold);font-family:Georgia,serif;font-weight:400}.v4-vision a{display:flex;justify-content:space-between;width:230px;margin-top:48px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.5);font-size:11px}
-.v4-vision--earth>img{object-position:center center;filter:brightness(.46) saturate(.86) contrast(1.05)}
-.v4-vision--earth:after{background:linear-gradient(90deg,rgba(2,5,10,.94) 0,rgba(2,5,10,.66) 42%,rgba(2,5,10,.12) 78%),linear-gradient(0deg,rgba(2,5,10,.72),transparent 54%)}
+.v4-vision--earth{background:#02070d}
+.v4-vision--earth>img{object-position:58% center;filter:brightness(.82) saturate(1.04) contrast(1.06)}
+.v4-vision--earth:after{background:linear-gradient(90deg,rgba(2,5,10,.97) 0,rgba(2,5,10,.78) 31%,rgba(2,5,10,.24) 55%,rgba(2,5,10,0) 78%)}
 
 /* Existing pages: one visual language, less chrome. */
 .solution-grid{gap:1px;background:rgba(255,255,255,.16)}
@@ -170,8 +172,7 @@ main{overflow:hidden}
 @media(max-width:1100px){
   .site-header{height:72px;padding:0 20px}
   .site-header .brand{min-width:0}
-  .site-header .brand-art{width:215px;height:54px}
-  .site-header .brand-art img{width:350px}
+  .site-header .brand-wordmark strong{font-size:16px}
   .nav-toggle{
     position:absolute;
     z-index:3;
@@ -622,8 +623,8 @@ main{overflow:hidden}
 }
 
 @media(max-width:560px){
-  .site-header .brand-art{width:176px;height:48px}
-  .site-header .brand-art img{width:288px}
+  .site-header .brand-wordmark strong{font-size:14px;letter-spacing:.25em}
+  .site-header .brand-wordmark small{font-size:6px;letter-spacing:.3em}
   .shell,.solution-demo-stage.shell{width:calc(100% - 28px)}
   .v4-hero{
     height:auto;

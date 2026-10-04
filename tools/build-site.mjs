@@ -255,7 +255,7 @@ function footer(lang = 'fr-CA') {
 
 function normalizeProductNaming(html) {
   return html
-    .replaceAll('/site-v4.css?v=20261001m', '/site-v4.css?v=20261004c')
+    .replaceAll('/site-v4.css?v=20261001m', '/site-v4.css?v=20261004d')
     .replaceAll('/ambulance-lab/', '/laboratoire-mobile/')
     .replaceAll('<span>AL</span><div><b>Ambulance Lab</b>', '<span>LM</span><div><b>Laboratoire mobile</b>')
     .replaceAll('<span>LM</span><div><b>Laboratoire mobile</b><small>Ford 2017 V10 · véhicule laboratoire</small>', '<span>J</span><div><b>JARVIS App</b><small>Laboratoire mobile · Ford 2017 V10</small>')
@@ -332,22 +332,9 @@ function solutionCards() {
 function homePage() {
   const capabilities = solutions.map((solution, index) => `<button${index === 0 ? ' class="active"' : ''} type="button" data-v4-capability="${solution.slug}"><span>0${index + 1}</span><b>${solution.title}</b><small>${solution.short}</small></button>`).join('');
   const body = `<div class="v4-home">
-    <section class="v4-hero" data-v4-hero>
-      <img class="v4-hero-image" data-v4-hero-image src="/media/concept/jarvis-hero-architecture-v1.webp" alt="Résidence contemporaine intégrant les systèmes JARVIS">
-      <div class="v4-hero-shade"></div>
-      <div class="v4-hero-copy shell">
-        <p class="eyebrow" data-v4-hero-kicker>JARVIS · INTELLIGENCE PRIVÉE</p>
-        <h1>Relier ce qui existe.<br><em>Faire agir l’ensemble.</em></h1>
-        <p data-v4-hero-lead>Une intelligence privée qui comprend vos règles, coordonne les systèmes autorisés et vous laisse les décisions importantes.</p>
-        <div class="v4-actions"><a href="/plateforme/">Découvrir JARVIS <span>↗</span></a><a href="/solutions/">Explorer les capacités</a></div>
-      </div>
-      <aside class="v4-console" aria-label="Exemple de décision JARVIS">
-        <header><span><i></i> JARVIS · ACTIF</span><small>LOCAL</small></header>
-        <div><small>CONTEXTE ACTUEL</small><strong data-v4-console-title>Retour prévu dans 32 minutes.</strong><p data-v4-console-copy>La maison peut préparer l’éclairage d’arrivée et maintenir la recharge après 21 h.</p></div>
-        <ul><li><span>PRÉSENCE</span><b data-v4-signal-one>Absence confirmée</b></li><li><span>ÉNERGIE</span><b data-v4-signal-two>Réserve 74 %</b></li><li><span>DÉCISION</span><b data-v4-signal-three>Votre accord</b></li></ul>
-        <a href="/solutions/environnements-intelligents/" data-v4-console-link>Voir cette capacité <span>→</span></a>
-      </aside>
-      <div class="v4-environments" role="tablist" aria-label="Choisir un environnement"><button class="active" type="button" role="tab" aria-selected="true" data-v4-environment="home">Maison</button><button type="button" role="tab" aria-selected="false" data-v4-environment="business">Entreprise</button><button type="button" role="tab" aria-selected="false" data-v4-environment="vehicle">Véhicule</button></div>
+    <section class="v4-product-showcase" aria-labelledby="home-product-title">
+      <h1 class="visually-hidden" id="home-product-title">JARVIS Private Systems, une vue unifiée de vos environnements</h1>
+      <figure><img src="/media/product/jarvis-command-center-preview.png" width="1721" height="1002" alt="Aperçu conceptuel de JARVIS réunissant résidence, entreprise, véhicule, multi-site, sécurité, automatisations et assistant privé" fetchpriority="high"></figure>
     </section>
 
     <section class="v4-manifesto" id="plateforme">
@@ -366,7 +353,7 @@ function homePage() {
     <section class="v4-vision v4-vision--earth"><img src="/media/concept/jarvis-earth-network-v1.png" alt="La Terre nocturne vue de l’espace, centrée sur l’Amérique du Nord"><div><p class="eyebrow">VISION À LONG TERME</p><h2>Une intelligence privée.<br>Des environnements autonomes.<br><em>Une vie plus fluide.</em></h2><a href="/vision-roadmap/">Découvrir la vision <span>→</span></a></div></section>
     ${cta('Construisons une première preuve qui compte.')}
   </div>`;
-  return documentPage({ title:'JARVIS Private Systems | Intelligence privée et systèmes connectés', description:'JARVIS relie vos outils, vos informations et vos espaces dans une expérience privée, contextuelle et contrôlée.', active:'', pathname:'/', body, image:'/media/concept/jarvis-hero-architecture-v1.webp' });
+  return documentPage({ title:'JARVIS Private Systems | Intelligence privée et systèmes connectés', description:'JARVIS relie vos outils, vos informations et vos espaces dans une expérience privée, contextuelle et contrôlée.', active:'', pathname:'/', body, image:'/media/product/jarvis-command-center-preview.png' });
 }
 
 function solutionsHub() {

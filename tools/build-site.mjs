@@ -218,7 +218,7 @@ const navItems = [
   ['vision', '/vision-roadmap/', 'Vision'],
 ];
 
-const brandLockup = '<span class="brand-copy" aria-hidden="true"><strong>JΛRVIS</strong><small>Private Systems</small></span>';
+const brandLockup = '<span class="brand-art" aria-hidden="true"><img src="/media/brand/jarvis-private-systems-logo.png" alt=""></span>';
 
 function header(active = '', lang = 'fr-CA') {
   const english = lang.startsWith('en');
@@ -255,7 +255,7 @@ function footer(lang = 'fr-CA') {
 
 function normalizeProductNaming(html) {
   return html
-    .replaceAll('/site-v4.css?v=20261001m', '/site-v4.css?v=20261003d')
+    .replaceAll('/site-v4.css?v=20261001m', '/site-v4.css?v=20261004a')
     .replaceAll('/ambulance-lab/', '/laboratoire-mobile/')
     .replaceAll('<span>AL</span><div><b>Ambulance Lab</b>', '<span>LM</span><div><b>Laboratoire mobile</b>')
     .replaceAll('<span>LM</span><div><b>Laboratoire mobile</b><small>Ford 2017 V10 · véhicule laboratoire</small>', '<span>J</span><div><b>JARVIS App</b><small>Laboratoire mobile · Ford 2017 V10</small>')
@@ -363,7 +363,7 @@ function homePage() {
 
     <section class="v4-proof" id="preuve"><div><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Ambulance Ford 2017 dans le garage du laboratoire mobile JARVIS"></div><article><p class="eyebrow">PREMIER TERRAIN DE PREUVE</p><h2>Le système sort de l’écran.</h2><p>Une Ford 2017 V10 devient un environnement d’essai réel pour l’énergie, le réseau, le confort, la sécurité, le diagnostic et l’automatisation.</p><dl><div><dt>ÉNERGIE</dt><dd>560 Ah</dd></div><div><dt>SOLAIRE</dt><dd>500 W</dd></div><div><dt>CONTEXTE</dt><dd>Mobile</dd></div></dl><a href="/laboratoire-mobile/">Découvrir le laboratoire mobile <span>↗</span></a></article></section>
 
-    <section class="v4-vision"><img src="/media/concept/jarvis-future-ecosystem-v1.webp" alt="Écosystème JARVIS dans une architecture contemporaine"><div><p class="eyebrow">VISION À LONG TERME</p><h2>Une intelligence privée.<br>Des environnements autonomes.<br><em>Une vie plus fluide.</em></h2><a href="/vision-roadmap/">Découvrir la vision <span>→</span></a></div></section>
+    <section class="v4-vision v4-vision--earth"><img src="/media/concept/jarvis-earth-network-v1.png" alt="La Terre nocturne vue de l’espace, centrée sur l’Amérique du Nord"><div><p class="eyebrow">VISION À LONG TERME</p><h2>Une intelligence privée.<br>Des environnements autonomes.<br><em>Une vie plus fluide.</em></h2><a href="/vision-roadmap/">Découvrir la vision <span>→</span></a></div></section>
     ${cta('Construisons une première preuve qui compte.')}
   </div>`;
   return documentPage({ title:'JARVIS Private Systems | Intelligence privée et systèmes connectés', description:'JARVIS relie vos outils, vos informations et vos espaces dans une expérience privée, contextuelle et contrôlée.', active:'', pathname:'/', body, image:'/media/concept/jarvis-hero-architecture-v1.webp' });

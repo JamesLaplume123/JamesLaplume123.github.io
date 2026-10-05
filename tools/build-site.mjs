@@ -255,7 +255,7 @@ function footer(lang = 'fr-CA') {
 
 function normalizeProductNaming(html) {
   return html
-    .replaceAll('/site-v4.css?v=20261001m', '/site-v4.css?v=20261004d')
+    .replaceAll('/site-v4.css?v=20261001m', '/site-v4.css?v=20261005a')
     .replaceAll('/ambulance-lab/', '/laboratoire-mobile/')
     .replaceAll('<span>AL</span><div><b>Ambulance Lab</b>', '<span>LM</span><div><b>Laboratoire mobile</b>')
     .replaceAll('<span>LM</span><div><b>Laboratoire mobile</b><small>Ford 2017 V10 · véhicule laboratoire</small>', '<span>J</span><div><b>JARVIS App</b><small>Laboratoire mobile · Ford 2017 V10</small>')
@@ -281,7 +281,7 @@ function normalizeProductNaming(html) {
 
 function documentPage({ title, description, active, pathname, body, image = '/og.png', lang = 'fr-CA' }) {
   const canonical = `${baseUrl}${pathname}`;
-  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><meta name="application-name" content="JARVIS Private Systems"><link rel="canonical" href="${canonical}"><meta property="og:site_name" content="JARVIS Private Systems"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#07090b"><link rel="icon" href="/favicon.svg"><link rel="preload" href="/assets/_vinext_fonts/geist-8ac0455e797f/geist-001175b1.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-013b2f2f.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/site-v3.css?v=20260930d"><link rel="stylesheet" href="/site-v4.css?v=20261001m"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260930d" defer></script><script src="/site-v4.js?v=20260930e" defer></script></body></html>`);
+  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><meta name="application-name" content="JARVIS Private Systems"><link rel="canonical" href="${canonical}"><meta property="og:site_name" content="JARVIS Private Systems"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#07090b"><link rel="icon" href="/favicon.svg"><link rel="preload" href="/assets/_vinext_fonts/geist-8ac0455e797f/geist-001175b1.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-013b2f2f.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/site-v3.css?v=20260930d"><link rel="stylesheet" href="/site-v4.css?v=20261001m"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260930d" defer></script><script src="/site-v4.js?v=20261005a" defer></script></body></html>`);
 }
 
 function replaceSection(html, startMarker, endMarker, replacement) {
@@ -332,9 +332,22 @@ function solutionCards() {
 function homePage() {
   const capabilities = solutions.map((solution, index) => `<button${index === 0 ? ' class="active"' : ''} type="button" data-v4-capability="${solution.slug}"><span>0${index + 1}</span><b>${solution.title}</b><small>${solution.short}</small></button>`).join('');
   const body = `<div class="v4-home">
-    <section class="v4-product-showcase" aria-labelledby="home-product-title">
-      <h1 class="visually-hidden" id="home-product-title">JARVIS Private Systems, une vue unifiée de vos environnements</h1>
-      <figure><img src="/media/product/jarvis-command-center-preview.png" width="1721" height="1002" alt="Aperçu conceptuel de JARVIS réunissant résidence, entreprise, véhicule, multi-site, sécurité, automatisations et assistant privé" fetchpriority="high"></figure>
+    <section class="v4-hero" data-v4-hero>
+      <img class="v4-hero-image" data-v4-hero-image src="/media/concept/jarvis-hero-architecture-v1.webp" alt="Résidence contemporaine intégrant les systèmes JARVIS" fetchpriority="high">
+      <div class="v4-hero-shade"></div>
+      <div class="v4-hero-copy shell">
+        <p class="eyebrow" data-v4-hero-kicker>JARVIS · INTELLIGENCE PRIVÉE</p>
+        <h1>Relier ce qui existe.<br><em>Faire agir l’ensemble.</em></h1>
+        <p data-v4-hero-lead>Une intelligence privée qui comprend vos règles, coordonne les systèmes autorisés et vous laisse les décisions importantes.</p>
+        <div class="v4-actions"><a href="/plateforme/">Découvrir JARVIS <span>↗</span></a><a href="/solutions/">Explorer les capacités</a></div>
+      </div>
+      <aside class="v4-console" aria-label="Exemple de décision JARVIS">
+        <header><span><i></i> JARVIS · ACTIF</span><small>LOCAL</small></header>
+        <div><small>CONTEXTE ACTUEL</small><strong data-v4-console-title>Retour prévu dans 32 minutes.</strong><p data-v4-console-copy>La maison peut préparer l’éclairage d’arrivée et maintenir la recharge après 21 h.</p></div>
+        <ul><li><span>PRÉSENCE</span><b data-v4-signal-one>Absence confirmée</b></li><li><span>ÉNERGIE</span><b data-v4-signal-two>Réserve 74 %</b></li><li><span>DÉCISION</span><b data-v4-signal-three>Votre accord</b></li></ul>
+        <a href="/solutions/environnements-intelligents/" data-v4-console-link>Voir cette capacité <span>→</span></a>
+      </aside>
+      <div class="v4-environments" role="tablist" aria-label="Choisir un environnement"><button class="active" type="button" role="tab" aria-selected="true" data-v4-environment="home">Maison</button><button type="button" role="tab" aria-selected="false" data-v4-environment="business">Entreprise</button><button type="button" role="tab" aria-selected="false" data-v4-environment="vehicle">Véhicule</button></div>
     </section>
 
     <section class="v4-manifesto" id="plateforme">
@@ -345,7 +358,7 @@ function homePage() {
 
     <section class="v4-capabilities" id="capacites">
       <header><div><p class="eyebrow">UNE PLATEFORME · SIX CAPACITÉS</p><h2>Le bon outil.<br>Au bon moment.</h2></div><p>Chaque capacité utilise la même identité, les mêmes permissions et la même trace. On commence par un besoin réel, puis on relie seulement ce qui apporte une valeur claire.</p></header>
-      <div class="v4-capability-stage"><nav aria-label="Explorer les six capacités">${capabilities}</nav><article class="v4-capability-preview"><img data-v4-capability-image src="/media/solutions/jarvis-spaces-property-v3.webp" alt="Interface JARVIS pour un environnement intelligent"><div></div><section><span data-v4-capability-kicker>ENVIRONNEMENTS INTELLIGENTS</span><h3 data-v4-capability-title>Le lieu répond à la situation, pas à une suite de commandes.</h3><p data-v4-capability-copy>Éclairage, climat, sécurité et énergie se coordonnent dans une interface unique.</p><a data-v4-capability-link href="/solutions/environnements-intelligents/">Explorer cette capacité <b>↗</b></a></section><small><i></i><b data-v4-capability-status>Mode arrivée prêt à confirmer</b></small></article></div>
+      <div class="v4-capability-stage"><nav aria-label="Explorer les six capacités">${capabilities}</nav><article class="v4-capability-preview v4-capability-preview--dashboard"><img data-v4-capability-image src="/media/product/jarvis-command-center-preview.png" alt="Aperçu conceptuel de JARVIS réunissant résidence, entreprise, véhicule, multi-site, sécurité, automatisations et assistant privé" loading="lazy"><div></div><section><span data-v4-capability-kicker>ENVIRONNEMENTS INTELLIGENTS</span><h3 data-v4-capability-title>Le lieu répond à la situation, pas à une suite de commandes.</h3><p data-v4-capability-copy>Éclairage, climat, sécurité et énergie se coordonnent dans une interface unique.</p><a data-v4-capability-link href="/solutions/environnements-intelligents/">Explorer cette capacité <b>↗</b></a></section><small><i></i><b data-v4-capability-status>Interface conceptuelle JARVIS</b></small></article></div>
     </section>
 
     <section class="v4-proof" id="preuve"><div><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Ambulance Ford 2017 dans le garage du laboratoire mobile JARVIS"></div><article><p class="eyebrow">PREMIER TERRAIN DE PREUVE</p><h2>Le système sort de l’écran.</h2><p>Une Ford 2017 V10 devient un environnement d’essai réel pour l’énergie, le réseau, le confort, la sécurité, le diagnostic et l’automatisation.</p><dl><div><dt>ÉNERGIE</dt><dd>560 Ah</dd></div><div><dt>SOLAIRE</dt><dd>500 W</dd></div><div><dt>CONTEXTE</dt><dd>Mobile</dd></div></dl><a href="/laboratoire-mobile/">Découvrir le laboratoire mobile <span>↗</span></a></article></section>

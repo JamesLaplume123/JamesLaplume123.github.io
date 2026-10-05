@@ -865,3 +865,10 @@ main{overflow:hidden}
   .site-nav a{font-size:11px}
   .vision-camera-rail button span{font-size:10px!important;line-height:1.35!important}
 }
+
+/* Keep the complete dashboard visible, with the section copy beneath it. */
+.v4-capability-preview--dashboard{display:flex;flex-direction:column;min-height:0;background:#05090d}
+.v4-capability-preview--dashboard>img{position:static;display:block;width:100%;height:auto;object-fit:contain;filter:none}
+.v4-capability-preview--dashboard>div{display:none}
+.v4-capability-preview--dashboard>section{position:static;padding:32px clamp(20px,3vw,55px) 24px}
+.v4-capability-preview--dashboard>small{position:static;align-self:flex-start;margin:0 clamp(20px,3vw,55px) 32px}

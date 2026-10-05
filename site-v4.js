@@ -30,7 +30,7 @@
   };
 
   const capabilityData = {
-    'environnements-intelligents': ['/media/solutions/jarvis-spaces-property-v3.webp', 'ENVIRONNEMENTS INTELLIGENTS', 'Le lieu répond à la situation, pas à une suite de commandes.', 'Éclairage, climat, sécurité et énergie se coordonnent dans une interface unique.', 'Mode arrivée prêt à confirmer'],
+    'environnements-intelligents': ['/media/product/jarvis-command-center-preview.png', 'ENVIRONNEMENTS INTELLIGENTS', 'Le lieu répond à la situation, pas à une suite de commandes.', 'Éclairage, climat, sécurité et énergie se coordonnent dans une interface unique.', 'Interface conceptuelle JARVIS'],
     'ia-privee-connaissances': ['/media/solutions/ia-privee-connaissances.webp', 'IA PRIVÉE ET CONNAISSANCES', 'Une réponse utile montre ce qu’elle sait et d’où elle le sait.', 'Documents, photos, courriels et dossiers autorisés deviennent interrogeables sans perdre leurs sources.', '3 sources rapprochées'],
     'securite-intelligente': ['/media/solutions/securite-intelligente.webp', 'SÉCURITÉ INTELLIGENTE', 'Comprendre l’événement avant de décider quoi faire.', 'Caméras, accès, personnes, appareils et règles expliquent ensemble ce qui mérite votre attention.', 'Événement expliqué localement'],
     'automatisation-operations': ['/media/solutions/jarvis-enterprise-operations-v1.webp', 'AUTOMATISATION D’ENTREPRISE', 'La demande devient un travail complet, prêt à approuver.', 'JARVIS consulte les outils autorisés, prépare les actions et conserve chaque décision dans le journal.', 'Mission prête à autoriser'],
@@ -74,6 +74,7 @@
       const data = capabilityData[slug];
       if (!data) return;
       capabilityButtons.forEach((item) => item.classList.toggle('active', item === button));
+      image.closest('.v4-capability-preview').classList.toggle('v4-capability-preview--dashboard', slug === 'environnements-intelligents');
       image.src = data[0];
       image.alt = `Aperçu de la capacité ${data[1].toLowerCase()}`;
       kicker.textContent = data[1];

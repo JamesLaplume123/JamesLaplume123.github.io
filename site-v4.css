@@ -55,7 +55,8 @@ body,button,input,select,textarea{font-variant-numeric:tabular-nums}
 /* Shared page heroes and editorial rhythm */
 main{overflow:hidden}
 .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-.hero:not(.v4-hero){min-height:760px;height:88vh;align-items:flex-end;background:var(--v4-ink)}
+/* Let long hero content grow while preserving the space below the fixed header. */
+.hero:not(.v4-hero){min-height:max(760px,88svh);height:auto;align-items:flex-end;background:var(--v4-ink)}
 .hero:not(.v4-hero) .hero-media:after{background:linear-gradient(90deg,rgba(4,6,8,.94) 0,rgba(4,6,8,.68) 42%,rgba(4,6,8,.12) 76%),linear-gradient(0deg,rgba(4,6,8,.72),transparent 58%)}
 .hero:not(.v4-hero) .hero-media img{filter:saturate(.76) contrast(1.06)}
 .hero:not(.v4-hero) .hero-inner{padding-bottom:72px}

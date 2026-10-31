@@ -95,4 +95,7 @@ DATA = {
     ),
 }
 
+DATA["demo_image"] = "/media/product/user/assistant.jpg"
+DATA["demo_caption"] = "Assistant JARVIS — il propose, vous décidez. Conception en validation."
+
 PAGE = solution_page(DATA)

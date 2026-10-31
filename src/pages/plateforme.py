@@ -49,9 +49,10 @@ PAGE = {
       <p class="eyebrow">Visite guidée · 58 vues conçues</p>
       <h2 style="margin-top:1rem">Votre espace.<br><em>À votre image.</em></h2>
     </div>
-    <p data-rev>Le parcours complet du compte personnel est déjà dessiné, écran par
+    <p data-rev>Le parcours complet du compte personnel est dessiné, écran par
     écran : l’accès, la journée, les messages, l’assistant, le partage et la carte.
-    Voici l’essentiel — données simulées, en validation avant le développement.</p>
+    C’est la direction de conception — données simulées, chaque fonction sera
+    confirmée seulement une fois construite et prouvée.</p>
   </div>
 
   <article class="frow">
@@ -139,9 +140,9 @@ PAGE = {
     <div data-rev>
       <p class="num">Carte</p>
       <h3>Voir votre monde, pas celui des autres.</h3>
-      <p class="res">Le Hub, vos appareils et seulement les personnes qui ont choisi
-      de partager leur position. Position refusée? JARVIS affiche le Hub — jamais une
-      fausse position personnelle.</p>
+      <p class="res">La direction prévue : le Hub, vos appareils et seulement les
+      personnes qui ont choisi de partager leur position. Et si la position est
+      refusée, JARVIS affichera le Hub — jamais une fausse position personnelle.</p>
     </div>
   </article>
 

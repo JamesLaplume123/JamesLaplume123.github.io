@@ -13,7 +13,7 @@ SITE = {
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
-    "asset_version": "20261031e",
+    "asset_version": "20261031f",
     "copyright": "© 2026 JARVIS Private Systems · Québec, Canada",
 }
 
@@ -44,6 +44,7 @@ FOOTER_COLUMNS = [
             {"url": "/vision-roadmap/", "label": "Vision et feuille de route"},
             {"url": "/confiance/", "label": "Confiance"},
             {"url": "/a-propos/", "label": "À propos"},
+            {"url": "/confidentialite/", "label": "Confidentialité"},
             {"url": "/contact/", "label": "Contact"},
         ],
     },

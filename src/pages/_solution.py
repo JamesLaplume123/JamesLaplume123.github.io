@@ -76,12 +76,13 @@ def solution_page(d):
     <p data-rev>{d['demo_copy']}</p>
   </div>
   <figure class="frame" data-rev>
-    <img src="{d['image']}" alt="Aperçu conceptuel — {d['title']}" loading="lazy">
+    <img src="{d.get('demo_image', d['image'])}" alt="Aperçu conceptuel — {d['title']}" loading="lazy">
     <figcaption>
       <span>JARVIS App · {d['title'].upper()}</span>
-      <strong>Prototype interactif — données simulées.</strong>
+      <strong>{d.get('demo_caption', 'Prototype interactif — données simulées.')}</strong>
     </figcaption>
   </figure>
+  {d.get('extra', '')}
   <div class="chiprow" data-rev>
     <span class="chip chip-sim">Compatibilités possibles</span>
     {compat}

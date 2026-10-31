@@ -99,4 +99,23 @@ DATA = {
     ),
 }
 
+DATA["demo_image"] = "/media/solutions/jarvis-spaces-property-v3.webp"
+DATA["demo_caption"] = "Toute la propriété. Une seule expérience. — Données simulées."
+DATA["extra"] = """
+<div class="shots" data-rev style="margin-top:14px">
+  <figure>
+    <img src="/media/solutions/camera-front-entry-v1.webp" alt="Caméra de l’entrée avant de la résidence" loading="lazy">
+    <figcaption><b>Entrée avant</b><span>Aucun événement à vérifier</span></figcaption>
+  </figure>
+  <figure>
+    <img src="/media/solutions/camera-driveway-garage-v1.webp" alt="Caméra de l’allée et des portes de garage" loading="lazy">
+    <figcaption><b>Allée et garage</b><span>Portes fermées</span></figcaption>
+  </figure>
+  <figure>
+    <img src="/media/solutions/camera-rear-terrace-v1.webp" alt="Caméra de la terrasse arrière et du foyer" loading="lazy">
+    <figcaption><b>Terrasse arrière</b><span>Accès fermé · foyer actif</span></figcaption>
+  </figure>
+</div>
+"""
+
 PAGE = solution_page(DATA)

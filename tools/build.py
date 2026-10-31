@@ -38,6 +38,7 @@ PAGE_MODULES = [
     "a_propos",
     "contact",
     "merci",
+    "confidentialite",
     "english",
     "page_404",
 ]

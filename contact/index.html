@@ -15,9 +15,9 @@
 <meta property="og:url" content="https://jameslaplume.ca/contact/">
 <meta property="og:image" content="https://jameslaplume.ca/media/product/jarvis-command-center-preview-og.jpg">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="/favicon.svg?v=20261031e">
+<link rel="icon" href="/favicon.svg?v=20261031f">
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/wow.css?v=20261031e">
+<link rel="stylesheet" href="/assets/css/wow.css?v=20261031f">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -77,8 +77,21 @@
           <input id="f-courriel" name="email" type="email" autocomplete="email" required>
         </div>
         <div class="field full">
+          <label id="env-label">Environnement visé</label>
+          <div class="choices" role="radiogroup" aria-labelledby="env-label">
+            <span class="choice"><input type="radio" id="env-res" name="environnement" value="Résidence"><label for="env-res">Résidence</label></span>
+            <span class="choice"><input type="radio" id="env-ent" name="environnement" value="Entreprise"><label for="env-ent">Entreprise</label></span>
+            <span class="choice"><input type="radio" id="env-mob" name="environnement" value="Mobilité"><label for="env-mob">Mobilité</label></span>
+            <span class="choice"><input type="radio" id="env-nsp" name="environnement" value="Je ne sais pas encore" checked><label for="env-nsp">Je ne sais pas encore</label></span>
+          </div>
+        </div>
+        <div class="field">
           <label for="f-org">Organisation ou projet</label>
           <input id="f-org" name="organisation" type="text">
+        </div>
+        <div class="field">
+          <label for="f-region">Ville ou région</label>
+          <input id="f-region" name="region" type="text" autocomplete="address-level2" placeholder="Québec, Montréal…">
         </div>
         <div class="field">
           <label for="f-role">Vous êtes</label>
@@ -111,7 +124,8 @@
         </div>
       </div>
       <p class="form-note">Votre message sera transmis directement à James. Aucune liste
-      d’envoi, aucun suivi publicitaire.</p>
+      d’envoi, aucun suivi publicitaire — voir la
+      <a href="/confidentialite/" style="color:#d4d4d8">politique de confidentialité</a>.</p>
       <button class="pill" type="submit">Envoyer le message</button>
     </form>
   </div>
@@ -124,10 +138,10 @@
       <b>JARVIS <span>Private Systems</span></b>
       <p>Relier ce qui existe. Faire agir l’ensemble.</p>
     </div>
-    <div><h2>Explorer</h2><nav><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/recherche/">Recherche</a></nav></div><div><h2>Projet</h2><nav><a href="/vision-roadmap/">Vision et feuille de route</a><a href="/confiance/">Confiance</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav></div>
+    <div><h2>Explorer</h2><nav><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/recherche/">Recherche</a></nav></div><div><h2>Projet</h2><nav><a href="/vision-roadmap/">Vision et feuille de route</a><a href="/confiance/">Confiance</a><a href="/a-propos/">À propos</a><a href="/confidentialite/">Confidentialité</a><a href="/contact/">Contact</a></nav></div>
   </div>
   <p class="foot-line"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span>Privé par conception</span></p>
 </footer>
-<script src="/assets/js/wow.js?v=20261031e" defer></script>
+<script src="/assets/js/wow.js?v=20261031f" defer></script>
 </body>
 </html>

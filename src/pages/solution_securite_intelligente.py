@@ -86,4 +86,23 @@ DATA = {
     ),
 }
 
+DATA["demo_image"] = "/media/solutions/security-enterprise-delivery-v1.webp"
+DATA["demo_caption"] = "Livraison détectée au quai 2 — contexte attendu. Données simulées."
+DATA["extra"] = """
+<div class="shots" data-rev style="margin-top:14px">
+  <figure>
+    <img src="/media/solutions/camera-garage-supercars-v1.webp" alt="Caméra intérieure du garage" loading="lazy">
+    <figcaption><b>Garage intérieur</b><span>2 véhicules autorisés</span></figcaption>
+  </figure>
+  <figure>
+    <img src="/media/solutions/security-enterprise-parking-v1.webp" alt="Caméra du stationnement de l’entreprise" loading="lazy">
+    <figcaption><b>Stationnement</b><span>Périmètre calme</span></figcaption>
+  </figure>
+  <figure>
+    <img src="/media/solutions/camera-pool-spa-v1.webp" alt="Caméra de la piscine et du spa" loading="lazy">
+    <figcaption><b>Piscine et spa</b><span>Périmètre calme</span></figcaption>
+  </figure>
+</div>
+"""
+
 PAGE = solution_page(DATA)

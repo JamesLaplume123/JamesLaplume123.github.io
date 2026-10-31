@@ -49,8 +49,21 @@ PAGE = {
           <input id="f-courriel" name="email" type="email" autocomplete="email" required>
         </div>
         <div class="field full">
+          <label id="env-label">Environnement visé</label>
+          <div class="choices" role="radiogroup" aria-labelledby="env-label">
+            <span class="choice"><input type="radio" id="env-res" name="environnement" value="Résidence"><label for="env-res">Résidence</label></span>
+            <span class="choice"><input type="radio" id="env-ent" name="environnement" value="Entreprise"><label for="env-ent">Entreprise</label></span>
+            <span class="choice"><input type="radio" id="env-mob" name="environnement" value="Mobilité"><label for="env-mob">Mobilité</label></span>
+            <span class="choice"><input type="radio" id="env-nsp" name="environnement" value="Je ne sais pas encore" checked><label for="env-nsp">Je ne sais pas encore</label></span>
+          </div>
+        </div>
+        <div class="field">
           <label for="f-org">Organisation ou projet</label>
           <input id="f-org" name="organisation" type="text">
+        </div>
+        <div class="field">
+          <label for="f-region">Ville ou région</label>
+          <input id="f-region" name="region" type="text" autocomplete="address-level2" placeholder="Québec, Montréal…">
         </div>
         <div class="field">
           <label for="f-role">Vous êtes</label>
@@ -83,7 +96,8 @@ PAGE = {
         </div>
       </div>
       <p class="form-note">Votre message sera transmis directement à James. Aucune liste
-      d’envoi, aucun suivi publicitaire.</p>
+      d’envoi, aucun suivi publicitaire — voir la
+      <a href="/confidentialite/" style="color:#d4d4d8">politique de confidentialité</a>.</p>
       <button class="pill" type="submit">Envoyer le message</button>
     </form>
   </div>

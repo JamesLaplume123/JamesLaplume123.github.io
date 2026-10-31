@@ -1,7 +1,7 @@
 # Gabarits partagés : <head>, en-tête, pied de page et enveloppe de document.
 # Chaque page de src/pages/ fournit un dict PAGE ; document() produit le HTML final.
 
-from config import SITE, NAV, CTA, FOOTER_COLUMNS, FOOTER_STATUS
+from config import SITE, NAV, CTA, CTA_V2, FOOTER_COLUMNS, FOOTER_STATUS
 
 BRAND = (
     '<a class="brand" href="{home}" aria-label="JARVIS Private Systems — accueil">'
@@ -17,6 +17,17 @@ def head(page):
     og = SITE["domain"] + page.get("og_image", SITE["og_image"])
     v = SITE["asset_version"]
     robots = '<meta name="robots" content="noindex">' if page.get("noindex") else ""
+    if page.get("v2"):
+        assets = (
+            '<link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>\n'
+            f'<link rel="stylesheet" href="/assets/css/wow.css?v={v}">'
+        )
+    else:
+        assets = (
+            '<link rel="preload" href="/assets/fonts/fraunces/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>\n'
+            '<link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>\n'
+            f'<link rel="stylesheet" href="/assets/css/site.css?v={v}">'
+        )
     lang_alt = (
         f'<link rel="alternate" hreflang="en" href="{SITE["domain"]}/en/">'
         f'<link rel="alternate" hreflang="fr-CA" href="{SITE["domain"]}/">'
@@ -36,9 +47,7 @@ def head(page):
 <meta property="og:image" content="{og}">
 <meta name="theme-color" content="{SITE['theme_color']}">
 <link rel="icon" href="/favicon.svg?v={v}">
-<link rel="preload" href="/assets/fonts/fraunces/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v={v}">"""
+{assets}"""
 
 
 def header(page):
@@ -80,6 +89,61 @@ def header(page):
 </header>"""
 
 
+def header_v2(page):
+    """En-tête des pages wow : barre fixe fine + menu mobile plein écran."""
+    links = "".join(
+        '<a href="{u}"{active}>{l}</a>'.format(
+            u=item["url"],
+            l=item["label"],
+            active=' aria-current="page"' if page["url"].startswith(item["url"]) else "",
+        )
+        for item in NAV
+    )
+    sheet_links = "".join(
+        '<a href="{u}"{active}>{l}</a>'.format(
+            u=item["url"],
+            l=item["label"],
+            active=' aria-current="page"' if page["url"].startswith(item["url"]) else "",
+        )
+        for item in NAV
+    )
+    return f"""<header class="bar" data-bar>
+  <a class="bar-brand" href="/"><b>JARVIS</b> <span>Private Systems</span></a>
+  <nav class="bar-nav" aria-label="Navigation principale">{links}</nav>
+  <div class="bar-actions">
+    <a class="bar-cta" href="{CTA_V2['url']}">{CTA_V2['label']}</a>
+    <button class="bar-menu" type="button" aria-expanded="false" aria-label="Ouvrir le menu" data-menu>
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+<nav class="sheet" aria-label="Menu">
+  {sheet_links}
+  <a class="sheet-cta" href="{CTA_V2['url']}">{CTA_V2['label']}</a>
+  <a class="sheet-lang" href="/en/" lang="en">English</a>
+</nav>"""
+
+
+def footer_v2(page):
+    cols = "".join(
+        "<div><h2>{t}</h2><nav>{links}</nav></div>".format(
+            t=col["title"],
+            links="".join(f'<a href="{l["url"]}">{l["label"]}</a>' for l in col["links"]),
+        )
+        for col in FOOTER_COLUMNS
+    )
+    return f"""<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <b>JARVIS <span>Private Systems</span></b>
+      <p>Relier ce qui existe. Faire agir l’ensemble.</p>
+    </div>
+    {cols}
+  </div>
+  <p class="foot-line"><span>{SITE['copyright']}</span><span>Privé par conception</span></p>
+</footer>"""
+
+
 def footer(page):
     cols = "".join(
         "<div><h2>{t}</h2>{links}</div>".format(
@@ -111,6 +175,12 @@ def document(page):
     lang = "fr-CA" if page.get("lang", "fr") == "fr" else "en"
     skip = "Aller au contenu" if page.get("lang", "fr") == "fr" else "Skip to content"
     body_class = page.get("body_class", "")
+    if page.get("v2"):
+        top, bottom = header_v2(page), footer_v2(page)
+        script = f'<script src="/assets/js/wow.js?v={v}" defer></script>'
+    else:
+        top, bottom = header(page), footer(page)
+        script = f'<script src="/assets/js/site.js?v={v}" defer></script>'
     return f"""<!doctype html>
 <html lang="{lang}">
 <head>
@@ -118,12 +188,12 @@ def document(page):
 </head>
 <body class="{body_class}">
 <a class="skip-link" href="#contenu">{skip}</a>
-{header(page)}
+{top}
 <main id="contenu">
 {page['content']}
 </main>
-{footer(page)}
-<script src="/assets/js/site.js?v={v}" defer></script>
+{bottom}
+{script}
 </body>
 </html>
 """

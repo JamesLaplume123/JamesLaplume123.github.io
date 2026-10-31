@@ -1,272 +1,166 @@
-# Accueil — comprendre l'ensemble en moins d'une minute.
-# Rôle (docs/SITE_INFORMATION_ARCHITECTURE.md) : promesse, JARVIS en une vue,
-# six capacités, laboratoire mobile comme preuve, une ouverture vers la vision,
-# un appel à discuter.
-
-import json
-
-from config import CAPABILITIES
-
-CAP_PHRASES = {
-    "environnements-intelligents": {
-        "title": "Le lieu répond à la situation, pas à une suite de commandes.",
-        "copy": "Éclairage, climat, sécurité et énergie se coordonnent dans une interface unique.",
-    },
-    "ia-privee-connaissances": {
-        "title": "Parlez à vos informations, recevez des réponses avec leurs preuves.",
-        "copy": "Documents, courriels, photos et procédures redeviennent une mémoire utilisable.",
-    },
-    "securite-intelligente": {
-        "title": "Une situation compréhensible plutôt qu’une pluie de notifications.",
-        "copy": "Caméras, accès et alarmes racontent une chronologie claire, avec une action proportionnée.",
-    },
-    "automatisation-operations": {
-        "title": "Les demandes avancent entre vos outils sans perdre leur contexte.",
-        "copy": "Courriels, documents et approbations circulent, et chaque action sensible attend votre accord.",
-    },
-    "reseau-resilience": {
-        "title": "Une vue vivante du réseau, de ses dépendances et de ses accès.",
-        "copy": "Inventaire, topologie, disponibilité et accès privés surveillés en continu.",
-    },
-    "diagnostic-care": {
-        "title": "D’un symptôme à une remise en service documentée.",
-        "copy": "Hypothèses, vérifications guidées et rapport prêt pour l’intervention.",
-    },
-}
-
-CAP_JSON = json.dumps(
-    {
-        c["slug"]: {
-            "kicker": c["title"].upper(),
-            "title": CAP_PHRASES[c["slug"]]["title"],
-            "copy": CAP_PHRASES[c["slug"]]["copy"],
-            "image": c["image"],
-            "alt": f"Aperçu conceptuel — {c['title']}",
-            "url": f"/solutions/{c['slug']}/",
-        }
-        for c in CAPABILITIES
-    },
-    ensure_ascii=False,
-)
-
-ENV_JSON = json.dumps(
-    {
-        "maison": {
-            "title": "Retour prévu dans 32 minutes.",
-            "copy": "La maison peut préparer l’éclairage d’arrivée et maintenir la recharge après 21 h.",
-            "s1": "Absence confirmée",
-            "s2": "Réserve 74 %",
-            "s3": "Votre accord",
-            "url": "/solutions/environnements-intelligents/",
-        },
-        "entreprise": {
-            "title": "Livraison détectée au quai 2.",
-            "copy": "Le fournisseur est attendu : l’accès peut s’ouvrir dix minutes et prévenir la réception.",
-            "s1": "Visiteur attendu",
-            "s2": "Zone déverrouillable",
-            "s3": "Votre accord",
-            "url": "/solutions/securite-intelligente/",
-        },
-        "vehicule": {
-            "title": "Réserve solaire excédentaire.",
-            "copy": "Le véhicule peut précharger la batterie habitacle avant la route de demain matin.",
-            "s1": "Soleil 500 W",
-            "s2": "Batteries 560 Ah",
-            "s3": "Votre accord",
-            "url": "/laboratoire-mobile/",
-        },
-    },
-    ensure_ascii=False,
-)
-
-CAP_BUTTONS = "".join(
-    f"""<button type="button" data-cap="{c['slug']}"{' class="is-active"' if i == 0 else ''}>
-      <span>{c['num']}</span><b>{c['title']}</b>
-      <small>{c['short']}</small>
-    </button>"""
-    for i, c in enumerate(CAPABILITIES)
-)
+# Accueil — version « wow » (chantier 2026) : vendre JARVIS, le logiciel.
+# Parcours : promesse cinématique → manifeste → le logiciel en scène → le Hub →
+# six capacités (bento) → offre par environnement → preuve (laboratoire) → démo.
+# Les textes seront enrichis avec les PDF de James; la structure, elle, est finale.
 
 PAGE = {
     "url": "/",
+    "v2": True,
     "title": "JARVIS Private Systems | Intelligence privée et systèmes connectés",
     "description": (
         "JARVIS relie vos outils, vos informations et vos espaces dans une "
-        "expérience privée, contextuelle et contrôlée."
+        "expérience privée, contextuelle et contrôlée. Réservez une démonstration."
     ),
-    "content": f"""
-<!-- Héros : promesse + console de décision -->
-<section class="hero hero-home">
-  <div class="hero-media">
-    <img src="/media/concept/jarvis-hero-architecture-v1.webp"
-         alt="Résidence contemporaine intégrant les systèmes JARVIS" fetchpriority="high">
-  </div>
-  <div class="shell hero-inner">
-    <div>
-      <p class="eyebrow">JARVIS · Intelligence privée</p>
-      <h1>Relier ce qui existe.<br><em>Faire agir l’ensemble.</em></h1>
-      <p class="lead">Une intelligence privée qui comprend vos règles, coordonne les
-      systèmes autorisés et vous laisse les décisions importantes.</p>
-      <div class="hero-actions">
-        <a class="button button-gold" href="/plateforme/">Découvrir JARVIS <span>↗</span></a>
-        <a class="button" href="/solutions/">Explorer les capacités</a>
-      </div>
+    "content": """
+<!-- Scène 1 · Héros -->
+<section class="hero">
+  <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp"
+       alt="Résidence contemporaine la nuit, systèmes JARVIS actifs" fetchpriority="high"></div>
+  <div class="hero-inner">
+    <p class="eyebrow">Intelligence privée</p>
+    <h1>Relier ce qui existe.<span class="l2">Faire agir l’ensemble.</span></h1>
+    <p class="sub">Une intelligence privée qui comprend vos règles, coordonne les systèmes
+    autorisés et vous laisse les décisions importantes.</p>
+    <div class="acts">
+      <a class="pill" href="#app">Voir JARVIS en action</a>
+      <a class="pill ghost" href="/contact/">Réserver une démo</a>
     </div>
-    <div>
-      <aside class="console" aria-label="Exemple de décision JARVIS">
-        <header class="console-head"><span><i></i>JARVIS · ACTIF</span><small>LOCAL</small></header>
-        <div class="console-body">
-          <small>CONTEXTE ACTUEL</small>
-          <strong data-console-title>Retour prévu dans 32 minutes.</strong>
-          <p data-console-copy>La maison peut préparer l’éclairage d’arrivée et maintenir la recharge après 21 h.</p>
-        </div>
-        <ul class="console-signals">
-          <li><span>PRÉSENCE</span><b data-console-s1>Absence confirmée</b></li>
-          <li><span>ÉNERGIE</span><b data-console-s2>Réserve 74 %</b></li>
-          <li><span>DÉCISION</span><b data-console-s3>Votre accord</b></li>
-        </ul>
-        <a class="console-link" href="/solutions/environnements-intelligents/" data-console-link>Voir cette capacité <span>→</span></a>
-      </aside>
-      <div class="env-switch" role="group" aria-label="Choisir un environnement">
-        <button type="button" class="is-active" aria-pressed="true" data-env="maison">Maison</button>
-        <button type="button" aria-pressed="false" data-env="entreprise">Entreprise</button>
-        <button type="button" aria-pressed="false" data-env="vehicule">Véhicule</button>
-      </div>
-      <script type="application/json" id="env-data">{ENV_JSON}</script>
+  </div>
+  <i class="cue" aria-hidden="true"></i>
+</section>
+
+<!-- Scène 2 · Manifeste -->
+<section class="mani" aria-label="Manifeste">
+  <div class="stick"><p>Vos appareils existent déjà. Vos informations existent déjà.
+  Il manquait l’intelligence privée qui les comprend — et qui les fait travailler ensemble.</p></div>
+</section>
+
+<!-- Scène 3 · Le logiciel -->
+<section class="scene app" id="app">
+  <div class="stick">
+    <img src="/media/product/jarvis-command-center-preview.png"
+         alt="JARVIS App — vue d’ensemble de tous vos environnements" loading="lazy">
+    <h2 class="t1">Voici JARVIS App.</h2>
+    <p class="t2">Tous vos environnements. Une seule intelligence. Votre accord pour chaque action.</p>
+    <div class="t3">
+      <span class="chip">Assistant intégré</span>
+      <span class="chip">Résidence · Entreprise · Véhicule</span>
+      <span class="chip chip-sim">Prototype interactif · données simulées</span>
     </div>
   </div>
 </section>
 
-<!-- JARVIS en une vue : App, Core, Hub -->
-<section class="section manifesto">
-  <div class="shell">
-    <div class="section-head" data-reveal>
-      <div>
-        <p class="eyebrow">La plateforme</p>
-        <h2>Tout existe déjà.<br><em>JARVIS fait travailler l’ensemble.</em></h2>
-      </div>
-      <p>Les bons appareils, logiciels et services sont déjà là. JARVIS ajoute le
-      lien qui manque : une identité, du contexte, des permissions et une façon
-      claire de décider.</p>
-    </div>
-    <div class="manifesto-grid">
-      <figure data-reveal>
-        <img src="/media/product/jarvis-hub-v1.webp"
-             alt="JARVIS Hub intégré dans une résidence contemporaine" loading="lazy">
-        <figcaption>
-          <span>JARVIS HUB</span>
-          <strong>L’intelligence demeure près du lieu.</strong>
-        </figcaption>
-      </figure>
-      <div data-reveal>
-        <div class="card-grid" style="grid-template-columns: 1fr;">
-          <article class="card">
-            <p class="eyebrow">Interface</p>
-            <h3>JARVIS App</h3>
-            <p>Comprendre, demander, approuver et consulter les preuves — sur les
-            écrans que vous autorisez.</p>
-          </article>
-          <article class="card">
-            <p class="eyebrow">Intelligence</p>
-            <h3>JARVIS Core</h3>
-            <p>Contexte, mémoire autorisée, permissions, automatisations et
-            journal d’audit : le logiciel central.</p>
-          </article>
-          <article class="card">
-            <p class="eyebrow">Sur place</p>
-            <h3>JARVIS Hub</h3>
-            <p>L’infrastructure locale qui exécute JARVIS Core et garde vos
-            données près de vos systèmes.</p>
-          </article>
-        </div>
-        <div class="badge-row">
-          <span class="badge"><i></i>LOCAL</span>
-          <span class="badge badge-gold"><i></i>PRIVÉ</span>
-          <span class="badge badge-cyan"><i></i>AUTONOME</span>
-        </div>
-        <p style="margin-top:1.8rem;"><a class="link-arrow" href="/plateforme/">Comprendre l’architecture <span>↗</span></a></p>
-      </div>
+<!-- Scène 4 · Le Hub -->
+<section class="scene">
+  <div class="stick">
+    <img src="/media/product/jarvis-hub-v1.webp"
+         alt="JARVIS Hub posé sur un meuble d’une résidence contemporaine" loading="lazy">
+    <h2 class="t1">JARVIS Hub</h2>
+    <p class="t2">L’intelligence demeure chez vous — pas dans un nuage.</p>
+    <div class="t3">
+      <span class="chip">100 % local</span>
+      <span class="chip">Données privées</span>
+      <span class="chip">Décisions humaines</span>
     </div>
   </div>
 </section>
 
-<!-- Six capacités -->
-<section class="section section-raised" id="capacites">
-  <div class="shell">
-    <div class="section-head" data-reveal>
-      <div>
-        <p class="eyebrow">Une plateforme · Six capacités</p>
-        <h2>Le bon outil.<br><em>Au bon moment.</em></h2>
-      </div>
-      <p>Chaque capacité utilise la même identité, les mêmes permissions et la
-      même trace. On commence par un besoin réel, puis on relie seulement ce qui
-      apporte une valeur claire.</p>
-    </div>
-    <div class="cap-stage" data-reveal>
-      <nav class="cap-list" aria-label="Explorer les six capacités">
-        {CAP_BUTTONS}
-      </nav>
-      <article class="cap-preview">
-        <img data-cap-image src="/media/solutions/environnements-intelligents.webp"
-             alt="Aperçu conceptuel — Environnements intelligents" loading="lazy">
-        <section>
-          <span data-cap-kicker>ENVIRONNEMENTS INTELLIGENTS</span>
-          <h3 data-cap-title>Le lieu répond à la situation, pas à une suite de commandes.</h3>
-          <p data-cap-copy>Éclairage, climat, sécurité et énergie se coordonnent dans une interface unique.</p>
-          <a class="link-arrow" data-cap-link href="/solutions/environnements-intelligents/">Explorer cette capacité <span>↗</span></a>
-        </section>
-      </article>
-      <script type="application/json" id="cap-data">{CAP_JSON}</script>
-    </div>
+<!-- Scène 5 · Six capacités (bento) -->
+<section class="bento" id="capacites">
+  <div class="head" data-rev>
+    <h2>Une plateforme.<br>Six capacités.</h2>
+    <p>La même identité, les mêmes permissions, la même trace —
+    du salon à l’entreprise, jusqu’au véhicule.</p>
+  </div>
+  <div class="grid">
+    <a class="tile w3" href="/solutions/environnements-intelligents/" data-rev>
+      <img src="/media/solutions/environnements-intelligents.webp" alt="" loading="lazy">
+      <span class="lab"><small>01 · Environnements</small><b>Le lieu répond à la situation.</b></span></a>
+    <a class="tile w3" href="/solutions/ia-privee-connaissances/" data-rev>
+      <img src="/media/solutions/ia-privee-connaissances.webp" alt="" loading="lazy">
+      <span class="lab"><small>02 · IA privée</small><b>Parlez à vos informations.</b></span></a>
+    <a class="tile" href="/solutions/securite-intelligente/" data-rev>
+      <img src="/media/solutions/securite-intelligente.webp" alt="" loading="lazy">
+      <span class="lab"><small>03 · Sécurité</small><b>Une situation claire.</b></span></a>
+    <a class="tile" href="/solutions/automatisation-operations/" data-rev>
+      <img src="/media/solutions/jarvis-enterprise-operations-v1.webp" alt="" loading="lazy">
+      <span class="lab"><small>04 · Automatisation</small><b>Vos outils, reliés.</b></span></a>
+    <a class="tile" href="/solutions/reseau-resilience/" data-rev>
+      <img src="/media/solutions/reseau-resilience.webp" alt="" loading="lazy">
+      <span class="lab"><small>05 · Réseau</small><b>Une vue vivante.</b></span></a>
+    <a class="tile w6" href="/solutions/diagnostic-care/" data-rev>
+      <img src="/media/solutions/diagnostic-care.webp" alt="" loading="lazy">
+      <span class="lab"><small>06 · Diagnostic &amp; continuité</small>
+      <b>D’un symptôme à une remise en service documentée.</b></span></a>
   </div>
 </section>
 
-<!-- Preuve : laboratoire mobile -->
-<section class="section">
-  <div class="shell proof-grid">
-    <figure data-reveal>
-      <img src="/media/ambulance/ambulance-garage-lab-v1.webp"
-           alt="Ambulance Ford 2017 dans le garage du laboratoire mobile JARVIS" loading="lazy">
-    </figure>
-    <div data-reveal>
-      <p class="eyebrow">Premier terrain de preuve</p>
-      <h2>Le système sort<br><em>de l’écran.</em></h2>
-      <p>Une Ford 2017 V10 devient un environnement d’essai réel pour l’énergie,
-      le réseau, le confort, la sécurité, le diagnostic et l’automatisation.</p>
-      <dl class="stat-row">
-        <div><dt>Énergie</dt><dd>560 Ah</dd></div>
-        <div><dt>Solaire</dt><dd>500 W</dd></div>
-        <div><dt>Contexte</dt><dd>Mobile</dd></div>
-      </dl>
-      <a class="link-arrow" href="/laboratoire-mobile/">Découvrir le laboratoire mobile <span>↗</span></a>
+<!-- Scène 6 · Offre -->
+<section class="offer" id="offre">
+  <div class="head" data-rev>
+    <h2>Choisissez votre environnement.</h2>
+    <p>Un seul JARVIS, configuré pour votre réalité. Chaque déploiement commence
+    par une première preuve utile, définie avec vous.</p>
+  </div>
+  <div class="plans">
+    <article class="plan" data-rev>
+      <small>Résidence</small>
+      <h3>Maison · condo · chalet</h3>
+      <ul>
+        <li>Confort, énergie et sécurité coordonnés</li>
+        <li>JARVIS Hub installé chez vous</li>
+        <li>Données 100 % locales</li>
+      </ul>
+      <a class="pill" href="/contact/">Réserver une démo</a>
+    </article>
+    <article class="plan star" data-rev>
+      <small>Entreprise</small>
+      <h3>Bureau · commerce · atelier</h3>
+      <ul>
+        <li>Automatisation entre vos outils existants</li>
+        <li>Sécurité et réseau compréhensibles</li>
+        <li>Journal d’audit complet</li>
+      </ul>
+      <a class="pill" href="/contact/">Réserver une démo</a>
+    </article>
+    <article class="plan" data-rev>
+      <small>Mobilité</small>
+      <h3>Véhicule aménagé · VR · unité spécialisée</h3>
+      <ul>
+        <li>Énergie et réseau en déplacement</li>
+        <li>Éprouvé dans le laboratoire mobile</li>
+        <li>Diagnostic embarqué</li>
+      </ul>
+      <a class="pill" href="/contact/">Réserver une démo</a>
+    </article>
+  </div>
+  <p class="offer-note" data-rev>JARVIS est en développement actif —
+  les premières démonstrations se réservent maintenant.</p>
+</section>
+
+<!-- Scène 7 · Laboratoire (preuve) -->
+<section class="band">
+  <div class="bg"><img src="/media/ambulance/ambulance-garage-lab-v1.webp"
+       alt="Laboratoire mobile JARVIS — ambulance Ford 2017 dans le garage" loading="lazy"></div>
+  <div class="band-inner">
+    <p class="eyebrow" data-rev>Premier terrain de preuve</p>
+    <h2 data-rev>Le système sort<br>de l’écran.</h2>
+    <div class="specs" data-rev>
+      <div><b><span data-n="560">560</span><i>Ah</i></b><small>Énergie</small></div>
+      <div><b><span data-n="500">500</span><i>W</i></b><small>Solaire</small></div>
+      <div><b>V10</b><small>Ford 2017</small></div>
+      <div><b><span data-n="100">100</span><i>%</i></b><small>Réel</small></div>
     </div>
+    <p data-rev style="margin:0 0 3rem"><a class="pill ghost" href="/laboratoire-mobile/">Découvrir le laboratoire mobile</a></p>
   </div>
 </section>
 
-<!-- Vision -->
-<section class="vision-band">
-  <img src="/media/concept/jarvis-earth-network-v1.jpg"
-       alt="La Terre nocturne vue de l’espace, centrée sur l’Amérique du Nord" loading="lazy">
-  <div class="shell" data-reveal>
-    <p class="eyebrow">Vision à long terme</p>
-    <h2>Une intelligence privée.<br>Des environnements autonomes.<br><em>Une vie plus fluide.</em></h2>
-    <p style="margin-top:1.6rem;"><a class="link-arrow" href="/vision-roadmap/">Découvrir la vision <span>→</span></a></p>
-  </div>
-</section>
-
-<!-- Appel -->
-<section class="cta-band">
-  <div class="shell cta-inner" data-reveal>
-    <div>
-      <p class="eyebrow">Premier échange</p>
-      <h2>Construisons une première preuve <em>qui compte.</em></h2>
-    </div>
-    <div>
-      <p>Décrivez le problème et son contexte. La première preuve utile sera
-      clairement définie.</p>
-      <a class="button button-fill" href="/contact/">Discuter du projet <span>↗</span></a>
-    </div>
-  </div>
+<!-- Scène 8 · Appel -->
+<section class="cta" id="demo">
+  <h2 data-rev>Voyez JARVIS<br><span>de vos yeux.</span></h2>
+  <p data-rev>Une rencontre, vos besoins réels, une démonstration en direct —
+  et la première preuve utile définie ensemble.</p>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
 </section>
 """,
 }

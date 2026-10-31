@@ -13,7 +13,7 @@ SITE = {
     "og_image": "/media/product/jarvis-command-center-preview-og.jpg",
     "theme_color": "#07080a",
     # Incrémenter pour invalider le cache navigateur de site.css / site.js.
-    "asset_version": "20261031a",
+    "asset_version": "20261031b",
     "copyright": "© 2026 JARVIS Private Systems · Québec, Canada",
 }
 
@@ -26,6 +26,9 @@ NAV = [
 ]
 
 CTA = {"url": "/contact/", "label": "Parler du projet"}
+
+# Appel à l'action des pages v2 (chantier wow — vente du logiciel)
+CTA_V2 = {"url": "/contact/", "label": "Réserver une démo"}
 
 FOOTER_COLUMNS = [
     {

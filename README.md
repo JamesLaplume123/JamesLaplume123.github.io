@@ -1,52 +1,86 @@
-# jameslaplume.ca
+# jameslaplume.ca — JARVIS Private Systems
 
-Site statique multipage de JARVIS Private Systems, fondé par James Laplume.
+Site public de JARVIS Private Systems, fondé par James Laplume (Québec, Canada).
+Site statique multipage, hébergé sur GitHub Pages avec le domaine `jameslaplume.ca`.
 
-## Structure publique
+## Structure du dépôt
 
-- `/solutions/` présente les six familles de solutions.
-- `/plateforme/` explique comment JARVIS App, JARVIS Core et JARVIS Hub forment une même plateforme.
-- `/ambulance-lab/` documente le laboratoire physique.
-- `/recherche/` sépare les hypothèses, essais et preuves.
-- `/vision-roadmap/` contient uniquement la vision et les horizons futurs.
-- `/confiance/`, `/a-propos/` et `/contact/` complètent le parcours.
+```
+src/                  Source du site (la seule chose à modifier)
+├── config.py         Identité, navigation, capacités, redirections
+├── partials.py       Gabarits <head>, en-tête, pied de page
+├── pages/            Une page = un module Python (contenu HTML)
+│   └── _solution.py  Gabarit commun des six pages de solution
+└── articles/         Brouillons d'articles (non publiés pour l'instant)
 
-## Reconstruction
+tools/build.py        Générateur (Python 3 standard, aucune dépendance)
 
-Le contenu commun et les routes sont générés par `tools/build-site.mjs`.
+assets/
+├── css/site.css      L'unique feuille de style (design « Signature »)
+├── js/site.js        L'unique script (menu, reveals, explorateurs)
+├── fonts/            Fraunces, Geist et Geist Mono auto-hébergées
+└── *.js, *_vinext_*  Build figé de /sudo-bonne-fete/ (carte QR) — ne pas toucher
 
-```powershell
-node tools/build-site.mjs
+media/                Images du site (webp/png)
+data/                 Configurations publiques (télémétrie batterie)
+integrations/         Worker Cloudflare + exemples Home Assistant (télémétrie)
+docs/                 Références : source de vérité, architecture, UI, audits
+
+index.html, */index.html, sitemap.xml, <anciennes-urls>
+                      FICHIERS GÉNÉRÉS — ne pas éditer à la main
 ```
 
-Les pages générées restent du HTML statique compatible avec GitHub Pages. Les détails sensibles de recherche, les secrets, les données personnelles et les configurations exploitables ne doivent jamais être ajoutés à ce dépôt public.
+## Modifier le site
 
-## Fonctionnement
+1. Éditer le contenu dans `src/pages/`, les gabarits dans `src/partials.py`
+   ou le style dans `assets/css/site.css`.
+2. Regénérer :
 
-- `site-v3.css` contient le système visuel responsive commun.
-- `site-v3.js` contrôle le menu, les animations, le formulaire et le compteur public.
-- Le formulaire utilise FormSubmit pour transmettre les demandes à `laplumejames@gmail.com`.
-- `/en/` fournit un aperçu anglais; l’édition détaillée est maintenue en français.
-- Les anciennes pages redirigent vers les nouvelles sections correspondantes.
-- `CNAME` conserve le domaine `jameslaplume.ca`.
-- `.nojekyll` permet à GitHub Pages de servir tous les actifs tels quels.
-- `sitemap.xml`, `robots.txt` et `og.png` assurent le référencement et le partage social.
+```bash
+python3 tools/build.py
+```
 
-## Telemetrie batteries
+3. Prévisualiser localement :
 
-GitHub Pages reste l'hébergement statique du site. Pour du presque temps réel, Home Assistant OS doit pousser les mesures vers une petite passerelle publique sécurisée, puis le site lit cette passerelle toutes les 30 secondes.
+```bash
+python3 -m http.server 4173
+```
 
-- Worker Cloudflare: `integrations/cloudflare-worker/`
-- Exemple Home Assistant avec Worker: `integrations/home-assistant/battery-telemetry.yaml`
-- Option rapide Home Assistant vers GitHub Gist: `integrations/home-assistant/battery-telemetry-github-gist.yaml`
-- Configuration publique du site: `data/battery-public-config.json`
+4. Commiter et pousser sur `main` : GitHub Pages publie automatiquement.
 
-Le site compare les sources publiques disponibles et garde la plus recente. Si HAOS n'a pas encore pousse de nouvelle mesure, l'instantane local sert seulement de secours et reste indique comme vieux par l'interface.
+Pour invalider le cache navigateur après un changement de CSS/JS, incrémenter
+`asset_version` dans `src/config.py` puis regénérer.
 
-Ne jamais publier de jeton Home Assistant, adresse IP privée, identifiant Bluetooth/MAC ou commande de contrôle dans le JSON public.
+## Règles éditoriales
+
+- L'architecture des pages suit `docs/SITE_INFORMATION_ARCHITECTURE.md` ;
+  le vocabulaire produit suit `docs/JARVIS_SITE_SOURCE_OF_TRUTH.md` ;
+  le système visuel suit `docs/JARVIS_UI_SYSTEM.md`.
+- Ne jamais publier de secret, jeton, adresse IP privée, identifiant matériel
+  ou configuration exploitable : le dépôt est public.
+- Ne jamais inventer de client, certification, résultat commercial ou capacité
+  déjà disponible. Chaque démonstration est marquée « données simulées ».
 
 ## Déploiement
 
 - Dépôt : `JamesLaplume123/JamesLaplume123.github.io`
-- Branche publiée : `main`
-- Domaine : `jameslaplume.ca`
+- Branche publiée : `main` (racine)
+- Domaine : `jameslaplume.ca` (fichier `CNAME`)
+- `.nojekyll` : GitHub Pages sert les fichiers tels quels
+
+## Formulaire de contact
+
+Le formulaire de `/contact/` passe par FormSubmit et transmet les messages à
+`laplumejames@gmail.com`. Aucun service de suivi n'est utilisé.
+
+## Télémétrie batteries (optionnel, non branché au site actuellement)
+
+L'interface publique de télémétrie a été retirée du site lors de la refonte
+d'octobre 2026; les intégrations restent prêtes dans `integrations/` :
+
+- Worker Cloudflare : `integrations/cloudflare-worker/`
+- Home Assistant : `integrations/home-assistant/`
+- Configuration publique : `data/battery-public-config.json`
+
+Ne jamais publier de jeton Home Assistant, adresse IP privée ou identifiant
+Bluetooth/MAC dans le JSON public.

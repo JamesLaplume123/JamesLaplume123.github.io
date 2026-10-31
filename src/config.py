@@ -13,7 +13,7 @@ SITE = {
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
-    "asset_version": "20261031h",
+    "asset_version": "20261031i",
     "copyright": "© 2026 JARVIS Private Systems · Québec, Canada",
 }
 

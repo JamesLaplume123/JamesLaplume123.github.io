@@ -63,7 +63,9 @@ def build():
         page = mod.PAGE
         path = out_path(page["url"])
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(document(page), encoding="utf-8")
+        # Décodage asynchrone des images : évite de bloquer le rendu.
+        html = document(page).replace("<img src", '<img decoding="async" src')
+        path.write_text(html, encoding="utf-8")
         written.append(path.relative_to(ROOT))
         pages.append(page)
 

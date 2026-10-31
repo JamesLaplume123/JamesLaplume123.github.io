@@ -33,6 +33,9 @@ def head(page):
 <meta property="og:type" content="website">
 <meta property="og:url" content="{url}">
 <meta property="og:image" content="{og}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="{SITE['theme_color']}">
 <link rel="icon" href="/favicon.svg?v={v}">
 {assets}"""

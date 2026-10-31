@@ -1,0 +1,231 @@
+# Laboratoire mobile — montrer où les idées sont testées dans le monde réel.
+
+PAGE = {
+    "url": "/laboratoire-mobile/",
+    "title": "Laboratoire mobile JARVIS | Projet réel",
+    "description": (
+        "Une ambulance Ford 2017 V10 transformée en laboratoire réel pour l’énergie, "
+        "le réseau, la sécurité, le diagnostic et l’automatisation."
+    ),
+    "og_image": "/media/ambulance/ambulance-garage-lab-v1.webp",
+    "content": """
+<section class="hero page-hero">
+  <div class="hero-media">
+    <img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="" fetchpriority="high">
+  </div>
+  <div class="shell hero-inner">
+    <div>
+      <p class="eyebrow">Laboratoire mobile · Ford 2017 V10</p>
+      <h1>Construire le premier environnement JARVIS <em>dans le réel.</em></h1>
+      <p class="lead">Cette ancienne ambulance québécoise est transformée en véhicule habitable
+      et en banc d’essai mobile. Le projet physique est en cours; les interfaces montrent la
+      direction complète visée.</p>
+      <div class="hero-actions">
+        <a class="button button-gold" href="#commande">Voir le centre de commande <span>↓</span></a>
+      </div>
+      <div class="hero-meta">
+        <div><span>État</span><b>Projet physique en construction</b></div>
+        <div><span>Rôle</span><b>Banc d’essai mobile</b></div>
+        <div><span>Étape actuelle</span><b>Systèmes et intégrations</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell split">
+    <div data-reveal>
+      <p class="eyebrow">Le projet concret</p>
+      <h2>Le véhicule existe. <em>JARVIS doit relier ce qui le fait vivre.</em></h2>
+    </div>
+    <p class="lead" data-reveal>Le Laboratoire mobile n’est pas une offre séparée. C’est le
+    premier endroit où l’énergie, l’eau, le confort, le véhicule, le réseau, la sécurité et le
+    diagnostic devront fonctionner ensemble dans des conditions réelles.</p>
+  </div>
+</section>
+
+<section class="section section-raised">
+  <div class="shell">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="eyebrow">Le véhicule complet</p>
+        <h2>Habitation, véhicule et laboratoire <em>partagent la même réalité.</em></h2>
+      </div>
+      <p>Les caractéristiques évoluent avec la construction. Le site distingue ce qui est
+      prévu, installé, mesuré et réellement validé.</p>
+    </div>
+    <div class="card-grid">
+      <article class="card" data-reveal>
+        <p class="eyebrow">Énergie</p>
+        <h3>Produire, stocker et arbitrer</h3>
+        <p>560 Ah LiFePO₄, extension prévue, 500 W solaire, DC-DC 60 A, génératrice et
+        délestage progressif.</p>
+      </article>
+      <article class="card" data-reveal>
+        <p class="eyebrow">Confort</p>
+        <h3>Habiter en toute saison</h3>
+        <p>Chauffage diesel, climatisation, foyer au propane, deux ventilateurs, éclairage et
+        scènes adaptées.</p>
+      </article>
+      <article class="card" data-reveal>
+        <p class="eyebrow">Eau et habitation</p>
+        <h3>Voir avant de manquer</h3>
+        <p>Réservoirs, chauffe-eau, douche, pompe, frigo 110 V, TV et estimation des besoins à
+        venir.</p>
+      </article>
+      <article class="card" data-reveal>
+        <p class="eyebrow">Réseau</p>
+        <h3>Rester relié sans dépendre d’un seul lien</h3>
+        <p>Starlink, LTE, Wi-Fi, VPN, services locaux et choix d’arrêt selon la couverture
+        prévue.</p>
+      </article>
+      <article class="card" data-reveal>
+        <p class="eyebrow">Véhicule</p>
+        <h3>Conserver les systèmes d’origine</h3>
+        <p>Les fonctions Ford et ambulance doivent rester opérationnelles et rejoindre HAOS
+        lorsque l’interface le permet.</p>
+      </article>
+      <article class="card" data-reveal>
+        <p class="eyebrow">Sécurité</p>
+        <h3>Comprendre ce qui entoure le véhicule</h3>
+        <p>Caméras, accès, présence, périmètres et capteurs ESP32 pourront enrichir le
+        contexte autorisé.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="commande">
+  <div class="shell">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="eyebrow">Centre de commande · données simulées</p>
+        <h2>Le véhicule complet, visible et contrôlable <em>au même endroit.</em></h2>
+      </div>
+      <p>Énergie, eau, confort, mécanique, réseau et sécurité gardent chacun leur contexte.
+      Chaque équipement conserve aussi sa commande manuelle.</p>
+    </div>
+    <figure class="showcase-frame" data-reveal>
+      <img src="/media/ambulance/ambulance-cutaway-control-v1.webp"
+           alt="Vue en coupe du laboratoire mobile et de ses espaces contrôlables" loading="lazy">
+      <figcaption>
+        <span>MODE CAMP · ATELIER, QUÉBEC</span>
+        <strong>Stationné · solaire actif · confort maintenu · surveillance locale.</strong>
+      </figcaption>
+    </figure>
+    <dl class="stat-row" data-reveal style="grid-template-columns:repeat(5,1fr); margin-top:1.4rem;">
+      <div><dt>Batteries</dt><dd>74 %</dd></div>
+      <div><dt>Essence</dt><dd>61 %</dd></div>
+      <div><dt>Eau propre</dt><dd>68 %</dd></div>
+      <div><dt>Eaux grises</dt><dd>24 %</dd></div>
+      <div><dt>Température</dt><dd>21,4 °C</dd></div>
+    </dl>
+    <div class="split" style="margin-top:2.2rem;">
+      <aside class="console" data-reveal style="max-width:none;">
+        <header class="console-head"><span><i></i>À SURVEILLER</span><small>SIMULÉ</small></header>
+        <div class="console-body">
+          <small>PROJECTION ÉNERGÉTIQUE</small>
+          <strong>La météo de demain réduit la production solaire prévue.</strong>
+          <p>Maintenir le chauffe-eau reporté et profiter du prochain trajet avant d’envisager
+          la génératrice.</p>
+        </div>
+        <ul class="console-signals">
+          <li><span>SOLAIRE PRÉVU</span><b>1,8 kWh</b></li>
+          <li><span>AUTONOMIE</span><b>31 h projetées</b></li>
+          <li><span>DÉCISION</span><b>Votre accord</b></li>
+        </ul>
+      </aside>
+      <div data-reveal>
+        <p class="eyebrow">Orchestration contextuelle</p>
+        <h3 style="font-family:var(--font-display);font-size:1.6rem;">Prévoir, proposer, agir
+        et expliquer.</h3>
+        <p>La gestion énergétique combinera l’état des batteries, le solaire prévu,
+        l’historique de consommation, les déplacements probables, les heures permises et les
+        charges prioritaires.</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.6rem;">
+          <li class="badge"><i></i>Délester graduellement les charges non essentielles</li>
+          <li class="badge"><i></i>Proposer ou démarrer la recharge selon les règles autorisées</li>
+          <li class="badge"><i></i>Prévoir l’eau, l’énergie, la connectivité et les arrêts utiles</li>
+          <li class="badge"><i></i>Conserver un mode manuel et expliquer chaque décision</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-raised">
+  <div class="shell">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="eyebrow">Automatisations envisagées</p>
+        <h2>Le comportement dépend du lieu, du moment <em>et de la priorité.</em></h2>
+      </div>
+      <p>Chaque règle importante doit pouvoir être expliquée, refusée et reprise manuellement.</p>
+    </div>
+    <div class="card-grid">
+      <article class="card" data-reveal>
+        <p class="eyebrow">Stationnement</p>
+        <h3>Demander avant de produire du bruit.</h3>
+        <p>Vérifier l’heure, la position, les règles choisies et la réserve avant de proposer
+        la génératrice.</p>
+      </article>
+      <article class="card" data-reveal>
+        <p class="eyebrow">Confort</p>
+        <h3>Préparer sans gaspiller.</h3>
+        <p>Chauffer l’eau ou climatiser au moment utile, puis réduire les charges si la
+        projection se dégrade.</p>
+      </article>
+      <article class="card" data-reveal>
+        <p class="eyebrow">Trajet</p>
+        <h3>Anticiper l’arrêt utile.</h3>
+        <p>Rapprocher couverture Internet, eau, énergie, destination et durée de conduite
+        prévue.</p>
+      </article>
+      <article class="card" data-reveal>
+        <p class="eyebrow">Maintenance</p>
+        <h3>Voir les dérives avant le code.</h3>
+        <p>Comparer les capteurs mécaniques, les conditions de route et l’historique avant de
+        préparer un rapport.</p>
+      </article>
+      <article class="card" data-reveal>
+        <p class="eyebrow">Sécurité</p>
+        <h3>Adapter la vigilance au contexte.</h3>
+        <p>Différencier un arrêt connu, une présence autorisée et un événement qui mérite une
+        vérification.</p>
+      </article>
+      <article class="card" data-reveal>
+        <p class="eyebrow">Diagnostic</p>
+        <h3>Passer du symptôme au dossier.</h3>
+        <p>Classer les causes, guider les contrôles, trouver la documentation et préparer le
+        partage au technicien.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell center" data-reveal>
+    <p class="eyebrow">La règle du laboratoire</p>
+    <h2 class="max-head" style="margin-inline:auto;">Tout mesurer. Tout expliquer.<br>
+    <em>Ne rien prétendre avant la preuve.</em></h2>
+    <p class="lead" style="margin-inline:auto;">Une hypothèse guidée ne remplace jamais la
+    validation d’un mécanicien ou d’un technicien qualifié.</p>
+    <p style="margin-top:1.8rem;"><a class="link-arrow" href="/recherche/">Découvrir la méthode de recherche <span>↗</span></a></p>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="shell cta-inner" data-reveal>
+    <div>
+      <p class="eyebrow">Premier échange</p>
+      <h2>Suivre le laboratoire ou contribuer <em>à une validation?</em></h2>
+    </div>
+    <div>
+      <p>Décrivez le problème et son contexte. La première preuve utile sera clairement
+      définie.</p>
+      <a class="button button-fill" href="/contact/">Discuter du projet <span>↗</span></a>
+    </div>
+  </div>
+</section>
+""",
+}

@@ -38,7 +38,7 @@ PAGE = {
 <!-- Scène 3 · Le logiciel -->
 <section class="scene app" id="app">
   <div class="stick">
-    <img src="/media/product/jarvis-command-center-preview.png"
+    <img src="/media/product/jarvis-command-center-preview.jpg"
          alt="JARVIS App — vue d’ensemble de tous vos environnements" loading="lazy">
     <h2 class="t1">Voici JARVIS App.</h2>
     <p class="t2">Tous vos environnements. Une seule intelligence. Votre accord pour chaque action.</p>
@@ -156,6 +156,19 @@ PAGE = {
 </section>
 
 <!-- Scène 8 · Appel -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "JARVIS Private Systems",
+  "url": "https://jameslaplume.ca",
+  "logo": "https://jameslaplume.ca/favicon.svg",
+  "email": "laplumejames@gmail.com",
+  "founder": {"@type": "Person", "name": "James Laplume"},
+  "address": {"@type": "PostalAddress", "addressRegion": "QC", "addressCountry": "CA"}
+}
+</script>
+
 <section class="cta" id="demo">
   <h2 data-rev>Voyez JARVIS<br><span>de vos yeux.</span></h2>
   <p data-rev>Une rencontre, vos besoins réels, une démonstration en direct —

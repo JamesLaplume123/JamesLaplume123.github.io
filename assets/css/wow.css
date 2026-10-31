@@ -75,6 +75,15 @@ a { color: inherit; }
   padding: .8rem 1.2rem; font-weight: 600; text-decoration: none;
 }
 .skip-link:focus { left: 0; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid #fff; outline-offset: 3px;
+}
+
+.bar-lang {
+  font: 500 .68rem/1 var(--mono); letter-spacing: .14em;
+  color: #9a9aa0; text-decoration: none;
+}
+.bar-lang:hover { color: #fff; }
 
 /* ---------- Barre de navigation ---------- */
 .bar {
@@ -346,7 +355,7 @@ body.menu-open { overflow: hidden; }
 /* ---------- Réactif ---------- */
 @media (max-width: 880px) {
   .bar { padding: 1rem 1.2rem; }
-  .bar-nav, .bar-cta { display: none; }
+  .bar-nav, .bar-cta, .bar-lang { display: none; }
   .bar-menu { display: flex; }
   .grid { grid-template-columns: repeat(2, 1fr); }
   .tile, .tile.w3 { grid-column: span 1; min-height: 230px; }

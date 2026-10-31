@@ -31,7 +31,7 @@ PAGE = {
 
 <section class="scene app" id="app">
   <div class="stick">
-    <img src="/media/product/jarvis-command-center-preview.png"
+    <img src="/media/product/jarvis-command-center-preview.jpg"
          alt="JARVIS App — vue d’ensemble de tous vos environnements" loading="lazy">
     <h2 class="t1">JARVIS App</h2>
     <p class="t2">Comprendre, demander, approuver — et consulter les preuves.</p>

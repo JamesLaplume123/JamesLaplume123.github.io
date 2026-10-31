@@ -26,7 +26,8 @@ def head(page):
 <meta name="description" content="{desc}">
 <meta name="application-name" content="{SITE['name']}">
 {robots}<link rel="canonical" href="{url}">
-{lang_alt}<meta property="og:site_name" content="{SITE['name']}">
+{lang_alt}<meta property="og:locale" content="{'en_CA' if page.get('lang') == 'en' else 'fr_CA'}">
+<meta property="og:site_name" content="{SITE['name']}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:type" content="website">
@@ -64,10 +65,16 @@ def header_v2(page):
         if en
         else '<a class="sheet-lang" href="/en/" lang="en">English</a>'
     )
+    bar_lang = (
+        '<a class="bar-lang" href="/" lang="fr">FR</a>'
+        if en
+        else '<a class="bar-lang" href="/en/" lang="en">EN</a>'
+    )
     return f"""<header class="bar" data-bar>
   <a class="bar-brand" href="{'/en/' if en else '/'}"><b>JARVIS</b> <span>Private Systems</span></a>
   <nav class="bar-nav" aria-label="{nav_label}">{links}</nav>
   <div class="bar-actions">
+    {bar_lang}
     <a class="bar-cta" href="{CTA_V2['url']}">{cta_label}</a>
     <button class="bar-menu" type="button" aria-expanded="false" aria-label="{menu_label}" data-menu>
       <span></span><span></span>

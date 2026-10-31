@@ -91,4 +91,7 @@ DATA = {
     ),
 }
 
+DATA["demo_image"] = "/media/product/outils/diagnostic.jpg"
+DATA["demo_caption"] = "Écran de référence de l’outil Diagnostic — maquette, données fictives."
+
 PAGE = solution_page(DATA)

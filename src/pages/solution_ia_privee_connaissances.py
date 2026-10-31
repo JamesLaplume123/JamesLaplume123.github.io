@@ -1,101 +1,220 @@
-# Solution 02 — IA privée et connaissances.
+# Solution 02 — IA privée et connaissances. PAGE VEDETTE (sur mesure).
+# Contenu tiré du Guide visuel « IA et connaissances » (conception à valider) :
+# deux parcours, trois autorisations, réponses vérifiables, périmètres, contrôle.
 
-from pages._solution import solution_page
-
-# Vitrine : une question devient une réponse sourcée, avec ses preuves.
-SHOWCASE = """
-<div class="qa-stage" data-reveal>
-  <div class="qa-thread">
-    <div class="qa-user">
-      <small>VOUS</small>
-      <p>Pourquoi la génératrice s’arrête-t-elle après quelques minutes, et que puis-je vérifier sans risque?</p>
-    </div>
-    <div class="qa-answer">
-      <header><span>JARVIS · SYNTHÈSE SOURCÉE</span><small>Confiance · 74 %</small></header>
-      <strong>La surchauffe liée à la circulation d’air est la piste la mieux appuyée.</strong>
-      <p>Le manuel relie le code E-17 à une température d’huile élevée et le technicien recommande
-      un dégagement de 30 cm. Le dernier entretien confirme l’huile et le filtre remplacés. La photo
-      jointe identifie le véhicule, mais ne montre pas l’entrée d’air : elle ne peut donc pas
-      confirmer l’hypothèse.</p>
-      <footer>
-        <span class="status status-real"><i></i>Confirmé · code E-17 observé</span>
-        <span class="status status-building"><i></i>Probable · ventilation à contrôler</span>
-        <span class="status status-proto"><i></i>Preuve manquante · entrée d’air</span>
-      </footer>
-    </div>
-  </div>
-  <div class="qa-sources">
-    <p class="eyebrow">Preuves rapprochées</p>
-    <article class="card">
-      <p class="eyebrow">PDF · page 48</p>
-      <h3>Manuel_Generatrice.pdf</h3>
-      <p>Code d’arrêt E-17 et procédure de vérification. Document primaire, cité dans la réponse.</p>
-    </article>
-    <article class="card">
-      <p class="eyebrow">DOC · 41 h depuis l’entretien</p>
-      <h3>Entretien_2026.docx</h3>
-      <p>Huile et filtre remplacés. Écarte un entretien oublié, mais aucune preuve thermique jointe.</p>
-    </article>
-    <article class="card">
-      <p class="eyebrow">IMG · preuve insuffisante</p>
-      <h3>IMG_1842_Vue_vehicule.jpg</h3>
-      <p>Le véhicule est identifié, mais l’entrée d’air est hors cadre. JARVIS refuse d’en déduire une obstruction.</p>
-    </article>
-  </div>
-</div>
-"""
-
-DATA = {
-    "slug": "ia-privee-connaissances",
-    "title": "IA privée et connaissances",
+PAGE = {
+    "url": "/solutions/ia-privee-connaissances/",
+    "v2": True,
+    "title": "IA privée et connaissances | Solutions JARVIS",
     "description": "Parler à ses propres informations, retrouver les bonnes preuves et préparer une action avec permission.",
-    "image": "/media/solutions/ia-privee-connaissances.webp",
-    "h1": "IA privée et <em>connaissances.</em>",
-    "lead": "Un assistant qui travaille à partir de vos sources autorisées et montre d’où vient chaque réponse importante.",
-    "for": "Particuliers, PME et équipes qui travaillent avec beaucoup d’information",
-    "problem_title": "L’information existe déjà. <em>Le travail consiste à la retrouver.</em>",
-    "problem_copy": (
-        "Documents, courriels, procédures, photos et historiques sont dispersés. "
-        "L’interface conversationnelle de JARVIS aide à chercher, comparer et préparer la prochaine "
-        "étape sans donner un accès illimité à toutes les données."
-    ),
-    "change_title": "Une réponse utile commence par une source vérifiable.",
-    "change_copy": (
-        "Chaque réponse relie la demande aux sources consultées, aux permissions utilisées "
-        "et à la prochaine action proposée."
-    ),
-    "features": [
-        ("Recherche avec provenance", "Chaque résultat important peut pointer vers les documents ou systèmes qui le soutiennent."),
-        ("Permissions explicites", "Les personnes, agents et missions accèdent seulement aux sources nécessaires à leur rôle."),
-        ("Contexte de mission", "L’assistant utilise le dossier, le site et l’objectif autorisés plutôt qu’une mémoire sans limites."),
-        ("Préparation du travail", "Résumer une demande, comparer des documents et préparer un dossier ou une intervention."),
-        ("Actions supervisées", "Les communications et opérations externes importantes attendent une validation humaine."),
-        ("Déploiement flexible", "Les données peuvent rester locales, privées ou réparties selon le niveau de sensibilité."),
-    ],
-    "demo_title": "Poser une question. <em>Voir les preuves.</em>",
-    "demo_copy": (
-        "L’aperçu montre comment une question devient une réponse sourcée, puis un travail "
-        "préparé — sans accès général aux données."
-    ),
-    "showcase": SHOWCASE,
-    "compat": ["Documents", "Courriels", "Calendriers", "Photos", "Procédures", "Stockage local", "API métier"],
-    "deploy_title": "Vos informations restent là où vous les avez autorisées.",
-    "deploy_copy": (
-        "Les modèles, index et documents sensibles peuvent être conservés sur une infrastructure "
-        "privée. Le choix dépend du matériel, du volume et du niveau de confidentialité."
-    ),
-    "limit": (
-        "L’assistant ne reçoit jamais automatiquement toutes les données du réseau. Chaque "
-        "connecteur, source et permission doit être déclaré, contrôlé et révocable."
-    ),
-    "cta_title": "Quelle information devrait devenir <em>facile à retrouver?</em>",
-    "cta_copy": (
-        "Présentez les sources concernées, les personnes qui doivent y accéder et le résultat "
-        "concret que l’assistant devrait préparer."
-    ),
+    "og_image": "/media/product/outils/ia.jpg",
+    "content": """
+<section class="band top">
+  <div class="bg"><img src="/media/solutions/ia-privee-connaissances.webp" alt="" fetchpriority="high"></div>
+  <div class="band-inner">
+    <p class="eyebrow" data-rev>Solution 02 / 06 · Vedette</p>
+    <h1 data-rev>IA privée et <em>connaissances.</em></h1>
+    <p class="lead" data-rev>Vos documents restent à leur place. L’IA vous aide à les
+    comprendre — et montre toujours d’où vient sa réponse.</p>
+    <div class="acts" data-rev>
+      <a class="pill" href="/contact/">Réserver une démo</a>
+      <a class="pill ghost" href="#outil">Voir l’outil</a>
+    </div>
+    <div class="meta" data-rev>
+      <span class="chip">Particuliers · PME · équipes</span>
+      <span class="chip">Traitement local ou autorisé</span>
+      <span class="chip">Réponses avec preuves</span>
+    </div>
+  </div>
+</section>
+
+<section class="sect">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Le problème à résoudre</p>
+      <h2 style="margin-top:1rem">Vous savez que c’est écrit quelque part. <em>Mais
+      où?</em></h2>
+    </div>
+    <p data-rev>Documents, courriels, photos, procédures : votre information existe, mais
+    elle est éparpillée. JARVIS la rend interrogeable — sans la déménager, sans l’exposer,
+    et sans jamais inventer de réponse.</p>
+  </div>
+</section>
+
+<section class="scene app" id="outil">
+  <div class="stick">
+    <img src="/media/product/outils/ia.jpg"
+         alt="Outil IA et connaissances — collections, documents et questions" loading="lazy">
+    <h2 class="t1">IA et connaissances</h2>
+    <p class="t2">Organisez vos documents et interrogez-les simplement.</p>
+    <div class="t3">
+      <span class="chip">Bibliothèque · Conversations · Assistants</span>
+      <span class="chip">Traitement local affiché</span>
+      <span class="chip chip-sim">Maquette · données fictives</span>
+    </div>
+  </div>
+</section>
+
+<section class="sect alt">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Le contrôle, en trois crans</p>
+      <h2 style="margin-top:1rem">Trois autorisations <em>différentes.</em></h2>
+    </div>
+    <p data-rev>Une connexion n’active ni la lecture par l’IA, ni les commandes, ni le
+    partage externe. Chaque pouvoir se donne séparément — et se retire séparément.</p>
+  </div>
+  <div class="cards">
+    <article class="card" data-rev>
+      <small>01 · Connecter</small>
+      <h3>JARVIS peut joindre un compte ou un service précis.</h3>
+      <p>Relier votre agenda ou votre stockage ne donne encore aucun droit de lecture à
+      l’IA.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>02 · Autoriser à lire</small>
+      <h3>Vous choisissez les dossiers, les usages et la destination du traitement.</h3>
+      <p>Dossier par dossier, avec le lieu de traitement — local ou externe — toujours
+      affiché avant votre accord.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>03 · Autoriser une action</small>
+      <h3>Créer un rappel ou envoyer un message exige son propre droit.</h3>
+      <p>L’IA prépare, vous confirmez, l’outil autorisé exécute — et rapporte le résultat
+      réel.</p>
+    </article>
+  </div>
+</section>
+
+<section class="sect">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Des réponses honnêtes</p>
+      <h2 style="margin-top:1rem">Une réponse utile montre <em>ce qui la justifie.</em></h2>
+    </div>
+    <p data-rev>Ici, l’IA cite « Procédure retours.pdf, page 2 » — puis, quand la preuve
+    manque, elle le dit et demande le bon document au lieu d’inventer une règle.</p>
+  </div>
+  <figure class="frame" data-rev>
+    <img src="/media/product/ia/reponse-verifiable.jpg"
+         alt="Conversation IA : réponse citant sa source, puis refus d’inventer une règle absente" loading="lazy">
+    <figcaption>
+      <span>IA et connaissances · Conversations</span>
+      <strong>« Je n’ai pas de preuve suffisante. » — Maquette, données fictives.</strong>
+    </figcaption>
+  </figure>
+  <div class="cards" style="margin-top:2.6rem">
+    <article class="card" data-rev>
+      <small>Règle 01</small>
+      <h3>Une source consultable.</h3>
+      <p>Nom du document et passage précis — si vous avez toujours le droit de l’ouvrir.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>Règle 02</small>
+      <h3>Une version identifiable.</h3>
+      <p>Date ou version connue, sans inventer une fraîcheur qui n’a pas été vérifiée.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>Règle 03</small>
+      <h3>Une limite explicite.</h3>
+      <p>Source ancienne, documents en désaccord ou information manquante : l’IA le dit.</p>
+    </article>
+  </div>
+</section>
+
+<section class="sect alt">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">À qui appartient quoi</p>
+      <h2 style="margin-top:1rem">Personnel, partagé <em>ou professionnel.</em></h2>
+    </div>
+    <p data-rev>Ces périmètres indiquent à qui le contenu est ouvert — pas où se trouve son
+    serveur. Le rôle d’administrateur est une permission de gestion, jamais un passe-partout
+    sur vos contenus.</p>
+  </div>
+  <div class="rows">
+    <div class="row" data-rev>
+      <i>Personnel</i>
+      <div><h3>Moi uniquement.</h3>
+      <p>Mes notes, mes factures, mes documents choisis.</p></div>
+    </div>
+    <div class="row" data-rev>
+      <i>Partagé</i>
+      <div><h3>Les personnes choisies.</h3>
+      <p>Maison, famille ou projet — chaque partage est explicite : la notice du
+      chauffe-eau, pas tout votre dossier personnel.</p></div>
+    </div>
+    <div class="row" data-rev>
+      <i>Professionnel</i>
+      <div><h3>Mon organisation.</h3>
+      <p>Procédures et dossiers ouverts à mon rôle — et le serveur vérifie les droits
+      avant la recherche, à l’ouverture et avant chaque action.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sect">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Vos données, votre décision</p>
+      <h2 style="margin-top:1rem">Reprendre le contrôle, <em>pour vrai.</em></h2>
+    </div>
+    <p data-rev>Original, copie, index, conversation, mémoire, sauvegarde : chaque trace a
+    sa règle, visible et actionnable.</p>
+  </div>
+  <div class="cards two">
+    <article class="card" data-rev>
+      <small>Retirer un accès</small>
+      <h3>Bloquer les nouveaux usages, immédiatement.</h3>
+      <p>Une ancienne autorisation ne suffit plus à chercher ni à agir.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>Supprimer avec précision</small>
+      <h3>Original, copie, index, conversation et mémoire se distinguent.</h3>
+      <p>Chacun se supprime selon sa propre règle — vérifiée, pas présumée.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>Voir les durées</small>
+      <h3>Les délais de conservation sont consultables.</h3>
+      <p>Et les options offertes par votre organisation restent visibles.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>Exporter son périmètre</small>
+      <h3>Récupérer ses contenus autorisés.</h3>
+      <p>Sans embarquer ceux d’une autre personne.</p>
+    </article>
+  </div>
+</section>
+
+<section class="sect alt">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Déploiement responsable</p>
+      <h2 style="margin-top:1rem">« Privé » se vérifie, <em>il ne se décrète pas.</em></h2>
+    </div>
+    <p data-rev>Qui peut consulter? Où sont les données? Où sont-elles traitées? Trois
+    questions, trois réponses affichées avant chaque autorisation.</p>
+  </div>
+  <div class="cards two">
+    <article class="card" data-rev>
+      <small>Accord humain</small>
+      <h3>Les actions sensibles exigent une validation adaptée au risque.</h3>
+    </article>
+    <article class="card" data-rev>
+      <small>Limite publiée</small>
+      <h3 style="font-weight:500;font-size:1rem;color:#b9b9c2;line-height:1.6">« Local » ne
+      prouve pas, à lui seul, qu’aucun service externe ne reçoit de données : chaque flux se
+      vérifie. L’IA lit seulement les sources autorisées, et une instruction trouvée dans un
+      document ne déclenche jamais un accès ni une action.</h3>
+    </article>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 data-rev>Quelle information mérite enfin<br><span>d’être retrouvable?</span></h2>
+  <p data-rev>Décrivez vos documents, vos outils actuels et ce que vous cherchez trop
+  souvent sans le trouver.</p>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
+</section>
+""",
 }
-
-DATA["demo_image"] = "/media/product/user/assistant.jpg"
-DATA["demo_caption"] = "Assistant JARVIS — il propose, vous décidez. Conception en validation."
-
-PAGE = solution_page(DATA)

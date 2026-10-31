@@ -90,4 +90,7 @@ DATA = {
     ),
 }
 
+DATA["demo_image"] = "/media/product/outils/entreprise.jpg"
+DATA["demo_caption"] = "Écran de référence de l’outil Entreprise — maquette, données fictives."
+
 PAGE = solution_page(DATA)

@@ -86,8 +86,8 @@ DATA = {
     ),
 }
 
-DATA["demo_image"] = "/media/solutions/security-enterprise-delivery-v1.webp"
-DATA["demo_caption"] = "Livraison détectée au quai 2 — contexte attendu. Données simulées."
+DATA["demo_image"] = "/media/product/outils/securite.jpg"
+DATA["demo_caption"] = "Écran de référence de l’outil Sécurité — maquette, données fictives."
 DATA["extra"] = """
 <div class="shots" data-rev style="margin-top:14px">
   <figure>

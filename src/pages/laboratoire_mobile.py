@@ -114,7 +114,12 @@ PAGE = {
     <span class="chip">LTE active · Starlink en secours</span>
     <span class="chip chip-sim">Maquette · données d’exemple</span>
   </div>
-  <div class="shots" data-rev style="margin-top:14px;grid-template-columns:1fr">
+  <div class="shots" data-rev style="margin-top:14px;grid-template-columns:1fr 1fr">
+    <figure>
+      <img src="/media/product/outils/mobilite.jpg"
+           alt="Outil Mobilité et voyage — trajet, arrêts et contraintes du véhicule" loading="lazy" style="aspect-ratio:auto">
+      <figcaption><b>Mobilité et voyage</b><span>Écran de référence · maquette</span></figcaption>
+    </figure>
     <figure>
       <img src="/media/ambulance/ambulance-cutaway-control-v1.webp"
            alt="Vue en coupe du laboratoire mobile et de ses espaces contrôlables" loading="lazy" style="aspect-ratio:auto">

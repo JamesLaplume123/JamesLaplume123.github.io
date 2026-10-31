@@ -15,9 +15,9 @@
 <meta property="og:url" content="https://jameslaplume.ca/solutions/environnements-intelligents/">
 <meta property="og:image" content="https://jameslaplume.ca/media/solutions/environnements-intelligents.webp">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="/favicon.svg?v=20261031f">
+<link rel="icon" href="/favicon.svg?v=20261031g">
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/wow.css?v=20261031f">
+<link rel="stylesheet" href="/assets/css/wow.css?v=20261031g">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -42,15 +42,16 @@
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solution 01 / 06</p>
+    <p class="eyebrow" data-rev>Solution 01 / 06 · Vedette</p>
     <h1 data-rev>Environnements <em>intelligents.</em></h1>
-    <p class="lead" data-rev>Un environnement qui comprend son état, s’adapte au contexte et demeure contrôlable simplement.</p>
+    <p class="lead" data-rev>Un environnement qui comprend son état, s’adapte au contexte et
+    demeure contrôlable simplement.</p>
     <div class="acts" data-rev>
       <a class="pill" href="/contact/">Réserver une démo</a>
-      <a class="pill ghost" href="/solutions/">Toutes les solutions</a>
+      <a class="pill ghost" href="#journee">Vivre une journée</a>
     </div>
     <div class="meta" data-rev>
-      <span class="chip">Résidences, bâtiments, ateliers et véhicules aménagés</span>
+      <span class="chip">Résidences · bâtiments · ateliers · véhicules aménagés</span>
       <span class="chip">Local, privé ou hybride</span>
       <span class="chip">Contrôle humain</span>
     </div>
@@ -61,46 +62,142 @@
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Le problème à résoudre</p>
-      <h2 style="margin-top:1rem">Les appareils sont intelligents. <em>Le lieu, lui, reste fragmenté.</em></h2>
+      <h2 style="margin-top:1rem">Les appareils sont intelligents. <em>Le lieu, lui, reste
+      fragmenté.</em></h2>
     </div>
-    <p data-rev>Éclairage, chauffage, énergie, accès, audio, capteurs et sécurité vivent dans des applications séparées. JARVIS construit une couche commune qui les observe et les coordonne sans remplacer ce qui fonctionne déjà.</p>
+    <p data-rev>Éclairage, chauffage, énergie, accès, audio, capteurs et sécurité vivent dans
+    des applications séparées. JARVIS construit une couche commune qui les observe et les
+    coordonne sans remplacer ce qui fonctionne déjà.</p>
+  </div>
+</section>
+
+<section class="sect alt" id="journee">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Un exemple vécu</p>
+      <h2 style="margin-top:1rem">Une journée où tout <em>se tient.</em></h2>
+    </div>
+    <p data-rev>Choisissez un moment : la maison réagit au contexte, pas à une suite de
+    commandes. Scénario illustratif — données simulées.</p>
+  </div>
+  <div class="moments" data-rev data-swap-group="moments-data" data-swap-scope="#journee">
+    <div class="mom-btns" role="group" aria-label="Choisir un moment de la journée">
+      <button type="button" class="is-on" aria-pressed="true" data-swap="matin">Matin</button>
+      <button type="button" aria-pressed="false" data-swap="depart">Départ</button>
+      <button type="button" aria-pressed="false" data-swap="retour">Retour</button>
+      <button type="button" aria-pressed="false" data-swap="soiree">Soirée</button>
+      <button type="button" aria-pressed="false" data-swap="nuit">Nuit</button>
+    </div>
+    <article class="mom-card">
+      <div class="mom-left">
+        <time data-swap-field="time">06 H 58 · MATIN</time>
+        <h3 data-swap-field="title">La maison se réveille avant vous.</h3>
+        <p data-swap-field="copy">L’éclairage de la chambre monte en douceur, la salle de bain
+        gagne deux degrés et la cuisine prépare l’ambiance du déjeuner — selon la règle que
+        vous avez choisie.</p>
+        <ul class="mom-sig">
+          <li><span data-swap-field="l1">Présence</span><b data-swap-field="v1">Chambre</b></li>
+          <li><span data-swap-field="l2">Salle de bain</span><b data-swap-field="v2">23 °C atteints</b></li>
+          <li><span data-swap-field="l3">Décision</span><b data-swap-field="v3">Règle approuvée par vous</b></li>
+        </ul>
+      </div>
+      <figure class="mom-media" style="margin:0">
+        <img src="/media/concept/jarvis-hero-architecture-v1.webp"
+             alt="Résidence contemporaine coordonnée par JARVIS" loading="lazy">
+      </figure>
+    </article>
+    <script type="application/json" id="moments-data">{"matin": {"time": "06 H 58 · MATIN", "title": "La maison se réveille avant vous.", "copy": "L’éclairage de la chambre monte en douceur, la salle de bain gagne deux degrés et la cuisine prépare l’ambiance du déjeuner — selon la règle que vous avez choisie.", "l1": "Présence", "v1": "Chambre", "l2": "Salle de bain", "v2": "23 °C atteints", "l3": "Décision", "v3": "Règle approuvée par vous"}, "depart": {"time": "08 H 12 · DÉPART", "title": "Vous partez. Tout se met en veille.", "copy": "Thermostats en mode économie, prises non essentielles coupées, périmètre armé. La maison cesse de dépenser dès que plus personne n’en profite.", "l1": "Présence", "v1": "Absence confirmée", "l2": "Énergie", "v2": "Consommation −38 %", "l3": "Sécurité", "v3": "Périmètre armé"}, "retour": {"time": "17 H 26 · RETOUR", "title": "Retour prévu dans 32 minutes.", "copy": "La maison peut préparer l’éclairage d’arrivée, remonter la température de confort et reporter la recharge du véhicule après 21 h. Elle propose — vous approuvez.", "l1": "Retour estimé", "v1": "32 minutes", "l2": "Confort", "v2": "En préparation", "l3": "Décision", "v3": "Votre accord"}, "soiree": {"time": "19 H 40 · SOIRÉE", "title": "Mode cinéma, sans y penser.", "copy": "Les lumières se tamisent, les stores descendent et les notifications deviennent discrètes. Un seul geste pour reprendre la main — toujours.", "l1": "Scène", "v1": "Cinéma", "l2": "Notifications", "v2": "Discrètes", "l3": "Reprise manuelle", "v3": "Un geste"}, "nuit": {"time": "23 H 05 · NUIT", "title": "La maison veille. Vous dormez.", "copy": "Tout s’éteint, les portes sont vérifiées, le périmètre reste attentif. Vous n’êtes réveillé que si quelque chose compte vraiment.", "l1": "Portes", "v1": "Verrouillées", "l2": "Périmètre", "v2": "Calme", "l3": "Prochain réveil", "v3": "06 h 58"}}</script>
+  </div>
+</section>
+
+<section class="sect">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Ce que la solution change</p>
+      <h2 style="margin-top:1rem">Votre lieu, réuni dans une expérience claire.</h2>
+    </div>
+    <p data-rev>Le tableau de bord privilégie les états qui demandent une décision. Les
+    protocoles et les intégrations restent en arrière-plan.</p>
+  </div>
+  <div class="cards">
+    <article class="card" data-rev>
+      <small>01</small>
+      <h3>Une seule lecture du lieu</h3>
+      <p>Voir les états importants, les anomalies et les actions possibles dans une expérience cohérente.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>02</small>
+      <h3>Des automatisations contextuelles</h3>
+      <p>Adapter le confort et l’énergie selon la présence, l’heure, la météo et les priorités choisies.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>03</small>
+      <h3>Un contrôle qui reste local</h3>
+      <p>Conserver les fonctions essentielles même lorsqu’Internet ou un service externe devient indisponible.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>04</small>
+      <h3>Des modes manuels clairs</h3>
+      <p>Chaque automatisation sensible peut être expliquée, suspendue ou reprise manuellement.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>05</small>
+      <h3>Un historique utile</h3>
+      <p>Comprendre ce qui s’est passé avant une anomalie plutôt que consulter une suite de journaux techniques.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>06</small>
+      <h3>Une base extensible</h3>
+      <p>Ajouter progressivement de nouveaux appareils sans reconstruire tout l’environnement.</p>
+    </article>
   </div>
 </section>
 
 <section class="sect alt">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">Ce que la solution change</p>
-      <h2 style="margin-top:1rem">Votre lieu, réuni dans une expérience claire.</h2>
+      <p class="eyebrow">Module Éclairage · concept en conception</p>
+      <h2 style="margin-top:1rem">La lumière qui comprend <em>le moment.</em></h2>
     </div>
-    <p data-rev>Le tableau de bord privilégie les états qui demandent une décision. Les protocoles et les intégrations restent en arrière-plan.</p>
+    <p data-rev>« Bonsoir, James. Installez-vous. La soirée est à vous. » Chaque pièce, chaque
+    ambiance, chaque nuance — pensées pour être belles ET honnêtes.</p>
   </div>
-  <div class="cards">
+  <figure class="frame" data-rev>
+    <img src="/media/solutions/env/eclairage-bonsoir-james.jpg"
+         alt="Module Éclairage JARVIS — pièces, ambiances et aperçus" loading="lazy">
+    <figcaption>
+      <span>JARVIS · Éclairage</span>
+      <strong>Concept statique illustratif — rien n’est exécuté par cette image.</strong>
+    </figcaption>
+  </figure>
+  <div class="chiprow" data-rev>
+    <span class="chip chip-sim">Les ambiances</span>
+    <span class="chip">Heure dorée</span>
+    <span class="chip">Océan</span>
+    <span class="chip">Aurore</span>
+    <span class="chip">Lecture</span>
+    <span class="chip">Cinéma</span>
+    <span class="chip">Nuit douce</span>
+  </div>
+  <div class="cards" style="margin-top:2.6rem">
     <article class="card" data-rev>
-          <small>01</small>
-          <h3>Une seule lecture du lieu</h3>
-          <p>Voir les états importants, les anomalies et les actions possibles dans une expérience cohérente.</p>
-        </article><article class="card" data-rev>
-          <small>02</small>
-          <h3>Des automatisations contextuelles</h3>
-          <p>Adapter le confort et l’énergie selon la présence, l’heure, la météo et les priorités choisies.</p>
-        </article><article class="card" data-rev>
-          <small>03</small>
-          <h3>Un contrôle qui reste local</h3>
-          <p>Conserver les fonctions essentielles même lorsqu’Internet ou un service externe devient indisponible.</p>
-        </article><article class="card" data-rev>
-          <small>04</small>
-          <h3>Des modes manuels clairs</h3>
-          <p>Chaque automatisation sensible peut être expliquée, suspendue ou reprise manuellement.</p>
-        </article><article class="card" data-rev>
-          <small>05</small>
-          <h3>Un historique utile</h3>
-          <p>Comprendre ce qui s’est passé avant une anomalie plutôt que consulter une suite de journaux techniques.</p>
-        </article><article class="card" data-rev>
-          <small>06</small>
-          <h3>Une base extensible</h3>
-          <p>Ajouter progressivement de nouveaux appareils sans reconstruire tout l’environnement.</p>
-        </article>
+      <small>Règle 01</small>
+      <h3>Un aperçu n’envoie rien.</h3>
+      <p>Composer un éclairage crée un brouillon : rien ne change dans la pièce avant que
+      vous appliquiez. Les lumières éteintes le restent.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>Règle 02</small>
+      <h3>Votre précédent est protégé.</h3>
+      <p>Avant chaque application, l’éclairage en place est sauvegardé. Vous pouvez toujours
+      revenir — même après avoir fermé JARVIS.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>Règle 03</small>
+      <h3>Jamais de faux succès.</h3>
+      <p>Une lumière qui ne répond pas est annoncée « à vérifier », pas « réglée ». Chaque
+      état affiché vient d’une confirmation réelle.</p>
+    </article>
   </div>
 </section>
 
@@ -110,34 +207,41 @@
       <p class="eyebrow">Aperçu conceptuel · données simulées</p>
       <h2 style="margin-top:1rem">Toute la propriété. <em>Une seule expérience.</em></h2>
     </div>
-    <p data-rev>L’interface réunit les espaces, les ambiances, l’énergie et la sécurité. Chaque commande reste visible, compréhensible et réversible.</p>
+    <p data-rev>L’interface réunit les espaces, les ambiances, l’énergie et la sécurité.
+    Chaque commande reste visible, compréhensible et réversible.</p>
   </div>
   <figure class="frame" data-rev>
-    <img src="/media/solutions/jarvis-spaces-property-v3.webp" alt="Aperçu conceptuel — Environnements intelligents" loading="lazy">
+    <img src="/media/solutions/jarvis-spaces-property-v3.webp"
+         alt="Plan en trois dimensions d’une propriété intelligente" loading="lazy">
     <figcaption>
-      <span>JARVIS App · ENVIRONNEMENTS INTELLIGENTS</span>
+      <span>JARVIS App · Résidence</span>
       <strong>Toute la propriété. Une seule expérience. — Données simulées.</strong>
     </figcaption>
   </figure>
-  
-<div class="shots" data-rev style="margin-top:14px">
-  <figure>
-    <img src="/media/solutions/camera-front-entry-v1.webp" alt="Caméra de l’entrée avant de la résidence" loading="lazy">
-    <figcaption><b>Entrée avant</b><span>Aucun événement à vérifier</span></figcaption>
-  </figure>
-  <figure>
-    <img src="/media/solutions/camera-driveway-garage-v1.webp" alt="Caméra de l’allée et des portes de garage" loading="lazy">
-    <figcaption><b>Allée et garage</b><span>Portes fermées</span></figcaption>
-  </figure>
-  <figure>
-    <img src="/media/solutions/camera-rear-terrace-v1.webp" alt="Caméra de la terrasse arrière et du foyer" loading="lazy">
-    <figcaption><b>Terrasse arrière</b><span>Accès fermé · foyer actif</span></figcaption>
-  </figure>
-</div>
-
+  <div class="shots" data-rev style="margin-top:14px">
+    <figure>
+      <img src="/media/solutions/camera-front-entry-v1.webp" alt="Caméra de l’entrée avant de la résidence" loading="lazy">
+      <figcaption><b>Entrée avant</b><span>Aucun événement à vérifier</span></figcaption>
+    </figure>
+    <figure>
+      <img src="/media/solutions/camera-driveway-garage-v1.webp" alt="Caméra de l’allée et des portes de garage" loading="lazy">
+      <figcaption><b>Allée et garage</b><span>Portes fermées</span></figcaption>
+    </figure>
+    <figure>
+      <img src="/media/solutions/camera-rear-terrace-v1.webp" alt="Caméra de la terrasse arrière et du foyer" loading="lazy">
+      <figcaption><b>Terrasse arrière</b><span>Accès fermé · foyer actif</span></figcaption>
+    </figure>
+  </div>
   <div class="chiprow" data-rev>
     <span class="chip chip-sim">Compatibilités possibles</span>
-    <span class="chip">Home Assistant</span><span class="chip">Matter</span><span class="chip">Zigbee</span><span class="chip">Z-Wave</span><span class="chip">KNX</span><span class="chip">ESPHome</span><span class="chip">Modbus</span><span class="chip">MQTT</span>
+    <span class="chip">Home Assistant</span>
+    <span class="chip">Matter</span>
+    <span class="chip">Zigbee</span>
+    <span class="chip">Z-Wave</span>
+    <span class="chip">KNX</span>
+    <span class="chip">ESPHome</span>
+    <span class="chip">Modbus</span>
+    <span class="chip">MQTT</span>
   </div>
 </section>
 
@@ -147,7 +251,8 @@
       <p class="eyebrow">Déploiement responsable</p>
       <h2 style="margin-top:1rem">Les fonctions essentielles restent dans le lieu.</h2>
     </div>
-    <p data-rev>Les commandes essentielles, les règles et l’historique récent peuvent demeurer sur place. Les services infonuagiques restent optionnels et clairement identifiés.</p>
+    <p data-rev>Les commandes essentielles, les règles et l’historique récent peuvent demeurer
+    sur place. Les services infonuagiques restent optionnels et clairement identifiés.</p>
   </div>
   <div class="cards two">
     <article class="card" data-rev>
@@ -156,14 +261,17 @@
     </article>
     <article class="card" data-rev>
       <small>Limite publiée</small>
-      <h3 style="font-weight:500;font-size:1rem;color:#b9b9c2;line-height:1.6">JARVIS n’invente pas une nouvelle plateforme domotique. Il relie des systèmes compatibles, documentés et autorisés. Chaque installation exige une analyse technique.</h3>
+      <h3 style="font-weight:500;font-size:1rem;color:#b9b9c2;line-height:1.6">JARVIS n’invente
+      pas une nouvelle plateforme domotique. Il relie des systèmes compatibles, documentés et
+      autorisés. Chaque installation exige une analyse technique.</h3>
     </article>
   </div>
 </section>
 
 <section class="cta">
-  <h2 data-rev>Quel lieu mérite enfin de fonctionner <em>comme un ensemble?</em></h2>
-  <p data-rev>Décrivez les appareils déjà en place, les irritants quotidiens et ce qui doit continuer de fonctionner même sans Internet.</p>
+  <h2 data-rev>Quel lieu mérite enfin de fonctionner<br><span>comme un ensemble?</span></h2>
+  <p data-rev>Décrivez les appareils déjà en place, les irritants quotidiens et ce qui doit
+  continuer de fonctionner même sans Internet.</p>
   <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
 </section>
 
@@ -178,6 +286,6 @@
   </div>
   <p class="foot-line"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span>Privé par conception</span></p>
 </footer>
-<script src="/assets/js/wow.js?v=20261031f" defer></script>
+<script src="/assets/js/wow.js?v=20261031g" defer></script>
 </body>
 </html>

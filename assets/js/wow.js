@@ -29,6 +29,30 @@
     });
   }
 
+  /* Sélecteurs de contenu (ex. : moments de la journée) */
+  document.querySelectorAll("[data-swap-group]").forEach(function (group) {
+    var dataEl = document.getElementById(group.getAttribute("data-swap-group"));
+    if (!dataEl) return;
+    var data;
+    try { data = JSON.parse(dataEl.textContent); } catch (e) { return; }
+    var btns = [].slice.call(group.querySelectorAll("button[data-swap]"));
+    var scope = document.querySelector(group.getAttribute("data-swap-scope")) || document;
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        btns.forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("is-on", on);
+          x.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        var d = data[b.getAttribute("data-swap")] || {};
+        Object.keys(d).forEach(function (k) {
+          var el = scope.querySelector('[data-swap-field="' + k + '"]');
+          if (el) el.textContent = d[k];
+        });
+      });
+    });
+  });
+
   if (reduce) return;
   doc.classList.add("fx");
 

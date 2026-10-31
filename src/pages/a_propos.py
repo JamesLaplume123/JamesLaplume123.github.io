@@ -11,7 +11,7 @@ PAGE = {
     "og_image": "/media/solutions/automatisation-operations.webp",
     "content": """
 <section class="band top">
-  <div class="bg"><img src="/media/solutions/automatisation-operations.webp" alt="" fetchpriority="high"></div>
+  <div class="bg"><img src="/media/concept/jarvis-life-context-v3.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
     <p class="eyebrow" data-rev>À propos</p>
     <h1 data-rev>Construire le lien entre l’idée <em>et le réel.</em></h1>

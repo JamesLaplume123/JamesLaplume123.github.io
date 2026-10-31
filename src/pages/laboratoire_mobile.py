@@ -100,20 +100,26 @@ PAGE = {
     contexte. Chaque équipement conserve aussi sa commande manuelle.</p>
   </div>
   <figure class="frame" data-rev>
-    <img src="/media/ambulance/ambulance-cutaway-control-v1.webp"
-         alt="Vue en coupe du laboratoire mobile et de ses espaces contrôlables" loading="lazy">
+    <img src="/media/ambulance/boulance-vue-ensemble.jpg"
+         alt="Tableau de bord BouLance — vue d’ensemble du véhicule et du séjour" loading="lazy">
     <figcaption>
-      <span>Mode camp · Atelier, Québec</span>
-      <strong>Stationné · solaire actif · confort maintenu · surveillance locale.</strong>
+      <span>BouLance · Vue d’ensemble</span>
+      <strong>L’essentiel de votre véhicule et de votre séjour — maquette, données d’exemple.</strong>
     </figcaption>
   </figure>
   <div class="chiprow" data-rev>
-    <span class="chip">Batteries 74 %</span>
-    <span class="chip">Essence 61 %</span>
-    <span class="chip">Eau propre 68 %</span>
-    <span class="chip">Eaux grises 24 %</span>
-    <span class="chip">21,4 °C</span>
-    <span class="chip chip-sim">Données simulées</span>
+    <span class="chip">Batterie cellule 78 %</span>
+    <span class="chip">Eau propre 72 %</span>
+    <span class="chip">Intérieur 21 °C</span>
+    <span class="chip">LTE active · Starlink en secours</span>
+    <span class="chip chip-sim">Maquette · données d’exemple</span>
+  </div>
+  <div class="shots" data-rev style="margin-top:14px;grid-template-columns:1fr">
+    <figure>
+      <img src="/media/ambulance/ambulance-cutaway-control-v1.webp"
+           alt="Vue en coupe du laboratoire mobile et de ses espaces contrôlables" loading="lazy" style="aspect-ratio:auto">
+      <figcaption><b>Vue en coupe</b><span>Mode camp · Atelier, Québec</span></figcaption>
+    </figure>
   </div>
 </section>
 

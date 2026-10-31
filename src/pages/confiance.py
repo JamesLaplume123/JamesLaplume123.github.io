@@ -38,7 +38,7 @@ PAGE = {
     "og_image": "/media/solutions/securite-intelligente.webp",
     "content": f"""
 <section class="band top">
-  <div class="bg"><img src="/media/solutions/securite-intelligente.webp" alt="" fetchpriority="high"></div>
+  <div class="bg"><img src="/media/concept/jarvis-earth-network-v1.jpg" alt="" fetchpriority="high"></div>
   <div class="band-inner">
     <p class="eyebrow" data-rev>Confiance et gouvernance</p>
     <h1 data-rev>La capacité d’agir exige <em>des limites visibles.</em></h1>

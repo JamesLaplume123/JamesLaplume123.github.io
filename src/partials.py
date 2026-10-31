@@ -8,7 +8,13 @@ def head(page):
     url = SITE["domain"] + page["url"]
     title = page["title"]
     desc = page["description"]
-    og = SITE["domain"] + page.get("og_image", SITE["og_image"])
+    og_path = page.get("og_image", SITE["og_image"])
+    og = SITE["domain"] + og_path
+    og_size = (
+        '<meta property="og:image:width" content="1200">\n'
+        '<meta property="og:image:height" content="630">\n'
+        if og_path == SITE["og_image"] else ""
+    )
     v = SITE["asset_version"]
     robots = '<meta name="robots" content="noindex">' if page.get("noindex") else ""
     assets = (
@@ -33,11 +39,10 @@ def head(page):
 <meta property="og:type" content="website">
 <meta property="og:url" content="{url}">
 <meta property="og:image" content="{og}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="referrer" content="strict-origin-when-cross-origin">
+{og_size}<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="{SITE['theme_color']}">
 <link rel="icon" href="/favicon.svg?v={v}">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 {assets}"""
 
 

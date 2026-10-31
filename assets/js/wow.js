@@ -108,9 +108,16 @@
       if (s.t2) s.t2.style.opacity = c01((hp - .42) * 4);
       if (s.t3) s.t3.style.opacity = c01((hp - .58) * 4);
     });
-    requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
+  var queued = false;
+  function schedule() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () { queued = false; frame(); });
+  }
+  addEventListener("scroll", schedule, { passive: true });
+  addEventListener("resize", schedule);
+  schedule();
 
   /* Révélations à l'entrée dans la fenêtre */
   var io = new IntersectionObserver(function (entries) {

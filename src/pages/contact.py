@@ -15,8 +15,8 @@ PAGE = {
   <p class="eyebrow" data-rev>Contact</p>
   <h1 data-rev>Voyez JARVIS <em>de vos yeux.</em></h1>
   <p class="lead" data-rev>Client potentiel, partenaire technique, chercheur ou investisseur :
-  décrivez ce que vous cherchez à comprendre, relier ou automatiser, et réservez une
-  démonstration en direct.</p>
+  décrivez ce que vous cherchez à comprendre, relier ou automatiser. Je vous montrerai ce
+  qui existe aujourd’hui et ce qui reste à construire.</p>
 </section>
 
 <section class="sect" style="padding-top:2rem">

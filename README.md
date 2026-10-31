@@ -67,6 +67,7 @@ Pour invalider le cache navigateur après un changement de CSS/JS, incrémenter
 - Branche publiée : `main` (racine)
 - Domaine : `jameslaplume.ca` (fichier `CNAME`)
 - `.nojekyll` : GitHub Pages sert les fichiers tels quels
+- Branche `ancien-site` : le site tel qu'il était en ligne avant la refonte (conservé, non publié)
 
 ## Formulaire de contact
 

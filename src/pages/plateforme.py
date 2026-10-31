@@ -63,7 +63,7 @@ PAGE = {
       <p class="num">Accès</p>
       <h3>Sur invitation seulement.</h3>
       <p class="res">Aucune inscription publique : chaque compte est créé par
-      l’administrateur du Hub. Clés d’accès prises en charge — votre biométrie reste
+      l’administrateur du Hub. Clés d’accès prévues — votre biométrie resterait
       sur votre appareil, jamais chez JARVIS.</p>
     </div>
   </article>
@@ -323,7 +323,7 @@ PAGE = {
     <div class="row" data-rev>
       <i>Mobilité et voyage</i>
       <div><h3>Le trajet, les arrêts et le véhicule, dans le même contexte.</h3>
-      <p>Éprouvée sur le laboratoire mobile.
+      <p>Développée sur le laboratoire mobile.
       <a href="/laboratoire-mobile/" style="color:#fff">Voir le laboratoire.</a></p></div>
     </div>
   </div>

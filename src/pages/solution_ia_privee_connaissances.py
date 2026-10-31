@@ -12,7 +12,7 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/solutions/ia-privee-connaissances.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solution 02 / 06 · Vedette</p>
+    <p class="eyebrow" data-rev>Solution 02 / 06</p>
     <h1 data-rev>IA privée et <em>connaissances.</em></h1>
     <p class="lead" data-rev>Vos documents restent à leur place. L’IA vous aide à les
     comprendre — et montre toujours d’où vient sa réponse.</p>
@@ -21,6 +21,7 @@ PAGE = {
       <a class="pill ghost" href="#outil">Voir l’outil</a>
     </div>
     <div class="meta" data-rev>
+      <span class="chip chip-sim">Interface conceptuelle · à construire et à tester</span>
       <span class="chip">Particuliers · PME · équipes</span>
       <span class="chip">Traitement local ou autorisé</span>
       <span class="chip">Réponses avec preuves</span>

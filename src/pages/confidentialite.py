@@ -36,10 +36,11 @@ PAGE = {
     </div>
     <div class="row" data-rev>
       <i>03 · Aucun pistage</i>
-      <div><h3>Pas de témoins, pas d’analytique, pas de publicité.</h3>
-      <p>Ce site n’installe aucun témoin (cookie), n’utilise aucun outil de mesure
-      d’audience et ne charge aucune ressource publicitaire. Les polices de
-      caractères sont hébergées sur le site lui-même.</p></div>
+      <div><h3>Pas de témoins, pas d’analytique, pas de publicité sur ce site.</h3>
+      <p>Les pages de ce site n’installent aucun témoin (cookie), n’utilisent aucun outil
+      de mesure d’audience et ne chargent aucune ressource externe : les polices de
+      caractères sont hébergées sur le site lui-même. Le service de formulaire décrit
+      plus bas applique ses propres règles au moment de l’envoi.</p></div>
     </div>
     <div class="row" data-rev>
       <i>04 · Utilisation</i>
@@ -51,15 +52,18 @@ PAGE = {
     <div class="row" data-rev>
       <i>05 · Prestataires</i>
       <div><h3>Deux services techniques, clairement identifiés.</h3>
-      <p>Le formulaire est acheminé par FormSubmit vers le courriel du responsable.
-      Le site est hébergé par GitHub Pages, qui peut tenir des journaux techniques
-      de serveur (adresses IP) comme tout hébergeur.</p></div>
+      <p>Le formulaire est acheminé par FormSubmit (formsubmit.co) vers le courriel du
+      responsable. À l’envoi, FormSubmit peut afficher une vérification anti-robot
+      reCAPTCHA de Google et conserve les soumissions pendant 30 jours, selon sa propre
+      documentation. Le site est hébergé par GitHub Pages, qui peut tenir des journaux
+      techniques de serveur (adresses IP) comme tout hébergeur.</p></div>
     </div>
     <div class="row" data-rev>
       <i>06 · Conservation</i>
       <div><h3>Le temps de l’échange, pas plus.</h3>
       <p>Les messages reçus sont conservés dans la boîte courriel du responsable le
-      temps du suivi, puis supprimés lorsqu’ils ne sont plus nécessaires.</p></div>
+      temps du suivi, puis supprimés lorsqu’ils ne sont plus nécessaires. La copie
+      tenue par FormSubmit suit le délai de 30 jours mentionné plus haut.</p></div>
     </div>
     <div class="row" data-rev>
       <i>07 · Vos droits</i>

@@ -13,8 +13,7 @@ PAGE = {
     <p class="eyebrow">Message reçu</p>
     <h1 style="font-size:clamp(2.4rem,6vw,4.2rem);margin-top:1.2rem">Merci.<br><em>C’est entre
     bonnes mains.</em></h1>
-    <p>Votre message vient d’arriver directement dans ma boîte. Je vous réponds
-    personnellement, généralement à l’intérieur de 24 à 48 heures.</p>
+    <p>Votre message a été transmis. Je vous réponds personnellement.</p>
     <div class="acts" style="justify-content:center">
       <a class="pill" href="/">Retour à l’accueil</a>
       <a class="pill ghost" href="/solutions/">Explorer les solutions</a>

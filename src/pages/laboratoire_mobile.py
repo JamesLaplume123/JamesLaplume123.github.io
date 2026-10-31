@@ -25,7 +25,7 @@ PAGE = {
       <div><b><span data-n="560">560</span><i>Ah</i></b><small>Énergie LiFePO₄</small></div>
       <div><b><span data-n="500">500</span><i>W</i></b><small>Solaire</small></div>
       <div><b>V10</b><small>Ford 2017</small></div>
-      <div><b><span data-n="100">100</span><i>%</i></b><small>Réel</small></div>
+      <div><b>En cours</b><small>Construction réelle</small></div>
     </div>
   </div>
 </section>

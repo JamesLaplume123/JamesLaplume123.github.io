@@ -37,6 +37,7 @@ def solution_page(d):
       <a class="pill ghost" href="/solutions/">Toutes les solutions</a>
     </div>
     <div class="meta" data-rev>
+      <span class="chip chip-sim">Interface conceptuelle · fondation en construction</span>
       <span class="chip">{d['for']}</span>
       <span class="chip">Local, privé ou hybride</span>
       <span class="chip">Contrôle humain</span>

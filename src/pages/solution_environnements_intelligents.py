@@ -59,7 +59,7 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solution 01 / 06 · Vedette</p>
+    <p class="eyebrow" data-rev>Solution 01 / 06</p>
     <h1 data-rev>Environnements <em>intelligents.</em></h1>
     <p class="lead" data-rev>Un environnement qui comprend son état, s’adapte au contexte et
     demeure contrôlable simplement.</p>
@@ -68,6 +68,7 @@ PAGE = {
       <a class="pill ghost" href="#journee">Vivre une journée</a>
     </div>
     <div class="meta" data-rev>
+      <span class="chip chip-sim">Interface conceptuelle · fondation en construction</span>
       <span class="chip">Résidences · bâtiments · ateliers · véhicules aménagés</span>
       <span class="chip">Local, privé ou hybride</span>
       <span class="chip">Contrôle humain</span>

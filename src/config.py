@@ -25,9 +25,7 @@ NAV = [
     {"url": "/vision-roadmap/", "label": "Vision"},
 ]
 
-CTA = {"url": "/contact/", "label": "Parler du projet"}
-
-# Appel à l'action des pages v2 (chantier wow — vente du logiciel)
+# Appel à l'action principal (chantier wow — vente du logiciel)
 CTA_V2 = {"url": "/contact/", "label": "Réserver une démo"}
 
 FOOTER_COLUMNS = [
@@ -49,12 +47,6 @@ FOOTER_COLUMNS = [
             {"url": "/contact/", "label": "Contact"},
         ],
     },
-]
-
-FOOTER_STATUS = [
-    "Plateforme en construction",
-    "Laboratoire mobile en construction",
-    "Ouvert aux collaborations",
 ]
 
 # Les six capacités : source unique pour l'accueil, la page Solutions et les sous-pages.

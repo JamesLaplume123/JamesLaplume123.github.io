@@ -16,9 +16,9 @@ src/                  Source du site (la seule chose à modifier)
 tools/build.py        Générateur (Python 3 standard, aucune dépendance)
 
 assets/
-├── css/site.css      L'unique feuille de style (design « Signature »)
-├── js/site.js        L'unique script (menu, reveals, explorateurs)
-├── fonts/            Fraunces, Geist et Geist Mono auto-hébergées
+├── css/wow.css       L'unique feuille de style (design « WOW », esprit Apple/Tesla)
+├── js/wow.js         L'unique script (barre, menu, scènes au défilement, compteurs)
+├── fonts/            Geist et Geist Mono auto-hébergées (variables)
 └── *.js, *_vinext_*  Build figé de /sudo-bonne-fete/ (carte QR) — ne pas toucher
 
 media/                Images du site (webp/png)

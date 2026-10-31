@@ -8,7 +8,7 @@ PAGE = {
         "Découvrez comment JARVIS App, JARVIS Core et JARVIS Hub forment un "
         "système privé, local et contrôlé."
     ),
-    "og_image": "/media/product/jarvis-command-center-preview-og.jpg",
+    "og_image": "/media/product/user/accueil-og.jpg",
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="" fetchpriority="high"></div>
@@ -31,15 +31,138 @@ PAGE = {
 
 <section class="scene app" id="app">
   <div class="stick">
-    <img src="/media/product/jarvis-command-center-preview.jpg"
-         alt="JARVIS App — vue d’ensemble de tous vos environnements" loading="lazy">
+    <img src="/media/product/user/accueil.jpg"
+         alt="JARVIS App — accueil personnel : Bonsoir Alex, votre journée, simplement" loading="lazy">
     <h2 class="t1">JARVIS App</h2>
-    <p class="t2">Comprendre, demander, approuver — et consulter les preuves.</p>
+    <p class="t2">Bonsoir Alex. Votre journée, simplement.</p>
     <div class="t3">
+      <span class="chip">Votre espace · à votre image</span>
       <span class="chip">Ordinateur · tablette · téléphone</span>
-      <span class="chip">Écrans intégrés</span>
-      <span class="chip chip-sim">Prototype interactif · données simulées</span>
+      <span class="chip chip-sim">Conception en validation · données simulées</span>
     </div>
+  </div>
+</section>
+
+<section class="sect alt" id="experience-user">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Visite guidée · 58 vues conçues</p>
+      <h2 style="margin-top:1rem">Votre espace.<br><em>À votre image.</em></h2>
+    </div>
+    <p data-rev>Le parcours complet du compte personnel est déjà dessiné, écran par
+    écran : l’accès, la journée, les messages, l’assistant, le partage et la carte.
+    Voici l’essentiel — données simulées, en validation avant le développement.</p>
+  </div>
+
+  <article class="frow">
+    <figure class="media" data-rev>
+      <img src="/media/product/user/connexion.jpg" alt="Écran de connexion JARVIS" loading="lazy">
+    </figure>
+    <div data-rev>
+      <p class="num">Accès</p>
+      <h3>Sur invitation seulement.</h3>
+      <p class="res">Aucune inscription publique : chaque compte est créé par
+      l’administrateur du Hub. Clés d’accès prises en charge — votre biométrie reste
+      sur votre appareil, jamais chez JARVIS.</p>
+    </div>
+  </article>
+
+  <article class="frow flip">
+    <figure class="media" data-rev>
+      <img src="/media/product/user/ma-journee.jpg" alt="Ma journée — agenda et tâches réunis" loading="lazy">
+    </figure>
+    <div data-rev>
+      <p class="num">Ma journée</p>
+      <h3>Agenda et tâches, enfin ensemble.</h3>
+      <p class="res">Tous vos calendriers et toutes vos listes, de toutes vos sources,
+      dans une seule vue. Créer, déplacer, planifier — un calendrier en lecture seule
+      reste en lecture seule.</p>
+    </div>
+  </article>
+
+  <article class="frow">
+    <figure class="media" data-rev>
+      <img src="/media/product/user/conversation.jpg" alt="Conversation dans la messagerie JARVIS" loading="lazy">
+    </figure>
+    <div data-rev>
+      <p class="num">Messages</p>
+      <h3>Vos conversations, chez vous.</h3>
+      <p class="res">Messagerie interne du Hub : texte, photos, documents, vocaux et
+      appels. Chaque pièce jointe est vérifiée avant l’envoi; micro et caméra ne
+      s’activent jamais sans votre permission explicite.</p>
+    </div>
+  </article>
+
+  <article class="frow flip">
+    <figure class="media" data-rev>
+      <img src="/media/product/user/assistant.jpg" alt="Assistant JARVIS — conversation" loading="lazy">
+    </figure>
+    <div data-rev>
+      <p class="num">Assistant</p>
+      <h3>Il propose. Vous décidez.</h3>
+      <p class="res">Parlez à JARVIS en texte ou en voix. Il prépare l’action — un
+      rappel, un événement — puis attend votre confirmation : aucune écriture
+      automatique, jamais de succès affiché sans résultat réel.</p>
+    </div>
+  </article>
+
+  <article class="frow">
+    <figure class="media" data-rev>
+      <img src="/media/product/user/recommandations.jpg" alt="Recommandations JARVIS avec leur provenance" loading="lazy">
+    </figure>
+    <div data-rev>
+      <p class="num">Recommandations</p>
+      <h3>Chaque suggestion montre d’où elle vient.</h3>
+      <p class="res">Provenance et raison visibles sur chaque conseil. Ignorer ou
+      rappeler plus tard — une suggestion n’agit jamais à votre place, et rien n’est
+      inventé pour remplir une carte.</p>
+    </div>
+  </article>
+
+  <article class="frow flip">
+    <figure class="media" data-rev>
+      <img src="/media/product/user/partage.jpg" alt="Je choisis ce que je partage — contrôle de la position et des documents" loading="lazy">
+    </figure>
+    <div data-rev>
+      <p class="num">Vie privée</p>
+      <h3>Je choisis ce que je partage.</h3>
+      <p class="res">Position, documents : avec qui, pour combien de temps, et sous
+      votre contrôle. Chaque partage est explicite, limité dans le temps et révocable
+      en tout temps.</p>
+    </div>
+  </article>
+
+  <article class="frow">
+    <figure class="media" data-rev>
+      <img src="/media/product/user/carte.jpg" alt="Carte JARVIS — Hub, appareils et partages choisis" loading="lazy">
+    </figure>
+    <div data-rev>
+      <p class="num">Carte</p>
+      <h3>Voir votre monde, pas celui des autres.</h3>
+      <p class="res">Le Hub, vos appareils et seulement les personnes qui ont choisi
+      de partager leur position. Position refusée? JARVIS affiche le Hub — jamais une
+      fausse position personnelle.</p>
+    </div>
+  </article>
+
+  <article class="frow flip">
+    <figure class="media" data-rev>
+      <img src="/media/product/user/personnaliser.jpg" alt="Personnaliser mon accueil — cartes réorganisables" loading="lazy">
+    </figure>
+    <div data-rev>
+      <p class="num">Personnalisation</p>
+      <h3>Votre accueil vous ressemble.</h3>
+      <p class="res">Affichez, ordonnez et dimensionnez les cartes de votre page
+      d’accueil. Vos préférences suivent votre compte — sans jamais changer vos
+      droits ni ceux des autres.</p>
+    </div>
+  </article>
+
+  <div class="chiprow" data-rev>
+    <span class="chip chip-sim">Aucun succès simulé</span>
+    <span class="chip">Droits revérifiés à chaque action</span>
+    <span class="chip">Provenance visible</span>
+    <span class="chip">Vos données restent les vôtres</span>
   </div>
 </section>
 

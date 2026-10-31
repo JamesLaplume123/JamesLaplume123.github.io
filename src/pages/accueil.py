@@ -38,14 +38,14 @@ PAGE = {
 <!-- Scène 3 · Le logiciel -->
 <section class="scene app" id="app">
   <div class="stick">
-    <img src="/media/product/jarvis-command-center-preview.jpg"
-         alt="JARVIS App — vue d’ensemble de tous vos environnements" loading="lazy">
+    <img src="/media/product/user/accueil.jpg"
+         alt="JARVIS App — accueil personnel : Bonsoir Alex, votre journée, simplement" loading="lazy">
     <h2 class="t1">Voici JARVIS App.</h2>
-    <p class="t2">Tous vos environnements. Une seule intelligence. Votre accord pour chaque action.</p>
+    <p class="t2">Votre espace. À votre image. Votre accord pour chaque action.</p>
     <div class="t3">
       <span class="chip">Assistant intégré</span>
-      <span class="chip">Résidence · Entreprise · Véhicule</span>
-      <span class="chip chip-sim">Prototype interactif · données simulées</span>
+      <span class="chip">Agenda · messages · documents · carte</span>
+      <span class="chip chip-sim">Conception en validation · données simulées</span>
     </div>
   </div>
 </section>

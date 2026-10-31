@@ -245,7 +245,7 @@ PAGE = {
 
 <!-- Vision -->
 <section class="vision-band">
-  <img src="/media/concept/jarvis-earth-network-v1.png"
+  <img src="/media/concept/jarvis-earth-network-v1.jpg"
        alt="La Terre nocturne vue de l’espace, centrée sur l’Amérique du Nord" loading="lazy">
   <div class="shell" data-reveal>
     <p class="eyebrow">Vision à long terme</p>

@@ -10,7 +10,7 @@ SITE = {
         "JARVIS relie vos outils, vos informations et vos espaces dans une "
         "expérience privée, contextuelle et contrôlée."
     ),
-    "og_image": "/media/product/jarvis-command-center-preview.png",
+    "og_image": "/media/product/jarvis-command-center-preview-og.jpg",
     "theme_color": "#07080a",
     # Incrémenter pour invalider le cache navigateur de site.css / site.js.
     "asset_version": "20261031a",

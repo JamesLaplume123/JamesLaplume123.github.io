@@ -255,7 +255,7 @@ function footer(lang = 'fr-CA') {
 
 function normalizeProductNaming(html) {
   return html
-    .replaceAll('/site-v4.css?v=20261001m', '/site-v4.css?v=20261029a')
+    .replaceAll('/site-v4.css?v=20261001m', '/site-v4.css?v=20261031nav')
     .replaceAll('/ambulance-lab/', '/laboratoire-mobile/')
     .replaceAll('<span>AL</span><div><b>Ambulance Lab</b>', '<span>LM</span><div><b>Laboratoire mobile</b>')
     .replaceAll('<span>LM</span><div><b>Laboratoire mobile</b><small>Ford 2017 V10 · véhicule laboratoire</small>', '<span>J</span><div><b>JARVIS App</b><small>Laboratoire mobile · Ford 2017 V10</small>')
@@ -281,7 +281,7 @@ function normalizeProductNaming(html) {
 
 function documentPage({ title, description, active, pathname, body, image = '/og.png', lang = 'fr-CA' }) {
   const canonical = `${baseUrl}${pathname}`;
-  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><meta name="application-name" content="JARVIS Private Systems"><link rel="canonical" href="${canonical}"><meta property="og:site_name" content="JARVIS Private Systems"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#070707"><link rel="icon" href="/favicon.svg?v=20261029a"><link rel="preload" href="/assets/_vinext_fonts/geist-8ac0455e797f/geist-001175b1.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-013b2f2f.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/site-v3.css?v=20261029a"><link rel="stylesheet" href="/site-v4.css?v=20261001m"><link rel="stylesheet" href="/site-signature.css?v=20261029a"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260930d" defer></script><script src="/site-v4.js?v=20261005a" defer></script></body></html>`);
+  return normalizeProductNaming(`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${description}"><meta name="application-name" content="JARVIS Private Systems"><link rel="canonical" href="${canonical}"><meta property="og:site_name" content="JARVIS Private Systems"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${baseUrl}${image}"><meta name="theme-color" content="#070707"><link rel="icon" href="/favicon.svg?v=20261029a"><link rel="preload" href="/assets/_vinext_fonts/geist-8ac0455e797f/geist-001175b1.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-013b2f2f.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/site-v3.css?v=20261029a"><link rel="stylesheet" href="/site-v4.css?v=20261001m"><link rel="stylesheet" href="/site-signature.css?v=20261031nav"></head><body>${header(active, lang)}<main id="contenu">${body}</main>${footer(lang)}<script src="/site-v3.js?v=20260930d" defer></script><script src="/site-v4.js?v=20261031nav" defer></script></body></html>`);
 }
 
 function replaceSection(html, startMarker, endMarker, replacement) {
@@ -330,7 +330,15 @@ function solutionCards() {
 }
 
 function homePage() {
-  const capabilities = solutions.map((solution, index) => `<button${index === 0 ? ' class="active"' : ''} type="button" data-v4-capability="${solution.slug}"><span>0${index + 1}</span><b>${solution.title}</b><small>${solution.short}</small></button>`).join('');
+  const benefits = {
+    'environnements-intelligents': 'Lumières, confort et énergie réunis.',
+    'ia-privee-connaissances': 'Retrouver vos documents et les bonnes réponses.',
+    'securite-intelligente': 'Comprendre les événements de vos lieux.',
+    'automatisation-operations': 'Faire avancer les demandes de votre équipe.',
+    'reseau-resilience': 'Garder vos connexions fiables et privées.',
+    'diagnostic-care': 'Comprendre un souci et préparer la suite.',
+  };
+  const capabilities = solutions.map((solution, index) => `<a class="v4-solution-link${index === 0 ? ' active' : ''}" data-v4-capability="${solution.slug}" href="/solutions/${solution.slug}/"><span class="v4-solution-number" aria-hidden="true">0${index + 1}</span><span class="v4-solution-text"><b>${solution.title}</b><small>${benefits[solution.slug] || solution.short}</small><span class="v4-solution-action">Voir la solution</span></span><span class="v4-solution-arrow" aria-hidden="true">↗</span></a>`).join('');
   const body = `<div class="v4-home">
     <section class="v4-hero" data-v4-hero>
       <img class="v4-hero-image" data-v4-hero-image src="/media/concept/jarvis-hero-architecture-v1.webp" alt="Résidence contemporaine intégrant les systèmes JARVIS" fetchpriority="high">
@@ -357,8 +365,8 @@ function homePage() {
     </section>
 
     <section class="v4-capabilities" id="capacites">
-      <header><div><p class="eyebrow">UNE PLATEFORME · SIX CAPACITÉS</p><h2>Le bon outil.<br>Au bon moment.</h2></div><p>Chaque capacité utilise la même identité, les mêmes permissions et la même trace. On commence par un besoin réel, puis on relie seulement ce qui apporte une valeur claire.</p></header>
-      <div class="v4-capability-stage"><nav aria-label="Explorer les six capacités">${capabilities}</nav><article class="v4-capability-preview v4-capability-preview--dashboard"><img data-v4-capability-image src="/media/product/jarvis-command-center-preview.png" alt="Aperçu conceptuel de JARVIS réunissant résidence, entreprise, véhicule, multi-site, sécurité, automatisations et assistant privé" loading="lazy"><div></div><section><span data-v4-capability-kicker>ENVIRONNEMENTS INTELLIGENTS</span><h3 data-v4-capability-title>Le lieu répond à la situation, pas à une suite de commandes.</h3><p data-v4-capability-copy>Éclairage, climat, sécurité et énergie se coordonnent dans une interface unique.</p><a data-v4-capability-link href="/solutions/environnements-intelligents/">Explorer cette capacité <b>↗</b></a></section><small><i></i><b data-v4-capability-status>Interface conceptuelle JARVIS</b></small></article></div>
+      <header><div><p class="eyebrow">SIX SOLUTIONS · UN POINT DE DÉPART</p><h2>Votre besoin.<br>La bonne solution.</h2></div><p>Choisissez ce que vous aimeriez simplifier.<br>Un clic sur une carte ouvre directement sa solution.</p></header>
+      <div class="v4-capability-stage"><nav aria-label="Accéder aux six solutions">${capabilities}</nav><article class="v4-capability-preview" aria-label="Aperçu de la solution"><img data-v4-capability-image src="/media/solutions/environnements-intelligents.webp" alt="Illustration d’un environnement intelligent" loading="lazy"><div aria-hidden="true"></div><section><span data-v4-capability-kicker>ENVIRONNEMENTS INTELLIGENTS</span><h3 data-v4-capability-title>Le lieu répond à la situation, pas à une suite de commandes.</h3><p data-v4-capability-copy>Éclairage, climat, sécurité et énergie se coordonnent dans une interface unique.</p><a class="v4-solution-cta" data-v4-capability-link href="/solutions/environnements-intelligents/">Découvrir <span data-v4-capability-link-label>Environnements intelligents</span><b aria-hidden="true">↗</b></a></section><small data-v4-capability-status>Aperçu illustratif</small></article></div>
     </section>
 
     <section class="v4-proof" id="preuve"><div><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Ambulance Ford 2017 dans le garage du laboratoire mobile JARVIS"></div><article><p class="eyebrow">PREMIER TERRAIN DE PREUVE</p><h2>Le système sort de l’écran.</h2><p>Une Ford 2017 V10 devient un environnement d’essai réel pour l’énergie, le réseau, le confort, la sécurité, le diagnostic et l’automatisation.</p><dl><div><dt>ÉNERGIE</dt><dd>560 Ah</dd></div><div><dt>SOLAIRE</dt><dd>500 W</dd></div><div><dt>CONTEXTE</dt><dd>Mobile</dd></div></dl><a href="/laboratoire-mobile/">Découvrir le laboratoire mobile <span>↗</span></a></article></section>

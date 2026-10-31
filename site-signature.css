@@ -46,10 +46,7 @@
   border-radius: 12px;
   overflow: hidden;
 }
-.v4-capability-stage > nav button.active {
-  background: #151616;
-  box-shadow: inset 2px 0 var(--jarvis-gold);
-}
+
 .v4-environments button.active {
   background: #111111e8;
   color: var(--jarvis-gold);

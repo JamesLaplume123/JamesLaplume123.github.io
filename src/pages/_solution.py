@@ -1,118 +1,117 @@
-# Gabarit commun des six pages de solution.
+# Gabarit commun des six pages de solution — version « wow ».
 # Chaque module de solution fournit un dict DATA ; solution_page() le
-# transforme en page complète, structurée selon docs/SITE_INFORMATION_ARCHITECTURE.md :
-# problème → résultat → bénéfices → aperçu → gouvernance → appel.
+# transforme en page complète : bande immersive → problème → ce qui change →
+# aperçu → déploiement responsable → démo.
+# Le champ DATA["showcase"] (démonstrations v1) est conservé mais inutilisé :
+# les aperçus détaillés reviendront avec le contenu final (PDF).
+
+from config import CAPABILITIES
 
 
 def solution_page(d):
+    num = next((c["num"] for c in CAPABILITIES if c["slug"] == d["slug"]), "0X")
     features = "".join(
-        f"""<article class="card" data-reveal>
-          <p class="eyebrow">0{i + 1}</p>
+        f"""<article class="card" data-rev>
+          <small>0{i + 1}</small>
           <h3>{f[0]}</h3>
           <p>{f[1]}</p>
         </article>"""
         for i, f in enumerate(d["features"])
     )
-    compat = "".join(f'<span class="badge"><i></i>{c}</span>' for c in d["compat"])
+    compat = "".join(f'<span class="chip">{c}</span>' for c in d["compat"])
     return {
         "url": f"/solutions/{d['slug']}/",
+        "v2": True,
         "title": f"{d['title']} | Solutions JARVIS",
         "description": d["description"],
         "og_image": d["image"],
         "content": f"""
-<section class="hero page-hero">
-  <div class="hero-media"><img src="{d['image']}" alt="" fetchpriority="high"></div>
-  <div class="shell hero-inner">
-    <div>
-      <p class="eyebrow">Interface conceptuelle · fondation en construction</p>
-      <h1>{d['h1']}</h1>
-      <p class="lead">{d['lead']}</p>
-      <div class="hero-actions">
-        <a class="button button-gold" href="/contact/">Présenter un besoin <span>↗</span></a>
-        <a class="button" href="/solutions/">Comparer les solutions</a>
-      </div>
-      <div class="hero-meta">
-        <div><span>Pour</span><b>{d['for']}</b></div>
-        <div><span>Déploiement</span><b>Local, privé ou hybride</b></div>
-        <div><span>Principe</span><b>Contrôle humain</b></div>
-      </div>
+<section class="band top">
+  <div class="bg"><img src="{d['image']}" alt="" fetchpriority="high"></div>
+  <div class="band-inner">
+    <p class="eyebrow" data-rev>Solution {num} / 06</p>
+    <h1 data-rev>{d['h1']}</h1>
+    <p class="lead" data-rev>{d['lead']}</p>
+    <div class="acts" data-rev>
+      <a class="pill" href="/contact/">Réserver une démo</a>
+      <a class="pill ghost" href="/solutions/">Toutes les solutions</a>
+    </div>
+    <div class="meta" data-rev>
+      <span class="chip">{d['for']}</span>
+      <span class="chip">Local, privé ou hybride</span>
+      <span class="chip">Contrôle humain</span>
     </div>
   </div>
 </section>
 
-<section class="section">
-  <div class="shell split">
-    <div data-reveal>
+<section class="sect">
+  <div class="sect-head">
+    <div data-rev>
       <p class="eyebrow">Le problème à résoudre</p>
-      <h2>{d['problem_title']}</h2>
+      <h2 style="margin-top:1rem">{d['problem_title']}</h2>
     </div>
-    <p class="lead" data-reveal>{d['problem_copy']}</p>
+    <p data-rev>{d['problem_copy']}</p>
   </div>
 </section>
 
-<section class="section section-raised">
-  <div class="shell">
-    <div class="section-head" data-reveal>
-      <div>
-        <p class="eyebrow">Ce que la solution change</p>
-        <h2>{d['change_title']}</h2>
-      </div>
-      <p>{d['change_copy']}</p>
+<section class="sect alt">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Ce que la solution change</p>
+      <h2 style="margin-top:1rem">{d['change_title']}</h2>
     </div>
-    <div class="card-grid">
-      {features}
-    </div>
+    <p data-rev>{d['change_copy']}</p>
+  </div>
+  <div class="cards">
+    {features}
   </div>
 </section>
 
-<section class="section">
-  <div class="shell">
-    <div class="section-head" data-reveal>
-      <div>
-        <p class="eyebrow">Aperçu conceptuel · données simulées</p>
-        <h2>{d['demo_title']}</h2>
-      </div>
-      <p>{d['demo_copy']}</p>
+<section class="sect">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Aperçu conceptuel · données simulées</p>
+      <h2 style="margin-top:1rem">{d['demo_title']}</h2>
     </div>
-    {d['showcase']}
-    <div class="badge-row" data-reveal style="margin-top:2.5rem;">
-      <span class="badge badge-gold"><i></i>COMPATIBILITÉS POSSIBLES</span>
-      {compat}
-    </div>
+    <p data-rev>{d['demo_copy']}</p>
+  </div>
+  <figure class="frame" data-rev>
+    <img src="{d['image']}" alt="Aperçu conceptuel — {d['title']}" loading="lazy">
+    <figcaption>
+      <span>JARVIS App · {d['title'].upper()}</span>
+      <strong>Prototype interactif — données simulées.</strong>
+    </figcaption>
+  </figure>
+  <div class="chiprow" data-rev>
+    <span class="chip chip-sim">Compatibilités possibles</span>
+    {compat}
   </div>
 </section>
 
-<section class="section section-raised">
-  <div class="shell split">
-    <div data-reveal>
+<section class="sect alt">
+  <div class="sect-head">
+    <div data-rev>
       <p class="eyebrow">Déploiement responsable</p>
-      <h2>{d['deploy_title']}</h2>
-      <p>{d['deploy_copy']}</p>
+      <h2 style="margin-top:1rem">{d['deploy_title']}</h2>
     </div>
-    <div class="card-grid" style="grid-template-columns:1fr;" data-reveal>
-      <article class="card">
-        <h3>Accord humain</h3>
-        <p>Les actions sensibles exigent une validation adaptée au risque.</p>
-      </article>
-      <article class="card">
-        <h3>Limite publiée</h3>
-        <p>{d['limit']}</p>
-      </article>
-    </div>
+    <p data-rev>{d['deploy_copy']}</p>
+  </div>
+  <div class="cards two">
+    <article class="card" data-rev>
+      <small>Accord humain</small>
+      <h3>Les actions sensibles exigent une validation adaptée au risque.</h3>
+    </article>
+    <article class="card" data-rev>
+      <small>Limite publiée</small>
+      <h3 style="font-weight:500;font-size:1rem;color:#b9b9c2;line-height:1.6">{d['limit']}</h3>
+    </article>
   </div>
 </section>
 
-<section class="cta-band">
-  <div class="shell cta-inner" data-reveal>
-    <div>
-      <p class="eyebrow">Premier échange</p>
-      <h2>{d['cta_title']}</h2>
-    </div>
-    <div>
-      <p>{d['cta_copy']}</p>
-      <a class="button button-fill" href="/contact/">Discuter du projet <span>↗</span></a>
-    </div>
-  </div>
+<section class="cta">
+  <h2 data-rev>{d['cta_title']}</h2>
+  <p data-rev>{d['cta_copy']}</p>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
 </section>
 """,
     }

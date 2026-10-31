@@ -1,45 +1,41 @@
-# Contact — transformer l'intérêt en conversation utile.
+# Contact — transformer l'intérêt en conversation utile. Version wow.
 # Le formulaire passe par FormSubmit vers laplumejames@gmail.com (comme avant).
 
 PAGE = {
     "url": "/contact/",
-    "title": "Contact | Discuter d’un projet JARVIS",
+    "v2": True,
+    "title": "Contact | Réserver une démonstration JARVIS",
     "description": (
-        "Présentez votre projet, votre problème ou une possibilité de collaboration "
-        "à James Laplume."
+        "Réservez une démonstration de JARVIS ou présentez votre projet, votre problème "
+        "ou une possibilité de collaboration à James Laplume."
     ),
-    "og_image": "/media/solutions/ia-privee-connaissances.webp",
+    "og_image": "/media/product/jarvis-command-center-preview-og.jpg",
     "content": """
-<section class="hero page-hero">
-  <div class="hero-media">
-    <img src="/media/solutions/ia-privee-connaissances.webp" alt="" fetchpriority="high">
-  </div>
-  <div class="shell hero-inner">
-    <div>
-      <p class="eyebrow">Contact</p>
-      <h1>Parlons du problème <em>avant de parler de la solution.</em></h1>
-      <p class="lead">Client potentiel, partenaire technique, chercheur ou investisseur :
-      décrivez simplement ce que vous cherchez à comprendre, relier ou automatiser.</p>
-      <div class="hero-meta">
-        <div><span>Réponse</span><b>À laplumejames@gmail.com</b></div>
-        <div><span>Lieu</span><b>Québec, Canada</b></div>
-        <div><span>Échanges</span><b>Exploratoires et confidentiels</b></div>
-      </div>
-    </div>
-  </div>
+<section class="plain-top">
+  <p class="eyebrow" data-rev>Contact</p>
+  <h1 data-rev>Voyez JARVIS <em>de vos yeux.</em></h1>
+  <p class="lead" data-rev>Client potentiel, partenaire technique, chercheur ou investisseur :
+  décrivez ce que vous cherchez à comprendre, relier ou automatiser, et réservez une
+  démonstration en direct.</p>
 </section>
 
-<section class="section">
-  <div class="shell split">
-    <div data-reveal>
+<section class="sect" style="padding-top:2rem">
+  <div class="sect-head" style="align-items:start">
+    <div data-rev>
       <p class="eyebrow">Premier échange</p>
-      <h2>Une idée claire peut commencer par <em>quelques lignes.</em></h2>
-      <p>Je vous répondrai sur ce qui semble réalisable, ce qui mérite une première preuve et
-      les informations nécessaires pour aller plus loin.</p>
-      <p>Vous préférez écrire directement?<br>
-      <a class="link-arrow" href="mailto:laplumejames@gmail.com">laplumejames@gmail.com <span>↗</span></a></p>
+      <h2 style="margin-top:1rem">Une idée claire peut commencer par <em>quelques
+      lignes.</em></h2>
+      <p style="color:var(--dim);margin-top:1.2rem">Je vous répondrai sur ce qui semble
+      réalisable, ce qui mérite une première preuve et les informations nécessaires pour
+      aller plus loin.</p>
+      <p style="margin-top:1.6rem"><a class="pill ghost" href="mailto:laplumejames@gmail.com">laplumejames@gmail.com</a></p>
+      <div class="meta" style="display:flex;gap:.7rem;flex-wrap:wrap;margin-top:2rem">
+        <span class="chip">Réponse personnelle</span>
+        <span class="chip">Québec, Canada</span>
+        <span class="chip">Échanges confidentiels</span>
+      </div>
     </div>
-    <form class="form-card" data-reveal action="https://formsubmit.co/laplumejames@gmail.com" method="POST">
+    <form class="form-card" data-rev action="https://formsubmit.co/laplumejames@gmail.com" method="POST">
       <input type="hidden" name="_subject" value="Nouveau message — jameslaplume.ca">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="form-grid">
@@ -68,6 +64,7 @@ PAGE = {
         <div class="field">
           <label for="f-sujet">Sujet principal</label>
           <select id="f-sujet" name="sujet">
+            <option>Démonstration JARVIS</option>
             <option>Environnement intelligent</option>
             <option>IA privée et connaissances</option>
             <option>Sécurité intelligente</option>
@@ -86,9 +83,7 @@ PAGE = {
       </div>
       <p class="form-note">Votre message sera transmis directement à James. Aucune liste
       d’envoi, aucun suivi publicitaire.</p>
-      <button class="button button-fill" type="submit" style="margin-top:0.8rem;">
-        Envoyer le message <span>↗</span>
-      </button>
+      <button class="pill" type="submit">Envoyer le message</button>
     </form>
   </div>
 </section>

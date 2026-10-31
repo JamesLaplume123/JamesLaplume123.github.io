@@ -13,7 +13,7 @@ SITE = {
     "og_image": "/media/product/jarvis-command-center-preview-og.jpg",
     "theme_color": "#07080a",
     # Incrémenter pour invalider le cache navigateur de site.css / site.js.
-    "asset_version": "20261031b",
+    "asset_version": "20261031c",
     "copyright": "© 2026 JARVIS Private Systems · Québec, Canada",
 }
 

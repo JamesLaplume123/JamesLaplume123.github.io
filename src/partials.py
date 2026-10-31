@@ -89,38 +89,47 @@ def header(page):
 </header>"""
 
 
+NAV_EN_LABELS = {
+    "/solutions/": "Solutions",
+    "/plateforme/": "JARVIS",
+    "/laboratoire-mobile/": "Mobile lab",
+    "/vision-roadmap/": "Vision",
+}
+
+
 def header_v2(page):
     """En-tête des pages wow : barre fixe fine + menu mobile plein écran."""
+    en = page.get("lang") == "en"
     links = "".join(
         '<a href="{u}"{active}>{l}</a>'.format(
             u=item["url"],
-            l=item["label"],
+            l=NAV_EN_LABELS.get(item["url"], item["label"]) if en else item["label"],
             active=' aria-current="page"' if page["url"].startswith(item["url"]) else "",
         )
         for item in NAV
     )
-    sheet_links = "".join(
-        '<a href="{u}"{active}>{l}</a>'.format(
-            u=item["url"],
-            l=item["label"],
-            active=' aria-current="page"' if page["url"].startswith(item["url"]) else "",
-        )
-        for item in NAV
+    cta_label = "Book a demo" if en else CTA_V2["label"]
+    nav_label = "Main navigation" if en else "Navigation principale"
+    menu_label = "Open menu" if en else "Ouvrir le menu"
+    lang_link = (
+        '<a class="sheet-lang" href="/" lang="fr">Français</a>'
+        if en
+        else '<a class="sheet-lang" href="/en/" lang="en">English</a>'
     )
     return f"""<header class="bar" data-bar>
-  <a class="bar-brand" href="/"><b>JARVIS</b> <span>Private Systems</span></a>
-  <nav class="bar-nav" aria-label="Navigation principale">{links}</nav>
+  <a class="bar-brand" href="{'/en/' if en else '/'}"><b>JARVIS</b> <span>Private Systems</span></a>
+  <nav class="bar-nav" aria-label="{nav_label}">{links}</nav>
   <div class="bar-actions">
-    <a class="bar-cta" href="{CTA_V2['url']}">{CTA_V2['label']}</a>
-    <button class="bar-menu" type="button" aria-expanded="false" aria-label="Ouvrir le menu" data-menu>
+    <a class="bar-cta" href="{CTA_V2['url']}">{cta_label}</a>
+    <button class="bar-menu" type="button" aria-expanded="false" aria-label="{menu_label}" data-menu>
       <span></span><span></span>
     </button>
   </div>
 </header>
 <nav class="sheet" aria-label="Menu">
-  {sheet_links}
-  <a class="sheet-cta" href="{CTA_V2['url']}">{CTA_V2['label']}</a>
-  <a class="sheet-lang" href="/en/" lang="en">English</a>
+  {links}
+  <a class="sheet-cta" href="{CTA_V2['url']}">{cta_label}</a>
+  {lang_link}
 </nav>"""
 
 

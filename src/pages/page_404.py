@@ -1,20 +1,20 @@
-# Page 404.
+# Page 404 — version wow.
 
 PAGE = {
     "url": "/404.html",
+    "v2": True,
     "title": "Page introuvable | JARVIS Private Systems",
     "description": "La page demandée n’existe pas ou a été déplacée.",
     "noindex": True,
     "content": """
-<section class="page-404">
-  <div class="shell">
-    <p class="eyebrow" style="justify-content:center;">Erreur 404</p>
-    <h1><em>Introuvable.</em></h1>
-    <p class="lead" style="margin-inline:auto;">La page demandée n’existe pas ou a été
-    déplacée. Le site a récemment été réorganisé.</p>
-    <div class="hero-actions" style="justify-content:center;">
-      <a class="button button-gold" href="/">Retour à l’accueil <span>→</span></a>
-      <a class="button" href="/solutions/">Voir les solutions</a>
+<section class="notfound">
+  <div>
+    <p class="code">404</p>
+    <h1>Cette page n’existe pas.</h1>
+    <p>Ou elle a été déplacée — le site a récemment été réorganisé.</p>
+    <div class="acts" style="justify-content:center">
+      <a class="pill" href="/">Retour à l’accueil</a>
+      <a class="pill ghost" href="/solutions/">Voir les solutions</a>
     </div>
   </div>
 </section>

@@ -14,147 +14,101 @@
 <meta property="og:url" content="https://jameslaplume.ca/confiance/">
 <meta property="og:image" content="https://jameslaplume.ca/media/solutions/securite-intelligente.webp">
 <meta name="theme-color" content="#07080a">
-<link rel="icon" href="/favicon.svg?v=20261031b">
-<link rel="preload" href="/assets/fonts/fraunces/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="/favicon.svg?v=20261031c">
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=20261031b">
+<link rel="stylesheet" href="/assets/css/wow.css?v=20261031c">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
-<header class="site-head" data-head>
-  <div class="head-inner">
-    <a class="brand" href="/" aria-label="JARVIS Private Systems — accueil"><span class="brand-word">JARVIS</span><span class="brand-sub">Private Systems</span></a>
-    <nav class="head-nav" aria-label="Navigation principale" data-nav>
-      <a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/vision-roadmap/">Vision</a>
-      <div class="head-nav-extra">
-        <a class="lang-link" href="/en/" lang="en">EN</a>
-        <a class="button button-gold" href="/contact/">Parler du projet</a>
-      </div>
-    </nav>
-    <div class="head-actions">
-      <a class="lang-link" href="/en/" lang="en">EN</a>
-      <a class="button button-gold head-cta" href="/contact/">Parler du projet</a>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-label="Ouvrir le menu" data-nav-toggle>
-        <span></span><span></span>
-      </button>
-    </div>
+<header class="bar" data-bar>
+  <a class="bar-brand" href="/"><b>JARVIS</b> <span>Private Systems</span></a>
+  <nav class="bar-nav" aria-label="Navigation principale"><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/vision-roadmap/">Vision</a></nav>
+  <div class="bar-actions">
+    <a class="bar-cta" href="/contact/">Réserver une démo</a>
+    <button class="bar-menu" type="button" aria-expanded="false" aria-label="Ouvrir le menu" data-menu>
+      <span></span><span></span>
+    </button>
   </div>
 </header>
+<nav class="sheet" aria-label="Menu">
+  <a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/vision-roadmap/">Vision</a>
+  <a class="sheet-cta" href="/contact/">Réserver une démo</a>
+  <a class="sheet-lang" href="/en/" lang="en">English</a>
+</nav>
 <main id="contenu">
 
-<section class="hero page-hero">
-  <div class="hero-media">
-    <img src="/media/solutions/securite-intelligente.webp" alt="" fetchpriority="high">
-  </div>
-  <div class="shell hero-inner">
-    <div>
-      <p class="eyebrow">Confiance et gouvernance</p>
-      <h1>La capacité d’agir exige <em>des limites visibles.</em></h1>
-      <p class="lead">Vie privée, sécurité, provenance et contrôle humain ne sont pas des
-      options ajoutées après coup. Ils définissent la manière dont JARVIS peut accéder à une
-      source ou agir dans le monde réel.</p>
-      <div class="hero-meta">
-        <div><span>Données</span><b>Accès explicites</b></div>
-        <div><span>Actions</span><b>Approbations selon le risque</b></div>
-        <div><span>Historique</span><b>Preuves et journalisation</b></div>
-      </div>
+<section class="band top">
+  <div class="bg"><img src="/media/solutions/securite-intelligente.webp" alt="" fetchpriority="high"></div>
+  <div class="band-inner">
+    <p class="eyebrow" data-rev>Confiance et gouvernance</p>
+    <h1 data-rev>La capacité d’agir exige <em>des limites visibles.</em></h1>
+    <p class="lead" data-rev>Vie privée, sécurité, provenance et contrôle humain ne sont pas
+    des options ajoutées après coup. Ils définissent la manière dont JARVIS peut accéder à
+    une source ou agir dans le monde réel.</p>
+    <div class="meta" data-rev>
+      <span class="chip">Accès explicites</span>
+      <span class="chip">Approbations selon le risque</span>
+      <span class="chip">Preuves et journalisation</span>
     </div>
   </div>
 </section>
 
-<section class="section">
-  <div class="shell">
-    <div class="section-head" data-reveal>
-      <div>
-        <p class="eyebrow">Principes de conception</p>
-        <h2>Savoir qui peut voir, comprendre <em>et agir.</em></h2>
-      </div>
-      <p>Ces principes sont des objectifs d’architecture. Leur mise en œuvre doit être
-      vérifiée pour chaque solution et chaque déploiement.</p>
+<section class="sect">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Principes de conception</p>
+      <h2 style="margin-top:1rem">Savoir qui peut voir, comprendre <em>et agir.</em></h2>
     </div>
-    <div class="rules">
-      <div data-reveal>
-      <span>01 · Minimisation</span>
-      <div>
-        <h3>Utiliser seulement ce qui est nécessaire.</h3>
-        <p>Une mission reçoit les sources, outils et durées utiles à son objectif, pas un accès général par défaut.</p>
-      </div>
-    </div><div data-reveal>
-      <span>02 · Provenance</span>
-      <div>
-        <h3>Montrer d’où vient l’information.</h3>
-        <p>Une réponse importante distingue les faits observés, les sources consultées et les hypothèses produites.</p>
-      </div>
-    </div><div data-reveal>
-      <span>03 · Approbation</span>
-      <div>
-        <h3>Adapter le contrôle au risque.</h3>
-        <p>Les actions sensibles, irréversibles ou externes demeurent entre les mains d’une personne autorisée.</p>
-      </div>
-    </div><div data-reveal>
-      <span>04 · Réversibilité</span>
-      <div>
-        <h3>Prévoir l’arrêt et le retour.</h3>
-        <p>Les automatisations doivent pouvoir être suspendues et les changements importants documentés.</p>
-      </div>
-    </div><div data-reveal>
-      <span>05 · Localité</span>
-      <div>
-        <h3>Garder les fonctions essentielles près du site.</h3>
-        <p>Le cloud est utilisé lorsqu’il apporte une valeur comprise, jamais comme dépendance cachée.</p>
-      </div>
-    </div><div data-reveal>
-      <span>06 · Honnêteté</span>
-      <div>
-        <h3>Publier la maturité et les limites.</h3>
-        <p>Une idée, un prototype et une solution commerciale ne sont jamais présentés comme équivalents.</p>
-      </div>
-    </div><div data-reveal>
-      <span>07 · Propriété</span>
-      <div>
-        <h3>Permettre l’export et définir la rétention.</h3>
-        <p>Le propriétaire des données, leur durée de conservation et les possibilités d’export ou de suppression sont établis par le mandat.</p>
-      </div>
-    </div><div data-reveal>
-      <span>08 · Continuité</span>
-      <div>
-        <h3>Tester sauvegarde, restauration et reprise.</h3>
-        <p>Les configurations et données essentielles doivent pouvoir être restaurées selon une procédure vérifiée.</p>
-      </div>
-    </div>
+    <p data-rev>Ces principes sont des objectifs d’architecture. Leur mise en œuvre doit être
+    vérifiée pour chaque solution et chaque déploiement.</p>
+  </div>
+  <div class="rows">
+    <div class="row" data-rev>
+      <i>01 · Minimisation</i>
+      <div><h3>Utiliser seulement ce qui est nécessaire.</h3><p>Une mission reçoit les sources, outils et durées utiles à son objectif, pas un accès général par défaut.</p></div>
+    </div><div class="row" data-rev>
+      <i>02 · Provenance</i>
+      <div><h3>Montrer d’où vient l’information.</h3><p>Une réponse importante distingue les faits observés, les sources consultées et les hypothèses produites.</p></div>
+    </div><div class="row" data-rev>
+      <i>03 · Approbation</i>
+      <div><h3>Adapter le contrôle au risque.</h3><p>Les actions sensibles, irréversibles ou externes demeurent entre les mains d’une personne autorisée.</p></div>
+    </div><div class="row" data-rev>
+      <i>04 · Réversibilité</i>
+      <div><h3>Prévoir l’arrêt et le retour.</h3><p>Les automatisations doivent pouvoir être suspendues et les changements importants documentés.</p></div>
+    </div><div class="row" data-rev>
+      <i>05 · Localité</i>
+      <div><h3>Garder les fonctions essentielles près du site.</h3><p>Le cloud est utilisé lorsqu’il apporte une valeur comprise, jamais comme dépendance cachée.</p></div>
+    </div><div class="row" data-rev>
+      <i>06 · Honnêteté</i>
+      <div><h3>Publier la maturité et les limites.</h3><p>Une idée, un prototype et une solution commerciale ne sont jamais présentés comme équivalents.</p></div>
+    </div><div class="row" data-rev>
+      <i>07 · Propriété</i>
+      <div><h3>Permettre l’export et définir la rétention.</h3><p>Le propriétaire des données, leur durée de conservation et les possibilités d’export ou de suppression sont établis par le mandat.</p></div>
+    </div><div class="row" data-rev>
+      <i>08 · Continuité</i>
+      <div><h3>Tester sauvegarde, restauration et reprise.</h3><p>Les configurations et données essentielles doivent pouvoir être restaurées selon une procédure vérifiée.</p></div>
     </div>
   </div>
 </section>
 
-<section class="cta-band">
-  <div class="shell cta-inner" data-reveal>
-    <div>
-      <p class="eyebrow">Premier échange</p>
-      <h2>Un projet sensible commence par définir <em>les responsabilités.</em></h2>
-    </div>
-    <div>
-      <p>Décrivez le problème et son contexte. La première preuve utile sera clairement
-      définie.</p>
-      <a class="button button-fill" href="/contact/">Discuter du projet <span>↗</span></a>
-    </div>
-  </div>
+<section class="cta">
+  <h2 data-rev>Un projet sensible commence par définir<br><span>les responsabilités.</span></h2>
+  <p data-rev>Décrivez le problème et son contexte. La première preuve utile sera clairement
+  définie.</p>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
 </section>
 
 </main>
-<footer class="site-foot">
-  <div class="shell foot-main">
+<footer class="foot">
+  <div class="foot-grid">
     <div class="foot-brand">
-      <a class="brand" href="/" aria-label="JARVIS Private Systems — accueil"><span class="brand-word">JARVIS</span><span class="brand-sub">Private Systems</span></a>
-      <p>Relier ce qui existe. Comprendre ce qui compte. Agir avec votre accord.</p>
+      <b>JARVIS <span>Private Systems</span></b>
+      <p>Relier ce qui existe. Faire agir l’ensemble.</p>
     </div>
-    <div><h2>Explorer</h2><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/recherche/">Recherche</a></div><div><h2>Projet</h2><a href="/vision-roadmap/">Vision et feuille de route</a><a href="/confiance/">Confiance</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></div>
-    <div><h2>État</h2><span>Plateforme en construction</span><span>Laboratoire mobile en construction</span><span>Ouvert aux collaborations</span></div>
+    <div><h2>Explorer</h2><nav><a href="/solutions/">Solutions</a><a href="/plateforme/">JARVIS</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/recherche/">Recherche</a></nav></div><div><h2>Projet</h2><nav><a href="/vision-roadmap/">Vision et feuille de route</a><a href="/confiance/">Confiance</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a></nav></div>
   </div>
-  <div class="shell foot-bottom">
-    <span>© 2026 JARVIS Private Systems · Québec, Canada</span>
-    <span>Privé par conception</span>
-  </div>
+  <p class="foot-line"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span>Privé par conception</span></p>
 </footer>
-<script src="/assets/js/site.js?v=20261031b" defer></script>
+<script src="/assets/js/wow.js?v=20261031c" defer></script>
 </body>
 </html>

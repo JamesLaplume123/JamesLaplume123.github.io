@@ -1,4 +1,4 @@
-# Confiance — les règles communes de gouvernance.
+# Confiance — les règles communes de gouvernance. Version wow.
 
 PRINCIPLES = [
     ("Minimisation", "Utiliser seulement ce qui est nécessaire.",
@@ -20,18 +20,16 @@ PRINCIPLES = [
 ]
 
 RULES_HTML = "".join(
-    f"""<div data-reveal>
-      <span>0{i + 1} · {name}</span>
-      <div>
-        <h3>{title}</h3>
-        <p>{copy}</p>
-      </div>
+    f"""<div class="row" data-rev>
+      <i>0{i + 1} · {name}</i>
+      <div><h3>{title}</h3><p>{copy}</p></div>
     </div>"""
     for i, (name, title, copy) in enumerate(PRINCIPLES)
 )
 
 PAGE = {
     "url": "/confiance/",
+    "v2": True,
     "title": "Confiance et gouvernance | JARVIS",
     "description": (
         "Les principes de vie privée, permissions, provenance, contrôle humain et "
@@ -39,54 +37,41 @@ PAGE = {
     ),
     "og_image": "/media/solutions/securite-intelligente.webp",
     "content": f"""
-<section class="hero page-hero">
-  <div class="hero-media">
-    <img src="/media/solutions/securite-intelligente.webp" alt="" fetchpriority="high">
-  </div>
-  <div class="shell hero-inner">
-    <div>
-      <p class="eyebrow">Confiance et gouvernance</p>
-      <h1>La capacité d’agir exige <em>des limites visibles.</em></h1>
-      <p class="lead">Vie privée, sécurité, provenance et contrôle humain ne sont pas des
-      options ajoutées après coup. Ils définissent la manière dont JARVIS peut accéder à une
-      source ou agir dans le monde réel.</p>
-      <div class="hero-meta">
-        <div><span>Données</span><b>Accès explicites</b></div>
-        <div><span>Actions</span><b>Approbations selon le risque</b></div>
-        <div><span>Historique</span><b>Preuves et journalisation</b></div>
-      </div>
+<section class="band top">
+  <div class="bg"><img src="/media/solutions/securite-intelligente.webp" alt="" fetchpriority="high"></div>
+  <div class="band-inner">
+    <p class="eyebrow" data-rev>Confiance et gouvernance</p>
+    <h1 data-rev>La capacité d’agir exige <em>des limites visibles.</em></h1>
+    <p class="lead" data-rev>Vie privée, sécurité, provenance et contrôle humain ne sont pas
+    des options ajoutées après coup. Ils définissent la manière dont JARVIS peut accéder à
+    une source ou agir dans le monde réel.</p>
+    <div class="meta" data-rev>
+      <span class="chip">Accès explicites</span>
+      <span class="chip">Approbations selon le risque</span>
+      <span class="chip">Preuves et journalisation</span>
     </div>
   </div>
 </section>
 
-<section class="section">
-  <div class="shell">
-    <div class="section-head" data-reveal>
-      <div>
-        <p class="eyebrow">Principes de conception</p>
-        <h2>Savoir qui peut voir, comprendre <em>et agir.</em></h2>
-      </div>
-      <p>Ces principes sont des objectifs d’architecture. Leur mise en œuvre doit être
-      vérifiée pour chaque solution et chaque déploiement.</p>
+<section class="sect">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Principes de conception</p>
+      <h2 style="margin-top:1rem">Savoir qui peut voir, comprendre <em>et agir.</em></h2>
     </div>
-    <div class="rules">
-      {RULES_HTML}
-    </div>
+    <p data-rev>Ces principes sont des objectifs d’architecture. Leur mise en œuvre doit être
+    vérifiée pour chaque solution et chaque déploiement.</p>
+  </div>
+  <div class="rows">
+    {RULES_HTML}
   </div>
 </section>
 
-<section class="cta-band">
-  <div class="shell cta-inner" data-reveal>
-    <div>
-      <p class="eyebrow">Premier échange</p>
-      <h2>Un projet sensible commence par définir <em>les responsabilités.</em></h2>
-    </div>
-    <div>
-      <p>Décrivez le problème et son contexte. La première preuve utile sera clairement
-      définie.</p>
-      <a class="button button-fill" href="/contact/">Discuter du projet <span>↗</span></a>
-    </div>
-  </div>
+<section class="cta">
+  <h2 data-rev>Un projet sensible commence par définir<br><span>les responsabilités.</span></h2>
+  <p data-rev>Décrivez le problème et son contexte. La première preuve utile sera clairement
+  définie.</p>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
 </section>
 """,
 }

@@ -1,4 +1,4 @@
-# Solutions — reconnaître son problème et choisir la bonne capacité.
+# Solutions — reconnaître son problème et choisir la bonne capacité. Version wow.
 
 from config import CAPABILITIES
 
@@ -45,34 +45,35 @@ STORIES = {
 }
 
 GUIDE_HTML = "".join(
-    f"""<a href="#{slug}"><span>{q}</span><strong>{next(c['title'] for c in CAPABILITIES if c['slug'] == slug)}</strong></a>"""
-    for slug, q in GUIDE
+    f"""<a class="row" href="#{slug}" data-rev>
+      <i>Question {i + 1:02d}</i>
+      <span>{q}
+      <em class="go">{next(c['title'] for c in CAPABILITIES if c['slug'] == slug)} ↓</em></span>
+    </a>"""
+    for i, (slug, q) in enumerate(GUIDE)
 )
 
 STORIES_HTML = "".join(
-    f"""<article class="story" id="{c['slug']}">
-      <div class="story-media" data-reveal>
-        <span class="story-num">{c['num']} / 06</span>
+    f"""<article class="frow{' flip' if i % 2 else ''}" id="{c['slug']}">
+      <figure class="media" data-rev>
         <img src="{c['image']}" alt="Aperçu de la solution {c['title']}" loading="lazy">
-      </div>
-      <div data-reveal>
-        <h2>{c['title']}</h2>
-        <p class="story-result">{STORIES[c['slug']]['result']}</p>
+      </figure>
+      <div data-rev>
+        <p class="num">{c['num']} / 06</p>
+        <h3>{c['title']}</h3>
+        <p class="res">{STORIES[c['slug']]['result']}</p>
         <ul>{''.join(f'<li>{p}</li>' for p in STORIES[c['slug']]['points'])}</ul>
-        <div class="story-foot">
-          <div>
-            <span>Particulièrement utile pour</span>
-            <strong>{STORIES[c['slug']]['for']}</strong>
-          </div>
-          <a class="link-arrow" href="/solutions/{c['slug']}/">Explorer cette solution <span>↗</span></a>
-        </div>
+        <p class="for">Particulièrement utile pour
+        <b>{STORIES[c['slug']]['for']}</b></p>
+        <a class="pill ghost" href="/solutions/{c['slug']}/">Explorer cette solution</a>
       </div>
     </article>"""
-    for c in CAPABILITIES
+    for i, c in enumerate(CAPABILITIES)
 )
 
 PAGE = {
     "url": "/solutions/",
+    "v2": True,
     "title": "Solutions | JARVIS Private Systems",
     "description": (
         "Six familles de solutions pour les environnements intelligents, l’IA privée, "
@@ -80,79 +81,60 @@ PAGE = {
     ),
     "og_image": "/media/solutions/environnements-intelligents.webp",
     "content": f"""
-<section class="hero page-hero">
-  <div class="hero-media">
-    <img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high">
-  </div>
-  <div class="shell hero-inner">
-    <div>
-      <p class="eyebrow">Solutions JARVIS</p>
-      <h1>Six solutions.<br><em>Une architecture commune.</em></h1>
-      <p class="lead">Commencez par un problème concret. Chaque solution peut fonctionner seule;
-      JARVIS permet ensuite de les relier sans tout reconstruire.</p>
-      <div class="hero-meta">
-        <div><span>Point de départ</span><b>Un besoin réel</b></div>
-        <div><span>Déploiement</span><b>Local, privé ou hybride</b></div>
-        <div><span>Environnements</span><b>Maison, véhicule et entreprise</b></div>
-      </div>
+<section class="band top">
+  <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
+  <div class="band-inner">
+    <p class="eyebrow" data-rev>Solutions JARVIS</p>
+    <h1 data-rev>Six solutions.<br><em>Une architecture commune.</em></h1>
+    <p class="lead" data-rev>Commencez par un problème concret. Chaque solution peut fonctionner
+    seule; JARVIS permet ensuite de les relier sans tout reconstruire.</p>
+    <div class="meta" data-rev>
+      <span class="chip">Un besoin réel</span>
+      <span class="chip">Local, privé ou hybride</span>
+      <span class="chip">Maison · véhicule · entreprise</span>
     </div>
   </div>
 </section>
 
-<section class="section">
-  <div class="shell">
-    <div class="section-head" data-reveal>
-      <div>
-        <p class="eyebrow">Trouver le bon point d’entrée</p>
-        <h2>Qu’est-ce qui vous ralentit <em>aujourd’hui?</em></h2>
-      </div>
-      <p>Vous n’avez pas à choisir une technologie ni à comprendre toute l’architecture.
-      Identifiez simplement le problème qui revient le plus souvent.</p>
+<section class="sect">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Trouver le bon point d’entrée</p>
+      <h2 style="margin-top:1rem">Qu’est-ce qui vous ralentit <em>aujourd’hui?</em></h2>
     </div>
-    <div class="guide-rows" data-reveal>
-      {GUIDE_HTML}
-    </div>
+    <p data-rev>Vous n’avez pas à choisir une technologie ni à comprendre toute l’architecture.
+    Identifiez simplement le problème qui revient le plus souvent.</p>
+  </div>
+  <div class="rows">
+    {GUIDE_HTML}
   </div>
 </section>
 
-<section class="section section-raised">
-  <div class="shell">
-    <div class="section-head" data-reveal>
-      <div>
-        <p class="eyebrow">Les six solutions</p>
-        <h2>Des résultats distincts.<br><em>Une expérience cohérente.</em></h2>
-      </div>
-      <p>Six points d’entrée, selon le problème à résoudre.</p>
+<section class="sect alt">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Les six solutions</p>
+      <h2 style="margin-top:1rem">Des résultats distincts.<br><em>Une expérience cohérente.</em></h2>
     </div>
-    {STORIES_HTML}
+    <p data-rev>Six points d’entrée, selon le problème à résoudre.</p>
+  </div>
+  {STORIES_HTML}
+</section>
+
+<section class="statement">
+  <p class="eyebrow" data-rev>Une fondation commune</p>
+  <h2 data-rev style="margin-top:1.2rem">Une plateforme,<br><em>pas six systèmes isolés.</em></h2>
+  <p data-rev>Les six capacités partagent la même identité, les mêmes permissions et la
+  même trace. Elles s’activent selon le besoin.</p>
+  <div class="acts" data-rev style="justify-content:center">
+    <a class="pill ghost" href="/plateforme/">Comprendre la plateforme</a>
   </div>
 </section>
 
-<section class="section">
-  <div class="shell split">
-    <div data-reveal>
-      <p class="eyebrow">Une fondation commune</p>
-      <h2>Une plateforme, <em>pas six systèmes isolés.</em></h2>
-    </div>
-    <div data-reveal>
-      <p class="lead">Les six capacités partagent la même identité, les mêmes permissions et la
-      même trace. Elles s’activent selon le besoin.</p>
-      <p style="margin-top:1.6rem;"><a class="link-arrow" href="/plateforme/">Comprendre la plateforme <span>↗</span></a></p>
-    </div>
-  </div>
-</section>
-
-<section class="cta-band">
-  <div class="shell cta-inner" data-reveal>
-    <div>
-      <p class="eyebrow">Premier échange</p>
-      <h2>Quel problème mérite une première preuve <em>concrète?</em></h2>
-    </div>
-    <div>
-      <p>Décrivez le problème et son contexte. La première preuve utile sera clairement définie.</p>
-      <a class="button button-fill" href="/contact/">Discuter du projet <span>↗</span></a>
-    </div>
-  </div>
+<section class="cta">
+  <h2 data-rev>Quel problème mérite<br><span>une première preuve?</span></h2>
+  <p data-rev>Décrivez le problème et son contexte. La première preuve utile sera clairement définie.</p>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
 </section>
 """,
 }

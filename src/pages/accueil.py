@@ -65,6 +65,48 @@ PAGE = {
   </div>
 </section>
 
+<!-- Trois modes -->
+<section class="modes" id="modes">
+  <div class="head" data-rev>
+    <p class="eyebrow">Base · Signature · Platinum</p>
+    <h2 style="margin-top:1.1rem">Votre espace.<br><em>À votre image.</em></h2>
+    <p>Trois modes pour la même intelligence. Choisissez-en un : tout le site le suit,
+    comme l’interface de JARVIS.</p>
+  </div>
+  <div class="mode-tabs" role="group" aria-label="Choisir un mode d’affichage" data-rev>
+    <button type="button" data-mode-set="base" aria-pressed="false">
+      <img src="/media/modes/base.webp" alt="" loading="lazy">
+      <span class="txt"><b>Base</b><small>Verre fumé. Sobre, neutre, l’essentiel.</small></span>
+    </button>
+    <button type="button" class="is-on" data-mode-set="signature" aria-pressed="true">
+      <img src="/media/modes/signature.webp" alt="" loading="lazy">
+      <span class="txt"><b>Signature</b><small>Verre or. Noir profond et lumière chaude.</small></span>
+    </button>
+    <button type="button" data-mode-set="platinum" aria-pressed="false">
+      <img src="/media/modes/platinum.webp" alt="" loading="lazy">
+      <span class="txt"><b>Platinum</b><small>Cristal. Noir fumé et reflets froids.</small></span>
+    </button>
+  </div>
+  <div class="mode-demo">
+    <article class="card" data-rev>
+      <small>Ma journée</small>
+      <h3>Souper entre amis</h3>
+      <p>19:00 – 22:00 · Chez nous</p>
+    </article>
+    <article class="card" data-rev>
+      <small>Assistant JARVIS</small>
+      <h3>Comment puis-je vous aider?</h3>
+      <p>Il propose. Vous décidez.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>Recommandations</small>
+      <h3>Préparer votre journée</h3>
+      <p>Chaque suggestion montre sa source.</p>
+    </article>
+  </div>
+  <p class="offer-note" data-rev>Apparences de l’interface JARVIS · exemples fictifs</p>
+</section>
+
 <!-- Scène 5 · Six capacités (bento) -->
 <section class="bento" id="capacites">
   <div class="head" data-rev>

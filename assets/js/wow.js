@@ -5,6 +5,23 @@
   "use strict";
   var doc = document.documentElement;
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  doc.classList.add("js");
+
+  /* Modes Base, Signature et Platinum */
+  var modeButtons = [].slice.call(document.querySelectorAll("[data-mode-set]"));
+  function applyMode(mode, remember) {
+    doc.setAttribute("data-mode", mode);
+    modeButtons.forEach(function (b) {
+      var on = b.getAttribute("data-mode-set") === mode;
+      b.classList.toggle("is-on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    if (remember) { try { localStorage.setItem("jarvis-mode", mode); } catch (e) {} }
+  }
+  applyMode(doc.getAttribute("data-mode") || "signature", false);
+  modeButtons.forEach(function (b) {
+    b.addEventListener("click", function () { applyMode(b.getAttribute("data-mode-set"), true); });
+  });
 
   /* Barre : fond plein après défilement */
   var bar = document.querySelector("[data-bar]");

@@ -43,8 +43,16 @@ def head(page):
 <meta name="theme-color" content="{SITE['theme_color']}">
 <link rel="icon" href="/favicon.svg?v={v}">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+{MODE_SCRIPT}
 {assets}"""
 
+
+MODE_SCRIPT = (
+    '<script>try{var m=new URLSearchParams(location.search).get("mode")'
+    '||localStorage.getItem("jarvis-mode");'
+    'if(m==="base"||m==="signature"||m==="platinum")'
+    'document.documentElement.dataset.mode=m}catch(e){}</script>'
+)
 
 NAV_EN_LABELS = {
     "/solutions/": "Solutions",
@@ -111,6 +119,12 @@ def footer_v2(page):
       <p>Relier ce qui existe. Faire agir l’ensemble.</p>
     </div>
     {cols}
+  </div>
+  <div class="foot-modes" role="group" aria-label="Mode d’affichage">
+    <span>Mode</span>
+    <button type="button" data-mode-set="base" aria-pressed="false">Base</button>
+    <button type="button" class="is-on" data-mode-set="signature" aria-pressed="true">Signature</button>
+    <button type="button" data-mode-set="platinum" aria-pressed="false">Platinum</button>
   </div>
   <p class="foot-line"><span>{SITE['copyright']}</span><span>Privé par conception</span></p>
 </footer>"""

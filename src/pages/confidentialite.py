@@ -40,7 +40,9 @@ PAGE = {
       <p>Les pages de ce site n’installent aucun témoin (cookie), n’utilisent aucun outil
       de mesure d’audience et ne chargent aucune ressource externe : les polices de
       caractères sont hébergées sur le site lui-même. Le service de formulaire décrit
-      plus bas applique ses propres règles au moment de l’envoi.</p></div>
+      plus bas applique ses propres règles au moment de l’envoi. Votre choix de mode
+      (Base, Signature ou Platinum) est gardé dans votre navigateur et n’est jamais
+      transmis.</p></div>
     </div>
     <div class="row" data-rev>
       <i>04 · Utilisation</i>

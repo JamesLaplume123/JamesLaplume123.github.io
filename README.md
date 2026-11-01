@@ -17,7 +17,7 @@ tools/build.py        Générateur (Python 3 standard, aucune dépendance)
 
 assets/
 ├── css/wow.css       L'unique feuille de style (design « WOW », esprit Apple/Tesla)
-├── js/wow.js         L'unique script (barre, menu, scènes au défilement, compteurs)
+├── js/wow.js         L'unique script (barre, menu, scènes, modes, compteurs)
 ├── fonts/            Geist et Geist Mono auto-hébergées (variables)
 └── *.js, *_vinext_*  Build figé de /sudo-bonne-fete/ (carte QR) — ne pas toucher
 
@@ -47,6 +47,9 @@ python3 -m http.server 4173
 ```
 
 4. Commiter et pousser sur `main` : GitHub Pages publie automatiquement.
+
+Les modes Base, Signature et Platinum sont définis en tête de `wow.css`, et leurs
+images sont dans `media/modes/`. Ajouter `?mode=platinum` à une adresse force un mode.
 
 Pour invalider le cache navigateur après un changement de CSS/JS, incrémenter
 `asset_version` dans `src/config.py` puis regénérer.

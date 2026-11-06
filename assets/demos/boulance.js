@@ -12,9 +12,8 @@
     if (s < 5400) return "il y a " + Math.round(s / 60) + " min";
     return "il y a " + Math.round(s / 3600) + " h";
   }
-  /* Or quand tout va bien, ambre puis rouge seulement quand la réserve baisse vraiment */
-  function color(soc) { return soc >= 30 ? "#f0d29a" : soc >= 15 ? "#f5b955" : "#f08a78"; }
-  function deep(soc) { return soc >= 30 ? "#7a5420" : soc >= 15 ? "#8a4b10" : "#7f1d1d"; }
+  function color(soc) { return soc >= 60 ? "#34d399" : soc >= 30 ? "#fbbf24" : "#f87171"; }
+  function deep(soc) { return soc >= 60 ? "#0f766e" : soc >= 30 ? "#b45309" : "#991b1b"; }
   /* Change le texte et fait briller la valeur si elle a vraiment changé */
   function put(el, text) {
     if (!el || el.textContent === text) return;

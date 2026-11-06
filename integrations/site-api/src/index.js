@@ -89,6 +89,10 @@ async function contact(request, env, h) {
     `<p style="white-space:pre-wrap;margin-top:16px;padding:12px;background:#f5f5f5;border-radius:8px">${escapeHtml(lead.message)}</p>` +
     `<p style="color:#888;font-size:12px">Référence ${lead.id} · reçue ${lead.recu}</p></div>`;
 
+  if (!env.RESEND_API_KEY) {
+    // Demande gardée, mais pas encore de courriel : le site passe au service de secours.
+    return json({ ok: false, stored: true, message: "Envoi par courriel non configuré." }, 503, h);
+  }
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: "Bearer " + env.RESEND_API_KEY, "Content-Type": "application/json" },
@@ -103,7 +107,8 @@ async function contact(request, env, h) {
   if (!r.ok) {
     lead.statut = "courriel-en-echec";
     await env.SITE_KV.put("lead:" + lead.recu + ":" + lead.id, JSON.stringify(lead));
-    // La demande est gardée : on confirme au visiteur, James la verra dans JARVIS.
+    // Demande gardée; le site tente aussi le service de secours pour que James la reçoive.
+    return json({ ok: false, stored: true, message: "Le courriel n’est pas parti." }, 502, h);
   }
   return json({ ok: true, id: lead.id }, 200, h);
 }

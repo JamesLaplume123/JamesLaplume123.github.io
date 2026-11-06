@@ -16,7 +16,7 @@ SITE = {
     "asset_version": "20261106a",
     # Adresse du service du site (formulaire → Resend → JARVIS, compteur). Vide tant
     # que le Worker Cloudflare n'est pas déployé : le formulaire passe alors par FormSubmit.
-    "api": "",
+    "api": "https://jarvis-site-api.laplumejames.workers.dev",
     "copyright": "© 2026 JARVIS Private Systems · Québec, Canada",
 }
 

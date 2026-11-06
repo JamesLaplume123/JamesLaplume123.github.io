@@ -1373,6 +1373,7 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
 .vit-cap h3 { margin: 0; font-weight: 700; font-size: clamp(1.6rem, 3vw, 2.4rem); letter-spacing: -.035em; }
 .vit-cap p { margin: .6rem 0 0; color: #cfcfd6; font-size: clamp(1rem, 1.3vw, 1.15rem); }
 .vit-note { display: flex; justify-content: center; margin: 1.6rem 0 0; }
+@media (max-width: 560px) { .vit-note .chip { white-space: nowrap; font-size: .58rem; letter-spacing: .06em; } }
 @media (max-width: 880px) {
   .vitrine { padding: 5rem .8rem 4rem; }
   .vit-tabs { margin-bottom: 1.6rem; }

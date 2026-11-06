@@ -6,6 +6,8 @@
 
 import json
 
+from demos import boulance, carte, maison
+
 FAQ = [
     (
         "Qu’est-ce que JARVIS, concrètement?",
@@ -130,42 +132,61 @@ SCHEMA = json.dumps(
     indent=1,
 )
 
-# Visite de l'app : une étape = un écran + son texte.
-ON = ' class="is-on"'
-TOUR = [
-    ("accueil", "Accueil", "Voici JARVIS App.",
-     "Votre journée, vos messages, vos lieux et votre assistant — réunis sur un seul écran.",
-     "JARVIS App — accueil : Bonsoir Alex, votre journée, simplement"),
+# Vitrine de l'app : un grand écran, des onglets qui défilent seuls, des points expliqués.
+# (diapo, onglet, titre, texte, description de l'image, [(x %, y %, bulle), ...])
+VITRINE = [
+    ("accueil", "Accueil", "Votre journée, sur un seul écran.",
+     "Messages, agenda, lieux et assistant réunis, à votre image.",
+     "JARVIS App — accueil : Bonsoir Alex, votre journée, simplement",
+     [(35, 52, "Agenda et tâches réunis"), (83, 45, "L’assistant prépare, vous approuvez"),
+      (35, 86, "Vos lieux, seulement ce qui est permis"), (73, 5, "Météo du lieu, en direct")]),
     ("assistant", "Assistant", "Il propose. Vous décidez.",
      "Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord.",
-     "Assistant JARVIS — une demande de rappel préparée, à vérifier avant création"),
+     "Assistant JARVIS — un rappel préparé, à vérifier avant sa création",
+     [(55, 32, "Des raccourcis pour demander simplement"), (37, 55, "Chaque réponse montre sa source"),
+      (68, 78, "Rien n’est créé sans votre vérification"), (88, 93, "Parlez ou écrivez")]),
     ("ma-journee", "Ma journée", "Tous vos agendas, enfin ensemble.",
-     "Calendriers et tâches de toutes vos sources dans une seule vue. Ce qui est en lecture seule le reste.",
-     "Ma journée — agenda et tâches réunis"),
+     "Calendriers et tâches de toutes vos sources. Ce qui est en lecture seule le reste.",
+     "Ma journée — agenda et tâches réunis",
+     [(25, 45, "Tous vos calendriers, de toutes vos sources"), (70, 56, "Travail et vie personnelle côte à côte"),
+      (52, 85, "Le souper de ce soir, avec le lieu")]),
     ("carte", "Carte", "Vos lieux, sans surveillance.",
      "La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée.",
-     "Carte JARVIS — couches autorisées autour de Saint-Hyacinthe"),
+     "Carte JARVIS — couches autorisées autour de Saint-Hyacinthe",
+     [(26, 28, "Vous choisissez les couches visibles"), (53, 60, "Le Hub, lieu de référence"),
+      (85, 28, "Aucune position sans permission")]),
     ("partage", "Partage", "Vous choisissez ce que vous partagez.",
      "Avec qui, pour combien de temps, et sous votre contrôle. Un partage retiré disparaît partout.",
-     "Partage — position et documents partagés avec une durée précise"),
+     "Partage — position et documents partagés avec une durée précise",
+     [(32, 40, "Rien n’est partagé par défaut"), (84, 52, "Avec qui, et pour combien de temps"),
+      (67, 77, "Un accès retiré disparaît partout")]),
 ]
 
-TOUR_SCREENS = "".join(
-    f'<img src="/media/product/user/{slug}.webp" alt="{alt}" width="1600" height="1062"'
-    f'{ON if i == 0 else ""} data-step="{i}" loading="{"eager" if i == 0 else "lazy"}">'
-    for i, (slug, _label, _t, _p, alt) in enumerate(TOUR)
+
+ON = ' class="is-on"'
+
+
+def _hot(x, y, label, k):
+    side = " left" if x > 60 else ""
+    return (f'<span class="hot{side}" style="--x:{x}%;--y:{y}%;--k:{k}">'
+            f'<i aria-hidden="true"></i><em>{label}</em></span>')
+
+
+VIT_SLIDES = "".join(
+    f'''<figure class="vit-slide{' is-on' if i == 0 else ''}" data-i="{i}">
+          <img src="/media/product/user/{slug}.webp" alt="{alt}" width="1600" height="1062" loading="{'eager' if i == 0 else 'lazy'}">
+          {"".join(_hot(x, y, lab, k) for k, (x, y, lab) in enumerate(hots))}
+        </figure>'''
+    for i, (slug, _tab, _t, _p, alt, hots) in enumerate(VITRINE)
 )
-TOUR_STEPS = "".join(
-    f"""<article class="tour-step{' is-on' if i == 0 else ''}" data-step="{i}">
-        <p class="tour-kick">{i + 1:02d} · {label}</p>
-        <h3>{title}</h3>
-        <p>{text}</p>
-      </article>"""
-    for i, (_slug, label, title, text, _alt) in enumerate(TOUR)
+VIT_TABS = "".join(
+    f'''<button type="button" role="tab" aria-selected="{'true' if i == 0 else 'false'}" data-i="{i}"{ON if i == 0 else ''}>
+        <span>{tab}</span><i class="vit-prog" aria-hidden="true"></i></button>'''
+    for i, (_slug, tab, _t, _p, _alt, _h) in enumerate(VITRINE)
 )
-TOUR_RAIL = "".join(
-    f'<li{ON if i == 0 else ""} data-step="{i}"><span>{label}</span></li>'
-    for i, (_slug, label, _t, _p, _alt) in enumerate(TOUR)
+VIT_CAPS = "".join(
+    f'''<div class="vit-cap{' is-on' if i == 0 else ''}" data-i="{i}"><h3>{t}</h3><p>{p}</p></div>'''
+    for i, (_slug, _tab, t, p, _alt, _h) in enumerate(VITRINE)
 )
 
 STANDARDS = [
@@ -178,17 +199,29 @@ PAGE = {
     "url": "/",
     "v2": True,
     "title": "Domotique privée et sécurité intelligente au Québec | JARVIS",
+    "assets": ["maison", "boulance", "carte"],
     "description": (
         "Domotique privée, sécurité intelligente et IA locale, installées chez vous. "
         "JARVIS relie vos appareils sans envoyer vos données au nuage. Saint-Hyacinthe, Québec."
     ),
     "content": f"""
-<!-- Héros -->
+<!-- Héros : la maison s'allume, JARVIS prend la parole -->
 <section class="hero" data-hero>
-  <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" width="1916" height="821"
-       alt="Résidence contemporaine la nuit, systèmes JARVIS actifs" fetchpriority="high"></div>
+  <div class="bg" data-hero-bg>
+    <img class="dark" src="/media/concept/jarvis-hero-architecture-v1.webp" width="1916" height="821" alt="" aria-hidden="true" fetchpriority="high">
+    <img class="lit" src="/media/concept/jarvis-hero-architecture-v1.webp" width="1916" height="821"
+         alt="Résidence contemporaine la nuit, systèmes JARVIS actifs">
+  </div>
+  <div class="hero-flash" aria-hidden="true"></div>
+  <div class="hud" aria-hidden="true">
+    <div class="hud-tag t-out" style="--x:9%;--y:29%;--px:26%;--py:30%"><i></i><span><small>Extérieur · réel</small><b data-live="temp-hud">— °C</b></span></div>
+    <div class="hud-tag t-fire" style="--x:9%;--y:58%;--px:27%;--py:63%"><i></i><span><small>Terrasse</small><b>Foyer allumé</b></span></div>
+    <div class="hud-tag t-salon" style="--x:12%;--y:86%;--px:34%;--py:77%"><i></i><span><small>Salon</small><b>Soirée · 60 %</b></span></div>
+    <div class="hud-tag t-hub" style="--x:91%;--y:30%;--px:63%;--py:47%"><i></i><span><small>Cuisine</small><b>3 lumières · 40 %</b></span></div>
+    <div class="hud-tag t-energy" style="--x:90%;--y:82%;--px:80%;--py:74%"><i></i><span><small>Énergie</small><b>1,2 kW · stable</b></span></div>
+  </div>
   <div class="hero-inner">
-    <p class="eyebrow hero-eyebrow">Domotique · Sécurité · IA privée</p>
+    <p class="eyebrow hero-eyebrow"><span data-greet>Domotique · Sécurité · IA privée</span></p>
     <h1><span class="ln">Relier ce qui existe.</span><span class="ln l2">Faire agir l’ensemble.</span></h1>
     <p class="sub">Une intelligence privée, installée chez vous, qui comprend vos règles,
     coordonne vos systèmes et vous laisse les décisions importantes.</p>
@@ -213,20 +246,33 @@ PAGE = {
   Il manquait l’intelligence privée qui les comprend — et qui les fait travailler ensemble.</p></div>
 </section>
 
-<!-- Visite de l'app (épinglée : l'écran est toujours entier) -->
-<section class="tour" id="app" aria-label="Visite de JARVIS App" style="--steps:{len(TOUR)}">
-  <div class="tour-stage">
-    <div class="tour-copy">
-      <p class="eyebrow">JARVIS App · l’interface</p>
-      <div class="tour-steps">{TOUR_STEPS}</div>
-      <ol class="tour-rail" aria-hidden="true">{TOUR_RAIL}</ol>
-    </div>
-    <div class="tour-device">
-      <div class="tour-glow" aria-hidden="true"></div>
-      <div class="tour-screen">{TOUR_SCREENS}<i class="tour-sweep" aria-hidden="true"></i></div>
-      <p class="tour-note"><span class="chip chip-sim">Conception en validation · données fictives</span></p>
-    </div>
+<!-- Vitrine de l'app : un grand écran vivant -->
+<section class="vitrine" id="app" aria-label="JARVIS App">
+  <div class="head" data-rev>
+    <p class="eyebrow">JARVIS App · l’interface</p>
+    <h2 data-split>Une seule application.<br><em>Toute votre vie connectée.</em></h2>
   </div>
+  <div class="vit-tabs" role="tablist" aria-label="Écrans de JARVIS App">{VIT_TABS}</div>
+  <div class="vit-stage" data-vitrine>
+    <div class="vit-glow" aria-hidden="true"></div>
+    <div class="vit-device">
+      <div class="vit-screen">{VIT_SLIDES}<i class="vit-sweep" aria-hidden="true"></i></div>
+    </div>
+    <div class="vit-floor" aria-hidden="true"></div>
+  </div>
+  <div class="vit-caps" aria-live="polite">{VIT_CAPS}</div>
+  <p class="vit-note"><span class="chip chip-sim">Conception en validation · données fictives</span></p>
+</section>
+
+<!-- Ma maison : démo interactive -->
+<section class="sect maison-home" id="maison" aria-labelledby="maison-titre">
+  <div class="head" data-rev style="max-width:52rem;margin:0 auto 3rem;text-align:center">
+    <p class="eyebrow">Essayez · démonstration interactive</p>
+    <h2 id="maison-titre" data-split style="margin:1.1rem 0 0;font-weight:700;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:-.04em;line-height:1.06">Touchez une pièce.<br><em>Elle vous répond.</em></h2>
+    <p style="color:#c4c4cc;max-width:40rem;margin:1.2rem auto 0">Choisissez une ambiance ou une pièce : lumière, chauffage, stores et verrous se règlent
+    sous vos yeux. Chaque commande est envoyée, puis confirmée.</p>
+  </div>
+  {maison.html()}
 </section>
 
 <!-- JARVIS en direct : vraies données, décisions simulées -->
@@ -300,6 +346,19 @@ PAGE = {
       <ol data-live="journal"></ol>
     </div>
   </div>
+</section>
+
+<!-- BouLance en direct : batteries réelles + radar -->
+<section class="sect" id="boulance" aria-labelledby="boulance-titre">
+  <div class="head" data-rev style="max-width:52rem;margin:0 auto 3rem;text-align:center">
+    <p class="eyebrow" style="display:inline-flex;align-items:center;gap:.7rem"><i class="dot" aria-hidden="true"></i> Le laboratoire mobile · en direct</p>
+    <h2 id="boulance-titre" style="margin:1.1rem 0 0;font-weight:700;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:-.04em;line-height:1.06">Les batteries de l’ambulance.<br><em>Pour vrai, en ce moment.</em></h2>
+    <p style="color:#c4c4cc;max-width:40rem;margin:1.2rem auto 0">Deux batteries LiFePO₄ de 280 Ah, lues par Home Assistant dans le véhicule et
+    affichées ici en direct. C’est exactement ce que JARVIS fera chez vous : des données vraies, jamais inventées.</p>
+  </div>
+  {boulance.html()}
+  <div style="height:16px"></div>
+  {carte.html()}
 </section>
 
 <!-- Comment ça marche -->

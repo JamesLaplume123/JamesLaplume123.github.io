@@ -25,6 +25,9 @@
 <script>try{var m=new URLSearchParams(location.search).get("mode")||localStorage.getItem("jarvis-mode");if(m==="base"||m==="signature"||m==="platinum")document.documentElement.dataset.mode=m}catch(e){}</script>
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/wow.css?v=20261106a">
+<link rel="stylesheet" href="/assets/demos/maison.css?v=20261106a">
+<link rel="stylesheet" href="/assets/demos/boulance.css?v=20261106a">
+<link rel="stylesheet" href="/assets/demos/carte.css?v=20261106a">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -46,12 +49,23 @@
 </nav>
 <main id="contenu">
 
-<!-- Héros -->
+<!-- Héros : la maison s'allume, JARVIS prend la parole -->
 <section class="hero" data-hero>
-  <div class="bg"><img decoding="async" src="/media/concept/jarvis-hero-architecture-v1.webp" width="1916" height="821"
-       alt="Résidence contemporaine la nuit, systèmes JARVIS actifs" fetchpriority="high"></div>
+  <div class="bg" data-hero-bg>
+    <img class="dark" src="/media/concept/jarvis-hero-architecture-v1.webp" width="1916" height="821" alt="" aria-hidden="true" fetchpriority="high">
+    <img class="lit" src="/media/concept/jarvis-hero-architecture-v1.webp" width="1916" height="821"
+         alt="Résidence contemporaine la nuit, systèmes JARVIS actifs">
+  </div>
+  <div class="hero-flash" aria-hidden="true"></div>
+  <div class="hud" aria-hidden="true">
+    <div class="hud-tag t-out" style="--x:9%;--y:29%;--px:26%;--py:30%"><i></i><span><small>Extérieur · réel</small><b data-live="temp-hud">— °C</b></span></div>
+    <div class="hud-tag t-fire" style="--x:9%;--y:58%;--px:27%;--py:63%"><i></i><span><small>Terrasse</small><b>Foyer allumé</b></span></div>
+    <div class="hud-tag t-salon" style="--x:12%;--y:86%;--px:34%;--py:77%"><i></i><span><small>Salon</small><b>Soirée · 60 %</b></span></div>
+    <div class="hud-tag t-hub" style="--x:91%;--y:30%;--px:63%;--py:47%"><i></i><span><small>Cuisine</small><b>3 lumières · 40 %</b></span></div>
+    <div class="hud-tag t-energy" style="--x:90%;--y:82%;--px:80%;--py:74%"><i></i><span><small>Énergie</small><b>1,2 kW · stable</b></span></div>
+  </div>
   <div class="hero-inner">
-    <p class="eyebrow hero-eyebrow">Domotique · Sécurité · IA privée</p>
+    <p class="eyebrow hero-eyebrow"><span data-greet>Domotique · Sécurité · IA privée</span></p>
     <h1><span class="ln">Relier ce qui existe.</span><span class="ln l2">Faire agir l’ensemble.</span></h1>
     <p class="sub">Une intelligence privée, installée chez vous, qui comprend vos règles,
     coordonne vos systèmes et vous laisse les décisions importantes.</p>
@@ -76,40 +90,97 @@
   Il manquait l’intelligence privée qui les comprend — et qui les fait travailler ensemble.</p></div>
 </section>
 
-<!-- Visite de l'app (épinglée : l'écran est toujours entier) -->
-<section class="tour" id="app" aria-label="Visite de JARVIS App" style="--steps:5">
-  <div class="tour-stage">
-    <div class="tour-copy">
-      <p class="eyebrow">JARVIS App · l’interface</p>
-      <div class="tour-steps"><article class="tour-step is-on" data-step="0">
-        <p class="tour-kick">01 · Accueil</p>
-        <h3>Voici JARVIS App.</h3>
-        <p>Votre journée, vos messages, vos lieux et votre assistant — réunis sur un seul écran.</p>
-      </article><article class="tour-step" data-step="1">
-        <p class="tour-kick">02 · Assistant</p>
-        <h3>Il propose. Vous décidez.</h3>
-        <p>Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord.</p>
-      </article><article class="tour-step" data-step="2">
-        <p class="tour-kick">03 · Ma journée</p>
-        <h3>Tous vos agendas, enfin ensemble.</h3>
-        <p>Calendriers et tâches de toutes vos sources dans une seule vue. Ce qui est en lecture seule le reste.</p>
-      </article><article class="tour-step" data-step="3">
-        <p class="tour-kick">04 · Carte</p>
-        <h3>Vos lieux, sans surveillance.</h3>
-        <p>La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée.</p>
-      </article><article class="tour-step" data-step="4">
-        <p class="tour-kick">05 · Partage</p>
-        <h3>Vous choisissez ce que vous partagez.</h3>
-        <p>Avec qui, pour combien de temps, et sous votre contrôle. Un partage retiré disparaît partout.</p>
-      </article></div>
-      <ol class="tour-rail" aria-hidden="true"><li class="is-on" data-step="0"><span>Accueil</span></li><li data-step="1"><span>Assistant</span></li><li data-step="2"><span>Ma journée</span></li><li data-step="3"><span>Carte</span></li><li data-step="4"><span>Partage</span></li></ol>
-    </div>
-    <div class="tour-device">
-      <div class="tour-glow" aria-hidden="true"></div>
-      <div class="tour-screen"><img decoding="async" src="/media/product/user/accueil.webp" alt="JARVIS App — accueil : Bonsoir Alex, votre journée, simplement" width="1600" height="1062" class="is-on" data-step="0" loading="eager"><img decoding="async" src="/media/product/user/assistant.webp" alt="Assistant JARVIS — une demande de rappel préparée, à vérifier avant création" width="1600" height="1062" data-step="1" loading="lazy"><img decoding="async" src="/media/product/user/ma-journee.webp" alt="Ma journée — agenda et tâches réunis" width="1600" height="1062" data-step="2" loading="lazy"><img decoding="async" src="/media/product/user/carte.webp" alt="Carte JARVIS — couches autorisées autour de Saint-Hyacinthe" width="1600" height="1062" data-step="3" loading="lazy"><img decoding="async" src="/media/product/user/partage.webp" alt="Partage — position et documents partagés avec une durée précise" width="1600" height="1062" data-step="4" loading="lazy"><i class="tour-sweep" aria-hidden="true"></i></div>
-      <p class="tour-note"><span class="chip chip-sim">Conception en validation · données fictives</span></p>
-    </div>
+<!-- Vitrine de l'app : un grand écran vivant -->
+<section class="vitrine" id="app" aria-label="JARVIS App">
+  <div class="head" data-rev>
+    <p class="eyebrow">JARVIS App · l’interface</p>
+    <h2 data-split>Une seule application.<br><em>Toute votre vie connectée.</em></h2>
   </div>
+  <div class="vit-tabs" role="tablist" aria-label="Écrans de JARVIS App"><button type="button" role="tab" aria-selected="true" data-i="0" class="is-on">
+        <span>Accueil</span><i class="vit-prog" aria-hidden="true"></i></button><button type="button" role="tab" aria-selected="false" data-i="1">
+        <span>Assistant</span><i class="vit-prog" aria-hidden="true"></i></button><button type="button" role="tab" aria-selected="false" data-i="2">
+        <span>Ma journée</span><i class="vit-prog" aria-hidden="true"></i></button><button type="button" role="tab" aria-selected="false" data-i="3">
+        <span>Carte</span><i class="vit-prog" aria-hidden="true"></i></button><button type="button" role="tab" aria-selected="false" data-i="4">
+        <span>Partage</span><i class="vit-prog" aria-hidden="true"></i></button></div>
+  <div class="vit-stage" data-vitrine>
+    <div class="vit-glow" aria-hidden="true"></div>
+    <div class="vit-device">
+      <div class="vit-screen"><figure class="vit-slide is-on" data-i="0">
+          <img decoding="async" src="/media/product/user/accueil.webp" alt="JARVIS App — accueil : Bonsoir Alex, votre journée, simplement" width="1600" height="1062" loading="eager">
+          <span class="hot" style="--x:35%;--y:52%;--k:0"><i aria-hidden="true"></i><em>Agenda et tâches réunis</em></span><span class="hot left" style="--x:83%;--y:45%;--k:1"><i aria-hidden="true"></i><em>L’assistant prépare, vous approuvez</em></span><span class="hot" style="--x:35%;--y:86%;--k:2"><i aria-hidden="true"></i><em>Vos lieux, seulement ce qui est permis</em></span><span class="hot left" style="--x:73%;--y:5%;--k:3"><i aria-hidden="true"></i><em>Météo du lieu, en direct</em></span>
+        </figure><figure class="vit-slide" data-i="1">
+          <img decoding="async" src="/media/product/user/assistant.webp" alt="Assistant JARVIS — un rappel préparé, à vérifier avant sa création" width="1600" height="1062" loading="lazy">
+          <span class="hot" style="--x:55%;--y:32%;--k:0"><i aria-hidden="true"></i><em>Des raccourcis pour demander simplement</em></span><span class="hot" style="--x:37%;--y:55%;--k:1"><i aria-hidden="true"></i><em>Chaque réponse montre sa source</em></span><span class="hot left" style="--x:68%;--y:78%;--k:2"><i aria-hidden="true"></i><em>Rien n’est créé sans votre vérification</em></span><span class="hot left" style="--x:88%;--y:93%;--k:3"><i aria-hidden="true"></i><em>Parlez ou écrivez</em></span>
+        </figure><figure class="vit-slide" data-i="2">
+          <img decoding="async" src="/media/product/user/ma-journee.webp" alt="Ma journée — agenda et tâches réunis" width="1600" height="1062" loading="lazy">
+          <span class="hot" style="--x:25%;--y:45%;--k:0"><i aria-hidden="true"></i><em>Tous vos calendriers, de toutes vos sources</em></span><span class="hot left" style="--x:70%;--y:56%;--k:1"><i aria-hidden="true"></i><em>Travail et vie personnelle côte à côte</em></span><span class="hot" style="--x:52%;--y:85%;--k:2"><i aria-hidden="true"></i><em>Le souper de ce soir, avec le lieu</em></span>
+        </figure><figure class="vit-slide" data-i="3">
+          <img decoding="async" src="/media/product/user/carte.webp" alt="Carte JARVIS — couches autorisées autour de Saint-Hyacinthe" width="1600" height="1062" loading="lazy">
+          <span class="hot" style="--x:26%;--y:28%;--k:0"><i aria-hidden="true"></i><em>Vous choisissez les couches visibles</em></span><span class="hot" style="--x:53%;--y:60%;--k:1"><i aria-hidden="true"></i><em>Le Hub, lieu de référence</em></span><span class="hot left" style="--x:85%;--y:28%;--k:2"><i aria-hidden="true"></i><em>Aucune position sans permission</em></span>
+        </figure><figure class="vit-slide" data-i="4">
+          <img decoding="async" src="/media/product/user/partage.webp" alt="Partage — position et documents partagés avec une durée précise" width="1600" height="1062" loading="lazy">
+          <span class="hot" style="--x:32%;--y:40%;--k:0"><i aria-hidden="true"></i><em>Rien n’est partagé par défaut</em></span><span class="hot left" style="--x:84%;--y:52%;--k:1"><i aria-hidden="true"></i><em>Avec qui, et pour combien de temps</em></span><span class="hot left" style="--x:67%;--y:77%;--k:2"><i aria-hidden="true"></i><em>Un accès retiré disparaît partout</em></span>
+        </figure><i class="vit-sweep" aria-hidden="true"></i></div>
+    </div>
+    <div class="vit-floor" aria-hidden="true"></div>
+  </div>
+  <div class="vit-caps" aria-live="polite"><div class="vit-cap is-on" data-i="0"><h3>Votre journée, sur un seul écran.</h3><p>Messages, agenda, lieux et assistant réunis, à votre image.</p></div><div class="vit-cap" data-i="1"><h3>Il propose. Vous décidez.</h3><p>Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord.</p></div><div class="vit-cap" data-i="2"><h3>Tous vos agendas, enfin ensemble.</h3><p>Calendriers et tâches de toutes vos sources. Ce qui est en lecture seule le reste.</p></div><div class="vit-cap" data-i="3"><h3>Vos lieux, sans surveillance.</h3><p>La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée.</p></div><div class="vit-cap" data-i="4"><h3>Vous choisissez ce que vous partagez.</h3><p>Avec qui, pour combien de temps, et sous votre contrôle. Un partage retiré disparaît partout.</p></div></div>
+  <p class="vit-note"><span class="chip chip-sim">Conception en validation · données fictives</span></p>
+</section>
+
+<!-- Ma maison : démo interactive -->
+<section class="sect maison-home" id="maison" aria-labelledby="maison-titre">
+  <div class="head" data-rev style="max-width:52rem;margin:0 auto 3rem;text-align:center">
+    <p class="eyebrow">Essayez · démonstration interactive</p>
+    <h2 id="maison-titre" data-split style="margin:1.1rem 0 0;font-weight:700;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:-.04em;line-height:1.06">Touchez une pièce.<br><em>Elle vous répond.</em></h2>
+    <p style="color:#c4c4cc;max-width:40rem;margin:1.2rem auto 0">Choisissez une ambiance ou une pièce : lumière, chauffage, stores et verrous se règlent
+    sous vos yeux. Chaque commande est envoyée, puis confirmée.</p>
+  </div>
+  <div class="demo-shell mz" data-demo="maison" data-rev>
+  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · Ma maison</b>
+    <span class="mz-clock" data-mz="state">Soirée · 19 h 42</span><span class="tag tag-sim">Démo · données simulées</span></div>
+  <div class="demo-body mz-body">
+    <div class="mz-stage">
+      <div class="mz-plan" data-mz="plan">
+        <img class="mz-base" src="/media/solutions/jarvis-spaces-property-v3.webp" alt="Plan d’une résidence vue de haut : salon, cuisine, chambre, piscine et garage" width="1586" height="992" loading="lazy" decoding="async">
+        <img class="mz-lit" data-room="salon" src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" aria-hidden="true" style="clip-path: polygon(15.26% 41.53%, 38.34% 41.53%, 38.34% 69.56%, 15.26% 69.56%)" loading="lazy" decoding="async"><img class="mz-lit" data-room="cuisine" src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" aria-hidden="true" style="clip-path: polygon(15.26% 23.79%, 49.56% 23.79%, 49.56% 41.53%, 15.26% 41.53%)" loading="lazy" decoding="async"><img class="mz-lit" data-room="chambre" src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" aria-hidden="true" style="clip-path: polygon(50.19% 22.78%, 63.81% 22.78%, 63.81% 44.96%, 50.19% 44.96%)" loading="lazy" decoding="async"><img class="mz-lit" data-room="sdb" src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" aria-hidden="true" style="clip-path: polygon(63.93% 23.19%, 72.01% 23.19%, 72.01% 44.96%, 63.93% 44.96%)" loading="lazy" decoding="async"><img class="mz-lit" data-room="bureau" src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" aria-hidden="true" style="clip-path: polygon(49.81% 47.38%, 63.18% 47.38%, 63.18% 69.76%, 49.81% 69.76%)" loading="lazy" decoding="async"><img class="mz-lit" data-room="entree" src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" aria-hidden="true" style="clip-path: polygon(38.34% 44.35%, 49.81% 44.35%, 49.81% 70.56%, 47.16% 70.56%, 47.16% 91.23%, 39.34% 91.23%, 39.34% 70.56%, 38.34% 70.56%)" loading="lazy" decoding="async"><img class="mz-lit" data-room="garage" src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" aria-hidden="true" style="clip-path: polygon(73.01% 31.05%, 91.55% 31.05%, 91.55% 63.31%, 73.01% 63.31%)" loading="lazy" decoding="async"><img class="mz-lit" data-room="terrasse" src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" aria-hidden="true" style="clip-path: polygon(14.19% 3.02%, 40.35% 3.02%, 40.35% 21.67%, 14.19% 21.67%)" loading="lazy" decoding="async"><img class="mz-lit" data-room="piscine" src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" aria-hidden="true" style="clip-path: polygon(40.86% 8.27%, 85.75% 8.27%, 85.75% 26.41%, 74.27% 26.41%, 74.27% 21.37%, 40.86% 21.37%)" loading="lazy" decoding="async"><img class="mz-lit" data-room="exterieur" src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" aria-hidden="true" style="clip-path: polygon(3.78% 70.56%, 39.34% 70.56%, 39.34% 91.23%, 47.16% 91.23%, 47.16% 70.56%, 75.66% 70.56%, 75.66% 64.52%, 90.79% 64.52%, 90.79% 95.77%, 3.78% 95.77%)" loading="lazy" decoding="async">
+        <div class="mz-night" aria-hidden="true"></div>
+        <i class="mz-bloom" data-room="salon" style="--x:26.80%;--y:55.54%"></i><i class="mz-bloom" data-room="cuisine" style="--x:32.41%;--y:32.66%"></i><i class="mz-bloom" data-room="chambre" style="--x:57.00%;--y:33.87%"></i><i class="mz-bloom" data-room="sdb" style="--x:67.97%;--y:34.07%"></i><i class="mz-bloom" data-room="bureau" style="--x:56.49%;--y:58.57%"></i><i class="mz-bloom" data-room="entree" style="--x:44.07%;--y:67.79%"></i><i class="mz-bloom" data-room="garage" style="--x:82.28%;--y:47.18%"></i><i class="mz-bloom" data-room="terrasse" style="--x:27.27%;--y:12.35%"></i><i class="mz-bloom" data-room="piscine" style="--x:63.30%;--y:17.34%"></i><i class="mz-bloom" data-room="exterieur" style="--x:47.29%;--y:80.14%"></i>
+        <svg class="mz-hit" viewBox="0 0 1586 992" preserveAspectRatio="none" aria-hidden="true"><polygon data-room="salon" points="242,412 608,412 608,690 242,690"><title>Salon</title></polygon><polygon data-room="cuisine" points="242,236 786,236 786,412 242,412"><title>Cuisine</title></polygon><polygon data-room="chambre" points="796,226 1012,226 1012,446 796,446"><title>Chambre</title></polygon><polygon data-room="sdb" points="1014,230 1142,230 1142,446 1014,446"><title>Salle de bain</title></polygon><polygon data-room="bureau" points="790,470 1002,470 1002,692 790,692"><title>Bureau</title></polygon><polygon data-room="entree" points="608,440 790,440 790,700 748,700 748,905 624,905 624,700 608,700"><title>Entrée</title></polygon><polygon data-room="garage" points="1158,308 1452,308 1452,628 1158,628"><title>Garage</title></polygon><polygon data-room="terrasse" points="225,30 640,30 640,215 225,215"><title>Terrasse</title></polygon><polygon data-room="piscine" points="648,82 1360,82 1360,262 1178,262 1178,212 648,212"><title>Piscine</title></polygon><polygon data-room="exterieur" points="60,700 624,700 624,905 748,905 748,700 1200,700 1200,640 1440,640 1440,950 60,950"><title>Extérieur</title></polygon></svg>
+        <button type="button" class="mz-tag" data-room="salon" style="--x:26.80%;--y:55.54%"><b>Salon</b><span class="mz-tag-v">Éteint</span></button><button type="button" class="mz-tag" data-room="cuisine" style="--x:32.41%;--y:32.66%"><b>Cuisine</b><span class="mz-tag-v">Éteint</span></button><button type="button" class="mz-tag" data-room="chambre" style="--x:57.00%;--y:33.87%"><b>Chambre</b><span class="mz-tag-v">Éteint</span></button><button type="button" class="mz-tag" data-room="sdb" style="--x:67.97%;--y:34.07%"><b>Salle de bain</b><span class="mz-tag-v">Éteint</span></button><button type="button" class="mz-tag" data-room="bureau" style="--x:56.49%;--y:58.57%"><b>Bureau</b><span class="mz-tag-v">Éteint</span></button><button type="button" class="mz-tag" data-room="entree" style="--x:44.07%;--y:67.79%"><b>Entrée</b><span class="mz-tag-v">Éteint</span></button><button type="button" class="mz-tag" data-room="garage" style="--x:82.28%;--y:47.18%"><b>Garage</b><span class="mz-tag-v">Éteint</span></button><button type="button" class="mz-tag" data-room="terrasse" style="--x:27.27%;--y:12.35%"><b>Terrasse</b><span class="mz-tag-v">Éteint</span></button><button type="button" class="mz-tag" data-room="piscine" style="--x:63.30%;--y:17.34%"><b>Piscine</b><span class="mz-tag-v">Éteint</span></button><button type="button" class="mz-tag" data-room="exterieur" style="--x:47.29%;--y:80.14%"><b>Extérieur</b><span class="mz-tag-v">Éteint</span></button>
+      </div>
+    </div>
+    <aside class="mz-panel">
+      <p class="mz-k">Ambiances</p>
+      <div class="mz-scenes" role="group" aria-label="Ambiances de la maison"><button type="button" data-scene="matin">Matin</button><button type="button" data-scene="soiree" class="is-on">Soirée</button><button type="button" data-scene="cinema">Cinéma</button><button type="button" data-scene="nuit">Nuit</button><button type="button" data-scene="absent">Absent</button></div>
+      <div class="mz-room" data-mz="room" aria-live="polite">
+        <div class="mz-room-head">
+          <p class="mz-k">Pièce choisie</p>
+          <h3 data-mz="room-name">Salon</h3>
+          <span class="mz-ack" data-mz="ack"></span>
+        </div>
+        <div class="mz-row">
+          <span>Lumière</span>
+          <button type="button" class="mz-switch" data-mz="switch" role="switch" aria-checked="true" aria-label="Allumer ou éteindre"><i></i></button>
+        </div>
+        <label class="mz-slider"><span>Intensité <b data-mz="lvl-v">60 %</b></span>
+          <input type="range" min="0" max="100" step="1" value="60" data-mz="lvl" aria-label="Intensité de la lumière"></label>
+        <div class="mz-row mz-temps" role="group" aria-label="Couleur de la lumière">
+          <button type="button" data-tone="chaude" class="is-on">Chaude</button>
+          <button type="button" data-tone="neutre">Neutre</button>
+          <button type="button" data-tone="froide">Froide</button>
+        </div>
+        <div class="mz-row mz-extra" data-mz="extra"></div>
+      </div>
+      <div class="mz-foot">
+        <div><span>Consommation estimée</span><b data-mz="watts">— W</b></div>
+        <div><span>Portes</span><b data-mz="locks">—</b></div>
+      </div>
+    </aside>
+  </div>
+  <script type="application/json" data-mz="data">{"rooms": [{"k": "salon", "name": "Salon", "w": 180, "x": 26.8, "y": 55.54, "temp": 21, "store": true}, {"k": "cuisine", "name": "Cuisine", "w": 220, "x": 32.41, "y": 32.66, "temp": 21}, {"k": "chambre", "name": "Chambre", "w": 90, "x": 57.0, "y": 33.87, "temp": 19, "store": true}, {"k": "sdb", "name": "Salle de bain", "w": 70, "x": 67.97, "y": 34.07, "temp": 23}, {"k": "bureau", "name": "Bureau", "w": 80, "x": 56.49, "y": 58.57, "temp": 21}, {"k": "entree", "name": "Entrée", "w": 60, "x": 44.07, "y": 67.79, "lock": true}, {"k": "garage", "name": "Garage", "w": 120, "x": 82.28, "y": 47.18, "door": true}, {"k": "terrasse", "name": "Terrasse", "w": 140, "x": 27.27, "y": 12.35, "fire": true}, {"k": "piscine", "name": "Piscine", "w": 300, "x": 63.3, "y": 17.34, "water": 28}, {"k": "exterieur", "name": "Extérieur", "w": 160, "x": 47.29, "y": 80.14}], "scenes": {"matin": {"label": "Matin", "rooms": {"chambre": [0.45, "neutre"], "sdb": [0.85, "froide"], "cuisine": [0.9, "neutre"], "entree": [0.3, "neutre"]}, "lock": false, "door": false}, "soiree": {"label": "Soirée", "rooms": {"salon": [0.6, "chaude"], "cuisine": [0.45, "chaude"], "terrasse": [0.75, "chaude"], "piscine": [0.85, "eau"], "exterieur": [0.6, "chaude"], "entree": [0.4, "chaude"], "chambre": [0.15, "chaude"]}, "lock": false, "door": false}, "cinema": {"label": "Cinéma", "rooms": {"salon": [0.22, "cinema"], "entree": [0.08, "chaude"], "exterieur": [0.25, "chaude"]}, "lock": true, "door": false}, "nuit": {"label": "Nuit", "rooms": {"exterieur": [0.22, "chaude"], "entree": [0.08, "chaude"]}, "lock": true, "door": false}, "absent": {"label": "Absent", "rooms": {"salon": [0.3, "chaude"]}, "lock": true, "door": false, "away": true}}}</script>
+</div>
+<p class="demo-hint">Touchez une pièce ou choisissez une ambiance · démonstration, aucun appareil réel</p>
 </section>
 
 <!-- JARVIS en direct : vraies données, décisions simulées -->
@@ -183,6 +254,117 @@
       <ol data-live="journal"></ol>
     </div>
   </div>
+</section>
+
+<!-- BouLance en direct : batteries réelles + radar -->
+<section class="sect" id="boulance" aria-labelledby="boulance-titre">
+  <div class="head" data-rev style="max-width:52rem;margin:0 auto 3rem;text-align:center">
+    <p class="eyebrow" style="display:inline-flex;align-items:center;gap:.7rem"><i class="dot" aria-hidden="true"></i> Le laboratoire mobile · en direct</p>
+    <h2 id="boulance-titre" style="margin:1.1rem 0 0;font-weight:700;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:-.04em;line-height:1.06">Les batteries de l’ambulance.<br><em>Pour vrai, en ce moment.</em></h2>
+    <p style="color:#c4c4cc;max-width:40rem;margin:1.2rem auto 0">Deux batteries LiFePO₄ de 280 Ah, lues par Home Assistant dans le véhicule et
+    affichées ici en direct. C’est exactement ce que JARVIS fera chez vous : des données vraies, jamais inventées.</p>
+  </div>
+  <div class="demo-shell bl" data-demo="boulance" data-rev>
+  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · BouLance · Énergie</b>
+    <span class="bl-state" data-bl="state"><i class="dot is-off" aria-hidden="true"></i>Connexion…</span>
+    <span class="tag tag-real">Données réelles</span></div>
+  <div class="demo-body bl-body">
+    <article class="bl-bat" data-bat="0">
+      <div class="bl-pack" aria-hidden="true">
+        <span class="bl-cap"></span>
+        <div class="bl-cell">
+          <svg class="bl-liquid" viewBox="0 0 200 400" preserveAspectRatio="none">
+            <path class="bl-wave w1" d=""></path><path class="bl-wave w2" d=""></path>
+          </svg>
+          <div class="bl-shine"></div>
+          <b class="bl-soc"><span data-bl="soc">--</span><i>%</i></b>
+        </div>
+      </div>
+      <div class="bl-info">
+        <p class="bl-k">Batterie A <span class="bl-flag" data-bl="flag"></span></p>
+        <dl class="bl-stats">
+          <div><dt>Tension</dt><dd data-bl="v">—</dd></div>
+          <div><dt>Courant</dt><dd data-bl="a">—</dd></div>
+          <div><dt>Température</dt><dd data-bl="t">—</dd></div>
+          <div><dt>Énergie</dt><dd data-bl="wh">—</dd></div>
+          <div><dt>Écart cellules</dt><dd data-bl="cells">—</dd></div>
+          <div><dt>Cycles</dt><dd data-bl="cycles">—</dd></div>
+        </dl>
+        <p class="bl-mos"><span data-bl="chg">Charge</span><span data-bl="dsg">Décharge</span><span data-bl="bal">Équilibrage</span></p>
+      </div>
+    </article>
+    <div class="bl-mid">
+      <p class="bl-k">Réserve totale</p>
+      <p class="bl-total"><b data-bl="kwh">—</b><i>kWh</i></p>
+      <p class="bl-sub"><span data-bl="ah">— Ah</span> · <span data-bl="w">— W</span></p>
+      <div class="bl-flow" data-bl="flow" aria-hidden="true">
+        <span class="bl-node n-in">Solaire<br>et chargeur</span>
+        <span class="bl-node n-bat">Batteries</span>
+        <span class="bl-node n-out">Ambulance</span>
+        <svg viewBox="0 0 300 60" preserveAspectRatio="none"><path class="bl-wire" d="M40 30 H150 H260"/>
+          <circle class="bl-dot d1" r="4"/><circle class="bl-dot d2" r="4"/><circle class="bl-dot d3" r="4"/></svg>
+      </div>
+      <p class="bl-mode" data-bl="mode">—</p>
+      <div class="bl-chart">
+        <p class="bl-k">24 dernières heures</p>
+        <svg viewBox="0 0 300 90" preserveAspectRatio="none" data-bl="chart" aria-label="Énergie stockée sur 24 heures">
+          <defs><linearGradient id="blg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".45"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+          <path class="bl-area" d=""/><path class="bl-line" d=""/>
+        </svg>
+        <p class="bl-axis"><span>il y a 24 h</span><span data-bl="range">—</span><span>maintenant</span></p>
+      </div>
+    </div>
+    <article class="bl-bat" data-bat="1">
+      <div class="bl-pack" aria-hidden="true">
+        <span class="bl-cap"></span>
+        <div class="bl-cell">
+          <svg class="bl-liquid" viewBox="0 0 200 400" preserveAspectRatio="none">
+            <path class="bl-wave w1" d=""></path><path class="bl-wave w2" d=""></path>
+          </svg>
+          <div class="bl-shine"></div>
+          <b class="bl-soc"><span data-bl="soc">--</span><i>%</i></b>
+        </div>
+      </div>
+      <div class="bl-info">
+        <p class="bl-k">Batterie B <span class="bl-flag" data-bl="flag"></span></p>
+        <dl class="bl-stats">
+          <div><dt>Tension</dt><dd data-bl="v">—</dd></div>
+          <div><dt>Courant</dt><dd data-bl="a">—</dd></div>
+          <div><dt>Température</dt><dd data-bl="t">—</dd></div>
+          <div><dt>Énergie</dt><dd data-bl="wh">—</dd></div>
+          <div><dt>Écart cellules</dt><dd data-bl="cells">—</dd></div>
+          <div><dt>Cycles</dt><dd data-bl="cycles">—</dd></div>
+        </dl>
+        <p class="bl-mos"><span data-bl="chg">Charge</span><span data-bl="dsg">Décharge</span><span data-bl="bal">Équilibrage</span></p>
+      </div>
+    </article>
+  </div>
+  <p class="bl-foot"><span data-bl="age">En attente de la première mesure</span> · actualisé toutes les 5 secondes ·
+  source : Home Assistant de l’ambulance (BMS Bluetooth)</p>
+</div>
+  <div style="height:16px"></div>
+  <div class="demo-shell ct" data-demo="carte" data-rev>
+  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · Radar en direct</b>
+    <span class="ct-time" data-ct="time">—</span>
+    <span class="tag tag-real">Données réelles</span></div>
+  <div class="demo-body ct-body">
+    <div class="ct-map" data-ct="map" role="img" aria-label="Carte radar des précipitations autour de Saint-Hyacinthe">
+      <p class="ct-wait" data-ct="wait">Chargement de la carte…</p>
+    </div>
+    <div class="ct-card">
+      <p class="ct-k">BouLance · lieu de base</p>
+      <h3>Saint-Hyacinthe</h3>
+      <p class="ct-now"><b data-ct="temp">—</b><span data-ct="cond">Conditions actuelles</span></p>
+      <p class="ct-note">Position fixe, choisie par le propriétaire : aucune position en direct n’est publiée.</p>
+    </div>
+    <div class="ct-legend" aria-hidden="true"><span>Faible</span><i></i><span>Forte</span><em>Pluie · neige</em></div>
+  </div>
+  <div class="ct-bar">
+    <button type="button" class="ct-play" data-ct="play" aria-label="Mettre en pause l’animation">❚❚</button>
+    <div class="ct-track" data-ct="track"></div>
+    <span class="ct-src">Radar : Environnement et Changement climatique Canada · carte : OpenFreeMap, © OpenMapTiles, © contributeurs OpenStreetMap</span>
+  </div>
+</div>
 </section>
 
 <!-- Comment ça marche -->
@@ -607,5 +789,8 @@
   <p class="foot-line"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span>Privé par conception</span></p>
 </footer>
 <script src="/assets/js/wow.js?v=20261106a" defer></script>
+<script src="/assets/demos/maison.js?v=20261106a" defer></script>
+<script src="/assets/demos/boulance.js?v=20261106a" defer></script>
+<script src="/assets/demos/carte.js?v=20261106a" defer></script>
 </body>
 </html>

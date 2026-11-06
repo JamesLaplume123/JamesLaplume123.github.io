@@ -392,6 +392,7 @@
       lastData = d;
       var tShort = d.temp !== null ? Math.round(d.temp) + " °C" : "—";
       setText("temp-short", tShort);
+      setText("temp-hud", d.temp !== null ? Math.round(d.temp) + " °C · " + (d.condition || "").toLowerCase() : "— °C");
       if (!liveRoot) return;
       var tEl = $('[data-live="temp"]', liveRoot);
       if (d.temp !== null) {
@@ -603,8 +604,142 @@
     });
   });
 
+  /* ---------- Vitrine de l'app : onglets automatiques ---------- */
+  $$("[data-vitrine]").forEach(function (stage) {
+    var root = stage.closest(".vitrine") || document;
+    var bar = $(".vit-tabs", root);
+    var tabs = $$(".vit-tabs button", root), slides = $$(".vit-slide", stage), caps = $$(".vit-cap", root);
+    var sweep = $(".vit-sweep", stage), device = $(".vit-device", stage);
+    var n = slides.length, cur = 0, DUR = 7000, timer = null, startedAt = 0, left = DUR, visible = false, hover = false;
+    bar.style.setProperty("--dur", DUR + "ms");
+    function show(i) {
+      if (i === cur) return;
+      var prev = slides[cur];
+      prev.classList.remove("is-on", "show-hots");
+      prev.classList.add("is-out");
+      setTimeout(function () { prev.classList.remove("is-out"); }, 1200);
+      cur = i;
+      slides[i].classList.add("is-on");
+      requestAnimationFrame(function () { slides[i].classList.add("show-hots"); });
+      tabs.forEach(function (t, k) {
+        t.classList.remove("is-on");
+        t.setAttribute("aria-selected", k === i ? "true" : "false");
+      });
+      void tabs[i].offsetWidth;
+      tabs[i].classList.add("is-on");
+      caps.forEach(function (c, k) { c.classList.toggle("is-on", k === i); });
+      if (sweep) { sweep.classList.remove("go"); void sweep.offsetWidth; sweep.classList.add("go"); }
+      left = DUR;
+      arm();
+    }
+    function arm() {
+      clearTimeout(timer);
+      if (reduce || !visible || hover) return;
+      startedAt = Date.now();
+      timer = setTimeout(function () { show((cur + 1) % n); }, left);
+    }
+    function pause() {
+      if (timer) { clearTimeout(timer); timer = null; left = Math.max(300, left - (Date.now() - startedAt)); }
+      bar.classList.add("is-paused");
+    }
+    tabs.forEach(function (t, k) {
+      t.addEventListener("click", function () { show(k); });
+      t.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          var j = (cur + (e.key === "ArrowRight" ? 1 : n - 1)) % n;
+          show(j); tabs[j].focus();
+        }
+      });
+    });
+    stage.addEventListener("pointerenter", function () { hover = true; pause(); });
+    stage.addEventListener("pointerleave", function () {
+      hover = false; bar.classList.remove("is-paused"); arm();
+      if (device) device.style.transform = "";
+    });
+    if (finePointer && !reduce && device) {
+      stage.addEventListener("pointermove", function (e) {
+        var r = stage.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+        device.style.transform = "rotateY(" + (x * 4).toFixed(2) + "deg) rotateX(" + (-y * 4).toFixed(2) + "deg)";
+      });
+    }
+    if (reduce) { bar.classList.add("is-manual"); slides[0].classList.add("show-hots"); return; }
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        visible = e.isIntersecting;
+        if (visible) {
+          stage.classList.add("in");
+          if (!slides[cur].classList.contains("show-hots")) setTimeout(function () { slides[cur].classList.add("show-hots"); }, 700);
+          bar.classList.remove("is-paused");
+          arm();
+        } else pause();
+      });
+    }, { threshold: .35 }).observe(stage);
+  });
+
   if (reduce) return;
   doc.classList.add("fx");
+
+  /* ---------- Héros : lumières et HUD placés sur l'image (object-fit: cover) ---------- */
+  var heroBox = $("[data-hero]");
+  if (heroBox) {
+    var lit = $(".bg img.lit", heroBox), hud = $(".hud", heroBox);
+    var LIGHTS = [[58, 47], [74, 50], [35, 78], [27, 63], [88, 50], [55, 12], [50, 55]];
+    var map = function (ix, iy) {
+      var W = heroBox.clientWidth, H = heroBox.clientHeight, R = 1916 / 821;
+      var w = Math.max(W, H * R), h = w / R;
+      return [((ix / 100) * w - (w - W) / 2) / W * 100, ((iy / 100) * h - (h - H) / 2) / H * 100];
+    };
+    var svgNS = "http://www.w3.org/2000/svg";
+    var svg = hud ? document.createElementNS(svgNS, "svg") : null;
+    var tags = hud ? $$(".hud-tag", hud) : [];
+    var marks = [];
+    if (svg) {
+      svg.setAttribute("viewBox", "0 0 100 100");
+      svg.setAttribute("preserveAspectRatio", "none");
+      hud.insertBefore(svg, hud.firstChild);
+      tags.forEach(function (t, k) {
+        var ln = document.createElementNS(svgNS, "line");
+        var pt = document.createElement("i");
+        pt.className = "hud-pt";
+        t.style.setProperty("--k", k);
+        ln.style.setProperty("--k", k);
+        pt.style.setProperty("--k", k);
+        svg.appendChild(ln);
+        hud.appendChild(pt);
+        marks.push({ tag: t, ln: ln, pt: pt });
+      });
+    }
+    var place = function () {
+      if (lit) LIGHTS.forEach(function (l, i) {
+        var m = map(l[0], l[1]);
+        lit.style.setProperty("--m" + (i + 1), m[0].toFixed(1) + "% " + m[1].toFixed(1) + "%");
+      });
+      var narrow = heroBox.clientWidth < 880;
+      marks.forEach(function (m) {
+        var cs = m.tag.style;
+        var p = map(parseFloat(cs.getPropertyValue("--px")), parseFloat(cs.getPropertyValue("--py")));
+        var tx = parseFloat(cs.getPropertyValue("--x")), ty = parseFloat(cs.getPropertyValue("--y"));
+        var off = p[0] < 4 || p[0] > 96 || (narrow && !m.tag.classList.contains("t-out") && !m.tag.classList.contains("t-salon"));
+        m.tag.classList.toggle("is-off", off);
+        m.pt.style.display = m.ln.style.display = off ? "none" : "";
+        m.pt.style.left = p[0] + "%";
+        m.pt.style.top = p[1] + "%";
+        m.ln.setAttribute("x1", tx); m.ln.setAttribute("y1", ty);
+        m.ln.setAttribute("x2", p[0].toFixed(2)); m.ln.setAttribute("y2", p[1].toFixed(2));
+      });
+    };
+    place();
+    addEventListener("resize", place);
+    if (hud) setTimeout(function () { hud.classList.add("on"); }, 3600);
+    /* Salutation selon l'heure à Saint-Hyacinthe */
+    var greet = $("[data-greet]", heroBox);
+    if (greet) {
+      var hr = +partsInTz(new Date()).hour;
+      greet.textContent = hr < 5 ? "Bonne nuit · la maison veille" : hr < 12 ? "Bonjour · la maison s’éveille"
+        : hr < 18 ? "Bon après-midi · la maison s’adapte" : hr < 22 ? "Bonsoir · la maison s’allume" : "Bonne nuit · la maison veille";
+    }
+  }
 
   function prog(el) {
     var r = el.getBoundingClientRect();
@@ -614,7 +749,7 @@
   /* Filet de sécurité : tout redevient visible (impression) */
   function defuse() {
     doc.classList.remove("fx");
-    $$(".scene .t1,.scene .t2,.scene .t3,.scene img,.hero .bg img,.tour-screen,.tour-copy")
+    $$(".scene .t1,.scene .t2,.scene .t3,.scene img,.hero .bg,.hero .bg img")
       .forEach(function (el) { el.style.opacity = ""; el.style.transform = ""; el.style.filter = ""; });
   }
   addEventListener("beforeprint", defuse);
@@ -663,7 +798,7 @@
 
   /* Héros : zoom, assombrissement et parallaxe à la souris */
   var hero = $("[data-hero]") || $(".hero");
-  var heroImg = hero ? $(".bg img", hero) : null;
+  var heroImg = hero ? $(".bg", hero) : null;
   var mx = 0, my = 0, tmx = 0, tmy = 0;
   if (hero && finePointer) {
     hero.addEventListener("pointermove", function (e) {
@@ -679,29 +814,6 @@
   var scenes = $$(".scene").map(function (s) {
     return { el: s, img: $("img", s), t1: $(".t1", s), t2: $(".t2", s), t3: $(".t3", s) };
   });
-
-  /* Visite de l'app : étapes liées au défilement */
-  var tour = $(".tour");
-  var tourState = null;
-  if (tour) {
-    tourState = {
-      screen: $(".tour-screen", tour), copy: $(".tour-copy", tour), note: $(".tour-note", tour),
-      imgs: $$(".tour-screen img", tour), steps: $$(".tour-step", tour), rail: $$(".tour-rail li", tour),
-      sweep: $(".tour-sweep", tour), cur: 0
-    };
-    tourState.n = tourState.imgs.length;
-  }
-  function tourStep(i) {
-    var s = tourState;
-    if (i === s.cur) return;
-    s.cur = i;
-    [s.imgs, s.steps, s.rail].forEach(function (list) {
-      list.forEach(function (el, k) { el.classList.toggle("is-on", k === i); });
-    });
-    s.sweep.classList.remove("go");
-    void s.sweep.offsetWidth;
-    s.sweep.classList.add("go");
-  }
 
   function frame() {
     var vh = innerHeight;
@@ -733,21 +845,6 @@
       if (s.t2) s.t2.style.opacity = Math.min(c01((hp - .35) * 4), fade);
       if (s.t3) s.t3.style.opacity = Math.min(c01((hp - .5) * 4), fade);
     });
-    if (tourState) {
-      var tr = tour.getBoundingClientRect();
-      if (tr.bottom > -vh && tr.top < vh * 2) {
-        var en = c01((vh - tr.top) / vh), ex = c01(tr.bottom / vh);
-        var tp = c01(-tr.top / Math.max(1, tr.height - vh));
-        tourStep(Math.min(tourState.n - 1, Math.floor(tp * tourState.n)));
-        var e = easeOut(en);
-        var o = Math.min(c01((en - .78) / .2), c01((ex - .76) / .2));
-        tourState.screen.style.opacity = o.toFixed(3);
-        tourState.screen.style.transform = "rotateX(" + ((1 - e) * 24).toFixed(2) + "deg) translateY(" + ((1 - e) * 70).toFixed(1) + "px) scale(" + (.9 + .1 * e - (1 - c01(ex * 1.4)) * .06).toFixed(4) + ")";
-        tourState.copy.style.opacity = o.toFixed(3);
-        tourState.copy.style.transform = "translateY(" + ((1 - e) * 40).toFixed(1) + "px)";
-        tourState.note.style.opacity = o.toFixed(3);
-      }
-    }
   }
   var queued = false;
   function schedule() {

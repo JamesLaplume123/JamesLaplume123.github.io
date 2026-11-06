@@ -23,6 +23,9 @@
 <script>try{var m=new URLSearchParams(location.search).get("mode")||localStorage.getItem("jarvis-mode");if(m==="base"||m==="signature"||m==="platinum")document.documentElement.dataset.mode=m}catch(e){}</script>
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/wow.css?v=20261106a">
+<link rel="stylesheet" href="/assets/demos/boulance.css?v=20261106a">
+<link rel="stylesheet" href="/assets/demos/carte.css?v=20261106a">
+<link rel="stylesheet" href="/assets/demos/ambiances.css?v=20261106a">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -71,6 +74,118 @@
   <p data-rev>Le Laboratoire mobile n’est pas une offre séparée. C’est le premier endroit où
   l’énergie, l’eau, le confort, le véhicule, le réseau, la sécurité et le diagnostic devront
   fonctionner ensemble dans des conditions réelles.</p>
+</section>
+
+<section class="sect" id="direct">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow"><i class="dot" aria-hidden="true"></i> En direct · données réelles</p>
+      <h2 style="margin-top:1rem">Les batteries de l’ambulance, <em>en ce moment.</em></h2>
+    </div>
+    <p data-rev>Ces valeurs viennent directement des deux batteries LiFePO₄ de BouLance, lues par
+    Home Assistant dans le véhicule. Rien n’est simulé : si la liaison tombe, le panneau le dit.</p>
+  </div>
+<div class="demo-shell bl" data-demo="boulance" data-rev>
+  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · BouLance · Énergie</b>
+    <span class="bl-state" data-bl="state"><i class="dot is-off" aria-hidden="true"></i>Connexion…</span>
+    <span class="tag tag-real">Données réelles</span></div>
+  <div class="demo-body bl-body">
+    <article class="bl-bat" data-bat="0">
+      <div class="bl-pack" aria-hidden="true">
+        <span class="bl-cap"></span>
+        <div class="bl-cell">
+          <svg class="bl-liquid" viewBox="0 0 200 400" preserveAspectRatio="none">
+            <path class="bl-wave w1" d=""></path><path class="bl-wave w2" d=""></path>
+          </svg>
+          <div class="bl-shine"></div>
+          <b class="bl-soc"><span data-bl="soc">--</span><i>%</i></b>
+        </div>
+      </div>
+      <div class="bl-info">
+        <p class="bl-k">Batterie A <span class="bl-flag" data-bl="flag"></span></p>
+        <dl class="bl-stats">
+          <div><dt>Tension</dt><dd data-bl="v">—</dd></div>
+          <div><dt>Courant</dt><dd data-bl="a">—</dd></div>
+          <div><dt>Température</dt><dd data-bl="t">—</dd></div>
+          <div><dt>Énergie</dt><dd data-bl="wh">—</dd></div>
+          <div><dt>Écart cellules</dt><dd data-bl="cells">—</dd></div>
+          <div><dt>Cycles</dt><dd data-bl="cycles">—</dd></div>
+        </dl>
+        <p class="bl-mos"><span data-bl="chg">Charge</span><span data-bl="dsg">Décharge</span><span data-bl="bal">Équilibrage</span></p>
+      </div>
+    </article>
+    <div class="bl-mid">
+      <p class="bl-k">Réserve totale</p>
+      <p class="bl-total"><b data-bl="kwh">—</b><i>kWh</i></p>
+      <p class="bl-sub"><span data-bl="ah">— Ah</span> · <span data-bl="w">— W</span></p>
+      <div class="bl-flow" data-bl="flow" aria-hidden="true">
+        <span class="bl-node n-in">Solaire<br>et chargeur</span>
+        <span class="bl-node n-bat">Batteries</span>
+        <span class="bl-node n-out">Ambulance</span>
+        <svg viewBox="0 0 300 60" preserveAspectRatio="none"><path class="bl-wire" d="M40 30 H150 H260"/>
+          <circle class="bl-dot d1" r="4"/><circle class="bl-dot d2" r="4"/><circle class="bl-dot d3" r="4"/></svg>
+      </div>
+      <p class="bl-mode" data-bl="mode">—</p>
+      <div class="bl-chart">
+        <p class="bl-k">24 dernières heures</p>
+        <svg viewBox="0 0 300 90" preserveAspectRatio="none" data-bl="chart" aria-label="Énergie stockée sur 24 heures">
+          <defs><linearGradient id="blg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".45"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+          <path class="bl-area" d=""/><path class="bl-line" d=""/>
+        </svg>
+        <p class="bl-axis"><span>il y a 24 h</span><span data-bl="range">—</span><span>maintenant</span></p>
+      </div>
+    </div>
+    <article class="bl-bat" data-bat="1">
+      <div class="bl-pack" aria-hidden="true">
+        <span class="bl-cap"></span>
+        <div class="bl-cell">
+          <svg class="bl-liquid" viewBox="0 0 200 400" preserveAspectRatio="none">
+            <path class="bl-wave w1" d=""></path><path class="bl-wave w2" d=""></path>
+          </svg>
+          <div class="bl-shine"></div>
+          <b class="bl-soc"><span data-bl="soc">--</span><i>%</i></b>
+        </div>
+      </div>
+      <div class="bl-info">
+        <p class="bl-k">Batterie B <span class="bl-flag" data-bl="flag"></span></p>
+        <dl class="bl-stats">
+          <div><dt>Tension</dt><dd data-bl="v">—</dd></div>
+          <div><dt>Courant</dt><dd data-bl="a">—</dd></div>
+          <div><dt>Température</dt><dd data-bl="t">—</dd></div>
+          <div><dt>Énergie</dt><dd data-bl="wh">—</dd></div>
+          <div><dt>Écart cellules</dt><dd data-bl="cells">—</dd></div>
+          <div><dt>Cycles</dt><dd data-bl="cycles">—</dd></div>
+        </dl>
+        <p class="bl-mos"><span data-bl="chg">Charge</span><span data-bl="dsg">Décharge</span><span data-bl="bal">Équilibrage</span></p>
+      </div>
+    </article>
+  </div>
+  <p class="bl-foot"><span data-bl="age">En attente de la première mesure</span> · actualisé toutes les 5 secondes ·
+  source : Home Assistant de l’ambulance (BMS Bluetooth)</p>
+</div>
+  <div style="height:16px"></div>
+<div class="demo-shell ct" data-demo="carte" data-rev>
+  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · Radar en direct</b>
+    <span class="ct-time" data-ct="time">—</span>
+    <span class="tag tag-real">Données réelles</span></div>
+  <div class="demo-body ct-body">
+    <div class="ct-map" data-ct="map" role="img" aria-label="Carte radar des précipitations autour de Saint-Hyacinthe">
+      <p class="ct-wait" data-ct="wait">Chargement de la carte…</p>
+    </div>
+    <div class="ct-card">
+      <p class="ct-k">BouLance · lieu de base</p>
+      <h3>Saint-Hyacinthe</h3>
+      <p class="ct-now"><b data-ct="temp">—</b><span data-ct="cond">Conditions actuelles</span></p>
+      <p class="ct-note">Position fixe, choisie par le propriétaire : aucune position en direct n’est publiée.</p>
+    </div>
+    <div class="ct-legend" aria-hidden="true"><span>Faible</span><i></i><span>Forte</span><em>Pluie · neige</em></div>
+  </div>
+  <div class="ct-bar">
+    <button type="button" class="ct-play" data-ct="play" aria-label="Mettre en pause l’animation">❚❚</button>
+    <div class="ct-track" data-ct="track"></div>
+    <span class="ct-src">Radar : Environnement et Changement climatique Canada · carte : OpenFreeMap, © OpenMapTiles, © contributeurs OpenStreetMap</span>
+  </div>
+</div>
 </section>
 
 <section class="sect alt">
@@ -141,13 +256,30 @@
       <strong>L’essentiel de votre véhicule et de votre séjour — maquette, données d’exemple.</strong>
     </figcaption>
   </figure>
-  <div class="chiprow" data-rev>
-    <span class="chip">Batterie cellule 78 %</span>
-    <span class="chip">Eau propre 72 %</span>
-    <span class="chip">Intérieur 21 °C</span>
-    <span class="chip">LTE active · Starlink en secours</span>
-    <span class="chip chip-sim">Maquette · données d’exemple</span>
+  <div style="height:16px"></div>
+<div class="demo-shell am" data-demo="ambiances" data-rev>
+  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · Studio lumière</b>
+    <span class="tag tag-sim">Démo · photos du module Éclairage</span></div>
+  <div class="demo-body">
+    <div class="am-stage">
+      <img class="am-img is-on" data-k="heure-doree" src="/media/ambiances/heure-doree.webp" alt="Ambiance Heure dorée : la même pièce éclairée autrement" width="1586" height="992" loading="eager" decoding="async"><img class="am-img" data-k="aurore" src="/media/ambiances/aurore.webp" alt="Ambiance Aurore : la même pièce éclairée autrement" width="1586" height="992" loading="lazy" decoding="async"><img class="am-img" data-k="lecture" src="/media/ambiances/lecture.webp" alt="Ambiance Lecture : la même pièce éclairée autrement" width="1586" height="992" loading="lazy" decoding="async"><img class="am-img" data-k="ocean" src="/media/ambiances/ocean.webp" alt="Ambiance Océan : la même pièce éclairée autrement" width="1586" height="992" loading="lazy" decoding="async"><img class="am-img" data-k="cinema" src="/media/ambiances/cinema.webp" alt="Ambiance Cinéma : la même pièce éclairée autrement" width="1586" height="992" loading="lazy" decoding="async"><img class="am-img" data-k="nuit-douce" src="/media/ambiances/nuit-douce.webp" alt="Ambiance Nuit douce : la même pièce éclairée autrement" width="1586" height="992" loading="lazy" decoding="async">
+      <i class="am-front" aria-hidden="true"></i>
+      <div class="am-card">
+        <p class="am-k">Couloir · ambiance</p>
+        <h3 data-am="name">Heure dorée</h3>
+        <p class="am-state" data-am="state"><i class="dot" aria-hidden="true"></i><span>Appliquée</span></p>
+        <div class="am-acts">
+          <button type="button" class="am-apply" data-am="apply" disabled>Appliquer</button>
+          <button type="button" class="am-back" data-am="back" hidden>Revenir</button>
+        </div>
+        <label class="am-dim"><span>Intensité</span><input type="range" min="40" max="115" value="100" data-am="dim" aria-label="Intensité"></label>
+      </div>
+      <p class="am-auto" data-am="auto"><i class="dot" aria-hidden="true"></i>Démonstration automatique · touchez une ambiance</p>
+    </div>
+    <div class="am-chips" role="group" aria-label="Choisir une ambiance"><button type="button" data-k="heure-doree" data-name="Heure dorée" style="--sw:linear-gradient(135deg,#ffd18a,#c77a2b)" class="is-on is-applied"><i aria-hidden="true"></i>Heure dorée</button><button type="button" data-k="aurore" data-name="Aurore" style="--sw:linear-gradient(135deg,#3ee0c8,#8a5cff 60%,#ff5fa8)"><i aria-hidden="true"></i>Aurore</button><button type="button" data-k="lecture" data-name="Lecture" style="--sw:linear-gradient(135deg,#fff3dc,#e8c99a)"><i aria-hidden="true"></i>Lecture</button><button type="button" data-k="ocean" data-name="Océan" style="--sw:linear-gradient(135deg,#4fc3ff,#1f4fd8)"><i aria-hidden="true"></i>Océan</button><button type="button" data-k="cinema" data-name="Cinéma" style="--sw:linear-gradient(135deg,#b07cff,#4b1fa8)"><i aria-hidden="true"></i>Cinéma</button><button type="button" data-k="nuit-douce" data-name="Nuit douce" style="--sw:linear-gradient(135deg,#8a6a3a,#2a1f12)"><i aria-hidden="true"></i>Nuit douce</button></div>
   </div>
+</div>
+<p class="demo-hint">Un aperçu n’envoie rien · « Appliquer » envoie, puis JARVIS confirme · démonstration, aucun appareil réel</p>
   <div class="shots" data-rev style="margin-top:14px;grid-template-columns:1fr 1fr">
     <figure>
       <img decoding="async" src="/media/product/outils/mobilite.jpg"
@@ -249,5 +381,8 @@
   <p class="foot-line"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span>Privé par conception</span></p>
 </footer>
 <script src="/assets/js/wow.js?v=20261106a" defer></script>
+<script src="/assets/demos/boulance.js?v=20261106a" defer></script>
+<script src="/assets/demos/carte.js?v=20261106a" defer></script>
+<script src="/assets/demos/ambiances.js?v=20261106a" defer></script>
 </body>
 </html>

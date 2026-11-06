@@ -1,5 +1,7 @@
 # Laboratoire mobile — où les idées sont testées dans le monde réel. Version wow.
 
+from demos import ambiances, boulance, carte
+
 PAGE = {
     "url": "/laboratoire-mobile/",
     "v2": True,
@@ -9,6 +11,7 @@ PAGE = {
         "le réseau, la sécurité, le diagnostic et l’automatisation."
     ),
     "og_image": "/media/ambulance/ambulance-garage-lab-v1.webp",
+    "assets": ["boulance", "carte", "ambiances"],
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="" fetchpriority="high"></div>
@@ -37,6 +40,20 @@ PAGE = {
   <p data-rev>Le Laboratoire mobile n’est pas une offre séparée. C’est le premier endroit où
   l’énergie, l’eau, le confort, le véhicule, le réseau, la sécurité et le diagnostic devront
   fonctionner ensemble dans des conditions réelles.</p>
+</section>
+
+<section class="sect" id="direct">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow"><i class="dot" aria-hidden="true"></i> En direct · données réelles</p>
+      <h2 style="margin-top:1rem">Les batteries de l’ambulance, <em>en ce moment.</em></h2>
+    </div>
+    <p data-rev>Ces valeurs viennent directement des deux batteries LiFePO₄ de BouLance, lues par
+    Home Assistant dans le véhicule. Rien n’est simulé : si la liaison tombe, le panneau le dit.</p>
+  </div>
+""" + boulance.html() + """
+  <div style="height:16px"></div>
+""" + carte.html() + """
 </section>
 
 <section class="sect alt">
@@ -107,13 +124,8 @@ PAGE = {
       <strong>L’essentiel de votre véhicule et de votre séjour — maquette, données d’exemple.</strong>
     </figcaption>
   </figure>
-  <div class="chiprow" data-rev>
-    <span class="chip">Batterie cellule 78 %</span>
-    <span class="chip">Eau propre 72 %</span>
-    <span class="chip">Intérieur 21 °C</span>
-    <span class="chip">LTE active · Starlink en secours</span>
-    <span class="chip chip-sim">Maquette · données d’exemple</span>
-  </div>
+  <div style="height:16px"></div>
+""" + ambiances.html("Couloir") + """
   <div class="shots" data-rev style="margin-top:14px;grid-template-columns:1fr 1fr">
     <figure>
       <img src="/media/product/outils/mobilite.jpg"

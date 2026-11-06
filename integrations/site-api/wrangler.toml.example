@@ -6,10 +6,11 @@ compatibility_date = "2026-11-01"
 ALLOWED_ORIGINS = "https://jameslaplume.ca,https://www.jameslaplume.ca,http://localhost:4173"
 MAIL_FROM = "JARVIS Private Systems <site@jarvisprivatesystems.com>"
 MAIL_TO = "laplumejames@gmail.com"
+HA_URL = "https://ha.jarvisprivatesystems.com"
 
 [[kv_namespaces]]
 binding = "SITE_KV"
 id = "REMPLACER_PAR_L_ID_DU_KV"
 
-# Secrets (jamais ici) : RESEND_API_KEY et LEADS_TOKEN, ajoutés dans le tableau de
+# Secrets (jamais ici) : RESEND_API_KEY, HA_TOKEN et LEADS_TOKEN, ajoutés dans le tableau de
 # bord Cloudflare (Paramètres → Variables et secrets) ou avec `wrangler secret put`.

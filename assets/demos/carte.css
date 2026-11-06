@@ -1,0 +1,46 @@
+/* « Radar en direct » : carte sombre + boucle radar d'Environnement Canada. */
+[data-demo="carte"] { max-width: 84rem; }
+[data-demo="carte"] .demo-top .ct-time { margin-left: auto; color: #fff; font-variant-numeric: tabular-nums; }
+[data-demo="carte"] .demo-top .tag { margin-left: 0; }
+[data-demo="carte"] .ct-body { position: relative; height: clamp(420px, 62vh, 620px); background: #07090c; }
+[data-demo="carte"] .ct-map { position: absolute; inset: 0; }
+[data-demo="carte"] .ct-wait { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; font: 500 .72rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: #a8a8b0; }
+[data-demo="carte"] .maplibregl-canvas { outline: none; }
+[data-demo="carte"] .maplibregl-ctrl-attrib { display: none; }
+[data-demo="carte"] .maplibregl-ctrl-group { background: #050505d0; border: 1px solid #ffffff26; box-shadow: none; }
+[data-demo="carte"] .maplibregl-ctrl-group button + button { border-top-color: #ffffff1f; }
+[data-demo="carte"] .maplibregl-ctrl-icon { filter: invert(1) brightness(1.4); }
+[data-demo="carte"] .ct-card {
+  position: absolute; left: 1.2rem; top: 1.2rem; z-index: 2; width: min(18rem, 70%); padding: 1rem 1.1rem; border-radius: 16px;
+  background: #050505c8; border: 1px solid #ffffff24; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 20px 50px #000c;
+}
+[data-demo="carte"] .ct-k { margin: 0; font: 600 .6rem/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--gold-soft); }
+[data-demo="carte"] .ct-card h3 { margin: .45rem 0 .2rem; font-weight: 700; font-size: 1.45rem; letter-spacing: -.03em; }
+[data-demo="carte"] .ct-now { margin: 0; display: flex; align-items: baseline; gap: .6rem; color: #dcdce0; }
+[data-demo="carte"] .ct-now b { font-weight: 700; font-size: 1.6rem; color: #fff; font-variant-numeric: tabular-nums; }
+[data-demo="carte"] .ct-note { margin: .6rem 0 0; color: #a8a8b0; font-size: .78rem; line-height: 1.45; }
+[data-demo="carte"] .ct-legend {
+  position: absolute; right: 1.2rem; bottom: 1.2rem; z-index: 2; display: flex; align-items: center; gap: .5rem; padding: .5rem .75rem; border-radius: 999px;
+  background: #050505c8; border: 1px solid #ffffff24; font: 500 .6rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #c4c4cc;
+}
+[data-demo="carte"] .ct-legend i { width: 90px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #9be7ff, #3b82f6, #22c55e, #facc15, #f97316, #ef4444, #c026d3); }
+[data-demo="carte"] .ct-legend em { font-style: normal; color: #a8a8b0; margin-left: .3rem; }
+[data-demo="carte"] .ct-marker { position: relative; width: 18px; height: 18px; }
+[data-demo="carte"] .ct-marker i { position: absolute; inset: 0; border-radius: 50%; background: var(--gold-soft); box-shadow: 0 0 0 3px #000, 0 0 22px var(--mode-glow); }
+[data-demo="carte"] .ct-marker i::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid var(--gold-soft); animation: ctPing 2.2s infinite; }
+@keyframes ctPing { from { transform: scale(1); opacity: .9; } to { transform: scale(3.2); opacity: 0; } }
+[data-demo="carte"] .ct-marker b { position: absolute; left: 26px; top: 50%; translate: 0 -50%; white-space: nowrap; font: 600 .74rem/1 var(--sans); color: #fff;
+  padding: .4rem .6rem; border-radius: 8px; background: #050505d8; border: 1px solid color-mix(in srgb, var(--gold-soft) 50%, transparent); }
+[data-demo="carte"] .ct-bar { display: flex; align-items: center; gap: 1rem; padding: .8rem 1.2rem; border-top: 1px solid var(--mode-line); flex-wrap: wrap; }
+[data-demo="carte"] .ct-play { width: 38px; height: 38px; flex: none; border-radius: 50%; border: 1px solid var(--mode-line); background: var(--mode-action); color: var(--mode-on-action); font-size: .7rem; cursor: pointer; }
+[data-demo="carte"] .ct-track { flex: 1; min-width: 12rem; display: flex; gap: 4px; }
+[data-demo="carte"] .ct-track button { flex: 1; height: 26px; border: 0; border-radius: 6px; background: #ffffff12; color: #a8a8b0; font: 500 .58rem/1 var(--mono); cursor: pointer; transition: background .2s, color .2s; }
+[data-demo="carte"] .ct-track button.is-on { background: var(--mode-action); color: var(--mode-on-action); }
+[data-demo="carte"] .ct-src { width: 100%; font: 500 .6rem/1.5 var(--mono); letter-spacing: .04em; color: #8e8e96; }
+@media (max-width: 700px) {
+  [data-demo="carte"] .ct-card { left: .7rem; top: .7rem; padding: .8rem .9rem; }
+  [data-demo="carte"] .ct-note { display: none; }
+  [data-demo="carte"] .ct-legend { display: none; }
+  [data-demo="carte"] .ct-track button { font-size: 0; }
+}
+@media (prefers-reduced-motion: reduce) { [data-demo="carte"] .ct-marker i::after { animation: none; } }

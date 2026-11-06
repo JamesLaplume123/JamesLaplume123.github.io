@@ -4,6 +4,9 @@
 
 import json
 
+from demos import ambiances, maison
+from pages._solution import clair_section
+
 MOMENTS = {
     "matin": {
         "time": "06 H 58 · MATIN",
@@ -49,12 +52,37 @@ MOMENTS = {
 
 MOMENTS_JSON = json.dumps(MOMENTS, ensure_ascii=False)
 
+# « En clair » : la solution expliquée simplement (avant / avec JARVIS).
+CLAIR = {'quoi': 'JARVIS réunit les lumières, le chauffage, les portes et l’énergie de votre maison '
+         '<em>dans une seule application simple.</em>',
+ 'exemple': 'Le soir, vous touchez « Soirée » : le salon passe à 60 %, la terrasse et la piscine '
+            's’allument, le foyer démarre et le chauffage des chambres baisse. Une seule touche au '
+            'lieu de cinq applications.',
+ 'avant': ['Une application par marque d’appareil',
+           'Des automatisations que personne ne comprend',
+           'Rien ne marche quand Internet tombe',
+           'Aucune idée de ce qui consomme'],
+ 'apres': ['Toute la maison sur un seul écran',
+           'Des ambiances claires, que vous approuvez',
+           'Tout fonctionne en local, même sans Internet',
+           'La consommation affichée pièce par pièce'],
+ 'obtenez': [('Un écran pour tout',
+              'Lumières, chauffage, stores, verrous et énergie, pièce par pièce, sur téléphone, '
+              'tablette ou ordinateur.'),
+             ('Des ambiances en une touche',
+              'Matin, Soirée, Cinéma, Nuit, Absent : chaque ambiance est réglée avec vous et reste '
+              'modifiable.'),
+             ('Le contrôle reste humain',
+              'Les actions sensibles, comme déverrouiller ou ouvrir le garage, demandent toujours '
+              'votre confirmation.')]}
+
 PAGE = {
     "url": "/solutions/environnements-intelligents/",
     "v2": True,
     "title": "Environnements intelligents | Solutions JARVIS",
     "description": "Faire travailler ensemble les technologies d’un lieu, sans rendre son utilisation compliquée.",
     "og_image": "/media/solutions/environnements-intelligents.webp",
+    "assets": ["maison", "ambiances"],
     "content": f"""
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
@@ -74,6 +102,20 @@ PAGE = {
       <span class="chip">Contrôle humain</span>
     </div>
   </div>
+</section>
+
+{clair_section(CLAIR)}
+
+<section class="sect" id="essayer">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Essayez · démonstration interactive</p>
+      <h2 style="margin-top:1rem">Touchez une pièce. <em>Elle vous répond.</em></h2>
+    </div>
+    <p data-rev>Choisissez une ambiance ou une pièce : la lumière, le chauffage, les stores et les
+    verrous se règlent sous vos yeux. Chaque commande est envoyée, puis confirmée.</p>
+  </div>
+  {maison.html()}
 </section>
 
 <section class="sect">
@@ -180,23 +222,7 @@ PAGE = {
     <p data-rev>« Bonsoir, James. Installez-vous. La soirée est à vous. » Chaque pièce, chaque
     ambiance, chaque nuance — pensées pour être belles ET honnêtes.</p>
   </div>
-  <figure class="frame" data-rev>
-    <img src="/media/solutions/env/eclairage-bonsoir-james.jpg"
-         alt="Module Éclairage JARVIS — pièces, ambiances et aperçus" loading="lazy">
-    <figcaption>
-      <span>JARVIS · Éclairage</span>
-      <strong>Concept statique illustratif — rien n’est exécuté par cette image.</strong>
-    </figcaption>
-  </figure>
-  <div class="chiprow" data-rev>
-    <span class="chip chip-sim">Les ambiances</span>
-    <span class="chip">Heure dorée</span>
-    <span class="chip">Océan</span>
-    <span class="chip">Aurore</span>
-    <span class="chip">Lecture</span>
-    <span class="chip">Cinéma</span>
-    <span class="chip">Nuit douce</span>
-  </div>
+  {ambiances.html("Salon")}
   <div class="cards" style="margin-top:2.6rem">
     <article class="card" data-rev>
       <small>Règle 01</small>
@@ -222,20 +248,12 @@ PAGE = {
 <section class="sect">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">Aperçu conceptuel · données simulées</p>
+      <p class="eyebrow">Caméras de la propriété · données simulées</p>
       <h2 style="margin-top:1rem">Toute la propriété. <em>Une seule expérience.</em></h2>
     </div>
-    <p data-rev>L’interface réunit les espaces, les ambiances, l’énergie et la sécurité.
+    <p data-rev>Les caméras rejoignent le même écran que les lumières et le chauffage.
     Chaque commande reste visible, compréhensible et réversible.</p>
   </div>
-  <figure class="frame" data-rev>
-    <img src="/media/solutions/jarvis-spaces-property-v3.webp"
-         alt="Plan en trois dimensions d’une propriété intelligente" loading="lazy">
-    <figcaption>
-      <span>JARVIS App · Résidence</span>
-      <strong>Toute la propriété. Une seule expérience. — Données simulées.</strong>
-    </figcaption>
-  </figure>
   <div class="shots" data-rev style="margin-top:14px">
     <figure>
       <img src="/media/solutions/camera-front-entry-v1.webp" alt="Caméra de l’entrée avant de la résidence" loading="lazy">

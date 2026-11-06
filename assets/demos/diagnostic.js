@@ -88,7 +88,7 @@
     D = DATA[S.cas];
     var kp = G.past || 0, kf = G.fut || D.now;
     var W = Math.max(260, Math.round(chart.clientWidth)), small = W < 520;
-    var H = small ? 280 : 410, L = small ? 28 : 34, R = 8, T = 30, B = 20, secH = small ? 38 : 46;
+    var H = small ? 280 : 410, L = small ? 31 : 34, R = 8, T = 30, B = 20, secH = small ? 38 : 46;
     var mainB = H - T - B - 25 - 18 - secH + T, compY = mainB + 17, secT = compY + 8 + 18, secB = H - B;
     G = { W: W, H: H, L: L, R: R, T: T, mainB: mainB, compY: compY, secT: secT, secB: secB, small: small };
     var pw = W - L - R;
@@ -97,6 +97,7 @@
     var sy = function (v) { return secT + (secB - secT) * (1 - (v - D.sy[0]) / (D.sy[1] - D.sy[0])); };
     svg.setAttribute("viewBox", "0 0 " + W + " " + H);
     svg.setAttribute("height", H);
+    svg.classList.toggle("is-small", small);
     while (svg.firstChild) svg.removeChild(svg.firstChild);
 
     var defs = el("defs", {}, svg);

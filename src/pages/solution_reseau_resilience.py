@@ -10,7 +10,7 @@ DATA = {
     "image": "/media/solutions/reseau-resilience.webp",
     "h1": "Réseau et <em>cybersécurité.</em>",
     "lead": "Une vue claire du réseau et de ses risques, avant que chaque problème devienne une urgence.",
-    "for": "Entreprises, multi-sites et environnements technologiques complexes",
+    "for": "Maisons connectées, PME et petits multi-sites qui dépendent de leur réseau",
     "problem_title": "Le réseau soutient tout le reste, <em>mais devient visible seulement lorsqu’il tombe.</em>",
     "problem_copy": (
         "Cette solution vise l’inventaire, la topologie, la disponibilité, les liens Internet, "

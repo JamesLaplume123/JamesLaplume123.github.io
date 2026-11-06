@@ -35,7 +35,7 @@ STORIES = {
     "reseau-resilience": {
         "result": "Une vue vivante du réseau, de ses dépendances, de ses accès privés et des risques à traiter.",
         "points": ["Inventaire, topologie et disponibilité", "Wi-Fi, VPN, LTE, Starlink et multi-sites", "Assistance à la surveillance réseau"],
-        "for": "Entreprises, multi-sites et environnements technologiques complexes",
+        "for": "Maisons connectées, PME et petits multi-sites qui dépendent de leur réseau",
     },
     "diagnostic-care": {
         "result": "Un diagnostic progressif qui relie les symptômes aux preuves et prépare un dossier utile pour intervenir.",

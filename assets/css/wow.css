@@ -71,7 +71,6 @@
   --mode-spec: inset 0 1px 0 #fff0c42e;
   --mode-line: #d3bc9433;
   --mode-glow: #c9a35c;
-  --mode-rim-filter: sepia(1) saturate(2.6) hue-rotate(-10deg) brightness(1.08);
 }
 :root[data-mode="platinum"] {
   --gold-soft: #e6e8ec;
@@ -85,7 +84,6 @@
   --mode-spec: inset 0 1px 1px #ffffff4d, inset 0 -1px 1px #e6e6e61f;
   --mode-line: #cfcfcf33;
   --mode-glow: #aeb8c8;
-  --mode-rim-filter: none;
 }
 :root[data-mode="base"] {
   --gold-soft: #dfdfdf;
@@ -99,7 +97,6 @@
   --mode-spec: inset 0 0 0 transparent;
   --mode-line: #bcbcbc2b;
   --mode-glow: #8a8a8a;
-  --mode-rim-filter: none;
 }
 
 /* ---------- Base ---------- */
@@ -617,14 +614,6 @@ a.row .go {
 .mom-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .mom-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to right, #0d0b09 0, transparent 45%); }
 
-/* Cadre de cristal du logiciel, teinté selon le mode */
-.form-card::before {
-  content: ""; position: absolute; inset: -1px; z-index: 3; pointer-events: none;
-  border: 18px solid transparent;
-  border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch;
-  filter: var(--mode-rim-filter);
-}
-:root[data-mode="base"] .form-card::before { display: none; }
 @media (min-width: 881px) {
   .card, .plan { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 }
@@ -660,8 +649,8 @@ html:not(.js) .foot-modes { display: none; }
 
 /* Formulaire */
 .form-card {
-  position: relative; border: 1px solid var(--mode-line); border-radius: var(--radius);
-  background: var(--mode-panel-solid); box-shadow: 0 18px 44px #0006, var(--mode-spec); padding: 2.2rem 2rem;
+  position: relative; border: 1px solid color-mix(in srgb, var(--gold-soft) 26%, transparent); border-radius: 20px;
+  background: linear-gradient(180deg, #ffffff0a, #ffffff04); box-shadow: 0 30px 70px #0008; padding: 2.2rem 2rem;
 }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
 .field { display: grid; gap: .45rem; align-content: start; }

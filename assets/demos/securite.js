@@ -5,6 +5,11 @@
    JARVIS relie les alertes et les fusionne en un seul événement expliqué.
    Les actions sensibles attendent « Approuver », puis : envoyé → confirmé
    (une commande n'est réussie qu'une fois l'état relu).
+   Rendu de vrai flux : grain du capteur, dérive lente, exposition qui
+   respire, débit qui monte quand ça bouge, bref artefact au mouvement;
+   cadres d'analyse qui suivent avec un léger retard, confiance qui varie,
+   numéro de piste commun aux caméras, trace au sol; caméra active mise
+   en avant. Les photos elles-mêmes ne sont jamais retouchées par ces effets.
    Tout est simulé. Sans JavaScript, le balisage montre l'état final.
    Mouvement réduit : état final directement, aucune boucle.
    Hors écran : tout se met en pause. */
@@ -15,7 +20,7 @@
 
   var reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
   var wide = window.matchMedia ? matchMedia("(min-width: 881px)") : { matches: true };
-  var W = 1672, H = 941, BASE = H * 0.3; // taille des images · hauteur de référence d'une silhouette
+  var W = 1672, H = 941; // taille des images de caméra
   var NBSP = " ";
 
   function $(s, r) { return (r || root).querySelector(s); }
@@ -58,28 +63,58 @@
     cam: '<svg viewBox="0 0 16 16"><rect x="2" y="4.5" width="12" height="8.5" rx="1.5"/><circle cx="8" cy="8.7" r="2.3"/><path d="M5.5 4.5 6.5 3h3l1 1.5"/></svg>'
   };
 
-  /* Silhouette simulée (60 × 160, pieds en bas au centre). */
+  /* Silhouette simulée, vue de trois quarts tournée vers la droite
+     (60 × 170, pieds en bas). Membres du fond plus sombres, membres avant
+     dégradés (lumière venue d'en haut). Une seule forme pleine : aucun
+     contour interne, le liseré de lumière est posé sur le tout en CSS. */
+  var LEG = "M28 86H42.4C43 98 41.6 112 40.2 129C39.8 141 39 152 38.8 160.5L45.2 163.6C47.4 164.6 47.4 167.8 45.2 167.8H32.4C31.4 167.8 31 167 31.1 166L31.8 160.5C31.2 150 30.8 141 30.8 129C29.8 113 28.5 99 28 86Z";
+  var TORSO = "M15 40C15.5 34 21 31 29.5 31C38 31 44 33.5 45 39L46 55C46.2 63 44.2 70 43 77L43.6 93H16.6L17.2 77C16.2 70 14.6 62 14.4 55Z";
+  var ARM = "M34 35C37.5 33.2 42.6 33.8 43.8 37.8C44.8 46 45 54 44.4 62C44.2 70 43.4 78 42.8 87.5C43 91.6 41.8 95.4 39.6 95.6C37.2 95.8 36.2 93 36.6 88.4C36.8 79 37 70 36.6 62C35.6 54 34.4 46 34 35Z";
   var PERSON =
-    '<svg viewBox="0 0 60 160" aria-hidden="true" focusable="false">' +
-    '<defs><linearGradient id="sgT@" x1="0" y1="0" x2=".25" y2="1"><stop class="g0" offset="0"/><stop class="g1" offset=".4"/><stop class="g2" offset="1"/></linearGradient>' +
-    '<linearGradient id="sgL@" x1="0" y1="0" x2="0" y2="1"><stop class="g3" offset="0"/><stop class="g4" offset="1"/></linearGradient></defs>' +
-    '<ellipse class="p-shadow" cx="30" cy="157" rx="17" ry="3"/>' +
+    '<svg viewBox="0 0 60 170" aria-hidden="true" focusable="false">' +
+    '<defs><linearGradient id="sgT@" x1="0" y1="0" x2=".18" y2="1"><stop class="g0" offset="0"/><stop class="g1" offset=".3"/><stop class="g2" offset="1"/></linearGradient>' +
+    '<linearGradient id="sgL@" x1="0" y1="0" x2="0" y2="1"><stop class="g3" offset="0"/><stop class="g4" offset=".72"/><stop class="g3" offset="1"/></linearGradient>' +
+    '<radialGradient id="sgH@" cx=".7" cy=".42" r=".75"><stop class="g5" offset="0"/><stop class="g6" offset="1"/></radialGradient>' +
+    '<linearGradient id="sgS@" x1="0" y1="0" x2="1" y2="0"><stop class="s0" offset="0"/><stop class="s1" offset=".6"/></linearGradient></defs>' +
     '<g class="p-body">' +
-    '<path class="p-leg p-rim p-legL" fill="url(#sgL@)" d="M16.5 86H30l-1.5 36-1 30c0 3-1.5 4.5-4.5 4.5h-5c-1.5 0-1.5-2.5.5-3.5l1-31z"/>' +
-    '<path class="p-leg p-rim p-legR" fill="url(#sgL@)" d="M30 86h13.5l-3 36 1 31c2 1 2 3.5.5 3.5h-5c-3 0-4.5-1.5-4.5-4.5l-1-30z"/>' +
-    '<path class="p-top p-rim" fill="url(#sgT@)" d="M26 23h8l1 5c7 1 12 3.5 13 9l-2 25-2 26H16l-2-26-2-25c1-5.5 6-8 13-9z"/>' +
-    '<path class="p-strip" d="M13.6 57h32.8l-.2 3H13.8zM13.9 65h32.2l-.2 3H14.1z"/>' +
-    '<path class="p-top p-rim p-armL" fill="url(#sgT@)" d="M12.5 35c-3 13-3.5 27-2.5 43 .3 4.5 5 4.5 5.2 0 .4-14 1.4-28 3.3-40z"/>' +
-    '<path class="p-top p-rim p-armR" fill="url(#sgT@)" d="M47.5 35c3 13 3.5 27 2.5 43-.3 4.5-5 4.5-5.2 0-.4-14-1.4-28-3.3-40z"/>' +
-    '<ellipse class="p-skin p-rim" cx="30" cy="15" rx="8" ry="9.5"/>' +
-    '<path class="p-hood p-top p-rim" d="M19.5 18c-1-11 4.5-15.5 10.5-15.5S41.5 7 40.5 18c-.3 6-3.5 10-6.5 11h-8c-3-1-6.2-5-6.5-11z"/>' +
-    '<path class="p-cap p-top" d="M21.5 11c.5-6 4.5-6.5 8.5-6.5s8 .5 8.5 6.5l4.5 1.5c0 1-2 1.5-4.5 1L21.5 13z"/>' +
-    '<g class="p-box"><path d="M13 49h34v26H13z" fill="#93724a"/><path d="m13 49 4-5h26l4 5z" fill="#b48f60"/><path d="M30 49v26" stroke="#e6d3ab" stroke-opacity=".55" stroke-width="2"/></g>' +
+    '<g transform="translate(-17 1)"><path class="p-armF" d="' + ARM + '"/></g>' +
+    '<g transform="translate(-9 0)"><path class="p-legF" d="' + LEG + '"/></g>' +
+    '<path class="p-torso" fill="url(#sgT@)" d="' + TORSO + '"/><path class="p-shade" fill="url(#sgS@)" d="' + TORSO + '"/>' +
+    '<path class="p-legN" fill="url(#sgL@)" d="' + LEG + '"/>' +
+    '<path class="p-neck" d="M28.6 21H35.6L36.2 33H28Z"/>' +
+    '<path class="p-head" fill="url(#sgH@)" d="M24.6 14.2C24.6 7 28.6 3.6 32.8 3.6C37.6 3.6 40.8 7.2 40.8 13.8C40.8 18.8 39.4 22.6 36.4 24.4C34.2 25.6 30.4 25.5 28.2 24C25.9 22.4 24.6 18.6 24.6 14.2Z"/>' +
+    '<path class="p-hair" d="M24.3 14.4C23.6 6.4 28 3 32.8 3C37.8 3 41.2 6 41 10.8C37 9.4 31.8 9.8 29 12.2C28 15.6 28 18.8 26.6 20.8C25.2 19 24.4 16.8 24.3 14.4Z"/>' +
+    '<path class="p-cap" d="M24.1 12.2C23.9 5.4 28.2 2.6 32.8 2.6C37.8 2.6 41.2 5.4 41.4 10.6L48.4 12.4C49.1 13.3 48.2 14.2 46.6 14L24.4 14Z"/>' +
+    '<path class="p-hood" fill="url(#sgT@)" d="M22.2 15.6C21.6 5.6 26.8 1.6 33 1.6C39.6 1.6 43 6.6 42.6 13.8C42.4 19.2 40.8 24 37.6 27.4L29.2 31.4C25.2 28.6 22.6 22.2 22.2 15.6Z"/>' +
+    '<path class="p-face" d="M34.8 8.8C38.4 8.9 40.4 11.6 40.4 15.4C40.4 19.6 38.8 22.9 36 24C34.6 21.2 34.2 13.6 34.8 8.8Z"/>' +
+    '<g class="p-box"><path class="bx-f" d="M36 46H62V69H36Z"/><path class="bx-t" d="M36 46 40 42H66L62 46Z"/><path class="bx-s" d="M62 46 66 42V65L62 69Z"/><path class="bx-tape" d="M49 46V69M47 46 51 42"/></g>' +
+    '<path class="p-armN" fill="url(#sgT@)" d="' + ARM + '"/>' +
+    '<path class="p-armC" fill="url(#sgT@)" d="M34.5 36C38 33.6 42.8 34 44 38C44.8 46 45 54 44.6 60L55.6 62.2C58.4 62.8 58.6 67.4 55.8 67.8L42.2 68.2C38.8 68.2 37.4 65.6 37.2 61.6C36.8 53 35 45 34.5 36Z"/>' +
     "</g></svg>";
+  /* Colis au sol : trois faces ombrées, ruban, étiquette, ombre de contact. */
+  /* Couloir éclairé vu par la porte de service ouverte (perspective simple :
+     plafond et plafonnier, murs, sol, mur du fond). */
+  var CORRIDOR =
+    '<svg viewBox="0 0 100 180" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
+    '<defs><linearGradient id="cf@" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#4e3e2e"/><stop offset="1" stop-color="#8a7356"/></linearGradient>' +
+    '<linearGradient id="cw@" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9a8263"/><stop offset="1" stop-color="#bba27e"/></linearGradient>' +
+    '<radialGradient id="cl@" cx=".58" cy=".08" r=".5"><stop offset="0" stop-color="#fff2d6" stop-opacity=".75"/><stop offset="1" stop-color="#fff2d6" stop-opacity="0"/></radialGradient>' +
+    '<linearGradient id="cv@" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset=".75" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient></defs>' +
+    '<path d="M0 0H100V180H0Z" fill="#a78e6b"/>' +
+    '<path d="M0 0 38 46V116L0 180Z" fill="url(#cw@)"/>' +
+    '<path d="M100 0 74 46V116L100 180Z" fill="#927a5a"/>' +
+    '<path d="M0 0H100L74 46H38Z" fill="#a48b67"/>' +
+    '<path d="M38 46H74V116H38Z" fill="#c4ab86"/>' +
+    '<path d="M0 180 38 116H74L100 180Z" fill="url(#cf@)"/>' +
+    '<path d="M0 0H100V90H0Z" fill="url(#cl@)"/><path d="M0 0H100V180H0Z" fill="url(#cv@)"/></svg>';
   var PARCEL =
-    '<svg viewBox="0 0 74 52" aria-hidden="true" focusable="false">' +
-    '<path d="M4 17h40v33H4z" fill="#8a6a43"/><path d="M44 17 70 6v33L44 50z" fill="#6b5133"/>' +
-    '<path d="M4 17 30 6h40L44 17z" fill="#b08b5d"/><path d="M15 17 41 6M24 17v33" stroke="#e3cfa6" stroke-opacity=".55" stroke-width="2.4"/></svg>';
+    '<svg viewBox="0 0 64 46" aria-hidden="true" focusable="false">' +
+    '<defs><linearGradient id="pk@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a7346"/><stop offset="1" stop-color="#6a4d2c"/></linearGradient></defs>' +
+    '<ellipse cx="33" cy="43" rx="31" ry="3.4" fill="#000" opacity=".55"/>' +
+    '<path d="M5 18H39V43H5Z" fill="url(#pk@)"/><path d="M39 18 58 9V34L39 43Z" fill="#553d23"/>' +
+    '<path d="M5 18 24 9H58L39 18Z" fill="#c09663"/>' +
+    '<path d="M14.5 18 33.5 9M22 18V43" stroke="#d9c49c" stroke-opacity=".3" stroke-width="2.2" fill="none"/>' +
+    '<path d="M27 25H35V31H27Z" fill="#c8bca6" opacity=".4"/></svg>';
 
   /* ---------- Sites et caméras ---------- */
   var M = "/media/solutions/";
@@ -126,15 +161,17 @@
 
   /* ---------- Situations simulées ----------
      Temps en millisecondes réelles depuis le début. Positions en pixels de
-     l'image d'origine (1672 × 941) : [t, x des pieds, y des pieds, hauteur]. */
+     l'image d'origine (1672 × 941) : [t, x des pieds, y des pieds, hauteur].
+     tid : numéro de piste de l'analyse vidéo; il reste le même d'une caméra à
+     l'autre quand JARVIS reconnaît la même personne. */
   var P = "Personne · ", PC = NBSP + "%";
   var SC = {
     livraison: {
       site: "maison", start: "21:41:58", rate: 5, mood: "", alarm: "Désarmée",
       walkers: [
-        { id: "a", img: "allee", kind: "livreur", carry: true, keys: [[600, 150, 790, 360], [3400, 760, 640, 275], [5000, 1380, 525, 195]] },
-        { id: "b", img: "entree", kind: "livreur", carry: [0, 8150], keys: [[4800, 1000, 1010, 560], [6300, 640, 830, 430], [7400, 430, 610, 325], [8000, 255, 508, 288], [8800, 255, 508, 288], [9600, 430, 610, 325], [10300, 760, 860, 450], [10900, 1000, 1010, 560]] },
-        { id: "c", img: "allee", kind: "livreur", keys: [[10300, 1380, 525, 195], [12400, 700, 650, 280], [13900, 150, 790, 360]] }
+        { id: "a", tid: "14", img: "allee", kind: "livreur", carry: true, keys: [[600, 150, 790, 360], [3400, 760, 640, 275], [5000, 1380, 525, 195]] },
+        { id: "b", tid: "14", img: "entree", kind: "livreur", carry: [0, 8150], keys: [[4800, 1000, 1010, 560], [6300, 640, 830, 430], [7400, 430, 610, 325], [8000, 255, 508, 288], [8800, 255, 508, 288], [9600, 430, 610, 325], [10300, 760, 860, 450], [10900, 1000, 1010, 560]] },
+        { id: "c", tid: "14", img: "allee", kind: "livreur", keys: [[10300, 1380, 525, 195], [12400, 700, 650, 280], [13900, 150, 790, 360]] }
       ],
       props: [
         { img: "entree", kind: "ring", at: 7900, dur: 1700, x: 378, y: 318 },
@@ -143,7 +180,7 @@
       boxes: [
         { tile: 1, track: "a", from: 900, to: 4900, labels: [[900, "Mouvement", "move"], [1900, P + "94" + PC, "person"]] },
         { tile: 0, track: "b", from: 5300, to: 10700, labels: [[5300, P + "96" + PC, "person"]] },
-        { tile: 0, rect: [303, 455, 94, 70], from: 8500, labels: [[8500, "Colis · 91" + PC, "parcel"]] },
+        { tile: 0, rect: [310, 463, 82, 60], from: 8500, labels: [[8500, "Colis · 91" + PC, "parcel"]] },
         { tile: 1, track: "c", from: 10600, to: 13800, labels: [[10600, P + "93" + PC, "person"]] }
       ],
       events: [
@@ -171,9 +208,9 @@
     visiteur: {
       site: "maison", start: "02:12:50", rate: 16, mood: "ir", alarm: "Armée · nuit",
       walkers: [
-        { id: "a", img: "allee", kind: "hood", keys: [[400, 150, 800, 370], [2200, 640, 685, 300], [2900, 640, 685, 300], [4300, 1380, 525, 195]] },
-        { id: "b", img: "entree", kind: "hood", keys: [[4100, 1000, 1010, 560], [5400, 640, 830, 430], [6300, 470, 640, 335], [8800, 470, 640, 335], [9600, 760, 860, 450], [10300, 1050, 1010, 560]] },
-        { id: "c", img: "terrasse", kind: "hood", stay: true, keys: [[9900, 1190, 300, 150], [11300, 1240, 470, 250], [12000, 1255, 590, 305]] }
+        { id: "a", tid: "31", img: "allee", kind: "hood", keys: [[400, 150, 800, 370], [2200, 640, 685, 300], [2900, 640, 685, 300], [4300, 1380, 525, 195]] },
+        { id: "b", tid: "31", img: "entree", kind: "hood", keys: [[4100, 1000, 1010, 560], [5400, 640, 830, 430], [6300, 470, 640, 335], [8800, 470, 640, 335], [9600, 760, 860, 450], [10300, 1050, 1010, 560]] },
+        { id: "c", tid: "31", img: "terrasse", kind: "hood", stay: true, keys: [[9900, 1190, 300, 150], [11300, 1240, 470, 250], [12000, 1255, 590, 305]] }
       ],
       props: [],
       boxes: [
@@ -208,19 +245,19 @@
     entrepot: {
       site: "entrepot", start: "23:06:40", rate: 6, mood: "dim", alarm: "Armée",
       walkers: [
-        { id: "a", img: "parking", kind: "dark", keys: [[1900, 690, 650, 215], [3600, 960, 565, 170], [4800, 1190, 470, 122]] },
-        { id: "b", img: "quai", kind: "dark", keys: [[4600, 300, 665, 215], [6200, 1000, 700, 235], [7200, 1430, 565, 205], [7700, 1505, 530, 196], [9000, 1505, 530, 196], [9400, 1515, 522, 190]] }
+        { id: "a", tid: "07", img: "parking", kind: "dark", keys: [[1900, 690, 650, 215], [3600, 960, 565, 170], [4800, 1190, 470, 122]] },
+        { id: "b", tid: "07", img: "quai", kind: "dark", keys: [[4600, 300, 665, 215], [6200, 1000, 700, 235], [7200, 1430, 565, 205], [7700, 1505, 530, 196], [9500, 1505, 530, 196], [10300, 1522, 512, 176]] }
       ],
       props: [
         { img: "parking", kind: "tail", at: 0, until: 2000, x: 238, y: 576 },
         { img: "quai", kind: "door", at: 8600, rect: [1442, 266, 142, 254] }
       ],
       boxes: [
-        { tile: 0, rect: [150, 440, 532, 222], from: 600, labels: [[600, "Véhicule · 96" + PC, "vehicle"]] },
+        { tile: 0, tid: "06", rect: [150, 440, 532, 222], from: 600, labels: [[600, "Véhicule · 96" + PC, "vehicle"]] },
         { tile: 0, track: "a", from: 2200, to: 4700, labels: [[2200, P + "92" + PC, "person"]] },
         { tile: 2, rect: [705, 345, 480, 275], from: 300, labels: [[300, "Camion connu · ignoré", "known"]] },
-        { tile: 2, track: "b", from: 5000, to: 9300, labels: [[5000, P + "95" + PC, "person"]] },
-        { tile: 3, track: "b", from: 6800, to: 9300, labels: [[6800, P + "97" + PC, "person"], [8000, "Aucun badge", "alert"]] }
+        { tile: 2, track: "b", from: 5000, to: 10100, labels: [[5000, P + "95" + PC, "person"]] },
+        { tile: 3, track: "b", from: 6800, to: 10100, labels: [[6800, P + "97" + PC, "person"], [8000, "Aucun badge", "alert"]] }
       ],
       events: [
         { t: 700, k: "vehicle", title: "Véhicule — stationnement", src: "Caméra 01 · 96" + PC, tile: 0 },
@@ -260,11 +297,17 @@
 
   var curSite = "maison";
   var tiles = $$(".sec-cam", wall).map(function (fig, i) {
+    var br = $("[data-sec-br]", fig);
     return {
       el: fig, view: $(".sec-view", fig), stage: $(".sec-stage", fig), ts: $("[data-sec-ts]", fig),
-      st: $("[data-sec-st]", fig), name: $(".sec-name", fig), cam: SITES.maison.cams[i], k: null
+      st: $("[data-sec-st]", fig), name: $(".sec-name", fig), br: br, cam: SITES.maison.cams[i], k: null,
+      busy: false, brV: br ? parseFloat(br.textContent.replace(",", ".")) : 2, h: 0
     };
   });
+  /* Hauteur des tuiles, relue seulement quand la fenêtre change de taille */
+  function measure() { tiles.forEach(function (t) { t.h = t.el.offsetHeight; }); }
+  measure();
+  window.addEventListener("resize", measure, { passive: true });
   var today = (function () { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); })();
 
   root.classList.add("is-live");
@@ -303,6 +346,7 @@
           requestAnimationFrame(function () {
             ns.classList.remove("is-enter");
             old.classList.add("is-leave");
+            glitch(t, i * 90); // le nouveau flux « s'accroche » : bref artefact
             setTimeout(function () { if (old.parentNode) old.parentNode.removeChild(old); }, 800);
           });
         };
@@ -367,7 +411,7 @@
     var s = n.style;
     s.setProperty("--x", pct(p.x, W));
     s.setProperty("--y", pct(p.y, H));
-    s.setProperty("--k", (p.h / BASE).toFixed(4));
+    s.setProperty("--h", pct(p.h, H)); // vraie hauteur (pas d'agrandissement flou d'une image)
     s.opacity = p.o.toFixed(3);
     tog(n, "is-walk", p.mv);
     if (p.left != null) tog(n, "is-left", p.left);
@@ -389,8 +433,9 @@
   /* ---------- Objets de scène ---------- */
   function propOn(p, t) { return t >= p.at && (p.until == null || t < p.until) && (p.dur == null || t < p.at + p.dur); }
   function makeProp(p) {
-    var n = el("div", "sec-prop p-" + p.kind, p.kind === "parcel" ? PARCEL : null);
-    var r = p.rect || (p.kind === "parcel" ? [p.x - 37, p.y - 52, 74, 52] : [p.x, p.y, 0, 0]);
+    var art = p.kind === "parcel" ? PARCEL : p.kind === "door" ? CORRIDOR : null;
+    var n = el("div", "sec-prop p-" + p.kind, art && art.replace(/@/g, ++uid));
+    var r = p.rect || (p.kind === "parcel" ? [p.x - 32, p.y - 45, 64, 46] : [p.x, p.y, 0, 0]);
     n.style.setProperty("--x", pct(r[0], W)); n.style.setProperty("--y", pct(r[1], H));
     n.style.setProperty("--w", pct(r[2], W)); n.style.setProperty("--h", pct(r[3], H));
     return n;
@@ -411,7 +456,7 @@
         rec.push(n);
       });
     } else if (!on && rec && rec.length) {
-      rec.forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
+      rec.forEach(kill); // s'éteint en douceur (feux arrière, sonnette)
       run.pn[i] = [];
     }
   }
@@ -423,66 +468,156 @@
     if (b.rect) return b.rect;
     var p = walkerAt(run.wmap[b.track], t);
     if (!p || p.o < .25) return null;
-    return [p.x - p.h * .24, p.y - p.h * 1.01, p.h * .48, p.h * 1.05];
+    return [p.x - p.h * .2, p.y - p.h * 1.03, p.h * .4, p.h * 1.06];
   }
-  function makeBox() { return el("div", "sec-box", "<i></i><i></i><i></i><i></i><b></b>"); }
-  function setLabel(n, L) {
-    n.querySelector("b").textContent = L[1];
+  function makeBox() {
+    return el("div", "sec-box", '<i></i><i></i><i></i><i></i><b><span class="lb-k"></span><span class="lb-c"></span><span class="lb-id"></span></b>');
+  }
+  /* Étiquette « Personne · 94 % » → classe, confiance, numéro de piste.
+     Rend la confiance nominale (0 si l'étiquette n'en a pas). */
+  function setLabel(n, L, tid) {
+    var m = /^(.*) · (\d+)\s%$/.exec(L[1]), q = n.querySelectorAll("b > span");
+    q[0].textContent = m ? m[1] : L[1];
+    q[1].textContent = m ? m[2] + PC : "";
+    q[2].textContent = tid ? "ID " + tid : "";
     n.className = n.className.replace(/\bt-\w+/g, "").trim() + " t-" + L[2];
+    return m ? +m[2] : 0;
   }
-  function posBox(n, r, v) {
+  /* thr : hauteur (part de la vue) sous laquelle l'étiquette passe dans le
+     cadre, pour ne pas chevaucher le nom de la caméra en haut de la tuile. */
+  function posBox(n, r, v, thr) {
     var s = n.style;
     s.setProperty("--x", pct(r[0], W)); s.setProperty("--y", pct(r[1], H));
     s.setProperty("--w", pct(r[2], W)); s.setProperty("--h", pct(r[3], H));
-    tog(n, "is-in", (r[1] - v[1]) / v[3] < .22);
+    tog(n, "is-in", (r[1] - v[1]) / v[3] < (thr || .22));
     tog(n, "is-right", (r[0] + r[2] / 2 - v[0]) / v[2] > .6);
   }
-  function drawBox(rb, t) {
-    var b = rb.def, r = boxOn(b, t) && boxRect(b, t), tile = tiles[b.tile];
-    if (!r) { if (rb.node) { kill(rb.node); rb.node = null; rb.lab = -1; } return; }
-    if (!rb.node || rb.node.parentNode !== tile.stage) { rb.node = makeBox(); tile.stage.appendChild(rb.node); rb.lab = -1; }
+
+  /* Trace au sol : la position des pieds sur les ~1,3 dernières secondes,
+     qui s'estompe vers l'arrière (dessinée dans les coordonnées de l'image). */
+  var NS = "http://www.w3.org/2000/svg", TRAIL = 12, TSTEP = 110;
+  function makeTrail(k) {
+    uid++;
+    var s = document.createElementNS(NS, "svg");
+    s.setAttribute("viewBox", "0 0 " + W + " " + H);
+    s.setAttribute("preserveAspectRatio", "none");
+    s.setAttribute("aria-hidden", "true");
+    s.setAttribute("class", "sec-trail t-" + k);
+    s.innerHTML = '<defs><linearGradient id="st' + uid + '" gradientUnits="userSpaceOnUse"><stop offset="0"/><stop offset="1"/></linearGradient></defs>' +
+      '<path class="tr-line" stroke="url(#st' + uid + ')"/><path class="tr-dot"/>';
+    return s;
+  }
+  function drawTrail(s, w, t) {
+    var a = [], k, p;
+    for (k = TRAIL; k >= 0; k--) { p = walkerAt(w, t - k * TSTEP); if (p && p.o > .2) a.push(p); }
+    if (!a.length) return;
+    var g = s.firstChild.firstChild, f = a[0], l = a[a.length - 1];
+    s.childNodes[1].setAttribute("d", "M" + a.map(function (q) { return q.x.toFixed(1) + " " + q.y.toFixed(1); }).join("L"));
+    g.setAttribute("x1", f.x.toFixed(1)); g.setAttribute("y1", f.y.toFixed(1));
+    g.setAttribute("x2", l.x.toFixed(1)); g.setAttribute("y2", l.y.toFixed(1));
+    s.childNodes[2].setAttribute("d", "M" + l.x.toFixed(1) + " " + l.y.toFixed(1) + "h.01");
+  }
+
+  /* Comme une vraie analyse vidéo : le cadre suit la personne avec un léger
+     retard et respire un peu; la confiance varie pendant la marche et se
+     stabilise à l'arrêt. */
+  function wob(t, s, f) { return Math.sin(t / f + s) * Math.sin(t / (f * 1.7) + s * 2.3); }
+  function drawBox(rb, t, dt) {
+    var b = rb.def, raw = boxOn(b, t) && boxRect(b, t), tile = tiles[b.tile], w = b.track && run.wmap[b.track];
+    if (!raw) {
+      if (rb.node) { kill(rb.node); kill(rb.trail); rb.node = rb.trail = rb.r = null; rb.lab = -1; }
+      return;
+    }
+    if (!rb.node || rb.node.parentNode !== tile.stage) {
+      rb.node = makeBox(); tile.stage.appendChild(rb.node); rb.lab = -1; rb.r = null;
+      if (w) { rb.trail = makeTrail(b.labels[0][2]); tile.stage.appendChild(rb.trail); }
+    }
     var j = boxLabel(b, t);
     if (j !== rb.lab) {
-      setLabel(rb.node, b.labels[j]);
+      rb.nom = rb.cv = setLabel(rb.node, b.labels[j], w ? w.tid : b.tid);
+      if (rb.trail) rb.trail.setAttribute("class", "sec-trail t-" + b.labels[j][2]);
       if (rb.lab >= 0) { rb.node.classList.remove("is-swap"); void rb.node.offsetWidth; rb.node.classList.add("is-swap"); }
       rb.lab = j;
     }
-    posBox(rb.node, r, tile.cam.view);
+    var r = raw;
+    if (w) {
+      if (!rb.r || !(dt > 0) || dt > 250) rb.r = raw.slice();
+      else for (var i = 0, a = 1 - Math.exp(-dt / 85); i < 4; i++) rb.r[i] += (raw[i] - rb.r[i]) * a;
+      var ew = rb.r[2] * .035 * wob(t, rb.seed, 230), eh = rb.r[3] * .018 * wob(t, rb.seed + 1, 310);
+      r = [rb.r[0] - ew / 2, rb.r[1] - eh, rb.r[2] + ew, rb.r[3] + eh];
+      drawTrail(rb.trail, w, t);
+      var p = walkerAt(w, t);
+      var c = rb.nom && p && p.mv ? Math.min(99, rb.nom + Math.round(2.4 * Math.sin(Math.floor(t / 280) * 2.1 + rb.seed))) : rb.nom;
+      if (c !== rb.cv) { rb.cv = c; rb.node.querySelector(".lb-c").textContent = c + PC; }
+    }
+    posBox(rb.node, r, tile.cam.view, tile.h ? clamp(46 / tile.h, .2, .36) : .22);
   }
+
+  /* État de chaque tuile, et caméra « active » mise en avant : celle de la
+     dernière alerte tant qu'une personne y est suivie (ou pendant 2,6 s),
+     sinon toute autre caméra qui suit quelqu'un. */
   var ST = { move: "Mouvement", person: "Personne", vehicle: "Véhicule", parcel: "Colis", alert: "Alerte", known: "Connu" };
-  function tileStatus() {
-    var best = [null, null, null, null];
+  function tileStatus(t) {
+    var best = [null, null, null, null], seen = [false, false, false, false];
     run.boxes.forEach(function (rb) {
       if (!rb.node || rb.lab < 0) return;
-      var k = rb.def.labels[rb.lab][2];
-      if (k !== "known" || !best[rb.def.tile]) best[rb.def.tile] = k;
+      var k = rb.def.labels[rb.lab][2], i = rb.def.tile;
+      if (k !== "known" || !best[i]) best[i] = k;
+      if (rb.def.track) seen[i] = true;
     });
+    var L = run.lastTile, act = L != null && (seen[L] || t - run.lastT < 2600) ? L : seen.indexOf(true);
     tiles.forEach(function (tile, i) {
       var k = best[i] || "calm";
+      tile.busy = seen[i];
+      tog(tile.el, "is-act", i === act);
       if (tile.k === k) return;
       tile.k = k;
+      if (k !== "calm") tile.el.style.setProperty("--a", cvar(k));
       tile.st.textContent = k === "calm" ? "Calme" : ST[k];
       tile.st.className = "sec-st t-" + k;
     });
   }
 
+  /* Débit du flux, relu chaque seconde : il monte quand quelque chose bouge
+     dans l'image (l'encodeur a plus à transmettre), redescend au calme. */
+  function bitrate(dt) {
+    run.brT += dt;
+    if (run.brT < 1000) return;
+    run.brT = 0;
+    tiles.forEach(function (tile) {
+      if (!tile.br) return;
+      tile.brV = clamp(tile.brV + ((tile.busy ? 4.4 : 1.8) - tile.brV) * .45 + (Math.random() - .5) * .4, .9, 6.4);
+      tile.br.textContent = tile.brV.toFixed(1).replace(".", ",") + " Mb/s";
+    });
+  }
+
   /* ---------- Effets visuels ---------- */
+  /* Relance une classe d'animation sur la tuile, puis la retire */
+  function pulse(tile, cls, ms) {
+    tile.el.classList.remove(cls); void tile.el.offsetWidth; tile.el.classList.add(cls);
+    later(function () { tile.el.classList.remove(cls); }, ms);
+  }
+  /* Alerte : liseré lumineux de la couleur de la détection */
   function hit(tile, k) {
     tile.el.style.setProperty("--c", cvar(k));
-    tile.el.classList.remove("is-hit"); void tile.el.offsetWidth; tile.el.classList.add("is-hit");
-    later(function () { tile.el.classList.remove("is-hit"); }, 1300);
+    pulse(tile, "is-hit", 1500);
   }
-  function flashTile(tile) {
+  /* Bref artefact de compression (le flux se réajuste au mouvement) */
+  function glitch(tile, delay) {
     if (reduce) return;
-    tile.el.classList.remove("is-flash"); void tile.el.offsetWidth; tile.el.classList.add("is-flash");
-    later(function () { tile.el.classList.remove("is-flash"); }, 800);
+    later(function () { pulse(tile, "is-glitch", 380); }, delay || 0);
+  }
+  /* Éclair : fort à l'allumage des lumières, discret (obturateur) pour une capture */
+  function flashTile(tile, soft) {
+    if (reduce) return;
+    pulse(tile, soft ? "is-shot" : "is-flash", 800);
   }
   function snap(e) {
     if (reduce) return;
-    var tile = tiles[e.tile], chip = el("span", "sec-snap", ICON.cam + "Preuve capturée");
+    var tile = tiles[e.tile], chip = el("span", "sec-snap", ICON.cam + "<span>Preuve </span>capturée");
     chip.setAttribute("aria-hidden", "true");
     tile.el.appendChild(chip);
-    flashTile(tile);
+    flashTile(tile, true);
     later(function () { if (chip.parentNode) chip.parentNode.removeChild(chip); }, 1450);
   }
   function comet(fromEl, li, k) {
@@ -494,7 +629,6 @@
     var dx = Math.max(80, (ex - sx) * .5);
     var d = "M" + sx.toFixed(1) + " " + sy.toFixed(1) + "C" + (sx + dx).toFixed(1) + " " + sy.toFixed(1) + " " +
       (ex - dx).toFixed(1) + " " + ey.toFixed(1) + " " + ex.toFixed(1) + " " + ey.toFixed(1);
-    var NS = "http://www.w3.org/2000/svg";
     var g = document.createElementNS(NS, "g"), base = document.createElementNS(NS, "path"), dash = document.createElementNS(NS, "path");
     g.setAttribute("class", "sec-wire");
     g.style.setProperty("--c", cvar(k));
@@ -522,12 +656,20 @@
     li.innerHTML = '<span class="sec-r-ico" aria-hidden="true">' + (ICON[ev.k] || ICON.move) + '</span><span class="sec-r-txt"><b>' +
       ev.title + "</b><small>" + ev.src + "</small></span><time>" + hms(simAt(ev.t)) + "</time>";
     rawList.appendChild(li);
-    nRaw.textContent = run.n;
-    if (!reduce) { nRaw.classList.remove("sec-n-raw-bump"); void nRaw.offsetWidth; nRaw.classList.add("sec-n-raw-bump"); }
+    count(run.n);
     phase(run.n + (run.n > 1 ? " alertes reçues" : " alerte reçue"), "idle");
-    if (ev.tile != null) hit(tiles[ev.tile], ev.k);
+    if (ev.tile != null) {
+      run.lastTile = ev.tile; run.lastT = ev.t;
+      hit(tiles[ev.tile], ev.k);
+      if (/^(move|person|vehicle)$/.test(ev.k)) glitch(tiles[ev.tile]);
+    }
     if (ev.sensor) sensorHit(ev.sensor, ev.state, ev.k);
     comet(ev.sensor ? sensorEl(ev.sensor) : tiles[ev.tile].view, li, ev.k);
+  }
+  /* Compteur à rouleau : l'ancien chiffre monte et sort, le nouveau entre
+     (sans html.fx, seul le nouveau chiffre est visible). */
+  function count(n) {
+    nRaw.innerHTML = '<span class="n-out" aria-hidden="true">' + (n - 1) + '</span><span class="n-in">' + n + "</span>";
   }
   function linkPhase() {
     feed.classList.add("is-linking");
@@ -606,11 +748,12 @@
       run.boxes.forEach(function (rb) {
         var b = rb.def;
         if (b.tile !== e.tile || !boxOn(b, e.t)) return;
-        var r = boxRect(b, e.t);
+        var r = boxRect(b, e.t), w = b.track && run.wmap[b.track];
         if (!r) return;
-        var n = makeBox();
-        setLabel(n, b.labels[boxLabel(b, e.t)]);
+        var n = makeBox(), L = b.labels[boxLabel(b, e.t)];
+        setLabel(n, L, w ? w.tid : b.tid);
         posBox(n, r, v);
+        if (w) { var tr = makeTrail(L[2]); drawTrail(tr, w, e.t); s.appendChild(tr); }
         s.appendChild(n);
       });
       view.appendChild(s);
@@ -694,11 +837,12 @@
   var run = null, visible = false, raf = 0, last = 0;
 
   function step(t) {
-    var sc = run.sc, T = run.T;
+    var sc = run.sc, T = run.T, dt = t - run.lt;
+    run.lt = t;
     sc.walkers.forEach(function (w) { drawWalker(w, t); });
     sc.props.forEach(function (p, i) { drawProp(p, i, t); });
-    run.boxes.forEach(function (rb) { drawBox(rb, t); });
-    tileStatus();
+    run.boxes.forEach(function (rb) { drawBox(rb, t, dt); });
+    tileStatus(t);
     while (run.ev < sc.events.length && sc.events[run.ev].t <= t) fire(sc.events[run.ev++]);
     while (run.shot < sc.evidence.length && sc.evidence[run.shot].t <= t) snap(sc.evidence[run.shot++]);
     if (run.phase < 1 && t >= T.link) { run.phase = 1; linkPhase(); }
@@ -714,6 +858,7 @@
     last = now;
     run.t += dt;
     step(run.t);
+    bitrate(dt);
     raf = requestAnimationFrame(loop);
   }
   function play() {
@@ -728,9 +873,10 @@
     setSite(sc.site, !!run);
     tiles.forEach(function (tile, i) {
       tile.cam = SITES[sc.site].cams[i];
-      $$(".sec-subj, .sec-box, .sec-prop, .sec-say, .sec-snap", tile.el).forEach(function (n) { n.parentNode.removeChild(n); });
-      tile.el.classList.remove("is-lit", "is-hit", "is-flash");
+      $$(".sec-subj, .sec-box, .sec-trail, .sec-prop, .sec-say, .sec-snap", tile.el).forEach(function (n) { n.parentNode.removeChild(n); });
+      tile.el.classList.remove("is-lit", "is-hit", "is-flash", "is-shot", "is-glitch", "is-act");
       tile.k = null;
+      tile.busy = false;
     });
     if (wires) wires.innerHTML = "";
     tog(wall, "is-ir", sc.mood === "ir");
@@ -748,9 +894,9 @@
     });
     var end = sc.events[sc.events.length - 1].t;
     run = {
-      key: key, sc: sc, t: 0, ev: 0, shot: 0, phase: 0, n: 0, lastS: -1,
+      key: key, sc: sc, t: 0, lt: 0, ev: 0, shot: 0, phase: 0, n: 0, lastS: -1, lastTile: null, lastT: -1e9, brT: 0,
       wn: {}, pn: {}, dir: {}, wmap: {},
-      boxes: sc.boxes.map(function (b) { return { def: b, node: null, lab: -1 }; }),
+      boxes: sc.boxes.map(function (b, i) { return { def: b, node: null, trail: null, r: null, lab: -1, seed: i * 1.7 + .4 }; }),
       T: { link: end + 700, collapse: end + 2000, reveal: end + 2800, done: end + 4000 }
     };
     sc.walkers.forEach(function (w) { run.wmap[w.id] = w; });

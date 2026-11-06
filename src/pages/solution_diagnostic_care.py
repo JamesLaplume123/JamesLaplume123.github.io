@@ -1,45 +1,7 @@
 # Solution 06 — Diagnostic & continuité.
 
+from demos.diagnostic import HTML as DEMO
 from pages._solution import solution_page
-
-SHOWCASE = """
-<div class="split" data-reveal>
-  <div class="steps" style="align-self:stretch;">
-    <div>
-      <h3>Observer le symptôme</h3>
-      <p>Arrêt intermittent, dérive de température, perte de communication : l’état est capté
-      avec son historique plutôt que décrit de mémoire.</p>
-    </div>
-    <div>
-      <h3>Vérifier dans le bon ordre</h3>
-      <p>Alimentation, communications, contexte des changements récents : les contrôles les
-      moins risqués passent en premier.</p>
-    </div>
-    <div>
-      <h3>Décider avec des preuves</h3>
-      <p>Chaque hypothèse est confirmée, écartée ou laissée ouverte, avec la mesure qui le justifie.</p>
-    </div>
-    <div>
-      <h3>Documenter la remise en service</h3>
-      <p>Le dossier conserve les mesures, les étapes faites et la vérification de stabilité après l’intervention.</p>
-    </div>
-  </div>
-  <aside class="console" style="max-width:none;">
-    <header class="console-head"><span><i></i>DOSSIER K-041</span><small>LOCAL</small></header>
-    <div class="console-body">
-      <small>DOSSIER TECHNICIEN PRÉPARÉ</small>
-      <strong>Arrêt intermittent de la génératrice.</strong>
-      <p>Mesures, photos, historique d’entretien, pièces possibles et étapes déjà vérifiées :
-      la personne qui intervient reçoit le contexte complet, pas un symptôme isolé.</p>
-    </div>
-    <ul class="console-signals">
-      <li><span>SOURCES</span><b>4 reliées</b></li>
-      <li><span>VÉRIFICATIONS</span><b>2 faites · 1 proposée</b></li>
-      <li><span>ACTION</span><b>Aucune exécutée</b></li>
-    </ul>
-  </aside>
-</div>
-"""
 
 DATA = {
     "slug": "diagnostic-care",
@@ -68,12 +30,13 @@ DATA = {
         ("Sauvegarde et retour", "Documenter les configurations, mises à jour et options de retour lorsque le système le permet."),
         ("Suivi continu", "Vérifier après l’intervention que le service est réellement stable et que la cause est comprise."),
     ],
-    "demo_title": "Vérifier les causes <em>dans le bon ordre.</em>",
+    "demo_title": "Du symptôme à la remise en service, <em>avec des preuves.</em>",
     "demo_copy": (
-        "Équipement, infrastructure, logiciel ou véhicule : le même principe s’applique — "
-        "vérifier l’alimentation, les communications et le contexte avant de proposer une action."
+        "Une enquête guidée en cinq étapes : JARVIS lit les mesures, élimine les fausses pistes, "
+        "prépare le dossier du technicien et vérifie le retour à la normale. Deux cas simulés."
     ),
-    "showcase": SHOWCASE,
+    "demo_html": DEMO,
+    "assets": ["diagnostic"],
     "compat": ["Capteurs", "Journaux", "OBD véhicule", "Énergie", "Réseau", "Procédures", "Historique"],
     "deploy_title": "Le dossier reste avec le lieu et ses responsables.",
     "deploy_copy": (
@@ -91,7 +54,33 @@ DATA = {
     ),
 }
 
-DATA["demo_image"] = "/media/product/outils/diagnostic.jpg"
-DATA["demo_caption"] = "Écran de référence de l’outil Diagnostic — maquette, données fictives."
+DATA["clair"] = {
+    "quoi": "Quand quelque chose ne marche plus, JARVIS mène l’enquête <em>et vous montre les preuves.</em>",
+    "exemple": (
+        "La chambre froide d’une épicerie n’atteint plus 3 °C. JARVIS relit 24 heures de mesures, "
+        "écarte la porte, le courant et le thermostat, trouve le ventilateur arrêté et prépare le "
+        "dossier du frigoriste. Après l’intervention, il confirme sur la courbe que tout est revenu."
+    ),
+    "avant": [
+        "Une alarme sonne, sans dire pourquoi.",
+        "Le technicien arrive à l’aveugle et refait l’enquête.",
+        "On remplace des pièces au hasard, à vos frais.",
+        "Personne ne vérifie que la réparation tient vraiment.",
+    ],
+    "apres": [
+        "Le symptôme arrive avec ses mesures et son historique.",
+        "Les causes sont vérifiées une à une, la plus simple d’abord.",
+        "Le dossier technicien est prêt : preuves, cause probable, pièces.",
+        "La remise en service est vérifiée sur les mesures, avec l’heure.",
+    ],
+    "obtenez": [
+        ("Des réponses, pas des alarmes",
+         "Ce qui a changé, depuis quand et ce que ça veut dire, en mots simples."),
+        ("Un dossier prêt à transmettre",
+         "Le bon technicien reçoit les preuves et la bonne pièce à apporter. Rien ne part sans votre accord."),
+        ("Une réparation prouvée",
+         "JARVIS suit les mesures après l’intervention et confirme le retour à la normale."),
+    ],
+}
 
 PAGE = solution_page(DATA)

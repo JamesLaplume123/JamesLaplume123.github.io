@@ -1,8 +1,11 @@
 /* Démo « IA privée et connaissances » : la question se tape, JARVIS fouille les
    documents (balayage, compteur de passages), répond mot à mot avec ses
    citations, montre le passage exact, puis propose une action qui attend
-   « Approuver ». Démarre à l'entrée dans la fenêtre, se met en pause hors écran.
-   Sans JavaScript, l'état statique (première question répondue) reste lisible. */
+   « Approuver ». Sous html.fx, chaque citation relit son document (balayage),
+   un faisceau descend la page jusqu'au passage, puis le surligneur le trace
+   ligne par ligne. Démarre à l'entrée dans la fenêtre, se met en pause hors
+   écran. Sans JavaScript, l'état statique (première question répondue) reste
+   lisible. */
 (function () {
   "use strict";
   var root = document.querySelector('[data-demo="ia"]');
@@ -89,6 +92,46 @@
     return out;
   }
 
+  /* ---------- Surligneur : le passage est découpé en lignes, tracées l'une après l'autre ---------- */
+  function fx() { return !reduce && document.documentElement.classList.contains("fx"); }
+  function restart(el, cls) { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+  function markLines(pass) {
+    var span = pass.firstElementChild;
+    if (!span) return;
+    var text = span.getAttribute("data-t") || span.textContent;
+    span.setAttribute("data-t", text);
+    span.textContent = "";
+    span.classList.remove("is-lines");
+    /* Mesure avec le même retrait que le surlignage final (balise neutre, sans style) */
+    var words = text.split(/\s+/).filter(Boolean).map(function (w, i) {
+      if (i) span.appendChild(document.createTextNode(" "));
+      var e = document.createElement("x-w");
+      e.textContent = w;
+      span.appendChild(e);
+      return e;
+    });
+    var lines = [];
+    words.forEach(function (w) {
+      var top = w.offsetTop, l = lines[lines.length - 1];
+      if (!l || Math.abs(l.top - top) > 2) lines.push(l = { top: top, words: [], w: 0 });
+      l.words.push(w.textContent);
+      l.w += w.offsetWidth;
+    });
+    var max = Math.max.apply(null, lines.map(function (l) { return l.w; }).concat(1)), t = 0;
+    span.textContent = "";
+    span.classList.add("is-lines");
+    lines.forEach(function (l, i) {
+      var d = .22 + .5 * l.w / max, ml = document.createElement("span");
+      if (i) span.appendChild(document.createTextNode(" "));
+      ml.className = "ia-ml";
+      ml.textContent = l.words.join(" ");
+      ml.style.setProperty("--d", d.toFixed(2) + "s");
+      ml.style.setProperty("--t", t.toFixed(2) + "s");
+      span.appendChild(ml);
+      t += d + .04;
+    });
+  }
+
   /* ---------- Citation → passage exact ---------- */
   function focusCite(n, force) {
     n = String(n);
@@ -102,11 +145,20 @@
       if (ps) ps.classList.remove("is-on");
     });
     var pass = $(".ia-pass", page);
+    if (pass && fx()) {
+      markLines(pass);
+      page.style.setProperty("--to", (pass.offsetTop + pass.offsetHeight / 2).toFixed(0) + "px");
+      restart(page, "is-read");
+    }
     requestAnimationFrame(function () { requestAnimationFrame(function () { if (pass) pass.classList.add("is-on"); }); });
     $$(".ia-tab", tabsEl).forEach(function (t) { t.classList.toggle("is-on", t.getAttribute("data-c") === n); });
     $$(".ia-cite", log).forEach(function (c) { c.classList.toggle("is-on", c.getAttribute("data-c") === n); });
     var doc = page.getAttribute("data-doc");
-    docs.forEach(function (d) { d.classList.toggle("is-focus", d.getAttribute("data-doc") === doc); });
+    docs.forEach(function (d) {
+      var on = d.getAttribute("data-doc") === doc;
+      d.classList.toggle("is-focus", on);
+      if (on && fx()) restart(d, "is-read");
+    });
     var quote = $(".ia-quote", log);
     if (quoteLive && quote && pass) {
       quote.innerHTML = "";

@@ -11,25 +11,6 @@ DATA = {
     "h1": "Diagnostic & <em>continuité.</em>",
     "lead": "Comprendre plus vite ce qui a changé, quoi vérifier et comment transmettre un dossier utile à la bonne personne.",
     "for": "Tous les environnements équipés, du bâtiment au véhicule",
-    "problem_title": "Une panne traverse plusieurs systèmes <em>et personne ne possède toute l’histoire.</em>",
-    "problem_copy": (
-        "Cette capacité réunit les états, événements, changements et procédures autorisés pour "
-        "construire un diagnostic progressif. Elle prépare les vérifications, documente le "
-        "résultat et facilite la continuité après l’installation."
-    ),
-    "change_title": "Du symptôme au dossier utile, sans sauter aux conclusions.",
-    "change_copy": (
-        "Diagnostic & continuité rapproche les symptômes, les changements et les mesures "
-        "disponibles pour guider les vérifications sans prétendre connaître la cause trop tôt."
-    ),
-    "features": [
-        ("Détection précoce", "Repérer les dérives de capteurs, températures, consommations ou communications avant un arrêt complet."),
-        ("Arbre de vérification", "Classer les causes possibles et proposer les contrôles les moins risqués en premier."),
-        ("Contexte des changements", "Relier le symptôme aux mises à jour, interventions et événements qui l’ont précédé."),
-        ("Dossier technicien", "Préparer mesures, photos, historique, pièces possibles et étapes déjà vérifiées."),
-        ("Sauvegarde et retour", "Documenter les configurations, mises à jour et options de retour lorsque le système le permet."),
-        ("Suivi continu", "Vérifier après l’intervention que le service est réellement stable et que la cause est comprise."),
-    ],
     "demo_title": "Du symptôme à la remise en service, <em>avec des preuves.</em>",
     "demo_copy": (
         "Une enquête guidée en cinq étapes : JARVIS lit les mesures, élimine les fausses pistes, "

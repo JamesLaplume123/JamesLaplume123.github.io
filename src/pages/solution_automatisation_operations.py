@@ -14,25 +14,6 @@ DATA = {
         "demande une validation lorsque nécessaire, exécute et conserve une trace complète."
     ),
     "for": "PME, entreprises de services et équipes terrain",
-    "problem_title": "Le travail circule entre vos logiciels. <em>Le contexte, lui, se perd.</em>",
-    "problem_copy": (
-        "Le courriel, le CRM, le calendrier, les documents et les logiciels spécialisés continuent "
-        "de faire leur travail. JARVIS organise ce qui se passe entre eux : il transforme ce qui "
-        "entre dans l’entreprise en actions compréhensibles et supervisées."
-    ),
-    "change_title": "Un centre d’opérations, plusieurs processus.",
-    "change_copy": (
-        "Chaque flux montre d’où viennent les informations, ce que JARVIS comprend, "
-        "ce qu’il prépare et où l’humain décide."
-    ),
-    "features": [
-        ("Courriel transformé en dossier", "Une demande entrante devient un dossier qualifié avec le client, le contexte et l’historique."),
-        ("Documents et tâches préparés", "Les pièces jointes sont extraites, comparées et classées ; les tâches sont créées au bon endroit."),
-        ("Approbation avant chaque action sensible", "Un envoi, un paiement ou un engagement attend une validation humaine explicite."),
-        ("Exécution journalisée", "Chaque étape conserve sa source, sa règle et son résultat dans un journal consultable."),
-        ("Exceptions visibles", "Ce qui sort du cadre prévu est mis en file plutôt qu’exécuté en silence."),
-        ("Conception assistée", "Décrivez le résultat attendu : JARVIS prépare un brouillon de flux, modifiable avant tout essai."),
-    ],
     "demo_title": "Une demande d’achat, du courriel au bon de commande. <em>Sans copier-coller.</em>",
     "demo_copy": (
         "Regardez JARVIS lire un courriel, remplir la demande, appliquer votre règle, puis "

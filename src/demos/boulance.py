@@ -59,6 +59,12 @@ def html():
       </div>
     </div>
     {_battery(1, "B")}
+    <div class="bl-wait" role="status">
+      <span class="bl-wait-ico" aria-hidden="true"><i></i><i></i><i></i></span>
+      <b>Liaison avec l’ambulance en cours</b>
+      <p>Les deux batteries s’affichent ici en direct, mesurées aux 5 secondes dans le véhicule.
+      Tant que la liaison ne répond pas, rien n’est inventé.</p>
+    </div>
   </div>
   <p class="bl-foot"><span data-bl="age">En attente de la première mesure</span> · actualisé toutes les 5 secondes ·
   source : Home Assistant de l’ambulance (BMS Bluetooth)</p>

@@ -37,25 +37,6 @@ DATA = {
             ("Le dernier mot", "Allumer, parler, prévenir : JARVIS propose, vous approuvez. Rien ne se déverrouille tout seul."),
         ],
     },
-    "problem_title": "Une alerte sans contexte crée du bruit. <em>Une preuve organisée permet de décider.</em>",
-    "problem_copy": (
-        "Les caméras, portes, alarmes et capteurs détectent chacun une partie de l’événement. "
-        "JARVIS vise à construire une chronologie commune pour expliquer ce qui a été observé "
-        "et ce qui mérite réellement une attention."
-    ),
-    "change_title": "Moins d’alertes isolées. Plus de contexte pour décider.",
-    "change_copy": (
-        "La valeur vient du rapprochement entre présence, accès, image et horaire, "
-        "pas d’une multiplication des notifications."
-    ),
-    "features": [
-        ("Chronologie unifiée", "Rapprocher les événements provenant des caméras, accès, alarmes et capteurs autorisés."),
-        ("Conservation des preuves", "Associer les images, états et décisions pertinentes à un incident documenté."),
-        ("Alertes hiérarchisées", "Différencier un événement normal, une anomalie et une situation exigeant une vérification."),
-        ("Présence et périmètres", "Adapter les règles selon l’occupation, les horaires et les zones réellement concernées."),
-        ("Respect de la vie privée", "Limiter l’analyse, la durée de conservation et les personnes pouvant consulter les données."),
-        ("Réponse supervisée", "Proposer une procédure et laisser les décisions sensibles à une personne autorisée."),
-    ],
     "demo_title": "Six alertes. <em>Un seul événement compris.</em>",
     "demo_copy": (
         "Choisissez une situation. À gauche, les caméras repèrent ce qui bouge. À droite, les alertes "

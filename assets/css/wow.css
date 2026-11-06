@@ -246,6 +246,7 @@ body.menu-open { overflow: hidden; }
   font-size: clamp(1rem, 1.25vw, 1.15rem); line-height: 1.6; text-shadow: 0 1px 2px #000;
 }
 .hero .acts { justify-content: flex-start; margin-top: 2rem; }
+.acts { margin-top: 2.2rem; display: flex; gap: .9rem; justify-content: center; flex-wrap: wrap; }
 .cue {
   position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 2;
   width: 1px; height: 54px; background: linear-gradient(#ffffff99, transparent);
@@ -372,14 +373,14 @@ body.menu-open { overflow: hidden; }
 }
 
 /* ---------- Appel final ---------- */
-.cta { padding: 9rem 1.4rem; text-align: center; position: relative; overflow: hidden; }
+.cta { padding: 7rem 1.4rem 8rem; text-align: center; position: relative; overflow: hidden; }
 .cta::before {
   content: ""; position: absolute; left: 50%; top: 12%;
   width: 760px; height: 460px; transform: translateX(-50%);
   background: radial-gradient(closest-side, color-mix(in srgb, var(--mode-glow) 12%, transparent), transparent 70%);
   pointer-events: none;
 }
-.cta h2 { margin: 0; font-weight: 700; font-size: clamp(2.3rem, 5.4vw, 4.4rem); letter-spacing: -.04em; }
+.cta h2 { margin: 0; font-weight: 650; font-size: clamp(2.3rem, 5vw, 4.2rem); letter-spacing: -.04em; line-height: 1.04; }
 .cta h2 span { color: var(--em); }
 .cta p { color: var(--dim); max-width: 30rem; margin: 1.3rem auto 0; }
 
@@ -1027,9 +1028,12 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
 .road li span { display: block; padding-right: 1rem; }
 
 /* ---------- FAQ ---------- */
-.faq { padding: 5rem 1.4rem; }
-.faq-list { max-width: 56rem; margin: 0 auto; border-top: 1px solid var(--mode-line); }
-.faq-item { border-bottom: 1px solid var(--mode-line); }
+.faq { padding: 5rem 1.4rem; max-width: 76rem; margin: 0 auto; box-sizing: content-box;
+  display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.4fr); gap: 2rem 4rem; align-items: start; }
+.faq .head { margin: 0; position: sticky; top: 6rem; }
+.faq-list { border-top: 1px solid #ffffff17; }
+@media (max-width: 880px) { .faq { grid-template-columns: 1fr; } .faq .head { position: static; } }
+.faq-item { border-bottom: 1px solid #ffffff17; }
 .faq-item summary {
   list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;
   padding: 1.4rem .2rem; font-weight: 600; font-size: clamp(1.02rem, 1.6vw, 1.2rem); letter-spacing: -.01em;
@@ -1140,15 +1144,15 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
 .demo-hint { margin: 1rem auto 0; max-width: 76rem; text-align: center; font: 500 .72rem/1.5 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: #a8a8b0; }
 
 /* ---------- « En clair » des solutions : avant / avec JARVIS ---------- */
-.clair { padding: 6rem 1.4rem 5rem; }
-.clair-head { max-width: 56rem; margin: 0 auto 3rem; text-align: center; }
-.clair-head h2 { margin: 1.1rem 0 0; font-weight: 700; font-size: clamp(1.9rem, 4vw, 3.2rem); letter-spacing: -.035em; line-height: 1.1; }
-.clair-ex { margin: 1.4rem auto 0; max-width: 44rem; color: #d6d6dc; font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.65; }
+.clair { padding: 5rem 1.4rem; }
+.clair-head { max-width: 76rem; margin: 0 auto 2.6rem; }
+.clair-head h2 { margin: 1rem 0 0; font-weight: 650; font-size: clamp(1.8rem, 3.2vw, 2.7rem); letter-spacing: -.033em; line-height: 1.12; max-width: 30ch; }
+.clair-ex { margin: 1.2rem 0 0; max-width: 46rem; color: #d6d6dc; font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.65; }
 .clair-ex b { color: var(--gold-soft); font-weight: 600; }
 .vs { max-width: 76rem; margin: 0 auto; display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.4rem; align-items: stretch; }
 .vs-col { position: relative; border-radius: var(--radius); padding: 1.8rem 1.7rem; border: 1px solid var(--mode-line); }
-.vs-before { background: #0b0b0dcc; }
-.vs-after { background: var(--mode-panel-solid); box-shadow: 0 0 70px color-mix(in srgb, var(--mode-glow) 14%, transparent), var(--mode-spec); }
+.vs-before { background: transparent; border-color: #ffffff12; }
+.vs-after { background: linear-gradient(180deg, #ffffff0b, #ffffff04); border-color: color-mix(in srgb, var(--gold-soft) 34%, transparent); }
 .vs-k { margin: 0 0 1.1rem; font: 600 .7rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: #a8a8b0; }
 .vs-after .vs-k { color: var(--gold-soft); }
 .vs ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .85rem; }
@@ -1169,7 +1173,7 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
 @keyframes vsIn { from { opacity: 0; transform: translateX(14px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
 .fx .vs.in .vs-arrow span { animation: vsPulse 2.4s 1s ease-in-out infinite; }
 @keyframes vsPulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mode-glow) 40%, transparent); } 60% { box-shadow: 0 0 0 14px transparent; } }
-.clair-k { text-align: center; margin: 3.5rem 0 1.4rem; }
+.clair-k { max-width: 76rem; margin: 3.2rem auto 1.3rem; }
 @media (max-width: 880px) {
   .vs { grid-template-columns: 1fr; }
   .vs-arrow span { transform: rotate(90deg); }
@@ -1399,4 +1403,25 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
 }
 @media (prefers-reduced-motion: reduce) {
   .hot i::after { animation: none !important; }
+}
+
+/* ---------- Pages de solution : bandeau, confiance ---------- */
+.for-line { margin: 1.6rem 0 0; color: #d8d8de; font-size: .95rem; }
+.for-line span { font: 500 .7rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--gold-soft); margin-right: .6rem; }
+.sol-demo { padding-top: 4.5rem; }
+.trust {
+  max-width: 76rem; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 2.5rem 4rem;
+  padding-top: 2.6rem; border-top: 1px solid #ffffff17;
+}
+.trust h2 { margin: 1rem 0 0; font-weight: 650; font-size: clamp(1.6rem, 2.6vw, 2.2rem); letter-spacing: -.03em; line-height: 1.15; }
+.trust > div > p:last-child { margin: 1rem 0 0; color: #c4c4cc; }
+.trust dl { margin: 0; display: grid; gap: 0; }
+.trust dl > div { display: grid; grid-template-columns: 11rem 1fr; gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid #ffffff12; }
+.trust dl > div:first-child { padding-top: 0; }
+.trust dt { font: 500 .7rem/1.6 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--gold-soft); }
+.trust dd { margin: 0; color: #d4d4da; font-size: .95rem; line-height: 1.6; }
+.trust dd.chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+@media (max-width: 880px) {
+  .trust { grid-template-columns: 1fr; }
+  .trust dl > div { grid-template-columns: 1fr; gap: .35rem; }
 }

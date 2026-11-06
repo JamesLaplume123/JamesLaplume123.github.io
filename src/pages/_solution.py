@@ -1,9 +1,7 @@
-# Gabarit commun des six pages de solution — version « wow ».
-# Chaque module de solution fournit un dict DATA ; solution_page() le
-# transforme en page complète : bande immersive → problème → ce qui change →
-# aperçu → déploiement responsable → démo.
-# Le champ DATA["showcase"] (démonstrations v1) est conservé mais inutilisé :
-# les aperçus détaillés reviendront avec le contenu final (PDF).
+# Gabarit commun des pages de solution.
+# Chaque module fournit un dict DATA ; solution_page() le transforme en page :
+# bande immersive → démonstration interactive (le cœur) → « En clair »
+# (avant / avec JARVIS, ce que vous obtenez) → déploiement responsable → démo.
 
 from config import CAPABILITIES
 
@@ -47,14 +45,6 @@ def clair_section(c):
 
 def solution_page(d):
     num = next((c["num"] for c in CAPABILITIES if c["slug"] == d["slug"]), "0X")
-    features = "".join(
-        f"""<article class="card" data-rev>
-          <small>0{i + 1}</small>
-          <h3>{f[0]}</h3>
-          <p>{f[1]}</p>
-        </article>"""
-        for i, f in enumerate(d["features"])
-    )
     compat = "".join(f'<span class="chip">{c}</span>' for c in d["compat"])
     return {
         "url": f"/solutions/{d['slug']}/",
@@ -74,73 +64,36 @@ def solution_page(d):
       <a class="pill" href="/contact/">Réserver une démo</a>
       <a class="pill ghost" href="/solutions/">Toutes les solutions</a>
     </div>
-    <div class="meta" data-rev>
-      <span class="chip chip-sim">Interface conceptuelle · fondation en construction</span>
-      <span class="chip">{d['for']}</span>
-      <span class="chip">Local, privé ou hybride</span>
-      <span class="chip">Contrôle humain</span>
-    </div>
+    <p class="for-line" data-rev><span>Pour</span> {d['for']}</p>
   </div>
 </section>
 
-{clair_section(d.get("clair"))}
-
-<section class="sect">
+<section class="sect sol-demo">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">Le problème à résoudre</p>
-      <h2 style="margin-top:1rem">{d['problem_title']}</h2>
-    </div>
-    <p data-rev>{d['problem_copy']}</p>
-  </div>
-</section>
-
-<section class="sect alt">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Ce que la solution change</p>
-      <h2 style="margin-top:1rem">{d['change_title']}</h2>
-    </div>
-    <p data-rev>{d['change_copy']}</p>
-  </div>
-  <div class="cards">
-    {features}
-  </div>
-</section>
-
-<section class="sect">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Aperçu conceptuel · données simulées</p>
-      <h2 style="margin-top:1rem">{d['demo_title']}</h2>
+      <p class="eyebrow">Essayez · démonstration interactive</p>
+      <h2>{d['demo_title']}</h2>
     </div>
     <p data-rev>{d['demo_copy']}</p>
   </div>
   {d.get('demo_html') or FRAME.format(img=d.get('demo_image', d['image']), title=d['title'], up=d['title'].upper(), cap=d.get('demo_caption', 'Prototype interactif — données simulées.'))}
   {d.get('extra', '')}
-  <div class="chiprow" data-rev>
-    <span class="chip chip-sim">Compatibilités possibles</span>
-    {compat}
-  </div>
 </section>
 
-<section class="sect alt">
-  <div class="sect-head">
-    <div data-rev>
+{clair_section(d.get("clair"))}
+
+<section class="sect sol-trust">
+  <div class="trust" data-rev>
+    <div>
       <p class="eyebrow">Déploiement responsable</p>
-      <h2 style="margin-top:1rem">{d['deploy_title']}</h2>
+      <h2>{d['deploy_title']}</h2>
+      <p>{d['deploy_copy']}</p>
     </div>
-    <p data-rev>{d['deploy_copy']}</p>
-  </div>
-  <div class="cards two">
-    <article class="card" data-rev>
-      <small>Accord humain</small>
-      <h3>Les actions sensibles exigent une validation adaptée au risque.</h3>
-    </article>
-    <article class="card" data-rev>
-      <small>Limite publiée</small>
-      <h3 style="font-weight:500;font-size:1rem;color:#b9b9c2;line-height:1.6">{d['limit']}</h3>
-    </article>
+    <dl>
+      <div><dt>Accord humain</dt><dd>Les actions sensibles exigent une validation adaptée au risque.</dd></div>
+      <div><dt>Limite publiée</dt><dd>{d['limit']}</dd></div>
+      <div><dt>Compatibilités possibles</dt><dd class="chips">{compat}</dd></div>
+    </dl>
   </div>
 </section>
 

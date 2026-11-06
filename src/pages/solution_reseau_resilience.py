@@ -11,25 +11,6 @@ DATA = {
     "h1": "Réseau et <em>cybersécurité.</em>",
     "lead": "Une vue claire du réseau et de ses risques, avant que chaque problème devienne une urgence.",
     "for": "Maisons connectées, PME et petits multi-sites qui dépendent de leur réseau",
-    "problem_title": "Le réseau soutient tout le reste, <em>mais devient visible seulement lorsqu’il tombe.</em>",
-    "problem_copy": (
-        "Cette solution vise l’inventaire, la topologie, la disponibilité, les liens Internet, "
-        "la segmentation et les accès privés. Elle joue le rôle d’une couche d’observation et "
-        "d’assistance pour l’administrateur, sans promettre une cybersécurité magique."
-    ),
-    "change_title": "Une infrastructure visible avant qu’elle devienne urgente.",
-    "change_copy": (
-        "L’inventaire, la topologie et l’historique rendent les dépendances visibles avant "
-        "qu’une panne ne devienne une enquête improvisée."
-    ),
-    "features": [
-        ("Inventaire vivant", "Identifier les équipements autorisés, leur rôle, leur état et leurs dépendances."),
-        ("Topologie compréhensible", "Montrer comment les sites, réseaux, passerelles et services essentiels sont reliés."),
-        ("Disponibilité surveillée", "Repérer une dégradation de connexion, une perte de service ou un équipement instable."),
-        ("Accès privé", "Préparer des accès distants limités, documentés et révocables plutôt qu’exposer les systèmes."),
-        ("Segmentation progressive", "Séparer les appareils, utilisateurs et fonctions selon les risques et besoins réels."),
-        ("Contexte pour le diagnostic", "Transmettre à Diagnostic & continuité les événements réseau pertinents lorsqu’une panne touche plusieurs systèmes."),
-    ],
     "demo_title": "Votre réseau, <em>comme une carte vivante.</em>",
     "demo_copy": (
         "Choisissez une situation : JARVIS montre ce qui se passe, explique pourquoi en une "

@@ -48,8 +48,10 @@ SCENARIOS = [
             {"k": "fields", "icon": "scan", "label": "JARVIS lit et extrait",
              "say": "JARVIS lit le courriel et le devis, puis remplit la demande. Personne ne recopie rien.",
              "log": "4 champs extraits du courriel et du devis", "sum": "4 champs remplis",
-             "fields": [("Fournisseur", "Outillage Rive-Sud", ""), ("Montant", "1 284,50 $", ""),
-                        ("Projet", "Chantier Lavoie", ""), ("Date requise", "14 novembre", "")],
+             "fields": [("Fournisseur", "Outillage Rive-Sud", "", "devis-2231.pdf"),
+                        ("Montant", "1 284,50 $", "", "devis-2231.pdf"),
+                        ("Projet", "Chantier Lavoie", "", "Chantier Lavoie"),
+                        ("Date requise", "14 novembre", "", "14 novembre")],
              "note": "Lu dans le courriel et devis-2231.pdf"},
             {"k": "rule", "icon": "rule", "label": "Règle appliquée",
              "say": "Votre règle s’applique : au-delà de 500 $, le gérant doit approuver.",
@@ -86,8 +88,10 @@ SCENARIOS = [
             {"k": "fields", "icon": "scan", "label": "Fiche client créée",
              "say": "JARVIS vérifie qu’elle n’est pas déjà cliente, puis crée sa fiche dans votre logiciel clients.",
              "log": "Nouvelle fiche client créée", "sum": "Fiche client créée",
-             "fields": [("Cliente", "Nadia Côté · nouvelle", ""), ("Besoin", "Sécurité · 4 caméras", ""),
-                        ("Échéance", "Avant le 1er décembre", ""), ("Responsable", "Équipe des ventes", "")],
+             "fields": [("Cliente", "Nadia Côté · nouvelle", "", "Nadia Côté"),
+                        ("Besoin", "Sécurité · 4 caméras", "", "Caméras extérieures"),
+                        ("Échéance", "Avant le 1er décembre", "", "avant décembre"),
+                        ("Responsable", "Équipe des ventes", "", "")],
              "note": "Aucune fiche existante à ce nom"},
             {"k": "rule", "icon": "rule", "label": "Règle appliquée",
              "say": "Votre règle : chaque nouveau client reçoit un mot de bienvenue, approuvé par une personne.",
@@ -127,8 +131,9 @@ SCENARIOS = [
             {"k": "fields", "icon": "scan", "label": "Rapprochement",
              "say": "JARVIS compare la facture au bon de commande BC-0418, ligne par ligne.",
              "log": "Facture comparée au BC-0418 · 3 lignes conformes, 1 écart", "sum": "1 écart sur 4 lignes",
-             "fields": [("Article", "Compresseur 60 gal.", "ok"), ("Quantité", "1 = 1", "ok"),
-                        ("Prix", "1 284,50 $ = 1 284,50 $", "ok"), ("Livraison", "0 $ ≠ 58,00 $", "bad")],
+             "fields": [("Article", "Compresseur 60 gal.", "ok", "BC-0418"), ("Quantité", "1 = 1", "ok", "F-88214.pdf"),
+                        ("Prix", "1 284,50 $ = 1 284,50 $", "ok", "F-88214.pdf"),
+                        ("Livraison", "0 $ ≠ 58,00 $", "bad", "F-88214.pdf")],
              "note": "Bon de commande BC-0418 · facture F-88214"},
             {"k": "rule", "icon": "warn", "label": "Écart détecté",
              "say": "Votre règle : tout écart avec la commande va à une personne. Le paiement attend.",
@@ -156,31 +161,55 @@ SCENARIOS = [
 ]
 
 STATIC_TIMES = ["9:12:04", "9:12:05", "9:12:06", "9:12:06", "9:12:41", "9:12:42", "9:12:44"]
+# Signature manuscrite du gérant, tracée sur le document approuvé
+SIGN = ('<svg class="au-sig" viewBox="0 0 132 30" aria-hidden="true"><path pathLength="1" d="M9 21C4 25 3 16 13 7'
+        'c6-5 9-3 5 5-3 6-7 12-5 13 3 1 7-8 10-11 2-2 3 0 2 3-1 3-1 6 1 5 3-1 5-7 8-8 2 0 1 4 1 6 0 2 2 2 4 0 '
+        '3-3 5-7 8-7 2 0 0 5 2 6 3 1 6-4 9-6 2-1 3 1 3 3 0 3 3 3 6 0 4-4 9-10 14-10M20 27c26-2 60-6 104-10"/></svg>')
 
 
-def card(st, done):
+def sources(sc):
+    """Passages du message d'origine que JARVIS lit à l'étape 2 (sans doublon, dans l'ordre)."""
+    out = []
+    for f in sc["stages"][1]["fields"]:
+        if f[3] and f[3] not in out:
+            out.append(f[3])
+    return out
+
+
+def marked(text, srcs):
+    """Texte du message, avec un <mark> sur chaque passage lu par JARVIS."""
+    s = fr(text)
+    for i, src in enumerate(srcs):
+        if fr(src) in s:
+            s = s.replace(fr(src), f'<mark class="au-m" data-m="{i}">{fr(src)}</mark>', 1)
+    return s
+
+
+def card(st, done, srcs):
     k = st["k"]
     if k == "mail":
         ini, name, meta = st["from"]
         return f"""<div class="au-mail au-x">
-  <p class="au-from"><span class="au-ava" aria-hidden="true">{ini}</span><span><b>{fr(name)}</b><small>{fr(meta)}</small></span></p>
-  <p class="au-subj">{fr(st['subj'])}</p>
-  <p class="au-body">{fr(st['body'])}</p>
-  <span class="au-att">{icon('doc')}{st['att']}</span>
+  <p class="au-from"><span class="au-ava" aria-hidden="true">{ini}</span><span><b>{fr(name)}</b><small>{marked(meta, srcs)}</small></span></p>
+  <p class="au-subj">{marked(st['subj'], srcs)}</p>
+  <p class="au-body">{marked(st['body'], srcs)}</p>
+  <span class="au-att">{icon('doc')}{marked(st['att'], srcs)}</span>
 </div>"""
     if k == "form":
-        rows = "".join(f'<li><span>{fr(a)}</span><b>{fr(b)}</b></li>' for a, b in st["rows"])
+        rows = "".join(f'<li><span>{fr(a)}</span><b>{marked(b, srcs)}</b></li>' for a, b in st["rows"])
         return f"""<div class="au-form au-x">
   <p class="au-cap">Formulaire du site web</p>
   <ul>{rows}</ul>
-  <p class="au-body">{fr(st['msg'])}</p>
+  <p class="au-body">{marked(st['msg'], srcs)}</p>
 </div>"""
     if k == "fields":
-        rows = "".join(
-            f'<li class="au-f au-x{" is-" + flag if flag else ""}"><span>{fr(a)}</span>'
-            f'<b class="au-v">{fr(b)}{"<i>✓</i>" if flag == "ok" else "<i>✕</i>" if flag == "bad" else ""}</b></li>'
-            for a, b, flag in st["fields"]
-        )
+        def field(a, b, flag, src):
+            cls = f" is-{flag}" if flag else ""
+            ref = f' data-src="{srcs.index(src)}"' if src else ""
+            mark = {"ok": "<i>✓</i>", "bad": "<i>✕</i>"}.get(flag, "")
+            return (f'<li class="au-f au-x{cls}"{ref}><span>{fr(a)}</span>'
+                    f'<b class="au-v"><span class="au-t">{fr(b)}</span>{mark}</b></li>')
+        rows = "".join(field(*f) for f in st["fields"])
         return f"""<ul class="au-fields">{rows}</ul>
 <p class="au-note au-x">{fr(st['note'])}</p>"""
     if k == "rule":
@@ -209,15 +238,17 @@ def card(st, done):
     kick, title, line = st["doc"]
     on = ' class="on"' if done else ""
     track = "".join(f"<li{on}>{fr(t)}</li>" for t in st["track"])
-    return f"""<div class="au-doc au-x"><small>{fr(kick)}</small><b>{fr(title)}</b><span>{fr(line)}</span>
+    sign = f'<p class="au-sign">{SIGN}</p>' if st["icon"] == "doc" else ""
+    return f"""<div class="au-doc au-x"><small>{fr(kick)}</small><b>{fr(title)}</b><span>{fr(line)}</span>{sign}
   <em class="au-stamp" aria-hidden="true">Confirmé</em></div>
-<ol class="au-track au-x" aria-label="Suivi de l’action">{track}</ol>
+<ol class="au-track au-x" aria-label="Suivi de l’action" style="--tk:{1 if done else 0}">{track}</ol>
 <p class="au-res" data-sent="{fr(st['sent'])}" data-conf="{fr(st['conf'])}" data-skip="{fr(st['skip'])}">{fr(st['conf']) + '.' if done else ''}</p>"""
 
 
 def pipe(sc, done=False):
     items = []
     n = len(sc["stages"])
+    srcs = sources(sc)
     for i, st in enumerate(sc["stages"]):
         state = ""
         if done:
@@ -227,13 +258,13 @@ def pipe(sc, done=False):
         log = st.get("log", "")
         summary = st.get("sum") or (st["ok"][1] if done and st["k"] == "approve" else "")
         link = (
-            '<span class="au-link" aria-hidden="true"><i></i><b></b><b></b><b></b></span>' if i < n - 1 else ""
+            '<span class="au-link" aria-hidden="true"><i></i></span>' if i < n - 1 else ""
         )
         items.append(f"""<li class="au-st{state}" data-k="{st['k']}" data-say="{fr(st['say'])}" data-log="{fr(log)}">
   <div class="au-node">{icon(st['icon'])}</div>{link}
   <p class="au-lab"><small>{i + 1:02d}</small>{fr(st['label'])}</p>
   <p class="au-sum">{fr(summary)}</p>
-  <div class="au-card">{card(st, done)}</div>
+  <div class="au-card">{card(st, done, srcs)}</div>
 </li>""")
     return f'<ol class="au-pipe">{"".join(items)}</ol>'
 

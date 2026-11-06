@@ -1,39 +1,7 @@
 # Solution 03 — Sécurité intelligente.
 
 from pages._solution import solution_page
-
-# Vitrine : un événement compris avant la réaction.
-SHOWCASE = """
-<div class="split" data-reveal>
-  <figure class="showcase-frame" style="margin:0;">
-    <img src="/media/solutions/camera-front-entry-v1.webp"
-         alt="Caméra de l’entrée avant pendant un événement à vérifier" loading="lazy">
-    <figcaption>
-      <span>ENTRÉE AVANT · 20 H 41</span>
-      <strong>Vérification requise · 3 éléments rapprochés</strong>
-    </figcaption>
-  </figure>
-  <aside class="console" style="max-width:none;">
-    <header class="console-head"><span><i></i>ÉVÉNEMENT PRIORITAIRE</span><small>LOCAL</small></header>
-    <div class="console-body">
-      <small>CONFIANCE CONTEXTUELLE · 87 %</small>
-      <strong>Une personne inconnue accompagne une résidente autorisée.</strong>
-      <p>JARVIS rapproche la caméra, l’accès, les appareils reconnus et l’horaire.
-      Il ne déverrouille rien tant que le contexte demeure incomplet.</p>
-    </div>
-    <ul class="console-signals">
-      <li><span>CAMÉRA</span><b>Présence double</b></li>
-      <li><span>ACCÈS</span><b>Badge reconnu</b></li>
-      <li><span>DÉCISION</span><b>Confirmation requise</b></li>
-    </ul>
-    <div class="console-body" style="border-top:1px solid var(--line);">
-      <small>ACTION PROPOSÉE</small>
-      <p style="margin-top:0.5rem;">Afficher l’interphone et demander à la résidente de confirmer
-      le visiteur. Aucun accès automatique.</p>
-    </div>
-  </aside>
-</div>
-"""
+from demos.securite import HTML as DEMO_HTML
 
 DATA = {
     "slug": "securite-intelligente",
@@ -43,6 +11,32 @@ DATA = {
     "h1": "Sécurité <em>intelligente.</em>",
     "lead": "Une sécurité qui réunit le contexte, les preuves et les décisions, sans retirer le contrôle humain.",
     "for": "Résidences, entreprises et propriétés réparties sur plusieurs sites",
+    "clair": {
+        "quoi": "JARVIS regarde toutes vos caméras et vos capteurs en même temps, puis vous dit en une phrase <em>ce qui s’est vraiment passé.</em>",
+        "exemple": (
+            "Un livreur dépose un colis. Au lieu de six notifications (mouvement, personne, sonnette, "
+            "colis…), vous en recevez une seule : « 21 h 42 — Livraison : un colis a été déposé à "
+            "l’entrée. Rien d’anormal. » La nuit, si quelqu’un rôde, JARVIS vous propose d’allumer "
+            "les lumières et attend votre accord."
+        ),
+        "avant": [
+            "Des dizaines de notifications par jour, souvent pour un chat ou une branche.",
+            "Chaque caméra a son application et raconte sa propre version.",
+            "Pour comprendre, il faut ouvrir les vidéos une par une.",
+            "La nuit, impossible de savoir si c’est grave ou non.",
+        ],
+        "apres": [
+            "Les alertes d’une même situation deviennent un seul événement.",
+            "Une phrase claire explique ce qui s’est passé, images à l’appui.",
+            "Le normal reste discret; l’inhabituel ressort tout de suite.",
+            "JARVIS propose une action (lumières, interphone) et attend votre accord.",
+        ],
+        "obtenez": [
+            ("Un seul fil", "Caméras, sonnette, portes, détecteurs et alarme réunis dans une même chronologie."),
+            ("Des preuves classées", "Les images utiles sont gardées avec l’événement, sur place, aussi longtemps que vous le décidez."),
+            ("Le dernier mot", "Allumer, parler, prévenir : JARVIS propose, vous approuvez. Rien ne se déverrouille tout seul."),
+        ],
+    },
     "problem_title": "Une alerte sans contexte crée du bruit. <em>Une preuve organisée permet de décider.</em>",
     "problem_copy": (
         "Les caméras, portes, alarmes et capteurs détectent chacun une partie de l’événement. "
@@ -62,12 +56,14 @@ DATA = {
         ("Respect de la vie privée", "Limiter l’analyse, la durée de conservation et les personnes pouvant consulter les données."),
         ("Réponse supervisée", "Proposer une procédure et laisser les décisions sensibles à une personne autorisée."),
     ],
-    "demo_title": "Comprendre un événement <em>avant de réagir.</em>",
+    "demo_title": "Six alertes. <em>Un seul événement compris.</em>",
     "demo_copy": (
-        "Cette scène distingue ce qui est autorisé, ce qui est simplement observé "
-        "et ce qui exige une vérification humaine."
+        "Choisissez une situation. À gauche, les caméras repèrent ce qui bouge. À droite, les alertes "
+        "arrivent une à une, puis JARVIS les regroupe en une phrase claire, avec les images comme "
+        "preuves. Quand une action est utile, il la propose et attend votre accord."
     ),
-    "showcase": SHOWCASE,
+    "demo_html": DEMO_HTML,
+    "assets": ["securite"],
     "compat": ["Frigate", "ONVIF", "Contrôle d’accès", "Alarmes", "Capteurs", "Interphones", "Stockage local"],
     "deploy_title": "Les événements sensibles restent près du site.",
     "deploy_copy": (
@@ -85,24 +81,5 @@ DATA = {
         "les preuves utiles et les limites à respecter."
     ),
 }
-
-DATA["demo_image"] = "/media/product/outils/securite.jpg"
-DATA["demo_caption"] = "Écran de référence de l’outil Sécurité — maquette, données fictives."
-DATA["extra"] = """
-<div class="shots" data-rev style="margin-top:14px">
-  <figure>
-    <img src="/media/solutions/camera-garage-supercars-v1.webp" alt="Caméra intérieure du garage" loading="lazy">
-    <figcaption><b>Garage intérieur</b><span>2 véhicules autorisés</span></figcaption>
-  </figure>
-  <figure>
-    <img src="/media/solutions/security-enterprise-parking-v1.webp" alt="Caméra du stationnement de l’entreprise" loading="lazy">
-    <figcaption><b>Stationnement</b><span>Périmètre calme</span></figcaption>
-  </figure>
-  <figure>
-    <img src="/media/solutions/camera-pool-spa-v1.webp" alt="Caméra de la piscine et du spa" loading="lazy">
-    <figcaption><b>Piscine et spa</b><span>Périmètre calme</span></figcaption>
-  </figure>
-</div>
-"""
 
 PAGE = solution_page(DATA)

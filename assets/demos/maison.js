@@ -1,28 +1,108 @@
-/* Démo « Ma maison » : les pièces s'allument, se règlent et confirment chaque commande.
+/* Démo « Ma maison » : chaque pièce s'allume comme derrière un vrai gradateur.
+   La photo du plan n'est jamais retouchée : la nuit est un voile posé dessus, et une
+   pièce allumée révèle la photo à travers son masque (murs nets, débord doux par les
+   portes), puis ajoute le halo de ses luminaires, teinté selon la couleur choisie.
+   Les ambiances se déroulent pièce par pièce, comme une vraie scène.
    Démonstration seulement : aucun appareil réel n'est commandé. */
 (function () {
   "use strict";
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* Couleur de la lumière : c = halo des luminaires, t = voile coloré sur la pièce éclairée.
+     Chaude ≈ 2700 K (ambre), Neutre ≈ 4000 K, Froide ≈ 5500 K (pointe de bleu). */
   var TONES = {
-    chaude: "none",
-    neutre: "saturate(.7) brightness(1.06)",
-    froide: "saturate(.3) brightness(1.16) hue-rotate(-12deg)",
-    cinema: "hue-rotate(245deg) saturate(1.7) brightness(.92)",
-    eau: "saturate(1.15) brightness(1.05)"
+    chaude: { c: "#ffb35c", t: "rgba(255, 150, 60, .2)" },
+    neutre: { c: "#ffe7cc", t: "rgba(130, 165, 255, .3)" },
+    froide: { c: "#dbe7ff", t: "rgba(85, 140, 255, .55)" },
+    cinema: { c: "#6585ff", t: "rgba(45, 80, 255, .75)" },
+    eau: { c: "#5edcff", t: "rgba(40, 200, 255, .22)" }
   };
   var CLOCK = { matin: "Matin · 6 h 58", soiree: "Soirée · 19 h 42", cinema: "Cinéma · 21 h 05", nuit: "Nuit · 23 h 30", absent: "Absent · 14 h 10" };
+
+  var EDGE = 4, SPILL = 22; /* flou des murs et du débord par les ouvertures, en pixels de l'image */
+
+  /* Cadre d'une pièce : son polygone et ses ouvertures, plus la marge du flou.
+     Les couches de lumière n'occupent que ce cadre (moins de surface à peindre). */
+  function frame(r, W, H) {
+    var xs = [], ys = [];
+    r.poly.forEach(function (p) { xs.push(p[0] - 3 * EDGE, p[0] + 3 * EDGE); ys.push(p[1] - 3 * EDGE, p[1] + 3 * EDGE); });
+    r.d.forEach(function (d) { xs.push(d[0] - d[2] - 3 * SPILL, d[0] + d[2] + 3 * SPILL); ys.push(d[1] - d[3] - 3 * SPILL, d[1] + d[3] + 3 * SPILL); });
+    var x0 = Math.max(0, Math.floor(Math.min.apply(0, xs))), y0 = Math.max(0, Math.floor(Math.min.apply(0, ys)));
+    var x1 = Math.min(W, Math.ceil(Math.max.apply(0, xs))), y1 = Math.min(H, Math.ceil(Math.max.apply(0, ys)));
+    return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+  }
+
+  /* Masque d'une pièce, dessiné une seule fois en image : la pièce (murs adoucis, plus claire
+     près des luminaires) et ses ouvertures, où la lumière déborde à moitié. Le flou passe par
+     l'ombre portée du canevas, reconnue par tous les navigateurs. */
+  function mask(r, box) {
+    var S = .6, w = Math.ceil(box.w * S), h = Math.ceil(box.h * S);
+    function layer(sigma, alpha, paint) {
+      var c = document.createElement("canvas"), g = c.getContext("2d"), off = w + 8 * sigma * S + 40;
+      c.width = w; c.height = h;
+      g.shadowColor = "rgba(255, 255, 255, " + alpha + ")"; g.shadowBlur = 2 * sigma * S; g.shadowOffsetX = off;
+      g.translate(-off, 0); g.scale(S, S); g.translate(-box.x, -box.y);
+      g.fillStyle = "#fff"; g.beginPath(); paint(g); g.fill();
+      return c;
+    }
+    var room = layer(EDGE, 1, function (g) { r.poly.forEach(function (p, i) { g[i ? "lineTo" : "moveTo"](p[0], p[1]); }); g.closePath(); });
+    var near = layer(SPILL, 1, function (g) { r.f.forEach(function (f) { g.moveTo(f[0] + f[2] * .7, f[1]); g.arc(f[0], f[1], f[2] * .7, 0, 7); }); });
+    var ng = near.getContext("2d");
+    ng.globalCompositeOperation = "destination-in"; ng.drawImage(room, 0, 0);
+    var out = document.createElement("canvas"), o = out.getContext("2d");
+    out.width = w; out.height = h;
+    o.globalAlpha = .7; o.drawImage(room, 0, 0);
+    o.globalAlpha = 1; o.drawImage(near, 0, 0);
+    if (r.d.length) {
+      o.globalAlpha = .55;
+      o.drawImage(layer(SPILL, 1, function (g) { r.d.forEach(function (d) { g.moveTo(d[0] + d[2], d[1]); g.ellipse(d[0], d[1], d[2], d[3], 0, 0, 7); }); }), 0, 0);
+    }
+    return 'url("' + out.toDataURL() + '")';
+  }
+
+  /* Halo : un dégradé radial par luminaire, positions en % du cadre. Sa couleur vient de
+     --mz-<couche><sorte> (sorte 1 = principal, 2 = d'appoint, 3 = écran, 0 = lumière diffuse).
+     La mi-teinte placée tôt (28 %) donne une chute rapide puis une longue traîne, comme la vraie lumière. */
+  function glow(list, scale, layer, box) {
+    return list.map(function (f) {
+      var r = f[2] * scale;
+      return "radial-gradient(" + pc(r, box.w) + " " + pc(r, box.h) + " at " + pc(f[0] - box.x, box.w) + " " + pc(f[1] - box.y, box.h) +
+        ",var(--mz-" + layer + f[3] + "),28%,transparent)";
+    }).join(",");
+  }
+  function pc(v, total) { return (v / total * 100).toFixed(2) + "%"; }
 
   document.querySelectorAll('[data-demo="maison"]').forEach(function (root) {
     var $ = function (s) { return root.querySelector(s); };
     var $$ = function (s) { return [].slice.call(root.querySelectorAll(s)); };
     var data;
     try { data = JSON.parse($('[data-mz="data"]').textContent); } catch (e) { return; }
+    var W = data.size[0], H = data.size[1];
+    var lights = $('[data-mz="lights"]');
     var rooms = {}, order = [];
     data.rooms.forEach(function (r) {
+      /* Lumière de la pièce, dans son cadre et sous un seul masque : la photo révélée, puis le halo (cœur et étendue) */
+      var box = frame(r, W, H);
+      var xs = r.poly.map(function (p) { return p[0]; }), ys = r.poly.map(function (p) { return p[1]; });
+      var cx = (Math.min.apply(0, xs) + Math.max.apply(0, xs)) / 2, cy = (Math.min.apply(0, ys) + Math.max.apply(0, ys)) / 2;
+      var reach = Math.hypot(Math.max.apply(0, xs) - Math.min.apply(0, xs), Math.max.apply(0, ys) - Math.min.apply(0, ys)) * .45;
+      var l = document.createElement("div");
+      l.className = "mz-l is-off";
+      l.setAttribute("data-room", r.k);
+      l.style.cssText = "left:" + pc(box.x, W) + ";top:" + pc(box.y, H) + ";width:" + pc(box.w, W) + ";height:" + pc(box.h, H);
+      l.style.setProperty("--m", mask(r, box));
+      var lit = document.createElement("i"), core = document.createElement("i"), spread = document.createElement("i");
+      lit.className = "mz-lit"; core.className = "mz-core"; spread.className = "mz-spread";
+      /* La photo entière, placée pour que le cadre en montre exactement la bonne partie */
+      lit.style.backgroundSize = "100% 100%, " + pc(W, box.w) + " " + pc(H, box.h);
+      lit.style.backgroundPosition = "0 0, " + (box.w < W ? pc(box.x, W - box.w) : "0") + " " + (box.h < H ? pc(box.y, H - box.h) : "0");
+      core.style.backgroundImage = glow(r.f, .6, "k", box);
+      spread.style.backgroundImage = glow(r.f.concat([[cx, cy, reach, 0]]), 1.35, "p", box);
+      l.appendChild(lit); l.appendChild(core); l.appendChild(spread);
+      lights.appendChild(l);
       rooms[r.k] = {
         def: r, lvl: 0, on: false, tone: "chaude", temp: r.temp, lock: !!r.lock, door: false, store: false,
-        fire: false, water: r.water, img: $('.mz-lit[data-room="' + r.k + '"]'), tag: $('.mz-tag[data-room="' + r.k + '"]'),
-        poly: $('.mz-hit polygon[data-room="' + r.k + '"]'), bloom: $('.mz-bloom[data-room="' + r.k + '"]')
+        fire: false, water: r.water, l: l, tag: $('.mz-tag[data-room="' + r.k + '"]'),
+        poly: $('.mz-hit polygon[data-room="' + r.k + '"]')
       };
       order.push(r.k);
     });
@@ -33,19 +113,32 @@
       state: $('[data-mz="state"]'), tones: $$(".mz-temps button"), scenes: $$(".mz-scenes button")
     };
 
-    function paintRoom(k, bloom) {
-      var r = rooms[k];
-      var v = r.on ? r.lvl : 0;
-      r.img.style.setProperty("--lvl", v.toFixed(2));
-      r.img.style.setProperty("--tone", TONES[r.tone] || "none");
-      r.tag.classList.toggle("is-on", r.on && v > 0);
+    /* how = "drag" pendant qu'on glisse l'intensité : la lumière suit le doigt sans traîner */
+    function paintRoom(k, how) {
+      var r = rooms[k], v = r.on ? r.lvl : 0, s = r.l.style, t = TONES[r.tone] || TONES.chaude;
+      r.l.classList.toggle("is-off", !(v > 0));
+      r.l.classList.toggle("is-drag", how === "drag");
+      r.l.setAttribute("data-tone", r.tone);
+      /* Courbes d'un gradateur : le cœur des luminaires paraît avant que la pièce soit pleine */
+      /* En Cinéma, la pièce reste sombre et l'écran l'éclaire quel que soit le gradateur des plafonniers */
+      var screen = v > 0 && r.tone === "cinema";
+      s.setProperty("--mz-fill", (v > 0 ? Math.pow(v, screen ? 1 : .75) : 0).toFixed(3));
+      s.setProperty("--mz-core", (v > 0 ? Math.max(Math.pow(v, .5), screen ? .85 : 0) : 0).toFixed(3));
+      s.setProperty("--mz-spread", (v > 0 ? Math.max(Math.pow(v, .9), screen ? .7 : 0) : 0).toFixed(3));
+      s.setProperty("--mz-c", t.c);
+      s.setProperty("--mz-tint", t.t);
+      if (r.def.water) {
+        root.style.setProperty("--mz-water", (v > 0 ? Math.pow(v, .75) : 0).toFixed(3));
+        root.classList.toggle("is-swim", v > 0);
+      }
+      if (r.def.fire) root.classList.toggle("is-fire", r.fire);
+      r.tag.classList.toggle("is-on", v > 0);
       var bits = [];
-      bits.push(r.on && v > 0 ? Math.round(v * 100) + " %" : "Éteint");
+      bits.push(v > 0 ? Math.round(v * 100) + " %" : "Éteint");
       if (r.def.lock) bits.push(r.lock ? "verrouillée" : "déverrouillée");
       if (r.def.door) bits.push(r.door ? "porte ouverte" : "porte fermée");
       if (r.def.temp && !r.def.lock) bits.push(r.temp.toString().replace(".", ",") + " °C");
       r.tag.querySelector(".mz-tag-v").textContent = bits.join(" · ");
-      if (bloom && !reduce && r.bloom) { r.bloom.classList.remove("go"); void r.bloom.offsetWidth; r.bloom.classList.add("go"); }
     }
 
     function totals() {
@@ -62,14 +155,16 @@
       el.locks.textContent = open ? open + " ouverte" + (open > 1 ? "s" : "") : "Verrouillées";
       el.locks.style.color = open ? "#fcd34d" : "#9fe8bc";
     }
+    var tweenRaf = 0;
     function tween() {
-      if (reduce) { wattsShown = watts; el.watts.textContent = Math.round(watts) + " W"; return; }
+      cancelAnimationFrame(tweenRaf);
+      if (reduce) { wattsShown = watts; el.watts.textContent = Math.round(watts).toLocaleString("fr-CA") + " W"; return; }
       var from = wattsShown, to = watts, t0 = performance.now();
       (function step(t) {
         var k = Math.min(1, (t - t0) / 900), e = 1 - Math.pow(1 - k, 3);
         wattsShown = from + (to - from) * e;
         el.watts.textContent = Math.round(wattsShown).toLocaleString("fr-CA") + " W";
-        if (k < 1) requestAnimationFrame(step);
+        if (k < 1) tweenRaf = requestAnimationFrame(step);
       })(t0);
     }
 
@@ -123,35 +218,64 @@
       el.extra.innerHTML = extraButtons(r);
     }
 
-    function setRoom(k, lvl, tone, bloom) {
-      var r = rooms[k], was = r.on && r.lvl > 0;
+    function setRoom(k, lvl, tone, how) {
+      var r = rooms[k];
       r.lvl = lvl;
       r.on = lvl > 0;
       if (tone) r.tone = tone;
-      paintRoom(k, bloom && !was && r.on);
+      paintRoom(k, how);
     }
+
+    /* Étapes d'une scène en cours : annulées par la scène suivante, jouées tout de suite
+       si le visiteur reprend la main sur une pièce. */
+    var steps = [];
+    function later(fn, ms) {
+      if (reduce || !ms) { fn(); return; }
+      var s = { fn: fn };
+      s.id = setTimeout(function () { steps.splice(steps.indexOf(s), 1); fn(); }, ms);
+      steps.push(s);
+    }
+    function cancel() { steps.forEach(function (s) { clearTimeout(s.id); }); steps = []; }
+    function flush() { var pending = steps; cancel(); pending.forEach(function (s) { s.fn(); }); }
 
     function scene(key) {
       var s = data.scenes[key];
       if (!s) return;
+      cancel();
       sceneKey = key;
       el.scenes.forEach(function (b) { b.classList.toggle("is-on", b.getAttribute("data-scene") === key); });
       el.state.textContent = CLOCK[key] || "";
       if (s.away) root.setAttribute("data-away", ""); else root.removeAttribute("data-away");
-      order.forEach(function (k, i) {
-        var t = s.rooms[k];
-        setTimeout(function () {
-          setRoom(k, t ? t[0] : 0, t ? t[1] : null, true);
-          var r = rooms[k];
-          if (r.def.lock) r.lock = !!s.lock || key === "nuit" || key === "absent";
-          if (r.def.door) r.door = false;
-          if (r.def.fire) r.fire = key === "soiree";
-          if (r.def.store) r.store = key === "cinema" || key === "nuit";
-          paintRoom(k, false);
+      /* Portes, foyer et stores suivent la scène tout de suite; seule la lumière se déroule */
+      order.forEach(function (k) {
+        var r = rooms[k];
+        if (r.def.lock) r.lock = !!s.lock || key === "nuit" || key === "absent";
+        if (r.def.door) r.door = false;
+        if (r.def.fire) r.fire = key === "soiree";
+        if (r.def.store) r.store = key === "cinema" || key === "nuit";
+        paintRoom(k);
+      });
+      /* Chorégraphie : les pièces à éteindre s'éteignent en vague rapide, puis les pièces
+         de la scène s'allument une à une dans l'ordre de la scène (≈ 1,2 s en tout). */
+      var offs = order.filter(function (k) { return !s.rooms[k] && rooms[k].on; });
+      var ons = Object.keys(s.rooms);
+      var step = Math.min(220, 1100 / Math.max(1, ons.length)), t0 = offs.length ? 160 : 0;
+      offs.forEach(function (k, i) {
+        later(function () {
+          setRoom(k, 0);
           if (k === sel) syncPanel();
           totals();
-        }, reduce ? 0 : i * 110);
+        }, i * 70);
       });
+      ons.forEach(function (k, i) {
+        later(function () {
+          setRoom(k, s.rooms[k][0], s.rooms[k][1]);
+          if (k === sel) syncPanel();
+          totals();
+        }, t0 + i * step);
+      });
+      syncPanel();
+      totals();
     }
 
     /* Interactions */
@@ -160,31 +284,36 @@
     });
     el.scenes.forEach(function (b) { b.addEventListener("click", function () { scene(b.getAttribute("data-scene")); }); });
     el.sw.addEventListener("click", function () {
-      var r = rooms[sel], isOn = r.on && r.lvl > 0;
-      if (isOn) { r.on = false; paintRoom(sel); }
-      else { if (!(r.lvl > 0)) r.lvl = .7; r.on = true; paintRoom(sel, true); }
+      flush();
+      var r = rooms[sel];
+      if (r.on && r.lvl > 0) r.on = false;
+      else { if (!(r.lvl > 0)) r.lvl = .7; r.on = true; }
+      paintRoom(sel);
       syncPanel(); totals(); ack(sel); clearScene();
     });
     el.lvl.addEventListener("input", function () {
+      flush();
       var v = +el.lvl.value / 100;
-      setRoom(sel, v, null, true);
+      setRoom(sel, v, null, "drag");
       el.lvl.style.setProperty("--p", el.lvl.value + "%");
       el.lvlV.textContent = el.lvl.value + " %";
       el.sw.setAttribute("aria-checked", v > 0 ? "true" : "false");
       totals();
     });
-    el.lvl.addEventListener("change", function () { ack(sel); clearScene(); });
+    el.lvl.addEventListener("change", function () { paintRoom(sel); ack(sel); clearScene(); });
     el.tones.forEach(function (b) {
       b.addEventListener("click", function () {
+        flush();
         var r = rooms[sel];
         r.tone = b.getAttribute("data-tone");
-        if (!r.on || r.lvl === 0) setRoom(sel, .7, null, true);
+        if (!r.on || r.lvl === 0) setRoom(sel, .7);
         paintRoom(sel); syncPanel(); totals(); ack(sel); clearScene();
       });
     });
     el.extra.addEventListener("click", function (e) {
       var b = e.target.closest("button");
       if (!b) return;
+      flush();
       var r = rooms[sel], x = b.getAttribute("data-x");
       /* Action sensible : on demande une confirmation explicite avant d'envoyer */
       var sensitive = (x === "lock" && r.lock) || (x === "door" && !r.door);
@@ -211,20 +340,32 @@
       el.state.textContent = "Personnalisé";
     }
 
-    /* Départ : tout est éteint, puis la soirée s'allume pièce par pièce */
+    /* Départ : tout est éteint, puis la soirée s'allume pièce par pièce.
+       La photo des couches de lumière n'est demandée qu'à l'approche de la démo, et les
+       animations continues (eau, foyer, écran) ne tournent que lorsqu'elle est à l'écran. */
     order.forEach(function (k) { paintRoom(k); });
     select("salon");
     totals();
-    var started = false;
+    var started = false, fed = false;
+    function feed() {
+      if (fed) return;
+      fed = true;
+      root.style.setProperty("--mz-img", 'url("' + $(".mz-base").getAttribute("src") + '")');
+    }
     function start() {
       if (started) return;
       started = true;
+      feed();
       setTimeout(function () { scene("soiree"); }, reduce ? 0 : 900);
     }
     if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (es, obs) {
-        es.forEach(function (e) { if (e.isIntersecting) { start(); obs.disconnect(); } });
-      }, { threshold: .35 }).observe(root);
-    } else start();
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          root.classList.toggle("is-live", e.isIntersecting);
+          if (e.isIntersecting) feed();
+          if (e.intersectionRatio >= .35) start();
+        });
+      }, { threshold: [0, .35] }).observe(root);
+    } else { root.classList.add("is-live"); start(); }
   });
 })();

@@ -17,28 +17,100 @@
 }
 [data-demo="maison"] .mz-plan { transform: scale(1.16); }
 .fx [data-demo="maison"]:not(.in) .mz-plan { transform: rotateX(30deg) scale(.95); }
-[data-demo="maison"] .mz-base, [data-demo="maison"] .mz-lit {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+[data-demo="maison"] .mz-base { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ---------- La lumière (couches posées sur la photo, jamais retouchée) ----------
+   Ordre : photo · voile de nuit · pièces (photo révélée et halos) · eau · foyer · zones · étiquettes.
+   Les couleurs --mz-c et --mz-tint sont déclarées pour pouvoir glisser d'une teinte à l'autre. */
+@property --mz-c { syntax: "<color>"; inherits: true; initial-value: #ffb35c; }
+@property --mz-tint { syntax: "<color>"; inherits: true; initial-value: #0000; }
+/* La nuit, posée sur la photo : les couleurs s'éteignent (vision nocturne), puis un voile
+   bleuté plus dense sur les bords; plus sombre encore en mode Absent. .mz-dark n'est qu'un
+   support : ses deux calques se fondent directement sur la photo. */
+[data-demo="maison"] .mz-dark, [data-demo="maison"] .mz-dark i { position: absolute; inset: 0; pointer-events: none; }
+[data-demo="maison"] .mz-dark i { z-index: 1; }
+[data-demo="maison"] .mz-dark i:first-child { background: #808080; mix-blend-mode: saturation; opacity: .5; }
+[data-demo="maison"] .mz-dark i + i { mix-blend-mode: multiply; background: radial-gradient(118% 92% at 50% 42%, #343945, #15171e 80%); }
+[data-demo="maison"] .mz-dark i + i::after { content: ""; position: absolute; inset: 0; background: #010204; opacity: 0; }
+[data-demo="maison"][data-away] .mz-dark i + i::after { opacity: .45; }
+.fx [data-demo="maison"] .mz-dark i + i::after { transition: opacity 1.2s var(--ease); }
+/* Une pièce (cadre placé par le script, un seul masque) : la photo révélée, puis le halo de ses
+   luminaires, fondu en « écran » sur la photo comme une lumière qui s'ajoute. */
+[data-demo="maison"] .mz-lights { position: absolute; inset: 0; pointer-events: none; }
+[data-demo="maison"] .mz-l {
+  position: absolute; z-index: 2;
+  -webkit-mask: var(--m) 0 0 / 100% 100% no-repeat; mask: var(--m) 0 0 / 100% 100% no-repeat;
 }
-[data-demo="maison"] .mz-base { filter: brightness(.3) saturate(.45) contrast(1.08) hue-rotate(-14deg); }
+[data-demo="maison"] .mz-l i { position: absolute; inset: 0; }
 [data-demo="maison"] .mz-lit {
-  opacity: var(--lvl, 0); filter: var(--tone, none);
-  transition: opacity .9s var(--ease), filter .9s var(--ease);
+  opacity: var(--mz-fill, 0);
+  background-image: linear-gradient(var(--mz-tint), var(--mz-tint)), var(--mz-img, none);
+  background-repeat: no-repeat; background-blend-mode: soft-light, normal;
 }
-[data-demo="maison"] .mz-night {
-  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
-  background: radial-gradient(120% 90% at 50% 40%, #2a3550 0, #0b0f1c 80%); opacity: .35;
-  transition: opacity 1.2s var(--ease);
+[data-demo="maison"] .mz-core, [data-demo="maison"] .mz-spread { mix-blend-mode: screen; }
+/* Intensité de chaque sorte de luminaire : 1 principal, 2 d'appoint, 3 écran (seulement en Cinéma), 0 lumière diffuse */
+[data-demo="maison"] .mz-core {
+  opacity: var(--mz-core, 0);
+  --mz-k1: color-mix(in srgb, var(--mz-c) 78%, transparent); --mz-k2: color-mix(in srgb, var(--mz-c) 46%, transparent); --mz-k3: transparent;
 }
-[data-demo="maison"][data-away] .mz-night { opacity: .6; }
-[data-demo="maison"] .mz-bloom {
-  position: absolute; left: var(--x); top: var(--y); width: 26%; aspect-ratio: 1; translate: -50% -50%;
-  border-radius: 50%; pointer-events: none; opacity: 0; mix-blend-mode: screen;
-  background: radial-gradient(closest-side, #ffd9a0cc, #ffb35a44 45%, transparent 72%);
+[data-demo="maison"] .mz-spread {
+  opacity: var(--mz-spread, 0);
+  --mz-p1: color-mix(in srgb, var(--mz-c) 40%, transparent); --mz-p2: color-mix(in srgb, var(--mz-c) 24%, transparent); --mz-p3: transparent;
+  --mz-p0: color-mix(in srgb, var(--mz-c) 18%, transparent);
 }
-[data-demo="maison"] .mz-bloom.go { animation: mzBloom 1.1s var(--ease); }
-@keyframes mzBloom { 0% { opacity: 0; transform: scale(.2); } 35% { opacity: .9; } 100% { opacity: 0; transform: scale(1.25); } }
-[data-demo="maison"] .mz-hit { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* Cinéma : les plafonniers presque éteints, la lumière vient de l'écran */
+[data-demo="maison"] .mz-l[data-tone="cinema"] .mz-core { --mz-k1: transparent; --mz-k2: transparent; --mz-k3: color-mix(in srgb, var(--mz-c) 90%, transparent); }
+[data-demo="maison"] .mz-l[data-tone="cinema"] .mz-spread { --mz-p1: transparent; --mz-p2: transparent; --mz-p3: color-mix(in srgb, var(--mz-c) 72%, transparent); --mz-p0: color-mix(in srgb, var(--mz-c) 20%, transparent); }
+/* Gradateur : montée douce à l'allumage (le cœur d'abord, puis la lumière s'étend);
+   à l'extinction, la pièce s'assombrit et le cœur s'attarde un instant (lueur résiduelle).
+   Seule l'opacité bouge; la couleur ne glisse que lorsqu'on change de teinte. */
+.fx [data-demo="maison"] .mz-l { transition: --mz-c .9s ease, --mz-tint .9s ease; }
+.fx [data-demo="maison"] .mz-lit { transition: opacity .85s cubic-bezier(.45, 0, .2, 1); }
+.fx [data-demo="maison"] .mz-core { transition: opacity .55s cubic-bezier(.3, 0, .2, 1); }
+.fx [data-demo="maison"] .mz-spread { transition: opacity 1.15s cubic-bezier(.25, .1, .25, 1) .12s; }
+.fx [data-demo="maison"] .mz-l.is-off .mz-lit { transition: opacity .75s cubic-bezier(.4, 0, .6, 1); }
+.fx [data-demo="maison"] .mz-l.is-off .mz-core { transition: opacity 1.1s cubic-bezier(.35, 0, .25, 1) .18s; }
+.fx [data-demo="maison"] .mz-l.is-off .mz-spread { transition: opacity .65s cubic-bezier(.4, 0, .6, 1); }
+.fx [data-demo="maison"] .mz-l.is-drag { transition-duration: .2s; }
+.fx [data-demo="maison"] .mz-l.is-drag :is(.mz-lit, .mz-core, .mz-spread) { transition-duration: .2s; transition-delay: 0s; }
+/* Cinéma : la lumière de l'écran respire doucement */
+.fx [data-demo="maison"] .mz-l[data-tone="cinema"] { animation: mzScreen 5.2s ease-in-out infinite paused; }
+@keyframes mzScreen { 0%, 100% { opacity: 1; } 18% { opacity: .8; } 31% { opacity: .96; } 47% { opacity: .74; } 62% { opacity: .92; } 80% { opacity: .84; } }
+
+/* L'eau éclairée : deux réseaux de reflets qui dérivent lentement l'un sur l'autre */
+[data-demo="maison"] .mz-water { position: absolute; z-index: 4; overflow: hidden; pointer-events: none; display: none; }
+.fx [data-demo="maison"] .mz-water {
+  display: block; mix-blend-mode: screen; opacity: calc(var(--mz-water, 0) * .4); transition: opacity 1.2s ease;
+}
+[data-demo="maison"] .mz-water i {
+  position: absolute; left: 0; top: 0; width: 200%; height: 200%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='c' x='0' y='0' width='1' height='1' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.03' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='table' tableValues='0 0 0 0 0 .15 .9 .15 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix values='0 0 0 0 .88 0 0 0 0 .98 0 0 0 0 1 1 0 0 0 0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23c)'/%3E%3C/svg%3E") 0 0 / 12.5% 50%; animation: mzCausticA 24s linear infinite paused;
+}
+[data-demo="maison"] .mz-water i + i { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='c' x='0' y='0' width='1' height='1' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.024' numOctaves='2' seed='11' stitchTiles='stitch'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='table' tableValues='0 0 0 0 0 .1 .7 .1 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix values='0 0 0 0 .88 0 0 0 0 .98 0 0 0 0 1 1 0 0 0 0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23c)'/%3E%3C/svg%3E") 0 0 / 8.333% 25%; opacity: .8; animation: mzCausticB 17s linear infinite paused; }
+@keyframes mzCausticA { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, -50%, 0); } }
+@keyframes mzCausticB { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, -50%, 0); } }
+
+/* Le foyer : une lueur ambrée qui vacille */
+[data-demo="maison"] .mz-fire { position: absolute; z-index: 4; pointer-events: none; display: none; }
+.fx [data-demo="maison"] .mz-fire { display: block; mix-blend-mode: screen; opacity: 0; transition: opacity 1.2s ease; }
+.fx [data-demo="maison"].is-fire .mz-fire { opacity: 1; }
+[data-demo="maison"] .mz-fire::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(28% 16% at 50% 44%, #ffd08acc, #ff9a4052 45%, transparent),
+    radial-gradient(50% 50% at 50% 44%, #ff8a3a40, transparent);
+  animation: mzFire 2.6s ease-in-out infinite paused;
+}
+@keyframes mzFire {
+  0%, 100% { opacity: 1; transform: scale(1); } 17% { opacity: .82; transform: scale(1.03, .97); }
+  34% { opacity: .95; } 52% { opacity: .78; transform: scale(.98, 1.02); } 71% { opacity: .92; } 86% { opacity: .85; }
+}
+/* Les animations continues ne tournent que lorsque la démo est à l'écran */
+[data-demo="maison"].is-live .mz-hit polygon.is-sel,
+[data-demo="maison"].is-live .mz-l[data-tone="cinema"],
+[data-demo="maison"].is-live.is-swim .mz-water i,
+[data-demo="maison"].is-live.is-fire .mz-fire::before { animation-play-state: running; }
+
+[data-demo="maison"] .mz-hit { position: absolute; inset: 0; z-index: 5; width: 100%; height: 100%; }
 [data-demo="maison"] .mz-hit polygon {
   fill: transparent; stroke: transparent; stroke-width: 3; cursor: pointer; pointer-events: all;
   transition: fill .3s, stroke .3s; vector-effect: non-scaling-stroke;
@@ -47,11 +119,11 @@
 [data-demo="maison"] .mz-hit polygon.is-sel {
   stroke: var(--gold-soft); fill: color-mix(in srgb, var(--gold-soft) 7%, transparent);
   filter: drop-shadow(0 0 6px var(--mode-glow));
-  stroke-dasharray: 10 6; animation: mzDash 1.2s linear infinite;
+  stroke-dasharray: 10 6; animation: mzDash 1.2s linear infinite paused;
 }
 @keyframes mzDash { to { stroke-dashoffset: -32; } }
 [data-demo="maison"] .mz-tag {
-  position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; z-index: 2;
+  position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; z-index: 6;
   display: grid; justify-items: center; gap: .1rem; padding: .38rem .6rem; border-radius: 10px; cursor: pointer;
   font: inherit; color: #fff; background: #050505c4; border: 1px solid #ffffff26;
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: 0 8px 22px #000b;
@@ -132,6 +204,6 @@
   [data-demo="maison"] .mz-panel { padding: 1.1rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  [data-demo="maison"] .mz-lit, [data-demo="maison"] .mz-plan { transition: none; }
-  [data-demo="maison"] .mz-bloom.go, [data-demo="maison"] .mz-hit polygon.is-sel { animation: none; }
+  [data-demo="maison"] .mz-plan { transition: none; }
+  [data-demo="maison"] .mz-hit polygon.is-sel { animation: none; }
 }

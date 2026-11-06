@@ -1,41 +1,7 @@
 # Solution 04 — Automatisation d'entreprise.
 
+from demos.automatisation import HTML as DEMO
 from pages._solution import solution_page
-
-SHOWCASE = """
-<dl class="stat-row" data-reveal style="max-width:860px;">
-  <div><dt>Automatisations actives</dt><dd>12</dd></div>
-  <div><dt>Heures rendues disponibles / mois</dt><dd>47 h</dd></div>
-  <div><dt>Décisions en attente d’approbation</dt><dd>3</dd></div>
-</dl>
-<p class="form-note" data-reveal>Aperçu conceptuel · données simulées pour illustrer le produit.</p>
-<div class="guide-rows" data-reveal style="margin-top:2rem;">
-  <a href="/contact/">
-    <span>Courriel → compréhension → CRM → calendrier → mission → réponse préparée</span>
-    <strong>Demande client</strong>
-  </a>
-  <a href="/contact/">
-    <span>PDF → extraction → comparaison → exception → approbation → comptabilité</span>
-    <strong>Facture fournisseur</strong>
-  </a>
-  <a href="/contact/">
-    <span>Formulaire → qualification → CRM → priorité → attribution → suivi</span>
-    <strong>Nouveau prospect</strong>
-  </a>
-  <a href="/contact/">
-    <span>RH → comptes → permissions → matériel → calendrier → accueil</span>
-    <strong>Nouvel employé</strong>
-  </a>
-  <a href="/contact/">
-    <span>Échéance → contrat → responsable → tâches → message approuvé → CRM</span>
-    <strong>Renouvellement client</strong>
-  </a>
-  <a href="/contact/">
-    <span>Alerte → contexte → cause probable → recommandation → exécution supervisée</span>
-    <strong>Incident opérationnel</strong>
-  </a>
-</div>
-"""
 
 DATA = {
     "slug": "automatisation-operations",
@@ -67,12 +33,41 @@ DATA = {
         ("Exceptions visibles", "Ce qui sort du cadre prévu est mis en file plutôt qu’exécuté en silence."),
         ("Conception assistée", "Décrivez le résultat attendu : JARVIS prépare un brouillon de flux, modifiable avant tout essai."),
     ],
-    "demo_title": "Six scénarios réels. <em>Un même principe.</em>",
+    "demo_title": "Une demande d’achat, du courriel au bon de commande. <em>Sans copier-coller.</em>",
     "demo_copy": (
-        "D’un courriel client à un incident opérationnel : l’information avance entre les "
-        "systèmes autorisés et chaque décision importante reste humaine."
+        "Regardez JARVIS lire un courriel, remplir la demande, appliquer votre règle, puis "
+        "s’arrêter pour vous demander votre accord. Vous jouez le gérant : rien ne part sans "
+        "votre clic sur « Approuver ». Deux autres scénarios : un nouveau client et une "
+        "facture qui ne concorde pas."
     ),
-    "showcase": SHOWCASE,
+    "demo_html": DEMO,
+    "assets": ["automatisation"],
+    "clair": {
+        "quoi": "JARVIS fait circuler le travail entre vos outils. <em>Vous gardez la décision.</em>",
+        "exemple": (
+            "Un employé demande par courriel un compresseur de 1 284 $. JARVIS lit le courriel, "
+            "remplit la demande, voit que le montant dépasse 500 $ et vous demande d’approuver. "
+            "Un clic, et le bon de commande part au fournisseur, avec une trace de qui a approuvé "
+            "et à quelle heure."
+        ),
+        "avant": [
+            "Le même renseignement est retapé dans trois logiciels.",
+            "Les demandes dorment dans une boîte de courriel en attendant quelqu’un.",
+            "Personne ne sait vraiment qui a approuvé quoi, ni quand.",
+            "Une erreur de facture passe si personne ne compare à la main.",
+        ],
+        "apres": [
+            "JARVIS lit la demande et remplit les champs à votre place.",
+            "Vos règles décident de ce qui demande une approbation.",
+            "Vous approuvez en un clic : l’action part, puis la confirmation revient.",
+            "Chaque étape laisse une trace : source, règle, décision et heure.",
+        ],
+        "obtenez": [
+            ("Moins de ressaisie", "Les informations passent d’un outil à l’autre, sans copier-coller."),
+            ("Vos règles, appliquées", "Seuils, approbations, exceptions : écrits une fois, respectés à chaque fois."),
+            ("Une trace complète", "Un journal clair de chaque étape, consultable en tout temps."),
+        ],
+    },
     "compat": ["Courriel", "CRM", "Calendrier", "Comptabilité", "RH", "Documents", "API métier"],
     "deploy_title": "Vos processus, vos règles, votre rythme.",
     "deploy_copy": (
@@ -89,8 +84,5 @@ DATA = {
         "l’information se perd ou se ressaisit."
     ),
 }
-
-DATA["demo_image"] = "/media/product/outils/entreprise.jpg"
-DATA["demo_caption"] = "Écran de référence de l’outil Entreprise — maquette, données fictives."
 
 PAGE = solution_page(DATA)

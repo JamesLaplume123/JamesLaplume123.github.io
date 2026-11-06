@@ -722,15 +722,11 @@
     addEventListener("resize", place);
   }
 
-  function prog(el) {
-    var r = el.getBoundingClientRect();
-    return c01(-r.top / Math.max(1, r.height - innerHeight));
-  }
 
   /* Filet de sécurité : tout redevient visible (impression) */
   function defuse() {
     doc.classList.remove("fx");
-    $$(".scene .t1,.scene .t2,.scene .t3,.scene img,.hero .bg,.hero .bg img")
+    $$(".hero .bg,.hero .bg img")
       .forEach(function (el) { el.style.opacity = ""; el.style.transform = ""; el.style.filter = ""; });
   }
   addEventListener("beforeprint", defuse);
@@ -780,11 +776,6 @@
     hero.addEventListener("pointerleave", function () { tmx = 0; tmy = 0; schedule(); });
   }
 
-  /* Scènes produit (autres pages) : jamais d'image figée à moitié */
-  var scenes = $$(".scene").map(function (s) {
-    return { el: s, img: $("img", s), t1: $(".t1", s), t2: $(".t2", s), t3: $(".t3", s) };
-  });
-
   function frame() {
     var vh = innerHeight;
     var max = Math.max(1, document.documentElement.scrollHeight - vh);
@@ -798,19 +789,6 @@
       heroImg.style.filter = "brightness(" + (1 - p * .55) + ")";
       if (Math.abs(tmx - mx) > .002 || Math.abs(tmy - my) > .002) schedule();
     }
-    scenes.forEach(function (s) {
-      if (!s.img) return;
-      var r = s.el.getBoundingClientRect();
-      if (r.bottom < -vh || r.top > vh * 2) return;
-      var enter = c01((vh - r.top) / vh), exit = c01(r.bottom / vh), hp = prog(s.el);
-      var vis = Math.min(c01((enter - .8) / .18), c01((exit - .8) / .18));
-      s.img.style.opacity = vis.toFixed(3);
-      s.img.style.transform = "perspective(1400px) rotateX(" + ((1 - easeOut(enter)) * 16).toFixed(2) + "deg) scale(" + (.88 + Math.min(hp, .5) * .24).toFixed(4) + ")";
-      var fade = c01((exit - .8) / .18);
-      if (s.t1) s.t1.style.opacity = Math.min(c01((hp - .2) * 4), fade);
-      if (s.t2) s.t2.style.opacity = Math.min(c01((hp - .35) * 4), fade);
-      if (s.t3) s.t3.style.opacity = Math.min(c01((hp - .5) * 4), fade);
-    });
   }
   var queued = false;
   function schedule() {

@@ -18,6 +18,33 @@ FRAME = """<figure class="frame" data-rev>
   </figure>"""
 
 
+def clair_section(c):
+    """Bloc « En clair » : la solution expliquée simplement, avant / avec JARVIS."""
+    if not c:
+        return ""
+    avant = "".join(f"<li>{x}</li>" for x in c["avant"])
+    apres = "".join(f"<li>{x}</li>" for x in c["apres"])
+    obtenez = "".join(
+        f"""<article class="card" data-rev><small>{i + 1:02d}</small><h3>{t}</h3><p>{p}</p></article>"""
+        for i, (t, p) in enumerate(c["obtenez"])
+    )
+    return f"""
+<section class="clair" aria-labelledby="clair-titre">
+  <div class="clair-head" data-rev>
+    <p class="eyebrow">En clair</p>
+    <h2 id="clair-titre">{c['quoi']}</h2>
+    <p class="clair-ex"><b>Exemple concret.</b> {c['exemple']}</p>
+  </div>
+  <div class="vs" data-rev>
+    <div class="vs-col vs-before"><p class="vs-k">Aujourd’hui, sans JARVIS</p><ul>{avant}</ul></div>
+    <div class="vs-arrow" aria-hidden="true"><span></span></div>
+    <div class="vs-col vs-after"><p class="vs-k">Avec JARVIS</p><ul>{apres}</ul></div>
+  </div>
+  <p class="eyebrow clair-k" data-rev>Ce que vous obtenez</p>
+  <div class="cards">{obtenez}</div>
+</section>"""
+
+
 def solution_page(d):
     num = next((c["num"] for c in CAPABILITIES if c["slug"] == d["slug"]), "0X")
     features = "".join(
@@ -55,6 +82,8 @@ def solution_page(d):
     </div>
   </div>
 </section>
+
+{clair_section(d.get("clair"))}
 
 <section class="sect">
   <div class="sect-head">

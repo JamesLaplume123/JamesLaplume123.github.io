@@ -12,7 +12,7 @@
   var TONES = {
     chaude: { c: "#ffb35c", t: "rgba(255, 150, 60, .2)" },
     neutre: { c: "#ffe7cc", t: "rgba(130, 165, 255, .3)" },
-    froide: { c: "#dbe7ff", t: "rgba(85, 140, 255, .55)" },
+    froide: { c: "#d2e1ff", t: "rgba(80, 135, 255, .68)" },
     cinema: { c: "#6585ff", t: "rgba(45, 80, 255, .75)" },
     eau: { c: "#5edcff", t: "rgba(40, 200, 255, .22)" }
   };
@@ -89,7 +89,6 @@
       l.className = "mz-l is-off";
       l.setAttribute("data-room", r.k);
       l.style.cssText = "left:" + pc(box.x, W) + ";top:" + pc(box.y, H) + ";width:" + pc(box.w, W) + ";height:" + pc(box.h, H);
-      l.style.setProperty("--m", mask(r, box));
       var lit = document.createElement("i"), core = document.createElement("i"), spread = document.createElement("i");
       lit.className = "mz-lit"; core.className = "mz-core"; spread.className = "mz-spread";
       /* La photo entière, placée pour que le cadre en montre exactement la bonne partie */
@@ -101,7 +100,7 @@
       lights.appendChild(l);
       rooms[r.k] = {
         def: r, lvl: 0, on: false, tone: "chaude", temp: r.temp, lock: !!r.lock, door: false, store: false,
-        fire: false, water: r.water, l: l, tag: $('.mz-tag[data-room="' + r.k + '"]'),
+        fire: false, water: r.water, l: l, box: box, tag: $('.mz-tag[data-room="' + r.k + '"]'),
         poly: $('.mz-hit polygon[data-room="' + r.k + '"]')
       };
       order.push(r.k);
@@ -341,8 +340,8 @@
     }
 
     /* Départ : tout est éteint, puis la soirée s'allume pièce par pièce.
-       La photo des couches de lumière n'est demandée qu'à l'approche de la démo, et les
-       animations continues (eau, foyer, écran) ne tournent que lorsqu'elle est à l'écran. */
+       Les masques et la photo des couches de lumière ne sont préparés qu'à l'approche de la démo,
+       et les animations continues (eau, foyer, écran) ne tournent que lorsqu'elle est à l'écran. */
     order.forEach(function (k) { paintRoom(k); });
     select("salon");
     totals();
@@ -350,6 +349,7 @@
     function feed() {
       if (fed) return;
       fed = true;
+      order.forEach(function (k) { rooms[k].l.style.setProperty("--m", mask(rooms[k].def, rooms[k].box)); });
       root.style.setProperty("--mz-img", 'url("' + $(".mz-base").getAttribute("src") + '")');
     }
     function start() {

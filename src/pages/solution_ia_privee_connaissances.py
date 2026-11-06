@@ -51,35 +51,15 @@ PAGE = {
       <a class="pill" href="/contact/">Réserver une démo</a>
       <a class="pill ghost" href="#outil">Voir l’outil</a>
     </div>
-    <div class="meta" data-rev>
-      <span class="chip chip-sim">Interface conceptuelle · à construire et à tester</span>
-      <span class="chip">Particuliers · PME · équipes</span>
-      <span class="chip">Traitement local ou autorisé</span>
-      <span class="chip">Réponses avec preuves</span>
-    </div>
+    <p class="for-line" data-rev><span>Pour</span> Particuliers · PME · équipes</p>
   </div>
 </section>
 
-""" + clair_section(CLAIR) + """
-
-<section class="sect">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Le problème à résoudre</p>
-      <h2 style="margin-top:1rem">Vous savez que c’est écrit quelque part. <em>Mais
-      où?</em></h2>
-    </div>
-    <p data-rev>Documents, courriels, photos, procédures : votre information existe, mais
-    elle est éparpillée. JARVIS la rend interrogeable — sans la déménager, sans l’exposer,
-    et sans jamais inventer de réponse.</p>
-  </div>
-</section>
-
-<section class="sect" id="outil">
+<section class="sect sol-demo" id="outil">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Essayez-le · données simulées</p>
-      <h2 style="margin-top:1rem">Parlez à vos propres documents. <em>Chaque réponse montre sa
+      <h2>Parlez à vos propres documents. <em>Chaque réponse montre sa
       preuve.</em></h2>
     </div>
     <p data-rev>Choisissez une question. JARVIS fouille les six documents d’un atelier fictif,
@@ -89,11 +69,13 @@ PAGE = {
   """ + DEMO + """
 </section>
 
+""" + clair_section(CLAIR) + """
+
 <section class="sect alt">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Le contrôle, en trois crans</p>
-      <h2 style="margin-top:1rem">Trois autorisations <em>différentes.</em></h2>
+      <h2>Trois autorisations <em>différentes.</em></h2>
     </div>
     <p data-rev>Une connexion n’active ni la lecture par l’IA, ni les commandes, ni le
     partage externe. Chaque pouvoir se donne séparément — et se retire séparément.</p>
@@ -120,40 +102,11 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Des réponses honnêtes</p>
-      <h2 style="margin-top:1rem">Une réponse utile montre <em>ce qui la justifie.</em></h2>
-    </div>
-    <p data-rev>Dans la démo, essayez la « question piège » : aucune source ne parle de
-    remboursement sans reçu. JARVIS le dit, et propose de demander à la bonne personne au lieu
-    d’inventer une règle.</p>
-  </div>
-  <div class="cards">
-    <article class="card" data-rev>
-      <small>Règle 01</small>
-      <h3>Une source consultable.</h3>
-      <p>Nom du document et passage précis — si vous avez toujours le droit de l’ouvrir.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Règle 02</small>
-      <h3>Une version identifiable.</h3>
-      <p>Date ou version connue, sans inventer une fraîcheur qui n’a pas été vérifiée.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Règle 03</small>
-      <h3>Une limite explicite.</h3>
-      <p>Source ancienne, documents en désaccord ou information manquante : l’IA le dit.</p>
-    </article>
-  </div>
-</section>
-
 <section class="sect alt">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">À qui appartient quoi</p>
-      <h2 style="margin-top:1rem">Personnel, partagé <em>ou professionnel.</em></h2>
+      <h2>Personnel, partagé <em>ou professionnel.</em></h2>
     </div>
     <p data-rev>Ces périmètres indiquent à qui le contenu est ouvert — pas où se trouve son
     serveur. Le rôle d’administrateur est une permission de gestion, jamais un passe-partout
@@ -180,60 +133,22 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Vos données, votre décision</p>
-      <h2 style="margin-top:1rem">Reprendre le contrôle, <em>pour vrai.</em></h2>
-    </div>
-    <p data-rev>Original, copie, index, conversation, mémoire, sauvegarde : chaque trace a
-    sa règle, visible et actionnable.</p>
-  </div>
-  <div class="cards two">
-    <article class="card" data-rev>
-      <small>Retirer un accès</small>
-      <h3>Bloquer les nouveaux usages, immédiatement.</h3>
-      <p>Une ancienne autorisation ne suffit plus à chercher ni à agir.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Supprimer avec précision</small>
-      <h3>Original, copie, index, conversation et mémoire se distinguent.</h3>
-      <p>Chacun se supprime selon sa propre règle — vérifiée, pas présumée.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Voir les durées</small>
-      <h3>Les délais de conservation sont consultables.</h3>
-      <p>Et les options offertes par votre organisation restent visibles.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Exporter son périmètre</small>
-      <h3>Récupérer ses contenus autorisés.</h3>
-      <p>Sans embarquer ceux d’une autre personne.</p>
-    </article>
-  </div>
-</section>
-
-<section class="sect alt">
-  <div class="sect-head">
-    <div data-rev>
+<section class="sect sol-trust">
+  <div class="trust" data-rev>
+    <div>
       <p class="eyebrow">Déploiement responsable</p>
-      <h2 style="margin-top:1rem">« Privé » se vérifie, <em>il ne se décrète pas.</em></h2>
+      <h2>« Privé » se vérifie, <em>il ne se décrète pas.</em></h2>
+      <p>Qui peut consulter? Où sont les données? Où sont-elles traitées? Trois
+      questions, trois réponses affichées avant chaque autorisation.</p>
     </div>
-    <p data-rev>Qui peut consulter? Où sont les données? Où sont-elles traitées? Trois
-    questions, trois réponses affichées avant chaque autorisation.</p>
-  </div>
-  <div class="cards two">
-    <article class="card" data-rev>
-      <small>Accord humain</small>
-      <h3>Les actions sensibles exigent une validation adaptée au risque.</h3>
-    </article>
-    <article class="card" data-rev>
-      <small>Limite publiée</small>
-      <h3 style="font-weight:500;font-size:1rem;color:#b9b9c2;line-height:1.6">« Local » ne
-      prouve pas, à lui seul, qu’aucun service externe ne reçoit de données : chaque flux se
-      vérifie. L’IA lit seulement les sources autorisées, et une instruction trouvée dans un
-      document ne déclenche jamais un accès ni une action.</h3>
-    </article>
+    <dl>
+      <div><dt>Accord humain</dt><dd>Les actions sensibles exigent une validation adaptée au risque.</dd></div>
+      <div><dt>Vos données</dt><dd>Retirer un accès bloque aussitôt tout nouvel usage. Original, copie, index,
+      conversation et mémoire se suppriment chacun selon leur règle, et vous pouvez exporter vos contenus.</dd></div>
+      <div><dt>Limite publiée</dt><dd>« Local » ne prouve pas, à lui seul, qu’aucun service externe ne reçoit
+      de données : chaque flux se vérifie. L’IA lit seulement les sources autorisées, et une instruction trouvée
+      dans un document ne déclenche jamais un accès ni une action.</dd></div>
+    </dl>
   </div>
 </section>
 

@@ -581,10 +581,10 @@ a.row .go {
 
 /* Rangée de puces, déclaration centrée */
 .chiprow { max-width: 76rem; margin: 2.2rem auto 0; display: flex; gap: .7rem; flex-wrap: wrap; }
-.statement { padding: 8rem 1.4rem; text-align: center; }
-.statement h2 { margin: 0 auto; max-width: 56rem; font-weight: 700; font-size: clamp(2rem, 4.6vw, 3.6rem); letter-spacing: -.04em; line-height: 1.1; }
-.statement p { color: var(--dim); max-width: 34rem; margin: 1.4rem auto 0; }
-.statement .acts { margin-top: 2.2rem; }
+.statement { max-width: 76rem; margin: 0 auto; padding: 5.5rem 1.4rem; box-sizing: content-box; }
+.statement h2 { margin: 1rem 0 0; max-width: 26ch; font-weight: 650; font-size: clamp(1.9rem, 3.6vw, 3.1rem); letter-spacing: -.035em; line-height: 1.1; }
+.statement p { color: #c4c4cc; max-width: 40rem; margin: 1.1rem 0 0; }
+.statement .acts { margin-top: 1.8rem; justify-content: flex-start; }
 
 /* Teintes d'état */
 .chip-green { color: #9fe8bc; border-color: #2f5c4266; }

@@ -35,7 +35,7 @@ PAGE = {
 
 <section class="statement">
   <p class="eyebrow" data-rev>Le projet concret</p>
-  <h2 data-rev style="margin-top:1.2rem">Le véhicule existe.<br><em>JARVIS doit relier ce qui
+  <h2 data-rev>Le véhicule existe.<br><em>JARVIS doit relier ce qui
   le fait vivre.</em></h2>
   <p data-rev>Le Laboratoire mobile n’est pas une offre séparée. C’est le premier endroit où
   l’énergie, l’eau, le confort, le véhicule, le réseau, la sécurité et le diagnostic devront
@@ -46,7 +46,7 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow"><i class="dot" aria-hidden="true"></i> En direct · données réelles</p>
-      <h2 style="margin-top:1rem">Les batteries de l’ambulance, <em>en ce moment.</em></h2>
+      <h2>Les batteries de l’ambulance, <em>en ce moment.</em></h2>
     </div>
     <p data-rev>Ces valeurs viennent directement des deux batteries LiFePO₄ de BouLance, lues par
     Home Assistant dans le véhicule. Rien n’est simulé : si la liaison tombe, le panneau le dit.</p>
@@ -60,7 +60,7 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Le véhicule complet</p>
-      <h2 style="margin-top:1rem">Habitation, véhicule et laboratoire <em>partagent la même
+      <h2>Habitation, véhicule et laboratoire <em>partagent la même
       réalité.</em></h2>
     </div>
     <p data-rev>Les caractéristiques évoluent avec la construction. Le site distingue ce qui
@@ -110,41 +110,25 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Centre de commande · données simulées</p>
-      <h2 style="margin-top:1rem">Le véhicule complet, visible et contrôlable <em>au même
+      <h2>Le véhicule complet, visible et contrôlable <em>au même
       endroit.</em></h2>
     </div>
     <p data-rev>Énergie, eau, confort, mécanique, réseau et sécurité gardent chacun leur
     contexte. Chaque équipement conserve aussi sa commande manuelle.</p>
   </div>
-  <figure class="frame" data-rev>
-    <img src="/media/ambulance/boulance-vue-ensemble.jpg"
-         alt="Tableau de bord BouLance — vue d’ensemble du véhicule et du séjour" loading="lazy">
-    <figcaption>
-      <span>BouLance · Vue d’ensemble</span>
-      <strong>L’essentiel de votre véhicule et de votre séjour — maquette, données d’exemple.</strong>
-    </figcaption>
-  </figure>
-  <div style="height:16px"></div>
 """ + ambiances.html("Couloir") + """
-  <div class="shots" data-rev style="margin-top:14px;grid-template-columns:1fr 1fr">
-    <figure>
-      <img src="/media/product/outils/mobilite.jpg"
-           alt="Outil Mobilité et voyage — trajet, arrêts et contraintes du véhicule" loading="lazy" style="aspect-ratio:auto">
-      <figcaption><b>Mobilité et voyage</b><span>Écran de référence · maquette</span></figcaption>
-    </figure>
-    <figure>
-      <img src="/media/ambulance/ambulance-cutaway-control-v1.webp"
-           alt="Vue en coupe du laboratoire mobile et de ses espaces contrôlables" loading="lazy" style="aspect-ratio:auto">
-      <figcaption><b>Vue en coupe</b><span>Mode camp · Atelier, Québec</span></figcaption>
-    </figure>
-  </div>
+  <figure class="frame" data-rev style="margin-top:16px">
+    <img src="/media/ambulance/ambulance-cutaway-control-v1.webp"
+         alt="Vue en coupe du laboratoire mobile et de ses espaces contrôlables" loading="lazy">
+    <figcaption><span>Vue en coupe · mode camp</span><strong>Chaque espace du véhicule, contrôlable au même endroit.</strong></figcaption>
+  </figure>
 </section>
 
 <section class="sect alt">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Automatisations envisagées</p>
-      <h2 style="margin-top:1rem">Le comportement dépend du lieu, du moment <em>et de la
+      <h2>Le comportement dépend du lieu, du moment <em>et de la
       priorité.</em></h2>
     </div>
     <p data-rev>Chaque règle importante doit pouvoir être expliquée, refusée et reprise
@@ -192,11 +176,11 @@ PAGE = {
 
 <section class="statement">
   <p class="eyebrow" data-rev>La règle du laboratoire</p>
-  <h2 data-rev style="margin-top:1.2rem">Tout mesurer. Tout expliquer.<br><em>Ne rien
+  <h2 data-rev>Tout mesurer. Tout expliquer.<br><em>Ne rien
   prétendre avant la preuve.</em></h2>
   <p data-rev>Une hypothèse guidée ne remplace jamais la validation d’un mécanicien ou d’un
   technicien qualifié.</p>
-  <div class="acts" data-rev style="justify-content:center">
+  <div class="acts" data-rev>
     <a class="pill ghost" href="/recherche/">Découvrir la méthode de recherche</a>
   </div>
 </section>

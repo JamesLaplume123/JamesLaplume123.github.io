@@ -41,10 +41,10 @@
 [data-demo="boulance"] .bl-cell {
   position: relative; aspect-ratio: 1 / 2; border-radius: 18px; overflow: hidden;
   background: linear-gradient(90deg, #0d0c0b, #1a1814 50%, #0d0c0b); border: 1px solid #ffffff24;
-  box-shadow: inset 0 0 30px #000, 0 20px 50px #000c, 0 0 60px color-mix(in srgb, var(--bl-c, #34d399) calc(var(--soc, 0) * 0.3%), transparent);
+  box-shadow: inset 0 0 30px #000, 0 20px 50px #000c, 0 0 60px color-mix(in srgb, var(--bl-c, #f0d29a) calc(var(--soc, 0) * 0.28%), transparent);
 }
 [data-demo="boulance"] .bl-liquid { position: absolute; inset: 0; width: 100%; height: 100%; }
-[data-demo="boulance"] .bl-wave { fill: var(--bl-c, #34d399); transition: fill .8s; }
+[data-demo="boulance"] .bl-wave { fill: var(--bl-c, #f0d29a); transition: fill .8s; }
 [data-demo="boulance"] .bl-wave.w1 { opacity: .9; }
 [data-demo="boulance"] .bl-wave.w2 { opacity: .45; }
 [data-demo="boulance"] .bl-shine { position: absolute; inset: 0; pointer-events: none;
@@ -64,7 +64,7 @@
 [data-demo="boulance"] .bl-soc i { font-style: normal; font-size: .45em; margin-left: .1em; }
 [data-demo="boulance"] .bl-flag { font: 600 .58rem/1 var(--mono); letter-spacing: .1em; padding: .35rem .5rem; border-radius: 999px; border: 1px solid transparent; }
 [data-demo="boulance"] .bl-flag:empty { display: none; }
-[data-demo="boulance"] .bl-flag.ok { color: #9fe8bc; border-color: #2f5c42; }
+[data-demo="boulance"] .bl-flag.ok { color: var(--gold-soft); border-color: color-mix(in srgb, var(--gold-soft) 40%, transparent); }
 [data-demo="boulance"] .bl-flag.warn { color: #fcd34d; border-color: #7a5a1e; }
 [data-demo="boulance"] .bl-stats { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem .9rem; margin: 0; }
 [data-demo="boulance"] .bl-stats dt { font: 500 .58rem/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: #a8a8b0; }
@@ -72,7 +72,7 @@
 [data-demo="boulance"] .bl-stats dd { white-space: nowrap; margin: .2rem 0 0; font-weight: 650; font-size: 1.02rem; font-variant-numeric: tabular-nums; }
 [data-demo="boulance"] .bl-mos { display: flex; gap: .35rem; flex-wrap: wrap; margin: 1rem 0 0; }
 [data-demo="boulance"] .bl-mos span { font: 600 .56rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; padding: .38rem .5rem; border-radius: 999px; border: 1px solid #ffffff24; color: #a8a8b0; }
-[data-demo="boulance"] .bl-mos span.on { color: #9fe8bc; border-color: #2f5c42; background: #0b2016aa; }
+[data-demo="boulance"] .bl-mos span.on { color: var(--gold-soft); border-color: color-mix(in srgb, var(--gold-soft) 40%, transparent); background: color-mix(in srgb, var(--gold-soft) 8%, transparent); }
 
 /* Centre : total, flux, courbe */
 [data-demo="boulance"] .bl-mid { padding: 2rem 1.6rem; display: flex; flex-direction: column; align-items: center; text-align: center; }

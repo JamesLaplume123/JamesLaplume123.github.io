@@ -10,8 +10,8 @@ def _battery(i, name):
         <div class="bl-cell">
           <svg class="bl-liquid" viewBox="0 0 200 400" preserveAspectRatio="none">
             <defs><linearGradient id="bl-liq-{i}" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" style="stop-color:var(--bl-c, #34d399)"/>
-              <stop offset="1" style="stop-color:var(--bl-c2, #0f766e)"/></linearGradient></defs>
+              <stop offset="0" style="stop-color:var(--bl-c, #f0d29a)"/>
+              <stop offset="1" style="stop-color:var(--bl-c2, #7a5420)"/></linearGradient></defs>
             <path class="bl-wave w2" d=""></path><path class="bl-wave w1" d="" style="fill:url(#bl-liq-{i})"></path>
           </svg>
           <div class="bl-bubbles"></div>

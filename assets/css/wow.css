@@ -65,8 +65,8 @@
   --mode-action: linear-gradient(135deg, #f6e2b5 0%, #e0b96f 55%, #cfa45b 100%);
   --mode-on-action: #1c1408;
   --mode-action-edge: inset 0 1px 0 #fff6;
-  --mode-panel: linear-gradient(130deg, #18130dc2, #090807db);
-  --mode-panel-solid: linear-gradient(130deg, #18130df5, #090807fa);
+  --mode-panel: linear-gradient(130deg, #151515c4, #060606de);
+  --mode-panel-solid: linear-gradient(130deg, #151515f5, #060606fa);
   --mode-spec: inset 0 1px 0 #fff0c42e;
   --mode-line: #d3bc9433;
   --mode-glow: #c9a35c;

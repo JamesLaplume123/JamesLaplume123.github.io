@@ -3,6 +3,7 @@
 # en clair, démo interactive, trois autorisations, réponses vérifiables,
 # périmètres, contrôle.
 
+from demos import coquille
 from demos.ia import HTML as DEMO
 from pages._solution import clair_section
 
@@ -38,7 +39,7 @@ PAGE = {
     "title": "IA privée et connaissances | Solutions JARVIS",
     "description": "Parler à ses propres informations, retrouver les bonnes preuves et préparer une action avec permission.",
     "og_image": "/media/product/outils/ia.jpg",
-    "assets": ["ia"],
+    "assets": ["coquille", "ia"],
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/solutions/ia-privee-connaissances.webp" alt="" fetchpriority="high"></div>
@@ -66,7 +67,7 @@ PAGE = {
     répond en citant ses sources et vous montre le passage exact. Puis il propose une action :
     elle attend votre « Approuver ». Rien ne quitte le Hub.</p>
   </div>
-  """ + DEMO + """
+  """ + coquille.html("ia-privee-connaissances", DEMO) + """
 </section>
 
 """ + clair_section(CLAIR) + """

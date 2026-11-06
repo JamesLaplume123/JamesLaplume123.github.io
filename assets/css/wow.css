@@ -75,18 +75,19 @@
   --mode-rim-filter: sepia(1) saturate(2.6) hue-rotate(-10deg) brightness(1.08);
 }
 :root[data-mode="platinum"] {
-  --gold-soft: #e6e8ec;
-  --mode-display: linear-gradient(110deg, #fff, #dfe3ea 55%, #a4a9b3);
-  --mode-action: linear-gradient(145deg, #424242, #242424 65%, #353535);
-  --mode-on-action: #fafafa;
-  --mode-action-edge: inset 0 1px 1px #fff7, inset 0 -1px 1px #e6e6e638, 0 0 0 1px #ffffff40;
-  --mode-panel: linear-gradient(130deg, #171717bd, #090909d6);
-  --mode-panel-solid: linear-gradient(130deg, #171717f5, #090909fa);
-  --mode-spec: inset 0 1px 1px #ffffff4d, inset 0 -1px 1px #e6e6e61f;
-  --mode-line: #cfcfcf33;
-  --mode-glow: #aeb8c8;
+  /* Platine cristal : argent lumineux et reflets bleu glacier, jamais gris terne */
+  --gold-soft: #d3e1f5;
+  --mode-display: linear-gradient(110deg, #ffffff 0%, #e4eefb 32%, #a9c3e6 62%, #eef5ff 100%);
+  --mode-action: linear-gradient(145deg, #ffffff 0%, #dfe7f2 38%, #aebdd2 72%, #e9f0f9 100%);
+  --mode-on-action: #0b1220;
+  --mode-action-edge: inset 0 1px 0 #fff, inset 0 -1px 0 #7f93ad66, 0 0 0 1px #ffffff59;
+  --mode-panel: linear-gradient(130deg, #141922c4, #07090ddc);
+  --mode-panel-solid: linear-gradient(130deg, #141922f5, #07090dfa);
+  --mode-spec: inset 0 1px 1px #ffffff57, inset 0 -1px 1px #cfe0ff1f;
+  --mode-line: #c8daf442;
+  --mode-glow: #9ec2ff;
   --mode-scene: url("/media/modes/scene-platinum.webp");
-  --mode-rim-filter: none;
+  --mode-rim-filter: saturate(1.15) brightness(1.12);
 }
 :root[data-mode="base"] {
   --gold-soft: #dfdfdf;
@@ -1286,7 +1287,8 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
   .apx-ch { padding-bottom: 5rem; }
   .apx-head { margin-bottom: 2rem; }
 }
-@media (prefers-reduced-motion: reduce) { .apx-rail { position: static; } }
+/* Écran peu haut (portable) : le rail ne colle plus, l'appareil garde toute la hauteur */
+@media (prefers-reduced-motion: reduce), (max-height: 899px) { .apx-rail { position: static; } }
 
 
 /* ---------- Pages de solution : bandeau, confiance ---------- */

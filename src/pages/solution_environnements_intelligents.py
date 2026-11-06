@@ -4,7 +4,7 @@
 
 import json
 
-from demos import ambiances, maison
+from demos import ambiances, coquille, maison
 from pages._solution import clair_section
 
 MOMENTS = {
@@ -82,7 +82,7 @@ PAGE = {
     "title": "Environnements intelligents | Solutions JARVIS",
     "description": "Faire travailler ensemble les technologies d’un lieu, sans rendre son utilisation compliquée.",
     "og_image": "/media/solutions/environnements-intelligents.webp",
-    "assets": ["maison", "ambiances"],
+    "assets": ["coquille", "maison", "ambiances"],
     "content": f"""
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
@@ -108,7 +108,7 @@ PAGE = {
     <p data-rev>Choisissez une ambiance ou une pièce : la lumière, le chauffage, les stores et les
     verrous se règlent sous vos yeux. Chaque commande est envoyée, puis confirmée.</p>
   </div>
-  {maison.html()}
+  {coquille.html("environnements-intelligents", maison.html())}
 </section>
 
 <section class="sect alt">

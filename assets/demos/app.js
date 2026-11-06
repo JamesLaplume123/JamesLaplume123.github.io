@@ -597,6 +597,22 @@
       stage.addEventListener("pointerleave", function () { cancelAnimationFrame(raf); raf = 0; tilt.style.transform = ""; });
     }
 
+    /* ---------------------------------------------------------------- L'appareil tient dans l'écran */
+    // Sur ordinateur, l'appareil entier doit être visible d'un coup : réduction douce, jamais sous 72 %.
+    var device = $(".ap-device"), zoomT = 0;
+    function fitZoom() {
+      tilt.style.removeProperty("--ap-zoom");
+      if (innerWidth < 700) return;
+      var rail = document.querySelector(".apx-rail"), railH = 0;
+      if (rail && root.closest(".apx") && getComputedStyle(rail).position === "sticky") railH = rail.offsetHeight + 18;
+      var avail = innerHeight - 66 - railH - 30, h = device.offsetHeight + 16;
+      var z = Math.max(.72, Math.min(1, avail / h));
+      if (z < .995) tilt.style.setProperty("--ap-zoom", z.toFixed(3));
+    }
+    addEventListener("resize", function () { clearTimeout(zoomT); zoomT = setTimeout(fitZoom, 120); });
+    addEventListener("load", fitZoom);
+    fitZoom();
+
     /* ---------------------------------------------------------------- Mise en page vivante */
     if ("ResizeObserver" in window) new ResizeObserver(function () { moveInd(); fitAll(); }).observe(stage);
     else addEventListener("resize", function () { moveInd(); fitAll(); });

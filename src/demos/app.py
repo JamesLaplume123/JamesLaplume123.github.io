@@ -8,6 +8,8 @@
 import math
 import re
 
+from config import CAPABILITIES
+
 NB = " "
 
 
@@ -80,6 +82,9 @@ ICONS = {
     "sliders": '<path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><path d="M15 5v4M9 10v4M17 15v4"/>',
     "devices": '<rect x="3" y="5" width="13" height="9.5" rx="1.5"/><path d="M2 17.5h15"/><rect x="17.5" y="9" width="4.5" height="9.5" rx="1.2"/>',
     "gear": '<circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.55 1.55M16.45 16.45 18 18M6 18l1.55-1.55M16.45 7.55 18 6"/>',
+    "flow": '<rect x="3.5" y="4" width="7" height="5.5" rx="1.5"/><rect x="13.5" y="14.5" width="7" height="5.5" rx="1.5"/><path d="M7 9.5v3.25a2 2 0 0 0 2 2h4.5"/><path d="m11.5 12.75 2 2-2 2"/>',
+    "net": '<circle cx="12" cy="5.5" r="2"/><circle cx="5" cy="18.5" r="2"/><circle cx="19" cy="18.5" r="2"/><circle cx="12" cy="13" r="2"/><path d="M12 7.5V11M10.4 14.3l-3.9 2.9M13.6 14.3l3.9 2.9"/>',
+    "pulse": '<path d="M3 12.5h4l2.25-5.5 4 11 2.5-5.5H21"/>',
     "image": '<rect x="3.5" y="5" width="17" height="14" rx="2.25"/><circle cx="9" cy="10" r="1.6"/><path d="m4 17 5-4.5 4 3.5 3-2.5 4 3.5"/>',
 }
 
@@ -109,14 +114,11 @@ NAV = [
     ("carte", "Carte", "Carte", "pin"),
     ("outils", "Mes outils", "Outils", "grid"),
 ]
-NOTE = {
-    "admin": "Administration : comptes, droits et extensions. Réservée à l’administrateur de votre système.",
-    "outils": "Mes outils : les outils autorisés par votre administrateur apparaissent ici. Aucun n’est actif dans cette démo.",
-}
+ADMIN_NOTE = "Administration : comptes, droits et extensions. Réservée à l’administrateur de votre système."
 TITLE = {"accueil": "Accueil", "assistant": "Assistant JARVIS", "espace": "Mon espace", "journee": "Ma journée",
          "partage": "Mes partages", "carte": "Carte", "outils": "Mes outils"}
 # Chapitres de la séquence de l'accueil (un appareil par écran)
-SEQUENCE = ["accueil", "assistant", "espace", "journee", "partage", "carte"]
+SEQUENCE = ["accueil", "assistant", "espace", "journee", "partage", "carte", "outils"]
 
 # Les écrans, dans l'ordre de la visite : clé, entrée du menu, durée (ms), légende
 SCREENS = [
@@ -132,9 +134,14 @@ SCREENS = [
      "Avec qui, pour combien de temps, et sous votre contrôle. Un accès retiré disparaît partout."),
     ("carte", "carte", 8000, "Vos lieux, sans surveillance.",
      "La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée."),
-    ("outils", "outils", 6500, "Seulement ce qui est autorisé.",
-     "Un outil apparaît quand l’administrateur l’active. Rien ne s’obtient d’un simple clic."),
+    ("outils", "outils", 7000, "Toutes vos extensions, au même endroit.",
+     "Domotique, IA, caméras, entreprise, réseau, diagnostic : chacune s’active par l’administrateur et s’ouvre ici."),
 ]
+
+# Mes outils : les extensions sont les six solutions du site (config.py); chacune ouvre sa page.
+EXT_ICON = {"environnements-intelligents": "home", "ia-privee-connaissances": "spark", "securite-intelligente": "shield",
+            "automatisation-operations": "flow", "reseau-resilience": "net", "diagnostic-care": "pulse"}
+EXT_ON = {"environnements-intelligents", "ia-privee-connaissances", "securite-intelligente", "reseau-resilience"}
 
 # Bannière et visages repris du dossier User v25 (texte incrusté retiré); photos d'ambiance du site.
 BANNER = "/media/app/banniere-lac.webp"
@@ -484,15 +491,19 @@ def v_espace():
 
 
 def v_outils():
-    return f"""{_head("", "Mes <em>outils</em>", "Les outils auxquels vous avez accès, au même endroit.")}
-<div class="ap-card ap-empty" data-r>
-  <span class="ap-empty-i">{icon("grid")}</span>
-  <h4>Aucun outil disponible pour le moment</h4>
-  <p>Les outils autorisés par votre administrateur apparaîtront ici.</p>
-  <small>Vos fonctions personnelles restent accessibles dans Mon espace.</small>
-  <button type="button" class="ap-btn" data-go="espace">Ouvrir Mon espace{icon("right")}</button>
-  <button type="button" class="ap-under" data-toast="Démo : la demande irait à votre administrateur. Rien n’est envoyé.">Contacter mon administrateur</button>
-</div>"""
+    cards = "".join(
+        f'''<a class="ap-card ap-ext{" is-on" if c["slug"] in EXT_ON else ""}" href="/solutions/{c["slug"]}/" data-r>
+  <img src="{c["image"]}" alt="" loading="lazy" decoding="async">
+  <span class="ap-ext-i">{icon(EXT_ICON[c["slug"]])}</span>
+  <span class="ap-ext-t"><small>{c["label"]}</small><b>{c["title"]}</b><span>{c["short"]}</span></span>
+  <span class="ap-ext-f"><em>{"Activée" if c["slug"] in EXT_ON else "Disponible · sur demande"}</em><i>Ouvrir{icon("right")}</i></span>
+</a>'''
+        for c in CAPABILITIES
+    )
+    on = sum(1 for c in CAPABILITIES if c["slug"] in EXT_ON)
+    return f"""{_head("", "Mes <em>outils</em>", "Vos extensions, autorisées par votre administrateur.",
+                      f'<p class="ap-ext-n"><b>{len(CAPABILITIES)}</b> extensions · <b>{on}</b> activées</p>')}
+<div class="ap-exts">{cards}</div>"""
 
 
 def _hh(h):
@@ -666,17 +677,14 @@ ON = ' class="is-on"'
 
 def _device(only=None):
     """L'appareil. `only` = clé d'écran : un seul écran, la barre latérale devient un index des chapitres
-    (menu de la révision 25; une entrée sans chapitre affiche un court message)."""
+    (menu de la révision 25)."""
     single = only is not None
     if single:
         parent = next(n for (k, n, _d, _t, _p) in SCREENS if k == only)
-        chap = set(SEQUENCE)
         items = "".join(
-            (f'<a class="ap-jump{" is-on" if k == parent else ""}" href="#ecran-{k}"'
-             f'{" aria-current=\'true\'" if k == parent else ""} aria-label="{lab}">' if k in chap else
-             f'<button type="button" class="ap-jump" data-toast="{fr(NOTE.get(k, ""))}" aria-label="{lab}">')
-            + f'{icon(ic)}<span class="l-long">{lab}</span><span class="l-short" aria-hidden="true">{short}</span>'
-            + ("</a>" if k in chap else "</button>")
+            f'<a class="ap-jump{" is-on" if k == parent else ""}" href="#ecran-{k}"'
+            f'{" aria-current=\'true\'" if k == parent else ""} aria-label="{lab}">{icon(ic)}'
+            f'<span class="l-long">{lab}</span><span class="l-short" aria-hidden="true">{short}</span></a>'
             for (k, lab, short, ic) in NAV
         )
         nav = f'<div class="ap-nav" aria-label="Écrans de JARVIS App">{items}</div>'
@@ -726,7 +734,7 @@ def _device(only=None):
           <nav class="ap-side" aria-label="JARVIS App">
             <div class="ap-brand" aria-hidden="true"><b>JARVIS</b><small>Private Systems</small><em class="ap-modename"></em></div>
             {nav}
-            <button type="button" class="ap-admin" data-toast="{fr(NOTE["admin"])}">{icon("sliders")}<span class="l-long">Administration</span></button>
+            <button type="button" class="ap-admin" data-toast="{fr(ADMIN_NOTE)}">{icon("sliders")}<span class="l-long">Administration</span></button>
             <div class="ap-side-f"><p class="ap-motto">Votre espace.<br>À votre image.</p></div>
           </nav>
           <div class="ap-main">

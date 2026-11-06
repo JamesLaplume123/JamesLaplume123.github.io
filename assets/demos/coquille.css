@@ -1,0 +1,177 @@
+/* Coquille « logiciel » des pages de solution : la démo s'ouvre dans JARVIS App (dossier User v25).
+   Même langage que la démo de l'app (assets/demos/app.css) : appareil à cadre de cristal, barre latérale
+   dorée vitreuse, en-tête noir, bannière du lac. Suit les modes Signature, Platinum et Base. */
+
+@font-face {
+  font-family: "Jarvis Manrope";
+  src: url("/assets/fonts/manrope/manrope-latin.woff2") format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+.xs {
+  --x-text: rgb(250 246 237);
+  --x-muted: rgb(187 181 170);
+  --x-line: var(--mode-line);
+  --x-line-2: color-mix(in srgb, var(--gold-soft) 34%, transparent);
+  --x-photo: saturate(.95) brightness(.92);
+  --x-font: "Jarvis Manrope", var(--sans);
+  position: relative; width: min(86rem, 100%); margin: 0 auto; color: var(--x-text);
+}
+:root[data-mode="platinum"] .xs { --x-text: #f7f9fc; --x-muted: #b9c2cf; --x-photo: saturate(.92) brightness(.97) contrast(1.04); }
+:root[data-mode="base"] .xs { --x-text: #f2f2f2; --x-muted: #b8b8b8; --x-photo: grayscale(.85) brightness(.85); }
+.xs .ap-i { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- Appareil ---------- */
+.xs-device {
+  position: relative; padding: 9px; border-radius: 28px;
+  background: linear-gradient(150deg, #262626, #0b0b0b 28%, #060606 72%, #1e1e1e);
+  box-shadow: 0 70px 150px #000, 0 0 0 1px #ffffff17, inset 0 1px 0 #ffffff30, 0 0 170px color-mix(in srgb, var(--mode-glow) 14%, transparent);
+}
+.xs-device::before {
+  content: ""; position: absolute; inset: -1px; z-index: 8; pointer-events: none;
+  border: 18px solid transparent; border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch; filter: var(--mode-rim-filter);
+}
+:root[data-mode="base"] .xs-device::before { display: none; }
+.xs-screen {
+  position: relative; isolation: isolate; overflow: hidden; border-radius: 20px;
+  display: grid; grid-template-columns: 228px minmax(0, 1fr);
+  background: #080706 url("/media/app/fond-chaud.webp") center / cover; font-family: var(--x-font); font-size: 14px; line-height: 1.4;
+}
+.xs-screen::before { content: ""; position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, #080706d9, #080706b3 40%, #080706e6); }
+:root[data-mode="platinum"] .xs-screen, :root[data-mode="base"] .xs-screen { background: #08090b; }
+.xs-banner {
+  position: absolute; z-index: -1; top: 66px; left: 228px; width: calc(100% - 228px); height: 210px;
+  object-fit: cover; object-position: 50% 55%; pointer-events: none; filter: var(--x-photo);
+  -webkit-mask: linear-gradient(180deg, #000 55%, #0000); mask: linear-gradient(180deg, #000 55%, #0000);
+}
+
+/* ---------- Barre latérale ---------- */
+.xs-side {
+  position: relative; z-index: 2; display: flex; flex-direction: column; gap: 4px; margin: 10px 0 10px 10px; padding: 24px 14px 20px;
+  border-radius: 18px; background: linear-gradient(180deg, #100c08d9, #070504f0); box-shadow: inset 0 0 40px #000a, 0 10px 40px #000c;
+}
+:root[data-mode="platinum"] .xs-side, :root[data-mode="base"] .xs-side { background: linear-gradient(180deg, #0b0b0ce6, #060607f2); }
+.xs-side::after {
+  content: ""; position: absolute; inset: -4px; z-index: 3; pointer-events: none;
+  border: 14px solid transparent; border-image: url("/media/modes/rim.png") 50 / 14px / 0 stretch; filter: var(--mode-rim-filter);
+}
+:root[data-mode="base"] .xs-side::after { inset: 0; border: 1px solid var(--x-line); border-image: none; border-radius: 18px; filter: none; }
+.xs-brand { display: grid; justify-items: center; gap: 6px; margin: 0 0 24px; text-align: center; }
+.xs-brand b {
+  font: 600 20px/1 var(--x-font); letter-spacing: .34em; padding-left: .34em;
+  background: var(--mode-display); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.xs-brand small { font: 600 12px/1 var(--x-font); letter-spacing: .2em; text-transform: uppercase; color: var(--x-muted); }
+.xs-mode { margin-top: 10px; font: 700 12px/1 var(--x-font); font-style: normal; letter-spacing: .32em; text-transform: uppercase; color: var(--gold-soft); }
+.xs-mode::after { content: "Signature"; }
+:root[data-mode="platinum"] .xs-mode::after { content: "Platinum"; }
+:root[data-mode="base"] .xs-mode::after { content: "Base"; }
+.xs-nav { display: grid; gap: 4px; }
+.xs-nav-i {
+  position: relative; display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 14px; border-radius: 12px;
+  font: 550 15px/1 var(--x-font); color: var(--x-muted); text-decoration: none; transition: color .3s, background .3s;
+}
+.xs-nav-i:hover { color: var(--x-text); }
+.xs-nav-i.is-on {
+  color: var(--x-text);
+  background: linear-gradient(95deg, color-mix(in srgb, var(--gold-soft) 15%, transparent), color-mix(in srgb, var(--gold-soft) 4%, transparent) 80%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold-soft) 42%, transparent), 0 0 22px color-mix(in srgb, var(--mode-glow) 16%, transparent);
+}
+.xs-nav-i.is-on .ap-i { color: var(--gold-soft); }
+.xs-nav-i.is-on::after {
+  content: ""; position: absolute; right: 14px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%;
+  background: var(--gold-soft); box-shadow: 0 0 10px var(--mode-glow);
+}
+.xs-admin { cursor: default; }
+/* Extensions : sous-menu de Mes outils, chaque entrée ouvre sa page de solution */
+.xs-exts { display: grid; gap: 2px; margin: 2px 0 6px 22px; padding-left: 12px; border-left: 1px solid var(--x-line-2); }
+.xs-ext {
+  display: flex; align-items: center; gap: 9px; height: 32px; padding: 0 10px; border-radius: 9px;
+  font: 550 13px/1 var(--x-font); color: var(--x-muted); text-decoration: none; transition: color .3s, background .3s;
+}
+.xs-ext .ap-i { width: 16px; height: 16px; }
+.xs-ext:hover { color: var(--x-text); background: #ffffff0a; }
+.xs-ext.is-on { color: var(--x-text); background: color-mix(in srgb, var(--gold-soft) 12%, transparent); }
+.xs-ext.is-on .ap-i { color: var(--gold-soft); }
+.xs-motto { margin: auto 0 0; padding: 0 6px; font: 500 13px/1.75 var(--x-font); letter-spacing: .14em; color: var(--x-muted); }
+.xs-motto::before { content: ""; display: block; width: 30px; height: 1.5px; margin-bottom: 14px; background: var(--gold-soft); opacity: .85; }
+
+/* ---------- Zone principale ---------- */
+.xs-main { position: relative; z-index: 1; min-width: 0; display: flex; flex-direction: column; }
+.xs-top { display: flex; align-items: center; gap: 18px; height: 66px; padding: 0 24px; background: #050505; }
+.xs-search {
+  display: flex; align-items: center; gap: 10px; width: min(380px, 42%); height: 40px; padding: 0 16px; border-radius: 999px;
+  border: 1px solid var(--x-line); background: #0807068c; color: var(--x-muted); font: 500 14px/1 var(--x-font); text-decoration: none;
+}
+.xs-search:hover { border-color: var(--x-line-2); }
+.xs-search .ap-i { width: 18px; height: 18px; color: var(--x-text); }
+.xs-wx { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.xs-wx b { font-size: 15px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.xs-wx small { display: block; font-size: 12px; color: var(--x-muted); white-space: nowrap; }
+.xs-live { color: rgb(128 226 182); }
+.xs[data-wx-state="off"] .xs-live { display: none; }
+.xs-wx-i { display: grid; color: var(--gold-soft); }
+.xs-wx-i .ap-i { width: 26px; height: 26px; display: none; }
+.xs[data-wx="sun"] .wx-sun, .xs[data-wx="moon"] .wx-moon, .xs[data-wx="cloud"] .wx-cloud, .xs:not([data-wx]) .wx-cloud,
+.xs[data-wx="rain"] .wx-rain, .xs[data-wx="snow"] .wx-snow, .xs[data-wx="fog"] .wx-fog { display: block; }
+.xs-pin { display: grid; }
+.xs-pin .ap-i { width: 19px; height: 19px; }
+.xs-me { display: flex; align-items: center; gap: 10px; padding-left: 18px; border-left: 1px solid var(--x-line); font-size: 14px; }
+.xs-me .ap-face { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1px solid color-mix(in srgb, var(--gold-soft) 45%, transparent); filter: var(--x-photo); }
+.xs-me .ap-i { width: 16px; height: 16px; color: var(--x-muted); }
+.xs-head { padding: 22px 26px 18px; min-height: 144px; display: flex; flex-direction: column; justify-content: flex-end; }
+.xs-crumb { margin: 0 0 10px; font: 500 13px/1 var(--x-font); color: #ece6da; }
+.xs-crumb a { color: inherit; text-decoration: none; }
+.xs-crumb a:hover { color: var(--gold-soft); }
+.xs-crumb span { margin: 0 7px; opacity: .6; }
+.xs-crumb b { color: var(--gold-soft); font-weight: 600; }
+.xs-title { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.xs-title-i {
+  width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; color: var(--gold-soft);
+  background: #0807069e; border: 1px solid var(--x-line-2); box-shadow: 0 0 24px color-mix(in srgb, var(--mode-glow) 18%, transparent);
+}
+.xs-title-i .ap-i { width: 24px; height: 24px; }
+.xs-title h3 { margin: 0; font: 650 36px/1.08 var(--x-font); letter-spacing: -.025em; text-shadow: 0 2px 24px #0009; }
+.xs-state {
+  display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px; font: 600 12px/1 var(--x-font); font-style: normal;
+  color: var(--x-muted); border: 1px solid var(--x-line); background: #080706b3;
+}
+.xs-state.is-on { color: rgb(128 226 182); border-color: rgb(128 226 182 / .4); }
+.xs-state.is-on::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+.xs-body { padding: 0 18px 18px; min-width: 0; }
+
+/* La démo devient le contenu de l'extension : plus de seconde fenêtre ni de second cadre */
+.xs .demo-shell { max-width: none; margin: 0; border-radius: 16px; box-shadow: 0 18px 44px #0007, var(--mode-spec); }
+.xs .demo-shell::before { display: none; }
+.xs .demo-top .lights, .xs .demo-top > b { display: none; }
+
+/* ---------- Écrans plus étroits ---------- */
+@media (max-width: 1100px) {
+  .xs-screen { grid-template-columns: 84px minmax(0, 1fr); }
+  .xs-banner { left: 84px; width: calc(100% - 84px); }
+  .xs-side { align-items: center; padding: 20px 10px 18px; }
+  .xs-brand small, .xs-mode, .xs-motto, .xs-nav-i > span, .xs-ext > span { display: none; }
+  .xs-brand b { font-size: 0; letter-spacing: 0; padding: 0; }
+  .xs-brand b::before { content: "J"; font-size: 24px; }
+  .xs-nav-i { width: 52px; justify-content: center; padding: 0; }
+  .xs-nav-i.is-on::after { display: none; }
+  .xs-exts { margin: 2px 0 6px; padding: 6px 0 0; border-left: 0; border-top: 1px solid var(--x-line-2); }
+  .xs-ext { width: 52px; height: 36px; justify-content: center; padding: 0; }
+  .xs-ext .ap-i { width: 18px; height: 18px; }
+  .xs-me b, .xs-me > .ap-i { display: none; }
+}
+@media (max-width: 700px) {
+  .xs-device { padding: 6px; border-radius: 22px; }
+  .xs-screen { grid-template-columns: minmax(0, 1fr); border-radius: 17px; }
+  .xs-side { display: none; }
+  .xs-banner { left: 0; width: 100%; top: 56px; height: 190px; }
+  .xs-top { height: 56px; padding: 0 14px; gap: 12px; }
+  .xs-search { width: 40px; padding: 0; justify-content: center; }
+  .xs-search span, .xs-wx small, .xs-pin { display: none; }
+  .xs-head { min-height: 120px; padding: 16px 16px 14px; }
+  .xs-title h3 { font-size: 26px; }
+  .xs-title-i { width: 38px; height: 38px; border-radius: 12px; }
+  .xs-body { padding: 0 8px 8px; }
+  .xs .demo-shell { border-radius: 14px; }
+}

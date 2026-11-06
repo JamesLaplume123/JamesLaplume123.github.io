@@ -95,22 +95,15 @@ PAGE = {
       <a class="pill" href="/contact/">Réserver une démo</a>
       <a class="pill ghost" href="#journee">Vivre une journée</a>
     </div>
-    <div class="meta" data-rev>
-      <span class="chip chip-sim">Interface conceptuelle · fondation en construction</span>
-      <span class="chip">Résidences · bâtiments · ateliers · véhicules aménagés</span>
-      <span class="chip">Local, privé ou hybride</span>
-      <span class="chip">Contrôle humain</span>
-    </div>
+    <p class="for-line" data-rev><span>Pour</span> Résidences · bâtiments · ateliers · véhicules aménagés</p>
   </div>
 </section>
 
-{clair_section(CLAIR)}
-
-<section class="sect" id="essayer">
+<section class="sect sol-demo" id="essayer">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Essayez · démonstration interactive</p>
-      <h2 style="margin-top:1rem">Touchez une pièce. <em>Elle vous répond.</em></h2>
+      <h2>Touchez une pièce. <em>Elle vous répond.</em></h2>
     </div>
     <p data-rev>Choisissez une ambiance ou une pièce : la lumière, le chauffage, les stores et les
     verrous se règlent sous vos yeux. Chaque commande est envoyée, puis confirmée.</p>
@@ -118,24 +111,45 @@ PAGE = {
   {maison.html()}
 </section>
 
-<section class="sect">
+<section class="sect alt">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">Le problème à résoudre</p>
-      <h2 style="margin-top:1rem">Les appareils sont intelligents. <em>Le lieu, lui, reste
-      fragmenté.</em></h2>
+      <p class="eyebrow">Module Éclairage · concept en conception</p>
+      <h2>La lumière qui comprend <em>le moment.</em></h2>
     </div>
-    <p data-rev>Éclairage, chauffage, énergie, accès, audio, capteurs et sécurité vivent dans
-    des applications séparées. JARVIS construit une couche commune qui les observe et les
-    coordonne sans remplacer ce qui fonctionne déjà.</p>
+    <p data-rev>« Bonsoir, James. Installez-vous. La soirée est à vous. » Chaque pièce, chaque
+    ambiance, chaque nuance — pensées pour être belles ET honnêtes.</p>
+  </div>
+  {ambiances.html("Salon")}
+  <div class="cards" style="margin-top:2.6rem">
+    <article class="card" data-rev>
+      <small>Règle 01</small>
+      <h3>Un aperçu n’envoie rien.</h3>
+      <p>Composer un éclairage crée un brouillon : rien ne change dans la pièce avant que
+      vous appliquiez. Les lumières éteintes le restent.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>Règle 02</small>
+      <h3>Votre précédent est protégé.</h3>
+      <p>Avant chaque application, l’éclairage en place est sauvegardé. Vous pouvez toujours
+      revenir — même après avoir fermé JARVIS.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>Règle 03</small>
+      <h3>Jamais de faux succès.</h3>
+      <p>Une lumière qui ne répond pas est annoncée « à vérifier », pas « réglée ». Chaque
+      état affiché vient d’une confirmation réelle.</p>
+    </article>
   </div>
 </section>
+
+{clair_section(CLAIR)}
 
 <section class="sect alt" id="journee">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Un exemple vécu</p>
-      <h2 style="margin-top:1rem">Une journée où tout <em>se tient.</em></h2>
+      <h2>Une journée où tout <em>se tient.</em></h2>
     </div>
     <p data-rev>Choisissez un moment : la maison réagit au contexte, pas à une suite de
     commandes. Scénario illustratif — données simulées.</p>
@@ -173,83 +187,8 @@ PAGE = {
 <section class="sect">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">Ce que la solution change</p>
-      <h2 style="margin-top:1rem">Votre lieu, réuni dans une expérience claire.</h2>
-    </div>
-    <p data-rev>Le tableau de bord privilégie les états qui demandent une décision. Les
-    protocoles et les intégrations restent en arrière-plan.</p>
-  </div>
-  <div class="cards">
-    <article class="card" data-rev>
-      <small>01</small>
-      <h3>Une seule lecture du lieu</h3>
-      <p>Voir les états importants, les anomalies et les actions possibles dans une expérience cohérente.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>02</small>
-      <h3>Des automatisations contextuelles</h3>
-      <p>Adapter le confort et l’énergie selon la présence, l’heure, la météo et les priorités choisies.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>03</small>
-      <h3>Un contrôle qui reste local</h3>
-      <p>Conserver les fonctions essentielles même lorsqu’Internet ou un service externe devient indisponible.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>04</small>
-      <h3>Des modes manuels clairs</h3>
-      <p>Chaque automatisation sensible peut être expliquée, suspendue ou reprise manuellement.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>05</small>
-      <h3>Un historique utile</h3>
-      <p>Comprendre ce qui s’est passé avant une anomalie plutôt que consulter une suite de journaux techniques.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>06</small>
-      <h3>Une base extensible</h3>
-      <p>Ajouter progressivement de nouveaux appareils sans reconstruire tout l’environnement.</p>
-    </article>
-  </div>
-</section>
-
-<section class="sect alt">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Module Éclairage · concept en conception</p>
-      <h2 style="margin-top:1rem">La lumière qui comprend <em>le moment.</em></h2>
-    </div>
-    <p data-rev>« Bonsoir, James. Installez-vous. La soirée est à vous. » Chaque pièce, chaque
-    ambiance, chaque nuance — pensées pour être belles ET honnêtes.</p>
-  </div>
-  {ambiances.html("Salon")}
-  <div class="cards" style="margin-top:2.6rem">
-    <article class="card" data-rev>
-      <small>Règle 01</small>
-      <h3>Un aperçu n’envoie rien.</h3>
-      <p>Composer un éclairage crée un brouillon : rien ne change dans la pièce avant que
-      vous appliquiez. Les lumières éteintes le restent.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Règle 02</small>
-      <h3>Votre précédent est protégé.</h3>
-      <p>Avant chaque application, l’éclairage en place est sauvegardé. Vous pouvez toujours
-      revenir — même après avoir fermé JARVIS.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Règle 03</small>
-      <h3>Jamais de faux succès.</h3>
-      <p>Une lumière qui ne répond pas est annoncée « à vérifier », pas « réglée ». Chaque
-      état affiché vient d’une confirmation réelle.</p>
-    </article>
-  </div>
-</section>
-
-<section class="sect">
-  <div class="sect-head">
-    <div data-rev>
       <p class="eyebrow">Caméras de la propriété · données simulées</p>
-      <h2 style="margin-top:1rem">Toute la propriété. <em>Une seule expérience.</em></h2>
+      <h2>Toute la propriété. <em>Une seule expérience.</em></h2>
     </div>
     <p data-rev>Les caméras rejoignent le même écran que les lumières et le chauffage.
     Chaque commande reste visible, compréhensible et réversible.</p>
@@ -268,39 +207,22 @@ PAGE = {
       <figcaption><b>Terrasse arrière</b><span>Accès fermé · foyer actif</span></figcaption>
     </figure>
   </div>
-  <div class="chiprow" data-rev>
-    <span class="chip chip-sim">Compatibilités possibles</span>
-    <span class="chip">Home Assistant</span>
-    <span class="chip">Matter</span>
-    <span class="chip">Zigbee</span>
-    <span class="chip">Z-Wave</span>
-    <span class="chip">KNX</span>
-    <span class="chip">ESPHome</span>
-    <span class="chip">Modbus</span>
-    <span class="chip">MQTT</span>
-  </div>
 </section>
 
-<section class="sect alt">
-  <div class="sect-head">
-    <div data-rev>
+<section class="sect sol-trust">
+  <div class="trust" data-rev>
+    <div>
       <p class="eyebrow">Déploiement responsable</p>
-      <h2 style="margin-top:1rem">Les fonctions essentielles restent dans le lieu.</h2>
+      <h2>Les fonctions essentielles restent dans le lieu.</h2>
+      <p>Les commandes essentielles, les règles et l’historique récent peuvent demeurer
+      sur place. Les services infonuagiques restent optionnels et clairement identifiés.</p>
     </div>
-    <p data-rev>Les commandes essentielles, les règles et l’historique récent peuvent demeurer
-    sur place. Les services infonuagiques restent optionnels et clairement identifiés.</p>
-  </div>
-  <div class="cards two">
-    <article class="card" data-rev>
-      <small>Accord humain</small>
-      <h3>Les actions sensibles exigent une validation adaptée au risque.</h3>
-    </article>
-    <article class="card" data-rev>
-      <small>Limite publiée</small>
-      <h3 style="font-weight:500;font-size:1rem;color:#b9b9c2;line-height:1.6">JARVIS n’invente
-      pas une nouvelle plateforme domotique. Il relie des systèmes compatibles, documentés et
-      autorisés. Chaque installation exige une analyse technique.</h3>
-    </article>
+    <dl>
+      <div><dt>Accord humain</dt><dd>Les actions sensibles exigent une validation adaptée au risque.</dd></div>
+      <div><dt>Limite publiée</dt><dd>JARVIS n’invente pas une nouvelle plateforme domotique. Il relie des systèmes
+      compatibles, documentés et autorisés. Chaque installation exige une analyse technique.</dd></div>
+      <div><dt>Compatibilités possibles</dt><dd class="chips"><span class="chip">Home Assistant</span><span class="chip">Matter</span><span class="chip">Zigbee</span><span class="chip">Z-Wave</span><span class="chip">KNX</span><span class="chip">ESPHome</span><span class="chip">Modbus</span><span class="chip">MQTT</span></dd></div>
+    </dl>
   </div>
 </section>
 

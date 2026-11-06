@@ -6,7 +6,7 @@
 
 import json
 
-from demos import boulance, carte, maison
+from demos import app, boulance, carte, maison
 
 FAQ = [
     (
@@ -132,63 +132,6 @@ SCHEMA = json.dumps(
     indent=1,
 )
 
-# Vitrine de l'app : un grand écran, des onglets qui défilent seuls, des points expliqués.
-# (diapo, onglet, titre, texte, description de l'image, [(x %, y %, bulle), ...])
-VITRINE = [
-    ("accueil", "Accueil", "Votre journée, sur un seul écran.",
-     "Messages, agenda, lieux et assistant réunis, à votre image.",
-     "JARVIS App — accueil : Bonsoir Alex, votre journée, simplement",
-     [(35, 52, "Agenda et tâches réunis"), (83, 45, "L’assistant prépare, vous approuvez"),
-      (35, 86, "Vos lieux, seulement ce qui est permis"), (73, 5, "Météo du lieu, en direct")]),
-    ("assistant", "Assistant", "Il propose. Vous décidez.",
-     "Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord.",
-     "Assistant JARVIS — un rappel préparé, à vérifier avant sa création",
-     [(55, 32, "Des raccourcis pour demander simplement"), (37, 55, "Chaque réponse montre sa source"),
-      (68, 78, "Rien n’est créé sans votre vérification"), (88, 93, "Parlez ou écrivez")]),
-    ("ma-journee", "Ma journée", "Tous vos agendas, enfin ensemble.",
-     "Calendriers et tâches de toutes vos sources. Ce qui est en lecture seule le reste.",
-     "Ma journée — agenda et tâches réunis",
-     [(25, 45, "Tous vos calendriers, de toutes vos sources"), (70, 56, "Travail et vie personnelle côte à côte"),
-      (52, 85, "Le souper de ce soir, avec le lieu")]),
-    ("carte", "Carte", "Vos lieux, sans surveillance.",
-     "La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée.",
-     "Carte JARVIS — couches autorisées autour de Saint-Hyacinthe",
-     [(26, 28, "Vous choisissez les couches visibles"), (53, 60, "Le Hub, lieu de référence"),
-      (85, 28, "Aucune position sans permission")]),
-    ("partage", "Partage", "Vous choisissez ce que vous partagez.",
-     "Avec qui, pour combien de temps, et sous votre contrôle. Un partage retiré disparaît partout.",
-     "Partage — position et documents partagés avec une durée précise",
-     [(32, 40, "Rien n’est partagé par défaut"), (84, 52, "Avec qui, et pour combien de temps"),
-      (67, 77, "Un accès retiré disparaît partout")]),
-]
-
-
-ON = ' class="is-on"'
-
-
-def _hot(x, y, label, k):
-    side = " left" if x > 60 else ""
-    return (f'<span class="hot{side}" style="--x:{x}%;--y:{y}%;--k:{k}">'
-            f'<i aria-hidden="true"></i><em>{label}</em></span>')
-
-
-VIT_SLIDES = "".join(
-    f'''<figure class="vit-slide{' is-on' if i == 0 else ''}" data-i="{i}">
-          <img src="/media/product/user/{slug}.webp" alt="{alt}" width="1600" height="1062" loading="{'eager' if i == 0 else 'lazy'}">
-          {"".join(_hot(x, y, lab, k) for k, (x, y, lab) in enumerate(hots))}
-        </figure>'''
-    for i, (slug, _tab, _t, _p, alt, hots) in enumerate(VITRINE)
-)
-VIT_TABS = "".join(
-    f'''<button type="button" role="tab" aria-selected="{'true' if i == 0 else 'false'}" data-i="{i}"{ON if i == 0 else ''}>
-        <span>{tab}</span><i class="vit-prog" aria-hidden="true"></i></button>'''
-    for i, (_slug, tab, _t, _p, _alt, _h) in enumerate(VITRINE)
-)
-VIT_CAPS = "".join(
-    f'''<div class="vit-cap{' is-on' if i == 0 else ''}" data-i="{i}"><h3>{t}</h3><p>{p}</p></div>'''
-    for i, (_slug, _tab, t, p, _alt, _h) in enumerate(VITRINE)
-)
-
 STANDARDS = [
     "Home Assistant", "Zigbee", "Z-Wave", "Matter", "MQTT", "ESPHome",
     "Frigate", "WireGuard", "Starlink", "LiFePO₄", "Whisper", "Piper",
@@ -199,7 +142,7 @@ PAGE = {
     "url": "/",
     "v2": True,
     "title": "Domotique privée et sécurité intelligente au Québec | JARVIS",
-    "assets": ["maison", "boulance", "carte"],
+    "assets": ["app", "maison", "boulance", "carte"],
     "description": (
         "Domotique privée, sécurité intelligente et IA locale, installées chez vous. "
         "JARVIS relie vos appareils sans envoyer vos données au nuage. Saint-Hyacinthe, Québec."
@@ -246,22 +189,13 @@ PAGE = {
   Il manquait l’intelligence privée qui les comprend — et qui les fait travailler ensemble.</p></div>
 </section>
 
-<!-- Vitrine de l'app : un grand écran vivant -->
+<!-- Vitrine de l'app : JARVIS App rendue en vrai HTML (assets/demos/app.*) -->
 <section class="vitrine" id="app" aria-label="JARVIS App">
   <div class="head" data-rev>
     <p class="eyebrow">JARVIS App · l’interface</p>
     <h2 data-split>Une seule application.<br><em>Toute votre vie connectée.</em></h2>
   </div>
-  <div class="vit-tabs" role="tablist" aria-label="Écrans de JARVIS App">{VIT_TABS}</div>
-  <div class="vit-stage" data-vitrine>
-    <div class="vit-glow" aria-hidden="true"></div>
-    <div class="vit-device">
-      <div class="vit-screen">{VIT_SLIDES}<i class="vit-sweep" aria-hidden="true"></i></div>
-    </div>
-    <div class="vit-floor" aria-hidden="true"></div>
-  </div>
-  <div class="vit-caps" aria-live="polite">{VIT_CAPS}</div>
-  <p class="vit-note"><span class="chip chip-sim">Conception en validation · données fictives</span></p>
+  {app.html()}
 </section>
 
 <!-- Ma maison : démo interactive -->

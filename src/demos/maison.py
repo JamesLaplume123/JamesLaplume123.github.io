@@ -57,6 +57,8 @@ def _data():
 
 
 ON = ' class="is-on"'
+# Libellés courts pour les petits écrans (évite que les étiquettes se chevauchent).
+SHORT = {"sdb": ' data-s="Bain"', "chambre": ' data-s="Chambre"', "exterieur": ' data-s="Ext."'}
 
 
 def html(uid="maison"):
@@ -72,7 +74,7 @@ def html(uid="maison"):
     )
     labels = "".join(
         f'<button type="button" class="mz-tag" data-room="{k}" style="--x:{_center(p)[0]:.2f}%;--y:{_center(p)[1]:.2f}%">'
-        f'<b>{n}</b><span class="mz-tag-v">Éteint</span></button>'
+        f'<b{SHORT.get(k, "")}>{n}</b><span class="mz-tag-v">Éteint</span></button>'
         for k, n, p, _w, _e in ROOMS
     )
     blooms = "".join(

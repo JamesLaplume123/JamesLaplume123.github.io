@@ -126,6 +126,8 @@
   [data-demo="maison"] .mz-tag { padding: .25rem .4rem; }
   [data-demo="maison"] .mz-tag b { font-size: .58rem; }
   [data-demo="maison"] .mz-tag .mz-tag-v { display: none; }
+  [data-demo="maison"] .mz-tag b[data-s] { font-size: 0; }
+  [data-demo="maison"] .mz-tag b[data-s]::after { content: attr(data-s); font-size: .58rem; }
   [data-demo="maison"] .demo-top .mz-clock { display: none; }
   [data-demo="maison"] .mz-panel { padding: 1.1rem; }
 }

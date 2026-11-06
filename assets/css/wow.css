@@ -220,7 +220,7 @@ body.menu-open { overflow: hidden; }
     radial-gradient(ellipse at 50% 72%, transparent 0%, #00000055 60%, #000000d9 100%),
     linear-gradient(to top, #000 0, transparent 26%);
 }
-.hero-inner { position: relative; z-index: 2; padding: 0 1.4rem; max-width: 72rem; }
+.hero-inner { position: relative; z-index: 2; padding: 0 1.4rem; max-width: 88rem; }
 .eyebrow {
   font: 600 .72rem/1 var(--mono); letter-spacing: .5em; text-indent: .5em;
   text-transform: uppercase; color: #dcdce0; margin: 0;

@@ -214,11 +214,11 @@ PAGE = {
   </div>
   <div class="hero-flash" aria-hidden="true"></div>
   <div class="hud" aria-hidden="true">
-    <div class="hud-tag t-out" style="--x:9%;--y:29%;--px:26%;--py:30%"><i></i><span><small>Extérieur · réel</small><b data-live="temp-hud">— °C</b></span></div>
-    <div class="hud-tag t-fire" style="--x:9%;--y:58%;--px:27%;--py:63%"><i></i><span><small>Terrasse</small><b>Foyer allumé</b></span></div>
-    <div class="hud-tag t-salon" style="--x:12%;--y:86%;--px:34%;--py:77%"><i></i><span><small>Salon</small><b>Soirée · 60 %</b></span></div>
-    <div class="hud-tag t-hub" style="--x:91%;--y:30%;--px:63%;--py:47%"><i></i><span><small>Cuisine</small><b>3 lumières · 40 %</b></span></div>
-    <div class="hud-tag t-energy" style="--x:90%;--y:82%;--px:80%;--py:74%"><i></i><span><small>Énergie</small><b>1,2 kW · stable</b></span></div>
+    <div class="hud-tag t-out" style="--x:8%;--y:58%;--px:24%;--py:34%"><i></i><span><small>Extérieur · réel</small><b data-live="temp-hud">— °C</b></span></div>
+    <div class="hud-tag t-fire" style="--x:9%;--y:73%;--px:27%;--py:63%"><i></i><span><small>Terrasse</small><b>Foyer allumé</b></span></div>
+    <div class="hud-tag t-salon" style="--x:12%;--y:89%;--px:34%;--py:77%"><i></i><span><small>Salon</small><b>Soirée · 60 %</b></span></div>
+    <div class="hud-tag t-hub" style="--x:92%;--y:60%;--px:63%;--py:47%"><i></i><span><small>Cuisine</small><b>3 lumières · 40 %</b></span></div>
+    <div class="hud-tag t-energy" style="--x:91%;--y:80%;--px:80%;--py:74%"><i></i><span><small>Énergie</small><b>1,2 kW · stable</b></span></div>
   </div>
   <div class="hero-inner">
     <p class="eyebrow hero-eyebrow"><span data-greet>Domotique · Sécurité · IA privée</span></p>

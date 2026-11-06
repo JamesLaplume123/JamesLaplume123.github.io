@@ -320,6 +320,22 @@
 [data-demo="ia"] .ia-page.is-none p { margin: 0; max-width: 22rem; font-size: .9rem; line-height: 1.6; }
 [data-demo="ia"] .ia-page.is-none b { display: block; color: #fde9b0; font-size: 1rem; margin-bottom: .3rem; }
 
+/* Sous html.fx : le document cité est relu, un faisceau descend la page jusqu'au passage,
+   puis le surligneur trace le passage ligne par ligne */
+html.fx [data-demo="ia"] .ia-doc.is-read::after { animation: iaSweep 1.1s var(--ease) both; }
+html.fx [data-demo="ia"] .ia-page.is-read::before {
+  content: ""; position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: 3.4rem; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--mode-glow) 16%, transparent) 86%, color-mix(in srgb, var(--mode-glow) 75%, transparent) 88%, transparent 91%);
+  animation: iaRead .9s cubic-bezier(.45, 0, .3, 1) .15s both;
+}
+@keyframes iaRead { 0% { opacity: 0; transform: translateY(-3.4rem); } 15% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(calc(var(--to, 8rem) - 3rem)); } }
+html.fx [data-demo="ia"] .ia-pass > span.is-lines { padding: 0; background: none; }
+[data-demo="ia"] .ia-ml {
+  padding: .06em .12em; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  background: linear-gradient(var(--ia-mark), var(--ia-mark)) 0 0 / 0% 100% no-repeat;
+}
+[data-demo="ia"] .ia-pass.is-on .ia-ml { background-size: 100% 100%; transition: background-size var(--d, .5s) cubic-bezier(.55, .1, .45, .95) calc(.95s + var(--t, 0s)); }
+
 /* Apparitions */
 [data-demo="ia"] .ia-in { animation: iaUp .6s var(--ease) both; }
 @keyframes iaUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }

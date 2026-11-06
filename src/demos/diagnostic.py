@@ -203,7 +203,7 @@ CASES = {
                 ("Cause probable", "Moteur du ventilateur du condenseur."),
                 ("Pièces à prévoir", "Moteur de ventilateur et condensateur (modèle à confirmer sur la plaque)."),
                 ("Urgence", "Aujourd’hui · marchandise à surveiller."),
-            ], ["Courbe de 24 h", "Journal du compresseur", "Courant du ventilateur"]),
+            ], [("Courbe de 24 h", "line"), ("Journal du compresseur", "comp"), ("Courant du ventilateur", "sec")]),
                  p="Le frigoriste arrive avec la bonne pièce, sans refaire l’enquête."),
             dict(h="JARVIS propose. Vous décidez.",
                  p="JARVIS propose d’envoyer le dossier à votre frigoriste, puis de vérifier la remise en service sur les mesures.",
@@ -248,7 +248,7 @@ CASES = {
                 ("Cause probable", "Batterie trop déchargée, peut-être en fin de vie."),
                 ("À prévoir", f"Recharge complète et test de capacité; batterie 12{NB}V 100{NB}Ah si le test échoue."),
                 ("Urgence", "Aujourd’hui · aliments à surveiller."),
-            ], ["Courbe de 24 h", "Journal de la batterie", "Coupures du réfrigérateur"]),
+            ], [("Courbe de 24 h", "line"), ("Journal de la batterie", "sec"), ("Coupures du réfrigérateur", "comp")]),
                  p="Le technicien sait quoi tester en premier, sans refaire l’enquête."),
             dict(h="JARVIS propose. Vous décidez.",
                  p="JARVIS propose de démarrer la génératrice pour recharger la batterie, puis de vérifier que le réfrigérateur repart.",
@@ -329,7 +329,7 @@ def step_html(case, n, s):
     elif n == 4:
         ref, when, rows, att = s["sheet"]
         dl = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in rows)
-        chips = "".join(f'<span class="dg-att">{a}</span>' for a in att)
+        chips = "".join(f'<span class="dg-att" data-from="{lane}">{a}</span>' for a, lane in att)
         body = f"""<div class="dg-sheet">
           <header><b>Dossier technicien · {ref}</b><small>Préparé par JARVIS · {when}</small></header>
           <dl>{dl}</dl>
@@ -379,6 +379,7 @@ HTML = f"""<div class="demo-shell" data-demo="diagnostic" data-rev>
         {HEROES}
         <div class="dg-chart" role="img" aria-label="Courbe de température des 24 dernières heures, avec les cycles du compresseur, les ouvertures de porte et une deuxième mesure (données simulées)">
           <svg class="dg-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+          <div class="dg-sweep" aria-hidden="true"><i></i></div>
           <div class="dg-tip" aria-hidden="true" hidden></div>
         </div>
         {LEGENDS}

@@ -23,6 +23,7 @@
 <script>try{var m=new URLSearchParams(location.search).get("mode")||localStorage.getItem("jarvis-mode");if(m==="base"||m==="signature"||m==="platinum")document.documentElement.dataset.mode=m}catch(e){}</script>
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/wow.css?v=20261106a">
+<link rel="stylesheet" href="/assets/demos/ia.css?v=20261106a">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -64,6 +65,22 @@
   </div>
 </section>
 
+
+<section class="clair" aria-labelledby="clair-titre">
+  <div class="clair-head" data-rev>
+    <p class="eyebrow">En clair</p>
+    <h2 id="clair-titre">Posez une question à vos propres documents. <em>La réponse arrive avec sa preuve.</em></h2>
+    <p class="clair-ex"><b>Exemple concret.</b> Un employé demande : « Comment ferme-t-on l’atelier le vendredi? ». JARVIS cherche dans vos procédures, vos courriels et vos registres, répond en quatre étapes et montre la page exacte d’où vient chacune. Si l’information n’existe nulle part, il le dit au lieu d’inventer.</p>
+  </div>
+  <div class="vs" data-rev>
+    <div class="vs-col vs-before"><p class="vs-k">Aujourd’hui, sans JARVIS</p><ul><li>L’information existe, mais elle est éparpillée entre dossiers, courriels et classeurs.</li><li>On dérange la personne qui « sait » à chaque question.</li><li>Une IA publique peut inventer une réponse avec beaucoup d’assurance.</li><li>Envoyer vos documents à un service externe pose un risque pour la confidentialité.</li></ul></div>
+    <div class="vs-arrow" aria-hidden="true"><span></span></div>
+    <div class="vs-col vs-after"><p class="vs-k">Avec JARVIS</p><ul><li>Une question en mots simples, une réponse en quelques secondes.</li><li>Chaque réponse montre sa source : le document et le passage exact.</li><li>Pas de source fiable? JARVIS le dit clairement, sans rien inventer.</li><li>En mode local, tout se passe sur votre Hub : vos documents restent chez vous.</li></ul></div>
+  </div>
+  <p class="eyebrow clair-k" data-rev>Ce que vous obtenez</p>
+  <div class="cards"><article class="card" data-rev><small>01</small><h3>Des réponses vérifiables</h3><p>Un clic sur le numéro de la source affiche le passage qui justifie la réponse.</p></article><article class="card" data-rev><small>02</small><h3>Vos documents restent chez vous</h3><p>Traitement local sur le Hub, ou externe seulement si vous l’autorisez, et toujours affiché.</p></article><article class="card" data-rev><small>03</small><h3>Des actions avec permission</h3><p>JARVIS peut préparer une liste de tâches ou un message. Rien ne part sans votre « Approuver ».</p></article></div>
+</section>
+
 <section class="sect">
   <div class="sect-head">
     <div data-rev>
@@ -77,18 +94,269 @@
   </div>
 </section>
 
-<section class="scene app" id="outil">
-  <div class="stick">
-    <img decoding="async" src="/media/product/outils/ia.jpg"
-         alt="Outil IA et connaissances — collections, documents et questions" loading="lazy">
-    <h2 class="t1">IA et connaissances</h2>
-    <p class="t2">Organisez vos documents et interrogez-les simplement.</p>
-    <div class="t3">
-      <span class="chip">Bibliothèque · Conversations · Assistants</span>
-      <span class="chip">Traitement local affiché</span>
-      <span class="chip chip-sim">Maquette · données fictives</span>
+<section class="sect" id="outil">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Essayez-le · données simulées</p>
+      <h2 style="margin-top:1rem">Parlez à vos propres documents. <em>Chaque réponse montre sa
+      preuve.</em></h2>
     </div>
+    <p data-rev>Choisissez une question. JARVIS fouille les six documents d’un atelier fictif,
+    répond en citant ses sources et vous montre le passage exact. Puis il propose une action :
+    elle attend votre « Approuver ». Rien ne quitte le Hub.</p>
   </div>
+  <div class="demo-shell" data-demo="ia" data-rev>
+  <div class="demo-top">
+    <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+    <b>JARVIS · IA privée</b>
+    <span class="ia-state"><i class="dot" aria-hidden="true"></i>Modèle local actif</span>
+    <span class="tag tag-sim">Démo · données simulées</span>
+  </div>
+  <div class="demo-body ia">
+    <div class="ia-chat">
+      <div class="ia-head">
+        <p class="ia-k">Conversation<span> · Atelier Démo</span></p>
+        <p class="ia-lock"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>Rien ne quitte le Hub</p>
+      </div>
+      <div class="ia-log" data-log>
+        <div class="ia-msg is-bot" data-keep>
+  <span class="ia-av" aria-hidden="true"></span>
+  <p class="ia-bub">Bonjour. Je connais les 6 documents de l’atelier Démo. Choisissez une question :
+  je réponds seulement avec ce que je peux prouver.</p>
+</div>
+        <div class="ia-msg is-me"><p class="ia-bub">Quelle est la procédure de fermeture de l’atelier le vendredi?</p></div>
+<div class="ia-msg is-bot">
+  <span class="ia-av" aria-hidden="true"></span>
+  <div class="ia-bub">
+    <div class="ia-think" hidden aria-hidden="true">
+      <p><span>Recherche dans vos documents</span><i></i><i></i><i></i></p>
+      <span class="ia-think-bar"></span>
+      <small><b data-read>0</b> passages lus · 6 documents</small>
+    </div>
+    <div class="ia-ans"><p>Le vendredi, la fermeture se fait en quatre étapes :</p><ol><li>Couper l’alimentation des compresseurs et des chargeurs <button type="button" class="ia-cite" data-c="1" aria-label="Voir la source 1">1</button>.</li><li>Ranger les outils portatifs dans l’armoire verrouillée <button type="button" class="ia-cite" data-c="1" aria-label="Voir la source 1">1</button>.</li><li>Armer l’alarme en zone B — la zone A est réservée aux fins de semaine de garde <button type="button" class="ia-cite" data-c="2" aria-label="Voir la source 2">2</button>.</li><li>Envoyer à Marie une photo du tableau électrique avant 17 h <button type="button" class="ia-cite" data-c="3" aria-label="Voir la source 3">3</button>.</li></ol></div>
+    <div class="ia-meta"><span class="ia-badge is-ok"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>Modèle local · aucune donnée envoyée à l’extérieur</span><span class="ia-badge is-src">3 sources · 1,2 s</span></div>
+    <p class="ia-quote" hidden></p>
+  </div>
+</div>
+<div class="ia-act" data-act>
+  <p class="ia-act-k"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 9.4 6.6 14.5 8 9.4 9.4 8 14.5 6.6 9.4 1.5 8 6.6 6.6z"/></svg>JARVIS propose · en attente de votre accord</p>
+  <h4>Créer la liste de tâches de vendredi</h4>
+  <p class="ia-act-sub">4 tâches pour l’équipe atelier, dans votre outil Tâches.</p>
+  <ul class="ia-act-list"><li>Couper compresseurs et chargeurs</li><li>Ranger les outils portatifs</li><li>Armer l’alarme en zone B</li><li>Photo du tableau à Marie avant 17 h</li></ul>
+  <div class="ia-act-btns">
+    <button type="button" class="ia-ok" data-do="ok">Approuver</button>
+    <button type="button" class="ia-no" data-do="no">Ignorer</button>
+    <span class="ia-act-note">Rien ne part sans votre accord.</span>
+  </div>
+  <ol class="ia-track" aria-label="Suivi de l’action">
+    <li data-s="1">Approuvé</li><li data-s="2">Envoyé</li><li data-s="3">Confirmé</li>
+  </ol>
+  <p class="ia-act-done" data-done="4 tâches créées pour l’équipe atelier." role="status"></p>
+</div>
+      </div>
+      <div class="ia-compose">
+        <div class="ia-compose-top">
+          <p class="ia-k">Choisissez une question</p>
+          <button type="button" class="ia-replay" data-replay><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 1 0 1.7-4"/><path d="M2.5 2.5v3h3"/></svg>Rejouer</button>
+        </div>
+        <div class="ia-chips" role="group" aria-label="Questions proposées"><button type="button" class="ia-chip is-on" data-sc="0" aria-pressed="true">Fermeture du vendredi</button><button type="button" class="ia-chip" data-sc="1" aria-pressed="false">Garantie de la thermopompe</button><button type="button" class="ia-chip" data-sc="2" aria-pressed="false">Promesses au client Tremblay</button><button type="button" class="ia-chip" data-sc="3" aria-pressed="false">Remboursement sans reçu<em>question piège</em></button></div>
+        <div class="ia-input">
+          <span class="ia-typed" data-typed></span><span class="ia-ph" data-ph>Posez une question sur vos documents…</span>
+          <span class="ia-send" aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5"/></svg></span>
+        </div>
+      </div>
+      <p class="ia-sr" aria-live="polite" data-sr></p>
+    </div>
+    <div class="ia-src">
+      <div class="ia-head">
+        <p class="ia-k">Vos documents · 6</p>
+        <p class="ia-count"><b data-count>1 398</b> passages lus</p>
+      </div>
+      <ul class="ia-docs" data-docs><li class="ia-doc is-hit" data-doc="d1" data-pass="48"><span class="ia-ty is-pdf" aria-hidden="true">PDF</span><span class="ia-doc-t"><b>Procédure de fermeture.pdf</b><small>Atelier · 4 pages</small></span><em class="ia-hit">1</em></li><li class="ia-doc is-hit" data-doc="d2" data-pass="64"><span class="ia-ty is-xls" aria-hidden="true">XLS</span><span class="ia-doc-t"><b>Registre des alarmes.xlsx</b><small>Codes et zones</small></span><em class="ia-hit">2</em></li><li class="ia-doc is-hit" data-doc="d3" data-pass="1180"><span class="ia-ty is-mail" aria-hidden="true">@</span><span class="ia-doc-t"><b>Courriels de l’équipe</b><small>Boîte partagée · 2026</small></span><em class="ia-hit">3</em></li><li class="ia-doc is-miss" data-doc="d4" data-pass="36"><span class="ia-ty is-pdf" aria-hidden="true">PDF</span><span class="ia-doc-t"><b>Contrat thermopompe.pdf</b><small>Installation · garantie</small></span><em class="ia-hit"></em></li><li class="ia-doc is-miss" data-doc="d5" data-pass="52"><span class="ia-ty is-xls" aria-hidden="true">XLS</span><span class="ia-doc-t"><b>Carnet d’entretien.xlsx</b><small>Bâtiment · 2019 à 2025</small></span><em class="ia-hit"></em></li><li class="ia-doc is-miss" data-doc="d6" data-pass="18"><span class="ia-ty is-pdf" aria-hidden="true">PDF</span><span class="ia-doc-t"><b>Soumission Tremblay.pdf</b><small>S-2026-031 · 2 pages</small></span><em class="ia-hit"></em></li></ul>
+      <div class="ia-prev">
+        <p class="ia-k">Preuve · passage exact</p>
+        <div class="ia-tabs" data-tabs><button type="button" class="ia-tab" data-c="1"><span>1</span>Procédure de fermeture · page 2</button><button type="button" class="ia-tab" data-c="2"><span>2</span>Registre des alarmes · onglet Zones</button><button type="button" class="ia-tab" data-c="3"><span>3</span>Courriels de l’équipe · courriel du 12 septembre</button></div>
+        <div class="ia-stack" data-stack><article class="ia-page is-on" data-c="1" data-doc="d1">
+  <header><span class="ia-ty is-pdf">PDF</span><b>Procédure de fermeture.pdf</b><small>page 2</small></header>
+  <h4>4. Fermeture de fin de semaine</h4>
+  <i class="ia-sk" style="--w:94%"></i><i class="ia-sk" style="--w:86%"></i><i class="ia-sk" style="--w:72%"></i>
+  <p class="ia-pass is-on"><span>Le vendredi, couper l’alimentation des compresseurs et des chargeurs, puis ranger les outils portatifs dans l’armoire verrouillée.</span></p>
+  <i class="ia-sk" style="--w:90%"></i><i class="ia-sk" style="--w:64%"></i><i class="ia-sk" style="--w:97%"></i><i class="ia-sk" style="--w:82%"></i><i class="ia-sk" style="--w:58%"></i>
+</article><article class="ia-page" data-c="2" data-doc="d2">
+  <header><span class="ia-ty is-xls">XLSX</span><b>Registre des alarmes.xlsx</b><small>onglet Zones</small></header>
+  <h4>Zones d’alarme du bâtiment</h4>
+  <i class="ia-sk" style="--w:90%"></i><i class="ia-sk" style="--w:64%"></i>
+  <p class="ia-pass"><span>Zone B : fermeture de semaine, y compris le vendredi. Zone A : réservée aux fins de semaine de garde.</span></p>
+  <i class="ia-sk" style="--w:97%"></i><i class="ia-sk" style="--w:82%"></i><i class="ia-sk" style="--w:58%"></i><i class="ia-sk" style="--w:88%"></i><i class="ia-sk" style="--w:70%"></i>
+</article><article class="ia-page" data-c="3" data-doc="d3">
+  <header><span class="ia-ty is-mail">Courriel</span><b>Courriels de l’équipe</b><small>courriel du 12 septembre</small></header>
+  <h4>De : Marie · Objet : Fermeture du vendredi</h4>
+  <i class="ia-sk" style="--w:97%"></i><i class="ia-sk" style="--w:82%"></i><i class="ia-sk" style="--w:58%"></i>
+  <p class="ia-pass"><span>À partir de maintenant, envoyez-moi une photo du tableau électrique avant 17 h chaque vendredi.</span></p>
+  <i class="ia-sk" style="--w:88%"></i><i class="ia-sk" style="--w:70%"></i><i class="ia-sk" style="--w:94%"></i><i class="ia-sk" style="--w:86%"></i><i class="ia-sk" style="--w:72%"></i>
+</article></div>
+      </div>
+    </div>
+    <template data-ia-sc="0" data-q="Quelle est la procédure de fermeture de l’atelier le vendredi?" data-hits="d1:1|d2:2|d3:3"><div data-part="chat"><div class="ia-msg is-me"><p class="ia-bub">Quelle est la procédure de fermeture de l’atelier le vendredi?</p></div>
+<div class="ia-msg is-bot">
+  <span class="ia-av" aria-hidden="true"></span>
+  <div class="ia-bub">
+    <div class="ia-think" aria-hidden="true">
+      <p><span>Recherche dans vos documents</span><i></i><i></i><i></i></p>
+      <span class="ia-think-bar"></span>
+      <small><b data-read>0</b> passages lus · 6 documents</small>
+    </div>
+    <div class="ia-ans"><p>Le vendredi, la fermeture se fait en quatre étapes :</p><ol><li>Couper l’alimentation des compresseurs et des chargeurs <button type="button" class="ia-cite" data-c="1" aria-label="Voir la source 1">1</button>.</li><li>Ranger les outils portatifs dans l’armoire verrouillée <button type="button" class="ia-cite" data-c="1" aria-label="Voir la source 1">1</button>.</li><li>Armer l’alarme en zone B — la zone A est réservée aux fins de semaine de garde <button type="button" class="ia-cite" data-c="2" aria-label="Voir la source 2">2</button>.</li><li>Envoyer à Marie une photo du tableau électrique avant 17 h <button type="button" class="ia-cite" data-c="3" aria-label="Voir la source 3">3</button>.</li></ol></div>
+    <div class="ia-meta"><span class="ia-badge is-ok"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>Modèle local · aucune donnée envoyée à l’extérieur</span><span class="ia-badge is-src">3 sources · 1,2 s</span></div>
+    <p class="ia-quote" hidden></p>
+  </div>
+</div>
+<div class="ia-act" data-act>
+  <p class="ia-act-k"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 9.4 6.6 14.5 8 9.4 9.4 8 14.5 6.6 9.4 1.5 8 6.6 6.6z"/></svg>JARVIS propose · en attente de votre accord</p>
+  <h4>Créer la liste de tâches de vendredi</h4>
+  <p class="ia-act-sub">4 tâches pour l’équipe atelier, dans votre outil Tâches.</p>
+  <ul class="ia-act-list"><li>Couper compresseurs et chargeurs</li><li>Ranger les outils portatifs</li><li>Armer l’alarme en zone B</li><li>Photo du tableau à Marie avant 17 h</li></ul>
+  <div class="ia-act-btns">
+    <button type="button" class="ia-ok" data-do="ok">Approuver</button>
+    <button type="button" class="ia-no" data-do="no">Ignorer</button>
+    <span class="ia-act-note">Rien ne part sans votre accord.</span>
+  </div>
+  <ol class="ia-track" aria-label="Suivi de l’action">
+    <li data-s="1">Approuvé</li><li data-s="2">Envoyé</li><li data-s="3">Confirmé</li>
+  </ol>
+  <p class="ia-act-done" data-done="4 tâches créées pour l’équipe atelier." role="status"></p>
+</div></div><div data-part="pages"><article class="ia-page" data-c="1" data-doc="d1">
+  <header><span class="ia-ty is-pdf">PDF</span><b>Procédure de fermeture.pdf</b><small>page 2</small></header>
+  <h4>4. Fermeture de fin de semaine</h4>
+  <i class="ia-sk" style="--w:94%"></i><i class="ia-sk" style="--w:86%"></i><i class="ia-sk" style="--w:72%"></i>
+  <p class="ia-pass"><span>Le vendredi, couper l’alimentation des compresseurs et des chargeurs, puis ranger les outils portatifs dans l’armoire verrouillée.</span></p>
+  <i class="ia-sk" style="--w:90%"></i><i class="ia-sk" style="--w:64%"></i><i class="ia-sk" style="--w:97%"></i><i class="ia-sk" style="--w:82%"></i><i class="ia-sk" style="--w:58%"></i>
+</article><article class="ia-page" data-c="2" data-doc="d2">
+  <header><span class="ia-ty is-xls">XLSX</span><b>Registre des alarmes.xlsx</b><small>onglet Zones</small></header>
+  <h4>Zones d’alarme du bâtiment</h4>
+  <i class="ia-sk" style="--w:90%"></i><i class="ia-sk" style="--w:64%"></i>
+  <p class="ia-pass"><span>Zone B : fermeture de semaine, y compris le vendredi. Zone A : réservée aux fins de semaine de garde.</span></p>
+  <i class="ia-sk" style="--w:97%"></i><i class="ia-sk" style="--w:82%"></i><i class="ia-sk" style="--w:58%"></i><i class="ia-sk" style="--w:88%"></i><i class="ia-sk" style="--w:70%"></i>
+</article><article class="ia-page" data-c="3" data-doc="d3">
+  <header><span class="ia-ty is-mail">Courriel</span><b>Courriels de l’équipe</b><small>courriel du 12 septembre</small></header>
+  <h4>De : Marie · Objet : Fermeture du vendredi</h4>
+  <i class="ia-sk" style="--w:97%"></i><i class="ia-sk" style="--w:82%"></i><i class="ia-sk" style="--w:58%"></i>
+  <p class="ia-pass"><span>À partir de maintenant, envoyez-moi une photo du tableau électrique avant 17 h chaque vendredi.</span></p>
+  <i class="ia-sk" style="--w:88%"></i><i class="ia-sk" style="--w:70%"></i><i class="ia-sk" style="--w:94%"></i><i class="ia-sk" style="--w:86%"></i><i class="ia-sk" style="--w:72%"></i>
+</article></div><div data-part="tabs"><button type="button" class="ia-tab" data-c="1"><span>1</span>Procédure de fermeture · page 2</button><button type="button" class="ia-tab" data-c="2"><span>2</span>Registre des alarmes · onglet Zones</button><button type="button" class="ia-tab" data-c="3"><span>3</span>Courriels de l’équipe · courriel du 12 septembre</button></div></template><template data-ia-sc="1" data-q="Quand expire la garantie de la thermopompe?" data-hits="d4:1|d5:2"><div data-part="chat"><div class="ia-msg is-me"><p class="ia-bub">Quand expire la garantie de la thermopompe?</p></div>
+<div class="ia-msg is-bot">
+  <span class="ia-av" aria-hidden="true"></span>
+  <div class="ia-bub">
+    <div class="ia-think" aria-hidden="true">
+      <p><span>Recherche dans vos documents</span><i></i><i></i><i></i></p>
+      <span class="ia-think-bar"></span>
+      <small><b data-read>0</b> passages lus · 6 documents</small>
+    </div>
+    <div class="ia-ans"><p>La garantie des pièces expire le 14 juin 2029 : elle couvre 10 ans à partir de l’installation du 14 juin 2019 <button type="button" class="ia-cite" data-c="1" aria-label="Voir la source 1">1</button>.</p><p>Une condition : un entretien annuel par un technicien certifié, sinon la garantie tombe <button type="button" class="ia-cite" data-c="1" aria-label="Voir la source 1">1</button>. Le dernier entretien inscrit date du 3 décembre 2025 <button type="button" class="ia-cite" data-c="2" aria-label="Voir la source 2">2</button> : le prochain est à faire avant le 3 décembre 2026.</p></div>
+    <div class="ia-meta"><span class="ia-badge is-ok"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>Modèle local · aucune donnée envoyée à l’extérieur</span><span class="ia-badge is-src">2 sources · 0,9 s</span></div>
+    <p class="ia-quote" hidden></p>
+  </div>
+</div>
+<div class="ia-act" data-act>
+  <p class="ia-act-k"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 9.4 6.6 14.5 8 9.4 9.4 8 14.5 6.6 9.4 1.5 8 6.6 6.6z"/></svg>JARVIS propose · en attente de votre accord</p>
+  <h4>Ajouter un rappel d’entretien</h4>
+  <p class="ia-act-sub">Le 19 novembre, deux semaines avant l’échéance, dans le calendrier de l’atelier.</p>
+  
+  <div class="ia-act-btns">
+    <button type="button" class="ia-ok" data-do="ok">Approuver</button>
+    <button type="button" class="ia-no" data-do="no">Ignorer</button>
+    <span class="ia-act-note">Rien ne part sans votre accord.</span>
+  </div>
+  <ol class="ia-track" aria-label="Suivi de l’action">
+    <li data-s="1">Approuvé</li><li data-s="2">Envoyé</li><li data-s="3">Confirmé</li>
+  </ol>
+  <p class="ia-act-done" data-done="Rappel ajouté au calendrier pour le 19 novembre." role="status"></p>
+</div></div><div data-part="pages"><article class="ia-page" data-c="1" data-doc="d4">
+  <header><span class="ia-ty is-pdf">PDF</span><b>Contrat thermopompe.pdf</b><small>page 3</small></header>
+  <h4>Article 7 — Garantie</h4>
+  <i class="ia-sk" style="--w:94%"></i><i class="ia-sk" style="--w:86%"></i><i class="ia-sk" style="--w:72%"></i>
+  <p class="ia-pass"><span>Installation : 14 juin 2019. Pièces garanties 10 ans, à condition d’un entretien annuel par un technicien certifié.</span></p>
+  <i class="ia-sk" style="--w:90%"></i><i class="ia-sk" style="--w:64%"></i><i class="ia-sk" style="--w:97%"></i><i class="ia-sk" style="--w:82%"></i><i class="ia-sk" style="--w:58%"></i>
+</article><article class="ia-page" data-c="2" data-doc="d5">
+  <header><span class="ia-ty is-xls">XLSX</span><b>Carnet d’entretien.xlsx</b><small>ligne 14</small></header>
+  <h4>Thermopompe — historique des entretiens</h4>
+  <i class="ia-sk" style="--w:90%"></i><i class="ia-sk" style="--w:64%"></i>
+  <p class="ia-pass"><span>3 décembre 2025 · Entretien annuel complet · Technicien certifié · Prochain : décembre 2026.</span></p>
+  <i class="ia-sk" style="--w:97%"></i><i class="ia-sk" style="--w:82%"></i><i class="ia-sk" style="--w:58%"></i><i class="ia-sk" style="--w:88%"></i><i class="ia-sk" style="--w:70%"></i>
+</article></div><div data-part="tabs"><button type="button" class="ia-tab" data-c="1"><span>1</span>Contrat thermopompe · page 3</button><button type="button" class="ia-tab" data-c="2"><span>2</span>Carnet d’entretien · ligne 14</button></div></template><template data-ia-sc="2" data-q="Qu’a-t-on promis au client Tremblay?" data-hits="d6:1|d3:2"><div data-part="chat"><div class="ia-msg is-me"><p class="ia-bub">Qu’a-t-on promis au client Tremblay?</p></div>
+<div class="ia-msg is-bot">
+  <span class="ia-av" aria-hidden="true"></span>
+  <div class="ia-bub">
+    <div class="ia-think" aria-hidden="true">
+      <p><span>Recherche dans vos documents</span><i></i><i></i><i></i></p>
+      <span class="ia-think-bar"></span>
+      <small><b data-read>0</b> passages lus · 6 documents</small>
+    </div>
+    <div class="ia-ans"><p>Trois engagements, tous écrits :</p><ol><li>Installer 4 caméras extérieures et un enregistreur local, pour 3 480 $ avant taxes <button type="button" class="ia-cite" data-c="1" aria-label="Voir la source 1">1</button>.</li><li>Terminer les travaux au plus tard le 21 novembre <button type="button" class="ia-cite" data-c="2" aria-label="Voir la source 2">2</button>.</li><li>Offrir une formation de 30 minutes sur l’application, sans frais <button type="button" class="ia-cite" data-c="2" aria-label="Voir la source 2">2</button>.</li></ol></div>
+    <div class="ia-meta"><span class="ia-badge is-ok"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>Modèle local · aucune donnée envoyée à l’extérieur</span><span class="ia-badge is-src">2 sources · 1,0 s</span></div>
+    <p class="ia-quote" hidden></p>
+  </div>
+</div>
+<div class="ia-act" data-act>
+  <p class="ia-act-k"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 9.4 6.6 14.5 8 9.4 9.4 8 14.5 6.6 9.4 1.5 8 6.6 6.6z"/></svg>JARVIS propose · en attente de votre accord</p>
+  <h4>Envoyer à M. Tremblay le rappel des engagements</h4>
+  <p class="ia-act-sub">Courriel préparé à partir des 2 sources. Il part seulement si vous approuvez.</p>
+  
+  <div class="ia-act-btns">
+    <button type="button" class="ia-ok" data-do="ok">Approuver</button>
+    <button type="button" class="ia-no" data-do="no">Ignorer</button>
+    <span class="ia-act-note">Rien ne part sans votre accord.</span>
+  </div>
+  <ol class="ia-track" aria-label="Suivi de l’action">
+    <li data-s="1">Approuvé</li><li data-s="2">Envoyé</li><li data-s="3">Confirmé</li>
+  </ol>
+  <p class="ia-act-done" data-done="Courriel remis à M. Tremblay." role="status"></p>
+</div></div><div data-part="pages"><article class="ia-page" data-c="1" data-doc="d6">
+  <header><span class="ia-ty is-pdf">PDF</span><b>Soumission Tremblay.pdf</b><small>page 1</small></header>
+  <h4>Soumission S-2026-031 — M. Tremblay</h4>
+  <i class="ia-sk" style="--w:94%"></i><i class="ia-sk" style="--w:86%"></i><i class="ia-sk" style="--w:72%"></i>
+  <p class="ia-pass"><span>4 caméras extérieures et 1 enregistreur local, installation comprise : 3 480 $ avant taxes.</span></p>
+  <i class="ia-sk" style="--w:90%"></i><i class="ia-sk" style="--w:64%"></i><i class="ia-sk" style="--w:97%"></i><i class="ia-sk" style="--w:82%"></i><i class="ia-sk" style="--w:58%"></i>
+</article><article class="ia-page" data-c="2" data-doc="d3">
+  <header><span class="ia-ty is-mail">Courriel</span><b>Courriels de l’équipe</b><small>courriel du 22 octobre</small></header>
+  <h4>À : M. Tremblay · Objet : Confirmation des travaux</h4>
+  <i class="ia-sk" style="--w:90%"></i><i class="ia-sk" style="--w:64%"></i>
+  <p class="ia-pass"><span>Nous terminerons au plus tard le 21 novembre et vous offrons une formation de 30 minutes sur l’application, sans frais.</span></p>
+  <i class="ia-sk" style="--w:97%"></i><i class="ia-sk" style="--w:82%"></i><i class="ia-sk" style="--w:58%"></i><i class="ia-sk" style="--w:88%"></i><i class="ia-sk" style="--w:70%"></i>
+</article></div><div data-part="tabs"><button type="button" class="ia-tab" data-c="1"><span>1</span>Soumission Tremblay · page 1</button><button type="button" class="ia-tab" data-c="2"><span>2</span>Courriels de l’équipe · courriel du 22 octobre</button></div></template><template data-ia-sc="3" data-q="Peut-on rembourser un client qui n’a pas de reçu?" data-hits=""><div data-part="chat"><div class="ia-msg is-me"><p class="ia-bub">Peut-on rembourser un client qui n’a pas de reçu?</p></div>
+<div class="ia-msg is-bot">
+  <span class="ia-av" aria-hidden="true"></span>
+  <div class="ia-bub">
+    <div class="ia-think" aria-hidden="true">
+      <p><span>Recherche dans vos documents</span><i></i><i></i><i></i></p>
+      <span class="ia-think-bar"></span>
+      <small><b data-read>0</b> passages lus · 6 documents</small>
+    </div>
+    <div class="ia-ans"><p class="ia-warn"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2 15 14H1z"/><path d="M8 6.5v3.5M8 12v.01"/></svg><strong>Je ne trouve pas de source fiable pour répondre.</strong></p><p>Aucun de vos 6 documents ne parle de remboursement sans reçu. Plutôt que d’inventer une règle, je peux poser la question à la bonne personne.</p></div>
+    <div class="ia-meta"><span class="ia-badge is-ok"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>Modèle local · aucune donnée envoyée à l’extérieur</span><span class="ia-badge is-warn">0 source fiable · rien d’inventé</span></div>
+    <p class="ia-quote" hidden></p>
+  </div>
+</div>
+<div class="ia-act" data-act>
+  <p class="ia-act-k"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 9.4 6.6 14.5 8 9.4 9.4 8 14.5 6.6 9.4 1.5 8 6.6 6.6z"/></svg>JARVIS propose · en attente de votre accord</p>
+  <h4>Demander la règle à Marie, la gérante</h4>
+  <p class="ia-act-sub">Message interne préparé. Sa réponse pourra devenir une procédure écrite.</p>
+  
+  <div class="ia-act-btns">
+    <button type="button" class="ia-ok" data-do="ok">Approuver</button>
+    <button type="button" class="ia-no" data-do="no">Ignorer</button>
+    <span class="ia-act-note">Rien ne part sans votre accord.</span>
+  </div>
+  <ol class="ia-track" aria-label="Suivi de l’action">
+    <li data-s="1">Approuvé</li><li data-s="2">Envoyé</li><li data-s="3">Confirmé</li>
+  </ol>
+  <p class="ia-act-done" data-done="Question transmise à Marie." role="status"></p>
+</div></div><div data-part="pages"><article class="ia-page is-none">
+  <p><b>Aucun passage fiable.</b> Aucun document ne répond à cette question : JARVIS ne cite rien plutôt que d’inventer.</p>
+</article></div><div data-part="tabs"></div></template>
+  </div>
+</div>
+<p class="demo-hint">Cliquez sur un numéro de source pour voir le passage exact · Documents et réponses fictifs</p>
 </section>
 
 <section class="sect alt">
@@ -128,18 +396,11 @@
       <p class="eyebrow">Des réponses honnêtes</p>
       <h2 style="margin-top:1rem">Une réponse utile montre <em>ce qui la justifie.</em></h2>
     </div>
-    <p data-rev>Ici, l’IA cite « Procédure retours.pdf, page 2 » — puis, quand la preuve
-    manque, elle le dit et demande le bon document au lieu d’inventer une règle.</p>
+    <p data-rev>Dans la démo, essayez la « question piège » : aucune source ne parle de
+    remboursement sans reçu. JARVIS le dit, et propose de demander à la bonne personne au lieu
+    d’inventer une règle.</p>
   </div>
-  <figure class="frame" data-rev>
-    <img decoding="async" src="/media/product/ia/reponse-verifiable.jpg"
-         alt="Conversation IA : réponse citant sa source, puis refus d’inventer une règle absente" loading="lazy">
-    <figcaption>
-      <span>IA et connaissances · Conversations</span>
-      <strong>« Je n’ai pas de preuve suffisante. » — Maquette, données fictives.</strong>
-    </figcaption>
-  </figure>
-  <div class="cards" style="margin-top:2.6rem">
+  <div class="cards">
     <article class="card" data-rev>
       <small>Règle 01</small>
       <h3>Une source consultable.</h3>
@@ -272,5 +533,6 @@
   <p class="foot-line"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span>Privé par conception</span></p>
 </footer>
 <script src="/assets/js/wow.js?v=20261106a" defer></script>
+<script src="/assets/demos/ia.js?v=20261106a" defer></script>
 </body>
 </html>

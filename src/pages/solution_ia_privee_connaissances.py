@@ -1,6 +1,36 @@
 # Solution 02 — IA privée et connaissances. PAGE VEDETTE (sur mesure).
 # Contenu tiré du Guide visuel « IA et connaissances » (conception à valider) :
-# deux parcours, trois autorisations, réponses vérifiables, périmètres, contrôle.
+# en clair, démo interactive, trois autorisations, réponses vérifiables,
+# périmètres, contrôle.
+
+from demos.ia import HTML as DEMO
+from pages._solution import clair_section
+
+CLAIR = {
+    "quoi": "Posez une question à vos propres documents. <em>La réponse arrive avec sa preuve.</em>",
+    "exemple": (
+        "Un employé demande : « Comment ferme-t-on l’atelier le vendredi? ». JARVIS cherche dans "
+        "vos procédures, vos courriels et vos registres, répond en quatre étapes et montre la page "
+        "exacte d’où vient chacune. Si l’information n’existe nulle part, il le dit au lieu d’inventer."
+    ),
+    "avant": [
+        "L’information existe, mais elle est éparpillée entre dossiers, courriels et classeurs.",
+        "On dérange la personne qui « sait » à chaque question.",
+        "Une IA publique peut inventer une réponse avec beaucoup d’assurance.",
+        "Envoyer vos documents à un service externe pose un risque pour la confidentialité.",
+    ],
+    "apres": [
+        "Une question en mots simples, une réponse en quelques secondes.",
+        "Chaque réponse montre sa source : le document et le passage exact.",
+        "Pas de source fiable? JARVIS le dit clairement, sans rien inventer.",
+        "En mode local, tout se passe sur votre Hub : vos documents restent chez vous.",
+    ],
+    "obtenez": [
+        ("Des réponses vérifiables", "Un clic sur le numéro de la source affiche le passage qui justifie la réponse."),
+        ("Vos documents restent chez vous", "Traitement local sur le Hub, ou externe seulement si vous l’autorisez, et toujours affiché."),
+        ("Des actions avec permission", "JARVIS peut préparer une liste de tâches ou un message. Rien ne part sans votre « Approuver »."),
+    ],
+}
 
 PAGE = {
     "url": "/solutions/ia-privee-connaissances/",
@@ -8,6 +38,7 @@ PAGE = {
     "title": "IA privée et connaissances | Solutions JARVIS",
     "description": "Parler à ses propres informations, retrouver les bonnes preuves et préparer une action avec permission.",
     "og_image": "/media/product/outils/ia.jpg",
+    "assets": ["ia"],
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/solutions/ia-privee-connaissances.webp" alt="" fetchpriority="high"></div>
@@ -29,6 +60,8 @@ PAGE = {
   </div>
 </section>
 
+""" + clair_section(CLAIR) + """
+
 <section class="sect">
   <div class="sect-head">
     <div data-rev>
@@ -42,18 +75,18 @@ PAGE = {
   </div>
 </section>
 
-<section class="scene app" id="outil">
-  <div class="stick">
-    <img src="/media/product/outils/ia.jpg"
-         alt="Outil IA et connaissances — collections, documents et questions" loading="lazy">
-    <h2 class="t1">IA et connaissances</h2>
-    <p class="t2">Organisez vos documents et interrogez-les simplement.</p>
-    <div class="t3">
-      <span class="chip">Bibliothèque · Conversations · Assistants</span>
-      <span class="chip">Traitement local affiché</span>
-      <span class="chip chip-sim">Maquette · données fictives</span>
+<section class="sect" id="outil">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Essayez-le · données simulées</p>
+      <h2 style="margin-top:1rem">Parlez à vos propres documents. <em>Chaque réponse montre sa
+      preuve.</em></h2>
     </div>
+    <p data-rev>Choisissez une question. JARVIS fouille les six documents d’un atelier fictif,
+    répond en citant ses sources et vous montre le passage exact. Puis il propose une action :
+    elle attend votre « Approuver ». Rien ne quitte le Hub.</p>
   </div>
+  """ + DEMO + """
 </section>
 
 <section class="sect alt">
@@ -93,18 +126,11 @@ PAGE = {
       <p class="eyebrow">Des réponses honnêtes</p>
       <h2 style="margin-top:1rem">Une réponse utile montre <em>ce qui la justifie.</em></h2>
     </div>
-    <p data-rev>Ici, l’IA cite « Procédure retours.pdf, page 2 » — puis, quand la preuve
-    manque, elle le dit et demande le bon document au lieu d’inventer une règle.</p>
+    <p data-rev>Dans la démo, essayez la « question piège » : aucune source ne parle de
+    remboursement sans reçu. JARVIS le dit, et propose de demander à la bonne personne au lieu
+    d’inventer une règle.</p>
   </div>
-  <figure class="frame" data-rev>
-    <img src="/media/product/ia/reponse-verifiable.jpg"
-         alt="Conversation IA : réponse citant sa source, puis refus d’inventer une règle absente" loading="lazy">
-    <figcaption>
-      <span>IA et connaissances · Conversations</span>
-      <strong>« Je n’ai pas de preuve suffisante. » — Maquette, données fictives.</strong>
-    </figcaption>
-  </figure>
-  <div class="cards" style="margin-top:2.6rem">
+  <div class="cards">
     <article class="card" data-rev>
       <small>Règle 01</small>
       <h3>Une source consultable.</h3>

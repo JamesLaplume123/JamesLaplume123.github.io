@@ -72,16 +72,18 @@ Pour invalider le cache navigateur après un changement de CSS/JS, incrémenter
 - `.nojekyll` : GitHub Pages sert les fichiers tels quels
 - Branche `ancien-site` : le site tel qu'il était en ligne avant la refonte (conservé, non publié)
 
-## Formulaire, compteur et console en direct
+## Formulaire, compteur et données en direct
 
-- **Formulaire** (`/contact/`) : envoi sans quitter la page (`wow.js`). Il passe d'abord
-  par le service du site si `SITE["api"]` est rempli (`integrations/site-api`), sinon
-  par FormSubmit. En cas d'échec, le visiteur reçoit un lien courriel avec son message
-  déjà rédigé. Sans JavaScript, c'est un envoi classique vers FormSubmit.
-- **Compteur de visites** : une visite par session, sans témoin. Abacus pour l'instant,
-  puis le service du site dès que `SITE["api"]` est rempli.
-- **JARVIS en direct** (accueil) : météo réelle d'Environnement Canada (Saint-Hyacinthe),
-  et des décisions simulées par des règles. Aucun appareil n'est commandé.
+- **Service du site** (`integrations/site-api`, Worker Cloudflare `jarvis-site-api`,
+  adresse dans `SITE["api"]`) : formulaire (gardé dans KV puis envoyé par Resend),
+  compteur de visites, batteries de BouLance lues dans Home Assistant (`/live`, `/history`).
+  Secrets dans Cloudflare seulement : `HA_TOKEN`, `RESEND_API_KEY`.
+- **Formulaire** (`/contact/`) : envoi sans quitter la page; secours FormSubmit, puis lien
+  courriel déjà rédigé. Sans JavaScript, envoi classique vers FormSubmit.
+- **Démos interactives** : `assets/demos/<nom>.{css,js}` + `src/demos/<nom>.py`, chargées
+  par page avec `PAGE["assets"]`. Maison, Studio lumière, BouLance, radar, et une démo par solution.
+- **Radar** : MapLibre hébergé dans `assets/vendor/`, radar GeoMet d'Environnement Canada,
+  fonds OpenFreeMap. BouLance est placée à Saint-Hyacinthe (aucune position GPS publiée).
 - Toute nouvelle requête externe doit être ajoutée à `/confidentialite/` (Loi 25).
 
 ## Télémétrie batteries (optionnel, non branché au site actuellement)

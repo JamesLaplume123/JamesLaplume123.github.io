@@ -9,16 +9,42 @@
 /* Batterie : bloc LiFePO₄ avec liquide lumineux */
 [data-demo="boulance"] .bl-bat { display: grid; grid-template-columns: 9.5rem 1fr; gap: 1.4rem; align-items: center; padding: 2rem 1.6rem; }
 [data-demo="boulance"] .bl-bat + .bl-mid, [data-demo="boulance"] .bl-mid + .bl-bat { border-left: 1px solid var(--mode-line); }
-[data-demo="boulance"] .bl-pack { position: relative; padding-top: 14px; }
-[data-demo="boulance"] .bl-cap { position: absolute; top: 0; left: 50%; translate: -50% 0; width: 42%; height: 16px; border-radius: 6px 6px 0 0;
-  background: linear-gradient(#3a3631, #15130f); border: 1px solid #ffffff22; border-bottom: 0; }
+[data-demo="boulance"] .bl-pack { position: relative; padding-top: 16px; }
+/* Bornes + et − ; la borne + s'allume quand le courant entre */
+[data-demo="boulance"] .bl-term {
+  position: absolute; top: 0; width: 24%; height: 17px; border-radius: 5px 5px 0 0; display: grid; place-items: center;
+  font: 700 .7rem/1 var(--sans); color: #9a958c; background: linear-gradient(#3c3832, #17150f); border: 1px solid #ffffff24; border-bottom: 0;
+  transition: color .5s, box-shadow .5s, background .5s;
+}
+[data-demo="boulance"] .bl-term.neg { left: 14%; }
+[data-demo="boulance"] .bl-term.pos { right: 14%; }
+[data-demo="boulance"] .bl-bat.is-charging .bl-term.pos { color: #1c1408; background: linear-gradient(#f6e2b5, #d9b06a); box-shadow: 0 0 18px var(--mode-glow); }
+[data-demo="boulance"] .bl-bat.is-using .bl-term.neg { color: #fff; box-shadow: 0 0 14px #ffffff40; }
+/* Bulles : leur rythme suit le vrai courant */
+[data-demo="boulance"] .bl-bubbles { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+[data-demo="boulance"] .bl-bubbles i {
+  position: absolute; bottom: -10px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffffffd9, #ffffff33 60%, transparent 70%);
+  animation: blBubble var(--d, 6s) linear forwards; opacity: .0;
+}
+@keyframes blBubble {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: .75; }
+  100% { transform: translate(var(--sx, 6px), calc(var(--top, 100%) * -1)); opacity: 0; }
+}
+/* Éclair de charge */
+[data-demo="boulance"] .bl-bolt {
+  position: absolute; z-index: 3; top: 12%; left: 50%; width: 26%; translate: -50% 0; fill: #fff7e0;
+  filter: drop-shadow(0 0 10px var(--mode-glow)); opacity: 0; transition: opacity .5s;
+}
+[data-demo="boulance"] .bl-bat.is-charging .bl-bolt { opacity: 1; animation: blBolt 1.6s ease-in-out infinite; }
+@keyframes blBolt { 50% { opacity: .35; transform: scale(.92); } }
 [data-demo="boulance"] .bl-cell {
   position: relative; aspect-ratio: 1 / 2; border-radius: 18px; overflow: hidden;
   background: linear-gradient(90deg, #0d0c0b, #1a1814 50%, #0d0c0b); border: 1px solid #ffffff24;
   box-shadow: inset 0 0 30px #000, 0 20px 50px #000c, 0 0 60px color-mix(in srgb, var(--bl-c, #34d399) calc(var(--soc, 0) * 0.3%), transparent);
 }
 [data-demo="boulance"] .bl-liquid { position: absolute; inset: 0; width: 100%; height: 100%; }
-[data-demo="boulance"] .bl-wave { fill: var(--bl-c, #34d399); }
+[data-demo="boulance"] .bl-wave { fill: var(--bl-c, #34d399); transition: fill .8s; }
 [data-demo="boulance"] .bl-wave.w1 { opacity: .9; }
 [data-demo="boulance"] .bl-wave.w2 { opacity: .45; }
 [data-demo="boulance"] .bl-shine { position: absolute; inset: 0; pointer-events: none;
@@ -122,3 +148,40 @@
 }
 @keyframes blRing { 0% { transform: scale(.25); opacity: .9; } 100% { transform: scale(1); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { [data-demo="boulance"] .bl-wait-ico i { animation: none; opacity: .5; } }
+
+/* Chaque nouvelle mesure se voit : la valeur qui change s'éclaire */
+[data-demo="boulance"] .is-tick { animation: blTick 1.2s var(--ease); }
+@keyframes blTick { 0% { color: var(--gold-soft); text-shadow: 0 0 16px var(--mode-glow); } 100% { color: inherit; text-shadow: none; } }
+/* Battement : la barre se remplit jusqu'à la prochaine mesure (5 s) */
+[data-demo="boulance"] .bl-beat { display: block; height: 2px; background: #ffffff0d; position: relative; overflow: hidden; }
+[data-demo="boulance"] .bl-beat::after {
+  content: ""; position: absolute; inset: 0; transform-origin: left; transform: scaleX(0);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gold-soft) 30%, transparent), var(--gold-soft));
+}
+[data-demo="boulance"] .bl-beat.run::after { animation: blBeat 5s linear forwards; }
+@keyframes blBeat { to { transform: scaleX(1); } }
+/* Courbe 24 h : se dessine, point « maintenant » qui bat, lecture au survol */
+[data-demo="boulance"] .bl-plot { position: relative; }
+[data-demo="boulance"] .bl-line { stroke-dasharray: 1; stroke-dashoffset: 1; }
+[data-demo="boulance"] .bl-chart.is-drawn .bl-line { stroke-dashoffset: 0; transition: stroke-dashoffset 2.2s var(--ease); }
+[data-demo="boulance"] .bl-area { opacity: 0; transition: opacity 1.4s .9s; }
+[data-demo="boulance"] .bl-chart.is-drawn .bl-area { opacity: 1; }
+[data-demo="boulance"] .bl-now {
+  position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--gold-soft);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold-soft) 60%, transparent); opacity: 0; transition: opacity .5s 2s;
+}
+[data-demo="boulance"] .bl-chart.is-drawn .bl-now { opacity: 1; animation: blNow 2s 2.2s infinite; }
+@keyframes blNow { 70%, 100% { box-shadow: 0 0 0 12px transparent; } 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold-soft) 60%, transparent); } }
+[data-demo="boulance"] .bl-cross { stroke: #ffffff59; stroke-width: 1; vector-effect: non-scaling-stroke; opacity: 0; }
+[data-demo="boulance"] .bl-plot.is-hover .bl-cross { opacity: 1; }
+[data-demo="boulance"] .bl-tip {
+  position: absolute; top: -2.2rem; padding: .35rem .55rem; border-radius: 8px; white-space: nowrap; pointer-events: none;
+  font: 600 .7rem/1 var(--mono); color: #fff; background: #0b0b0ce6; border: 1px solid color-mix(in srgb, var(--gold-soft) 40%, transparent);
+  transform: translateX(-50%); opacity: 0; transition: opacity .2s;
+}
+[data-demo="boulance"] .bl-plot.is-hover .bl-tip { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  [data-demo="boulance"] .bl-bubbles, [data-demo="boulance"] .bl-beat::after { display: none; }
+  [data-demo="boulance"] .bl-line { stroke-dashoffset: 0; }
+  [data-demo="boulance"] .bl-area, [data-demo="boulance"] .bl-now { opacity: 1; }
+}

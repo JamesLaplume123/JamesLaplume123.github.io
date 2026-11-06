@@ -6,11 +6,16 @@
 def _battery(i, name):
     return f"""<article class="bl-bat" data-bat="{i}">
       <div class="bl-pack" aria-hidden="true">
-        <span class="bl-cap"></span>
+        <span class="bl-term neg">−</span><span class="bl-term pos">+</span>
         <div class="bl-cell">
           <svg class="bl-liquid" viewBox="0 0 200 400" preserveAspectRatio="none">
-            <path class="bl-wave w1" d=""></path><path class="bl-wave w2" d=""></path>
+            <defs><linearGradient id="bl-liq-{i}" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" style="stop-color:var(--bl-c, #34d399)"/>
+              <stop offset="1" style="stop-color:var(--bl-c2, #0f766e)"/></linearGradient></defs>
+            <path class="bl-wave w2" d=""></path><path class="bl-wave w1" d="" style="fill:url(#bl-liq-{i})"></path>
           </svg>
+          <div class="bl-bubbles"></div>
+          <svg class="bl-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
           <div class="bl-shine"></div>
           <b class="bl-soc"><span data-bl="soc">--</span><i>%</i></b>
         </div>
@@ -51,10 +56,15 @@ def html():
       <p class="bl-mode" data-bl="mode">—</p>
       <div class="bl-chart">
         <p class="bl-k">24 dernières heures</p>
-        <svg viewBox="0 0 300 90" preserveAspectRatio="none" data-bl="chart" aria-label="Énergie stockée sur 24 heures">
-          <defs><linearGradient id="blg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".45"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
-          <path class="bl-area" d=""/><path class="bl-line" d=""/>
-        </svg>
+        <div class="bl-plot">
+          <svg viewBox="0 0 300 90" preserveAspectRatio="none" data-bl="chart" aria-label="Énergie stockée sur 24 heures">
+            <defs><linearGradient id="blg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".45"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+            <path class="bl-area" d=""/><path class="bl-line" d="" pathLength="1"/>
+            <line class="bl-cross" x1="0" x2="0" y1="0" y2="90"/>
+          </svg>
+          <i class="bl-now" aria-hidden="true"></i>
+          <span class="bl-tip" aria-hidden="true"></span>
+        </div>
         <p class="bl-axis"><span>il y a 24 h</span><span data-bl="range">—</span><span>maintenant</span></p>
       </div>
     </div>
@@ -66,6 +76,7 @@ def html():
       Tant que la liaison ne répond pas, rien n’est inventé.</p>
     </div>
   </div>
+  <i class="bl-beat" aria-hidden="true"></i>
   <p class="bl-foot"><span data-bl="age">En attente de la première mesure</span> · actualisé toutes les 5 secondes ·
   source : Home Assistant de l’ambulance (BMS Bluetooth)</p>
 </div>"""

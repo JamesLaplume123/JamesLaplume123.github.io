@@ -13,16 +13,27 @@
     return "il y a " + Math.round(s / 3600) + " h";
   }
   function color(soc) { return soc >= 60 ? "#34d399" : soc >= 30 ? "#fbbf24" : "#f87171"; }
+  function deep(soc) { return soc >= 60 ? "#0f766e" : soc >= 30 ? "#b45309" : "#991b1b"; }
+  /* Change le texte et fait briller la valeur si elle a vraiment changé */
+  function put(el, text) {
+    if (!el || el.textContent === text) return;
+    var first = el.textContent === "—" || el.textContent === "--" || el.textContent === "";
+    el.textContent = text;
+    if (first || reduce) return;
+    el.classList.remove("is-tick"); void el.offsetWidth; el.classList.add("is-tick");
+  }
 
   document.querySelectorAll('[data-demo="boulance"]').forEach(function (root) {
     var $ = function (s, r) { return (r || root).querySelector(s); };
     var bats = [].slice.call(root.querySelectorAll(".bl-bat"));
-    var level = [0, 0], target = [0, 0], phase = 0, visible = false, last = null, timer = null;
+    var level = [0, 0], target = [0, 0], amps = [0, 0], phase = 0, visible = false, last = null, timer = null;
+    var beat = $(".bl-beat");
 
     function waves() {
       phase += .035;
       bats.forEach(function (b, i) {
         level[i] += (target[i] - level[i]) * .06;
+        if (Math.abs(target[i] - level[i]) < .4) level[i] = target[i];
         var y = 400 - (level[i] / 100) * 384, amp = level[i] > 1 && level[i] < 99 ? 7 : 3;
         ["w1", "w2"].forEach(function (w, k) {
           var d = "M0 " + y.toFixed(1);
@@ -32,6 +43,7 @@
           d += " L200 400 L0 400 Z";
           $(".bl-wave." + w, b).setAttribute("d", d);
         });
+        if (last) $('[data-bl="soc"]', b).textContent = Math.round(Math.abs(target[i] - level[i]) < 1.5 ? target[i] : level[i]);
       });
       if (visible && !reduce) requestAnimationFrame(waves);
     }
@@ -51,13 +63,17 @@
         var soc = b.soc >= 0 ? b.soc : 0;
         target[i] = soc;
         el.style.setProperty("--bl-c", color(soc));
+        el.style.setProperty("--bl-c2", deep(soc));
         el.style.setProperty("--soc", soc);
-        $('[data-bl="soc"]', el).textContent = b.soc >= 0 ? Math.round(b.soc) : "--";
-        $('[data-bl="v"]', el).textContent = b.v > 0 ? fmt(b.v, 2) + " V" : "—";
-        $('[data-bl="a"]', el).textContent = fmt(b.a, 1) + " A";
-        $('[data-bl="t"]', el).textContent = b.t > -90 ? fmt(b.t, 1) + " °C" : "—";
-        $('[data-bl="wh"]', el).textContent = b.wh >= 0 ? fmt(b.wh / 1000, 2) + " kWh" : "—";
-        $('[data-bl="cells"]', el).textContent = b.hi > 0 ? "Δ " + Math.round((b.hi - b.lo) * 1000) + " mV" : "—";
+        amps[i] = b.a || 0;
+        el.classList.toggle("is-charging", b.a > .4 || !!b.charging);
+        el.classList.toggle("is-using", b.a < -.4);
+        if (reduce || b.soc < 0) $('[data-bl="soc"]', el).textContent = b.soc >= 0 ? Math.round(b.soc) : "--";
+        put($('[data-bl="v"]', el), b.v > 0 ? fmt(b.v, 2) + " V" : "—");
+        put($('[data-bl="a"]', el), fmt(b.a, 1) + " A");
+        put($('[data-bl="t"]', el), b.t > -90 ? fmt(b.t, 1) + " °C" : "—");
+        put($('[data-bl="wh"]', el), b.wh >= 0 ? fmt(b.wh / 1000, 2) + " kWh" : "—");
+        put($('[data-bl="cells"]', el), b.hi > 0 ? "Δ " + Math.round((b.hi - b.lo) * 1000) + " mV" : "—");
         $('[data-bl="cells"]', el).title = b.hi > 0 ? "Cellule la plus basse " + fmt(b.lo, 3) + " V, la plus haute " + fmt(b.hi, 3) + " V" : "";
         $('[data-bl="cycles"]', el).textContent = b.cycles >= 0 ? b.cycles : "—";
         $('[data-bl="chg"]', el).classList.toggle("on", !!b.chg);
@@ -71,9 +87,9 @@
         else { flag.className = "bl-flag ok"; flag.textContent = "Normale"; }
       });
       var t = d.total;
-      $('[data-bl="kwh"]').textContent = t.kwh >= 0 ? fmt(t.kwh, 2) : "—";
-      $('[data-bl="ah"]').textContent = t.ah >= 0 ? Math.round(t.ah) + " Ah" : "— Ah";
-      $('[data-bl="w"]').textContent = Math.round(t.w) + " W";
+      put($('[data-bl="kwh"]'), t.kwh >= 0 ? fmt(t.kwh, 2) : "—");
+      put($('[data-bl="ah"]'), t.ah >= 0 ? Math.round(t.ah) + " Ah" : "— Ah");
+      put($('[data-bl="w"]'), Math.round(t.w) + " W");
       var flow = t.a > .4 ? "in" : t.a < -.4 ? "out" : "idle";
       root.setAttribute("data-flow", flow);
       $('[data-bl="mode"]').textContent = flow === "in" ? "En charge : " + fmt(t.a, 1) + " A entrent dans les batteries"
@@ -83,7 +99,34 @@
       var age = Math.max(0, (d.now || Date.now() / 1000) - seen);
       $('[data-bl="age"]').textContent = "Dernière mesure des batteries " + ago(age);
       setState(true, "En direct");
+      if (beat && !reduce) { beat.classList.remove("run"); void beat.offsetWidth; beat.classList.add("run"); }
     }
+
+    /* Bulles dans le liquide : plus le courant est fort, plus elles montent vite et nombreuses */
+    function bubble(i) {
+      var b = bats[i], box = b && $(".bl-bubbles", b);
+      if (!box || !visible || reduce || document.hidden || !last) return;
+      var h = box.clientHeight, top = h * (level[i] / 100) - 14;
+      if (top < 20) return;
+      var a = Math.min(40, Math.abs(amps[i])), size = 3 + Math.random() * (a > .4 ? 6 : 4);
+      var el = document.createElement("i");
+      el.style.width = el.style.height = size.toFixed(1) + "px";
+      el.style.left = (12 + Math.random() * 76).toFixed(1) + "%";
+      el.style.setProperty("--top", top.toFixed(0) + "px");
+      el.style.setProperty("--sx", ((Math.random() - .5) * 18).toFixed(1) + "px");
+      el.style.setProperty("--d", (a > .4 ? 2.4 + Math.random() * 1.4 : 5 + Math.random() * 3).toFixed(2) + "s");
+      box.appendChild(el);
+      el.addEventListener("animationend", function () { el.remove(); });
+    }
+    function bubbles() {
+      bats.forEach(function (b, i) {
+        var a = Math.abs(amps[i]);
+        var gap = a > .4 ? Math.max(120, 700 - a * 30) : 1300;
+        if (!b._bt || Date.now() - b._bt > gap) { b._bt = Date.now() + Math.random() * 300; bubble(i); }
+      });
+      if (visible) setTimeout(bubbles, 120); else bubbling = false;
+    }
+    var bubbling = false;
 
     function chart(points) {
       if (!points || points.length < 2) return;
@@ -98,7 +141,27 @@
       var line = "M" + P.map(function (p) { return p.join(" "); }).join(" L");
       $(".bl-line").setAttribute("d", line);
       $(".bl-area").setAttribute("d", line + " L300 90 L0 90 Z");
+      var end = P[P.length - 1], now = $(".bl-now");
+      if (now) { now.style.left = (end[0] / 300 * 100) + "%"; now.style.top = (end[1] / 90 * 100) + "%"; }
+      plotPts = points.map(function (p, k) { return { t: p[0], v: p[1], x: +P[k][0], y: +P[k][1] }; });
+      requestAnimationFrame(function () { $(".bl-chart").classList.add("is-drawn"); });
       $('[data-bl="range"]').textContent = fmt(Math.min.apply(null, ys), 2) + " à " + fmt(Math.max.apply(null, ys), 2) + " kWh";
+    }
+
+    var plotPts = [], plot = $(".bl-plot");
+    if (plot) {
+      var tip = $(".bl-tip", plot), cross = $(".bl-cross", plot);
+      var hourFmt = new Intl.DateTimeFormat("fr-CA", { hour: "numeric", minute: "2-digit", timeZone: "America/Toronto" });
+      plot.addEventListener("pointermove", function (e) {
+        if (!plotPts.length) return;
+        var r = plot.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * 300, best = plotPts[0];
+        plotPts.forEach(function (p) { if (Math.abs(p.x - x) < Math.abs(best.x - x)) best = p; });
+        cross.setAttribute("x1", best.x); cross.setAttribute("x2", best.x);
+        tip.style.left = (best.x / 300 * 100) + "%";
+        tip.textContent = hourFmt.format(new Date(best.t * 1000)) + " · " + fmt(best.v, 2) + " kWh";
+        plot.classList.add("is-hover");
+      });
+      plot.addEventListener("pointerleave", function () { plot.classList.remove("is-hover"); });
     }
 
     function load() {
@@ -133,6 +196,7 @@
           if (!started) { started = true; load(); loadHistory(); setInterval(loadHistory, 300000); }
           loop();
           requestAnimationFrame(waves);
+          if (!bubbling) { bubbling = true; bubbles(); }
         }
       });
     }, { threshold: .15 }).observe(root);

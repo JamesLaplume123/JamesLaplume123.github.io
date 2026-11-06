@@ -33,6 +33,46 @@
   }
   function nval(o) { var n = parseFloat(val(o)); return isFinite(n) ? n : null; }
 
+  /* Une seule requête météo pour toute la page, même si plusieurs appareils sont affichés. */
+  var wxShared = null;
+  function wxFetch(fresh) {
+    if (wxShared && !fresh) return wxShared;
+    var ss = store(), cached = null;
+    try { var c = ss && JSON.parse(ss.getItem("jarvis-ec") || "null"); if (c && Date.now() - c.t < 300000) cached = c.j; } catch (e) {}
+    wxShared = cached ? Promise.resolve(cached) : fetch(EC_URL).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) { try { ss && ss.setItem("jarvis-ec", JSON.stringify({ t: Date.now(), j: j })); } catch (e) {} return j; });
+    wxShared.catch(function () { wxShared = null; });
+    return wxShared;
+  }
+
+  /* Rail de la séquence : la pastille suit le chapitre à l'écran. */
+  (function () {
+    var rail = document.querySelector(".apx-rail");
+    if (!rail || !("IntersectionObserver" in window)) return;
+    var links = [].slice.call(rail.querySelectorAll("a"));
+    var chapters = links.map(function (a) { return document.getElementById(a.getAttribute("href").slice(1)); });
+    function mark(el) {
+      links.forEach(function (a, i) {
+        var on = chapters[i] === el;
+        a.classList.toggle("is-on", on);
+        if (on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+      });
+    }
+    var seen = [];
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var i = chapters.indexOf(e.target);
+        if (i < 0) return;
+        seen[i] = e.isIntersecting ? e.intersectionRatio : 0;
+      });
+      var best = -1, score = 0;
+      seen.forEach(function (v, i) { if (v > score) { score = v; best = i; } });
+      mark(best >= 0 ? chapters[best] : null);
+    }, { threshold: [0, .15, .4, .7], rootMargin: "-25% 0px -45% 0px" });
+    chapters.forEach(function (c) { if (c) io.observe(c); });
+    mark(chapters[0]);
+  })();
+
   document.querySelectorAll('[data-demo="app"]').forEach(function (root) {
     var $ = function (s, r) { return (r || root).querySelector(s); };
     var $$ = function (s, r) { return [].slice.call((r || root).querySelectorAll(s)); };
@@ -119,23 +159,18 @@
         reco.textContent = "Coucher du soleil à " + hm(set) + " (réel) : JARVIS propose " + hm(pre) + ", si vous l’acceptez.";
       }
     }
-    function wxLoad() {
-      var ss = store(), cached = null;
-      try { var c = ss && JSON.parse(ss.getItem("jarvis-ec") || "null"); if (c && Date.now() - c.t < 300000) cached = c.j; } catch (e) {}
-      var got = cached ? Promise.resolve(cached) : fetch(EC_URL).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-        .then(function (j) { try { ss && ss.setItem("jarvis-ec", JSON.stringify({ t: Date.now(), j: j })); } catch (e) {} return j; });
-      got.then(wxPaint).catch(wxFail);
-    }
+    function wxLoad(fresh) { wxFetch(fresh).then(wxPaint).catch(wxFail); }
     function wxStart() {
       if (wxStarted) return;
       wxStarted = true;
       wxLoad();
-      setInterval(function () { if (!document.hidden && visible) wxLoad(); }, 600000);
+      setInterval(function () { if (!document.hidden && visible) wxLoad(true); }, 600000);
     }
 
     /* ---------------------------------------------------------------- Écrans et visite automatique */
     var timer = null, left = 0, startedAt = 0, visible = false, hover = false, focusIn = false;
-    var stopped = reduce || !fx;
+    var single = root.hasAttribute("data-single");
+    var stopped = reduce || !fx || single;
     var hooks = {};
     function dur(i) { return +views[i].getAttribute("data-dur") || 7000; }
     function running() { return visible && !hover && !focusIn && !stopped; }
@@ -222,7 +257,7 @@
       t.addEventListener("click", function () { go(k, true); });
     });
     var nav = $(".ap-nav");
-    nav.addEventListener("keydown", function (e) {
+    if (nav && tabs.length) nav.addEventListener("keydown", function (e) {
       var k = e.key, j = null;
       if (k === "ArrowDown" || k === "ArrowRight") j = (cur + 1) % n;
       else if (k === "ArrowUp" || k === "ArrowLeft") j = (cur + n - 1) % n;
@@ -235,7 +270,11 @@
     });
     root.addEventListener("click", function (e) {
       var g = e.target.closest("[data-go]");
-      if (g && root.contains(g)) { var j = keys.indexOf(g.getAttribute("data-go")); if (j >= 0) go(j, true); }
+      if (!g || !root.contains(g)) return;
+      var key = g.getAttribute("data-go"), j = keys.indexOf(key);
+      if (j >= 0) { go(j, true); return; }
+      var chap = document.getElementById("ecran-" + key);
+      if (chap) chap.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
     });
     // Toute interaction dans l'app arrête la visite automatique (le bouton Lecture la relance).
     $(".ap-screen").addEventListener("pointerdown", stop);

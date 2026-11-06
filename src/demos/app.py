@@ -572,36 +572,63 @@ def _stagger(html):
 ON = ' class="is-on"'
 
 
-def html():
-    tabs = "".join(
-        f'<button type="button" role="tab" id="ap-t-{k}" aria-controls="ap-p-{k}" aria-selected="{"true" if i == 0 else "false"}" '
-        f'tabindex="{0 if i == 0 else -1}" data-i="{i}" aria-label="{lab}"{ON if i == 0 else ""}>{icon(ic)}'
-        f'<span class="l-long">{lab}</span><span class="l-short" aria-hidden="true">{short}</span></button>'
-        for i, (k, lab, short, ic, _d, _t, _p) in enumerate(SCREENS)
-    )
-    views = "".join(
-        f'<section class="ap-view ap-v-{k}{" is-on" if i == 0 else ""}" role="tabpanel" id="ap-p-{k}" aria-labelledby="ap-t-{k}" '
-        f'data-view="{k}" data-dur="{d}"{"" if i == 0 else " inert"}>{_stagger(fr(VIEWS[k]()))}</section>'
-        for i, (k, _l, _s, _ic, d, _t, _p) in enumerate(SCREENS)
-    )
-    caps = "".join(
+def _device(only=None):
+    """L'appareil. `only` = clé d'écran : un seul écran, la barre latérale devient un index."""
+    single = only is not None
+    if single:
+        items = "".join(
+            f'<a class="ap-jump{" is-on" if k == only else ""}" href="#ecran-{k}"'
+            f'{" aria-current=\'true\'" if k == only else ""} aria-label="{lab}">{icon(ic)}'
+            f'<span class="l-long">{lab}</span><span class="l-short" aria-hidden="true">{short}</span></a>'
+            for (k, lab, short, ic, _d, _t, _p) in SCREENS
+        )
+        nav = f'<div class="ap-nav" aria-label="Écrans de JARVIS App">{items}</div>'
+        picked = [x for x in SCREENS if x[0] == only]
+        views = "".join(
+            f'<section class="ap-view ap-v-{k} is-on" role="group" id="ap-p-{k}-s" aria-label="{lab}" '
+            f'data-view="{k}" data-dur="{d}">{_stagger(fr(VIEWS[k]()))}</section>'
+            for (k, lab, _s, _ic, d, _t, _p) in picked
+        )
+        caps = ""
+    else:
+        tabs = "".join(
+            f'<button type="button" role="tab" id="ap-t-{k}" aria-controls="ap-p-{k}" aria-selected="{"true" if i == 0 else "false"}" '
+            f'tabindex="{0 if i == 0 else -1}" data-i="{i}" aria-label="{lab}"{ON if i == 0 else ""}>{icon(ic)}'
+            f'<span class="l-long">{lab}</span><span class="l-short" aria-hidden="true">{short}</span></button>'
+            for i, (k, lab, short, ic, _d, _t, _p) in enumerate(SCREENS)
+        )
+        nav = (f'<div class="ap-nav" role="tablist" aria-label="Écrans de JARVIS App" aria-orientation="vertical">'
+               f'<i class="ap-ind" aria-hidden="true"><i class="ap-prog"></i></i>{tabs}</div>')
+        views = "".join(
+            f'<section class="ap-view ap-v-{k}{" is-on" if i == 0 else ""}" role="tabpanel" id="ap-p-{k}" aria-labelledby="ap-t-{k}" '
+            f'data-view="{k}" data-dur="{d}"{"" if i == 0 else " inert"}>{_stagger(fr(VIEWS[k]()))}</section>'
+            for i, (k, _l, _s, _ic, d, _t, _p) in enumerate(SCREENS)
+        )
+        caps = f"""
+  <div class="ap-caps">
+    <div class="ap-cap-txt" aria-live="polite">{"".join(
         f'<div class="ap-cap{" is-on" if i == 0 else ""}"><h3>{fr(t)}</h3><p>{fr(p)}</p></div>'
-        for i, (_k, _l, _s, _ic, _d, t, p) in enumerate(SCREENS)
-    )
-    return f"""<div class="ap" data-demo="app">
+        for i, (_k, _l, _s, _ic, _d, t, p) in enumerate(SCREENS))}</div>
+    <div class="ap-ctrl">
+      <span class="ap-step"><b data-ap="step">01</b> / 0{len(SCREENS)}</span>
+      <button type="button" class="ap-play" data-ap="play" aria-label="Mettre la visite en pause">{icon("pause", "i-pause")}{icon("play", "i-play")}<span>Pause</span></button>
+      <span class="ap-hint">Touchez un écran : tout y est cliquable</span>
+    </div>
+  </div>"""
+
+    label = "JARVIS App, démonstration avec données fictives"
+    return f"""<div class="ap{" is-single" if single else ""}" data-demo="app"{f' data-single="{only}"' if single else ""}>
   <div class="ap-stage">
     <div class="ap-glow" aria-hidden="true"></div>
     <div class="ap-tilt">
       <div class="ap-device">
         <p class="ap-badge"><span>Démo · données fictives</span></p>
-        <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="JARVIS App, démonstration avec données fictives">
+        <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="{label}">
           <div class="ap-bg" aria-hidden="true"></div>
           <img class="ap-banner" src="{BANNER}" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1916" height="821">
           <nav class="ap-side" aria-label="JARVIS App">
             <div class="ap-brand" aria-hidden="true"><b>JARVIS</b><small>Private Systems</small><em class="ap-modename"></em></div>
-            <div class="ap-nav" role="tablist" aria-label="Écrans de JARVIS App" aria-orientation="vertical">
-              <i class="ap-ind" aria-hidden="true"><i class="ap-prog"></i></i>{tabs}
-            </div>
+            {nav}
             <div class="ap-side-f"><p class="ap-hubst"><i class="ap-dot is-ok" aria-hidden="true"></i><span><b>Hub en ligne</b><small>Saint-Hyacinthe</small></span></p>
               <p class="ap-motto">Votre espace.<br>À votre image.</p></div>
           </nav>
@@ -621,13 +648,35 @@ def html():
         <i class="ap-sweep" aria-hidden="true"></i>
       </div>
     </div>
+  </div>{caps}
+</div>"""
+
+
+def html():
+    """Un seul appareil, visite automatique des cinq écrans."""
+    return _device()
+
+
+def sequence():
+    """Les cinq écrans déroulés l'un sous l'autre : un chapitre, un appareil, beaucoup d'air."""
+    rail = "".join(
+        f'<li><a href="#ecran-{k}"><i>{i + 1:02d}</i><span>{lab}</span></a></li>'
+        for i, (k, lab, _s, _ic, _d, _t, _p) in enumerate(SCREENS)
+    )
+    chapters = "".join(
+        f"""<section class="apx-ch" id="ecran-{k}" aria-labelledby="ecran-{k}-t">
+  <div class="apx-head" data-rev>
+    <p class="apx-k"><i>{i + 1:02d}</i><span>{lab}</span></p>
+    <h3 id="ecran-{k}-t">{fr(t)}</h3>
+    <p>{fr(p)}</p>
   </div>
-  <div class="ap-caps">
-    <div class="ap-cap-txt" aria-live="polite">{caps}</div>
-    <div class="ap-ctrl">
-      <span class="ap-step"><b data-ap="step">01</b> / 0{len(SCREENS)}</span>
-      <button type="button" class="ap-play" data-ap="play" aria-label="Mettre la visite en pause">{icon("pause", "i-pause")}{icon("play", "i-play")}<span>Pause</span></button>
-      <span class="ap-hint">Touchez un écran : tout y est cliquable</span>
-    </div>
-  </div>
+  {_device(k)}
+</section>"""
+        for i, (k, lab, _s, _ic, _d, t, p) in enumerate(SCREENS)
+    )
+    return f"""<div class="apx">
+  <nav class="apx-rail" aria-label="Les cinq écrans de JARVIS App"><ol>{rail}</ol>
+    <p class="apx-note">{icon("info")}<span>Données fictives{NB}· tout est cliquable</span></p>
+  </nav>
+  {chapters}
 </div>"""

@@ -54,6 +54,7 @@
   --sans: "Geist", "Inter", -apple-system, system-ui, sans-serif;
   --mono: "Geist Mono", ui-monospace, monospace;
   --ease: cubic-bezier(.16, 1, .3, 1);
+  --bar-h: 66px;
   --radius: 16px;
 }
 
@@ -302,6 +303,58 @@ body.menu-open { overflow: hidden; }
 .bento .kick {
   margin: 0 0 1rem; font: 600 .68rem/1 var(--mono); letter-spacing: .14em;
   text-transform: uppercase; color: var(--gold-soft);
+}
+
+/* ---------- Aperçu complet des six solutions (accueil) ---------- */
+.sols .head { margin-bottom: 3.4rem; }
+.sol-grid {
+  max-width: 76rem; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px;
+}
+.sol-card {
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+  border: 1px solid var(--mode-line); border-radius: var(--radius);
+  background: var(--mode-panel); box-shadow: 0 18px 44px #0006, var(--mode-spec);
+  transition: border-color .45s, transform .45s var(--ease), box-shadow .45s;
+}
+.sol-card:hover { border-color: color-mix(in srgb, var(--gold-soft) 42%, transparent); transform: translateY(-3px); }
+.sol-shot { position: relative; display: block; height: 164px; overflow: hidden; }
+.sol-shot img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.9) brightness(.82); transition: transform 1.1s var(--ease), filter .6s; }
+.sol-card:hover .sol-shot img { transform: scale(1.05); filter: saturate(1) brightness(.92); }
+.sol-shot::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #0000 28%, #0b0b0bd9 86%, #0b0b0b); }
+.sol-num {
+  position: absolute; left: 18px; bottom: 14px; z-index: 1;
+  font: 500 .72rem/1 var(--mono); letter-spacing: .16em; color: var(--gold-soft);
+}
+.sol-body { display: flex; flex-direction: column; flex: 1; padding: 1.35rem 1.5rem 1.5rem; }
+.sol-kick {
+  margin: 0 0 .55rem;
+  font: 500 .68rem/1.3 var(--mono); letter-spacing: .13em; text-transform: uppercase; color: var(--gold-soft);
+}
+.sol-for { margin: .5rem 0 0; font: 500 .74rem/1.4 var(--sans); letter-spacing: .005em; color: #948f87; }
+.sol-body h3 { margin: 0; font-weight: 620; font-size: clamp(1.2rem, 1.7vw, 1.46rem); letter-spacing: -.028em; line-height: 1.15; }
+.sol-body h3 a { color: inherit; text-decoration: none; }
+.sol-body h3 a::after { content: ""; position: absolute; inset: 0; }
+.sol-line { margin: .75rem 0 0; color: #c4bfb6; font-size: .97rem; line-height: 1.55; }
+.sol-pts { list-style: none; margin: 1.1rem 0 0; padding: 0; display: grid; gap: .6rem; }
+.sol-pts li { display: grid; grid-template-columns: 14px 1fr; gap: .1rem .65rem; align-items: baseline; }
+.sol-pts li::before {
+  content: ""; grid-row: 1 / 3; width: 6px; height: 6px; margin-top: .45rem;
+  border-radius: 50%; background: var(--gold-soft); opacity: .7;
+}
+.sol-pts b { font-weight: 600; font-size: .93rem; letter-spacing: -.012em; color: #efeae1; }
+.sol-pts span { color: #a6a199; font-size: .88rem; line-height: 1.5; }
+.sol-go {
+  margin-top: auto; padding-top: 1.25rem;
+  font: 600 .78rem/1 var(--sans); letter-spacing: .01em; color: var(--gold-soft);
+}
+.sol-go i { font-style: normal; display: inline-block; transition: transform .3s var(--ease); }
+.sol-card:hover .sol-go i { transform: translate(3px, -3px); }
+.sol-all { max-width: 76rem; margin: 2.6rem auto 0; text-align: center; }
+@media (max-width: 980px) { .sol-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) {
+  .sol-shot { height: 136px; }
+  .sol-body { padding: 1.15rem 1.2rem 1.3rem; }
 }
 
 /* ---------- Offre ---------- */
@@ -1206,9 +1259,65 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
    Vitrine de l'app : l'écran lui-même vit dans assets/demos/app.css
    ========================================================================== */
 .vitrine { position: relative; padding: 7rem 1.4rem 5rem; }
-.vitrine .head { max-width: 77.5rem; margin: 0 auto 2.8rem; }
+.vitrine .head { max-width: 77.5rem; margin: 0 auto 3.4rem; }
+.vitrine-lead { margin: 1.1rem 0 0; max-width: 36rem; color: #c6c1b8; font-size: clamp(1rem, 1.25vw, 1.14rem); line-height: 1.55; }
 .vitrine .head h2 { margin: 1rem 0 0; font-weight: 650; font-size: clamp(2rem, 3.6vw, 3.1rem); letter-spacing: -.035em; line-height: 1.08; }
 @media (max-width: 880px) { .vitrine { padding: 5rem .8rem 4rem; } .vitrine .head { margin-bottom: 2.4rem; } }
+
+/* ---------- Séquence des écrans de l'app : un chapitre, un appareil ---------- */
+.apx { max-width: 86rem; margin: 0 auto; }
+.apx-rail {
+  position: sticky; top: var(--bar-h, 64px); z-index: 4;
+  display: flex; align-items: center; justify-content: center; gap: 1.2rem; flex-wrap: wrap;
+  margin: 0 auto 4.5rem; padding: .55rem .6rem;
+  border-radius: 999px; border: 1px solid var(--mode-line);
+  background: color-mix(in srgb, #0a0a0a 72%, transparent); backdrop-filter: blur(18px) saturate(1.4);
+  width: fit-content; max-width: 100%;
+}
+.apx-rail ol { display: flex; align-items: center; gap: .25rem; margin: 0; padding: 0; list-style: none; }
+.apx-rail a {
+  display: inline-flex; align-items: baseline; gap: .5rem;
+  padding: .5rem .9rem; border-radius: 999px; text-decoration: none;
+  font: 550 .9rem/1 var(--sans); letter-spacing: -.01em; color: #b9b4ab;
+  transition: color .3s, background-color .3s;
+}
+.apx-rail a:hover, .apx-rail a:focus-visible { color: #fff; background: #ffffff0f; }
+.apx-rail a.is-on { color: #fff; background: color-mix(in srgb, var(--gold-soft) 13%, transparent); box-shadow: inset 0 0 0 1px var(--mode-line); }
+.apx-rail a.is-on i { opacity: 1; }
+.apx-rail a i { font: 500 .68rem/1 var(--mono); font-style: normal; letter-spacing: .1em; color: var(--gold-soft); opacity: .75; }
+.apx-rail .apx-note {
+  display: inline-flex; align-items: center; gap: .45rem; margin: 0; padding-right: .7rem;
+  font: 500 .68rem/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #8e8a83;
+}
+.apx-rail .apx-note svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+
+.apx-ch { padding: 0 0 8rem; scroll-margin-top: calc(var(--bar-h, 64px) + 5.5rem); }
+.apx-ch:last-child { padding-bottom: 2rem; }
+.apx-head { max-width: 44rem; margin: 0 auto 2.6rem; text-align: center; }
+.apx-k {
+  display: inline-flex; align-items: center; gap: .6rem; margin: 0 0 1rem;
+  font: 500 .72rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: #a8a29a;
+}
+.apx-k i { font-style: normal; color: var(--gold-soft); }
+.apx-k i::after { content: ""; display: inline-block; width: 18px; height: 1px; margin-left: .6rem; vertical-align: middle; background: currentColor; opacity: .5; }
+.apx-head h3 {
+  margin: 0; font-weight: 600; font-size: clamp(1.9rem, 4vw, 3.15rem);
+  letter-spacing: -.042em; line-height: 1.04;
+  background: var(--mode-display); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.apx-head > p { margin: 1rem auto 0; max-width: 34rem; color: #c6c1b8; font-size: clamp(1rem, 1.25vw, 1.14rem); line-height: 1.55; }
+@media (max-width: 880px) {
+  .apx-rail { gap: .4rem; margin-bottom: 3rem; border-radius: 22px; padding: .4rem; }
+  .apx-rail ol { flex-wrap: wrap; justify-content: center; }
+  .apx-rail a { padding: .45rem .7rem; font-size: .84rem; }
+  .apx-rail a span { display: none; }
+  .apx-rail a i { font-size: .78rem; opacity: 1; }
+  .apx-rail .apx-note { padding: .2rem .5rem; font-size: .6rem; }
+  .apx-ch { padding-bottom: 5rem; }
+  .apx-head { margin-bottom: 2rem; }
+}
+@media (prefers-reduced-motion: reduce) { .apx-rail { position: static; } }
+
 
 /* ---------- Pages de solution : bandeau, confiance ---------- */
 .for-line { margin: 1.6rem 0 0; color: #d8d8de; font-size: .95rem; }

@@ -6,7 +6,33 @@
 
 import json
 
+from config import CAPABILITIES
 from demos import app, boulance, carte, maison, meteo, rust
+
+
+def apercu_solutions():
+    """Les six solutions avec l'essentiel de chacune : assez pour décider, sans ouvrir la page."""
+    cartes = []
+    for c in CAPABILITIES:
+        points = "".join(
+            f"<li><b>{t}</b><span>{d}</span></li>" for t, d in c["points"]
+        )
+        cartes.append(f"""<article class="sol-card" data-rev>
+      <a class="sol-shot" href="/solutions/{c['slug']}/" tabindex="-1" aria-hidden="true">
+        <img src="{c['image']}" alt="" loading="lazy" decoding="async">
+        <span class="sol-num">{c['num']}</span>
+      </a>
+      <div class="sol-body">
+        <p class="sol-kick">{c['label']}</p>
+        <h3><a href="/solutions/{c['slug']}/">{c['title']}</a></h3>
+        <p class="sol-for">Pour : {c['pour']}</p>
+        <p class="sol-line">{c['line']}</p>
+        <ul class="sol-pts">{points}</ul>
+        <span class="sol-go" aria-hidden="true">Voir la solution <i>↗</i></span>
+      </div>
+    </article>""")
+    return "\n    ".join(cartes)
+
 
 FAQ = [
     (
@@ -225,13 +251,15 @@ PAGE = {
   </ol>
 </section>
 
-<!-- Vitrine de l'app : JARVIS App rendue en vrai HTML (assets/demos/app.*) -->
+<!-- Vitrine de l'app : les cinq écrans déroulés, un par chapitre (assets/demos/app.*) -->
 <section class="vitrine" id="app" aria-label="JARVIS App">
   <div class="head" data-rev>
     <p class="eyebrow">JARVIS App · l’interface</p>
     <h2 data-split>Une seule application.<br><em>Toute votre vie connectée.</em></h2>
+    <p class="vitrine-lead">Voici les cinq écrans, tels qu’ils sont. Rien n’est une image&nbsp;:
+    chaque écran est la vraie interface, avec des données fictives.</p>
   </div>
-  {app.html()}
+  {app.sequence()}
 </section>
 
 <!-- Ma maison : démo interactive -->
@@ -419,33 +447,17 @@ PAGE = {
   </div>
 </section>
 
-<!-- Six solutions (bento) -->
-<section class="bento" id="capacites">
+<!-- Six solutions : l'aperçu complet, sans ouvrir les pages -->
+<section class="bento sols" id="capacites">
   <div class="head" data-rev>
     <p class="kick">Six solutions · Un point de départ</p>
     <h2 data-split>Votre besoin.<br><em>La bonne solution.</em></h2>
-    <p>Choisissez ce que vous aimeriez simplifier. Un clic sur une carte ouvre sa solution.</p>
+    <p>L’essentiel de chacune, ici même. La page complète attend ceux qui veulent tout le détail.</p>
   </div>
-  <nav class="grid" aria-label="Accéder aux six solutions">
-    <a class="tile w3" href="/solutions/environnements-intelligents/" data-rev data-tilt>
-      <img src="/media/solutions/environnements-intelligents.webp" alt="" loading="lazy">
-      <span class="lab"><small>01 · Domotique</small><b>Environnements intelligents</b><em>Lumières, confort et énergie réunis.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
-    <a class="tile w3" href="/solutions/ia-privee-connaissances/" data-rev data-tilt>
-      <img src="/media/solutions/ia-privee-connaissances.webp" alt="" loading="lazy">
-      <span class="lab"><small>02 · IA locale</small><b>IA privée et connaissances</b><em>Retrouver vos documents et les bonnes réponses.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
-    <a class="tile" href="/solutions/securite-intelligente/" data-rev data-tilt>
-      <img src="/media/solutions/securite-intelligente.webp" alt="" loading="lazy">
-      <span class="lab"><small>03 · Caméras</small><b>Sécurité intelligente</b><em>Comprendre les événements de vos lieux.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
-    <a class="tile" href="/solutions/automatisation-operations/" data-rev data-tilt>
-      <img src="/media/solutions/jarvis-enterprise-operations-v1.webp" alt="" loading="lazy">
-      <span class="lab"><small>04 · Entreprise</small><b>Automatisation d’entreprise</b><em>Faire avancer les demandes de votre équipe.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
-    <a class="tile" href="/solutions/reseau-resilience/" data-rev data-tilt>
-      <img src="/media/solutions/reseau-resilience.webp" alt="" loading="lazy">
-      <span class="lab"><small>05 · Réseau</small><b>Réseau et cybersécurité</b><em>Garder vos connexions fiables et privées.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
-    <a class="tile w6" href="/solutions/diagnostic-care/" data-rev data-tilt>
-      <img src="/media/solutions/diagnostic-care.webp" alt="" loading="lazy">
-      <span class="lab"><small>06 · Continuité</small><b>Diagnostic &amp; continuité</b><em>Comprendre un souci et préparer la suite.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
-  </nav>
+  <div class="sol-grid">
+    {apercu_solutions()}
+  </div>
+  <p class="sol-all" data-rev><a class="pill ghost" href="/solutions/">Comparer les six solutions</a></p>
 </section>
 
 <!-- Offre -->

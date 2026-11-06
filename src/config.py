@@ -54,48 +54,98 @@ FOOTER_COLUMNS = [
 ]
 
 # Les six capacités : source unique pour l'accueil, la page Solutions et les sous-pages.
+# « pour », « line » et « points » alimentent l'aperçu complet de l'accueil : même contenu
+# que les pages de solution, en plus court.
 CAPABILITIES = [
     {
         "slug": "environnements-intelligents",
         "num": "01",
         "title": "Environnements intelligents",
+        "label": "Domotique",
         "short": "Faire travailler ensemble les technologies d’un lieu, sans rendre son utilisation compliquée.",
         "image": "/media/solutions/environnements-intelligents.webp",
+        "pour": "Maisons, chalets et petits bâtiments",
+        "line": "Un environnement qui comprend son état, s’adapte au contexte et demeure contrôlable simplement.",
+        "points": [
+            ("Un écran pour tout", "Lumières, chauffage, stores, verrous et énergie, pièce par pièce."),
+            ("Des ambiances en une touche", "Matin, Soirée, Cinéma, Nuit, Absent : réglées avec vous, modifiables."),
+            ("Le contrôle reste humain", "Déverrouiller ou ouvrir le garage demande toujours votre confirmation."),
+        ],
     },
     {
         "slug": "ia-privee-connaissances",
         "num": "02",
         "title": "IA privée et connaissances",
+        "label": "IA locale",
         "short": "Parler à ses propres informations, retrouver les bonnes preuves et préparer une action avec permission.",
         "image": "/media/solutions/ia-privee-connaissances.webp",
+        "pour": "Familles, professionnels et équipes avec beaucoup de documents",
+        "line": "Vos documents restent à leur place. L’IA vous aide à les comprendre et montre toujours d’où vient sa réponse.",
+        "points": [
+            ("Des réponses vérifiables", "Un clic sur la source affiche le passage qui justifie la réponse."),
+            ("Vos documents restent chez vous", "Traitement local sur le Hub, ou externe seulement si vous l’autorisez."),
+            ("Des actions avec permission", "Rien ne part sans votre « Approuver »."),
+        ],
     },
     {
         "slug": "securite-intelligente",
         "num": "03",
         "title": "Sécurité intelligente",
+        "label": "Caméras",
         "short": "Transformer caméras, accès et alarmes en événements compréhensibles plutôt qu’en notifications isolées.",
         "image": "/media/solutions/securite-intelligente.webp",
+        "pour": "Résidences, entreprises et propriétés réparties sur plusieurs sites",
+        "line": "Une sécurité qui réunit le contexte, les preuves et les décisions, sans retirer le contrôle humain.",
+        "points": [
+            ("Un seul fil", "Caméras, sonnette, portes, détecteurs et alarme dans une même chronologie."),
+            ("Des preuves classées", "Les images utiles sont gardées avec l’événement, sur place."),
+            ("Le dernier mot", "JARVIS propose, vous approuvez. Rien ne se déverrouille tout seul."),
+        ],
     },
     {
         "slug": "automatisation-operations",
         "num": "04",
         "title": "Automatisation d’entreprise",
+        "label": "Entreprise",
         "short": "Faire circuler demandes, documents et approbations entre les outils que l’entreprise utilise déjà.",
         "image": "/media/solutions/jarvis-enterprise-operations-v1.webp",
+        "pour": "PME, entreprises de services et équipes terrain",
+        "line": "JARVIS relie les outils de l’entreprise, prépare les actions, demande une validation et conserve une trace.",
+        "points": [
+            ("Moins de ressaisie", "Les informations passent d’un outil à l’autre, sans copier-coller."),
+            ("Vos règles, appliquées", "Seuils, approbations, exceptions : écrits une fois, respectés chaque fois."),
+            ("Une trace complète", "Un journal clair de chaque étape, consultable en tout temps."),
+        ],
     },
     {
         "slug": "reseau-resilience",
         "num": "05",
         "title": "Réseau et cybersécurité",
+        "label": "Réseau",
         "short": "Comprendre l’infrastructure, surveiller les dépendances et conserver des accès privés fiables.",
         "image": "/media/solutions/reseau-resilience.webp",
+        "pour": "Maisons connectées, PME et petits multi-sites",
+        "line": "Une vue claire du réseau et de ses risques, avant que chaque problème devienne une urgence.",
+        "points": [
+            ("Une carte que tout le monde comprend", "Internet, routeur, zones et appareils, avec ce qui circule en direct."),
+            ("Des diagnostics en mots simples", "La vraie cause et une seule action proposée, que vous approuvez."),
+            ("Une maison qui tient bon", "Zones séparées, lien de secours, essentiel qui marche même sans Internet."),
+        ],
     },
     {
         "slug": "diagnostic-care",
         "num": "06",
         "title": "Diagnostic & continuité",
+        "label": "Continuité",
         "short": "Passer d’un symptôme à des preuves, des vérifications et une remise en service documentée.",
         "image": "/media/solutions/diagnostic-care.webp",
+        "pour": "Tous les environnements équipés, du bâtiment au véhicule",
+        "line": "Comprendre plus vite ce qui a changé, quoi vérifier et comment transmettre un dossier utile.",
+        "points": [
+            ("Des réponses, pas des alarmes", "Ce qui a changé, depuis quand et ce que ça veut dire, en mots simples."),
+            ("Un dossier prêt à transmettre", "Le bon technicien reçoit les preuves et la bonne pièce à apporter."),
+            ("Une réparation prouvée", "JARVIS suit les mesures après l’intervention et confirme le retour à la normale."),
+        ],
     },
 ]
 

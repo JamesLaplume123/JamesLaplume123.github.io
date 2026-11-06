@@ -86,10 +86,11 @@
   box-shadow: 0 0 0 1px #ffffff17, 0 14px 30px #0007;
   transition: box-shadow .6s var(--ease), transform .8s var(--ease);
 }
-/* Caméra active : liseré de la couleur de la détection, légère mise en avant */
+/* Caméra active : liseré de la couleur de la détection, légère mise en avant
+   (sans ombre portée : elle assombrirait les incrustations des voisines) */
 [data-demo="securite"] .sec-cam.is-act {
   z-index: 2;
-  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--a) 85%, transparent), 0 0 32px color-mix(in srgb, var(--a) 28%, transparent), 0 20px 40px #000b;
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--a) 85%, transparent), 0 0 30px color-mix(in srgb, var(--a) 26%, transparent);
 }
 html.fx [data-demo="securite"] .sec-cam.is-act { transform: scale(1.018); }
 /* Alerte : liseré intérieur qui s'allume puis s'éteint */

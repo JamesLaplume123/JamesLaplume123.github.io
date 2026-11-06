@@ -6,7 +6,7 @@
 
 import json
 
-from demos import app, boulance, carte, maison, rust
+from demos import app, boulance, carte, maison, meteo, rust
 
 FAQ = [
     (
@@ -142,7 +142,7 @@ PAGE = {
     "url": "/",
     "v2": True,
     "title": "Domotique privée et sécurité intelligente au Québec | JARVIS",
-    "assets": ["app", "maison", "boulance", "carte", "rust"],
+    "assets": ["app", "maison", "meteo", "boulance", "carte", "rust"],
     "description": (
         "Domotique privée, sécurité intelligente et IA locale, installées chez vous. "
         "JARVIS relie vos appareils sans envoyer vos données au nuage. Saint-Hyacinthe, Québec."
@@ -245,77 +245,16 @@ PAGE = {
   {maison.html()}
 </section>
 
-<!-- JARVIS en direct : vraies données, décisions simulées -->
-<section class="live" id="direct" aria-labelledby="direct-titre">
-  <div class="head" data-rev>
+<!-- Météo en direct : le vrai ciel de Saint-Hyacinthe, et ce que JARVIS en ferait (décisions simulées) -->
+<section class="sect" id="direct" aria-labelledby="direct-titre">
+  <div class="head shead" data-rev>
     <p class="eyebrow"><i class="dot" aria-hidden="true"></i> En direct · Saint-Hyacinthe</p>
-    <h2 id="direct-titre" data-split>JARVIS, maintenant.<br><em>Avec de vraies données.</em></h2>
-    <p>À gauche, les conditions réelles reçues d’Environnement Canada. À droite, ce que les
-    règles de JARVIS feraient avec elles. Les décisions sont simulées : aucun appareil réel
-    n’est commandé.</p>
+    <h2 id="direct-titre" data-split>Le ciel d’ici, en ce moment.<br><em>Et ce que JARVIS en ferait.</em></h2>
+    <p>Conditions, prochaines heures et sept jours, tels que publiés par Environnement Canada —
+    rien d’inventé. Les règles de JARVIS les lisent et proposent des gestes : ces décisions sont
+    simulées, aucun appareil n’est commandé.</p>
   </div>
-
-  <div class="console" data-live-root data-rev>
-    <div class="console-top">
-      <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
-      <b>JARVIS · Console</b>
-      <span class="console-clock" data-live="clock">--:--:--</span>
-      <span class="console-state" data-live="state">Connexion…</span>
-    </div>
-
-    <div class="console-grid">
-      <!-- Ce que JARVIS voit -->
-      <div class="panel panel-see">
-        <p class="panel-kick">Ce que JARVIS voit <span class="tag tag-real">Données réelles</span></p>
-        <div class="now">
-          <div class="now-temp"><b data-live="temp" class="odo" aria-live="polite">--</b><i>°C</i></div>
-          <div class="now-txt">
-            <strong data-live="condition">Chargement…</strong>
-            <span data-live="feels">&nbsp;</span>
-          </div>
-        </div>
-        <dl class="metrics">
-          <div><dt>Vent</dt><dd data-live="wind">—</dd></div>
-          <div><dt>Rafales</dt><dd data-live="gust">—</dd></div>
-          <div><dt>Humidité</dt><dd data-live="humidity">—</dd></div>
-          <div><dt>Pression</dt><dd data-live="pressure">—</dd></div>
-        </dl>
-        <div class="sun">
-          <svg viewBox="0 0 300 120" aria-hidden="true">
-            <path class="sun-track" d="M20 105 A130 95 0 0 1 280 105"/>
-            <path class="sun-done" data-live="sun-arc" d="M20 105 A130 95 0 0 1 280 105"/>
-            <line x1="8" y1="105" x2="292" y2="105" class="sun-horizon"/>
-            <circle class="sun-dot" data-live="sun-dot" cx="20" cy="105" r="7"/>
-          </svg>
-          <div class="sun-legend">
-            <span>Lever <b data-live="sunrise">--:--</b></span>
-            <span data-live="sun-state">&nbsp;</span>
-            <span>Coucher <b data-live="sunset">--:--</b></span>
-          </div>
-        </div>
-        <div class="hours" data-live="hours" aria-label="Prochaines heures"></div>
-        <p class="src" data-live="source">Source : Environnement et Changement climatique Canada</p>
-      </div>
-
-      <!-- Ce que JARVIS ferait -->
-      <div class="panel panel-do">
-        <p class="panel-kick">Ce que JARVIS ferait <span class="tag tag-sim">Décisions simulées</span></p>
-        <ul class="rules" data-live="rules">
-          <li class="rule is-wait"><b>Analyse des règles…</b><small>En attente des données</small></li>
-        </ul>
-        <div class="visits">
-          <span class="visits-k">Visites du site</span>
-          <b class="odo" data-live="visits">—</b>
-          <small>Compteur réel, sans témoin ni pistage</small>
-        </div>
-      </div>
-    </div>
-
-    <div class="journal" aria-label="Journal des décisions">
-      <p class="panel-kick">Journal</p>
-      <ol data-live="journal"></ol>
-    </div>
-  </div>
+  {meteo.html()}
 </section>
 
 <!-- BouLance en direct : batteries réelles + radar -->

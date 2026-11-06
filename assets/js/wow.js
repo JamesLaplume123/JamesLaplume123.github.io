@@ -2,7 +2,7 @@
    Règle d'or : rien ne dépend de ce script pour être visible. Les effets ne
    s'activent que sous html.fx, et tout filet de sécurité ramène le contenu.
    Sections : modes · barre · menu · sélecteurs · compteur de visites ·
-   console en direct · formulaire · effets de défilement · micro-animations. */
+   météo du héros · formulaire · effets de défilement · micro-animations. */
 (function () {
   "use strict";
   var doc = document.documentElement;
@@ -85,16 +85,14 @@
   function partsInTz(d) {
     var out = {};
     try {
-      new Intl.DateTimeFormat("fr-CA", { timeZone: TZ, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" })
+      new Intl.DateTimeFormat("fr-CA", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
         .formatToParts(d).forEach(function (p) { out[p.type] = p.value; });
     } catch (e) {
-      out = { hour: String(d.getHours()).padStart(2, "0"), minute: String(d.getMinutes()).padStart(2, "0"), second: String(d.getSeconds()).padStart(2, "0") };
+      out = { hour: String(d.getHours()).padStart(2, "0"), minute: String(d.getMinutes()).padStart(2, "0") };
     }
     return out;
   }
   function hm(d) { var p = partsInTz(d); return +p.hour + " h " + p.minute; }
-  function hms(d) { var p = partsInTz(d); return p.hour + ":" + p.minute + ":" + p.second; }
-  function hourOnly(d) { return +partsInTz(d).hour + " h"; }
   function fmtInt(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
   function setText(key, value, root) {
     $$('[data-live="' + key + '"]', root).forEach(function (el) { el.textContent = value; });
@@ -169,353 +167,69 @@
       });
   }
   var visitTargets = $$('[data-live="visits"], [data-live="visits-short"], [data-live="visits-foot"]');
+  /* Le grand compteur ne roule qu'une fois à l'écran */
+  var visitOdos = $$('[data-live="visits"]');
+  if (visitOdos.length && "IntersectionObserver" in window) {
+    var vio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target._seen = true;
+        if (e.target._odo) setOdo(e.target, e.target._odo);
+        vio.unobserve(e.target);
+      });
+    }, { threshold: .5 });
+    visitOdos.forEach(function (el) { vio.observe(el); });
+  } else visitOdos.forEach(function (el) { el._seen = true; });
   if (visitTargets.length) {
     loadVisits().then(function (v) {
       var txt = fmtInt(v);
-      $$('[data-live="visits"]').forEach(function (el) { el._odo = txt; if (el._seen) setOdo(el, txt); });
+      visitOdos.forEach(function (el) { el._odo = txt; if (el._seen) setOdo(el, txt); });
       setText("visits-short", txt + " visites");
       $$('[data-live="visits-foot"]').forEach(function (el) { el.textContent = txt; el.closest(".foot-count").hidden = false; });
     }).catch(function () {
       setText("visits-short", "Visites —");
-      $$('[data-live="visits"]').forEach(function (el) { el.textContent = "—"; });
+      visitOdos.forEach(function (el) { el.textContent = "—"; });
     });
   }
 
-  /* ---------- JARVIS en direct : vraies données, décisions simulées ---------- */
-  var liveRoot = $("[data-live-root]");
+  /* ---------- Météo réelle pour le héros (pastille et panneau) ----------
+     La démo météo (assets/demos/meteo.js) partage le même cache de session « jarvis-ec ». */
   var livePill = $("[data-live-pill]");
-  if (liveRoot || livePill) {
+  if (livePill || $("[data-hero-panel]")) {
     var EC_URL = "https://api.weather.gc.ca/collections/citypageweather-realtime/items/qc-22?f=json&lang=fr";
-    var val = function (o) {
-      if (o == null) return undefined;
-      var v = o.value !== undefined ? o.value : o;
-      if (v && typeof v === "object") v = v.fr !== undefined ? v.fr : v.en;
-      return v;
-    };
-    var txt = function (o) {
+    var ecText = function (o) {
       if (o == null) return "";
-      if (typeof o === "string") return o;
-      if (o.fr !== undefined) return o.fr;
-      if (o.value !== undefined) return txt(o.value);
-      return o.en || "";
+      if (typeof o !== "object") return String(o);
+      if (o.fr !== undefined) return String(o.fr);
+      return o.value !== undefined ? ecText(o.value) : "";
     };
-    var num = function (o) { var n = parseFloat(val(o)); return isFinite(n) ? n : null; };
-
-    var journalEl = liveRoot && $('[data-live="journal"]', liveRoot);
-    var queue = [], typing = false;
-    var log = function (text) {
-      if (!journalEl) return;
-      queue.push(text);
-      if (!typing) nextLine();
-    };
-    var nextLine = function () {
-      var text = queue.shift();
-      if (!text) { typing = false; return; }
-      typing = true;
-      var li = document.createElement("li");
-      var t = document.createElement("time");
-      t.textContent = hms(new Date());
-      var s = document.createElement("span");
-      li.appendChild(t);
-      li.appendChild(s);
-      journalEl.appendChild(li);
-      while (journalEl.children.length > 5) journalEl.removeChild(journalEl.firstChild);
-      if (reduce) { s.textContent = text; nextLine(); return; }
-      li.classList.add("typing");
-      var i = 0;
-      (function type() {
-        i += 2;
-        s.textContent = text.slice(0, i);
-        if (i < text.length) setTimeout(type, 16);
-        else { li.classList.remove("typing"); setTimeout(nextLine, 260); }
-      })();
-    };
-
-    var setState = function (ok, label) {
-      $$('[data-live="state"]').forEach(function (el) {
-        el.classList.toggle("is-off", !ok);
-        el.innerHTML = '<i class="dot' + (ok ? "" : " is-off") + '" aria-hidden="true"></i>' + label;
-      });
-      if (livePill) $(".dot", livePill).classList.toggle("is-off", !ok);
-    };
-
-    /* Horloge de la console */
-    if (liveRoot) {
-      var tick = function () { setText("clock", hms(new Date()), liveRoot); };
-      tick();
-      setInterval(tick, 1000);
-    }
-
-    /* Arc du soleil (ou de la lune la nuit) */
-    var drawSun = function (now, rise, set) {
-      if (!liveRoot) return;
-      var dot = $('[data-live="sun-dot"]', liveRoot), arc = $('[data-live="sun-arc"]', liveRoot);
-      if (!dot || !arc) return;
-      var day = now >= rise && now <= set, f, label;
-      if (day) {
-        f = (now - rise) / (set - rise);
-        label = "Jour · " + Math.round(f * 100) + " %";
-      } else {
-        var start = now > set ? set : new Date(set.getTime() - 864e5);
-        var end = now > set ? new Date(rise.getTime() + 864e5) : rise;
-        f = (now - start) / (end - start);
-        label = "Nuit · lever dans " + Math.max(0, Math.round((end - now) / 36e5 * 10) / 10).toString().replace(".", ",") + " h";
-      }
-      f = c01(f);
-      var x = 150 - 130 * Math.cos(Math.PI * f), y = 105 - 95 * Math.sin(Math.PI * f);
-      dot.classList.toggle("is-moon", !day);
-      arc.style.stroke = day ? "" : "#aeb8c8";
-      var len = arc.getTotalLength ? arc.getTotalLength() : 360;
-      arc.style.strokeDasharray = len + " " + len;
-      arc.style.strokeDashoffset = len;
-      arc.getBoundingClientRect();
-      arc.style.transition = reduce ? "none" : "stroke-dashoffset 1.6s cubic-bezier(.16,1,.3,1)";
-      arc.style.strokeDashoffset = len * (1 - f);
-      dot.setAttribute("cx", x.toFixed(1));
-      dot.setAttribute("cy", y.toFixed(1));
-      setText("sun-state", label, liveRoot);
-    };
-
-    /* Les règles de JARVIS, évaluées sur les vraies conditions */
-    var buildRules = function (d) {
-      var rules = [];
-      var now = d.now, night = d.rise && d.set ? (now < d.rise || now > d.set) : null;
-      if (d.rise && d.set) {
-        var lightsOn = new Date(d.set.getTime() - 15 * 60000);
-        if (night) {
-          rules.push({ kind: "auto", cat: "Éclairage", title: "Éclairage extérieur en veilleuse (20 %)",
-            why: "Il fait nuit depuis " + hm(d.set) + ". Retour à 0 % au lever du soleil, à " + hm(d.rise) + ".", st: "Automatique" });
-        } else if (d.set - now < 90 * 60000) {
-          rules.push({ kind: "auto", cat: "Éclairage", title: "Allumer l’éclairage extérieur à " + hm(lightsOn),
-            why: "Le soleil se couche à " + hm(d.set) + ". La règle est permise : elle s’applique seule.", st: "Automatique" });
-        } else {
-          rules.push({ kind: "info", cat: "Éclairage", title: "Éclairage extérieur éteint",
-            why: "Lumière du jour jusqu’à " + hm(d.set) + ". Allumage prévu à " + hm(lightsOn) + ".", st: "Rien à faire" });
-        }
-      }
-      if (d.temp !== null) {
-        var feel = d.feels !== null ? d.feels : d.temp;
-        if (feel <= -5) {
-          rules.push({ kind: "ask", cat: "Confort", title: "Préchauffer le véhicule à 7 h 15",
-            why: "Ressenti de " + Math.round(feel) + " °C. Départ habituel à 7 h 30 (exemple).", st: "Votre accord" });
-        } else if (d.temp >= 26) {
-          rules.push({ kind: "ask", cat: "Confort", title: "Fermer les stores côté sud",
-            why: "Il fait " + Math.round(d.temp) + " °C dehors. Garder la fraîcheur sans climatiser plus.", st: "Votre accord" });
-        } else if (d.temp < 14) {
-          rules.push({ kind: "auto", cat: "Confort", title: night ? "Chauffage de nuit : 18 °C dans les chambres" : "Garder 21 °C dans les pièces occupées",
-            why: "Extérieur " + Math.round(d.temp) + " °C" + (d.humidity !== null ? ", humidité " + Math.round(d.humidity) + " %" : "") + ".", st: "Automatique" });
-        } else {
-          rules.push({ kind: "info", cat: "Confort", title: "Chauffage au minimum",
-            why: "Extérieur " + Math.round(d.temp) + " °C : aucune correction nécessaire.", st: "Rien à faire" });
-        }
-      }
-      if (night !== null) {
-        rules.push(night
-          ? { kind: "auto", cat: "Sécurité", title: "Mode nuit : portes verrouillées, caméras en détection",
-              why: "Les événements sont regroupés en une chronologie au lieu de dix notifications.", st: "Automatique" }
-          : { kind: "info", cat: "Sécurité", title: "Mode jour : notifications pour les inconnus seulement",
-              why: "Les passages connus restent au journal, sans vous déranger.", st: "Actif" });
-      }
-      var wet = null;
-      (d.hours || []).forEach(function (h) { if (h.lop !== null && h.lop >= 60 && !wet) wet = h; });
-      if (d.warnings.length) {
-        rules.push({ kind: "ask", cat: "Météo", title: "Prévenir la famille de l’avertissement en cours",
-          why: d.warnings[0], st: "Votre accord" });
-      } else if (d.gust !== null && d.gust >= 50) {
-        rules.push({ kind: "ask", cat: "Météo", title: "Rentrer l’auvent et le mobilier extérieur",
-          why: "Rafales de " + Math.round(d.gust) + " km/h mesurées.", st: "Votre accord" });
-      } else if (wet) {
-        rules.push({ kind: "ask", cat: "Météo", title: wet.temp !== null && wet.temp <= 1 ? "Déglacer l’entrée avant " + hourOnly(wet.time) : "Rentrer le mobilier extérieur avant " + hourOnly(wet.time),
-          why: "Probabilité de précipitations de " + wet.lop + " % vers " + hourOnly(wet.time) + ".", st: "Votre accord" });
-      } else {
-        rules.push({ kind: "info", cat: "Météo", title: "Aucune action météo nécessaire",
-          why: "Pas de précipitations significatives prévues dans les prochaines heures.", st: "Rien à faire" });
-      }
-      return rules.slice(0, 4);
-    };
-
-    var renderRules = function (rules) {
-      var ul = liveRoot && $('[data-live="rules"]', liveRoot);
-      if (!ul) return;
-      ul.innerHTML = "";
-      rules.forEach(function (r, i) {
-        var li = document.createElement("li");
-        li.className = "rule is-" + r.kind;
-        li.style.setProperty("--i", i);
-        li.innerHTML = '<div class="rule-top"><small></small><span class="st"></span></div><b></b><p></p>';
-        $("small", li).textContent = r.cat;
-        $(".st", li).textContent = r.st;
-        $("b", li).textContent = r.title;
-        $("p", li).textContent = r.why;
-        if (r.kind === "ask") {
-          var acts = document.createElement("div");
-          acts.className = "rule-acts";
-          acts.innerHTML = '<button type="button" data-act="ok">Approuver</button><button type="button" data-act="no">Ignorer</button>';
-          acts.addEventListener("click", function (e) {
-            var b = e.target.closest("button");
-            if (!b) return;
-            var ok = b.getAttribute("data-act") === "ok";
-            li.className = "rule " + (ok ? "is-done" : "is-skip");
-            $(".st", li).textContent = ok ? "Approuvé · simulé" : "Ignoré";
-            acts.remove();
-            log((ok ? "Vous avez approuvé : " : "Vous avez ignoré : ") + r.title.toLowerCase() + " — simulation, aucun appareil commandé");
-          });
-          li.appendChild(acts);
-        }
-        ul.appendChild(li);
+    var ecDate = function (o) { var d = o ? new Date(ecText(o)) : null; return d && !isNaN(d) ? d : null; };
+    var pillDot = function (ok) { var dot = livePill && $(".dot", livePill); if (dot) dot.classList.toggle("is-off", !ok); };
+    var heroLoad = function () {
+      var cached = null;
+      try { var c = JSON.parse(session.getItem("jarvis-ec")); if (Date.now() - c.t < 300000) cached = c.j; } catch (e) {}
+      var got = cached ? Promise.resolve(cached) : fetch(EC_URL).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+      got.then(function (j) {
+        if (!cached && session) { try { session.setItem("jarvis-ec", JSON.stringify({ t: Date.now(), j: j })); } catch (e) {} }
+        var p = j.properties || {}, cc = p.currentConditions || {}, rs = p.riseSet || {};
+        var t = parseFloat(ecText(cc.temperature)), temp = isFinite(t) ? t : null, cond = ecText(cc.condition);
+        if (temp === null && !cond) throw new Error("vide");
+        pillDot(true);
+        setText("temp-short", temp !== null ? String(Math.round(temp) || 0).replace("-", "\u2212") + "\u00a0°C" : "—");
+        setText("cond", cond || "Conditions actuelles");
+        try {
+          document.dispatchEvent(new CustomEvent("jv:weather", { detail: {
+            now: new Date(), temp: temp, condition: cond, rise: ecDate(rs.sunrise), set: ecDate(rs.sunset)
+          } }));
+        } catch (e) {}
+      }).catch(function () {
+        pillDot(false);
+        setText("temp-short", "hors ligne");
+        setText("cond", "Météo indisponible pour l’instant");
       });
     };
-
-    var renderHours = function (hours) {
-      var box = liveRoot && $('[data-live="hours"]', liveRoot);
-      if (!box || !hours.length) return;
-      var temps = hours.map(function (h) { return h.temp; }).filter(function (t) { return t !== null; });
-      var lo = Math.min.apply(null, temps), hi = Math.max.apply(null, temps);
-      box.innerHTML = "";
-      hours.forEach(function (h) {
-        var el = document.createElement("div");
-        el.className = "hour";
-        var k = hi === lo ? .6 : (h.temp - lo) / (hi - lo);
-        el.innerHTML = '<b></b><span class="hbar"></span><span class="t"></span>' + (h.lop >= 30 ? '<span class="rain"></span>' : "");
-        $("b", el).textContent = h.temp !== null ? Math.round(h.temp) + "°" : "–";
-        $(".t", el).textContent = hourOnly(h.time);
-        if (h.lop >= 30) $(".rain", el).textContent = h.lop + " %";
-        box.appendChild(el);
-        var barEl = $(".hbar", el);
-        requestAnimationFrame(function () { requestAnimationFrame(function () { barEl.style.height = Math.round(18 + k * 46) + "px"; }); });
-      });
-    };
-
-    var shown = false;
-    var lastData = null;
-    var paint = function (d) {
-      lastData = d;
-      var tShort = d.temp !== null ? Math.round(d.temp) + " °C" : "—";
-      setText("temp-short", tShort);
-      setText("cond", d.condition || "Conditions actuelles");
-      try { document.dispatchEvent(new CustomEvent("jv:weather", { detail: d })); } catch (e) {}
-      if (!liveRoot) return;
-      var tEl = $('[data-live="temp"]', liveRoot);
-      if (d.temp !== null) {
-        var tv = String(Math.round(d.temp)).replace("-", "−");
-        if (tEl._last !== tv) { tEl._last = tv; setOdo(tEl, tv); }
-      }
-      setText("condition", d.condition || "Conditions actuelles", liveRoot);
-      setText("feels", d.feels !== null && Math.round(d.feels) !== Math.round(d.temp)
-        ? "Ressenti " + String(Math.round(d.feels)).replace("-", "−") + " °C" : (d.station ? "Observé à : " + d.station : " "), liveRoot);
-      setText("wind", d.wind !== null ? Math.round(d.wind) + " km/h " + (d.dir || "") : "—", liveRoot);
-      setText("gust", d.gust ? Math.round(d.gust) + " km/h" : "—", liveRoot);
-      setText("humidity", d.humidity !== null ? Math.round(d.humidity) + " %" : "—", liveRoot);
-      setText("pressure", d.pressure !== null ? String(d.pressure).replace(".", ",") + " kPa" : "—", liveRoot);
-      if (d.rise && d.set) {
-        setText("sunrise", hm(d.rise), liveRoot);
-        setText("sunset", hm(d.set), liveRoot);
-        drawSun(d.now, d.rise, d.set);
-      }
-      renderHours(d.hours);
-      var src = $('[data-live="source"]', liveRoot);
-      if (src) {
-        src.innerHTML = 'Source : Environnement et Changement climatique Canada · <a href="https://meteo.gc.ca/fr/location/index.html?coords=45.63,-72.95" rel="noopener" target="_blank">prévisions de Saint-Hyacinthe</a>' +
-          (d.obs ? " · mesure de " + hm(d.obs) : "");
-      }
-      var rules = buildRules(d);
-      renderRules(rules);
-      if (!shown) {
-        shown = true;
-        log("Environnement Canada · " + (d.temp !== null ? Math.round(d.temp) + " °C" : "—") + (d.condition ? ", " + d.condition.toLowerCase() : "") + " · reçu");
-        if (d.rise && d.set) log("Soleil · lever " + hm(d.rise) + ", coucher " + hm(d.set));
-        var a = rules.filter(function (r) { return r.kind === "auto"; }).length;
-        var p = rules.filter(function (r) { return r.kind === "ask"; }).length;
-        log(rules.length + " règles évaluées · " + a + " automatique" + (a > 1 ? "s" : "") + ", " + p + " en attente de votre accord");
-        log("Démonstration : aucun appareil réel n’est commandé");
-      }
-    };
-
-    var fail = function () {
-      setState(false, "Données indisponibles");
-      setText("temp-short", "hors ligne");
-      setText("cond", "Météo indisponible pour l’instant");
-      if (!liveRoot) return;
-      setText("condition", "Les données en direct ne répondent pas", liveRoot);
-      setText("feels", "JARVIS l’affiche honnêtement plutôt que d’inventer.", liveRoot);
-      var ul = $('[data-live="rules"]', liveRoot);
-      if (ul) ul.innerHTML = '<li class="rule is-info"><div class="rule-top"><small>État</small><span class="st">En attente</span></div><b>Aucune décision sans données fiables</b><p>Les règles reprendront dès que la source répondra.</p></li>';
-      if (!shown) log("Source météo injoignable · nouvelle tentative dans 2 minutes");
-    };
-
-    var load = function () {
-      var cached = session && session.getItem("jarvis-ec");
-      var useCache = null;
-      if (cached) { try { var c = JSON.parse(cached); if (Date.now() - c.t < 300000) useCache = c.j; } catch (e) {} }
-      var got = useCache ? Promise.resolve(useCache) : fetch(EC_URL).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
-      return got.then(function (j) {
-        if (!useCache && session) { try { session.setItem("jarvis-ec", JSON.stringify({ t: Date.now(), j: j })); } catch (e) {} }
-        var p = j.properties || {};
-        var cc = p.currentConditions || {};
-        var temp = num(cc.temperature);
-        /* Ressenti : refroidissement éolien seulement s'il fait froid, humidex s'il fait chaud */
-        var wc = num(cc.windChill), hx = num(cc.humidex), feels = null;
-        if (temp !== null && wc !== null && temp <= 5 && wc < temp) feels = wc;
-        if (temp !== null && hx !== null && temp >= 20 && hx > temp) feels = hx;
-        var rs = p.riseSet || {};
-        var rise = rs.sunrise ? new Date(txt(rs.sunrise)) : null;
-        var set = rs.sunset ? new Date(txt(rs.sunset)) : null;
-        var now = new Date();
-        var hourly = ((p.hourlyForecastGroup || {}).hourlyForecasts || []).filter(function (h) {
-          return new Date(h.timestamp) > now - 3600000;
-        }).slice(0, 6).map(function (h) {
-          return { time: new Date(h.timestamp), temp: num(h.temperature), lop: num(h.lop) };
-        });
-        var warnings = (p.warnings || []).map(function (w) {
-          return txt(w.description) || txt(w.type) || "Avertissement météo en vigueur.";
-        }).filter(Boolean);
-        var obs = cc.timestamp ? new Date(txt(cc.timestamp)) : null;
-        var d = {
-          now: now, temp: temp, feels: feels, condition: txt(cc.condition),
-          wind: num((cc.wind || {}).speed), gust: num((cc.wind || {}).gust), dir: val((cc.wind || {}).direction) || "",
-          humidity: num(cc.relativeHumidity), pressure: num(cc.pressure),
-          station: val(cc.station) || "", rise: rise && !isNaN(rise) ? rise : null, set: set && !isNaN(set) ? set : null,
-          hours: hourly, warnings: warnings, obs: obs && !isNaN(obs) ? obs : null
-        };
-        if (temp === null && !d.condition) throw new Error("vide");
-        setState(true, "En direct");
-        paint(d);
-      }).catch(fail);
-    };
-
-    /* Charger au besoin : tout de suite si la console ou la pastille est visible */
-    var started = false;
-    var start = function () {
-      if (started) return;
-      started = true;
-      load();
-      setInterval(function () {
-        if (document.hidden) return;
-        if (session) session.removeItem("jarvis-ec");
-        load();
-      }, 600000);
-    };
-    if (livePill) start();
-    if (liveRoot && "IntersectionObserver" in window) {
-      var lio = new IntersectionObserver(function (es) {
-        es.forEach(function (e) {
-          if (!e.isIntersecting) return;
-          start();
-          $$('[data-live="visits"]', liveRoot).forEach(function (el) { el._seen = true; if (el._odo) setOdo(el, el._odo); });
-          if (lastData && !liveRoot._replayed) {
-            liveRoot._replayed = true;
-            var tEl = $('[data-live="temp"]', liveRoot);
-            if (tEl && tEl._last) setOdo(tEl, tEl._last);
-            if (lastData.rise && lastData.set) drawSun(new Date(), lastData.rise, lastData.set);
-          }
-          lio.unobserve(e.target);
-        });
-      }, { threshold: .2 });
-      lio.observe(liveRoot);
-    } else if (liveRoot) {
-      start();
-      $$('[data-live="visits"]', liveRoot).forEach(function (el) { el._seen = true; });
-    }
+    heroLoad();
+    setInterval(function () { if (!document.hidden) heroLoad(); }, 600000);
   }
 
   /* ---------- Formulaire de contact : envoi sans quitter la page ---------- */

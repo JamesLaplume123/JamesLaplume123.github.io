@@ -162,7 +162,7 @@
 @keyframes blBeat { to { transform: scaleX(1); } }
 /* Courbe 24 h : se dessine, point « maintenant » qui bat, lecture au survol */
 [data-demo="boulance"] .bl-plot { position: relative; }
-[data-demo="boulance"] .bl-line { stroke-dasharray: 1; stroke-dashoffset: 1; }
+[data-demo="boulance"] .bl-line { stroke-dasharray: 2; stroke-dashoffset: 2; }
 [data-demo="boulance"] .bl-chart.is-drawn .bl-line { stroke-dashoffset: 0; transition: stroke-dashoffset 2.2s var(--ease); }
 [data-demo="boulance"] .bl-area { opacity: 0; transition: opacity 1.4s .9s; }
 [data-demo="boulance"] .bl-chart.is-drawn .bl-area { opacity: 1; }

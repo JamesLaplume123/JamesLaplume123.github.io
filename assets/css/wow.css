@@ -331,6 +331,10 @@ body.menu-open { overflow: hidden; }
   position: relative; min-height: 100vh; display: flex; align-items: flex-end; overflow: hidden;
 }
 .band .bg { position: absolute; inset: 0; }
+.band:not(.top) .bg {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 84%, transparent 100%);
+}
 .band .bg img { width: 100%; height: 100%; object-fit: cover; animation: bandDrift 30s ease-in-out infinite alternate; }
 @keyframes bandDrift { from { transform: scale(1.02); } to { transform: scale(1.11); } }
 .band .bg::after {
@@ -606,13 +610,13 @@ a.row .go {
 /* Cadre de cristal du logiciel, teinté selon le mode (or en Signature, argent en Platinum, aucun en Base) */
 .card::before, .plan::before, .mom-card::before, .form-card::before,
 .tile::before, .frame::before, .frow .media::before, .shots figure::before,
-.hp::before, .demo-shell::before, .vs-col::before, .hub-media::before {
+.hp::before, .demo-shell::before, .vs-col::before, .hub-media::before, .stat::before, .flow-out::before {
   content: ""; position: absolute; inset: -1px; z-index: 3; pointer-events: none; border-radius: inherit;
   border: 18px solid transparent;
   border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch;
   filter: var(--mode-rim-filter);
 }
-:root[data-mode="base"] :is(.card, .plan, .mom-card, .form-card, .tile, .frame, .frow .media, .shots figure, .hp, .demo-shell, .vs-col, .hub-media)::before { display: none; }
+:root[data-mode="base"] :is(.card, .plan, .mom-card, .form-card, .tile, .frame, .frow .media, .shots figure, .hp, .demo-shell, .vs-col, .hub-media, .stat, .flow-out)::before { display: none; }
 @media (min-width: 881px) {
   .card, .plan { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 }

@@ -43,6 +43,7 @@
   [data-demo="carte"] .ct-legend { display: none; }
   [data-demo="carte"] .ct-track button { font-size: 0; }
 }
+@media (max-width: 640px) { [data-demo="carte"] .ct-marker b { left: 50%; top: 30px; translate: -50% 0; } }
 @media (prefers-reduced-motion: reduce) { [data-demo="carte"] .ct-marker i::after { animation: none; } }
 
 /* En direct : la dernière image publiée, avec son âge et un point qui bat */

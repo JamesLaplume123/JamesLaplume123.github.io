@@ -36,9 +36,9 @@ EXTRA = [
 _MARK = {"ok": "✓", "mid": "~", "no": "✕"}
 
 
-def _cell(state, text, rust=False):
+def _cell(state, text, label, rust=False):
     cls = f"rs-c is-{state}" + (" is-rust" if rust else "")
-    return f'<td class="{cls}"><i aria-hidden="true">{_MARK[state]}</i>{text}</td>'
+    return f'<td class="{cls}" data-l="{label}"><i aria-hidden="true">{_MARK[state]}</i>{text}</td>'
 
 
 def html():
@@ -47,7 +47,7 @@ def html():
         for n, unit, p in STATS
     )
     rows = "".join(
-        f'<tr><th scope="row">{crit}</th>{_cell(*c)}{_cell(*py)}{_cell(*rs, rust=True)}</tr>'
+        f'<tr><th scope="row">{crit}</th>{_cell(*c, "C et C++")}{_cell(*py, "Python")}{_cell(*rs, "Rust", rust=True)}</tr>'
         for crit, c, py, rs in ROWS
     )
     extra = "".join(f"<li><b>{t}</b><span>{p}</span></li>" for t, p in EXTRA)

@@ -7,7 +7,7 @@ DATA = {
     "slug": "diagnostic-care",
     "title": "Diagnostic & continuité",
     "description": "Passer d’un symptôme à des preuves, des vérifications et une remise en service documentée.",
-    "image": "/media/product/jarvis-hub-v1.webp",
+    "image": "/media/solutions/diagnostic-care.webp",
     "h1": "Diagnostic & <em>continuité.</em>",
     "lead": "Comprendre plus vite ce qui a changé, quoi vérifier et comment transmettre un dossier utile à la bonne personne.",
     "for": "Tous les environnements équipés, du bâtiment au véhicule",

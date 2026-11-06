@@ -133,7 +133,7 @@ SCHEMA = json.dumps(
 )
 
 STANDARDS = [
-    "Home Assistant", "Zigbee", "Z-Wave", "Matter", "MQTT", "ESPHome",
+    "Rust", "Home Assistant", "Zigbee", "Z-Wave", "Matter", "MQTT", "ESPHome",
     "Frigate", "WireGuard", "Starlink", "LiFePO₄", "Whisper", "Piper",
 ]
 MARQUEE = "".join(f"<span>{s}</span>" for s in STANDARDS)
@@ -280,6 +280,7 @@ PAGE = {
   <div class="flow" data-rev>
     <svg class="flow-svg" viewBox="0 0 1000 420" aria-hidden="true">
       <defs>
+        <linearGradient id="fl2" gradientUnits="userSpaceOnUse" x1="600" y1="0" x2="790" y2="0"><stop offset="0" stop-color="currentColor" stop-opacity=".7"/><stop offset="1" stop-color="currentColor" stop-opacity=".25"/></linearGradient>
         <linearGradient id="fl" x1="0" x2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".05"/><stop offset=".5" stop-color="currentColor" stop-opacity=".55"/><stop offset="1" stop-color="currentColor" stop-opacity=".05"/></linearGradient>
       </defs>
       <g class="flow-lines" fill="none" stroke="url(#fl)" stroke-width="1.4">
@@ -289,7 +290,7 @@ PAGE = {
         <path id="p4" d="M210 260 C 360 260, 400 210, 500 210"/>
         <path id="p5" d="M210 330 C 360 330, 380 210, 500 210"/>
         <path id="p6" d="M210 395 C 360 395, 380 210, 500 210"/>
-        <path id="p7" d="M500 210 C 640 210, 660 210, 790 210"/>
+        <path id="p7" d="M500 210 C 640 210, 660 210, 790 210" stroke="url(#fl2)"/>
       </g>
       <g class="flow-pulses">
         <circle r="3.2"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#p1"/></animateMotion></circle>
@@ -422,7 +423,7 @@ PAGE = {
 <section class="bento" id="capacites">
   <div class="head" data-rev>
     <p class="kick">Six solutions · Un point de départ</p>
-    <h2 data-split>Votre besoin.<br>La bonne solution.</h2>
+    <h2 data-split>Votre besoin.<br><em>La bonne solution.</em></h2>
     <p>Choisissez ce que vous aimeriez simplifier. Un clic sur une carte ouvre sa solution.</p>
   </div>
   <nav class="grid" aria-label="Accéder aux six solutions">
@@ -450,7 +451,7 @@ PAGE = {
 <!-- Offre -->
 <section class="offer" id="offre">
   <div class="head" data-rev>
-    <h2>Choisissez votre environnement.</h2>
+    <h2>Choisissez votre <em>environnement.</em></h2>
     <p>Un seul JARVIS, configuré pour votre réalité. Chaque déploiement commence
     par une première preuve utile, définie avec vous.</p>
   </div>
@@ -496,7 +497,7 @@ PAGE = {
        alt="Laboratoire mobile JARVIS — ambulance Ford 2017 dans le garage" loading="lazy"></div>
   <div class="band-inner">
     <p class="eyebrow" data-rev>Premier terrain de preuve</p>
-    <h2 data-rev>Le système sort<br>de l’écran.</h2>
+    <h2 data-rev>Le système sort<br><em>de l’écran.</em></h2>
     <div class="specs" data-rev>
       <div><b><span data-n="560">560</span><i>Ah</i></b><small>Énergie</small></div>
       <div><b><span data-n="500">500</span><i>W</i></b><small>Solaire</small></div>

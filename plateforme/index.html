@@ -20,13 +20,13 @@
 <meta name="geo.region" content="CA-QC">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="/favicon.svg?v=20261106h">
+<link rel="icon" href="/favicon.svg?v=20261106i">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script>try{var m=new URLSearchParams(location.search).get("mode")||localStorage.getItem("jarvis-mode");if(m==="base"||m==="signature"||m==="platinum")document.documentElement.dataset.mode=m}catch(e){}</script>
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/wow.css?v=20261106h">
-<link rel="stylesheet" href="/assets/demos/app.css?v=20261106h">
-<link rel="stylesheet" href="/assets/demos/rust.css?v=20261106h">
+<link rel="stylesheet" href="/assets/css/wow.css?v=20261106i">
+<link rel="stylesheet" href="/assets/demos/app.css?v=20261106i">
+<link rel="stylesheet" href="/assets/demos/rust.css?v=20261106i">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -450,7 +450,7 @@
       <caption>Le même travail, trois façons de l’écrire</caption>
       <thead><tr><th scope="col"><span class="sr">Critère</span></th><th scope="col">C et C++<small>caméras, routeurs, boîtiers</small></th>
         <th scope="col">Python<small>beaucoup d’outils maison</small></th><th scope="col" class="is-rust">Rust<small>le noyau de JARVIS</small></th></tr></thead>
-      <tbody><tr><th scope="row">Failles de mémoire (débordement, accès après libération)</th><td class="rs-c is-no"><i aria-hidden="true">✕</i>Possibles</td><td class="rs-c is-ok"><i aria-hidden="true">✓</i>Évitées par l’interpréteur</td><td class="rs-c is-ok is-rust"><i aria-hidden="true">✓</i>Impossibles, vérifié à la compilation</td></tr><tr><th scope="row">Erreurs attrapées avant de démarrer (types, erreur oubliée, valeur absente)</th><td class="rs-c is-mid"><i aria-hidden="true">~</i>En partie</td><td class="rs-c is-no"><i aria-hidden="true">✕</i>Découvertes en marche</td><td class="rs-c is-ok is-rust"><i aria-hidden="true">✓</i>Le compilateur refuse</td></tr><tr><th scope="row">Tâches simultanées sans conflit de données</th><td class="rs-c is-no"><i aria-hidden="true">✕</i>À la main</td><td class="rs-c is-mid"><i aria-hidden="true">~</i>En partie</td><td class="rs-c is-ok is-rust"><i aria-hidden="true">✓</i>Garanti par le langage</td></tr><tr><th scope="row">Vitesse et mémoire sur un petit boîtier</th><td class="rs-c is-ok"><i aria-hidden="true">✓</i>Très bonnes</td><td class="rs-c is-no"><i aria-hidden="true">✕</i>Interpréteur lourd</td><td class="rs-c is-ok is-rust"><i aria-hidden="true">✓</i>Comme le C, sans ses failles</td></tr><tr><th scope="row">Ce qui est installé chez vous</th><td class="rs-c is-mid"><i aria-hidden="true">~</i>Programme compilé</td><td class="rs-c is-no"><i aria-hidden="true">✕</i>Interpréteur et paquets</td><td class="rs-c is-ok is-rust"><i aria-hidden="true">✓</i>Un seul programme, signé</td></tr></tbody>
+      <tbody><tr><th scope="row">Failles de mémoire (débordement, accès après libération)</th><td class="rs-c is-no" data-l="C et C++"><i aria-hidden="true">✕</i>Possibles</td><td class="rs-c is-ok" data-l="Python"><i aria-hidden="true">✓</i>Évitées par l’interpréteur</td><td class="rs-c is-ok is-rust" data-l="Rust"><i aria-hidden="true">✓</i>Impossibles, vérifié à la compilation</td></tr><tr><th scope="row">Erreurs attrapées avant de démarrer (types, erreur oubliée, valeur absente)</th><td class="rs-c is-mid" data-l="C et C++"><i aria-hidden="true">~</i>En partie</td><td class="rs-c is-no" data-l="Python"><i aria-hidden="true">✕</i>Découvertes en marche</td><td class="rs-c is-ok is-rust" data-l="Rust"><i aria-hidden="true">✓</i>Le compilateur refuse</td></tr><tr><th scope="row">Tâches simultanées sans conflit de données</th><td class="rs-c is-no" data-l="C et C++"><i aria-hidden="true">✕</i>À la main</td><td class="rs-c is-mid" data-l="Python"><i aria-hidden="true">~</i>En partie</td><td class="rs-c is-ok is-rust" data-l="Rust"><i aria-hidden="true">✓</i>Garanti par le langage</td></tr><tr><th scope="row">Vitesse et mémoire sur un petit boîtier</th><td class="rs-c is-ok" data-l="C et C++"><i aria-hidden="true">✓</i>Très bonnes</td><td class="rs-c is-no" data-l="Python"><i aria-hidden="true">✕</i>Interpréteur lourd</td><td class="rs-c is-ok is-rust" data-l="Rust"><i aria-hidden="true">✓</i>Comme le C, sans ses failles</td></tr><tr><th scope="row">Ce qui est installé chez vous</th><td class="rs-c is-mid" data-l="C et C++"><i aria-hidden="true">~</i>Programme compilé</td><td class="rs-c is-no" data-l="Python"><i aria-hidden="true">✕</i>Interpréteur et paquets</td><td class="rs-c is-ok is-rust" data-l="Rust"><i aria-hidden="true">✓</i>Un seul programme, signé</td></tr></tbody>
     </table>
   </div>
 
@@ -674,8 +674,8 @@
   </div>
   <p class="foot-line"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span>Privé par conception</span></p>
 </footer>
-<script src="/assets/js/wow.js?v=20261106h" defer></script>
-<script src="/assets/demos/app.js?v=20261106h" defer></script>
-<script src="/assets/demos/rust.js?v=20261106h" defer></script>
+<script src="/assets/js/wow.js?v=20261106i" defer></script>
+<script src="/assets/demos/app.js?v=20261106i" defer></script>
+<script src="/assets/demos/rust.js?v=20261106i" defer></script>
 </body>
 </html>

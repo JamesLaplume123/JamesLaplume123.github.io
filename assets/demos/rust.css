@@ -115,6 +115,17 @@ html:not(.fx) [data-demo="rust"] .rs-out { opacity: 1; transform: none; }
   [data-demo="rust"] .rs-core em { font-size: .62rem; }
   [data-demo="rust"] .rs-msg { left: .8rem; right: .8rem; font-size: .7rem; }
   [data-demo="rust"] .rs-out { right: .8rem; }
+  /* Comparaison en cartes : les trois langages visibles d'un coup, Rust en évidence */
+  [data-demo="rust"] .rs-compare { overflow: visible; }
+  [data-demo="rust"] table, [data-demo="rust"] tbody, [data-demo="rust"] tr, [data-demo="rust"] tbody th, [data-demo="rust"] td { display: block; min-width: 0; width: auto; }
+  [data-demo="rust"] thead { display: none; }
+  [data-demo="rust"] tbody tr { padding: 1.1rem 0; }
+  [data-demo="rust"] tbody th { padding: 0 0 .7rem; color: #fff; font-weight: 600; }
+  [data-demo="rust"] td { display: flex; align-items: center; padding: .5rem .7rem; font-size: .88rem; }
+  [data-demo="rust"] td::before { content: attr(data-l); flex: 0 0 4.9rem; font: 600 .62rem/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #8f8f99; }
+  [data-demo="rust"] td i { flex: 0 0 auto; vertical-align: 0; }
+  [data-demo="rust"] td.is-rust { margin-top: .35rem; border: 1px solid color-mix(in srgb, var(--gold-soft) 38%, transparent); border-radius: 10px; }
+  [data-demo="rust"] td.is-rust::before { color: var(--gold-soft); }
 }
 @media (prefers-reduced-motion: reduce) {
   [data-demo="rust"] .rs-dot { display: none; }

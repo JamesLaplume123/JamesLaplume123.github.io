@@ -1123,15 +1123,10 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
 }
 
 /* ==========================================================================
-   Héros : la maison s'allume pièce par pièce, puis JARVIS affiche ce qu'il voit
+   Héros : la lumière se répand doucement dans la maison (balayage large et fondu),
+   puis JARVIS affiche ce qu'il voit
    ========================================================================== */
-@property --l1 { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
-@property --l2 { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
-@property --l3 { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
-@property --l4 { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
-@property --l5 { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
-@property --l6 { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
-@property --l7 { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+@property --sweep { syntax: "<percentage>"; inherits: false; initial-value: -45%; }
 .hero .bg { will-change: transform, filter; transform-origin: 50% 60%; }
 .hero .bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: auto; }
 .hero .bg img.dark { display: none; }
@@ -1140,41 +1135,16 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
   filter: brightness(.16) saturate(.5) contrast(1.15) hue-rotate(-12deg);
 }
 .fx .hero .bg img.lit {
-  --m1: 58% 47%; --m2: 74% 50%; --m3: 35% 78%; --m4: 27% 63%; --m5: 88% 50%; --m6: 55% 12%; --m7: 50% 55%;
-  -webkit-mask-image:
-    radial-gradient(circle at var(--m1), #000 calc(var(--l1) * .55), transparent var(--l1)),
-    radial-gradient(circle at var(--m2), #000 calc(var(--l2) * .55), transparent var(--l2)),
-    radial-gradient(circle at var(--m3), #000 calc(var(--l3) * .55), transparent var(--l3)),
-    radial-gradient(circle at var(--m4), #000 calc(var(--l4) * .55), transparent var(--l4)),
-    radial-gradient(circle at var(--m5), #000 calc(var(--l5) * .55), transparent var(--l5)),
-    radial-gradient(circle at var(--m6), #000 calc(var(--l6) * .55), transparent var(--l6)),
-    radial-gradient(circle at var(--m7), #000 calc(var(--l7) * .6), transparent var(--l7));
-  mask-image:
-    radial-gradient(circle at var(--m1), #000 calc(var(--l1) * .55), transparent var(--l1)),
-    radial-gradient(circle at var(--m2), #000 calc(var(--l2) * .55), transparent var(--l2)),
-    radial-gradient(circle at var(--m3), #000 calc(var(--l3) * .55), transparent var(--l3)),
-    radial-gradient(circle at var(--m4), #000 calc(var(--l4) * .55), transparent var(--l4)),
-    radial-gradient(circle at var(--m5), #000 calc(var(--l5) * .55), transparent var(--l5)),
-    radial-gradient(circle at var(--m6), #000 calc(var(--l6) * .55), transparent var(--l6)),
-    radial-gradient(circle at var(--m7), #000 calc(var(--l7) * .6), transparent var(--l7));
-  animation:
-    lon1 1.8s .55s cubic-bezier(.2,.7,.2,1) forwards, lon2 1.8s .95s cubic-bezier(.2,.7,.2,1) forwards,
-    lon3 1.8s 1.3s cubic-bezier(.2,.7,.2,1) forwards, lon4 1.8s 1.6s cubic-bezier(.2,.7,.2,1) forwards,
-    lon5 1.8s 1.95s cubic-bezier(.2,.7,.2,1) forwards, lon6 2s 2.3s cubic-bezier(.2,.7,.2,1) forwards,
-    lon7 2.6s 2.9s cubic-bezier(.4,0,.2,1) forwards;
+  -webkit-mask-image: linear-gradient(104deg, #000 var(--sweep), transparent calc(var(--sweep) + 42%));
+  mask-image: linear-gradient(104deg, #000 var(--sweep), transparent calc(var(--sweep) + 42%));
+  animation: heroSweep 3s .35s cubic-bezier(.5, .05, .25, 1) forwards;
 }
-@keyframes lon1 { 0% { --l1: 0%; } 30% { --l1: 9%; } 38% { --l1: 4%; } 100% { --l1: 26%; } }
-@keyframes lon2 { 0% { --l2: 0%; } 100% { --l2: 22%; } }
-@keyframes lon3 { 0% { --l3: 0%; } 25% { --l3: 8%; } 33% { --l3: 3%; } 100% { --l3: 24%; } }
-@keyframes lon4 { 0% { --l4: 0%; } 100% { --l4: 20%; } }
-@keyframes lon5 { 0% { --l5: 0%; } 20% { --l5: 10%; } 26% { --l5: 2%; } 34% { --l5: 12%; } 100% { --l5: 26%; } }
-@keyframes lon6 { 0% { --l6: 0%; } 100% { --l6: 30%; } }
-@keyframes lon7 { 0% { --l7: 0%; } 100% { --l7: 160%; } }
+@keyframes heroSweep { from { --sweep: -45%; } to { --sweep: 100%; } }
 .hero-flash {
   position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0;
   background: radial-gradient(60% 50% at 55% 55%, #ffcf8a33, transparent 70%);
 }
-.fx .hero-flash { animation: heroFlash 3.4s 2.6s ease-out forwards; }
+.fx .hero-flash { animation: heroFlash 3s 1.9s ease-out forwards; }
 @keyframes heroFlash { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
 
 /* Panneau JARVIS du héros : net, vivant, honnête sur ce qui est simulé */

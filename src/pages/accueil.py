@@ -251,12 +251,12 @@ PAGE = {
   </ol>
 </section>
 
-<!-- Vitrine de l'app : les cinq écrans déroulés, un par chapitre (assets/demos/app.*) -->
+<!-- Vitrine de l'app (dossier User v25) : les écrans principaux déroulés, un par chapitre (assets/demos/app.*) -->
 <section class="vitrine" id="app" aria-label="JARVIS App">
   <div class="head" data-rev>
     <p class="eyebrow">JARVIS App · l’interface</p>
     <h2 data-split>Une seule application.<br><em>Toute votre vie connectée.</em></h2>
-    <p class="vitrine-lead">Voici les cinq écrans, tels qu’ils sont. Rien n’est une image&nbsp;:
+    <p class="vitrine-lead">Voici les écrans principaux, tels qu’ils sont. Rien n’est une image&nbsp;:
     chaque écran est la vraie interface, avec des données fictives.</p>
   </div>
   {app.sequence()}

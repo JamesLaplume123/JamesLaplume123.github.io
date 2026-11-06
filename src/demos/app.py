@@ -1,6 +1,7 @@
 # Démo « JARVIS App » : l'application rendue en vrai HTML/CSS, nette à toutes les tailles.
-# Remplace les captures floues de la vitrine de l'accueil. Cinq écrans (Accueil, Assistant,
-# Ma journée, Carte, Partage) dans un même appareil, pilotés par la barre latérale
+# Fidèle au dossier User révision 25 : menu Accueil, Mon espace, Carte, Mes outils, Administration;
+# bannière du lac au coucher du soleil; barre latérale dorée vitreuse. Sept écrans (Accueil, Assistant,
+# Mon espace, Ma journée, Mes partages, Carte, Mes outils), pilotés par la barre latérale
 # (barre d'onglets en bas sur cellulaire). Styles et script : assets/demos/app.css et app.js.
 # Données fictives, sauf l'heure locale et la météo réelle de Saint-Hyacinthe.
 
@@ -74,6 +75,12 @@ ICONS = {
     "rain": '<path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="m8.5 18-1 2.25M12.5 18l-1 2.25M16.5 18l-1 2.25"/>',
     "snow": '<path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="M8 18.5v.1M12 19.75v.1M16 18.5v.1M10 21.5v.1M14 21.5v.1"/>',
     "fog": '<path d="M4 9.5h16M6 13h12M4 16.5h16M8 20h8"/>',
+    "grid": '<rect x="4" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="4" width="6.75" height="6.75" rx="1.75"/>'
+            '<rect x="4" y="13.25" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="13.25" width="6.75" height="6.75" rx="1.75"/>',
+    "sliders": '<path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><path d="M15 5v4M9 10v4M17 15v4"/>',
+    "devices": '<rect x="3" y="5" width="13" height="9.5" rx="1.5"/><path d="M2 17.5h15"/><rect x="17.5" y="9" width="4.5" height="9.5" rx="1.2"/>',
+    "gear": '<circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.55 1.55M16.45 16.45 18 18M6 18l1.55-1.55M16.45 7.55 18 6"/>',
+    "image": '<rect x="3.5" y="5" width="17" height="14" rx="2.25"/><circle cx="9" cy="10" r="1.6"/><path d="m4 17 5-4.5 4 3.5 3-2.5 4 3.5"/>',
 }
 
 
@@ -89,27 +96,54 @@ def mono(initials, tone):
     return f'<span class="ap-mono t-{tone}" aria-hidden="true">{initials}</span>'
 
 
+def face(src):
+    return f'<img class="ap-mono ap-face" src="{src}" alt="" aria-hidden="true" loading="lazy" decoding="async" width="96" height="96">'
+
+
 # ---------------------------------------------------------------------------------------------
-# Les cinq écrans : clé, libellé, libellé court (cellulaire), icône, durée (ms), légende
+# Menu (révision 25) : clé, libellé, libellé court (cellulaire), icône
 # ---------------------------------------------------------------------------------------------
+NAV = [
+    ("accueil", "Accueil", "Accueil", "home"),
+    ("espace", "Mon espace", "Espace", "user"),
+    ("carte", "Carte", "Carte", "pin"),
+    ("outils", "Mes outils", "Outils", "grid"),
+]
+NOTE = {
+    "admin": "Administration : comptes, droits et extensions. Réservée à l’administrateur de votre système.",
+    "outils": "Mes outils : les outils autorisés par votre administrateur apparaissent ici. Aucun n’est actif dans cette démo.",
+}
+TITLE = {"accueil": "Accueil", "assistant": "Assistant JARVIS", "espace": "Mon espace", "journee": "Ma journée",
+         "partage": "Mes partages", "carte": "Carte", "outils": "Mes outils"}
+# Chapitres de la séquence de l'accueil (un appareil par écran)
+SEQUENCE = ["accueil", "assistant", "espace", "journee", "partage", "carte"]
+
+# Les écrans, dans l'ordre de la visite : clé, entrée du menu, durée (ms), légende
 SCREENS = [
-    ("accueil", "Accueil", "Accueil", "home", 7000, "Votre journée, sur un seul écran.",
+    ("accueil", "accueil", 7000, "Votre journée, sur un seul écran.",
      "Messages, agenda, lieux et assistant réunis, à votre image."),
-    ("assistant", "Assistant", "Assistant", "spark", 13000, "Il propose. Vous décidez.",
+    ("assistant", "accueil", 13000, "Il propose. Vous décidez.",
      "Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord."),
-    ("journee", "Ma journée", "Journée", "calendar", 8000, "Tous vos agendas, enfin ensemble.",
+    ("espace", "espace", 7500, "Votre quotidien, à votre image.",
+     "Agenda, documents, appareils, connexions et partages : chaque chose à sa place."),
+    ("journee", "espace", 8000, "Tous vos agendas, enfin ensemble.",
      "Calendriers et tâches de toutes vos sources. Ce qui est en lecture seule le reste."),
-    ("carte", "Carte", "Carte", "pin", 8000, "Vos lieux, sans surveillance.",
-     "La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée."),
-    ("partage", "Partage", "Partage", "share", 8500, "Vous choisissez ce que vous partagez.",
+    ("partage", "espace", 8500, "Vous choisissez ce que vous partagez.",
      "Avec qui, pour combien de temps, et sous votre contrôle. Un accès retiré disparaît partout."),
+    ("carte", "carte", 8000, "Vos lieux, sans surveillance.",
+     "La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée."),
+    ("outils", "outils", 6500, "Seulement ce qui est autorisé.",
+     "Un outil apparaît quand l’administrateur l’active. Rien ne s’obtient d’un simple clic."),
 ]
 
-# Photos d'ambiance (déjà sur le site, recadrées) : jamais les captures floues du PDF.
-BANNER = "/media/concept/jarvis-hero-architecture-v1.webp"
+# Bannière et visages repris du dossier User v25 (texte incrusté retiré); photos d'ambiance du site.
+BANNER = "/media/app/banniere-lac.webp"
+AV_ALEX = "/media/app/alex.webp"
+AV_CAMILLE = "/media/app/camille.webp"
+AV_EQUIPE = "/media/app/equipe.webp"
 PH_SOUPER = "/media/solutions/camera-rear-terrace-v1.webp"
 PH_DOCS = "/media/solutions/ia-privee-connaissances.webp"
-PH_RECO = "/media/ambiances/heure-doree.webp"
+PH_RECO = BANNER
 
 
 # ---------------------------------------------------------------------------------------------
@@ -287,9 +321,9 @@ def v_accueil():
     notifs = f"""<div class="ap-card ap-notifs" data-r>
   <div class="ap-nt"><span class="ap-ring">{icon("bell")}</span><span><b>Notifications</b>
     <small><i class="ap-dot is-red" aria-hidden="true"></i><span data-ap-n="2">2</span> non lues</small></span></div>
-  <div class="ap-nt">{mono("CL", "gold")}<span><b>Camille</b><small>Un message</small></span><i class="ap-dot is-red" aria-hidden="true"></i></div>
-  <div class="ap-nt"><span class="ap-ring">{icon("calendar")}</span><span><b>Ma journée</b><small>Demain à 8 h 30</small></span></div>
-  <div class="ap-nt"><span class="ap-ring is-ok">{icon("shield")}</span><span><b>Maison</b><small>Tout est calme</small></span></div>
+  <div class="ap-nt">{face(AV_CAMILLE)}<span><b>Camille</b><small>Nouveau message</small></span><i class="ap-dot is-red" aria-hidden="true"></i></div>
+  <div class="ap-nt"><span class="ap-ring">{icon("calendar")}</span><span><b>Ma journée</b><small>Demain à 8 h 30</small></span><i class="ap-dot is-red" aria-hidden="true"></i></div>
+  <div class="ap-nt ap-nt-all"><button type="button" class="ap-link" data-go="espace">Tout voir{icon("right")}</button></div>
 </div>"""
     agenda = f"""<ol class="ap-tl" data-seg-panel="agenda">
       <li class="s-perso"><div class="ap-tl-t"><small>Ce soir · 19 h – 22 h</small><b>Souper entre amis</b>
@@ -319,9 +353,11 @@ def v_accueil():
       <button type="button" class="ap-ask" data-go="assistant">{icon("spark")}<span>Écrire à JARVIS…</span><i>{icon("send")}</i></button>
     </article>
     <article class="ap-card ap-reco" data-r>
+      {_card_h("star", "Recommandations JARVIS")}
       <img src="{PH_RECO}" alt="" loading="lazy" decoding="async">
-      <div><p class="ap-kick">{icon("star")}Recommandation</p><b>Ambiance Soirée</b>
-        <small data-ap="reco">Au coucher du soleil, si vous l’acceptez.</small></div>
+      <div class="ap-reco-b"><span><b>Préparer votre journée</b>
+        <small>Vos rendez-vous, la météo et l’essentiel pour bien commencer.</small></span>
+        <button type="button" class="ap-btn ap-reco-go" data-go="journee">Voir{icon("right")}</button></div>
     </article>
   </div>
 </div>
@@ -344,8 +380,8 @@ def v_accueil():
   <article class="ap-card ap-msgs" data-r>
     {_card_h("mail", "Mes messages")}
     <ul class="ap-rows">
-      <li><div>{mono("CL", "gold")}<span><b>Camille</b><small>Tu es disponible pour le souper ce soir ?</small></span><time>12 min</time></div></li>
-      <li><div>{mono("ÉA", "teal")}<span><b>Équipe Atelier</b><small>Le dossier est prêt. On en discute demain matin.</small></span><time>2 h</time></div></li>
+      <li><div>{face(AV_CAMILLE)}<span><b>Camille</b><small>Tu es disponible pour le souper ce soir ?</small></span><time>12 min</time></div></li>
+      <li><div>{face(AV_EQUIPE)}<span><b>Équipe Atelier</b><small>Le dossier est prêt. On en discute demain matin.</small></span><time>2 h</time></div></li>
     </ul>
   </article>
 </div>"""
@@ -355,7 +391,7 @@ def v_assistant():
     def src(ic, a, b):
         return f'<span class="ap-src">{icon(ic)}{a}<em>{b}</em></span>'
 
-    me = mono("A", "stone")
+    me = face(AV_ALEX)
     return f"""{_head('Accueil <span>/</span> <b>Assistant</b>', 'Assistant <em>JARVIS</em>', "Parlez à JARVIS, tout simplement.")}
 <div class="ap-card ap-chat" data-r>
   <div class="ap-prompts" aria-hidden="true">
@@ -402,6 +438,61 @@ EVENTS = [
     (2, 14, 16.5, "Marche au mont Saint-Hilaire", "perso", "Personnel", "pin"),
 ]
 H0, H1 = 8, 22
+
+
+def v_espace():
+    tiles = [
+        ("calendar", "Ma journée", "Vos rendez-vous et priorités du jour.", 'data-go="journee"'),
+        ("doc", "Mes documents", "Vos fichiers au même endroit.", 'data-toast="Mes documents : vos fichiers, depuis les sources que vous avez autorisées."'),
+        ("devices", "Mes appareils", "Vos appareils personnels.", 'data-toast="Mes appareils : chaque appareil connecté à votre compte, et ses sessions."'),
+        ("link", "Mes connexions", "Vos services autorisés.", 'data-toast="Mes connexions : agenda, documents, messagerie. Vous choisissez ce que JARVIS peut lire."'),
+        ("share", "Mes partages", "Je choisis ce que je partage.", 'data-go="partage"'),
+        ("gear", "Mes préférences", "Mon accueil, mes réglages.", 'data-toast="Mes préférences : langue, notifications et cartes de votre accueil."'),
+    ]
+    grid = "".join(
+        f'<button type="button" class="ap-card ap-tile" {act} data-r><span class="ap-tile-i">{icon(ic)}</span>'
+        f'<span class="ap-tile-t"><b>{t}</b><small>{d}</small></span><i class="ap-tile-go">{icon("right")}</i></button>'
+        for ic, t, d, act in tiles
+    )
+    notes = [
+        ("is-unread", face(AV_CAMILLE), "Camille", "Nouveau message", "JARVIS", "il y a 10 min"),
+        ("is-unread", f'<span class="ap-ring">{icon("calendar")}</span>', "Ma journée", "Préparer les documents demain à 8 h 30", "Agenda personnel", "il y a 1 h"),
+        ("", f'<span class="ap-ring is-blue">{icon("doc")}</span>', "Mes documents", "Camille a partagé Liste de matériel.pdf", "Document partagé", "hier"),
+    ]
+    nl = "".join(
+        f'<li class="{c}">{av}<span><b>{t}</b><small>{d}</small><em>{tag}</em></span><time>{when}</time></li>'
+        for c, av, t, d, tag, when in notes
+    )
+    return f"""{_head("", "Mon <em>espace</em>", "Votre quotidien, à votre image.")}
+<div class="ap-es">
+  <div class="ap-es-main">
+    <div class="ap-tiles">{grid}</div>
+    <button type="button" class="ap-card ap-explore" data-go="carte" data-r>
+      <img src="{BANNER}" alt="" loading="lazy" decoding="async">
+      <span class="ap-tile-i">{icon("image")}</span>
+      <span class="ap-tile-t"><b>Explorer la carte</b><small>Retrouvez vos lieux, vos appareils et vos services sur la carte.</small></span>
+      <span class="ap-btn">Ouvrir la carte{icon("right")}</span>
+    </button>
+  </div>
+  <aside class="ap-card ap-notes" data-r>
+    <header class="ap-card-h">{icon("bell")}<h4>Notifications</h4><span class="ap-count"><b data-ap="unread">2</b> non lues</span></header>
+    <div class="ap-seg" role="group" aria-label="Filtrer"><button type="button" class="is-on" data-nf="all" aria-pressed="true">Toutes</button><button type="button" data-nf="unread" aria-pressed="false">Non lues</button></div>
+    <ul class="ap-nl">{nl}</ul>
+    <button type="button" class="ap-btn ap-markread" data-ap="markread">{icon("check")}<span>Tout marquer comme lu</span></button>
+  </aside>
+</div>"""
+
+
+def v_outils():
+    return f"""{_head("", "Mes <em>outils</em>", "Les outils auxquels vous avez accès, au même endroit.")}
+<div class="ap-card ap-empty" data-r>
+  <span class="ap-empty-i">{icon("grid")}</span>
+  <h4>Aucun outil disponible pour le moment</h4>
+  <p>Les outils autorisés par votre administrateur apparaîtront ici.</p>
+  <small>Vos fonctions personnelles restent accessibles dans Mon espace.</small>
+  <button type="button" class="ap-btn" data-go="espace">Ouvrir Mon espace{icon("right")}</button>
+  <button type="button" class="ap-under" data-toast="Démo : la demande irait à votre administrateur. Rien n’est envoyé.">Contacter mon administrateur</button>
+</div>"""
 
 
 def _hh(h):
@@ -524,7 +615,7 @@ def v_partage():
     for i, (ini, tone, name, role, ic, what, right, dur, pct, where) in enumerate(SHARES):
         steps = "".join(f"<li>{icon('check')}{w}</li>" for w in where)
         rows += f"""<li class="ap-acc" data-acc="{i}">
-  {mono(ini, tone)}
+  {face(AV_CAMILLE) if ini == "CL" else mono(ini, tone)}
   <span class="ap-acc-who"><b>{name}</b><small>{role}</small></span>
   <span class="ap-acc-what">{icon(ic)}<span><b>{what}</b><small>{right}</small></span></span>
   <span class="ap-acc-dur"><b>{dur}</b><i class="ap-bar" aria-hidden="true"><i style="transform:scaleX({pct / 100:.2f})"></i></i></span>
@@ -560,7 +651,8 @@ def v_partage():
 </div>"""
 
 
-VIEWS = {"accueil": v_accueil, "assistant": v_assistant, "journee": v_journee, "carte": v_carte, "partage": v_partage}
+VIEWS = {"accueil": v_accueil, "assistant": v_assistant, "espace": v_espace, "journee": v_journee,
+         "partage": v_partage, "carte": v_carte, "outils": v_outils}
 
 
 def _stagger(html):
@@ -573,42 +665,47 @@ ON = ' class="is-on"'
 
 
 def _device(only=None):
-    """L'appareil. `only` = clé d'écran : un seul écran, la barre latérale devient un index."""
+    """L'appareil. `only` = clé d'écran : un seul écran, la barre latérale devient un index des chapitres
+    (menu de la révision 25; une entrée sans chapitre affiche un court message)."""
     single = only is not None
     if single:
+        parent = next(n for (k, n, _d, _t, _p) in SCREENS if k == only)
+        chap = set(SEQUENCE)
         items = "".join(
-            f'<a class="ap-jump{" is-on" if k == only else ""}" href="#ecran-{k}"'
-            f'{" aria-current=\'true\'" if k == only else ""} aria-label="{lab}">{icon(ic)}'
-            f'<span class="l-long">{lab}</span><span class="l-short" aria-hidden="true">{short}</span></a>'
-            for (k, lab, short, ic, _d, _t, _p) in SCREENS
+            (f'<a class="ap-jump{" is-on" if k == parent else ""}" href="#ecran-{k}"'
+             f'{" aria-current=\'true\'" if k == parent else ""} aria-label="{lab}">' if k in chap else
+             f'<button type="button" class="ap-jump" data-toast="{fr(NOTE.get(k, ""))}" aria-label="{lab}">')
+            + f'{icon(ic)}<span class="l-long">{lab}</span><span class="l-short" aria-hidden="true">{short}</span>'
+            + ("</a>" if k in chap else "</button>")
+            for (k, lab, short, ic) in NAV
         )
         nav = f'<div class="ap-nav" aria-label="Écrans de JARVIS App">{items}</div>'
         picked = [x for x in SCREENS if x[0] == only]
         views = "".join(
-            f'<section class="ap-view ap-v-{k} is-on" role="group" id="ap-p-{k}-s" aria-label="{lab}" '
-            f'data-view="{k}" data-dur="{d}">{_stagger(fr(VIEWS[k]()))}</section>'
-            for (k, lab, _s, _ic, d, _t, _p) in picked
+            f'<section class="ap-view ap-v-{k} is-on" role="group" id="ap-p-{k}-s" aria-label="{TITLE[k]}" '
+            f'data-view="{k}" data-nav="{n}" data-dur="{d}">{_stagger(fr(VIEWS[k]()))}</section>'
+            for (k, n, d, _t, _p) in picked
         )
         caps = ""
     else:
         tabs = "".join(
             f'<button type="button" role="tab" id="ap-t-{k}" aria-controls="ap-p-{k}" aria-selected="{"true" if i == 0 else "false"}" '
-            f'tabindex="{0 if i == 0 else -1}" data-i="{i}" aria-label="{lab}"{ON if i == 0 else ""}>{icon(ic)}'
+            f'tabindex="{0 if i == 0 else -1}" data-nav="{k}" aria-label="{lab}"{ON if i == 0 else ""}>{icon(ic)}'
             f'<span class="l-long">{lab}</span><span class="l-short" aria-hidden="true">{short}</span></button>'
-            for i, (k, lab, short, ic, _d, _t, _p) in enumerate(SCREENS)
+            for i, (k, lab, short, ic) in enumerate(NAV)
         )
         nav = (f'<div class="ap-nav" role="tablist" aria-label="Écrans de JARVIS App" aria-orientation="vertical">'
                f'<i class="ap-ind" aria-hidden="true"><i class="ap-prog"></i></i>{tabs}</div>')
         views = "".join(
-            f'<section class="ap-view ap-v-{k}{" is-on" if i == 0 else ""}" role="tabpanel" id="ap-p-{k}" aria-labelledby="ap-t-{k}" '
-            f'data-view="{k}" data-dur="{d}"{"" if i == 0 else " inert"}>{_stagger(fr(VIEWS[k]()))}</section>'
-            for i, (k, _l, _s, _ic, d, _t, _p) in enumerate(SCREENS)
+            f'<section class="ap-view ap-v-{k}{" is-on" if i == 0 else ""}" role="tabpanel" id="ap-p-{k}" aria-labelledby="ap-t-{n}" '
+            f'data-view="{k}" data-nav="{n}" data-dur="{d}"{"" if i == 0 else " inert"}>{_stagger(fr(VIEWS[k]()))}</section>'
+            for i, (k, n, d, _t, _p) in enumerate(SCREENS)
         )
         caps = f"""
   <div class="ap-caps">
     <div class="ap-cap-txt" aria-live="polite">{"".join(
         f'<div class="ap-cap{" is-on" if i == 0 else ""}"><h3>{fr(t)}</h3><p>{fr(p)}</p></div>'
-        for i, (_k, _l, _s, _ic, _d, t, p) in enumerate(SCREENS))}</div>
+        for i, (_k, _n, _d, t, p) in enumerate(SCREENS))}</div>
     <div class="ap-ctrl">
       <span class="ap-step"><b data-ap="step">01</b> / 0{len(SCREENS)}</span>
       <button type="button" class="ap-play" data-ap="play" aria-label="Mettre la visite en pause">{icon("pause", "i-pause")}{icon("play", "i-play")}<span>Pause</span></button>
@@ -625,12 +722,12 @@ def _device(only=None):
         <p class="ap-badge"><span>Démo · données fictives</span></p>
         <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="{label}">
           <div class="ap-bg" aria-hidden="true"></div>
-          <img class="ap-banner" src="{BANNER}" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1916" height="821">
+          <img class="ap-banner" src="{BANNER}" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1990" height="342">
           <nav class="ap-side" aria-label="JARVIS App">
             <div class="ap-brand" aria-hidden="true"><b>JARVIS</b><small>Private Systems</small><em class="ap-modename"></em></div>
             {nav}
-            <div class="ap-side-f"><p class="ap-hubst"><i class="ap-dot is-ok" aria-hidden="true"></i><span><b>Hub en ligne</b><small>Saint-Hyacinthe</small></span></p>
-              <p class="ap-motto">Votre espace.<br>À votre image.</p></div>
+            <button type="button" class="ap-admin" data-toast="{fr(NOTE["admin"])}">{icon("sliders")}<span class="l-long">Administration</span></button>
+            <div class="ap-side-f"><p class="ap-motto">Votre espace.<br>À votre image.</p></div>
           </nav>
           <div class="ap-main">
             <header class="ap-top">
@@ -640,10 +737,12 @@ def _device(only=None):
                 <span class="ap-wx-i" aria-hidden="true">{WX}</span>
                 <span><b><span data-ap="temp">—</span><span class="ap-unit">{NB}°C</span></b><small>Saint-Hyacinthe<span class="ap-live"> · en direct</span></small></span>
               </span>
-              <span class="ap-me">{mono("A", "stone")}<b>Alex</b>{icon("down")}</span>
+              <span class="ap-pin" title="Emplacement du Hub">{icon("pin")}</span>
+              <span class="ap-me">{face(AV_ALEX)}<b>Alex</b>{icon("down")}</span>
             </header>
             <div class="ap-views">{views}</div>
           </div>
+          <p class="ap-flash" role="status" aria-live="polite"></p>
         </div>
         <i class="ap-sweep" aria-hidden="true"></i>
       </div>
@@ -653,29 +752,30 @@ def _device(only=None):
 
 
 def html():
-    """Un seul appareil, visite automatique des cinq écrans."""
+    """Un seul appareil, visite automatique des sept écrans."""
     return _device()
 
 
 def sequence():
-    """Les cinq écrans déroulés l'un sous l'autre : un chapitre, un appareil, beaucoup d'air."""
+    """Les écrans principaux déroulés l'un sous l'autre : un chapitre, un appareil, beaucoup d'air."""
+    info = {k: (t, p) for (k, _n, _d, t, p) in SCREENS}
     rail = "".join(
-        f'<li><a href="#ecran-{k}"><i>{i + 1:02d}</i><span>{lab}</span></a></li>'
-        for i, (k, lab, _s, _ic, _d, _t, _p) in enumerate(SCREENS)
+        f'<li><a href="#ecran-{k}"><i>{i + 1:02d}</i><span>{TITLE[k]}</span></a></li>'
+        for i, k in enumerate(SEQUENCE)
     )
     chapters = "".join(
         f"""<section class="apx-ch" id="ecran-{k}" aria-labelledby="ecran-{k}-t">
   <div class="apx-head" data-rev>
-    <p class="apx-k"><i>{i + 1:02d}</i><span>{lab}</span></p>
-    <h3 id="ecran-{k}-t">{fr(t)}</h3>
-    <p>{fr(p)}</p>
+    <p class="apx-k"><i>{i + 1:02d}</i><span>{TITLE[k]}</span></p>
+    <h3 id="ecran-{k}-t">{fr(info[k][0])}</h3>
+    <p>{fr(info[k][1])}</p>
   </div>
   {_device(k)}
 </section>"""
-        for i, (k, lab, _s, _ic, _d, t, p) in enumerate(SCREENS)
+        for i, k in enumerate(SEQUENCE)
     )
     return f"""<div class="apx">
-  <nav class="apx-rail" aria-label="Les cinq écrans de JARVIS App"><ol>{rail}</ol>
+  <nav class="apx-rail" aria-label="Les écrans de JARVIS App"><ol>{rail}</ol>
     <p class="apx-note">{icon("info")}<span>Données fictives{NB}· tout est cliquable</span></p>
   </nav>
   {chapters}

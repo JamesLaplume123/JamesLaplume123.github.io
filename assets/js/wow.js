@@ -416,27 +416,6 @@
   if (reduce) return;
   doc.classList.add("fx");
 
-  /* ---------- Héros : les lumières s'allument aux bons endroits de l'image (object-fit: cover) ---------- */
-  var heroBox = $("[data-hero]");
-  if (heroBox) {
-    var lit = $(".bg img.lit", heroBox);
-    var LIGHTS = [[58, 47], [74, 50], [35, 78], [27, 63], [88, 50], [55, 12], [50, 55]];
-    var map = function (ix, iy) {
-      var W = heroBox.clientWidth, H = heroBox.clientHeight, R = 1916 / 821;
-      var w = Math.max(W, H * R), h = w / R;
-      return [((ix / 100) * w - (w - W) / 2) / W * 100, ((iy / 100) * h - (h - H) / 2) / H * 100];
-    };
-    var place = function () {
-      if (lit) LIGHTS.forEach(function (l, i) {
-        var m = map(l[0], l[1]);
-        lit.style.setProperty("--m" + (i + 1), m[0].toFixed(1) + "% " + m[1].toFixed(1) + "%");
-      });
-    };
-    place();
-    addEventListener("resize", place);
-  }
-
-
   /* Filet de sécurité : tout redevient visible (impression) */
   function defuse() {
     doc.classList.remove("fx");

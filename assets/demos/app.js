@@ -1,4 +1,6 @@
-/* Démo « JARVIS App » : cinq écrans réels, pilotés par la barre latérale (ou les onglets du bas).
+/* Démo « JARVIS App » (dossier User v25) : sept écrans, quatre entrées de menu, pilotés par la barre latérale
+   (ou les onglets du bas). Un écran appartient à une entrée du menu (data-nav) : Ma journée et Mes partages
+   sont dans Mon espace, l'Assistant part de l'Accueil.
    Vraies données : l'heure locale et la météo de Saint-Hyacinthe (Environnement Canada).
    Tout le reste est fictif : aucun rappel, partage ou appareil réel n'est touché. */
 (function () {
@@ -80,10 +82,13 @@
     var stage = $(".ap-stage"), tilt = $(".ap-tilt"), banner = $(".ap-banner");
     var tabs = $$('.ap-nav [role="tab"]'), views = $$(".ap-view"), caps = $$(".ap-cap");
     var keys = views.map(function (v) { return v.getAttribute("data-view"); });
+    var navs = tabs.map(function (t) { return t.getAttribute("data-nav"); });
+    function tabOf(i) { return Math.max(0, navs.indexOf(views[i].getAttribute("data-nav"))); }
     var ind = $(".ap-ind"), prog = $(".ap-prog");
     var stepEl = $('[data-ap="step"]'), playBtn = $('[data-ap="play"]');
     var n = views.length, cur = 0;
-    var BANNER = ["scale(1.02)", "scale(1.12) translate(-3%, 2%)", "scale(1.08) translate(3%, -1%)", "scale(1.16) translate(-1%, 3%)", "scale(1.1) translate(2%, 1%)"];
+    var BANNER = ["scale(1.02)", "scale(1.1) translate(-3%, 2%)", "scale(1.06) translate(3%, 1%)", "scale(1.12) translate(-2%, 3%)",
+      "scale(1.08) translate(2%, 1%)", "scale(1.14) translate(-1%, 2%)", "scale(1.05) translate(1%, -1%)"];
 
     /* ---------------------------------------------------------------- Compteurs */
     function countUp(el, to) {
@@ -202,7 +207,7 @@
       prog = np;
     }
     function moveInd() {
-      var b = tabs[cur];
+      var b = tabs[tabOf(cur)];
       if (ind && b) ind.style.transform = "translate(" + b.offsetLeft + "px," + b.offsetTop + "px)";
     }
     function enter(v, i) {
@@ -236,8 +241,9 @@
       var prev = cur;
       cur = i;
       leave(views[prev], prev);
+      var ti = tabOf(i);
       tabs.forEach(function (t, k) {
-        var on = k === i;
+        var on = k === ti;
         t.setAttribute("aria-selected", on ? "true" : "false");
         t.tabIndex = on ? 0 : -1;
         t.classList.toggle("is-on", on);
@@ -253,20 +259,31 @@
       arm();
     }
 
+    function viewOf(t) { return Math.max(0, keys.indexOf(navs[t])); }
     tabs.forEach(function (t, k) {
-      t.addEventListener("click", function () { go(k, true); });
+      t.addEventListener("click", function () { go(viewOf(k), true); });
     });
-    var nav = $(".ap-nav");
-    if (nav && tabs.length) nav.addEventListener("keydown", function (e) {
-      var k = e.key, j = null;
-      if (k === "ArrowDown" || k === "ArrowRight") j = (cur + 1) % n;
-      else if (k === "ArrowUp" || k === "ArrowLeft") j = (cur + n - 1) % n;
+    var nav = $(".ap-nav"), nt = tabs.length;
+    if (nav && nt) nav.addEventListener("keydown", function (e) {
+      var k = e.key, j = null, c = tabOf(cur);
+      if (k === "ArrowDown" || k === "ArrowRight") j = (c + 1) % nt;
+      else if (k === "ArrowUp" || k === "ArrowLeft") j = (c + nt - 1) % nt;
       else if (k === "Home") j = 0;
-      else if (k === "End") j = n - 1;
+      else if (k === "End") j = nt - 1;
       if (j === null) return;
       e.preventDefault();
-      go(j, true);
+      go(viewOf(j), true);
       tabs[j].focus();
+    });
+    /* Petit message dans l'app (Administration, éléments présentés ailleurs) */
+    var flash = $(".ap-flash"), flashT = null;
+    root.addEventListener("click", function (e) {
+      var t = e.target.closest("[data-toast]");
+      if (!t || !root.contains(t) || !flash) return;
+      flash.textContent = t.getAttribute("data-toast");
+      flash.classList.add("is-on");
+      clearTimeout(flashT);
+      flashT = setTimeout(function () { flash.classList.remove("is-on"); }, 3600);
     });
     root.addEventListener("click", function (e) {
       var g = e.target.closest("[data-go]");
@@ -301,6 +318,36 @@
         $$("[data-seg-panel]", card).forEach(function (p) { p.hidden = p.getAttribute("data-seg-panel") !== b.getAttribute("data-seg"); });
       });
     });
+
+    /* ---------------------------------------------------------------- Mon espace : notifications */
+    (function () {
+      var v = $(".ap-v-espace");
+      if (!v) return;
+      var list = $(".ap-nl", v), count = $('[data-ap="unread"]', v), mark = $('[data-ap="markread"]', v);
+      var unread = $$(".is-unread", list), LABEL = mark.lastChild.textContent;
+      $$("[data-nf]", v).forEach(function (b) {
+        b.addEventListener("click", function () {
+          $$("[data-nf]", v).forEach(function (x) { var on = x === b; x.classList.toggle("is-on", on); x.setAttribute("aria-pressed", on ? "true" : "false"); });
+          list.classList.toggle("only-unread", b.getAttribute("data-nf") === "unread");
+        });
+      });
+      mark.addEventListener("click", function () {
+        unread.forEach(function (li) { li.classList.remove("is-unread"); });
+        countUp(count, 0);
+        mark.disabled = true;
+        mark.classList.add("is-done");
+        mark.lastChild.textContent = "Tout est lu";
+      });
+      hooks.espace = {
+        leave: function () {
+          unread.forEach(function (li) { li.classList.add("is-unread"); });
+          count._v = 2; count.textContent = "2";
+          mark.disabled = false; mark.classList.remove("is-done"); mark.lastChild.textContent = LABEL;
+          list.classList.remove("only-unread");
+          $$("[data-nf]", v).forEach(function (x, k) { x.classList.toggle("is-on", !k); x.setAttribute("aria-pressed", k ? "false" : "true"); });
+        }
+      };
+    })();
 
     /* ---------------------------------------------------------------- Assistant */
     (function () {

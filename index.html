@@ -25,6 +25,7 @@
 <script>try{var m=new URLSearchParams(location.search).get("mode")||localStorage.getItem("jarvis-mode");if(m==="base"||m==="signature"||m==="platinum")document.documentElement.dataset.mode=m}catch(e){}</script>
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/wow.css?v=20261106c">
+<link rel="stylesheet" href="/assets/demos/app.css?v=20261106c">
 <link rel="stylesheet" href="/assets/demos/maison.css?v=20261106c">
 <link rel="stylesheet" href="/assets/demos/boulance.css?v=20261106c">
 <link rel="stylesheet" href="/assets/demos/carte.css?v=20261106c">
@@ -127,42 +128,309 @@
   </ol>
 </section>
 
-<!-- Vitrine de l'app : un grand écran vivant -->
+<!-- Vitrine de l'app : JARVIS App rendue en vrai HTML (assets/demos/app.*) -->
 <section class="vitrine" id="app" aria-label="JARVIS App">
   <div class="head" data-rev>
     <p class="eyebrow">JARVIS App · l’interface</p>
     <h2 data-split>Une seule application.<br><em>Toute votre vie connectée.</em></h2>
   </div>
-  <div class="vit-tabs" role="tablist" aria-label="Écrans de JARVIS App"><button type="button" role="tab" aria-selected="true" data-i="0" class="is-on">
-        <span>Accueil</span><i class="vit-prog" aria-hidden="true"></i></button><button type="button" role="tab" aria-selected="false" data-i="1">
-        <span>Assistant</span><i class="vit-prog" aria-hidden="true"></i></button><button type="button" role="tab" aria-selected="false" data-i="2">
-        <span>Ma journée</span><i class="vit-prog" aria-hidden="true"></i></button><button type="button" role="tab" aria-selected="false" data-i="3">
-        <span>Carte</span><i class="vit-prog" aria-hidden="true"></i></button><button type="button" role="tab" aria-selected="false" data-i="4">
-        <span>Partage</span><i class="vit-prog" aria-hidden="true"></i></button></div>
-  <div class="vit-stage" data-vitrine>
-    <div class="vit-glow" aria-hidden="true"></div>
-    <div class="vit-device">
-      <div class="vit-screen"><figure class="vit-slide is-on" data-i="0">
-          <img decoding="async" src="/media/product/user/accueil.webp" alt="JARVIS App — accueil : Bonsoir Alex, votre journée, simplement" width="1600" height="1062" loading="eager">
-          <span class="hot" style="--x:35%;--y:52%;--k:0"><i aria-hidden="true"></i><em>Agenda et tâches réunis</em></span><span class="hot left" style="--x:83%;--y:45%;--k:1"><i aria-hidden="true"></i><em>L’assistant prépare, vous approuvez</em></span><span class="hot" style="--x:35%;--y:86%;--k:2"><i aria-hidden="true"></i><em>Vos lieux, seulement ce qui est permis</em></span><span class="hot left" style="--x:73%;--y:5%;--k:3"><i aria-hidden="true"></i><em>Météo du lieu, en direct</em></span>
-        </figure><figure class="vit-slide" data-i="1">
-          <img decoding="async" src="/media/product/user/assistant.webp" alt="Assistant JARVIS — un rappel préparé, à vérifier avant sa création" width="1600" height="1062" loading="lazy">
-          <span class="hot" style="--x:55%;--y:32%;--k:0"><i aria-hidden="true"></i><em>Des raccourcis pour demander simplement</em></span><span class="hot" style="--x:37%;--y:55%;--k:1"><i aria-hidden="true"></i><em>Chaque réponse montre sa source</em></span><span class="hot left" style="--x:68%;--y:78%;--k:2"><i aria-hidden="true"></i><em>Rien n’est créé sans votre vérification</em></span><span class="hot left" style="--x:88%;--y:93%;--k:3"><i aria-hidden="true"></i><em>Parlez ou écrivez</em></span>
-        </figure><figure class="vit-slide" data-i="2">
-          <img decoding="async" src="/media/product/user/ma-journee.webp" alt="Ma journée — agenda et tâches réunis" width="1600" height="1062" loading="lazy">
-          <span class="hot" style="--x:25%;--y:45%;--k:0"><i aria-hidden="true"></i><em>Tous vos calendriers, de toutes vos sources</em></span><span class="hot left" style="--x:70%;--y:56%;--k:1"><i aria-hidden="true"></i><em>Travail et vie personnelle côte à côte</em></span><span class="hot" style="--x:52%;--y:85%;--k:2"><i aria-hidden="true"></i><em>Le souper de ce soir, avec le lieu</em></span>
-        </figure><figure class="vit-slide" data-i="3">
-          <img decoding="async" src="/media/product/user/carte.webp" alt="Carte JARVIS — couches autorisées autour de Saint-Hyacinthe" width="1600" height="1062" loading="lazy">
-          <span class="hot" style="--x:26%;--y:28%;--k:0"><i aria-hidden="true"></i><em>Vous choisissez les couches visibles</em></span><span class="hot" style="--x:53%;--y:60%;--k:1"><i aria-hidden="true"></i><em>Le Hub, lieu de référence</em></span><span class="hot left" style="--x:85%;--y:28%;--k:2"><i aria-hidden="true"></i><em>Aucune position sans permission</em></span>
-        </figure><figure class="vit-slide" data-i="4">
-          <img decoding="async" src="/media/product/user/partage.webp" alt="Partage — position et documents partagés avec une durée précise" width="1600" height="1062" loading="lazy">
-          <span class="hot" style="--x:32%;--y:40%;--k:0"><i aria-hidden="true"></i><em>Rien n’est partagé par défaut</em></span><span class="hot left" style="--x:84%;--y:52%;--k:1"><i aria-hidden="true"></i><em>Avec qui, et pour combien de temps</em></span><span class="hot left" style="--x:67%;--y:77%;--k:2"><i aria-hidden="true"></i><em>Un accès retiré disparaît partout</em></span>
-        </figure><i class="vit-sweep" aria-hidden="true"></i></div>
-    </div>
-    <div class="vit-floor" aria-hidden="true"></div>
+  <div class="ap" data-demo="app">
+  <div class="ap-stage">
+    <div class="ap-glow" aria-hidden="true"></div>
+    <div class="ap-tilt">
+      <div class="ap-device">
+        <p class="ap-badge"><span>Démo · données fictives</span></p>
+        <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="JARVIS App, démonstration avec données fictives">
+          <div class="ap-bg" aria-hidden="true"></div>
+          <img class="ap-banner" src="/media/concept/jarvis-hero-architecture-v1.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1916" height="821">
+          <nav class="ap-side" aria-label="JARVIS App">
+            <div class="ap-brand" aria-hidden="true"><b>JARVIS</b><small>Private Systems</small><em class="ap-modename"></em></div>
+            <div class="ap-nav" role="tablist" aria-label="Écrans de JARVIS App" aria-orientation="vertical">
+              <i class="ap-ind" aria-hidden="true"><i class="ap-prog"></i></i><button type="button" role="tab" id="ap-t-accueil" aria-controls="ap-p-accueil" aria-selected="true" tabindex="0" data-i="0" aria-label="Accueil" class="is-on"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg><span class="l-long">Accueil</span><span class="l-short" aria-hidden="true">Accueil</span></button><button type="button" role="tab" id="ap-t-assistant" aria-controls="ap-p-assistant" aria-selected="false" tabindex="-1" data-i="1" aria-label="Assistant"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3.5c.6 4 2.5 5.9 6.5 6.5-4 .6-5.9 2.5-6.5 6.5-.6-4-2.5-5.9-6.5-6.5 4-.6 5.9-2.5 6.5-6.5Z"/><path d="M18 14.5c.3 1.7 1 2.4 2.7 2.7-1.7.3-2.4 1-2.7 2.7-.3-1.7-1-2.4-2.7-2.7 1.7-.3 2.4-1 2.7-2.7Z"/></svg><span class="l-long">Assistant</span><span class="l-short" aria-hidden="true">Assistant</span></button><button type="button" role="tab" id="ap-t-journee" aria-controls="ap-p-journee" aria-selected="false" tabindex="-1" data-i="2" aria-label="Ma journée"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.75" y="5" width="16.5" height="15" rx="2.5"/><path d="M3.75 9.75h16.5M8 3v4M16 3v4"/></svg><span class="l-long">Ma journée</span><span class="l-short" aria-hidden="true">Journée</span></button><button type="button" role="tab" id="ap-t-carte" aria-controls="ap-p-carte" aria-selected="false" tabindex="-1" data-i="3" aria-label="Carte"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg><span class="l-long">Carte</span><span class="l-short" aria-hidden="true">Carte</span></button><button type="button" role="tab" id="ap-t-partage" aria-controls="ap-p-partage" aria-selected="false" tabindex="-1" data-i="4" aria-label="Partage"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="17.5" cy="5.75" r="2.25"/><circle cx="6.5" cy="12" r="2.25"/><circle cx="17.5" cy="18.25" r="2.25"/><path d="m8.5 10.9 7-4M8.5 13.1l7 4"/></svg><span class="l-long">Partage</span><span class="l-short" aria-hidden="true">Partage</span></button>
+            </div>
+            <div class="ap-side-f"><p class="ap-hubst"><i class="ap-dot is-ok" aria-hidden="true"></i><span><b>Hub en ligne</b><small>Saint-Hyacinthe</small></span></p>
+              <p class="ap-motto">Votre espace.<br>À votre image.</p></div>
+          </nav>
+          <div class="ap-main">
+            <header class="ap-top">
+              <button type="button" class="ap-search" data-go="assistant"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.25"/><path d="m20 20-4.5-4.5"/></svg><span>Que souhaitez-vous faire ?</span></button>
+              <span class="ap-status-time" data-ap="clock">19 h 42</span>
+              <span class="ap-wx" title="Saint-Hyacinthe · Environnement Canada">
+                <span class="ap-wx-i" aria-hidden="true"><svg class="ap-i wx-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.75"/><path d="M12 2.75v2M12 19.25v2M2.75 12h2M19.25 12h2M5.45 5.45l1.4 1.4M17.15 17.15l1.4 1.4M5.45 18.55l1.4-1.4M17.15 6.85l1.4-1.4"/></svg><svg class="ap-i wx-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14.6A7.5 7.5 0 0 1 9.4 5a7.5 7.5 0 1 0 9.6 9.6Z"/></svg><svg class="ap-i wx-cloud" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 18.5h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/></svg><svg class="ap-i wx-rain" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="m8.5 18-1 2.25M12.5 18l-1 2.25M16.5 18l-1 2.25"/></svg><svg class="ap-i wx-snow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="M8 18.5v.1M12 19.75v.1M16 18.5v.1M10 21.5v.1M14 21.5v.1"/></svg><svg class="ap-i wx-fog" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h16M6 13h12M4 16.5h16M8 20h8"/></svg></span>
+                <span><b><span data-ap="temp">—</span><span class="ap-unit"> °C</span></b><small>Saint-Hyacinthe<span class="ap-live"> · en direct</span></small></span>
+              </span>
+              <span class="ap-me"><span class="ap-mono t-stone" aria-hidden="true">A</span><b>Alex</b><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></span>
+            </header>
+            <div class="ap-views"><section class="ap-view ap-v-accueil is-on" role="tabpanel" id="ap-p-accueil" aria-labelledby="ap-t-accueil" data-view="accueil" data-dur="7000"><div class="ap-head" data-r style="--r:0">
+  <div><h3 class="ap-h1"><span data-ap="greet">Bonsoir</span> <em>Alex</em></h3><p class="ap-sub">Votre journée, simplement.</p></div><div class="ap-today"><span data-ap="date">Aujourd’hui</span><b><span data-ap="clock">19 h 42</span></b></div>
+</div>
+<div class="ap-card ap-notifs" data-r style="--r:1">
+  <div class="ap-nt"><span class="ap-ring"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 16.5v-5a5.5 5.5 0 0 1 11 0v5l1.5 1.75H5z"/><path d="M10 20.75a2.3 2.3 0 0 0 4 0"/></svg></span><span><b>Notifications</b>
+    <small><i class="ap-dot is-red" aria-hidden="true"></i><span data-ap-n="2">2</span> non lues</small></span></div>
+  <div class="ap-nt"><span class="ap-mono t-gold" aria-hidden="true">CL</span><span><b>Camille</b><small>Un message</small></span><i class="ap-dot is-red" aria-hidden="true"></i></div>
+  <div class="ap-nt"><span class="ap-ring"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.75" y="5" width="16.5" height="15" rx="2.5"/><path d="M3.75 9.75h16.5M8 3v4M16 3v4"/></svg></span><span><b>Ma journée</b><small>Demain à 8 h 30</small></span></div>
+  <div class="ap-nt"><span class="ap-ring is-ok"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 6v5.5c0 4.4-2.9 7.6-7 9-4.1-1.4-7-4.6-7-9V6z"/><path d="m9 12 2.2 2.2L15.2 10"/></svg></span><span><b>Maison</b><small>Tout est calme</small></span></div>
+</div>
+<div class="ap-home-a">
+  <article class="ap-card ap-day" data-r style="--r:2">
+    <header class="ap-card-h"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.75" y="5" width="16.5" height="15" rx="2.5"/><path d="M3.75 9.75h16.5M8 3v4M16 3v4"/></svg><h4>Ma journée</h4><button type="button" class="ap-link" data-go="journee">Voir tout<svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></button></header>
+    <div class="ap-seg" role="group" aria-label="Afficher"><button type="button" class="is-on" data-seg="agenda" aria-pressed="true">Agenda</button><button type="button" data-seg="taches" aria-pressed="false">Tâches</button></div>
+    <ol class="ap-tl" data-seg-panel="agenda">
+      <li class="s-perso"><div class="ap-tl-t"><small>Ce soir · 19 h – 22 h</small><b>Souper entre amis</b>
+        <span class="ap-meta"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5V11M5 3.5v4.75a2 2 0 0 0 4 0V3.5M7 11v9.5M16.5 20.5v-17c-2 1.5-3 4-3 7V13h3"/></svg>Chez nous · Personnel</span></div>
+        <img decoding="async" src="/media/solutions/camera-rear-terrace-v1.webp" alt="" loading="lazy" decoding="async" style="object-position:62% 60%"></li>
+      <li class="s-trav"><div class="ap-tl-t"><small>Demain · 8 h 30 – 10 h</small><b>Préparer les documents</b>
+        <span class="ap-meta"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="7.5" width="17" height="12" rx="2.25"/><path d="M9 7.5V6a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 6v1.5M3.5 12.5h17"/></svg>Travail</span></div>
+        <img decoding="async" src="/media/solutions/ia-privee-connaissances.webp" alt="" loading="lazy" decoding="async" style="object-position:40% 45%"></li>
+    </ol>
+    <ul class="ap-mini-tasks" data-seg-panel="taches" hidden>
+      <li><span class="ap-box"></span><span><b>Relire le dossier</b><small>Demain, 14 h · Personnel</small></span></li>
+      <li class="is-done"><span class="ap-box"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span><b>Réserver le souper</b><small>Fait · Personnel</small></span></li>
+      <li class="is-ro"><span class="ap-box"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.25"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg></span><span><b>Valider la soumission</b><small>Travail · lecture seule</small></span></li>
+    </ul>
+  </article>
+  <div class="ap-col">
+    <article class="ap-card ap-asst" data-r style="--r:3">
+      <div class="ap-asst-h"><span class="ap-orb" aria-hidden="true"></span><span><b>Assistant JARVIS</b><small>Comment puis-je vous aider ?</small></span></div>
+      <button type="button" class="ap-ask" data-go="assistant"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3.5c.6 4 2.5 5.9 6.5 6.5-4 .6-5.9 2.5-6.5 6.5-.6-4-2.5-5.9-6.5-6.5 4-.6 5.9-2.5 6.5-6.5Z"/><path d="M18 14.5c.3 1.7 1 2.4 2.7 2.7-1.7.3-2.4 1-2.7 2.7-.3-1.7-1-2.4-2.7-2.7 1.7-.3 2.4-1 2.7-2.7Z"/></svg><span>Écrire à JARVIS…</span><i><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></i></button>
+    </article>
+    <article class="ap-card ap-reco" data-r style="--r:4">
+      <img decoding="async" src="/media/ambiances/heure-doree.webp" alt="" loading="lazy" decoding="async">
+      <div><p class="ap-kick"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 2.4 5 5.35.65-3.95 3.7 1.05 5.35L12 16.05 7.15 18.7l1.05-5.35-3.95-3.7L9.6 9z"/></svg>Recommandation</p><b>Ambiance Soirée</b>
+        <small data-ap="reco">Au coucher du soleil, si vous l’acceptez.</small></div>
+    </article>
   </div>
-  <div class="vit-caps" aria-live="polite"><div class="vit-cap is-on" data-i="0"><h3>Votre journée, sur un seul écran.</h3><p>Messages, agenda, lieux et assistant réunis, à votre image.</p></div><div class="vit-cap" data-i="1"><h3>Il propose. Vous décidez.</h3><p>Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord.</p></div><div class="vit-cap" data-i="2"><h3>Tous vos agendas, enfin ensemble.</h3><p>Calendriers et tâches de toutes vos sources. Ce qui est en lecture seule le reste.</p></div><div class="vit-cap" data-i="3"><h3>Vos lieux, sans surveillance.</h3><p>La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée.</p></div><div class="vit-cap" data-i="4"><h3>Vous choisissez ce que vous partagez.</h3><p>Avec qui, pour combien de temps, et sous votre contrôle. Un partage retiré disparaît partout.</p></div></div>
-  <p class="vit-note"><span class="chip chip-sim">Conception en validation · données fictives</span></p>
+</div>
+<div class="ap-home-b">
+  <article class="ap-card ap-minimap" data-r style="--r:5">
+    <header class="ap-card-h"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.75 3.75 6.5v12.75L9 17.5l6 1.75 5.25-1.75V4.75L15 6.5z"/><path d="M9 4.75V17.5M15 6.5v12.75"/></svg><h4>Ma carte</h4><button type="button" class="ap-link" data-go="carte">Ouvrir<svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></button></header>
+    <div class="ap-map ap-map-mini" data-map data-focus="-60,-52,108,90">
+      <svg class="ap-map-svg" viewBox="-109.5 -52.0 207.0 90.0" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="apm-rang" width="1.7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-36)">
+      <path d="M0 0V7M0 0H1.7" class="m-rang"/></pattern>
+    <pattern id="apm-urb" width="1.1" height="1.1" patternUnits="userSpaceOnUse"><circle cx=".55" cy=".55" r=".2" class="m-urb-dot"/></pattern>
+    <radialGradient id="apm-hub"><stop offset="0" class="m-hub-a"/><stop offset="1" class="m-hub-b"/></radialGradient>
+  </defs>
+  <rect class="m-land" x="-160" y="-140" width="320" height="260"/>
+  <rect x="-160" y="-140" width="320" height="260" fill="url(#apm-rang)" class="m-fields"/>
+  <g class="m-hills"><circle cx="-15.0" cy="8.9" r="2.6"/><circle cx="-15.0" cy="8.9" r="1.4"/><circle cx="6.8" cy="18.9" r="2.2"/><circle cx="6.8" cy="18.9" r="1.2"/><circle cx="27.8" cy="31.1" r="2.1"/><circle cx="27.8" cy="31.1" r="1.2"/><circle cx="-7.2" cy="22.2" r="2.2"/><circle cx="-7.2" cy="22.2" r="1.2"/></g>
+  <g class="m-urban" fill="url(#apm-urb)">
+    <path d="M-78.1 24.4 C-76.8 25.0 -73.1 23.8 -69.5 23.3 C-65.9 22.9 -59.8 22.4 -56.3 21.7 C-52.7 20.9 -49.8 20.1 -48.1 18.9 C-46.4 17.7 -46.7 16.3 -46.0 14.4 C-45.3 12.6 -44.6 10.2 -43.7 7.8 C-42.8 5.4 -41.3 2.6 -40.7 0.0 C-40.1 -2.6 -39.0 -7.4 -39.9 -7.8 C-40.8 -8.1 -43.6 -4.4 -46.2 -2.2 C-48.8 0.0 -52.6 3.3 -55.5 5.6 C-58.4 7.8 -60.4 9.4 -63.3 11.1 C-66.1 12.8 -70.3 14.1 -72.6 15.6 C-75.0 17.0 -76.4 18.5 -77.3 20.0 C-78.2 21.5 -79.4 23.9 -78.1 24.4 Z"/><path d="M-73.4 14.4 C-71.2 14.3 -65.8 10.9 -62.5 8.9 C-59.3 6.9 -56.9 4.6 -53.9 2.2 C-51.0 -0.2 -46.4 -3.7 -44.6 -5.6 C-42.8 -7.4 -41.6 -9.1 -43.0 -8.9 C-44.5 -8.7 -49.1 -6.5 -53.2 -4.4 C-57.2 -2.4 -63.4 0.9 -67.2 3.3 C-70.9 5.7 -74.7 8.1 -75.7 10.0 C-76.8 11.9 -75.6 14.6 -73.4 14.4 Z"/><path d="M-44.6 18.9 C-45.3 18.0 -43.4 16.3 -42.7 14.4 C-41.9 12.6 -41.2 9.6 -40.3 7.8 C-39.5 5.9 -39.1 3.5 -37.6 3.3 C-36.1 3.1 -32.1 4.8 -31.4 6.7 C-30.6 8.5 -31.8 12.2 -32.9 14.4 C-34.1 16.7 -36.4 19.3 -38.4 20.0 C-40.3 20.7 -43.9 19.8 -44.6 18.9 Z"/><circle cx="0.0" cy="0.0" r="4.2"/><circle cx="17.4" cy="25.6" r="3.8"/><circle cx="36.8" cy="-28.1" r="4.6"/><circle cx="-12.1" cy="-45.6" r="3.4"/><circle cx="-23.7" cy="35.9" r="3.8"/><circle cx="-19.3" cy="7.0" r="2.4"/><circle cx="30.5" cy="-2.2" r="1.6"/>
+  </g>
+  <g class="m-water">
+    <path class="w-fleuve" d="M-112.3 36.7 C-108.4 35.6 -95.9 32.0 -89.0 30.0 C-82.1 28.0 -76.5 25.7 -71.1 24.4 C-65.6 23.2 -60.2 23.2 -56.3 22.2 C-52.4 21.3 -49.5 20.2 -47.7 18.9 C-45.9 17.6 -46.2 16.3 -45.4 14.4 C-44.6 12.6 -44.0 10.2 -43.0 7.8 C-42.1 5.4 -41.0 2.4 -39.9 0.0 C-38.9 -2.4 -38.2 -4.1 -36.8 -6.7 C-35.4 -9.3 -33.4 -12.6 -31.4 -15.6 C-29.3 -18.5 -26.6 -21.3 -24.4 -24.4 C-22.2 -27.6 -20.1 -31.1 -18.1 -34.5 C-16.2 -37.8 -14.8 -41.7 -12.7 -44.5 C-10.6 -47.2 -9.1 -48.5 -5.7 -51.1 C-2.3 -53.7 3.3 -57.0 7.6 -60.0 C11.8 -63.0 16.2 -66.1 20.0 -68.9 C23.8 -71.7 26.9 -74.3 30.1 -76.7 C33.4 -79.1 36.0 -80.8 39.5 -83.3 C43.0 -85.9 46.6 -89.1 51.1 -92.2 C55.7 -95.4 64.1 -100.6 66.7 -102.2"/>
+    <path class="w-lac" d="M-8.0 -50.0 C-9.2 -51.5 -7.0 -55.2 -4.9 -57.8 C-2.8 -60.4 1.1 -63.0 4.4 -65.6 C7.8 -68.2 11.7 -70.9 15.3 -73.3 C19.0 -75.8 23.2 -78.5 26.2 -80.0 C29.2 -81.5 31.9 -82.8 33.2 -82.2 C34.5 -81.7 34.7 -78.9 34.0 -76.7 C33.4 -74.5 31.4 -71.7 29.3 -68.9 C27.3 -66.1 24.4 -62.6 21.6 -60.0 C18.7 -57.4 15.5 -55.2 12.2 -53.3 C9.0 -51.5 5.5 -49.5 2.1 -48.9 C-1.3 -48.3 -6.9 -48.5 -8.0 -50.0 Z"/>
+    <path class="w-riv" d="M-75.0 15.6 C-72.9 14.8 -65.9 12.8 -62.5 11.1 C-59.1 9.4 -57.3 7.6 -54.7 5.6 C-52.1 3.5 -49.3 1.1 -46.9 -1.1 C-44.6 -3.3 -41.8 -6.7 -40.7 -7.8"/><path class="w-riv" d="M-82.7 10.0 C-80.5 8.9 -73.9 5.6 -69.5 3.3 C-65.1 1.1 -60.4 -1.3 -56.3 -3.3 C-52.1 -5.4 -47.3 -7.6 -44.6 -8.9 C-41.9 -10.2 -40.7 -10.7 -39.9 -11.1"/>
+    <path class="w-riv" d="M-29.8 75.6 C-28.9 71.9 -25.5 60.0 -24.4 53.3 C-23.3 46.7 -22.9 40.9 -23.2 35.6 C-23.5 30.2 -26.4 25.2 -25.9 21.1 C-25.5 17.0 -21.6 14.1 -20.5 11.1 C-19.3 8.1 -19.4 6.5 -18.9 3.3 C-18.4 0.2 -18.0 -4.1 -17.4 -7.8 C-16.7 -11.5 -15.4 -15.4 -15.0 -18.9 C-14.6 -22.4 -15.3 -25.6 -15.0 -28.9 C-14.8 -32.2 -14.0 -36.1 -13.5 -38.9 C-12.9 -41.7 -12.2 -44.5 -11.9 -45.6"/><path class="w-riv w-yam" d="M10.7 58.9 C9.4 56.7 4.8 49.5 2.9 45.6 C0.9 41.7 -0.1 39.1 -1.0 35.6 C-1.9 32.0 -2.6 28.2 -2.6 24.4 C-2.6 20.7 -1.5 16.7 -1.0 13.3 C-0.5 10.0 0.4 6.7 0.5 4.4 C0.7 2.2 0.5 1.7 0.2 0.0 C-0.2 -1.7 -1.7 -3.1 -1.8 -5.6 C-1.9 -8.0 -0.8 -11.3 -0.2 -14.4 C0.3 -17.6 0.8 -21.1 1.3 -24.4 C1.8 -27.8 2.5 -31.3 2.9 -34.5 C3.3 -37.6 3.8 -40.7 3.7 -43.3 C3.5 -45.9 2.4 -48.9 2.1 -50.0"/>
+    <path class="w-riv" d="M83.1 25.6 C81.6 23.3 77.9 17.0 74.5 12.2 C71.1 7.4 66.7 1.1 62.8 -3.3 C58.9 -7.8 54.6 -11.1 51.1 -14.4 C47.6 -17.8 44.2 -21.1 41.8 -23.3 C39.4 -25.6 38.8 -25.7 36.7 -27.8 C34.7 -29.8 32.1 -33.0 29.3 -35.6 C26.6 -38.2 22.9 -40.9 20.0 -43.3 C17.2 -45.7 14.3 -48.2 12.2 -50.0 C10.1 -51.9 8.3 -53.7 7.6 -54.5"/>
+  </g>
+  <g class="m-roads" data-layer="routes"><path class="r-a20 r-major" d="M-39.9 11.1 C-38.5 10.7 -34.6 9.5 -31.4 8.9 C-28.1 8.2 -24.1 8.1 -20.5 7.2 C-16.8 6.3 -12.8 4.3 -9.6 3.3 C-6.4 2.4 -4.3 2.4 -1.4 1.3 C1.5 0.2 4.2 -1.3 7.6 -3.3 C10.9 -5.4 15.1 -8.5 18.4 -11.1 C21.8 -13.7 24.9 -16.4 27.8 -18.9 C30.6 -21.4 32.7 -23.3 35.6 -26.1 C38.4 -28.9 40.8 -31.9 44.9 -35.6 C49.1 -39.2 57.9 -45.7 60.5 -47.8"/><path class="r-a10 r-major" d="M-42.3 16.7 C-40.7 17.3 -36.8 19.4 -32.9 20.6 C-29.0 21.7 -23.8 22.5 -18.9 23.3 C-14.0 24.2 -7.9 25.0 -3.3 25.6 C1.2 26.1 5.0 26.4 8.3 26.7 C11.7 26.9 13.0 26.7 16.9 27.2 C20.8 27.8 26.0 29.0 31.7 30.0 C37.4 31.0 44.0 32.2 51.1 33.3 C58.3 34.5 70.6 36.1 74.5 36.7"/><path class="r-a30 r-major" d="M-77.3 36.7 C-73.0 35.6 -58.4 32.2 -51.6 30.0 C-44.9 27.8 -40.1 26.3 -36.8 23.3 C-33.6 20.4 -33.1 16.1 -32.1 12.2 C-31.2 8.3 -32.0 4.1 -31.4 0.0 C-30.7 -4.1 -30.1 -8.0 -28.3 -12.2 C-26.4 -16.5 -22.9 -21.3 -20.5 -25.6 C-18.0 -29.8 -15.0 -34.6 -13.5 -37.8 C-12.0 -40.9 -11.8 -43.3 -11.5 -44.5"/><path class="r-a55 r-major" d="M30.9 -76.7 C31.2 -73.0 31.7 -60.8 32.5 -54.5 C33.2 -48.2 34.7 -43.2 35.6 -38.9 C36.4 -34.6 34.9 -33.2 37.5 -28.9 C40.1 -24.6 46.3 -19.1 51.1 -13.3 C56.0 -7.6 62.0 -0.6 66.7 5.6 C71.4 11.7 77.1 20.4 79.2 23.3"/><path class="r-r137" d="M0.2 0.0 C1.0 1.3 3.2 4.8 5.2 7.8 C7.2 10.7 10.2 14.8 12.2 17.8 C14.2 20.7 16.4 24.3 17.3 25.6"/><path class="r-r116" d="M-19.7 7.2 C-18.3 6.6 -14.4 4.4 -11.1 3.3 C-7.9 2.2 -4.8 1.3 -0.2 0.6 C4.3 -0.2 10.9 -0.6 16.1 -1.1 C21.3 -1.6 26.1 -1.1 30.9 -2.2 C35.7 -3.3 42.6 -6.9 44.9 -7.8"/></g>
+  <circle class="m-hubglow" data-layer="hub" cx="0" cy="0" r="13" fill="url(#apm-hub)"/>
+</svg>
+      <div class="ap-ov"><span class="ap-city c2" data-layer="villes" data-x="-47.0" data-y="13.6" style="left:30.18%;top:72.84%"><i></i><b>Montréal</b></span><span class="ap-city c1" data-layer="villes" data-x="17.4" data-y="25.6" style="left:61.32%;top:86.18%"><i></i><b>Granby</b></span><span class="ap-city c1" data-layer="villes" data-x="36.8" data-y="-28.1" style="left:70.69%;top:26.54%"><i></i><b>Drummondville</b></span><span class="ap-city c1" data-layer="villes" data-x="-12.1" data-y="-45.6" style="left:47.03%;top:7.15%"><i></i><b>Sorel-Tracy</b></span><span class="ap-hub" data-layer="hub" data-x="0" data-y="0" style="left:52.90%;top:57.78%"><span class="ap-hub-pin"><i class="ap-hub-ring" aria-hidden="true"></i><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg></span></span></div>
+    </div>
+  </article>
+  <article class="ap-card ap-favs" data-r style="--r:6">
+    <header class="ap-card-h"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 2.4 5 5.35.65-3.95 3.7 1.05 5.35L12 16.05 7.15 18.7l1.05-5.35-3.95-3.7L9.6 9z"/></svg><h4>Mes favoris</h4></header>
+    <ul class="ap-rows">
+      <li><button type="button" data-go="journee"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.75" y="5" width="16.5" height="15" rx="2.5"/><path d="M3.75 9.75h16.5M8 3v4M16 3v4"/></svg><span><b>Mon agenda</b><small>Vos prochains événements</small></span><svg class="ap-i ap-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></button></li>
+      <li><button type="button" data-go="partage"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="17.5" cy="5.75" r="2.25"/><circle cx="6.5" cy="12" r="2.25"/><circle cx="17.5" cy="18.25" r="2.25"/><path d="m8.5 10.9 7-4M8.5 13.1l7 4"/></svg><span><b>Mes partages</b><small>Qui voit quoi, et jusqu’à quand</small></span><svg class="ap-i ap-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></button></li>
+      <li><button type="button" data-go="carte"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg><span><b>Mes lieux</b><small>Le Hub et vos couches</small></span><svg class="ap-i ap-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></button></li>
+    </ul>
+  </article>
+  <article class="ap-card ap-msgs" data-r style="--r:7">
+    <header class="ap-card-h"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="m4 7.5 8 5.5 8-5.5"/></svg><h4>Mes messages</h4></header>
+    <ul class="ap-rows">
+      <li><div><span class="ap-mono t-gold" aria-hidden="true">CL</span><span><b>Camille</b><small>Tu es disponible pour le souper ce soir ?</small></span><time>12 min</time></div></li>
+      <li><div><span class="ap-mono t-teal" aria-hidden="true">ÉA</span><span><b>Équipe Atelier</b><small>Le dossier est prêt. On en discute demain matin.</small></span><time>2 h</time></div></li>
+    </ul>
+  </article>
+</div></section><section class="ap-view ap-v-assistant" role="tabpanel" id="ap-p-assistant" aria-labelledby="ap-t-assistant" data-view="assistant" data-dur="13000" inert><div class="ap-head" data-r style="--r:0">
+  <div><p class="ap-crumb">Accueil <span>/</span> <b>Assistant</b></p><h3 class="ap-h1">Assistant <em>JARVIS</em></h3><p class="ap-sub">Parlez à JARVIS, tout simplement.</p></div>
+</div>
+<div class="ap-card ap-chat" data-r style="--r:1">
+  <div class="ap-prompts" aria-hidden="true">
+    <span><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.75" y="5" width="16.5" height="15" rx="2.5"/><path d="M3.75 9.75h16.5M8 3v4M16 3v4"/></svg>Organiser ma journée</span><span><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.25"/><path d="m20 20-4.5-4.5"/></svg>Retrouver une information</span><span><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 16.5v-5a5.5 5.5 0 0 1 11 0v5l1.5 1.75H5z"/><path d="M10 20.75a2.3 2.3 0 0 0 4 0"/></svg>Préparer un rappel</span>
+  </div>
+  <div class="ap-thread" data-ap="thread">
+    <div class="ap-msg me" data-step><div class="ap-bub">Peux-tu m’aider à préparer ma journée ?</div><time data-ap="now">18 h 23</time><span class="ap-mono t-stone" aria-hidden="true">A</span></div>
+    <div class="ap-msg jv" data-step><span class="ap-orb sm" aria-hidden="true"></span>
+      <div class="ap-bub-w"><div class="ap-bub"><i class="ap-dots" aria-hidden="true"><i></i><i></i><i></i></i><span data-type>Bien sûr. Ce soir, souper à 19 h ; demain, un dossier à relire. Que voulez-vous préparer ?</span></div>
+        <div class="ap-srcs"><small>Sources</small><span class="ap-src"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.75" y="5" width="16.5" height="15" rx="2.5"/><path d="M3.75 9.75h16.5M8 3v4M16 3v4"/></svg>Agenda<em>Personnel</em></span><span class="ap-src"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Tâches<em>Personnel</em></span></div></div>
+      <time data-ap="now">18 h 23</time></div>
+    <div class="ap-msg me" data-step><div class="ap-bub">Rappelle-moi de relire le dossier demain à 14 h.</div><time data-ap="now">18 h 23</time><span class="ap-mono t-stone" aria-hidden="true">A</span></div>
+    <div class="ap-msg jv" data-step><span class="ap-orb sm" aria-hidden="true"></span>
+      <div class="ap-bub-w"><div class="ap-bub"><i class="ap-dots" aria-hidden="true"><i></i><i></i><i></i></i><span data-type>Demain à 14 h, votre agenda est libre. Je prépare le rappel : vérifiez-le avant de le créer.</span></div>
+        <div class="ap-srcs"><small>Source</small><span class="ap-src"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.75" y="5" width="16.5" height="15" rx="2.5"/><path d="M3.75 9.75h16.5M8 3v4M16 3v4"/></svg>Agenda<em>Personnel</em></span></div></div>
+      <time data-ap="now">18 h 24</time></div>
+    <div class="ap-action" data-step data-ap="action">
+      <div class="ap-action-h"><span class="ap-ring"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 16.5v-5a5.5 5.5 0 0 1 11 0v5l1.5 1.75H5z"/><path d="M10 20.75a2.3 2.3 0 0 0 4 0"/></svg></span>
+        <span><small>Action préparée · rien n’est créé sans vous</small><b>Créer le rappel ?</b></span>
+        <span class="ap-state" data-ap="state"><i aria-hidden="true"></i><span>En attente de votre accord</span></span></div>
+      <ul class="ap-fields">
+        <li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h6.5L18 8v12.5H7z"/><path d="M13.5 3.5V8H18M9.75 12.5h5.5M9.75 16h5.5"/></svg>Relire le dossier<svg class="ap-i ap-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.5V12l3 2"/></svg>Demain, 14 h 00<svg class="ap-i ap-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></li>
+        <li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"/><path d="M4.75 20c.9-3.6 3.75-5.5 7.25-5.5s6.35 1.9 7.25 5.5"/></svg>Personnel<svg class="ap-i ap-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 16.5v-5a5.5 5.5 0 0 1 11 0v5l1.5 1.75H5z"/><path d="M10 20.75a2.3 2.3 0 0 0 4 0"/></svg>15 min avant<svg class="ap-i ap-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></li>
+      </ul>
+      <div class="ap-action-f">
+        <p class="ap-fine"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5"/><path d="M12 7.9v.1"/></svg><span data-ap="fine">Aucune action effectuée.</span></p>
+        <button type="button" class="ap-btn" data-ap="verify">Vérifier</button>
+        <button type="button" class="ap-btn is-primary" data-ap="approve">Approuver</button>
+      </div>
+    </div>
+  </div>
+  <div class="ap-composer" aria-hidden="true"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m19.5 11.5-7.4 7.4a4.5 4.5 0 0 1-6.4-6.4l7.7-7.7a3 3 0 0 1 4.2 4.2l-7.5 7.5a1.5 1.5 0 0 1-2.1-2.1l6.8-6.8"/></svg><span>Écrire à JARVIS…</span>
+    <span class="ap-talk"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.75 11.5a6.25 6.25 0 0 0 12.5 0M12 17.75v2.75"/></svg>Parler</span><span class="ap-go"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></span></div>
+</div></section><section class="ap-view ap-v-journee" role="tabpanel" id="ap-p-journee" aria-labelledby="ap-t-journee" data-view="journee" data-dur="8000" inert><div class="ap-head" data-r style="--r:0">
+  <div><p class="ap-crumb">Mon espace <span>/</span> <b>Ma journée</b></p><h3 class="ap-h1">Ma <em>journée</em></h3><p class="ap-sub">Tous vos agendas, enfin ensemble.</p></div><button type="button" class="ap-btn ap-new" tabindex="-1" aria-hidden="true"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Événement</button>
+</div>
+<div class="ap-jr">
+  <aside class="ap-card ap-cals" data-r style="--r:1">
+    <h4 class="ap-k">Mes calendriers</h4>
+    <ul><li><button type="button" class="ap-cal s-perso" data-cal="perso" aria-pressed="true"><span class="ap-box"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span><b>Personnel</b><small>Votre compte</small></span></button></li><li><button type="button" class="ap-cal s-trav" data-cal="trav" aria-pressed="true"><span class="ap-box"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span><b>Travail</b><small>L’atelier</small></span></button></li><li><button type="button" class="ap-cal s-fam" data-cal="fam" aria-pressed="true"><span class="ap-box"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span><b>Famille</b><small class=ap-ro-l><svg class="ap-i ap-ro" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.25"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>Lecture seule</small></span></button></li></ul>
+    <p class="ap-cals-f"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 13.5a3.75 3.75 0 0 0 5.3 0l3-3a3.75 3.75 0 0 0-5.3-5.3l-1 1"/><path d="M13.5 10.5a3.75 3.75 0 0 0-5.3 0l-3 3a3.75 3.75 0 0 0 5.3 5.3l1-1"/></svg><span>3 sources reliées<small>À jour il y a 2 min</small></span></p>
+  </aside>
+  <div class="ap-card ap-week" data-r style="--r:2">
+    <div class="ap-wk-top"><span class="ap-wk-nav" aria-hidden="true"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 6-6 6 6 6"/></svg><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></span>
+      <b data-ap="range">Cette semaine</b><span class="ap-pill">3 jours<svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></span></div>
+    <div class="ap-wk-heads"><span></span><div class="ap-wk-d is-today"><b data-ap="dname0">Aujourd’hui</b><small data-ap="dnum0"></small></div><div class="ap-wk-d"><b data-ap="dname1">Demain</b><small data-ap="dnum1"></small></div><div class="ap-wk-d"><b data-ap="dname2">Après-demain</b><small data-ap="dnum2"></small></div></div>
+    <div class="ap-wk-body"><div class="ap-wk-hours" aria-hidden="true"><span style="top:0.000%">8 h</span><span style="top:14.286%">10 h</span><span style="top:28.571%">12 h</span><span style="top:42.857%">14 h</span><span style="top:57.143%">16 h</span><span style="top:71.429%">18 h</span><span style="top:85.714%">20 h</span><span style="top:100.000%">22 h</span></div><div class="ap-wk-grid"><div class="ap-wk-col is-today"><div class="ap-ev s-trav is-short" data-src="trav" style="top:14.286%;height:7.143%"><b>Appel notaire</b><small>10 h – 11 h · Travail</small></div><div class="ap-ev s-perso" data-src="perso" style="top:78.571%;height:21.429%"><b>Souper entre amis</b><small>19 h – 22 h · Chez nous</small></div><i class="ap-now" data-ap="nowline" hidden><b data-ap="clock">19 h 42</b></i></div><div class="ap-wk-col"><div class="ap-ev s-trav is-short" data-src="trav" style="top:3.571%;height:10.714%"><b>Préparer les documents</b><small>8 h 30 – 10 h · Travail</small></div><div class="ap-ev s-fam is-ro is-short" data-src="fam" style="top:35.714%;height:10.714%"><b>Hockey de Léo</b><small>13 h – 14 h 30</small><small class=ap-ro-l><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.25"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>Lecture seule</small></div></div><div class="ap-wk-col"><div class="ap-ev s-perso is-short" data-src="perso" style="top:17.857%;height:10.714%"><b>Brunch chez Camille</b><small>10 h 30 – 12 h · Personnel</small></div><div class="ap-ev s-perso" data-src="perso" style="top:42.857%;height:17.857%"><b>Marche au mont Saint-Hilaire</b><small>14 h – 16 h 30 · Personnel</small></div></div></div></div>
+  </div>
+  <aside class="ap-card ap-tasks" data-r style="--r:3">
+    <header class="ap-card-h"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><h4>Tâches</h4><span class="ap-count"><b data-ap="done">1</b> / 5 faites</span></header>
+    <ul><li class="s-perso"><button type="button" class="ap-box" aria-pressed="false" aria-label="Marquer « Relire le dossier » comme faite"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><span><b>Relire le dossier</b><small><i class="ap-sw" aria-hidden="true"></i>Personnel · Demain, 14 h</small></span></li><li class="s-perso is-done"><button type="button" class="ap-box" aria-pressed="true" aria-label="Marquer « Réserver le souper » comme faite"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><span><b>Réserver le souper</b><small><i class="ap-sw" aria-hidden="true"></i>Personnel · Fait</small></span></li><li class="s-perso"><button type="button" class="ap-box" aria-pressed="false" aria-label="Marquer « Renouveler l’assurance » comme faite"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><span><b>Renouveler l’assurance</b><small><i class="ap-sw" aria-hidden="true"></i>Personnel · Lundi</small></span></li><li class="s-trav is-ro"><span class="ap-box" title="Lecture seule"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.25"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg></span><span><b>Valider la soumission</b><small><i class="ap-sw" aria-hidden="true"></i>Travail · Vendredi · lecture seule</small></span></li><li class="s-fam is-ro"><span class="ap-box" title="Lecture seule"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.25"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg></span><span><b>Patins de Léo</b><small><i class="ap-sw" aria-hidden="true"></i>Famille · Demain, 12 h 30 · lecture seule</small></span></li></ul>
+  </aside>
+</div></section><section class="ap-view ap-v-carte" role="tabpanel" id="ap-p-carte" aria-labelledby="ap-t-carte" data-view="carte" data-dur="8000" inert><div class="ap-head" data-r style="--r:0">
+  <div><h3 class="ap-h1">Carte</h3><p class="ap-sub">Les éléments que vous êtes autorisé à voir.</p></div>
+</div>
+<div class="ap-ct">
+  <div class="ap-card ap-map ap-map-big" data-r style="--r:1" data-map data-focus="-64,-54,116,88">
+    <svg class="ap-map-svg" viewBox="-69.8 -54.0 127.6 88.0" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="apb-rang" width="1.7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-36)">
+      <path d="M0 0V7M0 0H1.7" class="m-rang"/></pattern>
+    <pattern id="apb-urb" width="1.1" height="1.1" patternUnits="userSpaceOnUse"><circle cx=".55" cy=".55" r=".2" class="m-urb-dot"/></pattern>
+    <radialGradient id="apb-hub"><stop offset="0" class="m-hub-a"/><stop offset="1" class="m-hub-b"/></radialGradient>
+  </defs>
+  <rect class="m-land" x="-160" y="-140" width="320" height="260"/>
+  <rect x="-160" y="-140" width="320" height="260" fill="url(#apb-rang)" class="m-fields"/>
+  <g class="m-hills"><circle cx="-15.0" cy="8.9" r="2.6"/><circle cx="-15.0" cy="8.9" r="1.4"/><circle cx="6.8" cy="18.9" r="2.2"/><circle cx="6.8" cy="18.9" r="1.2"/><circle cx="27.8" cy="31.1" r="2.1"/><circle cx="27.8" cy="31.1" r="1.2"/><circle cx="-7.2" cy="22.2" r="2.2"/><circle cx="-7.2" cy="22.2" r="1.2"/></g>
+  <g class="m-urban" fill="url(#apb-urb)">
+    <path d="M-78.1 24.4 C-76.8 25.0 -73.1 23.8 -69.5 23.3 C-65.9 22.9 -59.8 22.4 -56.3 21.7 C-52.7 20.9 -49.8 20.1 -48.1 18.9 C-46.4 17.7 -46.7 16.3 -46.0 14.4 C-45.3 12.6 -44.6 10.2 -43.7 7.8 C-42.8 5.4 -41.3 2.6 -40.7 0.0 C-40.1 -2.6 -39.0 -7.4 -39.9 -7.8 C-40.8 -8.1 -43.6 -4.4 -46.2 -2.2 C-48.8 0.0 -52.6 3.3 -55.5 5.6 C-58.4 7.8 -60.4 9.4 -63.3 11.1 C-66.1 12.8 -70.3 14.1 -72.6 15.6 C-75.0 17.0 -76.4 18.5 -77.3 20.0 C-78.2 21.5 -79.4 23.9 -78.1 24.4 Z"/><path d="M-73.4 14.4 C-71.2 14.3 -65.8 10.9 -62.5 8.9 C-59.3 6.9 -56.9 4.6 -53.9 2.2 C-51.0 -0.2 -46.4 -3.7 -44.6 -5.6 C-42.8 -7.4 -41.6 -9.1 -43.0 -8.9 C-44.5 -8.7 -49.1 -6.5 -53.2 -4.4 C-57.2 -2.4 -63.4 0.9 -67.2 3.3 C-70.9 5.7 -74.7 8.1 -75.7 10.0 C-76.8 11.9 -75.6 14.6 -73.4 14.4 Z"/><path d="M-44.6 18.9 C-45.3 18.0 -43.4 16.3 -42.7 14.4 C-41.9 12.6 -41.2 9.6 -40.3 7.8 C-39.5 5.9 -39.1 3.5 -37.6 3.3 C-36.1 3.1 -32.1 4.8 -31.4 6.7 C-30.6 8.5 -31.8 12.2 -32.9 14.4 C-34.1 16.7 -36.4 19.3 -38.4 20.0 C-40.3 20.7 -43.9 19.8 -44.6 18.9 Z"/><circle cx="0.0" cy="0.0" r="4.2"/><circle cx="17.4" cy="25.6" r="3.8"/><circle cx="36.8" cy="-28.1" r="4.6"/><circle cx="-12.1" cy="-45.6" r="3.4"/><circle cx="-23.7" cy="35.9" r="3.8"/><circle cx="-19.3" cy="7.0" r="2.4"/><circle cx="30.5" cy="-2.2" r="1.6"/>
+  </g>
+  <g class="m-water">
+    <path class="w-fleuve" d="M-112.3 36.7 C-108.4 35.6 -95.9 32.0 -89.0 30.0 C-82.1 28.0 -76.5 25.7 -71.1 24.4 C-65.6 23.2 -60.2 23.2 -56.3 22.2 C-52.4 21.3 -49.5 20.2 -47.7 18.9 C-45.9 17.6 -46.2 16.3 -45.4 14.4 C-44.6 12.6 -44.0 10.2 -43.0 7.8 C-42.1 5.4 -41.0 2.4 -39.9 0.0 C-38.9 -2.4 -38.2 -4.1 -36.8 -6.7 C-35.4 -9.3 -33.4 -12.6 -31.4 -15.6 C-29.3 -18.5 -26.6 -21.3 -24.4 -24.4 C-22.2 -27.6 -20.1 -31.1 -18.1 -34.5 C-16.2 -37.8 -14.8 -41.7 -12.7 -44.5 C-10.6 -47.2 -9.1 -48.5 -5.7 -51.1 C-2.3 -53.7 3.3 -57.0 7.6 -60.0 C11.8 -63.0 16.2 -66.1 20.0 -68.9 C23.8 -71.7 26.9 -74.3 30.1 -76.7 C33.4 -79.1 36.0 -80.8 39.5 -83.3 C43.0 -85.9 46.6 -89.1 51.1 -92.2 C55.7 -95.4 64.1 -100.6 66.7 -102.2"/>
+    <path class="w-lac" d="M-8.0 -50.0 C-9.2 -51.5 -7.0 -55.2 -4.9 -57.8 C-2.8 -60.4 1.1 -63.0 4.4 -65.6 C7.8 -68.2 11.7 -70.9 15.3 -73.3 C19.0 -75.8 23.2 -78.5 26.2 -80.0 C29.2 -81.5 31.9 -82.8 33.2 -82.2 C34.5 -81.7 34.7 -78.9 34.0 -76.7 C33.4 -74.5 31.4 -71.7 29.3 -68.9 C27.3 -66.1 24.4 -62.6 21.6 -60.0 C18.7 -57.4 15.5 -55.2 12.2 -53.3 C9.0 -51.5 5.5 -49.5 2.1 -48.9 C-1.3 -48.3 -6.9 -48.5 -8.0 -50.0 Z"/>
+    <path class="w-riv" d="M-75.0 15.6 C-72.9 14.8 -65.9 12.8 -62.5 11.1 C-59.1 9.4 -57.3 7.6 -54.7 5.6 C-52.1 3.5 -49.3 1.1 -46.9 -1.1 C-44.6 -3.3 -41.8 -6.7 -40.7 -7.8"/><path class="w-riv" d="M-82.7 10.0 C-80.5 8.9 -73.9 5.6 -69.5 3.3 C-65.1 1.1 -60.4 -1.3 -56.3 -3.3 C-52.1 -5.4 -47.3 -7.6 -44.6 -8.9 C-41.9 -10.2 -40.7 -10.7 -39.9 -11.1"/>
+    <path class="w-riv" d="M-29.8 75.6 C-28.9 71.9 -25.5 60.0 -24.4 53.3 C-23.3 46.7 -22.9 40.9 -23.2 35.6 C-23.5 30.2 -26.4 25.2 -25.9 21.1 C-25.5 17.0 -21.6 14.1 -20.5 11.1 C-19.3 8.1 -19.4 6.5 -18.9 3.3 C-18.4 0.2 -18.0 -4.1 -17.4 -7.8 C-16.7 -11.5 -15.4 -15.4 -15.0 -18.9 C-14.6 -22.4 -15.3 -25.6 -15.0 -28.9 C-14.8 -32.2 -14.0 -36.1 -13.5 -38.9 C-12.9 -41.7 -12.2 -44.5 -11.9 -45.6"/><path class="w-riv w-yam" d="M10.7 58.9 C9.4 56.7 4.8 49.5 2.9 45.6 C0.9 41.7 -0.1 39.1 -1.0 35.6 C-1.9 32.0 -2.6 28.2 -2.6 24.4 C-2.6 20.7 -1.5 16.7 -1.0 13.3 C-0.5 10.0 0.4 6.7 0.5 4.4 C0.7 2.2 0.5 1.7 0.2 0.0 C-0.2 -1.7 -1.7 -3.1 -1.8 -5.6 C-1.9 -8.0 -0.8 -11.3 -0.2 -14.4 C0.3 -17.6 0.8 -21.1 1.3 -24.4 C1.8 -27.8 2.5 -31.3 2.9 -34.5 C3.3 -37.6 3.8 -40.7 3.7 -43.3 C3.5 -45.9 2.4 -48.9 2.1 -50.0"/>
+    <path class="w-riv" d="M83.1 25.6 C81.6 23.3 77.9 17.0 74.5 12.2 C71.1 7.4 66.7 1.1 62.8 -3.3 C58.9 -7.8 54.6 -11.1 51.1 -14.4 C47.6 -17.8 44.2 -21.1 41.8 -23.3 C39.4 -25.6 38.8 -25.7 36.7 -27.8 C34.7 -29.8 32.1 -33.0 29.3 -35.6 C26.6 -38.2 22.9 -40.9 20.0 -43.3 C17.2 -45.7 14.3 -48.2 12.2 -50.0 C10.1 -51.9 8.3 -53.7 7.6 -54.5"/>
+  </g>
+  <g class="m-roads" data-layer="routes"><path class="r-a20 r-major" d="M-39.9 11.1 C-38.5 10.7 -34.6 9.5 -31.4 8.9 C-28.1 8.2 -24.1 8.1 -20.5 7.2 C-16.8 6.3 -12.8 4.3 -9.6 3.3 C-6.4 2.4 -4.3 2.4 -1.4 1.3 C1.5 0.2 4.2 -1.3 7.6 -3.3 C10.9 -5.4 15.1 -8.5 18.4 -11.1 C21.8 -13.7 24.9 -16.4 27.8 -18.9 C30.6 -21.4 32.7 -23.3 35.6 -26.1 C38.4 -28.9 40.8 -31.9 44.9 -35.6 C49.1 -39.2 57.9 -45.7 60.5 -47.8"/><path class="r-a10 r-major" d="M-42.3 16.7 C-40.7 17.3 -36.8 19.4 -32.9 20.6 C-29.0 21.7 -23.8 22.5 -18.9 23.3 C-14.0 24.2 -7.9 25.0 -3.3 25.6 C1.2 26.1 5.0 26.4 8.3 26.7 C11.7 26.9 13.0 26.7 16.9 27.2 C20.8 27.8 26.0 29.0 31.7 30.0 C37.4 31.0 44.0 32.2 51.1 33.3 C58.3 34.5 70.6 36.1 74.5 36.7"/><path class="r-a30 r-major" d="M-77.3 36.7 C-73.0 35.6 -58.4 32.2 -51.6 30.0 C-44.9 27.8 -40.1 26.3 -36.8 23.3 C-33.6 20.4 -33.1 16.1 -32.1 12.2 C-31.2 8.3 -32.0 4.1 -31.4 0.0 C-30.7 -4.1 -30.1 -8.0 -28.3 -12.2 C-26.4 -16.5 -22.9 -21.3 -20.5 -25.6 C-18.0 -29.8 -15.0 -34.6 -13.5 -37.8 C-12.0 -40.9 -11.8 -43.3 -11.5 -44.5"/><path class="r-a55 r-major" d="M30.9 -76.7 C31.2 -73.0 31.7 -60.8 32.5 -54.5 C33.2 -48.2 34.7 -43.2 35.6 -38.9 C36.4 -34.6 34.9 -33.2 37.5 -28.9 C40.1 -24.6 46.3 -19.1 51.1 -13.3 C56.0 -7.6 62.0 -0.6 66.7 5.6 C71.4 11.7 77.1 20.4 79.2 23.3"/><path class="r-r137" d="M0.2 0.0 C1.0 1.3 3.2 4.8 5.2 7.8 C7.2 10.7 10.2 14.8 12.2 17.8 C14.2 20.7 16.4 24.3 17.3 25.6"/><path class="r-r116" d="M-19.7 7.2 C-18.3 6.6 -14.4 4.4 -11.1 3.3 C-7.9 2.2 -4.8 1.3 -0.2 0.6 C4.3 -0.2 10.9 -0.6 16.1 -1.1 C21.3 -1.6 26.1 -1.1 30.9 -2.2 C35.7 -3.3 42.6 -6.9 44.9 -7.8"/></g>
+  <circle class="m-hubglow" data-layer="hub" cx="0" cy="0" r="16" fill="url(#apb-hub)"/>
+</svg>
+    <div class="ap-ov"><span class="ap-city c2" data-layer="villes" data-x="-47.0" data-y="13.6" style="left:17.85%;top:76.77%"><i></i><b>Montréal</b></span><span class="ap-city c1" data-layer="villes" data-x="17.4" data-y="25.6" style="left:68.37%;top:90.41%"><i></i><b>Granby</b></span><span class="ap-city c1" data-layer="villes" data-x="36.8" data-y="-28.1" style="left:83.56%;top:29.41%"><i></i><b>Drummondville</b></span><span class="ap-city c1" data-layer="villes" data-x="-12.1" data-y="-45.6" style="left:45.19%;top:9.59%"><i></i><b>Sorel-Tracy</b></span><span class="ap-city c0" data-layer="villes" data-x="-19.3" data-y="7.0" style="left:39.57%;top:69.32%"><i></i><b>Beloeil</b></span><span class="ap-shield" data-layer="routes" data-x="14.6" data-y="-7.8" style="left:66.11%;top:52.52%" aria-hidden="true">20</span><span class="ap-shield" data-layer="routes" data-x="-9.6" data-y="25.0" style="left:47.20%;top:89.78%" aria-hidden="true">10</span><span class="ap-shield" data-layer="routes" data-x="58.9" data-y="-3.3" style="left:100.88%;top:57.58%" aria-hidden="true">55</span><span class="ap-shield" data-layer="routes" data-x="-24.4" data-y="-18.9" style="left:35.61%;top:39.90%" aria-hidden="true">30</span><span class="ap-water" data-x="-25.9" data-y="-22.2" style="left:34.39%;top:36.11%;--rot:-55deg" aria-hidden="true">Fleuve Saint-Laurent</span><span class="ap-hub" data-layer="hub" data-x="0" data-y="0" style="left:34.39%;top:36.11%"><span class="ap-hub-pin"><i class="ap-hub-ring" aria-hidden="true"></i><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg></span><span class="ap-hub-lab"><b>Hub</b><small>Saint-Hyacinthe · emplacement de référence</small></span></span></div>
+    <div class="ap-zoom"><button type="button" data-zoom="1" aria-label="Rapprocher"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button type="button" data-zoom="-1" aria-label="Éloigner"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+      <button type="button" data-zoom="0" aria-label="Recentrer sur le Hub"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.6"/><path d="M12 2.75v3M12 18.25v3M2.75 12h3M18.25 12h3"/></svg></button></div>
+    <p class="ap-nopos"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5"/><path d="M12 7.9v.1"/></svg><span>Aucune position sans permission</span></p>
+    <p class="ap-toast" data-ap="toast" role="status"></p>
+  </div>
+  <div class="ap-ct-side">
+    <aside class="ap-card ap-layers" data-r style="--r:2"><h4 class="ap-k">Couches d’affichage</h4><ul><li><button type="button" class="ap-layer" data-layer-t="hub" aria-pressed="true"><span class="ap-box"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg><span><b>Hub</b><small>1 position affichée</small></span></button></li><li><button type="button" class="ap-layer" data-layer-t="villes" aria-pressed="true"><span class="ap-box"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5h17M5.5 20.5V9.5l6-3.5v14.5M11.5 10l7 2.75v7.75"/><path d="M8.25 10.5v.1M8.25 13.5v.1M8.25 16.5v.1M15 14.75v.1M15 17.5v.1"/></svg><span><b>Villes</b><small>Repères de la région</small></span></button></li><li><button type="button" class="ap-layer" data-layer-t="routes" aria-pressed="true"><span class="ap-box"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 20.5 10 3.5M16.5 20.5 14 3.5M12 6v1.75M12 11v1.75M12 16v1.75"/></svg><span><b>Routes</b><small>Autoroutes et routes</small></span></button></li><li><button type="button" class="ap-layer" data-layer-t="appareils" aria-pressed="false"><span class="ap-box"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 17.75h2"/></svg><span><b>Mes appareils</b><small>0 position disponible</small></span></button></li><li><button type="button" class="ap-layer" data-layer-t="personnes" aria-pressed="false"><span class="ap-box"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.75" r="3.25"/><path d="M3 19.5c.7-3.1 3-4.75 6-4.75s5.3 1.65 6 4.75"/><path d="M15.5 5.75a3.25 3.25 0 0 1 0 6M17.5 14.9c1.9.5 3.1 2 3.5 4.6"/></svg><span><b>Personnes partagées</b><small>0 position disponible</small></span></button></li></ul></aside>
+    <aside class="ap-card ap-posc" data-r style="--r:3">
+      <header class="ap-card-h"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg><h4>Position de cet appareil</h4></header>
+      <p class="ap-deny"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 5a6.25 6.25 0 0 1 10 4.9c0 1.8-.7 3.6-1.7 5.2M14.6 17.8c-1.4 1.6-2.6 2.7-2.6 2.7s-6.25-5.4-6.25-10.6c0-.7.1-1.4.3-2"/><path d="m4 4 16 16"/></svg>Non autorisée</p>
+      <p>La carte utilise l’emplacement du Hub, pas votre position. Le partage avec d’autres personnes reste un choix séparé.</p>
+      <button type="button" class="ap-btn" data-ap="askpos"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg>Autoriser la position</button>
+      <p class="ap-fine" data-ap="posnote" hidden><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5"/><path d="M12 7.9v.1"/></svg><span>Démo : rien n’est demandé à votre appareil.</span></p>
+    </aside>
+  </div>
+</div></section><section class="ap-view ap-v-partage" role="tabpanel" id="ap-p-partage" aria-labelledby="ap-t-partage" data-view="partage" data-dur="8500" inert><div class="ap-head" data-r style="--r:0">
+  <div><p class="ap-crumb">Mon espace <span>/</span> <b>Mes partages</b></p><h3 class="ap-h1">Je choisis <em>ce que je partage</em></h3><p class="ap-sub">Avec qui, pour combien de temps, et sous votre contrôle.</p></div>
+</div>
+<div class="ap-pt">
+  <div class="ap-card ap-access" data-r style="--r:1">
+    <header class="ap-card-h"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.75" r="3.25"/><path d="M3 19.5c.7-3.1 3-4.75 6-4.75s5.3 1.65 6 4.75"/><path d="M15.5 5.75a3.25 3.25 0 0 1 0 6M17.5 14.9c1.9.5 3.1 2 3.5 4.6"/></svg><h4>Accès actifs</h4><span class="ap-count"><b data-ap="active" data-ap-n="5">5</b> accès<span class="ap-count-x"> · rien n’est partagé par défaut</span></span></header>
+    <ul><li class="ap-acc" data-acc="0">
+  <span class="ap-mono t-gold" aria-hidden="true">CL</span>
+  <span class="ap-acc-who"><b>Camille</b><small>Amie</small></span>
+  <span class="ap-acc-what"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h6.5L18 8v12.5H7z"/><path d="M13.5 3.5V8H18M9.75 12.5h5.5M9.75 16h5.5"/></svg><span><b>« Notes de réunion »</b><small>Lecture seule</small></span></span>
+  <span class="ap-acc-dur"><b>Encore 6 jours</b><i class="ap-bar" aria-hidden="true"><i style="transform:scaleX(0.80)"></i></i></span>
+  <span class="ap-acc-act">
+    <button type="button" class="ap-btn ap-revoke" data-ap="revoke" aria-label="Retirer l’accès de Camille">Retirer</button>
+    <span class="ap-confirm" hidden><span>Retirer partout ?</span><button type="button" class="ap-btn" data-ap="keep">Annuler</button><button type="button" class="ap-btn is-danger" data-ap="sure">Retirer</button></span>
+  </span>
+  <ol class="ap-prop" aria-label="Retrait en cours"><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Téléphone de Camille</li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Documents</li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Hub</li></ol>
+</li><li class="ap-acc" data-acc="1">
+  <span class="ap-mono t-teal" aria-hidden="true">MA</span>
+  <span class="ap-acc-who"><b>Marc</b><small>Frère</small></span>
+  <span class="ap-acc-what"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="7" width="12.5" height="10" rx="2.25"/><path d="m16 10.5 4.5-2.5v8L16 13.5"/></svg><span><b>Caméra de l’entrée</b><small>Événements seulement</small></span></span>
+  <span class="ap-acc-dur"><b>Jusqu’à dimanche</b><i class="ap-bar" aria-hidden="true"><i style="transform:scaleX(0.45)"></i></i></span>
+  <span class="ap-acc-act">
+    <button type="button" class="ap-btn ap-revoke" data-ap="revoke" aria-label="Retirer l’accès de Marc">Retirer</button>
+    <span class="ap-confirm" hidden><span>Retirer partout ?</span><button type="button" class="ap-btn" data-ap="keep">Annuler</button><button type="button" class="ap-btn is-danger" data-ap="sure">Retirer</button></span>
+  </span>
+  <ol class="ap-prop" aria-label="Retrait en cours"><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Téléphone de Marc</li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Caméra</li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Hub</li></ol>
+</li><li class="ap-acc" data-acc="2">
+  <span class="ap-mono t-violet" aria-hidden="true">SO</span>
+  <span class="ap-acc-who"><b>Sophie</b><small>Gardienne</small></span>
+  <span class="ap-acc-what"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="3.75"/><path d="m10.7 12.3 8.3-8.3M16 7l2.5 2.5M14 9l1.75 1.75"/></svg><span><b>Serrure de l’entrée</b><small>Code temporaire</small></span></span>
+  <span class="ap-acc-dur"><b>Ce soir, 18 h – 23 h</b><i class="ap-bar" aria-hidden="true"><i style="transform:scaleX(0.20)"></i></i></span>
+  <span class="ap-acc-act">
+    <button type="button" class="ap-btn ap-revoke" data-ap="revoke" aria-label="Retirer l’accès de Sophie">Retirer</button>
+    <span class="ap-confirm" hidden><span>Retirer partout ?</span><button type="button" class="ap-btn" data-ap="keep">Annuler</button><button type="button" class="ap-btn is-danger" data-ap="sure">Retirer</button></span>
+  </span>
+  <ol class="ap-prop" aria-label="Retrait en cours"><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Téléphone de Sophie</li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Serrure</li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Hub</li></ol>
+</li><li class="ap-acc" data-acc="3">
+  <span class="ap-mono t-stone" aria-hidden="true">ÉA</span>
+  <span class="ap-acc-who"><b>Équipe Atelier</b><small>4 personnes</small></span>
+  <span class="ap-acc-what"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 7.5a2 2 0 0 1 2-2h3.8l2 2.25h7.2a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></svg><span><b>Dossier « Soumissions »</b><small>Lecture et commentaires</small></span></span>
+  <span class="ap-acc-dur"><b>Encore 30 jours</b><i class="ap-bar" aria-hidden="true"><i style="transform:scaleX(0.92)"></i></i></span>
+  <span class="ap-acc-act">
+    <button type="button" class="ap-btn ap-revoke" data-ap="revoke" aria-label="Retirer l’accès de Équipe Atelier">Retirer</button>
+    <span class="ap-confirm" hidden><span>Retirer partout ?</span><button type="button" class="ap-btn" data-ap="keep">Annuler</button><button type="button" class="ap-btn is-danger" data-ap="sure">Retirer</button></span>
+  </span>
+  <ol class="ap-prop" aria-label="Retrait en cours"><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Comptes de l’équipe</li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Documents</li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Hub</li></ol>
+</li><li class="ap-acc" data-acc="4">
+  <span class="ap-mono t-gold" aria-hidden="true">SJ</span>
+  <span class="ap-acc-who"><b>Soutien JARVIS</b><small>Technicien</small></span>
+  <span class="ap-acc-what"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 6v5.5c0 4.4-2.9 7.6-7 9-4.1-1.4-7-4.6-7-9V6z"/><path d="m9 12 2.2 2.2L15.2 10"/></svg><span><b>Journal du Hub</b><small>Diagnostic, lecture seule</small></span></span>
+  <span class="ap-acc-dur"><b>Encore 2 h</b><i class="ap-bar" aria-hidden="true"><i style="transform:scaleX(0.30)"></i></i></span>
+  <span class="ap-acc-act">
+    <button type="button" class="ap-btn ap-revoke" data-ap="revoke" aria-label="Retirer l’accès de Soutien JARVIS">Retirer</button>
+    <span class="ap-confirm" hidden><span>Retirer partout ?</span><button type="button" class="ap-btn" data-ap="keep">Annuler</button><button type="button" class="ap-btn is-danger" data-ap="sure">Retirer</button></span>
+  </span>
+  <ol class="ap-prop" aria-label="Retrait en cours"><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Session de soutien</li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Journal</li><li><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Hub</li></ol>
+</li></ul>
+    <p class="ap-fine"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5"/><path d="M12 7.9v.1"/></svg><span>Une confirmation est demandée avant chaque retrait.</span></p>
+  </div>
+  <div class="ap-col">
+    <div class="ap-card ap-mypos" data-r style="--r:2">
+      <span class="ap-ring lg"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 5a6.25 6.25 0 0 1 10 4.9c0 1.8-.7 3.6-1.7 5.2M14.6 17.8c-1.4 1.6-2.6 2.7-2.6 2.7s-6.25-5.4-6.25-10.6c0-.7.1-1.4.3-2"/><path d="m4 4 16 16"/></svg></span>
+      <div><p class="ap-kick">Position personnelle</p><b>Non partagée</b>
+        <small>Autoriser la position sur cet appareil ne la partage pas automatiquement.</small></div>
+    </div>
+    <div class="ap-card ap-log" data-r style="--r:3">
+      <header class="ap-card-h"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.5V12l3 2"/></svg><h4>Journal des partages</h4></header>
+      <ol data-ap="log"><li class="ap-log-new" hidden><time>À l’instant</time><span></span></li><li><time>Il y a 40 min</time><span>Session de soutien ouverte, 2 h maximum</span></li><li><time>Il y a 2 h</time><span>Camille a ouvert « Notes de réunion »</span></li><li><time>Hier</time><span>Accès de Marc prolongé jusqu’à dimanche</span></li><li><time>Lundi</time><span>Code temporaire créé pour Sophie</span></li><li><time>1er novembre</time><span>Accès de Julie retiré partout</span></li></ol>
+    </div>
+  </div>
+</div></section></div>
+          </div>
+        </div>
+        <i class="ap-sweep" aria-hidden="true"></i>
+      </div>
+    </div>
+  </div>
+  <div class="ap-caps">
+    <div class="ap-cap-txt" aria-live="polite"><div class="ap-cap is-on"><h3>Votre journée, sur un seul écran.</h3><p>Messages, agenda, lieux et assistant réunis, à votre image.</p></div><div class="ap-cap"><h3>Il propose. Vous décidez.</h3><p>Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord.</p></div><div class="ap-cap"><h3>Tous vos agendas, enfin ensemble.</h3><p>Calendriers et tâches de toutes vos sources. Ce qui est en lecture seule le reste.</p></div><div class="ap-cap"><h3>Vos lieux, sans surveillance.</h3><p>La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée.</p></div><div class="ap-cap"><h3>Vous choisissez ce que vous partagez.</h3><p>Avec qui, pour combien de temps, et sous votre contrôle. Un accès retiré disparaît partout.</p></div></div>
+    <div class="ap-ctrl">
+      <span class="ap-step"><b data-ap="step">01</b> / 05</span>
+      <button type="button" class="ap-play" data-ap="play" aria-label="Mettre la visite en pause"><svg class="ap-i i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11M15 6.5v11"/></svg><svg class="ap-i i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.75v12.5L18.5 12z"/></svg><span>Pause</span></button>
+      <span class="ap-hint">Touchez un écran : tout y est cliquable</span>
+    </div>
+  </div>
+</div>
 </section>
 
 <!-- Ma maison : démo interactive -->
@@ -904,6 +1172,7 @@
   <p class="foot-line"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span>Privé par conception</span></p>
 </footer>
 <script src="/assets/js/wow.js?v=20261106c" defer></script>
+<script src="/assets/demos/app.js?v=20261106c" defer></script>
 <script src="/assets/demos/maison.js?v=20261106c" defer></script>
 <script src="/assets/demos/boulance.js?v=20261106c" defer></script>
 <script src="/assets/demos/carte.js?v=20261106c" defer></script>

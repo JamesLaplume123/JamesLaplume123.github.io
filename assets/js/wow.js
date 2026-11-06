@@ -392,7 +392,8 @@
       lastData = d;
       var tShort = d.temp !== null ? Math.round(d.temp) + " °C" : "—";
       setText("temp-short", tShort);
-      setText("temp-hud", d.temp !== null ? Math.round(d.temp) + " °C · " + (d.condition || "").toLowerCase() : "— °C");
+      setText("cond", d.condition || "Conditions actuelles");
+      try { document.dispatchEvent(new CustomEvent("jv:weather", { detail: d })); } catch (e) {}
       if (!liveRoot) return;
       var tEl = $('[data-live="temp"]', liveRoot);
       if (d.temp !== null) {
@@ -433,6 +434,7 @@
     var fail = function () {
       setState(false, "Données indisponibles");
       setText("temp-short", "hors ligne");
+      setText("cond", "Météo indisponible pour l’instant");
       if (!liveRoot) return;
       setText("condition", "Les données en direct ne répondent pas", liveRoot);
       setText("feels", "JARVIS l’affiche honnêtement plutôt que d’inventer.", liveRoot);
@@ -677,68 +679,121 @@
     }, { threshold: .35 }).observe(stage);
   });
 
+
+  /* ---------- Panneau JARVIS du héros : propositions approuvées, pièces qui suivent ---------- */
+  var hp = $("[data-hero-panel]");
+  if (hp) {
+    var hpAsk = $("[data-hp-ask]", hp), hpText = $("[data-hp-text]", hp), hpState = $(".hp-state", hp);
+    var hpClock = $("[data-hp-clock]", hp);
+    var clockTick = function () { if (hpClock) hpClock.textContent = hm(new Date()); };
+    clockTick();
+    setInterval(clockTick, 30000);
+    var room = function (k) { return $('[data-room="' + k + '"]', hp); };
+    var setRoom = function (k, txt, v) {
+      var li = room(k); if (!li) return;
+      var b = $("b", li); b.textContent = txt; b.classList.add("is-new");
+      setTimeout(function () { b.classList.remove("is-new"); }, 1600);
+      var bar = $("i", li); if (bar && v !== undefined) bar.style.setProperty("--v", v);
+    };
+    $$(".hp-rooms li", hp).forEach(function (li, k) { li.style.setProperty("--k", k); });
+    /* Propositions : la première suit la vraie météo dès qu'elle arrive */
+    var asks = [
+      { t: "Passer la maison en mode nuit à 23 h ? Portes verrouillées, caméras en détection.",
+        done: "Confirmé · mode nuit prévu à 23 h", apply: function () { setRoom("entree", "Verrouillée"); setRoom("salon", "Veilleuse · 10 %", .1); setRoom("energie", "0,6 kW", .15); } },
+      { t: "La porte du garage est ouverte depuis 20 minutes. La fermer ?",
+        done: "Confirmé · porte du garage fermée", apply: function () { setRoom("energie", "0,7 kW", .18); } },
+      { t: "Plus personne à la maison. Passer en mode Absent ? Lumières éteintes, chauffage à 17 °C.",
+        done: "Confirmé · mode Absent actif", apply: function () { setRoom("salon", "Éteint", 0); setRoom("chambre", "17 °C", .2); setRoom("entree", "Verrouillée"); setRoom("energie", "0,3 kW", .08); } }
+    ];
+    var initial = { salon: ["Soirée · 60 %", .6], chambre: ["19 °C", .42], entree: ["Déverrouillée"], energie: ["1,2 kW", .3] };
+    document.addEventListener("jv:weather", function (e) {
+      var d = e.detail;
+      if (d.temp === null) return;
+      var night = d.rise && d.set ? (d.now < d.rise || d.now > d.set) : true;
+      if (d.temp <= 8) {
+        asks[0] = { t: "Il fait " + String(Math.round(d.temp)).replace("-", "−") + " °C dehors. Monter les chambres à 20 °C pour 6 h 30 ?",
+          done: "Confirmé · chambres à 20 °C pour 6 h 30", apply: function () { setRoom("chambre", "20 °C à 6 h 30", .55); setRoom("energie", "1,6 kW", .42); } };
+      } else if (!night && d.set) {
+        var on = new Date(d.set.getTime() - 15 * 60000);
+        asks[0] = { t: "Le soleil se couche à " + hm(d.set) + ". Allumer l’extérieur à " + hm(on) + " ?",
+          done: "Confirmé · extérieur à " + hm(on), apply: function () { setRoom("energie", "1,3 kW", .34); } };
+      }
+      if (cur === 0 && !hpAsk.classList.contains("is-sent")) hpText.textContent = asks[0].t;
+    });
+    var cur = 0, busy = false, touched = false, timer = null;
+    var show = function (i) {
+      cur = i % asks.length;
+      hpAsk.classList.remove("is-sent", "is-ok");
+      hpText.textContent = asks[cur].t;
+      busy = false;
+    };
+    var answer = function (ok) {
+      if (busy) return;
+      busy = true;
+      var btn = $('[data-hp="' + (ok ? "ok" : "no") + '"]', hp);
+      btn.classList.add("is-press");
+      setTimeout(function () {
+        btn.classList.remove("is-press");
+        hpAsk.classList.add("is-sent");
+        if (!ok) { hpState.textContent = "Reporté · JARVIS reproposera plus tard"; return; }
+        hpState.textContent = "Envoyé…";
+        setTimeout(function () {
+          hpAsk.classList.add("is-ok");
+          hpState.textContent = asks[cur].done;
+          asks[cur].apply();
+        }, 900);
+      }, 220);
+    };
+    hp.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-hp]");
+      if (!b) return;
+      touched = true;
+      clearTimeout(timer);
+      answer(b.getAttribute("data-hp") === "ok");
+      timer = setTimeout(function () { show(cur + 1); }, 6000);
+    });
+    /* Lecture automatique tant que le visiteur n'a pas touché */
+    var cycle = function () {
+      if (touched || document.hidden) return;
+      answer(true);
+      timer = setTimeout(function () {
+        if (touched) return;
+        Object.keys(initial).forEach(function (k) { setRoom(k, initial[k][0], initial[k][1]); });
+        show(cur + 1);
+        timer = setTimeout(cycle, 4200);
+      }, 5200);
+    };
+    var hpSeen = false;
+    var hpGo = function () {
+      if (hpSeen) return;
+      hpSeen = true;
+      hp.classList.add("is-in");
+      if (!reduce) timer = setTimeout(cycle, 4200);
+    };
+    setTimeout(hpGo, reduce ? 0 : 1900);
+  }
+
   if (reduce) return;
   doc.classList.add("fx");
 
-  /* ---------- Héros : lumières et HUD placés sur l'image (object-fit: cover) ---------- */
+  /* ---------- Héros : les lumières s'allument aux bons endroits de l'image (object-fit: cover) ---------- */
   var heroBox = $("[data-hero]");
   if (heroBox) {
-    var lit = $(".bg img.lit", heroBox), hud = $(".hud", heroBox);
+    var lit = $(".bg img.lit", heroBox);
     var LIGHTS = [[58, 47], [74, 50], [35, 78], [27, 63], [88, 50], [55, 12], [50, 55]];
     var map = function (ix, iy) {
       var W = heroBox.clientWidth, H = heroBox.clientHeight, R = 1916 / 821;
       var w = Math.max(W, H * R), h = w / R;
       return [((ix / 100) * w - (w - W) / 2) / W * 100, ((iy / 100) * h - (h - H) / 2) / H * 100];
     };
-    var svgNS = "http://www.w3.org/2000/svg";
-    var svg = hud ? document.createElementNS(svgNS, "svg") : null;
-    var tags = hud ? $$(".hud-tag", hud) : [];
-    var marks = [];
-    if (svg) {
-      svg.setAttribute("viewBox", "0 0 100 100");
-      svg.setAttribute("preserveAspectRatio", "none");
-      hud.insertBefore(svg, hud.firstChild);
-      tags.forEach(function (t, k) {
-        var ln = document.createElementNS(svgNS, "line");
-        var pt = document.createElement("i");
-        pt.className = "hud-pt";
-        t.style.setProperty("--k", k);
-        ln.style.setProperty("--k", k);
-        pt.style.setProperty("--k", k);
-        svg.appendChild(ln);
-        hud.appendChild(pt);
-        marks.push({ tag: t, ln: ln, pt: pt });
-      });
-    }
     var place = function () {
       if (lit) LIGHTS.forEach(function (l, i) {
         var m = map(l[0], l[1]);
         lit.style.setProperty("--m" + (i + 1), m[0].toFixed(1) + "% " + m[1].toFixed(1) + "%");
       });
-      var narrow = heroBox.clientWidth < 880;
-      marks.forEach(function (m) {
-        var cs = m.tag.style;
-        var p = map(parseFloat(cs.getPropertyValue("--px")), parseFloat(cs.getPropertyValue("--py")));
-        var tx = parseFloat(cs.getPropertyValue("--x")), ty = parseFloat(cs.getPropertyValue("--y"));
-        var off = p[0] < 4 || p[0] > 96 || (narrow && !m.tag.classList.contains("t-out") && !m.tag.classList.contains("t-salon"));
-        m.tag.classList.toggle("is-off", off);
-        m.pt.style.display = m.ln.style.display = off ? "none" : "";
-        m.pt.style.left = p[0] + "%";
-        m.pt.style.top = p[1] + "%";
-        m.ln.setAttribute("x1", tx); m.ln.setAttribute("y1", ty);
-        m.ln.setAttribute("x2", p[0].toFixed(2)); m.ln.setAttribute("y2", p[1].toFixed(2));
-      });
     };
     place();
     addEventListener("resize", place);
-    if (hud) setTimeout(function () { hud.classList.add("on"); }, 3600);
-    /* Salutation selon l'heure à Saint-Hyacinthe */
-    var greet = $("[data-greet]", heroBox);
-    if (greet) {
-      var hr = +partsInTz(new Date()).hour;
-      greet.textContent = hr < 5 ? "Bonne nuit · la maison veille" : hr < 12 ? "Bonjour · la maison s’éveille"
-        : hr < 18 ? "Bon après-midi · la maison s’adapte" : hr < 22 ? "Bonsoir · la maison s’allume" : "Bonne nuit · la maison veille";
-    }
   }
 
   function prog(el) {
@@ -785,17 +840,6 @@
     })(h);
   });
 
-  /* Manifeste : chaque mot devient un span qui s'allume */
-  var mani = $(".mani");
-  var words = [];
-  if (mani) {
-    var mp = $("p", mani);
-    mp.innerHTML = mp.textContent.trim().split(/\s+/).map(function (w) {
-      return "<span>" + w + "</span>";
-    }).join(" ");
-    words = $$("span", mp);
-  }
-
   /* Héros : zoom, assombrissement et parallaxe à la souris */
   var hero = $("[data-hero]") || $(".hero");
   var heroImg = hero ? $(".bg", hero) : null;
@@ -827,10 +871,6 @@
       heroImg.style.transform = "translate3d(" + (-mx * 22).toFixed(2) + "px," + (-my * 14).toFixed(2) + "px,0) scale(" + (1.04 + p * .14) + ")";
       heroImg.style.filter = "brightness(" + (1 - p * .55) + ")";
       if (Math.abs(tmx - mx) > .002 || Math.abs(tmy - my) > .002) schedule();
-    }
-    if (words.length) {
-      var mpg = prog(mani), lit = Math.floor(mpg * words.length * 1.3);
-      for (var i = 0; i < words.length; i++) words[i].classList.toggle("lit", i < lit);
     }
     scenes.forEach(function (s) {
       if (!s.img) return;

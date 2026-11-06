@@ -57,37 +57,46 @@
          alt="Résidence contemporaine la nuit, systèmes JARVIS actifs">
   </div>
   <div class="hero-flash" aria-hidden="true"></div>
-  <div class="hud" aria-hidden="true">
-    <div class="hud-tag t-out" style="--x:8%;--y:58%;--px:24%;--py:34%"><i></i><span><small>Extérieur · réel</small><b data-live="temp-hud">— °C</b></span></div>
-    <div class="hud-tag t-fire" style="--x:9%;--y:73%;--px:27%;--py:63%"><i></i><span><small>Terrasse</small><b>Foyer allumé</b></span></div>
-    <div class="hud-tag t-salon" style="--x:12%;--y:89%;--px:34%;--py:77%"><i></i><span><small>Salon</small><b>Soirée · 60 %</b></span></div>
-    <div class="hud-tag t-hub" style="--x:92%;--y:60%;--px:63%;--py:47%"><i></i><span><small>Cuisine</small><b>3 lumières · 40 %</b></span></div>
-    <div class="hud-tag t-energy" style="--x:91%;--y:80%;--px:80%;--py:74%"><i></i><span><small>Énergie</small><b>1,2 kW · stable</b></span></div>
-  </div>
   <div class="hero-inner">
-    <p class="eyebrow hero-eyebrow"><span data-greet>Domotique · Sécurité · IA privée</span></p>
-    <h1><span class="ln">Relier ce qui existe.</span><span class="ln l2">Faire agir l’ensemble.</span></h1>
-    <p class="sub">Une intelligence privée, installée chez vous, qui comprend vos règles,
-    coordonne vos systèmes et vous laisse les décisions importantes.</p>
-    <div class="acts">
-      <a class="pill" href="#app" data-magnet>Découvrir JARVIS</a>
-      <a class="pill ghost" href="/contact/" data-magnet>Réserver une démo</a>
+    <div class="hero-copy">
+      <p class="eyebrow hero-eyebrow">Domotique · sécurité · IA privée — Québec</p>
+      <h1><span class="ln">Relier ce qui existe.</span><span class="ln l2">Faire agir l’ensemble.</span></h1>
+      <p class="sub">Une intelligence privée, installée chez vous, qui comprend vos règles,
+      coordonne vos systèmes et vous laisse les décisions importantes.</p>
+      <div class="acts">
+        <a class="pill" href="#app" data-magnet>Découvrir JARVIS</a>
+        <a class="pill ghost" href="/contact/" data-magnet>Réserver une démo</a>
+      </div>
+      <a class="live-pill" href="#direct" data-live-pill>
+        <i class="dot" aria-hidden="true"></i>
+        <span>En direct<span class="lp-place"> · Saint-Hyacinthe</span></span>
+        <b data-live="temp-short">—</b>
+        <span class="sep" aria-hidden="true"></span>
+        <span data-live="visits-short">Visites —</span>
+      </a>
     </div>
-    <a class="live-pill" href="#direct" data-live-pill>
-      <i class="dot" aria-hidden="true"></i>
-      <span>En direct<span class="lp-place"> · Saint-Hyacinthe</span></span>
-      <b data-live="temp-short">—</b>
-      <span class="sep" aria-hidden="true"></span>
-      <span data-live="visits-short">Visites —</span>
-    </a>
+    <aside class="hp" data-hero-panel aria-label="Aperçu de JARVIS : la maison en ce moment">
+      <div class="hp-head"><span class="hp-brand">JARVIS</span><span>Maison · <time data-hp-clock>—</time></span></div>
+      <div class="hp-wx">
+        <b data-live="temp-short">—</b>
+        <span><span data-live="cond">Conditions actuelles</span><br>Saint-Hyacinthe · <em class="hp-tag real">réel</em></span>
+      </div>
+      <ul class="hp-rooms">
+        <li data-room="salon"><span>Salon</span><b>Soirée · 60 %</b><i style="--v:.6"></i></li>
+        <li data-room="chambre"><span>Chambres</span><b>19 °C</b><i style="--v:.42"></i></li>
+        <li data-room="entree"><span>Entrée</span><b>Déverrouillée</b></li>
+        <li data-room="energie"><span>Énergie</span><b>1,2 kW</b><i style="--v:.3"></i></li>
+      </ul>
+      <div class="hp-ask" data-hp-ask>
+        <small>JARVIS propose</small>
+        <p data-hp-text>Passer la maison en mode nuit à 23 h ? Portes verrouillées, caméras en détection.</p>
+        <div class="hp-acts"><button type="button" data-hp="no">Plus tard</button><button type="button" class="ok" data-hp="ok">Approuver</button></div>
+        <p class="hp-state" role="status" aria-live="polite"></p>
+      </div>
+      <p class="hp-foot">Démonstration · pièces simulées, aucun appareil commandé</p>
+    </aside>
   </div>
   <i class="cue" aria-hidden="true"></i>
-</section>
-
-<!-- Manifeste -->
-<section class="mani" aria-label="Manifeste">
-  <div class="stick"><p>Vos appareils existent déjà. Vos informations existent déjà.
-  Il manquait l’intelligence privée qui les comprend — et qui les fait travailler ensemble.</p></div>
 </section>
 
 <!-- Vitrine de l'app : un grand écran vivant -->
@@ -130,10 +139,10 @@
 
 <!-- Ma maison : démo interactive -->
 <section class="sect maison-home" id="maison" aria-labelledby="maison-titre">
-  <div class="head" data-rev style="max-width:52rem;margin:0 auto 3rem;text-align:center">
+  <div class="head shead" data-rev>
     <p class="eyebrow">Essayez · démonstration interactive</p>
-    <h2 id="maison-titre" data-split style="margin:1.1rem 0 0;font-weight:700;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:-.04em;line-height:1.06">Touchez une pièce.<br><em>Elle vous répond.</em></h2>
-    <p style="color:#c4c4cc;max-width:40rem;margin:1.2rem auto 0">Choisissez une ambiance ou une pièce : lumière, chauffage, stores et verrous se règlent
+    <h2 id="maison-titre" data-split>Touchez une pièce.<br><em>Elle vous répond.</em></h2>
+    <p>Choisissez une ambiance ou une pièce : lumière, chauffage, stores et verrous se règlent
     sous vos yeux. Chaque commande est envoyée, puis confirmée.</p>
   </div>
   <div class="demo-shell mz" data-demo="maison" data-rev>
@@ -258,10 +267,10 @@
 
 <!-- BouLance en direct : batteries réelles + radar -->
 <section class="sect" id="boulance" aria-labelledby="boulance-titre">
-  <div class="head" data-rev style="max-width:52rem;margin:0 auto 3rem;text-align:center">
-    <p class="eyebrow" style="display:inline-flex;align-items:center;gap:.7rem"><i class="dot" aria-hidden="true"></i> Le laboratoire mobile · en direct</p>
-    <h2 id="boulance-titre" style="margin:1.1rem 0 0;font-weight:700;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:-.04em;line-height:1.06">Les batteries de l’ambulance.<br><em>Pour vrai, en ce moment.</em></h2>
-    <p style="color:#c4c4cc;max-width:40rem;margin:1.2rem auto 0">Deux batteries LiFePO₄ de 280 Ah, lues par Home Assistant dans le véhicule et
+  <div class="head shead" data-rev>
+    <p class="eyebrow"><i class="dot" aria-hidden="true"></i> Le laboratoire mobile · en direct</p>
+    <h2 id="boulance-titre">Les batteries de l’ambulance.<br><em>Pour vrai, en ce moment.</em></h2>
+    <p>Deux batteries LiFePO₄ de 280 Ah, lues par Home Assistant dans le véhicule et
     affichées ici en direct. C’est exactement ce que JARVIS fera chez vous : des données vraies, jamais inventées.</p>
   </div>
   <div class="demo-shell bl" data-demo="boulance" data-rev>

@@ -305,6 +305,98 @@
 @keyframes dgBand { 0% { fill: #4ade8066; } 100% { fill: #4ade802a; } }
 @keyframes dgBlink { 50% { opacity: .3; } }
 
+/* ==========================================================================
+   La mesure qui vit (seulement sous html.fx) : capteur en direct, tête de
+   lecture, faisceau des preuves, causes biffées, dossier assemblé, retour
+   dans la plage en temps réel.
+   ========================================================================== */
+[data-demo="diagnostic"] .dg-stage { position: relative; }
+/* Capteur : chaque lecture fait battre le point rouge */
+html.fx [data-demo="diagnostic"] .dg-hk i { animation: none; }
+html.fx [data-demo="diagnostic"] .dg-hk.is-tick i { animation: dgTick 1s var(--ease); }
+@keyframes dgTick { 0% { transform: scale(1.7); box-shadow: 0 0 0 0 #ff7a6b99, 0 0 12px var(--dg-bad); } 100% { transform: none; box-shadow: 0 0 0 9px transparent, 0 0 12px var(--dg-bad); } }
+html.fx [data-demo="diagnostic"] .dg-gmark { transition: left 1.2s var(--ease); }
+html.fx [data-demo="diagnostic"] .dg-gmark::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 1.5px solid var(--dg-bad); animation: dgLive 2s ease-out infinite; }
+
+/* Point « Maintenant » : il respire et affiche la dernière lecture */
+[data-demo="diagnostic"] .dg-live { visibility: hidden; }
+html.fx [data-demo="diagnostic"] .dg-live { visibility: visible; }
+[data-demo="diagnostic"] .dg-live .c { fill: #fff; stroke: var(--dg-bad); stroke-width: 2.4; }
+[data-demo="diagnostic"] .dg-live .r { fill: none; stroke: var(--dg-bad); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: dgLive 2s ease-out infinite; }
+@keyframes dgLive { from { opacity: .9; transform: scale(1); } to { opacity: 0; transform: scale(3.4); } }
+[data-demo="diagnostic"] .dg-svg .dg-live text { fill: var(--dg-bad-t); font-weight: 600; letter-spacing: .02em; }
+html.fx [data-demo="diagnostic"] .dg-svg:not(.is-verified) .dg-nowl { animation: dgNowl 2s ease-in-out infinite; }
+@keyframes dgNowl { 50% { stroke-opacity: .45; } }
+
+/* Tête de lecture : la courbe se trace sous un faisceau doré */
+[data-demo="diagnostic"] .dg-pen { display: none; pointer-events: none; }
+html.fx [data-demo="diagnostic"] .dg-svg.is-drawing .dg-pen { display: inline; }
+[data-demo="diagnostic"] .dg-pen rect { fill: url(#dg-peng); }
+[data-demo="diagnostic"] .dg-pen line { stroke: var(--gold-soft); stroke-width: 1.2; stroke-opacity: .8; }
+html.fx [data-demo="diagnostic"] .dg-svg.is-drawing .dg-headdot .h { animation: dgHead 1s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes dgHead { 50% { transform: scale(1.5); opacity: .15; } }
+/* Valeur portée par la tête pendant la vérification */
+[data-demo="diagnostic"] .dg-svg .dg-headdot text { fill: var(--dg-bad-t); font-weight: 700; font-size: 11px; text-anchor: middle; transition: fill .4s; }
+[data-demo="diagnostic"] .dg-svg .dg-headdot text.is-ok { fill: var(--dg-ok-t); }
+html.fx [data-demo="diagnostic"] .dg-band { transition: fill .6s var(--ease); }
+html.fx [data-demo="diagnostic"] .dg-svg.is-inband .dg-band { fill: #4ade8033; }
+html.fx [data-demo="diagnostic"] .dg-svg.is-inband .dg-bandl { stroke: #4ade80aa; }
+
+/* Faisceau des preuves (étape 3) */
+[data-demo="diagnostic"] .dg-sweep { position: absolute; z-index: 1; display: none; overflow: hidden; pointer-events: none; }
+html.fx [data-demo="diagnostic"].is-live .dg-sweep { display: block; }
+[data-demo="diagnostic"] .dg-sweep i {
+  position: absolute; inset: 0; transform: translateX(-100%); opacity: 0;
+  background: linear-gradient(90deg, transparent 82%, color-mix(in srgb, var(--gold-soft) 14%, transparent) 97%, color-mix(in srgb, var(--gold-soft) 70%, transparent) 99.6%, transparent);
+}
+[data-demo="diagnostic"] .dg-sweep.is-on i { animation: dgSweep .95s cubic-bezier(.45, 0, .3, 1) both; }
+@keyframes dgSweep { 0% { transform: translateX(-100%); opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(0); opacity: 0; } }
+
+/* Causes : biffées une à une, avec leur raison */
+html.fx [data-demo="diagnostic"].is-live .dg-checks b { position: relative; width: fit-content; transition: color .5s; }
+html.fx [data-demo="diagnostic"].is-live .dg-checks b::after {
+  content: ""; position: absolute; left: -2px; right: -2px; top: 54%; height: 1.5px; border-radius: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: 0 50%; transition: transform .55s var(--ease) .1s;
+}
+html.fx [data-demo="diagnostic"].is-live .dg-checks li.is-done[data-res="ok"] b { color: #a8a8b0; }
+html.fx [data-demo="diagnostic"].is-live .dg-checks li.is-done[data-res="ok"] b::after { transform: none; }
+html.fx [data-demo="diagnostic"].is-live .dg-checks li span { clip-path: inset(0 100% 0 0); transition: clip-path .8s var(--ease) .2s; }
+html.fx [data-demo="diagnostic"].is-live .dg-checks li.is-done span { clip-path: inset(0 0 0 0); }
+html.fx [data-demo="diagnostic"].is-live .dg-checks li.is-done em u { animation: dgIn .45s var(--ease) .15s both; }
+html.fx [data-demo="diagnostic"].is-live .dg-checks li.is-done[data-res="bad"] { animation: dgCulprit 1.4s var(--ease) both; }
+@keyframes dgCulprit { 0% { box-shadow: 0 0 0 0 #ff7a6b66; } 40% { box-shadow: 0 0 0 5px #ff7a6b22, 0 0 30px #ff7a6b33; } 100% { box-shadow: 0 0 0 0 transparent, 0 0 18px #ff7a6b1f; } }
+
+/* Dossier : la feuille se pose, chaque ligne s'écrit, chaque pièce jointe ajoute une page */
+html.fx [data-demo="diagnostic"].is-live .dg-sheet {
+  --pg: 0; margin-bottom: 12px;
+  box-shadow:
+    0 calc(var(--pg) * 4px) 0 calc(var(--pg) * -1.5px) #141416, 0 calc(var(--pg) * 4px + 1px) 0 calc(var(--pg) * -1.5px) #ffffff1c,
+    0 calc(min(var(--pg), 2) * 4px) 0 calc(min(var(--pg), 2) * -1.5px) #111113, 0 calc(min(var(--pg), 2) * 4px + 1px) 0 calc(min(var(--pg), 2) * -1.5px) #ffffff16,
+    0 calc(min(var(--pg), 1) * 4px) 0 calc(min(var(--pg), 1) * -1.5px) #0e0e10, 0 calc(min(var(--pg), 1) * 4px + 1px) 0 calc(min(var(--pg), 1) * -1.5px) #ffffff12,
+    0 20px 50px #0009, inset 0 1px 0 #ffffff14;
+  transition: box-shadow .5s var(--ease), opacity .6s var(--ease), transform .8s var(--ease);
+}
+html.fx [data-demo="diagnostic"].is-live .dg-sheet:not(.is-laid) { opacity: 0; transform: translateY(22px) rotate(-1.6deg) scale(.97); }
+html.fx [data-demo="diagnostic"].is-live .dg-sheet dl div { position: relative; transform: translateX(16px); }
+html.fx [data-demo="diagnostic"].is-live .dg-sheet dl div.is-in { transform: none; }
+html.fx [data-demo="diagnostic"].is-live .dg-sheet dl div.is-in::after {
+  content: ""; position: absolute; inset: 0 -1rem; pointer-events: none;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--gold-soft) 12%, transparent) 50%, transparent) no-repeat;
+  background-size: 40% 100%; animation: dgWrite .9s var(--ease) both;
+}
+@keyframes dgWrite { from { background-position: -60% 0; } to { background-position: 160% 0; opacity: 0; } }
+html.fx [data-demo="diagnostic"].is-live .dg-att { transition: opacity .35s, transform .5s var(--ease), border-color .5s, box-shadow .5s; }
+html.fx [data-demo="diagnostic"].is-live .dg-att:not(.is-in) { opacity: 0; transform: translateY(-6px) scale(.9); }
+html.fx [data-demo="diagnostic"].is-live .dg-att.is-in { animation: dgClip 1s var(--ease); }
+@keyframes dgClip { 0% { border-color: var(--gold-soft); box-shadow: 0 0 16px color-mix(in srgb, var(--gold-soft) 45%, transparent); } 100% { border-color: #ffffff14; box-shadow: none; } }
+[data-demo="diagnostic"] .dg-fly {
+  position: absolute; z-index: 6; left: 0; top: 0; pointer-events: none; white-space: nowrap; will-change: transform, opacity;
+  font: 500 .58rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: .38rem .5rem; border-radius: 6px;
+  color: #fff; background: #0c0b09f2; border: 1px solid var(--gold-soft);
+  box-shadow: 0 12px 30px #000c, 0 0 18px color-mix(in srgb, var(--gold-soft) 40%, transparent);
+}
+[data-demo="diagnostic"] .dg-fly::before { content: "+ "; color: var(--gold-soft); }
+
 /* ---------- Réactif ---------- */
 @media (max-width: 1080px) {
   [data-demo="diagnostic"] .dg-rail span { font-size: .76rem; }

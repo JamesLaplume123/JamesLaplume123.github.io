@@ -1,6 +1,11 @@
 /* Démo « Diagnostic & continuité » : enquête guidée en cinq étapes (données simulées).
    Les chiffres viennent de la simulation de src/demos/diagnostic.py (bloc JSON).
    Lecture automatique jusqu'à l'étape 5, qui attend « Approuver l'intervention ».
+   Sous html.fx, la mesure vit : la valeur du capteur bouge un peu, le point
+   « Maintenant » respire, la courbe se trace avec sa tête de lecture, chaque
+   cause écartée est biffée avec sa raison, le dossier s'assemble page par page
+   et, après l'accord, le graphique se rapproche des dernières heures pour
+   montrer le retour dans la plage normale en temps réel.
    Sans JavaScript, les cinq étapes du premier cas restent lisibles. */
 (function () {
   "use strict";
@@ -26,11 +31,11 @@
   function ease(k) { return k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; }
   root.classList.add("is-live");
 
-  var svg = $(".dg-svg"), chart = $(".dg-chart"), tip = $(".dg-tip");
+  var svg = $(".dg-svg"), chart = $(".dg-chart"), tip = $(".dg-tip"), sweep = $(".dg-sweep"), stage = $(".dg-stage");
   var rail = $(".dg-rail"), railLis = $$(".dg-rail li");
   var playBtn = $('[data-nav="play"]'), prevBtn = $('[data-nav="prev"]'), nextBtn = $('[data-nav="next"]');
   var DUR = [0, 6, 8.5, 9.5, 8, 0];
-  var S = { cas: "froid", step: 1, playing: !reduce, approved: false, auto: 0, hover: false };
+  var S = { cas: "froid", step: 1, playing: !reduce, approved: false, auto: 0, hover: false, fx: false, zoom: 0, live: 0 };
   var D = DATA.froid, G = {};
 
   /* ---------- Horloge (s'arrête hors écran) ---------- */
@@ -84,6 +89,13 @@
     for (var i = i0; i <= i1; i++) d += (i === i0 ? "M" : "L") + fx(i * D.step).toFixed(1) + " " + fy(arr[i]).toFixed(1);
     return d;
   }
+  /* Début de la fenêtre affichée : zoom 0 = les 27 h; zoom 1 = cinq heures avant « Maintenant » */
+  function dom0() { return Math.max(0, D.now - 300) * S.zoom; }
+  function tickLabel(m, small) {
+    if (m === 0) return small ? "12 h" : "Hier 12 h";
+    if (m === 720) return small ? "0 h" : "Minuit";
+    return hm(m);
+  }
   function build() {
     D = DATA[S.cas];
     var kp = G.past || 0, kf = G.fut || D.now;
@@ -91,8 +103,10 @@
     var H = small ? 280 : 410, L = small ? 31 : 34, R = 8, T = 30, B = 20, secH = small ? 38 : 46;
     var mainB = H - T - B - 25 - 18 - secH + T, compY = mainB + 17, secT = compY + 8 + 18, secB = H - B;
     G = { W: W, H: H, L: L, R: R, T: T, mainB: mainB, compY: compY, secT: secT, secB: secB, small: small };
-    var pw = W - L - R;
-    var x = G.x = function (m) { return L + m / D.end * pw; };
+    var pw = W - L - R, m0 = dom0(), span = D.end - m0;
+    var x = G.x = function (m) { return L + (m - m0) / span * pw; };
+    G.m0 = m0; G.span = span;
+    sweep.style.cssText = "left:" + L + "px;top:" + T + "px;width:" + pw + "px;height:" + (secB - T) + "px";
     var y = G.y = function (v) { return T + (mainB - T) * (1 - (v - D.y[0]) / (D.y[1] - D.y[0])); };
     var sy = function (v) { return secT + (secB - secT) * (1 - (v - D.sy[0]) / (D.sy[1] - D.sy[0])); };
     svg.setAttribute("viewBox", "0 0 " + W + " " + H);
@@ -112,6 +126,9 @@
     var ga = el("linearGradient", { id: "dg-area", x1: 0, x2: 0, y1: 0, y2: 1 }, defs);
     el("stop", { offset: 0, style: "stop-color:var(--gold-soft);stop-opacity:.2" }, ga);
     el("stop", { offset: 1, style: "stop-color:var(--gold-soft);stop-opacity:0" }, ga);
+    var gp = el("linearGradient", { id: "dg-peng", x1: 0, x2: 1, y1: 0, y2: 0 }, defs);
+    el("stop", { offset: 0, style: "stop-color:var(--gold-soft);stop-opacity:0" }, gp);
+    el("stop", { offset: 1, style: "stop-color:var(--gold-soft);stop-opacity:.22" }, gp);
     var pat = el("pattern", { id: "dg-hatch", width: 6, height: 6, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" }, defs);
     el("line", { x1: 0, y1: 0, x2: 0, y2: 6, stroke: "#ffffff", "stroke-opacity": ".06", "stroke-width": 2 }, pat);
     var cp = el("clipPath", { id: "dg-cp" }, defs), cf = el("clipPath", { id: "dg-cf" }, defs);
@@ -124,12 +141,15 @@
       el("line", { class: "dg-gl", x1: L, x2: W - R, y1: y(v), y2: y(v) }, grid);
       el("text", { x: L - 6, y: y(v) + 3.5, "text-anchor": "end" }, grid).textContent = v + "°";
     }
-    var ticks = [[0, small ? "12 h" : "Hier 12 h"], [360, "18 h"], [720, small ? "0 h" : "Minuit"], [1080, "6 h"], [1440, "12 h"]];
-    ticks.forEach(function (t) {
-      el("line", { class: "dg-gl", x1: x(t[0]), x2: x(t[0]), y1: T, y2: secB }, grid);
-      el("text", { x: x(t[0]) + (t[0] ? 0 : 1), y: H - 5, "text-anchor": t[0] ? "middle" : "start" }, grid).textContent = t[1].replace(/ h/g, " h");
-    });
-    if (!small) el("text", { x: W - R, y: H - 5, "text-anchor": "end" }, grid).textContent = "15 h";
+    // Graduations : aux 6 h sur la journée, plus serrées quand le graphique se rapproche
+    var every = span > 900 ? 360 : span > 560 ? 120 : (small ? 120 : 60), last = 0;
+    for (var tk = Math.ceil(m0 / every) * every; tk <= D.end; tk += every) {
+      var tx = x(tk), edge = tx > W - R - 12;
+      el("line", { class: "dg-gl", x1: tx, x2: tx, y1: T, y2: secB }, grid);
+      el("text", { x: tx + (tk === m0 ? 1 : 0), y: H - 5, "text-anchor": tk === m0 ? "start" : edge ? "end" : "middle" }, grid).textContent = tickLabel(tk, small);
+      last = tk;
+    }
+    if (!small && D.end - last > every * .4) el("text", { x: W - R, y: H - 5, "text-anchor": "end" }, grid).textContent = hm(D.end);
     el("rect", { class: "dg-fut", x: x(D.now), y: T, width: x(D.end) - x(D.now), height: secB - T }, svg);
     el("rect", { class: "dg-band", x: L, width: pw, y: y(D.band[1]), height: y(D.band[0]) - y(D.band[1]) }, svg);
     el("line", { class: "dg-bandl", x1: L, x2: W - R, y1: y(D.band[1]), y2: y(D.band[1]) }, svg);
@@ -137,8 +157,11 @@
     var setG = el("g", { "data-k": "set" }, svg);
     el("line", { class: "dg-set", x1: L, x2: x(D.now), y1: y(D.set), y2: y(D.set) }, setG);
     // Fenêtre d'anomalie
-    el("rect", { class: "dg-anom", x: x(D.anom[0]), y: T, width: x(D.anom[1]) - x(D.anom[0]), height: mainB - T, rx: 4 }, svg);
-    el("text", { class: "dg-anomt halo", x: x(D.anom[1]) - 6, y: mainB - 16, "text-anchor": "end" }, svg).textContent = D.lab.anom;
+    var ax = Math.max(L, x(D.anom[0]));
+    el("rect", { class: "dg-anom", x: ax, y: T, width: x(D.anom[1]) - ax, height: mainB - T, rx: 4 }, svg);
+    var at = el("text", { class: "dg-anomt halo", x: x(D.anom[1]) - 6, y: mainB - 16, "text-anchor": "end" }, svg);
+    at.textContent = D.lab.anom;
+    try { if (x(D.anom[1]) - 6 - at.getComputedTextLength() < L) { at.setAttribute("x", L + 4); at.setAttribute("text-anchor", "start"); } } catch (e) { /* mesure indisponible */ }
     // Libellés des voies
     el("text", { class: "dg-lane halo", x: L, y: compY - 5 }, svg).textContent = D.lab.comp.toUpperCase();
     el("text", { class: "dg-lane halo", x: L, y: secT - 6 }, svg).textContent = D.lab.sec.toUpperCase();
@@ -154,10 +177,11 @@
       if (D.sthr !== null) {
         el("line", { class: "dg-thr", x1: L, x2: W - R, y1: sy(D.sthr), y2: sy(D.sthr) }, g);
       }
-      el("path", { class: future ? "dg-secp2" : "dg-secp", "data-k": "sec", d: pathOf(D.s, x, sy, future ? D.now : 0, D.end) }, g);
+      var from = Math.max(0, m0 - D.step);
+      el("path", { class: future ? "dg-secp2" : "dg-secp", "data-k": "sec", d: pathOf(D.s, x, sy, future ? D.now : from, D.end) }, g);
       if (!future) {
-        el("path", { class: "dg-area", "data-k": "line", d: pathOf(D.t, x, y, 0, D.now) + "L" + x(D.now).toFixed(1) + " " + mainB + "L" + L + " " + mainB + "Z" }, g);
-        el("path", { class: "dg-line", "data-k": "line", d: pathOf(D.t, x, y, 0, D.now) }, g);
+        el("path", { class: "dg-area", "data-k": "line", d: pathOf(D.t, x, y, from, D.now) + "L" + x(D.now).toFixed(1) + " " + mainB + "L" + L + " " + mainB + "Z" }, g);
+        el("path", { class: "dg-line", "data-k": "line", d: pathOf(D.t, x, y, from, D.now) }, g);
         var marks = el("g", { class: "dg-marks" }, g), dg = el("g", { "data-k": "doors" }, marks);
         D.doors.forEach(function (m) {
           if (m > D.now) return;
@@ -191,8 +215,16 @@
     try { fw = ft.getComputedTextLength() + 20; } catch (e) { fw = 124; }
     var fxp = Math.min(0, (W - R) - x(D.verify) - fw / 2);
     fr_.setAttribute("x", (-fw / 2 + fxp).toFixed(1)); fr_.setAttribute("width", fw.toFixed(1)); ft.setAttribute("x", fxp.toFixed(1));
+    // Tête de lecture (tracé et vérification), point « Maintenant » qui respire, valeur en direct
+    G.pen = el("g", { class: "dg-pen" }, svg);
+    el("rect", { x: -18, y: T, width: 18, height: secB - T }, G.pen);
+    el("line", { x1: 0, x2: 0, y1: T, y2: secB }, G.pen);
+    G.live = el("g", { class: "dg-live" }, svg);
+    el("circle", { class: "r", r: 5 }, G.live); el("circle", { class: "c", r: 3.6 }, G.live);
+    G.liveT = el("text", { class: "halo", x: 9, y: 4 }, G.live);
     G.head = el("g", { class: "dg-headdot" }, svg);
     el("circle", { class: "h", r: 9 }, G.head); el("circle", { class: "c", r: 3.4 }, G.head);
+    G.headT = el("text", { class: "halo", y: -14 }, G.head);
     G.cur = el("g", { class: "dg-cur" }, svg);
     G.curL = el("line", { y1: T, y2: secB }, G.cur);
     G.curD = el("circle", { r: 4.5 }, G.cur);
@@ -202,6 +234,12 @@
     G.hit.addEventListener("pointerleave", unhover);
     G.past = kp; G.fut = kf;
     setPast(G.past); setFut(G.fut);
+    setLive(S.live || valAt(D.t, D.now));
+  }
+  function setLive(v) {
+    S.live = v;
+    G.live.setAttribute("transform", "translate(" + G.x(D.now).toFixed(1) + " " + G.y(v).toFixed(1) + ")");
+    G.liveT.textContent = fr(v) + "°";
   }
   function setHead(m, show) {
     G.head.style.display = show ? "" : "none";
@@ -220,20 +258,33 @@
     G.past = m;
     G.clipP.setAttribute("width", Math.max(0, G.x(m) - G.L + 3).toFixed(1));
     setHead(m, m > 0 && m < D.now - .5);
+    G.pen.setAttribute("transform", "translate(" + G.x(m).toFixed(1) + " 0)");
     G.now.style.display = m >= D.now - .5 ? "" : "none";
+    G.live.style.display = m >= D.now - .5 && G.fut <= D.now + .5 ? "" : "none";
+    G.headT.style.display = "none";
     if (G.fut <= D.now) setNow(D.now);
   }
   function setFut(m) {
     G.fut = m;
     G.clipF.setAttribute("width", Math.max(0, G.x(m) - G.x(D.now)).toFixed(1));
-    if (m > D.now) { setNow(m); setHead(m, m < D.end - .5); }
+    if (m > D.now) {
+      var v = valAt(D.t, m), inb = v >= D.band[0] && v <= D.band[1];
+      setNow(m); setHead(m, m < D.end - .5);
+      G.live.style.display = "none";
+      G.pen.setAttribute("transform", "translate(" + G.x(m).toFixed(1) + " 0)");
+      G.headT.style.display = "";
+      G.headT.setAttribute("x", Math.min(0, G.W - G.R - G.x(m) - 26).toFixed(1));
+      G.headT.textContent = fr(v) + " °C";
+      G.headT.setAttribute("class", "halo" + (inb ? " is-ok" : ""));
+      svg.classList.toggle("is-inband", inb && m < D.end - .5);
+    }
   }
 
   /* Survol de la courbe : heure, température, compresseur, deuxième mesure */
   function hover(e) {
     if (S.step < 2) return;
     var r = svg.getBoundingClientRect(), px = e.clientX - r.left;
-    var m = Math.max(0, Math.min(D.end, (px - G.L) / (G.W - G.L - G.R) * D.end));
+    var m = Math.max(G.m0, Math.min(D.end, G.m0 + (px - G.L) / (G.W - G.L - G.R) * G.span));
     var lim = G.fut > D.now ? G.fut : G.past;
     if (m > lim) { unhover(); return; }
     var tv = valAt(D.t, m), sv = valAt(D.s, m), on = D.comp.some(function (c) { return c[0] <= m && m < c[1]; });
@@ -260,7 +311,7 @@
     p.classList.remove("is-concl", "is-verified");
     $$(".dg-checks li", p).forEach(function (li) { li.className = ""; });
     $$(".dg-sheet .is-in", p).forEach(function (n) { n.classList.remove("is-in"); });
-    var sh = $(".dg-sheet", p); if (sh) sh.classList.remove("is-ready");
+    var sh = $(".dg-sheet", p); if (sh) { sh.classList.remove("is-ready", "is-laid"); sh.style.removeProperty("--pg"); }
     var pr = $(".dg-prop", p);
     if (pr) { pr.className = "dg-prop"; $$(".dg-flow li", pr).forEach(function (li) { li.className = ""; }); }
   }
@@ -269,6 +320,10 @@
   function go(n, auto) {
     n = Math.max(1, Math.min(5, n));
     S.step = n; S.auto = 0; events = []; tweens = [];
+    S.fx = !reduce && document.documentElement.classList.contains("fx");
+    $$(".dg-fly", stage).forEach(function (g) { g.remove(); });
+    svg.classList.remove("is-drawing", "is-inband");
+    if (S.zoom && !(n === 5 && S.approved)) { S.zoom = 0; build(); }
     root.setAttribute("data-step", n);
     root.classList.remove("is-end");
     railLis.forEach(function (li, i) {
@@ -288,6 +343,54 @@
     svg.classList.remove("is-verified");
     unhover();
     enter[n](p);
+    if (S.fx) later(n === 1 ? 2.2 : 1.4, liveTick);
+  }
+
+  /* ---------- Capteur en direct : petite dérive et bruit de mesure ---------- */
+  var ticks = 0;
+  function liveTick() {
+    if (G.fut > D.now + .5) return;
+    var base = valAt(D.t, D.now), v = base + Math.min(.05, ticks++ * .012) + (Math.random() - .5) * .1;
+    setLive(v);
+    if (S.step === 1) {
+      var h = $('.dg-hero[data-case="' + S.cas + '"]'), b = $(".dg-big b", h), gauge = $(".dg-gauge", h);
+      var to = +b.getAttribute("data-to"), per = parseFloat(gauge.style.getPropertyValue("--v")) / to, txt = fr(v);
+      gauge.style.setProperty("--vk", (v * per).toFixed(2) + "%");
+      if (b.textContent !== txt) {
+        b.textContent = txt;
+        if (b.animate) b.animate([{ opacity: .5, transform: "translateY(4px)" }, { opacity: 1, transform: "none" }], { duration: 420, easing: "cubic-bezier(.16,1,.3,1)" });
+      }
+      var hk = $(".dg-hk", h);
+      hk.classList.remove("is-tick"); void hk.offsetWidth; hk.classList.add("is-tick");
+    }
+    later(1.5 + Math.random() * .9, liveTick);
+  }
+
+  /* Faisceau qui parcourt le graphique (lecture des preuves à l'étape 3) */
+  function scan() {
+    if (!S.fx) return;
+    sweep.classList.remove("is-on"); void sweep.offsetWidth; sweep.classList.add("is-on");
+  }
+
+  /* Une pièce jointe quitte sa voie du graphique et rejoint le dossier */
+  function fly(chip) {
+    var lane = chip.getAttribute("data-from"), r = svg.getBoundingClientRect(), o = stage.getBoundingClientRect();
+    var mx = (Math.max(G.m0, D.anom[0]) + D.now) / 2;
+    var sy = lane === "comp" ? G.compY + 4 : lane === "sec" ? (G.secT + G.secB) / 2 : G.y(valAt(D.t, mx));
+    var ax = r.left + G.x(mx), ay = r.top + sy, b = chip.getBoundingClientRect();
+    if (!S.fx || ay < 0 || ay > innerHeight || !b.width) return false;
+    var g = document.createElement("span");
+    g.className = "dg-fly";
+    g.setAttribute("aria-hidden", "true");
+    g.textContent = chip.textContent;
+    stage.appendChild(g);
+    var x0 = ax - o.left - g.offsetWidth / 2, y0 = ay - o.top - g.offsetHeight / 2, x1 = b.left - o.left, y1 = b.top - o.top;
+    tween(.75, function (k) {
+      var e = ease(k), arc = Math.sin(Math.PI * e) * -40;
+      g.style.transform = "translate(" + (x0 + (x1 - x0) * e).toFixed(1) + "px," + (y0 + (y1 - y0) * e + arc).toFixed(1) + "px) scale(" + (.85 + .15 * e).toFixed(3) + ")";
+      g.style.opacity = k < .12 ? k / .12 : k > .9 ? (1 - k) / .1 : 1;
+    }, function () { g.remove(); });
+    return true;
   }
 
   var enter = {
@@ -308,7 +411,9 @@
       setFut(D.now);
       svg.classList.remove("is-marked", "is-anom");
       setPast(0);
+      if (S.fx) svg.classList.add("is-drawing");
       tween(2.8, function (k) { setPast(D.now * ease(k)); }, function () {
+        svg.classList.remove("is-drawing");
         svg.classList.add("is-marked");
         later(.5, function () { svg.classList.add("is-anom"); });
       });
@@ -318,17 +423,28 @@
       var lis = $$(".dg-checks li", p);
       lis.forEach(function (li, i) {
         var t0 = .5 + i * 1.2;
-        later(t0, function () { li.className = "is-run"; svg.setAttribute("data-hl", li.getAttribute("data-hl")); });
+        later(t0, function () { li.className = "is-run"; svg.setAttribute("data-hl", li.getAttribute("data-hl")); scan(); });
         later(t0 + .85, function () { li.className = "is-done"; });
       });
       later(.5 + lis.length * 1.2 + .1, function () { p.classList.add("is-concl"); svg.setAttribute("data-hl", "sec"); });
     },
     4: function (p) {
       full();
+      var sh = $(".dg-sheet", p), chips = $$(".dg-att", p), gap = S.fx ? .3 : .22;
       var rows = [$(".dg-sheet header", p)].concat($$(".dg-sheet dl div", p), [$(".dg-sheet footer", p)]);
-      rows.forEach(function (r, i) { later(.25 + i * .22, function () { r.classList.add("is-in"); }); });
-      later(.25 + rows.length * .22 + .2, function () { $(".dg-sheet", p).classList.add("is-ready"); });
-      later(.25 + rows.length * .22 + .8, function () { p.classList.add("is-concl"); });
+      later(.05, function () { sh.classList.add("is-laid"); });
+      rows.forEach(function (r, i) { later(.3 + i * gap, function () { r.classList.add("is-in"); }); });
+      // Chaque pièce jointe arrive du graphique et ajoute une page sous le dossier
+      var t = .3 + rows.length * gap;
+      chips.forEach(function (c, i) {
+        later(t + i * .5, function () {
+          var flew = fly(c);
+          later(flew ? .7 : 0, function () { c.classList.add("is-in"); sh.style.setProperty("--pg", i + 1); });
+        });
+      });
+      t += S.fx ? chips.length * .5 + .5 : .2;
+      later(t, function () { sh.classList.add("is-ready"); });
+      later(t + .6, function () { p.classList.add("is-concl"); });
     },
     5: function (p) {
       full();
@@ -348,8 +464,13 @@
     pr.classList.remove("is-wait"); pr.classList.add("is-sent");
     flow(p, "sent", "is-on is-done");
     var worked = false, read = false, ok = false;
-    later(.5, function () { flow(p, "work", "is-on is-run"); });
-    tween(6.5, function (k) {
+    later(.5, function () { if (!worked) flow(p, "work", "is-on is-run"); });
+    if (S.fx) {
+      tween(1.1, function (k) { S.zoom = ease(k); build(); }, verify);
+    } else verify();
+    function verify() {
+    if (S.fx) svg.classList.add("is-drawing");
+    tween(S.fx ? 7 : 6.5, function (k) {
       var m = D.now + (D.end - D.now) * k;
       setFut(m);
       if (!worked && m >= D.fix + 4) { worked = true; flow(p, "work", "is-on is-done"); flow(p, "read", "is-on is-run"); }
@@ -359,11 +480,14 @@
       }
       if (!ok && m >= D.verify + 8) { ok = true; p.classList.add("is-verified"); railLis[4].classList.add("is-ok"); }
     }, function () { finish(p, true); });
+    }
   }
   function finish(p, animated) {
     var pr = $(".dg-prop", p);
     pr.classList.remove("is-wait"); pr.classList.add("is-sent");
     ["sent", "work", "read", "ok"].forEach(function (k) { flow(p, k, "is-on is-done"); });
+    svg.classList.remove("is-drawing", "is-inband");
+    if (S.fx && S.zoom !== 1) { S.zoom = 1; build(); }
     setFut(D.end);
     svg.classList.add("is-verified");
     p.classList.add("is-verified");
@@ -377,7 +501,7 @@
   /* ---------- Commandes ---------- */
   function syncPlay() { playBtn.setAttribute("aria-pressed", S.playing ? "true" : "false"); }
   function setCase(k) {
-    S.cas = k; S.approved = false;
+    S.cas = k; S.approved = false; S.zoom = 0; S.live = 0;
     $$(".dg-cases button").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-case") === k ? "true" : "false"); });
     $$(".dg-step, .dg-hero, .dg-legend").forEach(function (n) { n.hidden = n.getAttribute("data-case") !== k; });
     G.past = 0; G.fut = DATA[k].now;
@@ -398,7 +522,7 @@
     else if (nav === "replay") { S.approved = false; S.playing = !reduce; syncPlay(); go(1, true); }
     else if (b.getAttribute("data-act") === "approve") approve(b.closest(".dg-step"));
   });
-  var stage = $(".dg-stage");
+
   stage.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") S.hover = true; });
   stage.addEventListener("pointerleave", function () { S.hover = false; });
   root.addEventListener("keydown", function (e) {

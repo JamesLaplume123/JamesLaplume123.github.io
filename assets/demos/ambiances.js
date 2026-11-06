@@ -2,15 +2,22 @@
 (function () {
   "use strict";
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var GLOW = { "heure-doree": "#ffcf8a", aurore: "#7cf0dc", lecture: "#fff1d6", ocean: "#7fd0ff", cinema: "#c39bff", "nuit-douce": "#c79a5a" };
+  /* Circuits de la pièce (zones des photos), dans l'ordre où ils changent : plafond, couloir, cuisine, salon */
+  var ZONES = [
+    "radial-gradient(62% 36% at 50% 12%, #000 30%, transparent 78%)",
+    "radial-gradient(17% 27% at 48% 52%, #000 25%, transparent 78%)",
+    "radial-gradient(34% 56% at 16% 64%, #000 30%, transparent 78%)",
+    "radial-gradient(40% 52% at 80% 66%, #000 30%, transparent 78%)"
+  ];
 
   document.querySelectorAll('[data-demo="ambiances"]').forEach(function (root) {
     var $ = function (s) { return root.querySelector(s); };
     var imgs = [].slice.call(root.querySelectorAll(".am-img"));
     var chips = [].slice.call(root.querySelectorAll(".am-chips button"));
-    var front = $(".am-front"), nameEl = $('[data-am="name"]'), state = $('[data-am="state"]');
+    var veil = $(".am-veil"), nameEl = $('[data-am="name"]'), state = $('[data-am="state"]');
     var apply = $('[data-am="apply"]'), back = $('[data-am="back"]'), dim = $('[data-am="dim"]');
     var shown = imgs[0].getAttribute("data-k"), applied = shown, previous = null, manual = false, timer = null, visible = false;
+    var zones = [], settle = null, arriving = null;
 
     function img(k) { return imgs.filter(function (i) { return i.getAttribute("data-k") === k; })[0]; }
     function chip(k) { return chips.filter(function (c) { return c.getAttribute("data-k") === k; })[0]; }
@@ -18,23 +25,37 @@
       state.className = "am-state" + (cls ? " " + cls : "");
       state.querySelector("span").textContent = text;
     }
+    /* Change d'ambiance comme une vraie scène : chaque circuit passe à la nouvelle lumière
+       l'un après l'autre (≈ 160 ms d'écart), puis la pièce entière se pose (≈ 1,4 s en tout). */
+    function land() {
+      clearTimeout(settle);
+      if (arriving) imgs.forEach(function (i) { i.classList.toggle("is-on", i === arriving); });
+      imgs.forEach(function (i) { i.classList.remove("is-enter"); });
+      zones.forEach(function (z) { z.remove(); });
+      zones = []; arriving = null;
+    }
     function show(k) {
       if (k === shown) return;
-      var next = img(k), cur = img(shown);
+      var next = img(k);
       shown = k;
       nameEl.textContent = chip(k).getAttribute("data-name");
       chips.forEach(function (c) { c.classList.toggle("is-on", c === chip(k)); });
-      if (reduce) { cur.classList.remove("is-on"); next.classList.add("is-on"); return; }
-      imgs.forEach(function (i) { i.classList.remove("is-enter"); });
+      land(); /* un changement encore en cours se termine d'abord */
+      arriving = next;
+      if (reduce) { land(); return; }
+      var src = next.currentSrc || next.src;
+      zones = ZONES.map(function (z, i) {
+        var e = document.createElement("img");
+        e.className = "am-zone"; e.src = src; e.alt = ""; e.setAttribute("aria-hidden", "true");
+        e.style.setProperty("--z", z);
+        e.style.transitionDelay = (i * .16) + "s";
+        next.parentNode.insertBefore(e, veil);
+        return e;
+      });
       next.classList.add("is-enter");
-      root.style.setProperty("--glow", GLOW[k] || "#ffd9a0");
-      front.style.setProperty("--glow", GLOW[k] || "#ffd9a0");
-      front.classList.remove("go"); void front.offsetWidth; front.classList.add("go");
-      setTimeout(function () {
-        if (shown !== k) return;
-        imgs.forEach(function (i) { i.classList.toggle("is-on", i === next); });
-        next.classList.remove("is-enter");
-      }, 1550);
+      void next.offsetWidth;
+      zones.forEach(function (e) { e.classList.add("go"); });
+      settle = setTimeout(land, 1500);
     }
     function markApplied(k) {
       chips.forEach(function (c) { c.classList.toggle("is-applied", c.getAttribute("data-k") === k); });
@@ -73,9 +94,7 @@
       setState("is-sent", "Retour à l’éclairage précédent…");
       setTimeout(function () { applied = k; markApplied(k); setState("", "Confirmé · éclairage précédent rétabli"); apply.disabled = true; }, reduce ? 0 : 900);
     });
-    dim.addEventListener("input", function () {
-      imgs.forEach(function (i) { i.style.setProperty("--dim", (dim.value / 100).toFixed(2)); });
-    });
+    dim.addEventListener("input", function () { veil.style.setProperty("--am-dim", (dim.value / 100).toFixed(2)); });
 
     /* Démonstration automatique tant que le visiteur n'a rien touché */
     function auto() {

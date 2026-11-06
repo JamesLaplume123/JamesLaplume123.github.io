@@ -69,7 +69,14 @@ SCENES = {
 }
 
 
-def _center(poly):
+# Étiquettes déplacées pour ne pas se chevaucher (pièces voisines et étroites), en pixels de l'image.
+LABEL_AT = {"chambre": (900, 292), "sdb": (1078, 392)}
+
+
+def _center(poly, key=None):
+    if key in LABEL_AT:
+        x, y = LABEL_AT[key]
+        return x / W * 100, y / H * 100
     xs, ys = [p[0] for p in poly], [p[1] for p in poly]
     return (min(xs) + max(xs)) / 2 / W * 100, (min(ys) + max(ys)) / 2 / H * 100
 
@@ -117,7 +124,7 @@ def html(uid="maison"):
         for k, n, p, _w, _e in ROOMS
     )
     labels = "".join(
-        f'<button type="button" class="mz-tag" data-room="{k}" style="--x:{_center(p)[0]:.2f}%;--y:{_center(p)[1]:.2f}%">'
+        f'<button type="button" class="mz-tag" data-room="{k}" style="--x:{_center(p, k)[0]:.2f}%;--y:{_center(p, k)[1]:.2f}%">'
         f'<b{SHORT.get(k, "")}>{n}</b><span class="mz-tag-v">Éteint</span></button>'
         for k, n, p, _w, _e in ROOMS
     )

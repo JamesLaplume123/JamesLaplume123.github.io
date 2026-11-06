@@ -1225,3 +1225,22 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
 :is(h1, h2, h3) em, .cta h2 span { text-shadow: none; filter: drop-shadow(0 2px 18px #000a); }
 .band.top h1 { max-width: 14ch; }
 @media (max-width: 880px) { .band.top h1 { max-width: none; } }
+
+/* ==========================================================================
+   Coquille commune des démos interactives (assets/demos/*). Même langage que
+   la console en direct : fenêtre de verre, en-tête, badge « Démo ».
+   ========================================================================== */
+.demo-shell {
+  position: relative; max-width: 76rem; margin: 0 auto; border-radius: 22px; overflow: hidden;
+  border: 1px solid var(--mode-line); background: var(--mode-panel-solid);
+  box-shadow: 0 40px 120px #000c, 0 0 120px color-mix(in srgb, var(--mode-glow) 10%, transparent), var(--mode-spec);
+}
+.demo-top {
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  padding: .95rem 1.4rem; border-bottom: 1px solid var(--mode-line);
+  font: 500 .72rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: #c4c4cc;
+}
+.demo-top b { color: #fff; font-weight: 600; }
+.demo-top .tag { margin-left: auto; }
+.demo-body { position: relative; }
+.demo-hint { margin: 1rem auto 0; max-width: 76rem; text-align: center; font: 500 .72rem/1.5 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: #a8a8b0; }

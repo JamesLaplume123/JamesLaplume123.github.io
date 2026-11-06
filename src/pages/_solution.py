@@ -8,6 +8,16 @@
 from config import CAPABILITIES
 
 
+# Image d'aperçu, utilisée tant qu'une solution n'a pas sa démo interactive (DATA["demo_html"]).
+FRAME = """<figure class="frame" data-rev>
+    <img src="{img}" alt="Aperçu conceptuel — {title}" loading="lazy">
+    <figcaption>
+      <span>JARVIS App · {up}</span>
+      <strong>{cap}</strong>
+    </figcaption>
+  </figure>"""
+
+
 def solution_page(d):
     num = next((c["num"] for c in CAPABILITIES if c["slug"] == d["slug"]), "0X")
     features = "".join(
@@ -25,6 +35,7 @@ def solution_page(d):
         "title": f"{d['title']} | Solutions JARVIS",
         "description": d["description"],
         "og_image": d["image"],
+        "assets": d.get("assets", []),
         "content": f"""
 <section class="band top">
   <div class="bg"><img src="{d['image']}" alt="" fetchpriority="high"></div>
@@ -76,13 +87,7 @@ def solution_page(d):
     </div>
     <p data-rev>{d['demo_copy']}</p>
   </div>
-  <figure class="frame" data-rev>
-    <img src="{d.get('demo_image', d['image'])}" alt="Aperçu conceptuel — {d['title']}" loading="lazy">
-    <figcaption>
-      <span>JARVIS App · {d['title'].upper()}</span>
-      <strong>{d.get('demo_caption', 'Prototype interactif — données simulées.')}</strong>
-    </figcaption>
-  </figure>
+  {d.get('demo_html') or FRAME.format(img=d.get('demo_image', d['image']), title=d['title'], up=d['title'].upper(), cap=d.get('demo_caption', 'Prototype interactif — données simulées.'))}
   {d.get('extra', '')}
   <div class="chiprow" data-rev>
     <span class="chip chip-sim">Compatibilités possibles</span>

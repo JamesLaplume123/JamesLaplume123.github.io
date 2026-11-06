@@ -138,14 +138,20 @@ def document(page):
     lang = "fr-CA" if page.get("lang", "fr") == "fr" else "en"
     skip = "Aller au contenu" if page.get("lang", "fr") == "fr" else "Skip to content"
     body_class = page.get("body_class", "")
+    demo_css = "".join(
+        f'\n<link rel="stylesheet" href="/assets/demos/{name}.css?v={v}">' for name in page.get("assets", [])
+    )
     top, bottom = header_v2(page), footer_v2(page)
     script = f'<script src="/assets/js/wow.js?v={v}" defer></script>'
+    # Démos propres à une page : assets/demos/<nom>.css et .js, chargés seulement là.
+    for name in page.get("assets", []):
+        script += f'\n<script src="/assets/demos/{name}.js?v={v}" defer></script>'
     api = SITE.get("api", "").rstrip("/")
     api_attr = f' data-api="{api}"' if api else ""
     return f"""<!doctype html>
 <html lang="{lang}"{api_attr}>
 <head>
-{head(page)}
+{head(page)}{demo_css}
 </head>
 <body class="{body_class}">
 <a class="skip-link" href="#contenu">{skip}</a>

@@ -1,4 +1,6 @@
-# JARVIS (plateforme) — le produit en scène : App, Core, Hub. Version wow.
+# JARVIS (plateforme) — le produit en scène : App, Core, Hub, et pourquoi le noyau est en Rust.
+
+from demos import rust
 
 PAGE = {
     "url": "/plateforme/",
@@ -9,6 +11,7 @@ PAGE = {
         "système privé, local et contrôlé."
     ),
     "og_image": "/media/product/user/accueil-og.jpg",
+    "assets": ["rust"],
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="" fetchpriority="high"></div>
@@ -47,7 +50,7 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Visite guidée · 58 vues conçues</p>
-      <h2 style="margin-top:1rem">Votre espace.<br><em>À votre image.</em></h2>
+      <h2>Votre espace.<br><em>À votre image.</em></h2>
     </div>
     <p data-rev>Le parcours complet du compte personnel est dessiné, écran par
     écran : l’accès, la journée, les messages, l’assistant, le partage et la carte.
@@ -171,7 +174,7 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Le produit complet</p>
-      <h2 style="margin-top:1rem">Une seule expérience.<br><em>Du geste au système réel.</em></h2>
+      <h2>Une seule expérience.<br><em>Du geste au système réel.</em></h2>
     </div>
     <p data-rev>L’App est ce que vous utilisez. Core comprend la demande. Le Hub garde
     l’intelligence près du site. Les équipements et logiciels existants exécutent le résultat.</p>
@@ -210,16 +213,30 @@ PAGE = {
   </div>
 </section>
 
-<section class="scene">
-  <div class="stick">
-    <img src="/media/product/jarvis-hub-v1.webp"
+<section class="sect rust-sect" id="rust" aria-labelledby="rust-titre">
+  <div class="head shead" data-rev>
+    <p class="eyebrow">Le logiciel · écrit en Rust</p>
+    <h2 id="rust-titre">Sûr par construction. <em>Pas par promesse.</em></h2>
+    <p>Le noyau de JARVIS garde vos comptes, vos droits et vos secrets. Il est écrit en Rust, le langage que
+    recommandent les agences de cybersécurité pour le logiciel critique — et bâti pour accueillir l’IA sans lui céder les clés.</p>
+  </div>
+  """ + rust.html() + """
+</section>
+
+<section class="hub" aria-labelledby="hub-titre">
+  <figure class="hub-media wipe" data-rev>
+    <img src="/media/product/jarvis-hub-v1.webp" width="1672" height="941"
          alt="JARVIS Hub intégré dans une résidence haut de gamme" loading="lazy">
-    <h2 class="t1">JARVIS Hub</h2>
-    <p class="t2">La présence physique de JARVIS — dimensionnée et intégrée selon le lieu.</p>
-    <div class="t3">
-      <span class="chip">Exécute Core</span>
+  </figure>
+  <div class="hub-copy" data-rev>
+    <p class="eyebrow">JARVIS Hub</p>
+    <h2 id="hub-titre">La présence physique <em>de JARVIS.</em></h2>
+    <p>Dimensionné et intégré selon le lieu, il exécute le noyau, garde les fonctions essentielles
+    même sans Internet et n’installe que des mises à jour signées.</p>
+    <div class="chiprow">
+      <span class="chip">Exécute le noyau</span>
       <span class="chip">Continuité sans Internet</span>
-      <span class="chip">Contrôle visible</span>
+      <span class="chip">Mises à jour signées</span>
     </div>
   </div>
 </section>
@@ -228,7 +245,7 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">JARVIS App · expérience de base</p>
-      <h2 style="margin-top:1rem">Votre identité. Vos règles.<br><em>Votre point d’entrée.</em></h2>
+      <h2>Votre identité. Vos règles.<br><em>Votre point d’entrée.</em></h2>
     </div>
     <p data-rev>Avant toute solution, JARVIS connaît seulement les personnes, les rôles et les
     limites que vous avez définis. Rien d’autre n’est relié par défaut.</p>
@@ -263,7 +280,7 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Pour l’administrateur</p>
-      <h2 style="margin-top:1rem">Services et hébergement :<br><em>une seule entrée.</em></h2>
+      <h2>Services et hébergement :<br><em>une seule entrée.</em></h2>
     </div>
     <p data-rev>L’administrateur voit où chaque logiciel fonctionne — sur le Hub, sur une
     machine qu’il contrôle ou chez un fournisseur — et ce que chaque connexion autorise.
@@ -295,7 +312,7 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Déjà dessinées, en validation</p>
-      <h2 style="margin-top:1rem">Les extensions <em>qui s’en viennent.</em></h2>
+      <h2>Les extensions <em>qui s’en viennent.</em></h2>
     </div>
     <p data-rev>Chaque extension a son dossier de conception complet — écrans, droits,
     règles et limites — avant la première ligne de code. Rien n’est annoncé sans dossier.</p>
@@ -336,7 +353,7 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Le contrôle reste visible</p>
-      <h2 style="margin-top:1rem">Puissant ne veut pas dire <em>opaque.</em></h2>
+      <h2>Puissant ne veut pas dire <em>opaque.</em></h2>
     </div>
     <p data-rev>JARVIS montre qui accède à quoi, ce qui peut être exécuté et quand une décision
     humaine est obligatoire.</p>

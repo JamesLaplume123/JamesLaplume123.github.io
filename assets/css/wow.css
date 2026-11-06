@@ -990,6 +990,7 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
 .fx .wipe[data-rev].in { clip-path: inset(0 0 0 0 round 20px); }
 .fx .wipe[data-rev].in img { transform: scale(1); }
 .hub-copy p:not(.eyebrow) { color: #cfcfd6; margin: 1.2rem 0 0; }
+.hub-copy .chiprow { margin-top: 1.4rem; }
 
 /* ---------- Où en est JARVIS ---------- */
 .status { padding: 5rem 1.4rem; }

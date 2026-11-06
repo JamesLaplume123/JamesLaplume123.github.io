@@ -476,7 +476,7 @@ PAGE = {
     <h2 id="hub-titre">L’intelligence demeure <em>chez vous.</em></h2>
     <p>Un petit serveur installé sur place garde vos règles, vos comptes, votre journal et
     votre IA locale. Pas d’abonnement obligatoire au nuage pour que la maison fonctionne.</p>
-    <div class="chiprow" style="margin-top:1.4rem">
+    <div class="chiprow">
       <span class="chip">Local d’abord</span>
       <span class="chip">Sauvegardes chiffrées</span>
       <span class="chip">Décisions humaines</span>

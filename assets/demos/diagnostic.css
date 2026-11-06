@@ -295,6 +295,8 @@
 [data-demo="diagnostic"].is-live .dg-done { display: none; }
 [data-demo="diagnostic"].is-live .dg-step.is-verified .dg-done { display: block; animation: dgIn .7s var(--ease) both; }
 
+/* Hors écran : toutes les animations continues s'arrêtent */
+[data-demo="diagnostic"].is-paused *, [data-demo="diagnostic"].is-paused *::before, [data-demo="diagnostic"].is-paused *::after { animation-play-state: paused !important; }
 @keyframes dgSpin { to { transform: rotate(360deg); } }
 @keyframes dgPop { 0% { transform: scale(.5); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
 @keyframes dgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }

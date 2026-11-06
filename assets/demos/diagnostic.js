@@ -75,6 +75,7 @@
   }
   function sync() {
     var want = visible && !document.hidden;
+    root.classList.toggle("is-paused", !want);
     if (want && !running) { running = true; last = performance.now(); raf = requestAnimationFrame(tick); }
     else if (!want && running) { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
   }

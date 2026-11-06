@@ -29,10 +29,16 @@
     var level = [0, 0], target = [0, 0], amps = [0, 0], phase = 0, visible = false, last = null, timer = null;
     var beat = $(".bl-beat");
 
-    function waves() {
-      phase += .035;
+    var lastT = 0;
+    function waves(now) {
+      /* Le remplissage dépend du temps écoulé, pas de la vitesse de l'écran : ~1,5 s partout */
+      now = now || performance.now();
+      var dt = lastT ? Math.min(300, now - lastT) : 16;
+      lastT = now;
+      phase += .035 * dt / 16;
+      var k = 1 - Math.exp(-dt / 320);
       bats.forEach(function (b, i) {
-        level[i] += (target[i] - level[i]) * .06;
+        level[i] += (target[i] - level[i]) * k;
         if (Math.abs(target[i] - level[i]) < .4) level[i] = target[i];
         var y = 400 - (level[i] / 100) * 384, amp = level[i] > 1 && level[i] < 99 ? 7 : 3;
         ["w1", "w2"].forEach(function (w, k) {
@@ -45,7 +51,7 @@
         });
         if (last) $('[data-bl="soc"]', b).textContent = Math.round(Math.abs(target[i] - level[i]) < 1.5 ? target[i] : level[i]);
       });
-      if (visible && !reduce) requestAnimationFrame(waves);
+      if (visible && !reduce) requestAnimationFrame(waves); else lastT = 0;
     }
 
     function setState(ok, text) {

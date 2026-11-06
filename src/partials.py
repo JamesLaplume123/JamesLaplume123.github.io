@@ -1,13 +1,12 @@
 # Gabarits partagés : <head>, en-tête, pied de page et enveloppe de document.
 # Chaque page de src/pages/ fournit un dict PAGE ; document() produit le HTML final.
 
-from config import SITE, NAV, CTA_V2, FOOTER_COLUMNS
+from config import SITE, NAV, CTA_V2, FOOTER_COLUMNS, SEO
 
 
 def head(page):
     url = SITE["domain"] + page["url"]
-    title = page["title"]
-    desc = page["description"]
+    title, desc = SEO.get(page["url"], (page["title"], page["description"]))
     og_path = page.get("og_image", SITE["og_image"])
     og = SITE["domain"] + og_path
     og_size = (
@@ -39,7 +38,9 @@ def head(page):
 <meta property="og:type" content="website">
 <meta property="og:url" content="{url}">
 <meta property="og:image" content="{og}">
-{og_size}<meta name="referrer" content="strict-origin-when-cross-origin">
+{og_size}<meta name="twitter:card" content="summary_large_image">
+<meta name="geo.region" content="CA-QC">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="{SITE['theme_color']}">
 <link rel="icon" href="/favicon.svg?v={v}">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -116,7 +117,8 @@ def footer_v2(page):
   <div class="foot-grid">
     <div class="foot-brand">
       <b>JARVIS <span>Private Systems</span></b>
-      <p>Relier ce qui existe. Faire agir l’ensemble.</p>
+      <p>Relier ce qui existe. Faire agir l’ensemble.<br>Domotique, sécurité et IA privée — Québec.</p>
+      <p class="foot-count" hidden><i class="dot" aria-hidden="true"></i>Visites du site <b data-live="visits-foot">—</b></p>
     </div>
     {cols}
   </div>
@@ -138,8 +140,10 @@ def document(page):
     body_class = page.get("body_class", "")
     top, bottom = header_v2(page), footer_v2(page)
     script = f'<script src="/assets/js/wow.js?v={v}" defer></script>'
+    api = SITE.get("api", "").rstrip("/")
+    api_attr = f' data-api="{api}"' if api else ""
     return f"""<!doctype html>
-<html lang="{lang}">
+<html lang="{lang}"{api_attr}>
 <head>
 {head(page)}
 </head>

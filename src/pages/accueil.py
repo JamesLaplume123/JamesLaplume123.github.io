@@ -1,68 +1,418 @@
-# Accueil — version « wow » (chantier 2026) : vendre JARVIS, le logiciel.
-# Parcours : promesse cinématique → manifeste → le logiciel en scène → le Hub →
-# six capacités (bento) → offre par environnement → preuve (laboratoire) → démo.
-# Les textes seront enrichis avec les PDF de James; la structure, elle, est finale.
+# Accueil — vendre JARVIS, le logiciel (refonte novembre 2026).
+# Parcours : promesse → manifeste → visite de l'app (épinglée, jamais coupée) →
+# JARVIS en direct (vraies données + décisions simulées) → comment ça marche →
+# où en est le projet → modes → six solutions → offre → laboratoire → FAQ → démo.
+# Les questions de la FAQ alimentent aussi les données structurées (FAQPage).
+
+import json
+
+FAQ = [
+    (
+        "Qu’est-ce que JARVIS, concrètement?",
+        "Un logiciel privé installé sur un petit serveur chez vous, le JARVIS Hub. Il relie "
+        "ce que vous avez déjà — lumières, caméras, chauffage, batteries, agenda, documents — "
+        "et vous le présente dans une seule application. Il propose des actions; vous gardez "
+        "la décision.",
+    ),
+    (
+        "Mes données quittent-elles la maison ou l’entreprise?",
+        "Pas par défaut. JARVIS est conçu pour que tout vive sur le Hub, chez vous. Le nuage ne "
+        "sert qu’à ce que vous choisissez : un accès à distance par un relais qui ne garde rien, "
+        "ou une copie de sauvegarde chiffrée.",
+    ),
+    (
+        "Dois-je changer mes appareils?",
+        "Généralement non. JARVIS s’appuie sur Home Assistant et sur des standards ouverts comme "
+        "Zigbee, Z-Wave, Matter et MQTT pour parler à des appareils de marques différentes. On "
+        "commence par ce qui existe déjà.",
+    ),
+    (
+        "Est-ce que ça fonctionne sans Internet?",
+        "C’est le principe du local d’abord : l’interface et les automatisations continuent de "
+        "fonctionner sur le réseau du lieu. Seul l’accès à distance demande une connexion.",
+    ),
+    (
+        "Pour qui est JARVIS?",
+        "Pour les résidences (maison, condo, chalet), les entreprises (bureau, commerce, atelier) "
+        "et les véhicules aménagés (VR, unités spécialisées) qui veulent une domotique, une "
+        "sécurité et une IA qui restent privées.",
+    ),
+    (
+        "Est-ce disponible aujourd’hui?",
+        "JARVIS est en construction. Le noyau du logiciel (comptes, droits, sécurité) est en "
+        "développement et le tableau JARVIS Signature fonctionne déjà sur Home Assistant. Une "
+        "démo vous montre honnêtement ce qui fonctionne aujourd’hui et ce qui reste à construire.",
+    ),
+    (
+        "Combien ça coûte?",
+        "Le prix dépend de votre environnement et de ce qu’on relie. On en parle après la "
+        "première rencontre, une fois le besoin clair et la première preuve utile définie.",
+    ),
+    (
+        "Où êtes-vous situé?",
+        "JARVIS Private Systems est basé dans la région de Saint-Hyacinthe, au Québec. "
+        "Écrivez-moi pour voir ce qui est possible chez vous.",
+    ),
+]
+
+FAQ_HTML = "".join(
+    f"""<details class="faq-item" data-rev>
+      <summary><span>{q}</span><i aria-hidden="true"></i></summary>
+      <div class="faq-a"><p>{a}</p></div>
+    </details>"""
+    for q, a in FAQ
+)
+
+SCHEMA = json.dumps(
+    [
+        {
+            "@context": "https://schema.org",
+            "@type": "ProfessionalService",
+            "@id": "https://jameslaplume.ca/#entreprise",
+            "name": "JARVIS Private Systems",
+            "alternateName": "JARVIS",
+            "url": "https://jameslaplume.ca/",
+            "logo": "https://jameslaplume.ca/apple-touch-icon.png",
+            "image": "https://jameslaplume.ca/media/product/user/accueil-og.jpg",
+            "email": "laplumejames@gmail.com",
+            "description": (
+                "Domotique privée, sécurité intelligente, automatisation et IA locale : "
+                "JARVIS relie les systèmes d’une maison, d’une entreprise ou d’un véhicule "
+                "dans un logiciel installé sur place."
+            ),
+            "founder": {"@type": "Person", "name": "James Laplume"},
+            "address": {
+                "@type": "PostalAddress",
+                "addressRegion": "QC",
+                "addressCountry": "CA",
+            },
+            "areaServed": [
+                {"@type": "City", "name": "Saint-Hyacinthe"},
+                {"@type": "AdministrativeArea", "name": "Montérégie"},
+                {"@type": "AdministrativeArea", "name": "Québec"},
+            ],
+            "knowsAbout": [
+                "Domotique",
+                "Maison intelligente",
+                "Home Assistant",
+                "Sécurité intelligente",
+                "Caméras de surveillance privées",
+                "Cybersécurité résidentielle",
+                "Automatisation d’entreprise",
+                "Intelligence artificielle locale",
+                "Énergie solaire et batteries LiFePO4",
+            ],
+            "availableLanguage": ["fr", "en"],
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://jameslaplume.ca/#site",
+            "name": "JARVIS Private Systems",
+            "url": "https://jameslaplume.ca/",
+            "inLanguage": "fr-CA",
+            "publisher": {"@id": "https://jameslaplume.ca/#entreprise"},
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": q,
+                    "acceptedAnswer": {"@type": "Answer", "text": a},
+                }
+                for q, a in FAQ
+            ],
+        },
+    ],
+    ensure_ascii=False,
+    indent=1,
+)
+
+# Visite de l'app : une étape = un écran + son texte.
+ON = ' class="is-on"'
+TOUR = [
+    ("accueil", "Accueil", "Voici JARVIS App.",
+     "Votre journée, vos messages, vos lieux et votre assistant — réunis sur un seul écran.",
+     "JARVIS App — accueil : Bonsoir Alex, votre journée, simplement"),
+    ("assistant", "Assistant", "Il propose. Vous décidez.",
+     "Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord.",
+     "Assistant JARVIS — une demande de rappel préparée, à vérifier avant création"),
+    ("ma-journee", "Ma journée", "Tous vos agendas, enfin ensemble.",
+     "Calendriers et tâches de toutes vos sources dans une seule vue. Ce qui est en lecture seule le reste.",
+     "Ma journée — agenda et tâches réunis"),
+    ("carte", "Carte", "Vos lieux, sans surveillance.",
+     "La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée.",
+     "Carte JARVIS — couches autorisées autour de Saint-Hyacinthe"),
+    ("partage", "Partage", "Vous choisissez ce que vous partagez.",
+     "Avec qui, pour combien de temps, et sous votre contrôle. Un partage retiré disparaît partout.",
+     "Partage — position et documents partagés avec une durée précise"),
+]
+
+TOUR_SCREENS = "".join(
+    f'<img src="/media/product/user/{slug}.webp" alt="{alt}" width="1600" height="1062"'
+    f'{ON if i == 0 else ""} data-step="{i}" loading="{"eager" if i == 0 else "lazy"}">'
+    for i, (slug, _label, _t, _p, alt) in enumerate(TOUR)
+)
+TOUR_STEPS = "".join(
+    f"""<article class="tour-step{' is-on' if i == 0 else ''}" data-step="{i}">
+        <p class="tour-kick">{i + 1:02d} · {label}</p>
+        <h3>{title}</h3>
+        <p>{text}</p>
+      </article>"""
+    for i, (_slug, label, title, text, _alt) in enumerate(TOUR)
+)
+TOUR_RAIL = "".join(
+    f'<li{ON if i == 0 else ""} data-step="{i}"><span>{label}</span></li>'
+    for i, (_slug, label, _t, _p, _alt) in enumerate(TOUR)
+)
+
+STANDARDS = [
+    "Home Assistant", "Zigbee", "Z-Wave", "Matter", "MQTT", "ESPHome",
+    "Frigate", "WireGuard", "Starlink", "LiFePO₄", "Whisper", "Piper",
+]
+MARQUEE = "".join(f"<span>{s}</span>" for s in STANDARDS)
 
 PAGE = {
     "url": "/",
     "v2": True,
-    "title": "JARVIS Private Systems | Intelligence privée et systèmes connectés",
+    "title": "Domotique privée et sécurité intelligente au Québec | JARVIS",
     "description": (
-        "JARVIS relie vos outils, vos informations et vos espaces dans une "
-        "expérience privée, contextuelle et contrôlée. Réservez une démonstration."
+        "Domotique privée, sécurité intelligente et IA locale, installées chez vous. "
+        "JARVIS relie vos appareils sans envoyer vos données au nuage. Saint-Hyacinthe, Québec."
     ),
-    "content": """
-<!-- Scène 1 · Héros -->
-<section class="hero">
-  <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp"
+    "content": f"""
+<!-- Héros -->
+<section class="hero" data-hero>
+  <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" width="1916" height="821"
        alt="Résidence contemporaine la nuit, systèmes JARVIS actifs" fetchpriority="high"></div>
   <div class="hero-inner">
-    <p class="eyebrow">Intelligence privée</p>
-    <h1>Relier ce qui existe.<span class="l2">Faire agir l’ensemble.</span></h1>
-    <p class="sub">Une intelligence privée qui comprend vos règles, coordonne les systèmes
-    autorisés et vous laisse les décisions importantes.</p>
+    <p class="eyebrow hero-eyebrow">Domotique · Sécurité · IA privée</p>
+    <h1><span class="ln">Relier ce qui existe.</span><span class="ln l2">Faire agir l’ensemble.</span></h1>
+    <p class="sub">Une intelligence privée, installée chez vous, qui comprend vos règles,
+    coordonne vos systèmes et vous laisse les décisions importantes.</p>
     <div class="acts">
-      <a class="pill" href="#app">Découvrir JARVIS</a>
-      <a class="pill ghost" href="/contact/">Réserver une démo</a>
+      <a class="pill" href="#app" data-magnet>Découvrir JARVIS</a>
+      <a class="pill ghost" href="/contact/" data-magnet>Réserver une démo</a>
     </div>
+    <a class="live-pill" href="#direct" data-live-pill>
+      <i class="dot" aria-hidden="true"></i>
+      <span>En direct<span class="lp-place"> · Saint-Hyacinthe</span></span>
+      <b data-live="temp-short">—</b>
+      <span class="sep" aria-hidden="true"></span>
+      <span data-live="visits-short">Visites —</span>
+    </a>
   </div>
   <i class="cue" aria-hidden="true"></i>
 </section>
 
-<!-- Scène 2 · Manifeste -->
+<!-- Manifeste -->
 <section class="mani" aria-label="Manifeste">
   <div class="stick"><p>Vos appareils existent déjà. Vos informations existent déjà.
   Il manquait l’intelligence privée qui les comprend — et qui les fait travailler ensemble.</p></div>
 </section>
 
-<!-- Scène 3 · Le logiciel -->
-<section class="scene app" id="app">
-  <div class="stick">
-    <img src="/media/product/user/accueil.jpg"
-         alt="JARVIS App — accueil personnel : Bonsoir Alex, votre journée, simplement" loading="lazy">
-    <h2 class="t1">Voici JARVIS App.</h2>
-    <p class="t2">Votre espace. À votre image. Votre accord pour chaque action.</p>
-    <div class="t3">
-      <span class="chip">Assistant intégré</span>
-      <span class="chip">Agenda · messages · documents · carte</span>
-      <span class="chip chip-sim">Conception en validation · données simulées</span>
+<!-- Visite de l'app (épinglée : l'écran est toujours entier) -->
+<section class="tour" id="app" aria-label="Visite de JARVIS App" style="--steps:{len(TOUR)}">
+  <div class="tour-stage">
+    <div class="tour-copy">
+      <p class="eyebrow">JARVIS App · l’interface</p>
+      <div class="tour-steps">{TOUR_STEPS}</div>
+      <ol class="tour-rail" aria-hidden="true">{TOUR_RAIL}</ol>
+    </div>
+    <div class="tour-device">
+      <div class="tour-glow" aria-hidden="true"></div>
+      <div class="tour-screen">{TOUR_SCREENS}<i class="tour-sweep" aria-hidden="true"></i></div>
+      <p class="tour-note"><span class="chip chip-sim">Conception en validation · données fictives</span></p>
     </div>
   </div>
 </section>
 
-<!-- Scène 4 · Le Hub -->
-<section class="scene">
-  <div class="stick">
-    <img src="/media/product/jarvis-hub-v1.webp"
+<!-- JARVIS en direct : vraies données, décisions simulées -->
+<section class="live" id="direct" aria-labelledby="direct-titre">
+  <div class="head" data-rev>
+    <p class="eyebrow"><i class="dot" aria-hidden="true"></i> En direct · Saint-Hyacinthe</p>
+    <h2 id="direct-titre" data-split>JARVIS, maintenant.<br><em>Avec de vraies données.</em></h2>
+    <p>À gauche, les conditions réelles reçues d’Environnement Canada. À droite, ce que les
+    règles de JARVIS feraient avec elles. Les décisions sont simulées : aucun appareil réel
+    n’est commandé.</p>
+  </div>
+
+  <div class="console" data-live-root data-rev>
+    <div class="console-top">
+      <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+      <b>JARVIS · Console</b>
+      <span class="console-clock" data-live="clock">--:--:--</span>
+      <span class="console-state" data-live="state">Connexion…</span>
+    </div>
+
+    <div class="console-grid">
+      <!-- Ce que JARVIS voit -->
+      <div class="panel panel-see">
+        <p class="panel-kick">Ce que JARVIS voit <span class="tag tag-real">Données réelles</span></p>
+        <div class="now">
+          <div class="now-temp"><b data-live="temp" class="odo" aria-live="polite">--</b><i>°C</i></div>
+          <div class="now-txt">
+            <strong data-live="condition">Chargement…</strong>
+            <span data-live="feels">&nbsp;</span>
+          </div>
+        </div>
+        <dl class="metrics">
+          <div><dt>Vent</dt><dd data-live="wind">—</dd></div>
+          <div><dt>Rafales</dt><dd data-live="gust">—</dd></div>
+          <div><dt>Humidité</dt><dd data-live="humidity">—</dd></div>
+          <div><dt>Pression</dt><dd data-live="pressure">—</dd></div>
+        </dl>
+        <div class="sun">
+          <svg viewBox="0 0 300 120" aria-hidden="true">
+            <path class="sun-track" d="M20 105 A130 95 0 0 1 280 105"/>
+            <path class="sun-done" data-live="sun-arc" d="M20 105 A130 95 0 0 1 280 105"/>
+            <line x1="8" y1="105" x2="292" y2="105" class="sun-horizon"/>
+            <circle class="sun-dot" data-live="sun-dot" cx="20" cy="105" r="7"/>
+          </svg>
+          <div class="sun-legend">
+            <span>Lever <b data-live="sunrise">--:--</b></span>
+            <span data-live="sun-state">&nbsp;</span>
+            <span>Coucher <b data-live="sunset">--:--</b></span>
+          </div>
+        </div>
+        <div class="hours" data-live="hours" aria-label="Prochaines heures"></div>
+        <p class="src" data-live="source">Source : Environnement et Changement climatique Canada</p>
+      </div>
+
+      <!-- Ce que JARVIS ferait -->
+      <div class="panel panel-do">
+        <p class="panel-kick">Ce que JARVIS ferait <span class="tag tag-sim">Décisions simulées</span></p>
+        <ul class="rules" data-live="rules">
+          <li class="rule is-wait"><b>Analyse des règles…</b><small>En attente des données</small></li>
+        </ul>
+        <div class="visits">
+          <span class="visits-k">Visites du site</span>
+          <b class="odo" data-live="visits">—</b>
+          <small>Compteur réel, sans témoin ni pistage</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="journal" aria-label="Journal des décisions">
+      <p class="panel-kick">Journal</p>
+      <ol data-live="journal"></ol>
+    </div>
+  </div>
+</section>
+
+<!-- Comment ça marche -->
+<section class="how" id="fonctionnement" aria-labelledby="how-titre">
+  <div class="head" data-rev>
+    <p class="eyebrow">Comment ça marche</p>
+    <h2 id="how-titre" data-split>Domotique, sécurité et IA.<br><em>Un seul système, chez vous.</em></h2>
+  </div>
+
+  <div class="flow" data-rev>
+    <svg class="flow-svg" viewBox="0 0 1000 420" aria-hidden="true">
+      <defs>
+        <linearGradient id="fl" x1="0" x2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".05"/><stop offset=".5" stop-color="currentColor" stop-opacity=".55"/><stop offset="1" stop-color="currentColor" stop-opacity=".05"/></linearGradient>
+      </defs>
+      <g class="flow-lines" fill="none" stroke="url(#fl)" stroke-width="1.4">
+        <path id="p1" d="M210 50 C 360 50, 380 210, 500 210"/>
+        <path id="p2" d="M210 120 C 360 120, 380 210, 500 210"/>
+        <path id="p3" d="M210 190 C 360 190, 400 210, 500 210"/>
+        <path id="p4" d="M210 260 C 360 260, 400 210, 500 210"/>
+        <path id="p5" d="M210 330 C 360 330, 380 210, 500 210"/>
+        <path id="p6" d="M210 395 C 360 395, 380 210, 500 210"/>
+        <path id="p7" d="M500 210 C 640 210, 660 210, 790 210"/>
+      </g>
+      <g class="flow-pulses">
+        <circle r="3.2"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#p1"/></animateMotion></circle>
+        <circle r="3.2"><animateMotion dur="2.9s" begin=".6s" repeatCount="indefinite"><mpath href="#p2"/></animateMotion></circle>
+        <circle r="3.2"><animateMotion dur="3.1s" begin="1.2s" repeatCount="indefinite"><mpath href="#p3"/></animateMotion></circle>
+        <circle r="3.2"><animateMotion dur="3.6s" begin=".3s" repeatCount="indefinite"><mpath href="#p4"/></animateMotion></circle>
+        <circle r="3.2"><animateMotion dur="3.3s" begin="1.6s" repeatCount="indefinite"><mpath href="#p5"/></animateMotion></circle>
+        <circle r="3.2"><animateMotion dur="3s" begin=".9s" repeatCount="indefinite"><mpath href="#p6"/></animateMotion></circle>
+        <circle r="4" class="out"><animateMotion dur="2.2s" begin="1s" repeatCount="indefinite"><mpath href="#p7"/></animateMotion></circle>
+      </g>
+    </svg>
+    <ul class="flow-in">
+      <li><b>Lumières</b><small>Zigbee · Z-Wave · Matter</small></li>
+      <li><b>Caméras</b><small>Événements · détection locale</small></li>
+      <li><b>Chauffage</b><small>Confort · horaires</small></li>
+      <li><b>Énergie</b><small>Batteries · solaire</small></li>
+      <li><b>Agenda et messages</b><small>Vos comptes reliés</small></li>
+      <li><b>Documents</b><small>Procédures · dossiers</small></li>
+    </ul>
+    <div class="flow-hub">
+      <span class="ring r1" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+      <b>JARVIS Hub</b><small>Chez vous</small>
+      <em>Règles · droits · journal · IA locale</em>
+    </div>
+    <div class="flow-out">
+      <b>JARVIS App</b><small>Vous</small>
+      <span class="approve"><i aria-hidden="true">✓</i> Votre accord</span>
+    </div>
+  </div>
+
+  <ol class="steps">
+    <li data-rev><i>01</i><h3>On regarde ce qui existe</h3>
+      <p>Vos appareils, vos outils et ce qui vous fait perdre du temps. JARVIS part de votre
+      réalité, pas d’un catalogue.</p></li>
+    <li data-rev><i>02</i><h3>Une première preuve utile</h3>
+      <p>Un cas concret défini avec vous et qui fonctionne chez vous : l’éclairage qui suit le
+      coucher du soleil, une alerte caméra qui dit vraiment ce qui se passe.</p></li>
+    <li data-rev><i>03</i><h3>On élargit à votre rythme</h3>
+      <p>Chaque capacité s’ajoute comme une extension, activée par l’administrateur, avec des
+      droits précis pour chaque personne.</p></li>
+  </ol>
+
+  <div class="marquee" aria-label="Standards ouverts sur lesquels JARVIS s’appuie">
+    <p class="marquee-k">Conçu pour s’appuyer sur des standards ouverts</p>
+    <div class="marquee-track"><div>{MARQUEE}</div><div aria-hidden="true">{MARQUEE}</div></div>
+  </div>
+</section>
+
+<!-- Le Hub -->
+<section class="hub" aria-labelledby="hub-titre">
+  <figure class="hub-media wipe" data-rev>
+    <img src="/media/product/jarvis-hub-v1.webp" width="1672" height="941"
          alt="JARVIS Hub posé sur un meuble d’une résidence contemporaine" loading="lazy">
-    <h2 class="t1">JARVIS Hub</h2>
-    <p class="t2">L’intelligence demeure chez vous — pas dans un nuage.</p>
-    <div class="t3">
+  </figure>
+  <div class="hub-copy" data-rev>
+    <p class="eyebrow">JARVIS Hub</p>
+    <h2 id="hub-titre">L’intelligence demeure <em>chez vous.</em></h2>
+    <p>Un petit serveur installé sur place garde vos règles, vos comptes, votre journal et
+    votre IA locale. Pas d’abonnement obligatoire au nuage pour que la maison fonctionne.</p>
+    <div class="chiprow" style="margin-top:1.4rem">
       <span class="chip">Local d’abord</span>
-      <span class="chip">Données privées</span>
+      <span class="chip">Sauvegardes chiffrées</span>
       <span class="chip">Décisions humaines</span>
     </div>
   </div>
+</section>
+
+<!-- Où en est JARVIS -->
+<section class="status" aria-labelledby="status-titre">
+  <div class="head" data-rev>
+    <p class="eyebrow">Où en est JARVIS · novembre 2026</p>
+    <h2 id="status-titre">Du concret, <em>pas des promesses.</em></h2>
+  </div>
+  <div class="status-grid">
+    <article class="stat" data-rev><b><span data-n="161">161</span></b><h3>écrans conçus</h3>
+      <p>Côté personne et côté administration, du premier démarrage au partage.</p></article>
+    <article class="stat" data-rev><b>En service</b><h3>Tableau JARVIS Signature</h3>
+      <p>Il pilote déjà l’éclairage du laboratoire mobile, sur Home Assistant.</p></article>
+    <article class="stat" data-rev><b><span data-n="560">560</span><i>Ah</i></b><h3>premier terrain réel</h3>
+      <p>Une ambulance Ford 2017 transformée : énergie, réseau et diagnostic.</p></article>
+    <article class="stat" data-rev><b>En cours</b><h3>Noyau du logiciel</h3>
+      <p>Comptes sur invitation, droits, double authentification, journal et sauvegardes.</p></article>
+  </div>
+  <ol class="road" data-rev aria-label="Grandes étapes">
+    <li class="done"><span>Fondations</span></li>
+    <li class="now"><span>Noyau et comptes</span></li>
+    <li><span>Extensions</span></li>
+    <li><span>Hub sur place</span></li>
+    <li><span>Environnements intelligents</span></li>
+    <li><span>Prêt à vendre</span></li>
+  </ol>
 </section>
 
 <!-- Trois modes -->
@@ -87,56 +437,38 @@ PAGE = {
       <span class="txt"><b>Platinum</b><small>Cristal. Noir fumé et reflets froids.</small></span>
     </button>
   </div>
-  <div class="mode-demo">
-    <article class="card" data-rev>
-      <small>Ma journée</small>
-      <h3>Souper entre amis</h3>
-      <p>19:00 – 22:00 · Chez nous</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Assistant JARVIS</small>
-      <h3>Comment puis-je vous aider?</h3>
-      <p>Il propose. Vous décidez.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Recommandations</small>
-      <h3>Préparer votre journée</h3>
-      <p>Chaque suggestion montre sa source.</p>
-    </article>
-  </div>
-  <p class="offer-note" data-rev>Apparences de l’interface JARVIS · exemples fictifs</p>
 </section>
 
-<!-- Scène 5 · Six capacités (bento) -->
+<!-- Six solutions (bento) -->
 <section class="bento" id="capacites">
   <div class="head" data-rev>
     <p class="kick">Six solutions · Un point de départ</p>
-    <h2>Votre besoin.<br>La bonne solution.</h2>
-    <p>Choisissez ce que vous aimeriez simplifier.<br>Un clic sur une carte ouvre directement sa solution.</p>
+    <h2 data-split>Votre besoin.<br>La bonne solution.</h2>
+    <p>Choisissez ce que vous aimeriez simplifier. Un clic sur une carte ouvre sa solution.</p>
   </div>
   <nav class="grid" aria-label="Accéder aux six solutions">
-    <a class="tile w3" href="/solutions/environnements-intelligents/" data-rev>
+    <a class="tile w3" href="/solutions/environnements-intelligents/" data-rev data-tilt>
       <img src="/media/solutions/environnements-intelligents.webp" alt="" loading="lazy">
-      <span class="lab"><small>01</small><b>Environnements intelligents</b><em>Lumières, confort et énergie réunis.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
-    <a class="tile w3" href="/solutions/ia-privee-connaissances/" data-rev>
+      <span class="lab"><small>01 · Domotique</small><b>Environnements intelligents</b><em>Lumières, confort et énergie réunis.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
+    <a class="tile w3" href="/solutions/ia-privee-connaissances/" data-rev data-tilt>
       <img src="/media/solutions/ia-privee-connaissances.webp" alt="" loading="lazy">
-      <span class="lab"><small>02</small><b>IA privée et connaissances</b><em>Retrouver vos documents et les bonnes réponses.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
-    <a class="tile" href="/solutions/securite-intelligente/" data-rev>
+      <span class="lab"><small>02 · IA locale</small><b>IA privée et connaissances</b><em>Retrouver vos documents et les bonnes réponses.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
+    <a class="tile" href="/solutions/securite-intelligente/" data-rev data-tilt>
       <img src="/media/solutions/securite-intelligente.webp" alt="" loading="lazy">
-      <span class="lab"><small>03</small><b>Sécurité intelligente</b><em>Comprendre les événements de vos lieux.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
-    <a class="tile" href="/solutions/automatisation-operations/" data-rev>
+      <span class="lab"><small>03 · Caméras</small><b>Sécurité intelligente</b><em>Comprendre les événements de vos lieux.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
+    <a class="tile" href="/solutions/automatisation-operations/" data-rev data-tilt>
       <img src="/media/solutions/jarvis-enterprise-operations-v1.webp" alt="" loading="lazy">
-      <span class="lab"><small>04</small><b>Automatisation d’entreprise</b><em>Faire avancer les demandes de votre équipe.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
-    <a class="tile" href="/solutions/reseau-resilience/" data-rev>
+      <span class="lab"><small>04 · Entreprise</small><b>Automatisation d’entreprise</b><em>Faire avancer les demandes de votre équipe.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
+    <a class="tile" href="/solutions/reseau-resilience/" data-rev data-tilt>
       <img src="/media/solutions/reseau-resilience.webp" alt="" loading="lazy">
-      <span class="lab"><small>05</small><b>Réseau et cybersécurité</b><em>Garder vos connexions fiables et privées.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
-    <a class="tile w6" href="/solutions/diagnostic-care/" data-rev>
+      <span class="lab"><small>05 · Réseau</small><b>Réseau et cybersécurité</b><em>Garder vos connexions fiables et privées.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
+    <a class="tile w6" href="/solutions/diagnostic-care/" data-rev data-tilt>
       <img src="/media/solutions/diagnostic-care.webp" alt="" loading="lazy">
-      <span class="lab"><small>06</small><b>Diagnostic &amp; continuité</b><em>Comprendre un souci et préparer la suite.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
+      <span class="lab"><small>06 · Continuité</small><b>Diagnostic &amp; continuité</b><em>Comprendre un souci et préparer la suite.</em><span class="go">Voir la solution <i aria-hidden="true">↗</i></span></span></a>
   </nav>
 </section>
 
-<!-- Scène 6 · Offre -->
+<!-- Offre -->
 <section class="offer" id="offre">
   <div class="head" data-rev>
     <h2>Choisissez votre environnement.</h2>
@@ -148,8 +480,8 @@ PAGE = {
       <small>Résidence</small>
       <h3>Maison · condo · chalet</h3>
       <ul>
-        <li>Confort, énergie et sécurité coordonnés</li>
-        <li>JARVIS Hub intégré au lieu</li>
+        <li>Domotique : confort, énergie et éclairage coordonnés</li>
+        <li>Caméras et alarmes qui expliquent les événements</li>
         <li>Local d’abord, Internet seulement si permis</li>
       </ul>
       <a class="pill" href="/contact/">Réserver une démo</a>
@@ -179,7 +511,7 @@ PAGE = {
   direction du produit, pas une disponibilité immédiate.</p>
 </section>
 
-<!-- Scène 7 · Laboratoire (preuve) -->
+<!-- Laboratoire (preuve) -->
 <section class="band">
   <div class="bg"><img src="/media/ambulance/ambulance-garage-lab-v1.webp"
        alt="Laboratoire mobile JARVIS — ambulance Ford 2017 dans le garage" loading="lazy"></div>
@@ -196,25 +528,25 @@ PAGE = {
   </div>
 </section>
 
-<!-- Scène 8 · Appel -->
+<!-- Questions fréquentes -->
+<section class="faq" id="questions" aria-labelledby="faq-titre">
+  <div class="head" data-rev>
+    <p class="eyebrow">Questions fréquentes</p>
+    <h2 id="faq-titre">Domotique privée : <em>vos questions.</em></h2>
+  </div>
+  <div class="faq-list">{FAQ_HTML}</div>
+</section>
+
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "JARVIS Private Systems",
-  "url": "https://jameslaplume.ca",
-  "logo": "https://jameslaplume.ca/favicon.svg",
-  "email": "laplumejames@gmail.com",
-  "founder": {"@type": "Person", "name": "James Laplume"},
-  "address": {"@type": "PostalAddress", "addressRegion": "QC", "addressCountry": "CA"}
-}
+{SCHEMA}
 </script>
 
+<!-- Appel -->
 <section class="cta" id="demo">
   <h2 data-rev>Voyez JARVIS<br><span>de vos yeux.</span></h2>
   <p data-rev>Une rencontre, vos besoins réels, ce qui existe aujourd’hui —
   et la première preuve utile définie ensemble.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
+  <div class="acts" data-rev><a class="pill" href="/contact/" data-magnet>Réserver une démo</a></div>
 </section>
 """,
 }

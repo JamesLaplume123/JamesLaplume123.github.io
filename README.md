@@ -17,7 +17,7 @@ tools/build.py        Générateur (Python 3 standard, aucune dépendance)
 
 assets/
 ├── css/wow.css       L'unique feuille de style (design « WOW », esprit Apple/Tesla)
-├── js/wow.js         L'unique script (barre, menu, scènes, modes, compteurs)
+├── js/wow.js         L'unique script (barre, menu, visite, console en direct, formulaire, compteurs)
 ├── fonts/            Geist et Geist Mono auto-hébergées (variables)
 └── *.js, *_vinext_*  Build figé de /sudo-bonne-fete/ (carte QR) — ne pas toucher
 
@@ -72,10 +72,17 @@ Pour invalider le cache navigateur après un changement de CSS/JS, incrémenter
 - `.nojekyll` : GitHub Pages sert les fichiers tels quels
 - Branche `ancien-site` : le site tel qu'il était en ligne avant la refonte (conservé, non publié)
 
-## Formulaire de contact
+## Formulaire, compteur et console en direct
 
-Le formulaire de `/contact/` passe par FormSubmit et transmet les messages à
-`laplumejames@gmail.com`. Aucun service de suivi n'est utilisé.
+- **Formulaire** (`/contact/`) : envoi sans quitter la page (`wow.js`). Il passe d'abord
+  par le service du site si `SITE["api"]` est rempli (`integrations/site-api`), sinon
+  par FormSubmit. En cas d'échec, le visiteur reçoit un lien courriel avec son message
+  déjà rédigé. Sans JavaScript, c'est un envoi classique vers FormSubmit.
+- **Compteur de visites** : une visite par session, sans témoin. Abacus pour l'instant,
+  puis le service du site dès que `SITE["api"]` est rempli.
+- **JARVIS en direct** (accueil) : météo réelle d'Environnement Canada (Saint-Hyacinthe),
+  et des décisions simulées par des règles. Aucun appareil n'est commandé.
+- Toute nouvelle requête externe doit être ajoutée à `/confidentialite/` (Loi 25).
 
 ## Télémétrie batteries (optionnel, non branché au site actuellement)
 

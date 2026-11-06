@@ -13,7 +13,10 @@ SITE = {
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
-    "asset_version": "20261031m",
+    "asset_version": "20261106a",
+    # Adresse du service du site (formulaire → Resend → JARVIS, compteur). Vide tant
+    # que le Worker Cloudflare n'est pas déployé : le formulaire passe alors par FormSubmit.
+    "api": "",
     "copyright": "© 2026 JARVIS Private Systems · Québec, Canada",
 }
 
@@ -121,4 +124,59 @@ REDIRECTS = {
     "en/jarvis-twin/index.html": "/en/",
     "en/services/index.html": "/en/",
     "en/trading-lab/index.html": "/en/",
+}
+
+# Titres et descriptions pensés pour Google (domotique, sécurité, IA privée, Québec).
+# Ils remplacent ceux des pages au moment de produire le <head>, sans toucher au contenu.
+SEO = {
+    "/solutions/": (
+        "Solutions de domotique, sécurité et IA privée | JARVIS",
+        "Domotique, sécurité intelligente, IA locale, automatisation d’entreprise, réseau et "
+        "diagnostic : six solutions privées qui fonctionnent seules ou ensemble.",
+    ),
+    "/solutions/environnements-intelligents/": (
+        "Domotique privée et maison intelligente au Québec | JARVIS",
+        "Lumières, chauffage, énergie et appareils de marques différentes réunis dans une "
+        "domotique locale, sans dépendre du nuage. Home Assistant, Zigbee, Z-Wave, Matter.",
+    ),
+    "/solutions/securite-intelligente/": (
+        "Sécurité intelligente et caméras privées | JARVIS Québec",
+        "Caméras, accès et alarmes transformés en événements clairs, traités sur place. "
+        "Une surveillance privée pour maisons et entreprises au Québec.",
+    ),
+    "/solutions/ia-privee-connaissances/": (
+        "IA privée et locale pour vos documents | JARVIS",
+        "Une intelligence artificielle qui répond à partir de vos propres documents, montre "
+        "ses sources et garde vos données chez vous.",
+    ),
+    "/solutions/automatisation-operations/": (
+        "Automatisation d’entreprise sur mesure au Québec | JARVIS",
+        "Demandes, documents et approbations qui circulent entre vos outils existants, avec "
+        "une trace de chaque décision. Pour bureaux, commerces et ateliers.",
+    ),
+    "/solutions/reseau-resilience/": (
+        "Réseau et cybersécurité pour maison et PME | JARVIS",
+        "Comprendre votre réseau, séparer les objets connectés, surveiller les dépendances et "
+        "garder des accès à distance privés et fiables.",
+    ),
+    "/solutions/diagnostic-care/": (
+        "Diagnostic technique et continuité des systèmes | JARVIS",
+        "Passer d’un symptôme à des preuves : événements, capteurs et documentation pour "
+        "réparer plus vite et remettre en service proprement.",
+    ),
+    "/plateforme/": (
+        "Logiciel JARVIS : App, Core et Hub installés chez vous",
+        "JARVIS App, JARVIS Core et JARVIS Hub forment un système privé et local : comptes sur "
+        "invitation, droits précis, journal et IA locale.",
+    ),
+    "/laboratoire-mobile/": (
+        "Ambulance convertie en VR connecté | Laboratoire JARVIS",
+        "Une ambulance Ford 2017 transformée en laboratoire mobile : 560 Ah LiFePO₄, 500 W "
+        "solaire et un tableau JARVIS sur Home Assistant.",
+    ),
+    "/contact/": (
+        "Réserver une démo de domotique privée | JARVIS",
+        "Présentez votre maison, votre entreprise ou votre véhicule. James vous montre ce que "
+        "JARVIS fait aujourd’hui et la première preuve utile possible chez vous.",
+    ),
 }

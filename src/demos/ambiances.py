@@ -1,6 +1,8 @@
 # Démo « Studio lumière » : six ambiances réelles du module Éclairage de JARVIS.
 # Les images viennent du module d'éclairage du logiciel (même pièce, six éclairages).
 # Règles montrées : un aperçu n'envoie rien; appliquer → envoyé → confirmé; revenir est toujours possible.
+# Les photos ne sont jamais retouchées : le changement d'ambiance passe circuit par circuit
+# (assets/demos/ambiances.js) et l'intensité est un voile posé dessus.
 
 AMBIANCES = [
     ("heure-doree", "Heure dorée", "linear-gradient(135deg,#ffd18a,#c77a2b)"),
@@ -30,7 +32,7 @@ def html(piece="Salon"):
   <div class="demo-body">
     <div class="am-stage">
       {imgs}
-      <i class="am-front" aria-hidden="true"></i>
+      <i class="am-veil" aria-hidden="true"></i>
       <div class="am-card">
         <p class="am-k">{piece} · ambiance</p>
         <h3 data-am="name">Heure dorée</h3>

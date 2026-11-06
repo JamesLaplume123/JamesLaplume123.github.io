@@ -117,7 +117,7 @@ def footer_v2(page):
   <div class="foot-grid">
     <div class="foot-brand">
       <b>JARVIS <span>Private Systems</span></b>
-      <p>Relier ce qui existe. Faire agir l’ensemble.<br>Domotique, sécurité et IA privée — Québec.</p>
+      <p>La liberté, par la technologie.<br>Sécurité privée, domotique et IA — Québec.</p>
       <p class="foot-count" hidden><i class="dot" aria-hidden="true"></i>Visites du site <b data-live="visits-foot">—</b></p>
     </div>
     {cols}

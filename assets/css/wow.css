@@ -60,10 +60,10 @@
 /* ---------- Modes : Signature (verre or), Platinum (cristal), Base (verre fumé) ---------- */
 :root,
 :root[data-mode="signature"] {
-  --gold-soft: #f0d19d;
+  --gold-soft: #e9c98c;
   --mode-display: linear-gradient(110deg, #f5e3b9, #e7c888 55%, #cfaa65);
-  --em: #c9b38d;
-  --mode-action: linear-gradient(125deg, #f7e6c8, #dbb373 70%, #efd2a2);
+  --em: #d9b877;
+  --mode-action: linear-gradient(135deg, #f6e2b5 0%, #e0b96f 55%, #cfa45b 100%);
   --mode-on-action: #1c1408;
   --mode-action-edge: inset 0 1px 0 #fff6;
   --mode-panel: linear-gradient(130deg, #18130dc2, #090807db);
@@ -1414,3 +1414,21 @@ html:not(.fx) .marquee-track > div { flex-wrap: wrap; justify-content: center; g
   .trust { grid-template-columns: 1fr; }
   .trust dl > div { grid-template-columns: 1fr; gap: .35rem; }
 }
+
+/* ---------- Mission : la liberté ---------- */
+.mission { max-width: 76rem; margin: 0 auto; padding: 6rem 1.4rem 4.5rem; box-sizing: content-box; }
+.mission-head h2 { margin: 1rem 0 0; max-width: 20ch; font-weight: 650; font-size: clamp(2.1rem, 4vw, 3.4rem); letter-spacing: -.038em; line-height: 1.06; }
+.mission-head > p:last-child { margin: 1.2rem 0 0; max-width: 42rem; color: #cfcfd6; font-size: clamp(1rem, 1.3vw, 1.12rem); line-height: 1.65; }
+.pillars { list-style: none; margin: 3.2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4rem; }
+.pillars li { position: relative; padding-top: 1.6rem; }
+.pillars li::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px;
+  background: linear-gradient(90deg, var(--gold-soft), color-mix(in srgb, var(--gold-soft) 15%, transparent));
+  transform-origin: left; transition: transform 1.2s var(--ease);
+}
+.fx .pillars li::before { transform: scaleX(0); }
+.fx .pillars li.in::before { transform: scaleX(1); }
+.pillars svg { width: 30px; height: 30px; fill: none; stroke: var(--gold-soft); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.pillars h3 { margin: 1rem 0 .5rem; font-weight: 650; font-size: 1.22rem; letter-spacing: -.02em; }
+.pillars p { margin: 0; color: #bfbfc7; font-size: .97rem; line-height: 1.6; }
+@media (max-width: 880px) { .pillars { grid-template-columns: 1fr; gap: 1.8rem; } .mission { padding-top: 4.5rem; } }

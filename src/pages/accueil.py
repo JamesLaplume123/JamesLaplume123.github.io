@@ -6,7 +6,7 @@
 
 import json
 
-from demos import boulance, carte, maison
+from demos import rust, boulance, carte, maison
 
 FAQ = [
     (
@@ -199,7 +199,7 @@ PAGE = {
     "url": "/",
     "v2": True,
     "title": "Domotique privée et sécurité intelligente au Québec | JARVIS",
-    "assets": ["maison", "boulance", "carte"],
+    "assets": ["maison", "boulance", "carte", "rust"],
     "description": (
         "Domotique privée, sécurité intelligente et IA locale, installées chez vous. "
         "JARVIS relie vos appareils sans envoyer vos données au nuage. Saint-Hyacinthe, Québec."
@@ -215,10 +215,10 @@ PAGE = {
   <div class="hero-flash" aria-hidden="true"></div>
   <div class="hero-inner">
     <div class="hero-copy">
-      <p class="eyebrow hero-eyebrow">Domotique · sécurité · IA privée — Québec</p>
-      <h1><span class="ln">Relier ce qui existe.</span><span class="ln l2">Faire agir l’ensemble.</span></h1>
-      <p class="sub">Une intelligence privée, installée chez vous, qui comprend vos règles,
-      coordonne vos systèmes et vous laisse les décisions importantes.</p>
+      <p class="eyebrow hero-eyebrow">Sécurité privée · domotique · IA — Québec</p>
+      <h1><span class="ln">Libérez votre temps.</span><span class="ln l2">Gardez le contrôle.</span></h1>
+      <p class="sub">JARVIS réunit votre sécurité, votre maison et votre information dans un
+      système privé, installé chez vous. Il s’occupe de ce qui se répète — vous gardez les décisions.</p>
       <div class="acts">
         <a class="pill" href="#app" data-magnet>Découvrir JARVIS</a>
         <a class="pill ghost" href="/contact/" data-magnet>Réserver une démo</a>
@@ -253,6 +253,33 @@ PAGE = {
     </aside>
   </div>
   <i class="cue" aria-hidden="true"></i>
+</section>
+
+<!-- Mission : la liberté, par le temps et le contrôle -->
+<section class="mission" aria-labelledby="mission-titre">
+  <div class="mission-head" data-rev>
+    <p class="eyebrow">Notre mission</p>
+    <h2 id="mission-titre">La technologie doit rendre libre. <em>Pas dépendant.</em></h2>
+    <p>JARVIS existe pour une seule raison : vous redonner du temps et le contrôle de votre vie,
+    simplement. La sécurité privée en est le socle — chez vous, pas dans le nuage d’un autre.</p>
+  </div>
+  <ol class="pillars">
+    <li data-rev>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+      <h3>Du temps libéré</h3>
+      <p>Ce qui se répète se fait seul, selon vos règles. Vous gardez votre énergie pour ce qui compte.</p>
+    </li>
+    <li data-rev>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+      <h3>Le contrôle, simplement</h3>
+      <p>Un seul endroit, des mots simples, rien sans votre accord. Vous voyez tout et pouvez tout reprendre.</p>
+    </li>
+    <li data-rev>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.3-3 7.9-7 9.5-4-1.6-7-5.2-7-9.5V6z"/><path d="M9 12l2 2 4-4"/></svg>
+      <h3>La sécurité privée</h3>
+      <p>Votre maison, vos données et les vôtres protégés sur place, par un système qui explique au lieu d’alarmer.</p>
+    </li>
+  </ol>
 </section>
 
 <!-- Vitrine de l'app : un grand écran vivant -->
@@ -458,6 +485,17 @@ PAGE = {
 </section>
 
 <!-- Où en est JARVIS -->
+<!-- Écrit en Rust : pourquoi c'est plus sûr, et prêt pour l'IA -->
+<section class="sect rust-sect" id="rust" aria-labelledby="rust-titre">
+  <div class="head shead" data-rev>
+    <p class="eyebrow">Le logiciel · écrit en Rust</p>
+    <h2 id="rust-titre">Sûr par construction. <em>Pas par promesse.</em></h2>
+    <p>Le cœur de JARVIS — celui qui garde vos comptes, vos droits et vos secrets — est écrit en Rust,
+    le langage que recommandent les agences de cybersécurité pour le logiciel critique. Voici pourquoi c’est différent.</p>
+  </div>
+  {rust.html()}
+</section>
+
 <section class="status" aria-labelledby="status-titre">
   <div class="head" data-rev>
     <p class="eyebrow">Où en est JARVIS · novembre 2026</p>

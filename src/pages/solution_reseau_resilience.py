@@ -1,33 +1,7 @@
 # Solution 05 — Réseau et cybersécurité.
 
+from demos.reseau import HTML as DEMO
 from pages._solution import solution_page
-
-SHOWCASE = """
-<div class="split" data-reveal>
-  <figure class="showcase-frame" style="margin:0;">
-    <img src="/media/solutions/reseau-resilience.webp"
-         alt="Infrastructure réseau surveillée par JARVIS" loading="lazy">
-    <figcaption>
-      <span>TOPOLOGIE · SITE PRINCIPAL</span>
-      <strong>Localiser une anomalie sans accuser tout le système.</strong>
-    </figcaption>
-  </figure>
-  <aside class="console" style="max-width:none;">
-    <header class="console-head"><span><i></i>SURVEILLANCE · ACTIVE</span><small>LOCAL</small></header>
-    <div class="console-body">
-      <small>ANOMALIE DÉTECTÉE</small>
-      <strong>Lien de secours LTE dégradé depuis 14 minutes.</strong>
-      <p>La carte isole la dégradation sur un lien précis tout en montrant que le reste du site
-      demeure stable. Le lien principal et les services essentiels ne sont pas touchés.</p>
-    </div>
-    <ul class="console-signals">
-      <li><span>APPAREILS</span><b>24 suivis</b></li>
-      <li><span>LIEN PRINCIPAL</span><b>Stable</b></li>
-      <li><span>ACTION</span><b>Vérification proposée</b></li>
-    </ul>
-  </aside>
-</div>
-"""
 
 DATA = {
     "slug": "reseau-resilience",
@@ -56,12 +30,13 @@ DATA = {
         ("Segmentation progressive", "Séparer les appareils, utilisateurs et fonctions selon les risques et besoins réels."),
         ("Contexte pour le diagnostic", "Transmettre à Diagnostic & continuité les événements réseau pertinents lorsqu’une panne touche plusieurs systèmes."),
     ],
-    "demo_title": "Localiser une anomalie <em>sans accuser tout le système.</em>",
+    "demo_title": "Votre réseau, <em>comme une carte vivante.</em>",
     "demo_copy": (
-        "Wi-Fi, VPN, LTE, Starlink et multi-sites : la même lecture claire des liens, "
-        "des dépendances et de ce qui mérite une vérification."
+        "Choisissez une situation : JARVIS montre ce qui se passe, explique pourquoi en une "
+        "phrase et attend votre accord avant d’agir. Tout ce que vous voyez est simulé."
     ),
-    "showcase": SHOWCASE,
+    "demo_html": DEMO,
+    "assets": ["reseau"],
     "compat": ["Wi-Fi", "VPN", "LTE", "Starlink", "Pare-feu", "VLAN", "Journaux", "Multi-sites"],
     "deploy_title": "L’observation reste sur votre infrastructure.",
     "deploy_copy": (
@@ -79,7 +54,33 @@ DATA = {
     ),
 }
 
-DATA["demo_image"] = "/media/product/outils/reseau.jpg"
-DATA["demo_caption"] = "Écran de référence de l’outil Réseau — maquette, données fictives."
+DATA["clair"] = {
+    "quoi": "JARVIS dessine votre réseau comme une carte vivante et vous dit, en mots simples, <em>pourquoi quelque chose ne marche pas.</em>",
+    "exemple": (
+        "La caméra du garage cesse d’enregistrer. Au lieu de tout redémarrer au hasard, JARVIS "
+        "remonte le câble jusqu’au commutateur, trouve le port coupé et propose de le relancer. "
+        "Vous approuvez; il confirme que l’image est revenue."
+    ),
+    "avant": [
+        "Quand quelque chose ne marche plus, on redémarre tout et on espère.",
+        "Personne ne sait vraiment quels appareils sont branchés au réseau.",
+        "Une ampoule connectée peut voir les mêmes ordinateurs que vous.",
+        "Une panne Internet arrête aussi les caméras et les lumières.",
+    ],
+    "apres": [
+        "La carte montre l’appareil touché et le chemin jusqu’à la cause.",
+        "Chaque appareil est connu, rangé dans sa zone et suivi.",
+        "Des murs séparent la famille, les objets, les caméras et les invités.",
+        "Le lien de secours prend le relais et la maison continue en local.",
+    ],
+    "obtenez": [
+        ("Une carte que tout le monde comprend",
+         "Internet, routeur, zones et appareils, avec ce qui circule en direct. Aucun jargon à décoder."),
+        ("Des diagnostics en mots simples",
+         "La vraie cause, le chemin pour la trouver et une seule action proposée, que vous approuvez."),
+        ("Une maison qui tient bon",
+         "Zones séparées, lien de secours et fonctions essentielles qui marchent même sans Internet."),
+    ],
+}
 
 PAGE = solution_page(DATA)

@@ -80,15 +80,29 @@
 
 /* ---------- Tuile de caméra ---------- */
 [data-demo="securite"] .sec-cam {
+  --a: var(--gold-soft);
   position: relative; margin: 0; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden;
-  background: #050505; isolation: isolate;
+  background: #050505; isolation: isolate; container: seccam / inline-size;
   box-shadow: 0 0 0 1px #ffffff17, 0 14px 30px #0007;
-  transition: box-shadow .5s var(--ease);
+  transition: box-shadow .6s var(--ease), transform .8s var(--ease);
 }
-[data-demo="securite"] .sec-cam.is-hit {
-  box-shadow: 0 0 0 1.5px var(--c), 0 0 34px color-mix(in srgb, var(--c) 35%, transparent), 0 14px 30px #0007;
+/* Caméra active : liseré de la couleur de la détection, légère mise en avant
+   (sans ombre portée : elle assombrirait les incrustations des voisines) */
+[data-demo="securite"] .sec-cam.is-act {
+  z-index: 2;
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--a) 85%, transparent), 0 0 30px color-mix(in srgb, var(--a) 26%, transparent);
 }
+html.fx [data-demo="securite"] .sec-cam.is-act { transform: scale(1.018); }
+/* Alerte : liseré intérieur qui s'allume puis s'éteint */
+[data-demo="securite"] .sec-cam::before {
+  content: ""; position: absolute; inset: 0; z-index: 5; border-radius: inherit; pointer-events: none; opacity: 0;
+  box-shadow: inset 0 0 0 2px var(--c, var(--gold-soft)), inset 0 0 26px color-mix(in srgb, var(--c, var(--gold-soft)) 45%, transparent);
+}
+html.fx [data-demo="securite"] .sec-cam.is-hit::before { animation: secHit 1.4s var(--ease) both; }
+@keyframes secHit { 0% { opacity: 0; } 12% { opacity: 1; } 100% { opacity: 0; } }
+
 [data-demo="securite"] .sec-view { position: absolute; inset: 0; overflow: hidden; contain: layout paint; }
+[data-demo="securite"] .sec-pan { position: absolute; inset: 0; }
 [data-demo="securite"] .sec-stage {
   position: absolute; container-type: size;
   transition: opacity .7s var(--ease), transform 1s var(--ease);
@@ -100,11 +114,29 @@
 [data-demo="securite"] .sec-stage.is-enter { opacity: 0; transform: scale(1.04); }
 [data-demo="securite"] .sec-stage.is-leave { opacity: 0; }
 
+/* Dérive numérique très lente, différente pour chaque caméra (l'image n'est
+   ni recadrée au repos ni retouchée : seul le cadrage glisse un peu). */
+html.fx [data-demo="securite"] .sec-pan {
+  will-change: transform;
+  animation: secDrift var(--dd, 40s) ease-in-out var(--dl, 0s) infinite alternate;
+}
+@keyframes secDrift {
+  from { transform: scale(1.03); }
+  to { transform: translate(var(--dx, 0), var(--dy, 0)) scale(var(--dz, 1.05)); }
+}
+[data-demo="securite"] .sec-cam:nth-child(1) { --dd: 41s; --dl: -9s; --dx: -1.1%; --dy: .5%; --dz: 1.05; --xd: 11s; --xl: -2s; --gd: -.07s; }
+[data-demo="securite"] .sec-cam:nth-child(2) { --dd: 53s; --dl: -31s; --dx: .9%; --dy: -.6%; --dz: 1.045; --xd: 14s; --xl: -9s; --gd: -.21s; }
+[data-demo="securite"] .sec-cam:nth-child(3) { --dd: 47s; --dl: -18s; --dx: 1.2%; --dy: .4%; --dz: 1.055; --xd: 9.5s; --xl: -5s; --gd: -.35s; }
+[data-demo="securite"] .sec-cam:nth-child(4) { --dd: 59s; --dl: -40s; --dx: -.8%; --dy: -.5%; --dz: 1.04; --xd: 12.5s; --xl: -1s; --gd: -.14s; }
+
 /* Ambiances : nuit infrarouge (résidence) et site fermé (entrepôt) */
-[data-demo="securite"] .sec-wall.is-ir .sec-cam:not(.is-lit) :is(.sec-stage > img, .sec-subj, .sec-prop),
-[data-demo="securite"] .sec-th-view.is-ir :is(.sec-stage > img, .sec-subj, .sec-prop) {
+[data-demo="securite"] .sec-wall.is-ir .sec-cam:not(.is-lit) :is(.sec-stage > img, .sec-prop),
+[data-demo="securite"] .sec-th-view.is-ir :is(.sec-stage > img, .sec-prop) {
   filter: grayscale(1) brightness(.62) contrast(1.28);
 }
+/* Une personne proche est éclairée par l'infrarouge de la caméra : gris clair */
+[data-demo="securite"] .sec-wall.is-ir .sec-cam:not(.is-lit) .sec-subj,
+[data-demo="securite"] .sec-th-view.is-ir .sec-subj { filter: grayscale(1) brightness(.78) contrast(1.2); }
 [data-demo="securite"] .sec-wall.is-dim .sec-cam:not(.is-lit) .sec-stage > img { filter: brightness(.66) saturate(.8); }
 [data-demo="securite"] .sec-cam.is-lit .sec-stage > img { filter: brightness(1.12) saturate(1.08); }
 [data-demo="securite"] .sec-view::after {
@@ -114,78 +146,121 @@
 }
 [data-demo="securite"] .sec-cam.is-lit .sec-view::after { opacity: 1; }
 
-/* Grain, lignes de balayage, vignette */
+/* ---------- Rendu de flux réel ----------
+   Grain du capteur et respiration de l'exposition vivent DANS l'image (sous
+   les cadres d'analyse, qui restent nets comme sur un vrai enregistreur);
+   la vignette de l'objectif se pose sur toute la tuile. */
 [data-demo="securite"] .sec-fx {
-  position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden;
-  background:
-    radial-gradient(ellipse at center, transparent 52%, #0000009e 100%),
-    repeating-linear-gradient(0deg, #ffffff07 0 1px, transparent 1px 3px);
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: radial-gradient(130% 105% at 50% 45%, transparent 56%, #00000042 82%, #00000085 100%);
 }
-[data-demo="securite"] .sec-fx::before {
-  content: ""; position: absolute; inset: -40px; opacity: .06;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/></filter><rect width='150' height='150' filter='url(%23n)'/></svg>");
-  animation: secNoise .6s steps(3) infinite;
+/* Grain fin, en luminance seulement : points clairs et points sombres
+   (deux bruits distincts), en fondu normal — léger à composer. */
+[data-demo="securite"] .sec-cam .sec-stage::before {
+  content: ""; position: absolute; inset: -64px; z-index: 2; pointer-events: none; opacity: .28;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><filter id='n' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='1' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 2 0 0 0 -1.08'/></filter><rect width='128' height='128' filter='url(%23n)'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><filter id='n' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='1' seed='11' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 0 .98'/></filter><rect width='128' height='128' filter='url(%23n)'/></svg>");
 }
-[data-demo="securite"] .sec-fx::after {
-  content: ""; position: absolute; left: 0; right: 0; top: -30%; height: 30%;
-  background: linear-gradient(to bottom, transparent, #ffffff0d 60%, transparent);
-  animation: secScan 7s linear infinite;
-}
-@keyframes secNoise {
+[data-demo="securite"] .sec-wall:is(.is-ir, .is-dim) .sec-cam:not(.is-lit) .sec-stage::before { opacity: .36; }
+html.fx [data-demo="securite"] .sec-cam .sec-stage::before { animation: secGrain .48s steps(1) var(--gd, 0s) infinite; }
+@keyframes secGrain {
   0% { transform: translate(0, 0); }
-  33% { transform: translate(-17px, 11px); }
-  66% { transform: translate(9px, -14px); }
-  100% { transform: translate(-6px, 4px); }
+  12.5% { transform: translate(-37px, 21px); }
+  25% { transform: translate(18px, -45px); }
+  37.5% { transform: translate(-51px, -9px); }
+  50% { transform: translate(29px, 33px); }
+  62.5% { transform: translate(-13px, -27px); }
+  75% { transform: translate(47px, 6px); }
+  87.5% { transform: translate(-22px, 49px); }
 }
-@keyframes secScan { to { transform: translateY(433%); } }
+/* Respiration de l'exposition automatique (voile très léger, irrégulier) */
+[data-demo="securite"] .sec-cam .sec-stage::after {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: #000; opacity: 0;
+}
+html.fx [data-demo="securite"] .sec-cam .sec-stage::after { animation: secExpo var(--xd, 12s) ease-in-out var(--xl, 0s) infinite; }
+@keyframes secExpo { 0%, 100% { opacity: 0; } 22% { opacity: .055; } 34% { opacity: .02; } 61% { opacity: .07; } 78% { opacity: .015; } }
 
-/* Éclair de capture / allumage */
+/* Artefact de compression : quelques bandes entrelacées et en blocs, le
+   temps de trois ou quatre images, et l'image qui saute d'un pixel. */
+[data-demo="securite"] .sec-glitch {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0;
+  background:
+    repeating-linear-gradient(0deg, #ffffff14 0 1px, transparent 1px 2px),
+    linear-gradient(90deg, #ffffff0d 50%, #00000024 0) 0 0 / 12px 100%,
+    linear-gradient(0deg, #ffffff0a 50%, #0000001c 0) 0 0 / 100% 12px;
+}
+html.fx [data-demo="securite"] .sec-cam.is-glitch .sec-glitch { animation: secGlitch .34s steps(1) both; }
+html.fx [data-demo="securite"] .sec-cam.is-glitch .sec-stage { animation: secJolt .34s steps(1); }
+@keyframes secGlitch {
+  0% { opacity: .9; clip-path: inset(22% 0 61% 0); }
+  20% { opacity: 1; clip-path: inset(48% 0 33% 0); }
+  45% { opacity: .7; clip-path: inset(31% 0 55% 0); }
+  70% { opacity: .45; clip-path: inset(66% 0 18% 0); }
+  100% { opacity: 0; }
+}
+@keyframes secJolt { 0% { translate: 2px 0; } 20% { translate: -1px 0; } 45% { translate: 1px 0; } 70%, 100% { translate: 0 0; } }
+
+/* Éclair : allumage des lumières (fort) ou capture d'une preuve (obturateur) */
 [data-demo="securite"] .sec-cam::after {
   content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0; background: #fff;
 }
 [data-demo="securite"] .sec-cam.is-flash::after { animation: secFlash .7s ease-out; }
-@keyframes secFlash { 0% { opacity: .55; } 100% { opacity: 0; } }
+[data-demo="securite"] .sec-cam.is-shot::after { animation: secShot .45s ease-out; }
+@keyframes secFlash { 0% { opacity: .5; } 100% { opacity: 0; } }
+@keyframes secShot { 0% { opacity: .1; } 100% { opacity: 0; } }
 
-/* Indications de la tuile */
+/* ---------- Incrustations, comme sur un enregistreur professionnel ---------- */
 [data-demo="securite"] .sec-hud {
   position: absolute; inset: 0; z-index: 3; margin: 0; pointer-events: none;
-  font: 500 .58rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #f4f4f6;
+  font: 500 .58rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #f4f4f6;
+  text-shadow: 0 1px 2px #000, 0 0 1px #000;
 }
-[data-demo="securite"] .sec-hud > * {
-  position: absolute; padding: .34rem .46rem; border-radius: 5px; background: #000000bd; white-space: nowrap;
-}
-[data-demo="securite"] .sec-name { left: 8px; top: 8px; }
-[data-demo="securite"] .sec-name b { color: var(--gold-soft); font-weight: 600; margin-right: .25rem; }
-[data-demo="securite"] .sec-rec { right: 8px; top: 8px; display: inline-flex; align-items: center; gap: .35rem; }
+[data-demo="securite"] .sec-hud::before,
+[data-demo="securite"] .sec-hud::after { content: ""; position: absolute; left: 0; right: 0; height: 40px; }
+[data-demo="securite"] .sec-hud::before { top: 0; background: linear-gradient(#0000009e, #0000); }
+[data-demo="securite"] .sec-hud::after { bottom: 0; background: linear-gradient(#0000, #0000009e); }
+[data-demo="securite"] .sec-hud > * { position: absolute; z-index: 1; white-space: nowrap; }
+[data-demo="securite"] .sec-name { left: 10px; top: 10px; }
+[data-demo="securite"] .sec-name b { color: var(--gold-soft); font-weight: 600; margin-right: .3rem; }
+[data-demo="securite"] .sec-tr { right: 10px; top: 10px; display: inline-flex; align-items: center; gap: .75rem; }
+[data-demo="securite"] .sec-br { color: #c2c2c9; font-variant-numeric: tabular-nums; letter-spacing: .04em; text-transform: none; }
+[data-demo="securite"] .sec-rec { display: inline-flex; align-items: center; gap: .35rem; font-weight: 600; }
 [data-demo="securite"] .sec-rec::before {
   content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sx-rec);
-  box-shadow: 0 0 8px var(--sx-rec); animation: secRec 1.4s steps(1) infinite;
+  box-shadow: 0 0 6px var(--sx-rec); animation: secRec 1.4s steps(1) infinite;
 }
 @keyframes secRec { 50% { opacity: .2; } }
-[data-demo="securite"] .sec-ir { right: 8px; top: 34px; color: #d9e1ea; display: none; }
+@container seccam (max-width: 330px) { [data-demo="securite"] .sec-br { display: none; } }
+[data-demo="securite"] .sec-ir {
+  right: 10px; top: 27px; padding: .22rem .34rem; border-radius: 3px; color: #e3e8ee; text-shadow: none;
+  background: #0000008c; box-shadow: inset 0 0 0 1px #ffffff26; display: none;
+}
 [data-demo="securite"] .sec-wall.is-ir .sec-cam:not(.is-lit) .sec-ir { display: block; }
-[data-demo="securite"] .sec-ts { left: 8px; bottom: 8px; font-variant-numeric: tabular-nums; }
-[data-demo="securite"] .sec-ts span { color: #b9b9c1; }
+[data-demo="securite"] .sec-ts { left: 10px; bottom: 10px; font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+[data-demo="securite"] .sec-ts span { color: #c8c8cf; }
 [data-demo="securite"] .sec-st {
-  right: 8px; bottom: 8px; display: inline-flex; align-items: center; gap: .4rem; color: #d0d0d6;
-  transition: color .3s;
+  right: 8px; bottom: 7px; display: inline-flex; align-items: center; gap: .4rem; color: #d6d6dc;
+  padding: .3rem .45rem; border-radius: 4px; background: #000000a6; text-shadow: none;
+  box-shadow: inset 0 0 0 1px #ffffff1c; transition: color .3s, box-shadow .3s;
 }
 [data-demo="securite"] .sec-st::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #6fd39b; }
-[data-demo="securite"] .sec-st:not(.t-calm) { color: var(--c); }
+[data-demo="securite"] .sec-st:not(.t-calm) { color: var(--c); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent); }
 [data-demo="securite"] .sec-st:not(.t-calm)::before { background: var(--c); box-shadow: 0 0 8px var(--c); }
 
-/* Puce « Preuve capturée » */
+/* Puce « Preuve capturée », au-dessus de la bande du bas */
 [data-demo="securite"] .sec-snap {
-  position: absolute; left: 50%; top: 50%; z-index: 5; display: inline-flex; align-items: center; gap: .4rem;
-  padding: .45rem .6rem; border-radius: 6px; background: #000000c4; color: #fff;
-  font: 600 .58rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
-  transform: translate(-50%, -50%); animation: secSnap 1.4s var(--ease) forwards; pointer-events: none;
+  position: absolute; left: 50%; bottom: 32px; z-index: 5; display: inline-flex; align-items: center; gap: .4rem;
+  padding: .38rem .55rem; border-radius: 5px; background: #000000b8; color: #fff;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mode-glow) 45%, transparent);
+  font: 600 .54rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
+  animation: secSnap 1.4s var(--ease) forwards; pointer-events: none;
 }
-[data-demo="securite"] .sec-snap svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+[data-demo="securite"] .sec-snap svg { width: 11px; height: 11px; fill: none; stroke: var(--gold-soft); stroke-width: 1.5; }
 @keyframes secSnap {
-  0% { opacity: 0; transform: translate(-50%, -30%) scale(.9); }
-  18%, 70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -70%); }
+  0% { opacity: 0; transform: translate(-50%, 6px); }
+  15%, 75% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, 0); }
 }
 
 /* Message d'interphone */
@@ -200,93 +275,138 @@
 
 /* ---------- Silhouettes simulées ---------- */
 [data-demo="securite"] .sec-subj {
-  --p-top: #1b1916; --p-leg: #121110; --p-skin: #241c16; --p-rim: #ffe2b8;
-  position: absolute; left: 0; top: 0; z-index: 1; height: 30cqh; aspect-ratio: 60 / 160;
-  transform: translate(calc(var(--x, 0) * 1cqw - 50%), calc(var(--y, 0) * 1cqh - 100%)) scale(var(--k, 1));
-  transform-origin: 50% 100%; will-change: transform, opacity; pointer-events: none;
+  --p-top: #26231f; --p-leg: #161513; --p-skin: #3a2b21; --p-hair: #100e0d; --p-rim: #ffd9a8; --p-blur: .3px;
+  position: absolute; left: 0; top: 0; z-index: 1; height: calc(var(--h, 30) * 1cqh); aspect-ratio: 60 / 170;
+  transform: translate(calc(var(--x, 0) * 1cqw - 50%), calc(var(--y, 0) * 1cqh - 100%));
+  pointer-events: none;
 }
-[data-demo="securite"] .sec-subj svg { display: block; width: 100%; height: 100%; overflow: visible; }
+[data-demo="securite"] .sec-subj.k-livreur { --p-top: #222429; --p-leg: #131417; }
+[data-demo="securite"] .sec-subj.k-hood { --p-top: #1d1d20; --p-leg: #121214; --p-rim: #e6ecf3; }
+/* Sous l'infrarouge, les tissus sombres renvoient la lumière : gris moyen */
+[data-demo="securite"] :is(.sec-wall.is-ir .sec-cam:not(.is-lit), .sec-th-view.is-ir) .sec-subj.k-hood { --p-top: #47484c; --p-leg: #2b2c2f; --p-skin: #7a675a; }
+[data-demo="securite"] .sec-subj.k-dark { --p-top: #202227; --p-leg: #121316; --p-skin: #241d19; --p-rim: #efe6d6; }
+[data-demo="securite"] .sec-subj.is-walk { --p-blur: .5px; }
+/* Ombre de contact au sol */
+[data-demo="securite"] .sec-subj::before {
+  content: ""; position: absolute; left: -8%; right: -8%; bottom: -2.2%; height: 4.5%; border-radius: 50%;
+  background: radial-gradient(closest-side, #000000b3, #00000059 55%, transparent);
+}
+/* Bords doux, liseré de lumière venu d'en haut et de face, flou de bougé en marche */
+[data-demo="securite"] .sec-subj svg {
+  display: block; width: 100%; height: 100%; overflow: visible;
+  filter: drop-shadow(0 -.6px 0 color-mix(in srgb, var(--p-rim) 42%, transparent))
+    drop-shadow(.5px 0 0 color-mix(in srgb, var(--p-rim) 22%, transparent)) blur(var(--p-blur));
+}
 [data-demo="securite"] .sec-subj.is-left svg { transform: scaleX(-1); }
-[data-demo="securite"] .sec-subj.k-livreur { --p-top: #57472f; --p-leg: #2c2722; }
-[data-demo="securite"] .sec-subj.k-hood { --p-top: #161616; --p-leg: #0e0e0f; --p-rim: #dbe2ec; }
-[data-demo="securite"] .sec-subj.k-dark { --p-top: #1f2125; --p-leg: #131417; }
-[data-demo="securite"] .p-shadow { fill: #000; opacity: .42; }
-[data-demo="securite"] .sec-subj { --p-lit: color-mix(in srgb, var(--p-top) 62%, #ffcf96); --p-low: color-mix(in srgb, var(--p-top) 55%, #000); }
-[data-demo="securite"] .sec-subj.k-hood { --p-lit: color-mix(in srgb, var(--p-top) 75%, #c9d4e4); }
-[data-demo="securite"] .p-top:not([fill]) { fill: var(--p-top); }
-[data-demo="securite"] .p-leg:not([fill]) { fill: var(--p-leg); }
-[data-demo="securite"] .p-skin { fill: var(--p-skin); }
-[data-demo="securite"] .sec-subj .g0 { stop-color: var(--p-lit); }
+[data-demo="securite"] .sec-subj .g0 { stop-color: color-mix(in srgb, var(--p-top) 58%, #f0c48a); }
+[data-demo="securite"] .sec-subj.k-hood .g0 { stop-color: color-mix(in srgb, var(--p-top) 80%, #c9d4e4); }
 [data-demo="securite"] .sec-subj .g1 { stop-color: var(--p-top); }
-[data-demo="securite"] .sec-subj .g2 { stop-color: var(--p-low); }
+[data-demo="securite"] .sec-subj .g2 { stop-color: color-mix(in srgb, var(--p-top) 55%, #000); }
 [data-demo="securite"] .sec-subj .g3 { stop-color: var(--p-leg); }
-[data-demo="securite"] .sec-subj .g4 { stop-color: #050505; }
-[data-demo="securite"] .sec-subj svg { filter: blur(.35px); }
-[data-demo="securite"] .p-rim { stroke: var(--p-rim); stroke-opacity: .28; stroke-width: 1; vector-effect: non-scaling-stroke; }
-[data-demo="securite"] .p-strip { fill: #f1e8d2; opacity: .85; }
-[data-demo="securite"] :is(.p-cap, .p-strip, .p-hood, .p-box) { display: none; }
-[data-demo="securite"] .k-livreur :is(.p-cap, .p-strip),
-[data-demo="securite"] .k-hood .p-hood,
-[data-demo="securite"] .is-carry .p-box { display: inline; }
-[data-demo="securite"] .p-legL { transform-origin: 23px 88px; }
-[data-demo="securite"] .p-legR { transform-origin: 37px 88px; }
-[data-demo="securite"] .p-armL { transform-origin: 14px 35px; }
-[data-demo="securite"] .p-armR { transform-origin: 46px 35px; }
-[data-demo="securite"] .is-walk :is(.p-legL, .p-armR) { animation: secSwingA .42s ease-in-out infinite alternate; }
-[data-demo="securite"] .is-walk :is(.p-legR, .p-armL) { animation: secSwingB .42s ease-in-out infinite alternate; }
-[data-demo="securite"] .is-walk .p-body { animation: secBob .21s ease-in-out infinite alternate; }
-[data-demo="securite"] .is-carry :is(.p-armL, .p-armR) { animation: none; }
-@keyframes secSwingA { from { transform: rotate(9deg); } to { transform: rotate(-9deg); } }
-@keyframes secSwingB { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
-@keyframes secBob { from { transform: translateY(0); } to { transform: translateY(-1.6px); } }
+[data-demo="securite"] .sec-subj .g4 { stop-color: color-mix(in srgb, var(--p-leg) 60%, #000); }
+[data-demo="securite"] .sec-subj .g5 { stop-color: color-mix(in srgb, var(--p-skin) 70%, #e0a979); }
+[data-demo="securite"] .sec-subj .g6 { stop-color: var(--p-skin); }
+/* Volume : le dos et le flanc dans l'ombre */
+[data-demo="securite"] .sec-subj .s0 { stop-color: #000; stop-opacity: .5; }
+[data-demo="securite"] .sec-subj .s1 { stop-color: #000; stop-opacity: 0; }
+[data-demo="securite"] .p-armF { fill: color-mix(in srgb, var(--p-top) 55%, #000); }
+[data-demo="securite"] .p-legF { fill: color-mix(in srgb, var(--p-leg) 62%, #000); }
+[data-demo="securite"] .p-neck { fill: color-mix(in srgb, var(--p-skin) 70%, #000); }
+[data-demo="securite"] .p-hair { fill: var(--p-hair); }
+[data-demo="securite"] .p-cap { fill: color-mix(in srgb, var(--p-top) 70%, #000); }
+[data-demo="securite"] .p-face { fill: color-mix(in srgb, var(--p-skin) 45%, #000); }
+[data-demo="securite"] .bx-f { fill: #9a7344; }
+[data-demo="securite"] .bx-t { fill: #c49a62; }
+[data-demo="securite"] .bx-s { fill: #6a4d2d; }
+[data-demo="securite"] .bx-tape { fill: none; stroke: #e6d3ab; stroke-opacity: .35; stroke-width: 1.6; }
+/* Tenues : casquette (livreur), capuche (visiteur), cheveux sinon; colis porté à deux mains */
+[data-demo="securite"] :is(.p-cap, .p-hood, .p-face, .p-box, .p-armC) { display: none; }
+[data-demo="securite"] .k-livreur .p-cap,
+[data-demo="securite"] .k-hood :is(.p-hood, .p-face),
+[data-demo="securite"] .is-carry :is(.p-box, .p-armC) { display: inline; }
+[data-demo="securite"] :is(.k-livreur, .k-hood) .p-hair,
+[data-demo="securite"] .is-carry :is(.p-armN, .p-armF) { display: none; }
+/* Marche : jambes et bras en pendule depuis la hanche et l'épaule, corps qui
+   monte à chaque pas et penche un peu vers l'avant */
+[data-demo="securite"] .sec-subj :is(.p-legN, .p-legF) { transform-box: fill-box; transform-origin: 37% 2%; }
+[data-demo="securite"] .sec-subj :is(.p-armN, .p-armF) { transform-box: fill-box; transform-origin: 48% 3%; }
+[data-demo="securite"] .sec-subj .p-body { transform-origin: 30px 168px; }
+[data-demo="securite"] .is-walk .p-legN { animation: secLegA .55s ease-in-out infinite alternate; }
+[data-demo="securite"] .is-walk .p-legF { animation: secLegB .55s ease-in-out infinite alternate; }
+[data-demo="securite"] .is-walk .p-armN { animation: secArmB .55s ease-in-out infinite alternate; }
+[data-demo="securite"] .is-walk .p-armF { animation: secArmA .55s ease-in-out infinite alternate; }
+[data-demo="securite"] .is-walk .p-body { animation: secBob .55s ease-in-out infinite; }
+@keyframes secLegA { from { transform: rotate(-17deg); } to { transform: rotate(15deg); } }
+@keyframes secLegB { from { transform: rotate(15deg); } to { transform: rotate(-17deg); } }
+@keyframes secArmA { from { transform: rotate(-11deg); } to { transform: rotate(11deg); } }
+@keyframes secArmB { from { transform: rotate(11deg); } to { transform: rotate(-11deg); } }
+@keyframes secBob { 0%, 100% { transform: translateY(.9px) rotate(2deg); } 50% { transform: translateY(-.9px) rotate(2deg); } }
 
-/* ---------- Objets de scène : colis, sonnette, feux, porte ---------- */
+/* ---------- Objets de scène : colis, sonnette, feux, porte ----------
+   Sous les personnes (qui passent devant), sauf l'onde de la sonnette. */
 [data-demo="securite"] .sec-prop {
-  position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none;
+  position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none;
   width: calc(var(--w, 0) * 1cqw); height: calc(var(--h, 0) * 1cqh);
   transform: translate(calc(var(--x, 0) * 1cqw), calc(var(--y, 0) * 1cqh));
+  transition: opacity .5s;
 }
-[data-demo="securite"] .p-parcel svg { display: block; width: 100%; height: 100%; }
-[data-demo="securite"] .p-parcel { animation: secDrop .5s var(--ease) both; }
-@keyframes secDrop { from { opacity: 0; translate: 0 -12px; } to { opacity: 1; translate: 0 0; } }
-[data-demo="securite"] :is(.p-ring, .p-tail)::before,
-[data-demo="securite"] .p-ring::after {
-  content: ""; position: absolute; left: 0; top: 0; border-radius: 50%; pointer-events: none;
-}
+[data-demo="securite"] .sec-prop.is-off { opacity: 0; }
+[data-demo="securite"] .p-parcel svg { display: block; width: 100%; height: 100%; overflow: visible; filter: blur(.3px); }
+[data-demo="securite"] .p-parcel { animation: secDrop .45s var(--ease) backwards; }
+@keyframes secDrop { from { opacity: 0; translate: 0 -10px; } }
+[data-demo="securite"] .p-ring { z-index: 3; }
 [data-demo="securite"] .p-ring::before,
 [data-demo="securite"] .p-ring::after {
-  width: 44px; height: 44px; margin: -22px 0 0 -22px; border: 2px solid var(--sx-bell);
-  box-shadow: 0 0 14px var(--sx-bell); animation: secRing 1.1s ease-out infinite;
+  content: ""; position: absolute; left: 0; top: 0; border-radius: 50%; pointer-events: none;
+  width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 1.5px solid var(--sx-bell);
+  box-shadow: 0 0 10px var(--sx-bell); animation: secRing 1.1s ease-out infinite;
 }
 [data-demo="securite"] .p-ring::after { animation-delay: .4s; }
 @keyframes secRing { from { opacity: 1; transform: scale(.2); } to { opacity: 0; transform: scale(1.5); } }
+/* Feux arrière : halo rouge et son reflet sur l'asphalte */
+[data-demo="securite"] .p-tail::before,
+[data-demo="securite"] .p-tail::after {
+  content: ""; position: absolute; left: 0; top: 0; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
+}
 [data-demo="securite"] .p-tail::before {
-  width: 9cqw; height: 5cqw; margin: -2.5cqw 0 0 -4.5cqw;
-  background: radial-gradient(closest-side, #ff4a3dcc, #ff2a1f33 60%, transparent);
-  mix-blend-mode: screen; animation: secTail 1.2s ease-in-out infinite alternate;
+  width: 7cqw; height: 4cqw; margin: -2cqw 0 0 -3.5cqw;
+  background: radial-gradient(closest-side, #ff6a5ae6, #ff2a1f66 45%, transparent);
 }
-@keyframes secTail { from { opacity: .45; } to { opacity: 1; } }
-[data-demo="securite"] .p-door {
-  background: linear-gradient(90deg, #ffe0aa, #ffcf8a 55%, #f3b866);
-  mix-blend-mode: screen; box-shadow: 0 0 28px #ffcf8a99, 0 0 6px #fff6;
-  animation: secDoor .9s var(--ease) both;
+[data-demo="securite"] .p-tail::after {
+  width: 2.4cqw; height: 7cqw; margin: 1.2cqw 0 0 -1.2cqw;
+  background: radial-gradient(closest-side, #ff3b2e59, transparent);
 }
-@keyframes secDoor { from { opacity: 0; clip-path: inset(0 0 0 100%); } to { opacity: .82; clip-path: inset(0 0 0 0); } }
+/* Porte de service ouverte : l'intérieur éclairé apparaît, le battant sombre
+   pivote vers l'intérieur et la lumière se répand au sol devant le seuil. */
+[data-demo="securite"] .p-door svg { display: block; width: 100%; height: 100%; filter: blur(1.2px); }
+[data-demo="securite"] .p-door { box-shadow: inset 0 0 0 1px #00000059; }
+[data-demo="securite"] .p-door::before {
+  content: ""; position: absolute; z-index: 1; left: 0; top: 0; bottom: 0; width: 15%;
+  background: linear-gradient(90deg, #1c1b1a, #2a2724 70%, #4a4239);
+  clip-path: polygon(0 0, 100% 5%, 100% 95%, 0 100%); transform-origin: 0 50%;
+  animation: secLeaf 1.2s var(--ease) both;
+}
+[data-demo="securite"] .p-door::after {
+  content: ""; position: absolute; left: -35%; right: -35%; top: 100%; height: 34%; border-radius: 50%;
+  background: radial-gradient(closest-side, #ffd9a159, transparent); mix-blend-mode: screen;
+  animation: secSpill 1.4s .2s var(--ease) both;
+}
+@keyframes secLeaf { from { transform: scaleX(6.67); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); } }
+@keyframes secSpill { from { opacity: 0; } }
 
 /* ---------- Cadres de détection ---------- */
 [data-demo="securite"] .sec-box {
-  position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none;
+  position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none;
   width: calc(var(--w, 0) * 1cqw); height: calc(var(--h, 0) * 1cqh);
   transform: translate(calc(var(--x, 0) * 1cqw), calc(var(--y, 0) * 1cqh));
   transition: opacity .35s;
 }
 [data-demo="securite"] .sec-box::before {
-  content: ""; position: absolute; inset: 0; border-radius: 2px;
-  border: 1px solid color-mix(in srgb, var(--c) 55%, transparent);
-  background: color-mix(in srgb, var(--c) 4%, transparent);
+  content: ""; position: absolute; inset: 0; border-radius: 1px;
+  border: 1px solid color-mix(in srgb, var(--c) 42%, transparent);
   animation: secBoxFill .5s .22s var(--ease) both;
 }
-[data-demo="securite"] .sec-box.t-known::before { border-style: dashed; background: transparent; }
+[data-demo="securite"] .sec-box.t-known::before { border-style: dashed; }
 [data-demo="securite"] .sec-box i {
   position: absolute; width: 10px; height: 10px; border: 2px solid var(--c);
   filter: drop-shadow(0 0 4px color-mix(in srgb, var(--c) 70%, transparent));
@@ -298,12 +418,16 @@
 [data-demo="securite"] .sec-box i:nth-of-type(4) { left: -2px; bottom: -2px; border-right: 0; border-top: 0; transform-origin: 0 100%; animation-delay: .15s; }
 @keyframes secCorner { from { opacity: 0; transform: scale(3.2); } to { opacity: 1; transform: none; } }
 @keyframes secBoxFill { from { opacity: 0; } to { opacity: 1; } }
+/* Étiquette : classe · confiance · numéro de piste */
 [data-demo="securite"] .sec-box b {
-  position: absolute; left: -2px; bottom: calc(100% + 5px); white-space: nowrap;
-  padding: .32rem .42rem; border-radius: 4px; background: var(--c); color: #0b0b0d;
-  font: 600 .56rem/1 var(--mono); letter-spacing: .07em; text-transform: uppercase;
+  position: absolute; left: -2px; bottom: calc(100% + 5px); display: inline-flex; align-items: center; gap: .5em; white-space: nowrap;
+  padding: .3rem .42rem; border-radius: 3px; background: var(--c); color: #0b0b0d;
+  font: 600 .55rem/1 var(--mono); letter-spacing: .07em; text-transform: uppercase;
   box-shadow: 0 4px 14px #0009; animation: secLab .45s .18s var(--ease) both;
 }
+[data-demo="securite"] .sec-box .lb-c { font-variant-numeric: tabular-nums; }
+[data-demo="securite"] .sec-box .lb-id { padding-left: .5em; border-left: 1px solid #0b0b0d4d; font-weight: 500; }
+[data-demo="securite"] .sec-box :is(.lb-c, .lb-id):empty { display: none; }
 [data-demo="securite"] .sec-box.is-in b { bottom: auto; top: 4px; left: 4px; }
 [data-demo="securite"] .sec-box.is-right b { left: auto; right: -2px; }
 [data-demo="securite"] .sec-box.is-in.is-right b { right: 4px; }
@@ -312,6 +436,16 @@
 [data-demo="securite"] .sec-box.is-off { opacity: 0; }
 @keyframes secLab { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
 @keyframes secSwap { 0% { transform: scale(1.18); filter: brightness(1.6); } 100% { transform: none; filter: none; } }
+
+/* Trace au sol : chemin des pieds, plus pâle vers l'arrière */
+[data-demo="securite"] .sec-trail {
+  position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; overflow: visible; pointer-events: none; transition: opacity .4s;
+}
+[data-demo="securite"] .sec-trail.is-off { opacity: 0; }
+[data-demo="securite"] .sec-trail stop { stop-color: var(--c); stop-opacity: 0; }
+[data-demo="securite"] .sec-trail stop + stop { stop-opacity: .85; }
+[data-demo="securite"] .sec-trail .tr-line { fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+[data-demo="securite"] .sec-trail .tr-dot { fill: none; stroke: var(--c); stroke-width: 5; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 
 /* ---------- Capteurs hors caméra ---------- */
 [data-demo="securite"] .sec-sensors {
@@ -407,10 +541,19 @@
   align-items: center; gap: .7rem; padding: 8px 12px 8px 11px; border-radius: 12px;
   border: 1px solid #ffffff17; background: #121214f0;
   box-shadow: 0 6px 18px #0006;
-  animation: secIn .55s var(--ease) backwards;
+  animation: secIn .6s cubic-bezier(.2, .9, .25, 1.1) backwards;
   transition: border-color .4s, box-shadow .4s;
 }
-@keyframes secIn { from { opacity: 0; transform: translateX(26px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes secIn { from { opacity: 0; transform: translate(18px, -8px) scale(.97); } to { opacity: 1; transform: none; } }
+/* Nouvelle alerte : lueur de sa couleur sur la ligne, qui s'éteint doucement */
+[data-demo="securite"] .sec-r::after {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; opacity: 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--c) 18%, transparent), transparent 75%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent);
+}
+html.fx [data-demo="securite"] .sec-r::after { animation: secNew 1.8s .1s ease-out; }
+html.fx [data-demo="securite"] .sec-r .sec-r-ico { animation: secPing 1s .2s var(--ease); }
+@keyframes secNew { 0%, 20% { opacity: 1; } 100% { opacity: 0; } }
 [data-demo="securite"] .sec-r-ico {
   position: relative; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
   color: var(--c); background: #0b0b0d; border: 1px solid color-mix(in srgb, var(--c) 55%, transparent);
@@ -504,6 +647,8 @@
 }
 [data-demo="securite"] .sec-th .sec-box b { display: none; }
 [data-demo="securite"] .sec-th .sec-box i { width: 6px; height: 6px; border-width: 1.5px; }
+[data-demo="securite"] .sec-th .sec-trail .tr-line { stroke-width: 1.2; }
+[data-demo="securite"] .sec-th .sec-trail .tr-dot { stroke-width: 3.5; }
 [data-demo="securite"] .sec-th :is(.sec-subj, .sec-subj *, .sec-prop, .sec-box, .sec-box *),
 [data-demo="securite"] .sec-th .sec-prop::before,
 [data-demo="securite"] .sec-th .sec-prop::after,
@@ -614,6 +759,13 @@
 [data-demo="securite"] .sec-arrow i {
   position: absolute; left: 0; right: 6px; top: 50%; height: 1.5px; background: var(--mode-display); transform-origin: 0 50%;
 }
+/* Regroupement : une lueur file le long de la flèche jusqu'au « 1 » */
+[data-demo="securite"] .sec-arrow::before {
+  content: ""; position: absolute; left: 0; top: 50%; width: 26px; height: 3px; margin-top: -1.5px; border-radius: 2px; opacity: 0;
+  background: linear-gradient(90deg, transparent, var(--gold-soft)); box-shadow: 0 0 10px var(--gold-soft);
+}
+html.fx [data-demo="securite"] .is-merged .sec-arrow::before { animation: secDart 1.1s .15s var(--ease); }
+@keyframes secDart { 0% { left: 0; opacity: 0; } 25% { opacity: 1; } 100% { left: calc(100% - 26px); opacity: 0; } }
 [data-demo="securite"] .sec-arrow::after {
   content: ""; position: absolute; right: 1px; top: 50%; width: 8px; height: 8px; margin-top: -4px;
   border-top: 1.5px solid var(--gold-soft); border-right: 1.5px solid var(--gold-soft); transform: rotate(45deg);
@@ -623,8 +775,16 @@
 [data-demo="securite"].is-live .sec-feed :is(.sec-n-one, .sec-arrow, .sec-arrow i) { transition: opacity .6s, filter .6s, transform .9s var(--ease); }
 [data-demo="securite"] .is-merged .sec-n-one b { animation: secPop .7s .2s var(--ease) both; }
 @keyframes secPop { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.18); opacity: 1; } 100% { transform: none; } }
-[data-demo="securite"] .sec-n-raw-bump { animation: secBump .4s var(--ease); }
-@keyframes secBump { 0% { transform: translateY(-6px); opacity: .3; } 100% { transform: none; opacity: 1; } }
+/* Compteur à rouleau : l'ancien chiffre monte et sort, le nouveau arrive d'en bas */
+[data-demo="securite"] [data-sec-n] { position: relative; display: inline-block; }
+[data-demo="securite"] [data-sec-n] .n-out { display: none; }
+html.fx [data-demo="securite"] [data-sec-n] { overflow: hidden; padding: .08em 0; margin: -.08em 0; }
+html.fx [data-demo="securite"] [data-sec-n] .n-out {
+  display: block; position: absolute; left: 0; top: .08em; animation: secNOut .5s var(--ease) forwards;
+}
+html.fx [data-demo="securite"] [data-sec-n] .n-in { display: inline-block; animation: secNIn .5s var(--ease) backwards; }
+@keyframes secNOut { to { opacity: 0; transform: translateY(-105%); } }
+@keyframes secNIn { from { opacity: 0; transform: translateY(105%); } }
 [data-demo="securite"] .sec-phone { display: none; margin: .6rem 0 0; font-size: .8rem; color: #b9b9c2; line-height: 1.4; }
 [data-demo="securite"] .sec-phone b { color: #f2f2f4; font-weight: 600; }
 [data-demo="securite"].is-live .sec-feed:not(.is-merged) .sec-phone { opacity: 0; }
@@ -668,18 +828,23 @@
   [data-demo="securite"] .sec-scen small { font-size: .5rem; letter-spacing: .08em; }
   [data-demo="securite"] .sec-scen b { font-size: .76rem; }
   [data-demo="securite"] .sec-cam { border-radius: 9px; }
-  [data-demo="securite"] .sec-hud { font-size: .5rem; letter-spacing: .06em; }
-  [data-demo="securite"] .sec-hud > * { padding: .26rem .32rem; border-radius: 4px; }
-  [data-demo="securite"] :is(.sec-name, .sec-rec) { top: 5px; }
-  [data-demo="securite"] .sec-name { left: 5px; }
-  [data-demo="securite"] .sec-rec { right: 5px; font-size: 0; gap: 0; padding: .3rem; }
-  [data-demo="securite"] .sec-ir { top: 26px; right: 5px; }
-  [data-demo="securite"] .sec-ts { left: 5px; bottom: 5px; }
+  [data-demo="securite"] .sec-hud { font-size: .5rem; letter-spacing: .05em; }
+  [data-demo="securite"] .sec-hud::before,
+  [data-demo="securite"] .sec-hud::after { height: 26px; }
+  [data-demo="securite"] :is(.sec-name, .sec-tr) { top: 6px; }
+  [data-demo="securite"] .sec-name { left: 6px; }
+  [data-demo="securite"] .sec-tr { right: 6px; }
+  [data-demo="securite"] .sec-rec { font-size: 0; gap: 0; }
+  [data-demo="securite"] .sec-ir { top: 18px; right: 5px; padding: .16rem .26rem; }
+  [data-demo="securite"] .sec-ts { left: 6px; bottom: 6px; }
   [data-demo="securite"] .sec-ts span,
-  [data-demo="securite"] .sec-st { display: none; }
+  [data-demo="securite"] .sec-st,
+  [data-demo="securite"] .sec-box .lb-id { display: none; }
   [data-demo="securite"] .sec-name b { display: none; }
-  [data-demo="securite"] .sec-box b { font-size: .46rem; padding: .22rem .3rem; letter-spacing: .04em; }
+  [data-demo="securite"] .sec-box b { font-size: .46rem; padding: .22rem .3rem; letter-spacing: .04em; gap: .35em; }
   [data-demo="securite"] .sec-box i { width: 7px; height: 7px; border-width: 1.5px; }
+  [data-demo="securite"] .sec-snap { bottom: 22px; font-size: .46rem; padding: .28rem .4rem; }
+  [data-demo="securite"] :is(.sec-snap, .sec-ir) span { display: none; }
   [data-demo="securite"] .sec-say { left: 5px; right: 5px; bottom: 22px; font-size: .62rem; padding: .4rem .45rem; }
   [data-demo="securite"] .sec-feed { padding: 12px 10px 10px; }
   [data-demo="securite"] .sec-r { padding: 7px 9px; gap: .55rem; }
@@ -700,6 +865,5 @@
   [data-demo="securite"] *,
   [data-demo="securite"] *::before,
   [data-demo="securite"] *::after { animation: none !important; transition: none !important; }
-  [data-demo="securite"] .sec-fx::before,
-  [data-demo="securite"] .sec-fx::after { display: none; }
+  [data-demo="securite"] .sec-cam .sec-stage::before { display: none; } /* grain figé : on l'enlève */
 }

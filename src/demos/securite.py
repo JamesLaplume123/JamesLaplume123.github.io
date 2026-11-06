@@ -61,17 +61,27 @@ THUMBS = [
 ]
 
 
+BITRATES = ("1,8", "2,1", "1,6", "1,9")  # débit affiché au repos (Mb/s), un par caméra
+
+
 def _cam(i, img, name, view, alt):
+    # .sec-pan : dérive lente de l'image (sous html.fx) · .sec-glitch : bref
+    # artefact de compression quand un mouvement se déclenche · .sec-fx :
+    # vignette de l'objectif. Le grain et l'exposition sont posés en CSS dans
+    # la scène elle-même, sous les cadres de détection.
     return f"""
           <figure class="sec-cam" data-cam="{i}">
             <div class="sec-view">
-              <div class="sec-stage" style="{_stage(view)}"><img src="{M}{img}" alt="{alt}" loading="lazy"></div>
+              <div class="sec-pan">
+                <div class="sec-stage" style="{_stage(view)}"><img src="{M}{img}" alt="{alt}" loading="lazy"></div>
+              </div>
+              <i class="sec-glitch" aria-hidden="true"></i>
               <i class="sec-fx" aria-hidden="true"></i>
             </div>
             <figcaption class="sec-hud">
               <span class="sec-name"><b>CAM 0{i + 1}</b> <span>{name}</span></span>
-              <span class="sec-rec" aria-hidden="true">REC</span>
-              <span class="sec-ir" aria-hidden="true">IR · nuit</span>
+              <span class="sec-tr" aria-hidden="true"><span class="sec-br" data-sec-br>{BITRATES[i]} Mb/s</span><span class="sec-rec">REC</span></span>
+              <span class="sec-ir" aria-hidden="true">IR<span> · nuit</span></span>
               <time class="sec-ts" data-sec-ts>21:42:58</time>
               <span class="sec-st t-calm" data-sec-st>Calme</span>
             </figcaption>

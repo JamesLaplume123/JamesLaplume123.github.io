@@ -1,7 +1,8 @@
 # Politique de confidentialité — site officiel d'entreprise (Loi 25, Québec).
 # Rédigée pour correspondre à la réalité du site : aucun témoin, aucun pisteur,
-# un formulaire transmis par FormSubmit, la météo d'Environnement Canada et un
-# compteur de visites anonyme (Abacus). Mettre à jour si un service change.
+# formulaire par le service du site (Cloudflare + Resend, FormSubmit en secours), météo et
+# radar d'Environnement Canada, carte OpenFreeMap, compteur anonyme. Mettre à jour si un
+# service change (Loi 25).
 
 PAGE = {
     "url": "/confidentialite/",
@@ -39,13 +40,14 @@ PAGE = {
       <i>03 · Aucun pistage</i>
       <div><h3>Pas de témoins, pas de publicité, pas de profil.</h3>
       <p>Les pages de ce site n’installent aucun témoin (cookie) et n’utilisent aucun outil
-      publicitaire ni de profilage. Les polices sont hébergées sur le site lui-même. Deux
-      petites requêtes partent de votre navigateur : la météo de Saint-Hyacinthe, demandée à
-      Environnement Canada pour la console « JARVIS en direct », et un compteur de visites
-      anonyme, qui augmente de un par session sans aucun identifiant. Pour ne pas vous compter
-      deux fois, votre navigateur retient « déjà compté » jusqu’à la fermeture de l’onglet;
-      cette marque n’est jamais transmise. Votre choix de mode (Base, Signature ou Platinum)
-      est gardé dans votre navigateur et n’est jamais transmis.</p></div>
+      publicitaire ni de profilage. Les polices et la bibliothèque de carte sont hébergées sur le
+      site lui-même. Quelques requêtes partent de votre navigateur pour afficher des données en
+      direct : la météo et le radar d’Environnement Canada, les fonds de carte d’OpenFreeMap, et
+      le service du site (batteries du laboratoire mobile et compteur de visites anonyme, qui
+      augmente de un par session sans aucun identifiant). Pour ne pas vous compter deux fois,
+      votre navigateur retient « déjà compté » jusqu’à la fermeture de l’onglet; cette marque
+      n’est jamais transmise. Votre choix de mode (Base, Signature ou Platinum) est gardé dans
+      votre navigateur et n’est jamais transmis.</p></div>
     </div>
     <div class="row" data-rev>
       <i>04 · Utilisation</i>
@@ -56,15 +58,14 @@ PAGE = {
     </div>
     <div class="row" data-rev>
       <i>05 · Prestataires</i>
-      <div><h3>Quatre services techniques, clairement identifiés.</h3>
-      <p>Le formulaire est acheminé par FormSubmit (formsubmit.co) vers le courriel du
-      responsable; FormSubmit conserve les soumissions pendant 30 jours, selon sa propre
-      documentation, et peut afficher une vérification anti-robot si le formulaire est envoyé
-      sans JavaScript. La météo provient d’Environnement et Changement climatique Canada
-      (api.weather.gc.ca). Le compteur de visites est tenu par Abacus
-      (abacus.jasoncameron.dev), qui ne reçoit qu’une requête anonyme par session. Le site est
-      hébergé par GitHub Pages. Comme tout serveur, ces services peuvent tenir des journaux
-      techniques (adresses IP).</p></div>
+      <div><h3>Des services techniques, clairement identifiés.</h3>
+      <p>Le service du site fonctionne sur Cloudflare : il reçoit le formulaire, le garde pour
+      qu’il ne soit jamais perdu et le transmet au responsable par courriel avec Resend. Si ce
+      service ne répond pas, le formulaire passe par FormSubmit (formsubmit.co), qui conserve les
+      soumissions 30 jours selon sa documentation. La météo et le radar proviennent
+      d’Environnement et Changement climatique Canada; les fonds de carte, d’OpenFreeMap
+      (© OpenMapTiles, © contributeurs OpenStreetMap). Le site est hébergé par GitHub Pages.
+      Comme tout serveur, ces services peuvent tenir des journaux techniques (adresses IP).</p></div>
     </div>
     <div class="row" data-rev>
       <i>06 · Conservation</i>

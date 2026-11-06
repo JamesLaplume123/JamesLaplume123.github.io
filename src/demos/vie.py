@@ -451,7 +451,7 @@ def _feed_html():
         t, title, why, srcs, _h = INSIGHTS[i]
         chips = "".join(f'<span data-src="{s}">{SRC_NAME[s]}</span>' for s in srcs)
         out.append(
-            f'<li class="pi-ins" data-ins="{i}"><span class="pi-ins-n">{i + 1}</span>'
+            f'<li class="pi-ins" data-ins="{i}" tabindex="0"><span class="pi-ins-n">{i + 1}</span>'
             f'<div class="pi-ins-b"><p class="pi-ins-h"><time>{clock(T(t))}</time><b>{escape(fr(title))}</b></p>'
             f'<p class="pi-ins-why"><span>Pourquoi{NBSP}:</span> {escape(fr(why.replace("{sit}", sit)))}</p>'
             f'<p class="pi-ins-off">Non relié{NBSP}: une permission est retirée. JARVIS ne devine pas.</p>'

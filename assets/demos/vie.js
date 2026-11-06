@@ -118,8 +118,8 @@
       el.tl.style.setProperty("--p", (p / DAY * 100).toFixed(3));
       paintSun();
       var c = hm(p), tomorrow = p + START >= 1440;
-      if (c !== lastClock) {
-        lastClock = c;
+      if (c + tomorrow !== lastClock) {
+        lastClock = c + tomorrow;
         el.time.textContent = c;
         el.date.textContent = tomorrow ? "Mardi 3" + NB + "novembre" : "Lundi 2" + NB + "novembre";
         el.clock.textContent = (tomorrow ? "Mardi · " : "Lundi · ") + c;
@@ -171,6 +171,7 @@
       });
       el.empty.hidden = n > 0;
       el.links.textContent = n + (n > 1 ? " liens" : " lien");
+      INS.forEach(function (ins, i) { cards[i].classList.toggle("is-old", shown[i] && i < n - 2); });
     }
     function paintLinks() {
       var key = habit().links;
@@ -181,6 +182,15 @@
         (hls[i] || []).forEach(function (h) { h.classList.toggle("is-dim", off); h.classList.toggle("is-key", isKey); });
       });
     }
+
+    /* Survoler un lien éclaire ses preuves dans la journée */
+    Object.keys(cards).forEach(function (k) {
+      var on = function (v) { return function () { (hls[k] || []).forEach(function (h) { h.classList.toggle("is-hot", v); }); }; };
+      cards[k].addEventListener("mouseenter", on(true));
+      cards[k].addEventListener("mouseleave", on(false));
+      cards[k].addEventListener("focusin", on(true));
+      cards[k].addEventListener("focusout", on(false));
+    });
 
     /* ---------- Permissions ---------- */
     function setPerm(k, on) {

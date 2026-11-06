@@ -1,70 +1,53 @@
-# Démo « Une vie entière, un seul système » (assets/demos/vie.css et vie.js).
-# Au centre, une personne; autour, les domaines de sa vie; entre les deux, le Hub
-# privé installé à la maison, qui reçoit seulement les signaux autorisés.
-# Un coach d'habitudes montre comment JARVIS aide à remplacer une mauvaise
-# habitude par une bonne : signaux consentis → suggestion expliquée → accord →
-# 14 jours → rapport du matin. Bien-être seulement, aucun diagnostic.
+# Démo « Personal Intelligence : une vie entière, un seul système »
+# (assets/demos/vie.css et vie.js).
 #
-# Une seule source de vérité : NODES et HABITS. Python produit l'état statique
-# (lisible sans JavaScript : la première habitude, étapes empilées) et toute la
-# géométrie (orbite, graphiques), transmise au script par un bloc JSON.
-# Données entièrement fictives.
+# Une journée d'Alex défile d'un réveil à l'autre (lundi 6 h 30 → mardi 6 h 30).
+# Quatre sources, chacune avec sa propre permission révocable : montre, téléphone,
+# agenda, maison. Leurs données arrivent au fil de la journée sur le Hub privé;
+# JARVIS relie les points (chaque lien montre son « pourquoi » et ses sources),
+# puis, au réveil, propose d'échanger une habitude contre une meilleure. Rien ne
+# change sans accord; l'essai de 14 jours s'anime ensuite dans la progression.
+# Bien-être seulement, aucun diagnostic. Données entièrement fictives.
+#
+# Une seule source de vérité : les listes ci-dessous. Python produit l'état final
+# statique (lisible sans JavaScript : journée complète, liens, proposition et
+# progression) et toute la géométrie; le script reçoit le reste par un bloc JSON.
 
 import json
 import math
 import re
 from html import escape
 
-NBSP = " "
+NBSP = " "
 
 
 def fr(s):
     """Espaces insécables de la typographie française (heures, unités, ponctuation, guillemets)."""
     s = re.sub(r"(\d) (\d{3})\b", rf"\1{NBSP}\2", s)
     s = re.sub(r"(\d) h (\d)", rf"\1{NBSP}h{NBSP}\2", s)
-    s = re.sub(r"(\d) (h|min|%|°C|kWh|pas|soirs?|jours?|nuits?|semaines?|tasses?|après-midi|rencontres?|minutes)\b",
+    s = re.sub(r"(\d) (h|min|ms|%|°C|pas|soirs?|jours?|nuits?|semaines?|après-midi|rencontres?|minutes)\b",
                rf"\1{NBSP}\2", s)
     s = re.sub(r" ([:;?!»])", rf"{NBSP}\1", s)
     return s.replace("« ", "«" + NBSP)
-
-
-RAW = {"ic", "sp", "line", "area", "k", "uses", "acts", "streak"}  # géométrie et clés : jamais retouchées
-
-
-def _fr_all(v):
-    if isinstance(v, str):
-        return fr(v)
-    if isinstance(v, list):
-        return [_fr_all(x) for x in v]
-    if isinstance(v, dict):
-        return {k: (x if k in RAW else _fr_all(x)) for k, x in v.items()}
-    return v
 
 
 # ---------------------------------------------------------------------------
 # Icônes (traits, 24 × 24)
 # ---------------------------------------------------------------------------
 ICONS = {
+    "watch": '<rect x="6.4" y="6.4" width="11.2" height="11.2" rx="3.2"/><path d="M9 6.4 9.6 3h4.8l.6 3.4M9 17.6l.6 3.4h4.8l.6-3.4"/><path d="M12 9.6V12l1.6 1"/>',
+    "phone": '<rect x="7" y="2.8" width="10" height="18.4" rx="2.6"/><path d="M11 18h2"/>',
+    "calendar": '<rect x="3.6" y="5" width="16.8" height="15" rx="2.2"/><path d="M3.6 10h16.8M8 3v4M16 3v4"/>',
     "home": '<path d="M3.5 10.6 12 4l8.5 6.6"/><path d="M5.6 9.2v10.3h12.8V9.2"/><path d="M10 19.5v-5h4v5"/>',
     "moon": '<path d="M19.6 14.6A7.9 7.9 0 1 1 9.4 4.4a6.4 6.4 0 0 0 10.2 10.2z"/>',
-    "rings": '<path d="M12 3.5a8.5 8.5 0 1 1-8.5 8.5"/><path d="M12 7a5 5 0 1 1-5 5"/><circle cx="12" cy="12" r="1.3"/>',
-    "repeat": '<path d="M4.5 11A7.6 7.6 0 0 1 17.4 6.6l1.9 1.9"/><path d="M19.6 4.2v4.6H15"/>'
-              '<path d="M19.5 13a7.6 7.6 0 0 1-12.9 4.4l-1.9-1.9"/><path d="M4.4 19.8v-4.6H9"/>',
-    "case": '<rect x="3.5" y="7.5" width="17" height="12" rx="2.2"/><path d="M9 7.5V5.6c0-.9.7-1.6 1.6-1.6h2.8c.9 0 1.6.7 1.6 1.6v1.9"/><path d="M3.5 12.6h17"/>',
-    "people": '<circle cx="9" cy="8.2" r="3.1"/><path d="M3.4 19.6a5.6 5.6 0 0 1 11.2 0"/><circle cx="17.2" cy="9.6" r="2.4"/><path d="M16 14.4a4.5 4.5 0 0 1 4.6 5.2"/>',
-    "bolt": '<path d="M13.2 3 5.4 13.6h6l-1 7.4 8.2-10.8h-6.2z"/>',
-    "nav": '<path d="M12 3.2 19 20.4l-7-3.7-7 3.7z"/>',
-    "shield": '<path d="M12 3.2l7.4 3v5.3c0 4.4-3 7.9-7.4 9.8-4.4-1.9-7.4-5.4-7.4-9.8V6.2z"/><path d="m9 12.1 2.1 2.1 4-4.2"/>',
-    "phone": '<rect x="7" y="2.8" width="10" height="18.4" rx="2.6"/><path d="M11 18h2"/>',
-    "watch": '<rect x="6.4" y="6.4" width="11.2" height="11.2" rx="3.2"/><path d="M9 6.4 9.6 3h4.8l.6 3.4M9 17.6l.6 3.4h4.8l.6-3.4"/><path d="M12 9.6V12l1.6 1"/>',
-    "bulb": '<path d="M9.2 18h5.6M10.2 21h3.6"/><path d="M12 3a6 6 0 0 0-3.7 10.7c.8.6 1.1 1.5 1.1 2.4h5.2c0-.9.3-1.8 1.1-2.4A6 6 0 0 0 12 3z"/>',
-    "coffee": '<path d="M4.6 9.2h11.8v4.6a5 5 0 0 1-5 5h-1.8a5 5 0 0 1-5-5z"/><path d="M16.4 10.6h1.4a2.5 2.5 0 0 1 0 5h-1.6"/><path d="M8.6 3.6c-.6.9.6 1.6 0 2.6M12.2 3.6c-.6.9.6 1.6 0 2.6"/>',
-    "calendar": '<rect x="3.6" y="5" width="16.8" height="15" rx="2.2"/><path d="M3.6 10h16.8M8 3v4M16 3v4"/>',
-    "book": '<path d="M12 6.6C10 5.1 7.1 4.6 3.6 5v13c3.5-.4 6.4.1 8.4 1.6 2-1.5 4.9-2 8.4-1.6V5c-3.5-.4-6.4.1-8.4 1.6z"/><path d="M12 6.6v13"/>',
+    "coffee": '<path d="M4.6 9.2h11.8v4.6a5 5 0 0 1-5 5h-1.8a5 5 0 0 1-5-5z"/><path d="M16.4 10.6h1.4a2.5 2.5 0 0 1 0 5h-1.6"/>',
     "check": '<path d="m5 12.5 4.4 4.3L19 7.2"/>',
     "lock": '<rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.2 10.5V8a3.8 3.8 0 0 1 7.6 0v2.5"/>',
     "erase": '<path d="M4.5 7h15M9.5 7V4.8h5V7"/><path d="M6.6 7 7.5 20h9l.9-13"/>',
     "spark": '<path d="M12 3.5 13.9 9l5.6 1.9-5.6 1.9L12 18.4l-1.9-5.6-5.6-1.9L10.1 9z"/>',
+    "pause": '<path d="M9 5.5v13M15 5.5v13"/>',
+    "play": '<path d="M8 5.2v13.6L18.6 12z"/>',
+    "replay": '<path d="M3 12a9 9 0 1 0 2.8-6.5"/><path d="M3 3.5v4.4h4.4"/>',
 }
 
 
@@ -75,445 +58,523 @@ def icon(name, cls=""):
 
 
 # ---------------------------------------------------------------------------
-# Les domaines de la vie (clé, nom, nom court, icône, valeur au repos)
+# L'axe du temps : lundi 6 h 30 → mardi 6 h 30 (1 440 minutes).
+# Les heures du lendemain s'écrivent 24:xx à 30:30.
 # ---------------------------------------------------------------------------
-NODES = [
-    ("maison", "Maison", "Maison", "home", "21 °C · calme"),
-    ("sommeil", "Sommeil", "Sommeil", "moon", "7 h 02"),
-    ("activite", "Activité", "Activité", "rings", "6 840 pas"),
-    ("habitudes", "Habitudes", "Habitudes", "repeat", "3 en cours"),
-    ("travail", "Travail", "Travail", "case", "3 rencontres"),
-    ("famille", "Famille", "Famille", "people", "Souper 18 h 15"),
-    ("energie", "Énergie", "Énergie", "bolt", "8,4 kWh"),
-    ("deplacements", "Déplacements", "Trajets", "nav", "Départ 8 h 05"),
-    ("securite", "Sécurité", "Sécurité", "shield", "Verrouillée"),
+DAY = 1440
+START = 6 * 60 + 30
+
+
+def T(hm):
+    h, m = map(int, hm.split(":"))
+    return h * 60 + m - START
+
+
+def pc(mins):
+    return round(mins / DAY * 100, 3)
+
+
+def clock(mins):
+    m = (mins + START) % DAY
+    return f"{m // 60} h {m % 60:02d}"
+
+
+# ---------------------------------------------------------------------------
+# Les sources et leurs données de la journée (fictives)
+# ---------------------------------------------------------------------------
+SOURCES = [
+    ("montre", "Montre", "Sommeil · pas · VFC", "watch"),
+    ("tel", "Téléphone", "Temps d’écran", "phone"),
+    ("agenda", "Agenda", "Rencontres", "calendar"),
+    ("maison", "Maison", "Lumière · température", "home"),
+]
+SRC_NAME = {k: n for k, n, _s, _i in SOURCES}
+
+# Montre : pas par tranche de 30 minutes (de 6 h 30 à minuit), puis sommeil.
+STEPS = [140, 300, 400, 240, 160, 30, 20, 40, 20, 50, 30, 40, 300, 330, 80, 30, 20, 60,
+         30, 40, 170, 220, 340, 260, 130, 120, 150, 90, 50, 40, 70, 50, 60, 70, 30]
+IN_BED, ASLEEP = T("23:35"), T("24:48")
+# Hypnogramme : (stade, minutes) dès l'endormissement. W éveil · R paradoxal · L léger · P profond
+SLEEP = [("L", 20), ("P", 45), ("L", 30), ("R", 18), ("L", 25), ("P", 35), ("L", 30), ("R", 22),
+         ("W", 4), ("L", 40), ("R", 25), ("L", 28), ("L", 20)]
+STAGE_Y = {"W": 18, "R": 38, "L": 57, "P": 76}
+HRV = [38, 40, 44, 42, 39, 43, 41, 45, 40, 42, 41]  # VFC la nuit, aux 30 minutes dès 1 h
+
+# Téléphone : séances d'écran (début, fin, au lit ?)
+SCREEN = [("6:40", "7:02", 0), ("8:12", "8:20", 0), ("10:24", "10:29", 0), ("12:44", "13:08", 0),
+          ("15:06", "15:12", 0), ("17:32", "17:47", 0), ("20:35", "21:15", 0), ("21:48", "22:06", 0),
+          ("23:39", "24:31", 1)]
+
+# Agenda : (début, fin, titre, personnel ?)
+MEETINGS = [("9:00", "10:00", "Équipe", 0), ("10:00", "11:00", "Client", 0), ("11:00", "12:40", "Revue de projet", 0),
+            ("14:00", "15:30", "Atelier", 0), ("15:30", "16:30", "Appel fournisseur", 0),
+            ("18:15", "19:00", "Souper en famille", 1)]
+
+# Maison : lumière (début, fin, niveau 0–1, pièce, au lit ?) et température (heure, °C)
+LIGHT = [("6:30", "8:00", .75, "Cuisine", 0), ("8:00", "9:00", .3, "Salon", 0), ("9:00", "16:30", .5, "Bureau", 0),
+         ("16:30", "17:00", .65, "Cuisine", 0), ("17:00", "21:00", .9, "Salon", 0),
+         ("21:00", "23:35", .55, "Salon tamisé", 0), ("23:35", "24:31", .42, "Chambre", 1), ("24:31", "30:30", 0, "Éteinte", 0)]
+TEMP = [("6:30", 20.5), ("7:00", 21.0), ("9:00", 21.0), ("12:00", 21.2), ("15:00", 21.4), ("16:30", 21.0),
+        ("18:00", 21.5), ("20:00", 21.0), ("22:00", 20.5), ("23:00", 19.5), ("24:00", 19.0), ("27:00", 18.6),
+        ("29:30", 18.8), ("30:00", 20.0), ("30:30", 20.5)]
+COFFEE = [("7:05", 0), ("16:40", 1)]
+SUN = (T("6:40"), T("16:32"))
+
+# ---------------------------------------------------------------------------
+# Ce que JARVIS relie : (heure d'arrivée, titre, pourquoi, sources, surlignages)
+# surlignage : (voie, début, fin, étiquette)
+# ---------------------------------------------------------------------------
+INSIGHTS = [
+    ("12:40", "3 h 40 de rencontres sans pause",
+     "Agenda plein de 9 h à 12 h 40 · {sit} pas pendant ce temps.",
+     ["agenda", "montre"], [("agenda", "9:00", "12:40", "3 h 40"), ("montre", "9:00", "12:30", "")]),
+    ("16:44", "Café à 16 h 40",
+     "Les jours de café après 15 h, sa récupération de nuit baisse de 18 % (21 jours observés).",
+     ["maison", "montre"], [("maison", "16:30", "16:52", "")]),
+    ("24:31", "52 minutes d’écran au lit",
+     "Téléphone actif de 23 h 39 à 0 h 31, lumière de la chambre allumée tout ce temps.",
+     ["tel", "maison"], [("tel", "23:39", "24:31", "Au lit"), ("maison", "23:35", "24:31", "")]),
+    ("25:20", "Endormie 17 minutes après l’écran",
+     "Écran éteint à 0 h 31, sommeil à 0 h 48 : le même écart que 11 soirs sur 14.",
+     ["montre", "tel"], [("montre", "24:31", "24:48", "")]),
+    ("30:30", "Nuit de 5 h 42",
+     "1 h 18 sous son objectif de 7 h · récupération (VFC) de 41 ms, sous sa moyenne de 52.",
+     ["montre"], [("montre", "24:48", "30:30", "5 h 42")]),
 ]
 
-# Géométrie de l'orbite (repère 1000 × 1000, centre 500 × 500)
-R_NODE, R_HUB, R_ME = 382, 172, 118
-NODE_EDGE = 60  # rayon visuel d'une pastille, en unités du repère
-
-
-def _angle(i):
-    return math.radians(-90 + i * 360 / len(NODES))
-
-
-def _node_pos(i):
-    a = _angle(i)
-    return 500 + R_NODE * math.cos(a), 500 + R_NODE * math.sin(a)
-
-
-def _spoke(i):
-    """Rayon du nœud vers l'anneau du Hub (sens du flux : vers le Hub)."""
-    a = _angle(i)
-    r1, r2 = R_NODE - NODE_EDGE, R_HUB + 10
-    return (f"M{500 + r1 * math.cos(a):.1f} {500 + r1 * math.sin(a):.1f} "
-            f"L{500 + r2 * math.cos(a):.1f} {500 + r2 * math.sin(a):.1f}")
-
-
 # ---------------------------------------------------------------------------
-# Les habitudes (données fictives)
+# Les échanges d'habitude proposés au réveil, et leur essai de 14 jours
 # ---------------------------------------------------------------------------
 HABITS = [
     {
-        "k": "lecture",
-        "tab": "Téléphone au lit",
-        "old": "Téléphone au lit",
-        "new": "20 minutes de lecture",
-        "uses": ["sommeil", "maison", "habitudes"],
-        "acts": ["maison"],
-        "signals": [
-            ("phone", "Écran au lit", "Téléphone · autorisé", "52 min", [48, 61, 44, 57, 52, 63, 49]),
-            ("watch", "Endormissement", "Montre · autorisée", "0 h 48", [40, 55, 38, 52, 47, 58, 46]),
-            ("bulb", "Lumière éteinte", "Chambre · capteur local", "0 h 31", [30, 44, 26, 41, 35, 47, 33]),
-        ],
-        "when": "Lundi · 21 h 04",
-        "sugg": "Et si le téléphone dormait dans la cuisine ? À 22 h 30, la chambre passe en lumière "
-                "de lecture et le téléphone en mode nuit. Vingt minutes de lecture remplacent le défilement.",
+        "tab": "Téléphone au lit", "best": True,
+        "old": "Téléphone au lit", "new": "20 minutes de lecture",
+        "uses": ["tel", "maison", "montre"], "links": [2, 3, 4],
+        "sugg": "Et si le téléphone dormait dans la cuisine ? À 22 h 30, la chambre passe en lumière de lecture "
+                "et le téléphone en mode nuit. Vingt minutes de lecture remplacent le défilement.",
         "why": "Les 4 soirs sur 14 où l’écran s’est éteint avant 22 h 45, Alex s’est endormie 31 minutes plus tôt.",
         "plan": ["22 h 30 · la chambre passe en lumière de lecture",
-                 "22 h 30 · le téléphone passe en mode nuit, appels urgents permis",
+                 "22 h 30 · téléphone en mode nuit, appels urgents permis",
                  "Essai de 14 jours, puis un bilan : Alex décide de la suite"],
-        "chart": {"label": "Heure d’endormissement", "fmt": "time", "base": 48, "lo": -15, "hi": 60, "invert": True,
-                  "pts": [44, 39, 51, 30, 26, 33, 18, 41, 15, 12, 20, 8, 10, 6]},
+        "metric": "Sommeil par nuit", "goal": "objectif : 7 h", "fmt": "dur", "base": 342, "lo": 300, "hi": 480,
+        "pts": [356, 371, 349, 392, 405, 388, 414, 409, 426, 401, 431, 437, 433, 446],
         "streak": "11011110111111",
-        "streak_label": "Soirs de lecture",
-        "kpis": [
-            ("Endormissement", "{gain}", "min", "plus tôt · 7 derniers soirs"),
-            ("Écran au lit", "9", "min", "avant : 52 min"),
-            ("Lecture", "{streak}", "soirs sur 14", "objectif : 10"),
-        ],
-        "sig": {"sommeil": "Endormie 0 h 48", "maison": "Chambre allumée", "habitudes": "Écran 52 min"},
-        "after": {"sommeil": "7 h 26", "maison": "Lecture 22 h 30", "habitudes": "Série · 6 soirs"},
-        "report": [
-            ("moon", "Sommeil", "7 h 26 · 38 min de plus que la moyenne"),
-            ("book", "Lecture", "12 soirs sur 14 · série en cours : 6"),
-            ("case", "Aujourd’hui", "3 rencontres · la première à 9 h"),
-            ("nav", "Départ conseillé", "8 h 05 · chaussée glissante annoncée"),
-        ],
-        "tip": "Marche de 15 minutes à 12 h 10 ? L’agenda est libre.",
-        "tipwhy": "2 100 pas hier avant midi.",
+        "delta": "+{gainL} par nuit",
+        "kpis": [("Sommeil", "+{gain}", "min", "par nuit · 7 dernières nuits"),
+                 ("Écran au lit", "9", "min", "avant : 52 min"),
+                 ("Lecture", "{streak}", "soirs sur 14", "objectif : 10")],
     },
     {
-        "k": "tisane",
-        "tab": "Café tardif",
-        "old": "Café à 16 h 40",
-        "new": "Tisane après 15 h",
-        "uses": ["maison", "sommeil", "travail"],
-        "acts": ["maison"],
-        "signals": [
-            ("coffee", "Dernier café", "Machine à café · Maison", "16 h 40", [44, 52, 38, 60, 47, 55, 41]),
-            ("watch", "Durée du sommeil", "Montre · autorisée", "6 h 35", [52, 40, 58, 36, 47, 42, 50]),
-            ("calendar", "Rencontres après 15 h", "Agenda · lecture seule", "4 / sem.", [30, 45, 40, 55, 35, 50, 45]),
-        ],
-        "when": "Lundi · 14 h 52",
-        "sugg": "Après 15 h, la machine à café propose d’abord une tisane : même pause, même rituel, sans "
-                "caféine. Le café reste possible — il suffit de le demander.",
-        "why": "Les jours où le dernier café est pris avant 14 h, Alex dort 41 minutes de plus en moyenne (21 jours observés).",
+        "tab": "Café tardif", "best": False,
+        "old": "Café à 16 h 40", "new": "Tisane après 15 h",
+        "uses": ["maison", "montre"], "links": [1, 4],
+        "sugg": "Après 15 h, la machine à café propose d’abord une tisane : même pause, même rituel, sans caféine. "
+                "Le café reste possible — il suffit de le demander.",
+        "why": "Les jours où le dernier café est pris avant 14 h, sa récupération de nuit est 18 % meilleure (21 jours observés).",
         "plan": ["Dès 15 h · la machine propose la tisane en premier",
                  "Le café reste à un geste, sans commentaire",
                  "Essai de 14 jours, puis un bilan : Alex décide de la suite"],
-        "chart": {"label": "Durée du sommeil", "fmt": "dur", "base": 395, "lo": 360, "hi": 460, "invert": False,
-                  "pts": [392, 401, 388, 410, 415, 398, 422, 419, 430, 404, 428, 436, 431, 438]},
+        "metric": "Récupération de nuit (VFC)", "goal": "plus haut = mieux récupérée", "fmt": "ms", "base": 41, "lo": 30, "hi": 60,
+        "pts": [42, 44, 41, 46, 47, 45, 49, 48, 51, 47, 52, 53, 51, 54],
         "streak": "11011011101111",
-        "streak_label": "Après-midi à la tisane",
-        "kpis": [
-            ("Sommeil", "{gain}", "min", "de plus · 7 dernières nuits"),
-            ("Dernier café", "14 h 50", "", "avant : 16 h 40"),
-            ("Tisane", "{streak}", "après-midi sur 14", "sans effort de mémoire"),
-        ],
-        "sig": {"maison": "Café 16 h 40", "sommeil": "6 h 35", "travail": "4 rencontres PM"},
-        "after": {"maison": "Tisane 15 h 20", "sommeil": "7 h 18", "travail": "2 rencontres"},
-        "report": [
-            ("moon", "Sommeil", "7 h 18 · 36 min de plus qu’il y a deux semaines"),
-            ("coffee", "Tisane", "11 après-midi sur 14 · proposée dès 15 h"),
-            ("case", "Aujourd’hui", "2 rencontres · la dernière finit à 16 h"),
-            ("bolt", "Énergie", "Chauffe-eau décalé à 2 h · tarif plus bas"),
-        ],
-        "tip": "Coucher vers 22 h 45 ce soir ? Le réveil sonne à 6 h 30.",
-        "tipwhy": "c’est le rythme de ses 14 dernières nuits.",
+        "delta": "+{gain} ms la nuit",
+        "kpis": [("Récupération", "+{gain}", "ms", "VFC · 7 dernières nuits"),
+                 ("Dernier café", "14 h 50", "", "avant : 16 h 40"),
+                 ("Tisane", "{streak}", "après-midi sur 14", "proposée dès 15 h")],
     },
     {
-        "k": "marche",
-        "tab": "Assise tout le jour",
-        "old": "Assise 9 h par jour",
-        "new": "Pause marche aux 90 minutes",
-        "uses": ["activite", "travail", "habitudes"],
-        "acts": ["travail"],
-        "signals": [
-            ("watch", "Temps assis", "Montre · autorisée", "9 h 20", [55, 48, 60, 52, 58, 45, 57]),
-            ("calendar", "Rencontres sans pause", "Agenda · lecture seule", "3 h 40", [40, 58, 35, 50, 62, 44, 48]),
-            ("rings", "Pas par jour", "Montre · autorisée", "4 200", [42, 38, 47, 35, 40, 52, 39]),
-        ],
-        "when": "Lundi · 10 h 15",
-        "sugg": "Après 90 minutes de travail sans pause, et seulement si l’agenda est libre, JARVIS propose "
-                "8 minutes de marche. Jamais pendant une rencontre, jamais après 18 h.",
+        "tab": "Assise tout le jour", "best": False,
+        "old": "Assise 9 h par jour", "new": "Pause marche aux 90 minutes",
+        "uses": ["montre", "agenda"], "links": [0],
+        "sugg": "Après 90 minutes sans pause, et seulement si l’agenda est libre, la montre propose 8 minutes "
+                "de marche. Jamais pendant une rencontre, jamais après 18 h.",
         "why": "Les journées avec au moins trois pauses comptent 3 000 pas de plus, sans réduire le temps de travail concentré.",
         "plan": ["Après 90 minutes sans pause · rappel discret sur la montre",
                  "Seulement si l’agenda est libre, jamais après 18 h",
                  "Essai de 14 jours, puis un bilan : Alex décide de la suite"],
-        "chart": {"label": "Pas par jour", "fmt": "int", "base": 4200, "lo": 3000, "hi": 8500, "invert": False,
-                  "pts": [4310, 5120, 3980, 5800, 6240, 5010, 6650, 7020, 4400, 6890, 7310, 7120, 7480, 7650]},
+        "metric": "Pas par jour", "goal": "objectif : 7 000", "fmt": "int", "base": 4210, "lo": 2000, "hi": 9000,
+        "pts": [4310, 5120, 3980, 5800, 6240, 5010, 6650, 7020, 4400, 6890, 7310, 7120, 7480, 7650],
         "streak": "01011011011111",
-        "streak_label": "Jours avec pauses",
-        "kpis": [
-            ("Pas par jour", "+{gain}", "", "moyenne · 7 derniers jours"),
-            ("Temps assis", "−1 h 10", "", "avant : 9 h 20"),
-            ("Pauses", "{streak}", "jours sur 14", "objectif : 10"),
-        ],
-        "sig": {"activite": "4 200 pas", "travail": "3 h 40 sans pause", "habitudes": "9 h 20 assise"},
-        "after": {"activite": "7 650 pas", "travail": "Pause 10 h 30", "habitudes": "Série · 5 jours"},
-        "report": [
-            ("rings", "Activité", "Hier : 7 650 pas · objectif atteint"),
-            ("repeat", "Pauses marche", "10 jours sur 14 · aux 90 minutes"),
-            ("case", "Aujourd’hui", "Concentration de 9 h à 11 h 30 · pause à 10 h 30"),
-            ("people", "Famille", "Souper à 18 h 15 · Léa rentre à 17 h 40"),
-        ],
-        "tip": "Aller à pied à la rencontre de 14 h ? 12 minutes, temps sec.",
-        "tipwhy": "en voiture, le trajet prend 9 minutes avec le stationnement.",
+        "delta": "+{gain} pas par jour",
+        "kpis": [("Pas par jour", "+{gain}", "", "moyenne · 7 derniers jours"),
+                 ("Temps assis", "−1 h 10", "", "avant : 9 h 20"),
+                 ("Pauses", "{streak}", "jours sur 14", "objectif : 10")],
     },
 ]
 
-STEPS = ["Signaux", "Suggestion", "14 jours", "Rapport"]
-CLOCK = ["14 jours observés", None, "Jours 1 à 14", "Mardi · 6 h 30"]
-
-# Graphique (repère 560 × 190)
-CW, CH, CPAD = 560, 190, 14
-
 
 def _fmt(v, kind):
-    if kind == "time":
-        m = int(round(v)) % (24 * 60)
-        return f"{m // 60} h {m % 60:02d}"
     if kind == "dur":
         return f"{int(v) // 60} h {int(v) % 60:02d}"
+    if kind == "ms":
+        return f"{int(round(v))} ms"
     return f"{int(round(v)):,}".replace(",", " ")
 
 
-def _y(v, c):
-    t = (v - c["lo"]) / (c["hi"] - c["lo"])
-    if c["invert"]:
-        t = 1 - t
-    return CPAD + (1 - t) * (CH - 2 * CPAD)
+# ---------------------------------------------------------------------------
+# Géométrie des voies (pourcentages de la voie : gauche, largeur, haut, hauteur)
+# ---------------------------------------------------------------------------
+def _steps_bins():
+    peak = max(STEPS)
+    return [(pc(i * 30), pc(30), round(v / peak * 72, 2)) for i, v in enumerate(STEPS)]
 
 
-def _chart(h):
-    c = h["chart"]
-    n = len(c["pts"])
-    xs = [CPAD + i * (CW - 2 * CPAD) / (n - 1) for i in range(n)]
-    ys = [_y(v, c) for v in c["pts"]]
-    # Courbe lissée (Catmull-Rom → Bézier)
-    d = f"M{xs[0]:.1f} {ys[0]:.1f}"
-    for i in range(n - 1):
-        x0, y0 = (xs[i - 1], ys[i - 1]) if i else (xs[i], ys[i])
-        x1, y1, x2, y2 = xs[i], ys[i], xs[i + 1], ys[i + 1]
-        x3, y3 = (xs[i + 2], ys[i + 2]) if i + 2 < n else (x2, y2)
-        d += (f" C{x1 + (x2 - x0) / 6:.1f} {y1 + (y2 - y0) / 6:.1f} "
-              f"{x2 - (x3 - x1) / 6:.1f} {y2 - (y3 - y1) / 6:.1f} {x2:.1f} {y2:.1f}")
-    area = d + f" L{xs[-1]:.1f} {CH} L{xs[0]:.1f} {CH} Z"
-    base = c["base"]
-    last7 = sum(c["pts"][-7:]) / 7
-    gain = round(abs(base - last7), -1 if c["fmt"] == "int" else 0)
-    # Étiquettes de l'axe : la plus haute valeur affichée est toujours « la meilleure »
-    top, bottom = (c["lo"], c["hi"]) if c["invert"] else (c["hi"], c["lo"])
-    return {
-        "label": c["label"],
-        "line": d,
-        "area": area,
-        "baseY": round(_y(base, c) / CH * 100, 2),
-        "baseL": "Avant : " + _fmt(base, c["fmt"]),
-        "endX": round(xs[-1] / CW * 100, 2),
-        "endY": round(ys[-1] / CH * 100, 2),
-        "endL": _fmt(c["pts"][-1], c["fmt"]),
-        "top": _fmt(top, c["fmt"]),
-        "bottom": _fmt(bottom, c["fmt"]),
-        "gain": gain,
-    }
+def _sleep_segs():
+    out, t = [], ASLEEP
+    for st, mins in SLEEP:
+        out.append((st, pc(t), pc(mins)))
+        t += mins
+    return out
 
 
-def _spark(vals):
-    """Petite courbe de 7 jours (repère 84 × 28)."""
-    lo, hi = min(vals), max(vals)
-    pts = [(2 + i * 80 / (len(vals) - 1), 25 - (v - lo) / max(1, hi - lo) * 21) for i, v in enumerate(vals)]
+def _hrv_path():
+    lo, hi = 34, 48
+    pts = [(T("25:00") + i * 30, 15 - (v - lo) / (hi - lo) * 11) for i, v in enumerate(HRV)]
+    return "M" + " L".join(f"{x:.1f} {y:.2f}" for x, y in pts)
+
+
+def _temp_y(c):
+    return 8 + (21.8 - c) / (21.8 - 18.4) * 36  # 18,4 °C en bas de bande, 21,8 °C en haut
+
+
+def _temp_path():
+    pts = [(T(h), _temp_y(c)) for h, c in TEMP]
+    d = f"M{pts[0][0]} {pts[0][1]:.2f}"
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        mx = (x0 + x1) / 2
+        d += f" C{mx:.1f} {y0:.2f} {mx:.1f} {y1:.2f} {x1} {y1:.2f}"
+    return d
+
+
+def _light_path():
+    d = f"M0 100"
+    for a, b, lv, _room, _f in LIGHT:
+        y = 100 - lv * 46
+        d += f" L{T(a) + 4} {y:.1f} L{T(b) - 4} {y:.1f}"
+    return d + f" L{DAY} 100 Z"
+
+
+def _light_edge():
+    d = ""
+    for i, (a, b, lv, _room, _f) in enumerate(LIGHT):
+        y = 100 - lv * 46
+        d += f"{'M' if i == 0 else ' L'}{T(a) + 4} {y:.1f} L{T(b) - 4} {y:.1f}"
+    return d
+
+
+def _sun_path():
+    rise, sset = SUN
+    pts = []
+    for i in range(41):
+        x = rise + (sset - rise) * i / 40
+        pts.append((x, 70 - math.sin(math.pi * i / 40) * 60))
     return "M" + " L".join(f"{x:.1f} {y:.1f}" for x, y in pts)
 
 
+def _sit_steps():
+    a, b = T("9:00"), T("12:30")
+    return sum(v for i, v in enumerate(STEPS) if a <= i * 30 < b)
+
+
+# ---------------------------------------------------------------------------
+# Les données transmises au script
+# ---------------------------------------------------------------------------
+def _ins_data():
+    out = []
+    for i, (t, title, why, srcs, hls) in enumerate(INSIGHTS):
+        out.append({"t": T(t), "src": srcs})
+    return out
+
+
 def _habit_data(h):
-    ch = _chart(h)
+    last7 = sum(h["pts"][-7:]) / 7
+    gain = round(last7 - h["base"], -1 if h["fmt"] == "int" else 0)
+    g = f"{int(gain):,}".replace(",", " ")
+    gl = f"{int(gain) // 60} h {int(gain) % 60:02d}" if h["fmt"] == "dur" and gain >= 60 else f"{g} min"
     streak = h["streak"].count("1")
-    gain = f"{int(ch['gain']):,}".replace(",", " ")
-    kpis = [
-        {"l": l, "v": v.replace("{gain}", gain).replace("{streak}", str(streak)), "u": u, "c": c}
-        for l, v, u, c in h["kpis"]
-    ]
+    span = h["hi"] - h["lo"]
+    vals = [round((v - h["lo"]) / span, 4) for v in h["pts"]]
     return {
-        "k": h["k"], "old": h["old"], "new": h["new"], "uses": h["uses"], "acts": h["acts"],
-        "signals": [{"ic": ICONS[ic], "t": t, "src": src, "v": v, "sp": _spark(sp)} for ic, t, src, v, sp in h["signals"]],
-        "when": h["when"], "sugg": h["sugg"], "why": h["why"], "plan": h["plan"],
-        "chart": ch, "streak": h["streak"], "streakL": h["streak_label"], "kpis": kpis,
-        "sig": h["sig"], "after": h["after"],
-        "report": [{"ic": ICONS[ic], "l": l, "v": v} for ic, l, v in h["report"]],
-        "tip": h["tip"], "tipwhy": h["tipwhy"],
+        "old": fr(h["old"]), "new": fr(h["new"]), "uses": h["uses"], "links": h["links"],
+        "sugg": fr(h["sugg"]), "why": fr(h["why"]), "plan": [fr(p) for p in h["plan"]],
+        "metric": fr(h["metric"]), "goal": fr(h["goal"]),
+        "vals": vals, "streak": h["streak"],
+        "avg": round((last7 - h["lo"]) / span * 100, 2), "avgL": fr("Semaine 2 : " + _fmt(last7, h["fmt"])),
+        "base": round((h["base"] - h["lo"]) / span * 100, 2), "baseL": fr("Avant : " + _fmt(h["base"], h["fmt"])),
+        "end": fr(_fmt(h["pts"][-1], h["fmt"])), "top": fr(_fmt(h["hi"], h["fmt"])), "bottom": fr(_fmt(h["lo"], h["fmt"])),
+        "delta": fr(h["delta"].replace("{gainL}", gl).replace("{gain}", g)),
+        "kpis": [{"l": l, "v": fr(v.replace("{gain}", g).replace("{streak}", str(streak))), "u": fr(u), "c": fr(c)}
+                 for l, v, u, c in h["kpis"]],
     }
 
 
-DATA = _fr_all({
-    "habits": [_habit_data(h) for h in HABITS],
-    "nodes": {k: v for k, _n, _s, _i, v in NODES},
-    "clock": CLOCK,
-})
+def _data():
+    return {
+        "day": DAY,
+        "steps": STEPS, "inBed": IN_BED, "asleep": ASLEEP,
+        "screen": [[T(a), T(b)] for a, b, _f in SCREEN],
+        "meet": [[T(a), T(b), fr(t)] for a, b, t, _p in MEETINGS],
+        "light": [[T(a), T(b), fr(room)] for a, b, _l, room, _f in LIGHT],
+        "temp": [[T(h), c] for h, c in TEMP],
+        "sun": list(SUN),
+        "ins": _ins_data(),
+        "habits": [_habit_data(h) for h in HABITS],
+        "names": SRC_NAME,
+    }
 
 
 # ---------------------------------------------------------------------------
 # Balisage
 # ---------------------------------------------------------------------------
-def _nodes_html():
+def _pos(a, w):
+    return f"--a:{a};--w:{w}"
+
+
+def _hl_html(lane):
     out = []
-    for i, (k, name, short, ic, val) in enumerate(NODES):
-        x, y = _node_pos(i)
-        s = f' data-s="{short}"' if short != name else ""
-        up = " is-up" if math.sin(_angle(i)) < -0.5 else ""  # en haut : étiquette au-dessus, loin du rayon
+    for i, (_t, _ti, _w, _s, hls) in enumerate(INSIGHTS):
+        for ln, a, b, label in hls:
+            if ln != lane:
+                continue
+            lab = f'<em>{escape(fr(label))}</em>' if label else ""
+            out.append(f'<i class="pi-hl" data-ins="{i}" style="{_pos(pc(T(a)), pc(T(b) - T(a)))}">'
+                       f'<b>{i + 1}</b>{lab}</i>')
+    return "".join(out)
+
+
+def _grid_html():
+    return '<span class="pi-grid" aria-hidden="true">' + "".join(
+        f'<i style="--a:{pc(T(f"{h}:00"))}"></i>' for h in (9, 12, 15, 18, 21, 24, 27, 30)) + "</span>"
+
+
+def _hypno_path():
+    """Ligne en escalier de l'hypnogramme, du milieu d'un stade au suivant."""
+    d = ""
+    t = ASLEEP
+    for i, (st, mins) in enumerate(SLEEP):
+        y = STAGE_Y[st] + 5.5
+        d += (f"M{t} {y}" if i == 0 else f" V{y}") + f" H{t + mins}"
+        t += mins
+    return d
+
+
+def _lane_montre():
+    bars = "".join(f'<i style="{_pos(a, w)};--h:{h}"></i>' for a, w, h in _steps_bins() if h > 0)
+    bed = f'<span class="pi-bed" style="{_pos(pc(IN_BED), pc(ASLEEP - IN_BED))}"></span>'
+    sleep = "".join(f'<i data-st="{st}" style="{_pos(a, w)};--y:{STAGE_Y[st]}"></i>' for st, a, w in _sleep_segs())
+    night = (f'<svg class="pi-hrv" viewBox="0 0 {DAY} 100" preserveAspectRatio="none" aria-hidden="true">'
+             f'<path class="pi-hyp" d="{_hypno_path()}" vector-effect="non-scaling-stroke"/>'
+             f'<path class="pi-vfc" d="{_hrv_path()}" vector-effect="non-scaling-stroke"/></svg>')
+    return f'<span class="pi-steps">{bars}</span>{bed}{night}<span class="pi-sleep">{sleep}</span>'
+
+
+def _lane_tel():
+    return "".join(
+        f'<i class="pi-sess{" is-bad" if bad else ""}" style="{_pos(pc(T(a)), pc(T(b) - T(a)))}"></i>'
+        for a, b, bad in SCREEN
+    )
+
+
+def _lane_agenda():
+    return "".join(
+        f'<i class="pi-meet{" is-perso" if perso else ""}" style="{_pos(pc(T(a)), pc(T(b) - T(a)))}" title="{escape(fr(t))}"></i>'
+        for a, b, t, perso in MEETINGS
+    )
+
+
+def _lane_maison():
+    light = (f'<svg class="pi-light" viewBox="0 0 {DAY} 100" preserveAspectRatio="none" aria-hidden="true">'
+             f'<defs><linearGradient id="pi-light-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".5"/>'
+             f'<stop offset="1" stop-color="currentColor" stop-opacity=".06"/></linearGradient></defs>'
+             f'<path class="pi-light-a" d="{_light_path()}" fill="url(#pi-light-g)"/>'
+             f'<path class="pi-light-e" d="{_light_edge()}" vector-effect="non-scaling-stroke"/>'
+             f'<path class="pi-temp" d="{_temp_path()}" vector-effect="non-scaling-stroke"/></svg>')
+    bad = "".join(
+        f'<span class="pi-bedlight" style="{_pos(pc(T(a)), pc(T(b) - T(a)))}"></span>'
+        for a, b, _l, _r, f in LIGHT if f)
+    cups = "".join(
+        f'<span class="pi-cup{" is-bad" if b else ""}" style="--a:{pc(T(t))}">{icon("coffee")}</span>' for t, b in COFFEE)
+    temps = (f'<span class="pi-tag pi-tag-t" style="--a:{pc(T("12:00"))};--t:{_temp_y(21.2) + 7:.1f}">21,2{NBSP}°C</span>'
+             f'<span class="pi-tag pi-tag-t" style="--a:{pc(T("26:30"))};--t:{_temp_y(18.7) + 7:.1f}">18,7{NBSP}°C</span>')
+    return light + bad + cups + temps
+
+
+LANES = {"montre": _lane_montre, "tel": _lane_tel, "agenda": _lane_agenda, "maison": _lane_maison}
+FIRST_VAL = {"montre": "Sommeil · 5 h 42", "tel": "3 h 10", "agenda": "Libre", "maison": "20,5 °C · Éteinte"}
+
+
+def _rows_html():
+    out = []
+    for k, name, sub, ic in SOURCES:
         out.append(
-            f'<div class="vi-node{up}" data-node="{k}" style="--x:{x / 10:.2f}%;--y:{y / 10:.2f}%">'
-            f'<span class="vi-dot">{icon(ic)}</span>'
-            f'<b{s}>{name}</b><small data-vi-v>{escape(fr(val))}</small></div>'
+            f'<div class="pi-row" data-src="{k}">'
+            f'<div class="pi-src"><span class="pi-src-ic">{icon(ic)}</span>'
+            f'<span class="pi-src-t"><b>{name}</b><small>{escape(fr(sub))}</small></span>'
+            f'<span class="pi-src-v" data-pi-v>{escape(fr(FIRST_VAL[k]))}</span>'
+            f'<button type="button" class="pi-sw" role="switch" aria-checked="true" '
+            f'aria-label="Permission · {name}"><i></i></button></div>'
+            f'<span class="pi-conn" aria-hidden="true"><i></i><i></i><b></b></span>'
+            f'<div class="pi-lane pi-lane-{k}">{_grid_html()}{LANES[k]()}{_hl_html(k)}'
+            f'<span class="pi-cover" aria-hidden="true"></span>'
+            f'<span class="pi-off">{icon("lock")}Permission retirée · rien n’est reçu</span></div></div>'
         )
     return "".join(out)
 
 
-def _spokes_svg():
+def _sky_html():
+    rise, sset = SUN
+    return (
+        f'<svg viewBox="0 0 {DAY} 100" preserveAspectRatio="none" aria-hidden="true">'
+        f'<defs><linearGradient id="pi-sky-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".34"/>'
+        f'<stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>'
+        f'<path class="pi-sky-a" d="{_sun_path()} L{sset} 70 L{rise} 70 Z" fill="url(#pi-sky-g)"/>'
+        f'<path class="pi-sky-l" d="{_sun_path()}" vector-effect="non-scaling-stroke"/>'
+        f'<path class="pi-horizon" d="M0 70 H{DAY}" vector-effect="non-scaling-stroke"/></svg>'
+        f'<span class="pi-sky-t" style="--a:{pc(rise)}"><i>Lever </i>6{NBSP}h{NBSP}40</span>'
+        f'<span class="pi-sky-t" style="--a:{pc(sset)}"><i>Coucher </i>16{NBSP}h{NBSP}32</span>'
+        f'<span class="pi-sun" aria-hidden="true"><i></i></span>'
+    )
+
+
+def _axis_html():
+    ticks = "".join(
+        f'<span style="--a:{pc(T(f"{h}:00"))}">{h % 24}{NBSP}h</span>' for h in (9, 12, 15, 18, 21, 24, 27, 30))
+    marks = "".join(
+        f'<b class="pi-mark" data-ins="{i}" style="--a:{pc(T(t))}">{i + 1}</b>' for i, (t, *_r) in enumerate(INSIGHTS))
+    return ticks + marks
+
+
+def _feed_html():
     out = []
-    for i, (k, *_r) in enumerate(NODES):
-        d = _spoke(i)
+    sit = f"{_sit_steps()}"
+    for i in reversed(range(len(INSIGHTS))):
+        t, title, why, srcs, _h = INSIGHTS[i]
+        chips = "".join(f'<span data-src="{s}">{SRC_NAME[s]}</span>' for s in srcs)
         out.append(
-            f'<g data-node="{k}" style="--d:{(i * 0.37) % 2.6:.2f}s">'
-            f'<path class="vi-spoke" d="{d}"/>'
-            f'<path class="vi-pulse" d="{d}" pathLength="100"/>'
-            f'<path class="vi-pulse vi-pulse-b" d="{d}" pathLength="100"/></g>'
+            f'<li class="pi-ins" data-ins="{i}"><span class="pi-ins-n">{i + 1}</span>'
+            f'<div class="pi-ins-b"><p class="pi-ins-h"><time>{clock(T(t))}</time><b>{escape(fr(title))}</b></p>'
+            f'<p class="pi-ins-why"><span>Pourquoi{NBSP}:</span> {escape(fr(why.replace("{sit}", sit)))}</p>'
+            f'<p class="pi-ins-off">Non relié{NBSP}: une permission est retirée. JARVIS ne devine pas.</p>'
+            f'<p class="pi-chips">{chips}</p></div></li>'
         )
     return "".join(out)
 
 
-def _signals_html(d):
-    return "".join(
-        f'<li class="vi-sig" style="--i:{i}"><span class="vi-ic">'
-        f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" '
-        f'stroke-linejoin="round" aria-hidden="true" data-vi="sig-ic">{s["ic"]}</svg></span>'
-        f'<span class="vi-sig-t"><b data-vi="sig-t">{escape(s["t"])}</b><small data-vi="sig-src">{escape(s["src"])}</small></span>'
-        f'<svg class="vi-spark" viewBox="0 0 84 28" aria-hidden="true"><path data-vi="sig-sp" d="{s["sp"]}" pathLength="1"/></svg>'
-        f'<span class="vi-sig-v" data-vi="sig-v">{escape(s["v"])}</span></li>'
-        for i, s in enumerate(d["signals"])
-    )
+def _swap_html(h, d):
+    q = lambda s: f"«{NBSP}{s}{NBSP}»"  # noqa: E731
+    tabs = "".join(
+        f'<button type="button" data-habit="{i}" aria-pressed="{"true" if i == 0 else "false"}">{escape(fr(x["tab"]))}'
+        f'{"<em>Plus grand effet</em>" if x["best"] else ""}</button>'
+        for i, x in enumerate(HABITS))
+    chips = "".join(f'<span data-src="{s}">{SRC_NAME[s]}</span>' for s in h["uses"])
+    plan = "".join(f'<li style="--i:{i}">{escape(p)}</li>' for i, p in enumerate(d["plan"]))
+    return f"""<section class="pi-swap" data-pi="swap" data-state="ready" aria-label="Proposition du matin">
+        <div class="pi-swap-head"><p class="pi-k">{icon("spark")}<span>Proposition du matin · <span class="pi-nw">mardi 6{NBSP}h{NBSP}30</span></span></p>
+          <span class="pi-chip">Bien-être · aucun diagnostic</span></div>
+        <div class="pi-tabs" role="group" aria-label="Choisir l’habitude à remplacer">{tabs}</div>
+        <p class="pi-swap-big"><s data-pi="old">{q(escape(d["old"]))}</s><span class="pi-arrow" aria-hidden="true">→</span><b data-pi="new">{q(escape(d["new"]))}</b></p>
+        <p class="pi-sugg" data-pi="sugg">{escape(d["sugg"])}</p>
+        <div class="pi-why"><p><b>Pourquoi{NBSP}?</b> <span data-pi="why">{escape(d["why"])}</span></p>
+          <p class="pi-chips" data-pi="uses">{chips}</p></div>
+        <ul class="pi-plan" data-pi="plan">{plan}</ul>
+        <div class="pi-ask">
+          <button type="button" class="pi-yes" data-pi="yes">Approuver pour 14{NBSP}jours</button>
+          <button type="button" class="pi-no" data-pi="no">Pas maintenant</button>
+        </div>
+        <p class="pi-wait">{icon("moon")}<span>Proposition prête au réveil · JARVIS observe encore la journée</span></p>
+        <p class="pi-ok">{icon("check")}<span><b data-pi="ok-who">Approuvé par Alex</b> · révocable en un geste, à tout moment</span></p>
+        <p class="pi-declined">Rien n’a changé. JARVIS ne reproposera pas cette idée avant 7{NBSP}jours.
+          <button type="button" data-pi="again">Revoir la proposition</button></p>
+        <p class="pi-blocked">{icon("lock")}<span>Cette proposition a besoin de{NBSP}: <b data-pi="need">Téléphone</b>.
+          Permission retirée{NBSP}: JARVIS ne propose rien sans elle.</span></p>
+      </section>"""
 
 
-def _streak_html(d):
-    return "".join(f'<i class="{"is-ok" if c == "1" else ""}" style="--i:{i}"></i>' for i, c in enumerate(d["streak"]))
-
-
-def _kpis_html(d):
-    return "".join(
-        f'<div class="vi-kpi" style="--i:{i}"><span class="vi-kpi-l" data-vi="kpi-l">{escape(k["l"])}</span>'
-        f'<b><span data-vi="kpi-v">{escape(k["v"])}</span> <small data-vi="kpi-u">{escape(k["u"])}</small></b>'
-        f'<span class="vi-kpi-c" data-vi="kpi-c">{escape(k["c"])}</span></div>'
-        for i, k in enumerate(d["kpis"])
-    )
-
-
-def _report_html(d):
-    return "".join(
-        f'<li style="--i:{i}"><span class="vi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-        f'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-vi="rep-ic">{r["ic"]}</svg></span>'
-        f'<span class="vi-rep-l" data-vi="rep-l">{escape(r["l"])}</span><span class="vi-rep-v" data-vi="rep-v">{escape(r["v"])}</span></li>'
-        for i, r in enumerate(d["report"])
-    )
+def _week_html(d):
+    bars = "".join(f'<i style="--v:{v};--i:{i}"></i>' for i, v in enumerate(d["vals"]))
+    dots = "".join(f'<i class="{"is-ok" if c == "1" else ""}" style="--i:{i}"></i>' for i, c in enumerate(d["streak"]))
+    kpis = "".join(
+        f'<div class="pi-kpi" style="--i:{i}"><span class="pi-kpi-l" data-pi="kpi-l">{escape(k["l"])}</span>'
+        f'<b><span data-pi="kpi-v">{escape(k["v"])}</span> <small data-pi="kpi-u">{escape(k["u"])}</small></b>'
+        f'<span class="pi-kpi-c" data-pi="kpi-c">{escape(k["c"])}</span></div>'
+        for i, k in enumerate(d["kpis"]))
+    return f"""<section class="pi-week" data-pi="week" data-state="on" aria-label="Progression de l’essai">
+        <div class="pi-week-head"><p class="pi-k">Progression · essai de 14{NBSP}jours</p>
+          <span class="pi-delta" data-pi="delta">{escape(d["delta"])}</span></div>
+        <p class="pi-metric"><b data-pi="metric">{escape(d["metric"])}</b> <small data-pi="goal">{escape(d["goal"])}</small></p>
+        <div class="pi-chart">
+          <div class="pi-yax" aria-hidden="true"><span data-pi="ax-t">{d["top"]}</span><span data-pi="ax-b">{d["bottom"]}</span></div>
+          <div class="pi-plot">
+            <span class="pi-base" data-pi="base" style="--y:{d["base"]}"><span data-pi="base-l">{d["baseL"]}</span></span>
+            <div class="pi-bars" data-pi="bars" style="--b:{d["base"]}">{bars}</div>
+            <span class="pi-avg" data-pi="avg" style="--y:{d["avg"]}"><span data-pi="avg-l">{d["avgL"]}</span></span>
+            <span class="pi-end" data-pi="end" style="--e:{round(d["vals"][-1] * 100, 2)}">{d["end"]}</span>
+            <p class="pi-ghost">L’essai commence avec votre accord.</p>
+            <p class="pi-paused">{icon("lock")}Suivi en pause · permission retirée</p>
+          </div>
+          <span class="pi-streak" data-pi="streak" aria-hidden="true">{dots}</span>
+          <div class="pi-days" aria-hidden="true"><span>Jour 1</span><span>Jour 7</span><span>Jour 14</span></div>
+        </div>
+        <div class="pi-kpis">{kpis}</div>
+      </section>"""
 
 
 def html():
-    d = DATA["habits"][0]
-    c = d["chart"]
-    tabs = "".join(
-        f'<button type="button" data-habit="{i}" aria-pressed="{"true" if i == 0 else "false"}">{escape(fr(h["tab"]))}</button>'
-        for i, h in enumerate(HABITS)
-    )
-    cur = ' aria-current="step"'
-    steps = "".join(
-        f'<li><button type="button" data-step="{i}"{cur if i == 0 else ""}>'
-        f'<i>{i + 1:02d}</i><span>{s}</span><em class="vi-bar" aria-hidden="true"></em></button></li>'
-        for i, s in enumerate(STEPS)
-    )
-    q = lambda s: f"«{NBSP}{s}{NBSP}»"  # noqa: E731
-    plan = "".join(f'<li style="--i:{i}">{escape(x)}</li>' for i, x in enumerate(d["plan"]))
-    return f"""<div class="demo-shell vi" data-demo="vie" data-rev>
-  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · Ma vie</b>
-    <span class="vi-clock" data-vi="clock">{fr(CLOCK[0])}</span><span class="tag tag-sim">Démo · données fictives</span></div>
-  <div class="demo-body vi-body">
-    <div class="vi-stage">
-      <div class="vi-orbit" data-vi="orbit">
-        <svg class="vi-svg" viewBox="0 0 1000 1000" aria-hidden="true">
-          <defs>
-            <radialGradient id="vi-halo"><stop offset="0" stop-color="currentColor" stop-opacity=".22"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></radialGradient>
-          </defs>
-          <circle class="vi-halo" cx="500" cy="500" r="330" fill="url(#vi-halo)"/>
-          <circle class="vi-ring-out" cx="500" cy="500" r="{R_NODE}"/>
-          <g class="vi-spokes">{_spokes_svg()}</g>
-          <circle class="vi-hub-ring" cx="500" cy="500" r="{R_HUB}"/>
-          <g class="vi-hub-ticks"><circle cx="500" cy="500" r="{R_HUB + 18}" pathLength="360"/></g>
-          <circle class="vi-wave" cx="500" cy="500" r="{R_ME + 6}"/>
-          <circle class="vi-wave vi-wave-b" cx="500" cy="500" r="{R_ME + 6}"/>
-        </svg>
-        <div class="vi-me"><img src="/media/vision/alex-portrait.webp" alt="Alex, la personne au centre de la démonstration" width="320" height="320" loading="lazy" decoding="async"></div>
-        <p class="vi-hub-label">{icon("lock")}<span><b>Hub privé</b> · à la maison</span></p>
-        {_nodes_html()}
-      </div>
+    h0 = HABITS[0]
+    d0 = _habit_data(h0)
+    return f"""<div class="demo-shell pi" data-demo="vie" data-rev>
+  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · Personal Intelligence</b>
+    <span class="pi-clock" data-pi="clock">Mardi · 6{NBSP}h{NBSP}30</span><span class="tag tag-sim">Démo · données fictives</span></div>
+  <div class="demo-body pi-body" data-pi="body">
+    <div class="pi-top">
+      <section class="pi-day" data-pi="day" aria-label="La journée d’Alex">
+        <div class="pi-day-head">
+          <div class="pi-who"><img src="/media/vision/alex-portrait.webp" alt="Alex, la personne de la démonstration" width="320" height="320" loading="lazy" decoding="async">
+            <p><b>Journée d’Alex</b><span>Lundi 2{NBSP}novembre · d’un réveil à l’autre</span></p></div>
+          <div class="pi-now">
+            <div class="pi-ctl"><button type="button" data-pi="play" aria-label="Mettre en pause">{icon("pause", "is-pause")}{icon("play", "is-play")}</button>
+              <button type="button" data-pi="replay" aria-label="Rejouer la journée">{icon("replay")}</button></div>
+            <p><b data-pi="time">6{NBSP}h{NBSP}30</b><span data-pi="date">Mardi 3{NBSP}novembre</span></p>
+          </div>
+        </div>
+        <div class="pi-tl" data-pi="tl">
+          <div class="pi-row pi-row-sky">
+            <p class="pi-src-k">{icon("lock")}<span>Sources · <b data-pi="count">4 sur 4</b></span></p>
+            <span></span>
+            <div class="pi-sky" data-pi="sky" role="slider" tabindex="0" aria-label="Heure de la journée d’Alex"
+              aria-valuemin="0" aria-valuemax="{DAY}" aria-valuenow="{DAY}" aria-valuetext="Mardi, 6 h 30">{_sky_html()}</div>
+          </div>
+          {_rows_html()}
+          <div class="pi-row pi-row-axis"><span></span><span></span><div class="pi-axis" aria-hidden="true">{_axis_html()}</div></div>
+        </div>
+        <p class="pi-hub">{icon("lock")}<span>Analysé sur le <b>Hub privé</b>, à la maison · rien ne quitte la maison</span></p>
+      </section>
+      <section class="pi-feed" aria-label="Ce que JARVIS relie">
+        <div class="pi-feed-head"><p class="pi-k">{icon("spark")}JARVIS relie les points</p><span data-pi="links">5 liens</span></div>
+        <p class="pi-feed-empty">JARVIS observe la journée. Chaque lien apparaîtra ici, avec sa raison et ses sources.</p>
+        <ol class="pi-ins-list" data-pi="feed">{_feed_html()}</ol>
+      </section>
     </div>
-
-    <div class="vi-panel">
-      <div class="vi-coach-head">
-        <p class="vi-k">Coach d’habitudes</p>
-        <div class="vi-habits" role="group" aria-label="Choisir l’habitude à remplacer">{tabs}</div>
-      </div>
-      <p class="vi-swap"><span class="vi-old" data-vi="old">{q(escape(fr(d["old"])))}</span>
-        <span class="vi-arrow" aria-hidden="true">→</span>
-        <span class="vi-new" data-vi="new">{q(escape(fr(d["new"])))}</span></p>
-      <ol class="vi-steps" aria-label="Étapes">{steps}</ol>
-
-      <div class="vi-views">
-        <section class="vi-view is-on" data-view="0" aria-label="Signaux">
-          <p class="vi-k">Ce que JARVIS remarque · avec permission</p>
-          <ul class="vi-sigs">{_signals_html(d)}</ul>
-          <p class="vi-note">{icon("lock")}<span>Sources autorisées une par une · analysées sur le Hub, rien ne quitte la maison</span></p>
-        </section>
-
-        <section class="vi-view" data-view="1" aria-label="Suggestion">
-          <div class="vi-msg">
-            <p class="vi-k">{icon("spark")}JARVIS propose · <span data-vi="when">{fr(d["when"])}</span></p>
-            <p class="vi-sugg" data-vi="sugg">{escape(d["sugg"])}</p>
-            <p class="vi-why"><b>Pourquoi{NBSP}?</b> <span data-vi="why">{escape(d["why"])}</span></p>
-          </div>
-          <div class="vi-plan">
-            <p class="vi-k">Si Alex approuve</p>
-            <ul data-vi="plan">{plan}</ul>
-          </div>
-          <div class="vi-ask" data-vi="ask">
-            <button type="button" class="vi-yes" data-vi="yes">Approuver pour 14 jours</button>
-            <button type="button" class="vi-no" data-vi="no">Pas maintenant</button>
-          </div>
-          <p class="vi-ok" data-vi="ok" hidden>{icon("check")}<span><b data-vi="ok-who">Approuvé par Alex</b> · révocable en un geste, à tout moment</span></p>
-          <p class="vi-declined" data-vi="declined" hidden>Rien n’a changé. JARVIS ne reproposera pas cette idée avant 7{NBSP}jours.
-            <button type="button" data-vi="again">Revoir la suggestion</button></p>
-        </section>
-
-        <section class="vi-view" data-view="2" aria-label="14 jours">
-          <div class="vi-chart-head"><p class="vi-k" data-vi="chart-l">{escape(c["label"])}</p>
-            <span class="vi-legend"><i aria-hidden="true"></i><span data-vi="streak-l">{escape(d["streakL"])}</span></span></div>
-          <div class="vi-chart">
-            <div class="vi-yax" aria-hidden="true"><span data-vi="ax-t">{c["top"]}</span><span data-vi="ax-b">{c["bottom"]}</span></div>
-            <div class="vi-plot">
-              <svg viewBox="0 0 {CW} {CH}" aria-hidden="true">
-                <defs><linearGradient id="vi-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".24"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
-                <path class="vi-grid" d="M0 {CPAD} H{CW} M0 {CH // 2} H{CW} M0 {CH - CPAD} H{CW}"/>
-                <path class="vi-area" data-vi="area" d="{c["area"]}" fill="url(#vi-area)"/>
-                <path class="vi-line" data-vi="line" d="{c["line"]}" pathLength="1"/>
-              </svg>
-              <span class="vi-base" data-vi="base" style="--y:{c["baseY"]}%"><span data-vi="base-l">{c["baseL"]}</span></span>
-              <span class="vi-end" data-vi="end" style="--x:{c["endX"]}%;--y:{c["endY"]}%"><span data-vi="end-l">{c["endL"]}</span></span>
-            </div>
-            <span class="vi-dots" data-vi="dots" aria-hidden="true">{_streak_html(d)}</span>
-            <div class="vi-days" aria-hidden="true"><span>Jour 1</span><span>Jour 7</span><span>Jour 14</span></div>
-          </div>
-          <div class="vi-kpis" data-vi="kpis">{_kpis_html(d)}</div>
-        </section>
-
-        <section class="vi-view" data-view="3" aria-label="Rapport du matin">
-          <div class="vi-report">
-            <div class="vi-rep-head"><p class="vi-k">Rapport du matin</p><span>Matin · Soir · Semaine</span></div>
-            <p class="vi-hello">Bonjour Alex.</p>
-            <ul class="vi-rep" data-vi="rep">{_report_html(d)}</ul>
-            <div class="vi-tip">
-              <p><b>Suggestion du jour.</b> <span data-vi="tip">{escape(d["tip"])}</span></p>
-              <p class="vi-tip-why">Pourquoi{NBSP}: <span data-vi="tipwhy">{escape(d["tipwhy"])}</span></p>
-              <button type="button" data-vi="tip-add">Ajouter à l’agenda</button>
-            </div>
-          </div>
-        </section>
-      </div>
-      <div class="vi-erased" data-vi="erased" hidden>
-        {icon("erase")}
-        <p><b>Données de la démo effacées.</b> Sur un vrai Hub{NBSP}: un seul geste, aucune copie
-        ailleurs, une ligne au journal pour le prouver.</p>
-        <button type="button" data-vi="restart">Recommencer la démo</button>
-      </div>
+    <div class="pi-bottom">
+      {_swap_html(h0, d0)}
+      {_week_html(d0)}
+    </div>
+    <div class="pi-erased" data-pi="erased" hidden>
+      {icon("erase")}
+      <p><b>Données de la démo effacées.</b> Sur un vrai Hub{NBSP}: un seul geste, aucune copie
+      ailleurs, une ligne au journal pour le prouver.</p>
+      <button type="button" data-pi="restart">Recommencer la démo</button>
     </div>
   </div>
-  <div class="vi-foot">
-    <ul class="vi-rules">
-      <li>{icon("spark")}Chaque suggestion est expliquée</li>
+  <div class="pi-foot">
+    <ul class="pi-rules">
+      <li>{icon("spark")}Chaque lien est expliqué</li>
       <li>{icon("check")}Rien ne se fait sans votre accord</li>
-      <li>{icon("lock")}Données gardées chez vous, effaçables</li>
+      <li>{icon("lock")}Une permission par source, révocable</li>
     </ul>
-    <button type="button" class="vi-erase" data-vi="erase">{icon("erase")}<span>Effacer les données</span></button>
+    <button type="button" class="pi-erase" data-pi="erase">{icon("erase")}<span>Effacer les données</span></button>
   </div>
-  <p class="vi-sr" aria-live="polite" data-vi="live"></p>
-  <script type="application/json" data-vi="data">{json.dumps(DATA, ensure_ascii=False)}</script>
+  <p class="pi-sr" aria-live="polite" data-pi="live"></p>
+  <script type="application/json" data-pi="data">{json.dumps(_data(), ensure_ascii=False)}</script>
 </div>
-<p class="demo-hint">Choisissez une habitude · approuvez ou refusez · bien-être seulement, aucun diagnostic · tout est fictif</p>"""
+<p class="demo-hint">Retirez une permission · faites glisser la journée · approuvez ou refusez · bien-être seulement, aucun diagnostic · tout est fictif</p>"""

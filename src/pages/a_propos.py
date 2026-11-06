@@ -14,10 +14,10 @@ PAGE = {
   <div class="bg"><img src="/media/concept/jarvis-life-context-v3.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
     <p class="eyebrow" data-rev>À propos</p>
-    <h1 data-rev>Construire le lien entre l’idée <em>et le réel.</em></h1>
-    <p class="lead" data-rev>Je m’appelle James Laplume. Je développe JARVIS comme une
-    plateforme d’intégration et de recherche appliquée pour les environnements intelligents,
-    l’IA privée et l’automatisation.</p>
+    <h1 data-rev>Rendre les gens libres, <em>par la technologie.</em></h1>
+    <p class="lead" data-rev>Je m’appelle James Laplume. La liberté est ma valeur la plus forte.
+    Je développe JARVIS pour la rendre concrète : du temps libéré, le contrôle de sa vie en toute
+    simplicité, et une sécurité privée qui protège sans surveiller.</p>
     <div class="meta" data-rev>
       <span class="chip">Québec, Canada</span>
       <span class="chip">Prototypes et preuves</span>
@@ -28,26 +28,26 @@ PAGE = {
 
 <section class="statement">
   <p class="eyebrow" data-rev>Pourquoi ce projet</p>
-  <h2 data-rev style="margin-top:1.2rem">La technologie devrait augmenter notre capacité
-  d’agir,<br><em>pas notre charge mentale.</em></h2>
+  <h2 data-rev>La technologie devrait libérer du temps,<br><em>pas en voler.</em></h2>
   <p data-rev>Les bons appareils, logiciels et modèles existent souvent déjà. Mon travail
   consiste à comprendre le système complet, construire les liens manquants et vérifier dans
   le réel que l’ensemble demeure utile, compréhensible et contrôlable. JARVIS est la
-  plateforme. Le laboratoire mobile JARVIS est le premier grand terrain de preuve.</p>
+  plateforme. Le laboratoire mobile JARVIS est le premier grand terrain de preuve. À terme,
+  JARVIS Private Systems veut devenir une entreprise de sécurité privée, avec la même exigence :
+  protéger les lieux et les personnes, en expliquant toujours ce qui se passe.</p>
 </section>
 
 <section class="sect alt">
   <div class="cards">
     <article class="card" data-rev>
-      <small>01 · Clarté</small>
-      <h3>Dire ce qui est réel.</h3>
-      <p>Les concepts, prototypes, validations et offres futures sont identifiés séparément.</p>
+      <small>01 · Liberté</small>
+      <h3>Rendre du temps et du contrôle.</h3>
+      <p>Ce qui se répète se fait seul; ce qui compte reste entre vos mains.</p>
     </article>
     <article class="card" data-rev>
-      <small>02 · Curiosité</small>
-      <h3>Comprendre le système complet.</h3>
-      <p>Une panne ou un besoin ne respecte pas les frontières entre logiciel, réseau et
-      matériel.</p>
+      <small>02 · Clarté</small>
+      <h3>Dire ce qui est réel.</h3>
+      <p>Les concepts, prototypes, validations et offres futures sont identifiés séparément.</p>
     </article>
     <article class="card" data-rev>
       <small>03 · Contrôle</small>
@@ -62,7 +62,7 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Collaborations recherchées</p>
-      <h2 style="margin-top:1rem">Des regards exigeants et <em>des terrains réels.</em></h2>
+      <h2>Des regards exigeants et <em>des terrains réels.</em></h2>
     </div>
     <div class="side" data-rev>
       <p>Le projet peut bénéficier de partenaires en recherche, énergie, véhicules, bâtiment,

@@ -1,10 +1,11 @@
 # Solution 01 — Environnements intelligents. PAGE VEDETTE (sur mesure).
-# Seule page de solution hors gabarit : journée interactive, module Éclairage
-# (concepts BouLance de James), plan de propriété et caméras.
+# Seule page de solution hors gabarit : la démo « Environnements » (un seul modèle de logiciel
+# pour BouLance, maison, chalet, entreprise, atelier, ferme, bateau et avion, dans JARVIS App),
+# journée interactive et caméras. Données de la démo : src/demos/env.py.
 
 import json
 
-from demos import ambiances, coquille, maison
+from demos import coquille, env
 from pages._solution import clair_section
 
 MOMENTS = {
@@ -82,7 +83,7 @@ PAGE = {
     "title": "Environnements intelligents | Solutions JARVIS",
     "description": "Faire travailler ensemble les technologies d’un lieu, sans rendre son utilisation compliquée.",
     "og_image": "/media/solutions/environnements-intelligents.webp",
-    "assets": ["coquille", "maison", "ambiances"],
+    "assets": ["coquille", "env"],
     "content": f"""
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
@@ -103,12 +104,13 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Essayez · démonstration interactive</p>
-      <h2>Touchez une pièce. <em>Elle vous répond.</em></h2>
+      <h2>Un seul logiciel. <em>Tous vos lieux.</em></h2>
     </div>
-    <p data-rev>Choisissez une ambiance ou une pièce : la lumière, le chauffage, les stores et les
-    verrous se règlent sous vos yeux. Chaque commande est envoyée, puis confirmée.</p>
+    <p data-rev>BouLance, maison, chalet, entreprise, atelier, ferme, bateau ou avion : les mêmes
+    sections et les mêmes gestes, seules les données changent. Chaque commande est envoyée, puis
+    confirmée. Les batteries de BouLance sont réelles.</p>
   </div>
-  {coquille.html("environnements-intelligents", maison.html())}
+  {coquille.html("environnements-intelligents", env.html())}
 </section>
 
 <section class="sect alt">
@@ -120,7 +122,6 @@ PAGE = {
     <p data-rev>« Bonsoir, James. Installez-vous. La soirée est à vous. » Chaque pièce, chaque
     ambiance, chaque nuance — pensées pour être belles ET honnêtes.</p>
   </div>
-  {ambiances.html("Salon")}
   <div class="cards" style="margin-top:2.6rem">
     <article class="card" data-rev>
       <small>Règle 01</small>

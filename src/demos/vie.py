@@ -134,7 +134,7 @@ INSIGHTS = [
     ("24:31", "52 minutes d’écran au lit",
      "Téléphone actif de 23 h 39 à 0 h 31, lumière de la chambre allumée tout ce temps.",
      ["tel", "maison"], [("tel", "23:39", "24:31", "Au lit"), ("maison", "23:35", "24:31", "")]),
-    ("25:20", "Endormie 17 minutes après l’écran",
+    ("25:40", "Endormie 17 minutes après l’écran",
      "Écran éteint à 0 h 31, sommeil à 0 h 48 : le même écart que 11 soirs sur 14.",
      ["montre", "tel"], [("montre", "24:31", "24:48", "")]),
     ("30:30", "Nuit de 5 h 42",

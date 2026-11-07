@@ -582,6 +582,8 @@
   [data-demo="vie"] .pi-hl { min-width: 1.3rem; border-radius: 6px; }
   [data-demo="vie"] .pi-hl b { width: 1rem; height: 1rem; left: 2px; top: 2px; font-size: .7rem; }
   [data-demo="vie"] .pi-cup { width: 18px; height: 18px; }
+  [data-demo="vie"] .pi-mark { width: 1rem; height: 1rem; margin-left: -.5rem; }
+  [data-demo="vie"] .pi-mark:last-of-type { margin-left: -1rem; }
   [data-demo="vie"] .pi-cup svg { width: 11px; height: 11px; }
   [data-demo="vie"] .pi-hub { font-size: .75rem; }
   [data-demo="vie"] .pi-feed { padding: 1.1rem .85rem 1rem; }

@@ -271,6 +271,11 @@
     persist();
   }
 
+  /* État initial annoncé au cadre (compte « x / y allumées »), sans rien envoyer */
+  function announce(k) {
+    document.dispatchEvent(new CustomEvent("lum:change", { detail: { env: k, on: onCount(k), total: env(k).ctrl.length } }));
+  }
+
   /* ---------------------------------------------------------------- transactions (03, 04, 05) */
   function txRun(k, p) {
     /* p = { kind: amb|zone|compose|config|restore, title, amb, zone, cfg, changes, origin, prevLabel } */
@@ -731,12 +736,18 @@
 
   /* ================================================================ SECTION COMPLÈTE */
   var INST = [];
-  function mountFull(el, k, api) {
+  /* Le module vit dans son propre élément, sans toucher aux styles du conteneur fourni */
+  function rootIn(host, cls) {
+    var r = document.createElement("div");
+    r.className = cls;
+    host.appendChild(r);
+    return r;
+  }
+  function mountFull(host, k, api) {
     data(); defs();
-    unmount(el);
-    var e = env(k);
-    var I = { el: el, k: k, e: e, api: api || {}, scr: { n: "home" }, hist: [], view: "pieces", filter: "", q: "", favOnly: false, parts: {}, dlg: null, saveOpen: true, timers: [] };
-    el.classList.add("lu");
+    unmount(host);
+    var e = env(k), el = rootIn(host, "lu");
+    var I = { host: host, el: el, k: k, e: e, api: api || {}, scr: { n: "home" }, hist: [], view: "pieces", filter: "", q: "", favOnly: false, parts: {}, dlg: null, saveOpen: true, timers: [] };
     el.setAttribute("data-lu-env", k);
     I.queue = function () {
       if (I.raf) return;
@@ -750,6 +761,7 @@
     SUBS.push(I);
     INST.push(I);
     render(I);
+    announce(k);
     return I;
   }
   function live(I) {
@@ -757,17 +769,16 @@
     I.io = new IntersectionObserver(function (es) { es.forEach(function (x) { I.el.classList.toggle("is-live", x.isIntersecting); }); });
     I.io.observe(I.el);
   }
-  function unmount(el) {
+  function unmount(host) {
     INST.slice().forEach(function (I) {
-      if (I.el !== el) return;
+      if (I.host !== host) return;
       if (I.raf) cancelAnimationFrame(I.raf);
       I.timers.forEach(function (f) { f(); });
       if (I.ro) I.ro.disconnect();
       if (I.io) I.io.disconnect();
       SUBS.splice(SUBS.indexOf(I), 1);
       INST.splice(INST.indexOf(I), 1);
-      el.innerHTML = "";
-      el.classList.remove("lu", "lu-mini-host", "is-live");
+      if (I.el.parentNode === host) host.removeChild(I.el);
     });
   }
   function fitAll(I) { [].forEach.call(I.el.querySelectorAll(".lu-plan"), function (p) { fit(p, I.e); }); }
@@ -843,6 +854,9 @@
     });
     fitAll(I);
     paintAll(I);
+    /* Un dialogue ouvert reçoit le focus (clavier et lecteurs d'écran) */
+    var dlg = I.el.querySelector(".lu-dlg");
+    if (dlg && !dlg.contains(document.activeElement)) { var fb = dlg.querySelector(".lu-btn-pri") || dlg.querySelector("button"); if (fb) fb.focus({ preventScroll: true }); }
     if (stills.length) requestAnimationFrame(function () { requestAnimationFrame(function () { stills.forEach(function (p) { p.classList.remove("lu-still"); }); }); });
   }
   function fkey(x) { return ["data-a", "data-r", "data-q", "data-n", "data-x", "data-v"].map(function (n) { return x.getAttribute(n) || ""; }).join("|"); }
@@ -999,17 +1013,19 @@
 
   /* 03-04 : Détail d'une zone */
   SCREENS.zone = function (I) {
-    var e = I.e, z = e.Z[I.scr.z];
+    var e = I.e, z = e.Z[I.scr.z], ctrl = e.zl[z.k].some(function (l) { return l.kind !== "regl"; });
     if (I.scr.apart == null) I.scr.apart = false;
     var h = '<button type="button" class="lu-back" data-a="back">' + ic("left") + "<span>Toutes les lumières</span></button>";
     h += '<header class="lu-head lu-head-z"><div class="lu-titlez"><h2 class="lu-h1">' + esc(z.name) + "</h2>" + part(I, "ztag", function () {
       return '<p class="lu-sub">' + esc(I.scr.apart && z.tagApart ? z.tagApart : z.tag) + "</p>";
-    }) + '</div><div class="lu-acts"><button type="button" class="lu-btn" data-a="compose" data-v="' + z.k + '">Choisir des lumières</button></div></header>';
+    }) + "</div>" + (ctrl ? '<div class="lu-acts"><button type="button" class="lu-btn" data-a="compose" data-v="' + z.k + '">Choisir des lumières</button></div>' : "") + "</header>";
     h += '<div class="lu-zgrid"><div class="lu-hero lu-rim" data-src="zprev">' + (e.key === "boulance" ? phHTML(e, z, V(I, "zprev"), "l") : planHTML(e, "zprev", { crop: "zone:" + z.k, fill: true })) +
       '<i class="lu-hero-shade" aria-hidden="true"></i>' + part(I, "zcap", function () { return heroCap(I, z); }, "div", "lu-hero-cap") + "</div>" +
       '<aside class="lu-panel lu-now">' + part(I, "znow", function () { return nowPanel(I, z); }) + "</aside></div>";
-    h += ambStrip(I, { mode: "zprev", sel: function () { return I.scr.pa || zoneMainAmb(I, z); } });
-    h += part(I, "zbar", function () { return zoneBar(I, z); }, "div", "lu-dock-wrap");
+    if (ctrl) {
+      h += ambStrip(I, { mode: "zprev", sel: function () { return I.scr.pa || zoneMainAmb(I, z); } });
+      h += part(I, "zbar", function () { return zoneBar(I, z); }, "div", "lu-dock-wrap");
+    }
     return h;
   };
   function zoneMainAmb(I, z) {
@@ -1355,7 +1371,7 @@
       badge = "Retour confirmé"; bcls = "is-ok";
     } else {
       title = tx.kind === "config" ? tx.title + " est en place." : "Votre éclairage est en place.";
-      sub = zoneSentences(I);
+      sub = zoneSentences(I, tx);
       badge = "Changements appliqués"; bcls = "is-ok";
     }
     var h = '<header class="lu-head"><div><h2 class="lu-h1">' + esc(title) + '</h2><p class="lu-sub' + (st.partial || tx.aborted ? " lu-gold" : "") + '">' + esc(sub) + "</p>" +
@@ -1389,7 +1405,7 @@
     }
     h += "</div>";
     if (tx.kind === "config") h += '<section class="lu-panel"><h3 class="lu-h2">Rien à enregistrer</h3><p class="lu-note">Votre éclairage correspond à « ' + esc(tx.title) + " ». La configuration reste telle qu’enregistrée : un rappel ne la modifie jamais.</p></section>";
-    else if (tx.kind !== "restore") h += '<section class="lu-panel lu-hl lu-savebox">' + part(I, "saveres", function () { return I.saveOpen ? savePanel(I, "res") : savedNote(I); }) + "</section>";
+    else h += '<section class="lu-panel lu-hl lu-savebox">' + part(I, "saveres", function () { return I.saveOpen ? savePanel(I, "res") : savedNote(I); }) + "</section>";
     h += "</div>";
     return h;
   }
@@ -1438,11 +1454,12 @@
         (offs.length ? esc(cap(list(offs.map(function (l) { return l.the; })))) + " toujours " + off(offs.length > 1 ? "mp" : offs[0].g) + ". " : "") + "Aucun succès global annoncé.</p></div>" +
         '<div class="lu-dock-a"><button type="button" class="lu-btn lu-btn-pri" data-a="retry"' + (s.busy ? " disabled" : "") + ">" + ic("retry") + "Réessayer " + esc(list(st.fails.map(function (k) { return e.L[k].the; }))) + "</button></div></div>";
     }
-    return '<div class="lu-dock"><div class="lu-dock-t"><b>Tout est confirmé.</b><p>Chaque lumière a répondu.</p></div><div class="lu-dock-a"><button type="button" class="lu-btn" data-a="home">Retour aux lumières</button></div></div>';
+    return '<div class="lu-dock is-done"><div class="lu-dock-t"><b>Tout est confirmé.</b><p>Chaque lumière a répondu.</p></div><div class="lu-dock-a"><button type="button" class="lu-btn" data-a="home">Retour aux lumières</button></div></div>';
   }
-  function zoneSentences(I) {
+  function zoneSentences(I, tx) {
     var e = I.e, cur = V(I, "cur"), bits = [];
-    e.zones.forEach(function (z) {
+    var moved = tx ? tx.changes.map(function (c) { return e.L[c.k].zone; }) : [];
+    e.zones.slice().sort(function (a, b) { return (moved.indexOf(b.k) >= 0) - (moved.indexOf(a.k) >= 0); }).forEach(function (z) {
       if (!zoneOn(e, z, cur) || e.zl[z.k].every(function (l) { return l.kind === "regl"; })) return;
       bits.push(zoneAmb(e, z, cur).replace(" · ", " et ") + " " + z.in + ".");
     });
@@ -1503,7 +1520,7 @@
     } else if (d.t === "none") {
       body = '<h3 class="lu-h2">Rien à restaurer.</h3><p class="lu-note">' + esc(d.msg) + '</p><div class="lu-row-end"><button type="button" class="lu-btn lu-btn-pri" data-a="dlg-close">D’accord</button></div>';
     }
-    return '<div class="lu-dlg" role="dialog" aria-modal="true"><div class="lu-dlg-box">' + body + "</div></div>";
+    return '<div class="lu-dlg" role="dialog" aria-modal="true" aria-label="Confirmation"><div class="lu-dlg-box">' + body + "</div></div>";
   }
 
   /* ---------------------------------------------------------------- actions */
@@ -1697,24 +1714,23 @@
 
   /* ================================================================ CARTE COMPACTE (Vue d'ensemble) */
   var QUICK = [["lecture", "Lecture"], ["heure-doree", "Soirée"], ["nuit-douce", "Nuit"]];
-  function mountMini(el, k, api) {
+  function mountMini(host, k, api) {
     data(); defs();
-    unmount(el);
-    var e = env(k);
-    var M = { el: el, k: k, e: e, api: api || {}, timers: [], parts: {}, mini: true };
-    el.classList.add("lu", "lu-mini-host");
+    unmount(host);
+    var e = env(k), el = rootIn(host, "lu lu-mini-host");
+    var M = { host: host, el: el, k: k, e: e, api: api || {}, timers: [], parts: {}, mini: true };
     M.queue = function () { if (M.raf) return; M.raf = requestAnimationFrame(function () { M.raf = 0; miniUpdate(M); }); };
     M.on = function (type, fn) { el.addEventListener(type, fn); M.timers.push(function () { el.removeEventListener(type, fn); }); };
     var zs = [e.Z[e.main]].concat(e.zones.filter(function (z) { return z.k !== e.main && !z.out && e.zl[z.k].some(function (l) { return l.kind !== "regl"; }); })).slice(0, 3);
     M.zs = zs;
-    el.innerHTML = '<div class="lu-mini"><header class="lu-mini-head"><span class="lu-mini-ic">' + ic("sun") + '</span><h3>Éclairage</h3><div class="lu-mini-q" data-mp="quick"></div></header>' +
-      '<ul class="lu-mini-rows" data-mp="rows"></ul><footer class="lu-mini-foot"><span data-mp="state"></span><button type="button" class="lu-link" data-a="go">Tout l’éclairage ' + ic("arrow") + "</button></footer></div>";
+    /* Corps seulement : le cadre fournit déjà la carte, le titre, le compte et le lien « Ouvrir » */
+    el.innerHTML = '<div class="lu-mini"><div class="lu-mini-q" data-mp="quick" role="group" aria-label="Ambiances rapides"></div>' +
+      '<ul class="lu-mini-rows" data-mp="rows"></ul><p class="lu-mini-st" data-mp="state" role="status"></p></div>';
     M.on("click", function (ev) {
       var b = ev.target.closest("[data-a]");
       if (!b || b.disabled) return;
       var a = b.getAttribute("data-a"), v = b.getAttribute("data-v"), s = S(k);
-      if (a === "go") { if (M.api.go) M.api.go("eclairage"); }
-      else if (a === "quick") {
+      if (a === "quick") {
         var name = QUICK.filter(function (q) { return q[0] === v; })[0][1];
         applyAmb(k, v).then(function (r) {
           if (!M.api.toast) return;
@@ -1745,6 +1761,7 @@
     SUBS.push(M);
     INST.push(M);
     miniUpdate(M);
+    announce(k);
     return M;
   }
   function miniUpdate(M) {
@@ -1775,10 +1792,11 @@
         li.querySelector(".lu-val").textContent = zoneOn(e, z, V0) ? zoneLvl(e, z, V0) + PC : "Éteint";
       });
     }
-    var st = M.el.querySelector('[data-mp="state"]');
-    var more = e.ctrl.length - M.zs.reduce(function (t, z) { return t + e.zl[z.k].filter(function (l) { return l.kind !== "regl"; }).length; }, 0);
-    if (s.busy && s.tx) { var c = counts(s.tx); st.innerHTML = '<span class="lu-spin"></span>Application · ' + c.confirmed + " / " + s.tx.changes.length; }
-    else st.textContent = stateLabel(k) + (more > 0 ? " · " + plural(more, "autre lumière", "autres lumières") : "");
+    /* Ligne d'état : seulement pendant une application ou quand une lumière reste à vérifier */
+    var st = M.el.querySelector('[data-mp="state"]'), unk = unknownLights(k);
+    if (s.busy && s.tx) { var c = counts(s.tx); st.innerHTML = '<span class="lu-spin"></span>Application en cours · ' + c.confirmed + " sur " + s.tx.changes.length + " confirmées"; st.className = "lu-mini-st is-busy"; }
+    else if (unk.length) { st.innerHTML = ic("warn") + esc(cap(list(unk.map(function (l) { return l.the; })))) + (unk.length > 1 ? " ne répondent pas." : " ne répond pas.") + " Ouvrez l’éclairage pour réessayer."; st.className = "lu-mini-st is-warn"; }
+    else { st.textContent = ""; st.className = "lu-mini-st"; }
   }
 
   /* ================================================================ API publique */
@@ -1787,7 +1805,12 @@
     if (!AMB[a]) return Promise.reject(new Error("JarvisLumieres : ambiance inconnue « " + a + " »."));
     var pl = ambPlan(k, a, {});
     if (!pl.changes.length) return Promise.resolve({ confirmed: 0, failed: 0, unchanged: true });
-    return txRun(k, { kind: "amb", title: AMB[a].name, amb: a, changes: pl.changes, keep: pl.keep, origin: { t: "amb", k: a } });
+    /* Rien n'est envoyé (application déjà en cours, ou précédent impossible à protéger) :
+       chaque lumière visée compte comme « à vérifier », jamais comme un succès */
+    return txRun(k, { kind: "amb", title: AMB[a].name, amb: a, changes: pl.changes, keep: pl.keep, origin: { t: "amb", k: a } }).then(function (r) {
+      if (r.aborted || r.busy) r.failed = pl.changes.length;
+      return r;
+    });
   }
   window.JarvisLumieres = {
     mount: function (el, envKey, api) { mountFull(el, envKey, api); },
@@ -1798,4 +1821,8 @@
     status: function (envKey) { var e = env(envKey); return { on: onCount(envKey), total: e.ctrl.length, label: stateLabel(envKey) }; }
   };
   document.dispatchEvent(new CustomEvent("lum:ready"));
+  /* Comptes de départ de chaque environnement, dès que les données sont dans la page */
+  function announceAll() { try { Object.keys(data().envs).forEach(announce); } catch (err) { /* page sans module Éclairage */ } }
+  if (document.getElementById("lum-data")) announceAll();
+  else document.addEventListener("DOMContentLoaded", announceAll, { once: true });
 })();

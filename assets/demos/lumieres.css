@@ -76,7 +76,7 @@
 .lu-state.is-ok { color: var(--lu-ok); border-color: rgb(128 226 182 / .35); }
 .lu-state.is-perso { color: var(--lu-accent); }
 .lu-state.is-warn { color: var(--lu-warn); border-color: #f3c96955; background: #f3c96912; }
-.lu-state.is-busy i { animation: luPulse 1s ease-in-out infinite; }
+.fx .lu-state.is-busy i { animation: luPulse 1s ease-in-out infinite; }
 .lu-prevchip {
   display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--lu-line);
   background: none; font: 600 12px/1 var(--lu-font); color: var(--lu-muted); white-space: nowrap; transition: color .3s, border-color .3s;
@@ -104,10 +104,11 @@
 .lu-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 42px; padding: 0 20px; border-radius: 999px;
   border: 1px solid var(--lu-line); background: rgb(8 8 8 / .6); font: 600 13.5px/1.1 var(--lu-font); color: var(--lu-text); white-space: nowrap;
-  transition: border-color .3s, background .3s, transform .2s, opacity .3s;
+  transition: border-color .3s, background .3s, opacity .3s;
 }
+.fx .lu-btn { transition: border-color .3s, background .3s, transform .2s, opacity .3s; }
 .lu-btn:hover:not(:disabled) { border-color: var(--lu-line-2); background: var(--lu-fill-2); }
-.lu-btn:active:not(:disabled) { transform: scale(.98); }
+.fx .lu-btn:active:not(:disabled) { transform: scale(.98); }
 .lu-btn:disabled { opacity: .45; }
 .lu-btn-sm { min-height: 34px; padding: 0 16px; font-size: 12.5px; }
 .lu-btn-wide { padding: 0 26px 0 18px; min-width: 230px; justify-content: space-between; }
@@ -156,12 +157,13 @@
 .lu-pill.is-ok i { background: var(--lu-ok); }
 .lu-pill.is-warn { color: var(--lu-warn); background: rgb(40 32 12 / .75); border-color: #f3c96955; }
 .lu-pill.is-warn i { background: var(--lu-warn); }
-.lu-pill.is-busy i { animation: luPulse 1s ease-in-out infinite; }
+.fx .lu-pill.is-busy i { animation: luPulse 1s ease-in-out infinite; }
 @keyframes luPulse { 50% { opacity: .25; } }
 .lu-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex: none; box-shadow: 0 0 8px currentColor; }
 .lu-swatch { width: 34px; height: 34px; border-radius: 50%; flex: none; box-shadow: 0 0 22px rgb(255 200 120 / .25), inset 0 1px 0 #fff6; }
 .lu-empty { padding: 26px; border-radius: 16px; border: 1px dashed var(--lu-line); color: var(--lu-muted); text-align: center; }
-.lu-spin { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border-radius: 50%; border: 1.6px solid currentColor; border-right-color: transparent; animation: luSpin .8s linear infinite; }
+.lu-spin { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border-radius: 50%; border: 1.6px solid currentColor; border-right-color: transparent; }
+.fx .lu-spin { animation: luSpin .8s linear infinite; }
 @keyframes luSpin { to { transform: rotate(1turn); } }
 
 /* Interrupteur */
@@ -170,10 +172,12 @@
   position: relative; width: 48px; height: 28px; flex: none; padding: 0; border-radius: 999px; border: 1px solid var(--lu-line);
   background: rgb(255 255 255 / .12); transition: background .3s, border-color .3s;
 }
-.lu-sw i { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #d9d6d0; transition: transform .35s var(--lu-ease), background .3s; }
+.lu-sw i { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #d9d6d0; }
+.fx .lu-sw i { transition: transform .35s var(--lu-ease), background .3s; }
 .lu-sw[aria-checked="true"] { background: var(--mode-action, #e0b96f); border-color: transparent; }
 .lu-sw[aria-checked="true"] i { transform: translateX(20px); background: var(--mode-on-action, #1c1408); }
-.lu-sw.is-pend i { box-shadow: 0 0 0 3px color-mix(in srgb, var(--lu-accent) 45%, transparent); animation: luPulse .9s ease-in-out infinite; }
+.lu-sw.is-pend i { box-shadow: 0 0 0 3px color-mix(in srgb, var(--lu-accent) 45%, transparent); }
+.fx .lu-sw.is-pend i { animation: luPulse .9s ease-in-out infinite; }
 .lu-sw:disabled { opacity: .5; }
 .lu-swbox { display: inline-flex; align-items: center; gap: 10px; }
 
@@ -281,14 +285,15 @@
   position: absolute; z-index: 4; translate: -50% -50%; display: inline-flex; align-items: center; gap: 8px; max-width: 46%;
   padding: 8px 14px; border-radius: 999px; border: 1px solid rgb(255 255 255 / .16); background: rgb(6 6 6 / .74);
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: 0 8px 22px #000a;
-  font: 500 13px/1 var(--lu-font); color: var(--lu-text); white-space: nowrap; transition: border-color .3s, transform .3s var(--lu-ease);
+  font: 500 13px/1 var(--lu-font); color: var(--lu-text); white-space: nowrap; transition: border-color .3s;
 }
 .lu-tag b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; }
 .lu-tag em { font-style: normal; margin-left: -4px; color: var(--lu-muted); }
 .lu-tag i { width: 7px; height: 7px; border-radius: 50%; flex: none; box-shadow: 0 0 8px currentColor; }
 .lu-tag.is-off i { background: transparent !important; box-shadow: inset 0 0 0 1.5px var(--lu-faint); }
 .lu-tag.is-off { color: var(--lu-muted); }
-button.lu-tag:hover { border-color: var(--lu-accent); transform: translateY(-2px); }
+button.lu-tag:hover { border-color: var(--lu-accent); }
+.fx button.lu-tag:hover { transform: translateY(-2px); }
 
 /* Photos de zone (BouLance) : deux images pour un fondu, un voile et des halos posés dessus */
 .lu-ph { position: absolute; inset: 0; overflow: hidden; background: #050403; }
@@ -321,14 +326,14 @@ button.lu-tag:hover { border-color: var(--lu-accent); transform: translateY(-2px
 .lu-outs { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; }
 .lu-card {
   position: relative; isolation: isolate; overflow: hidden; min-height: 250px; border-radius: var(--lu-r); background: #060606;
-  border: 1px solid rgb(255 255 255 / .07); box-shadow: 0 18px 44px #0008; transition: border-color .4s, transform .5s var(--lu-ease);
+  border: 1px solid rgb(255 255 255 / .07); box-shadow: 0 18px 44px #0008; transition: border-color .4s;
 }
 .lu-card:hover { border-color: var(--lu-line-2); }
 .lu-card.is-big { min-height: 440px; }
 .lu-card.is-wide { grid-column: span 2; min-height: 200px; }
 .lu-rooms.is-one .lu-card.is-big { min-height: 420px; }
 .lu-card > .lu-plan, .lu-out-pic > .lu-plan, .lu-hero > .lu-plan, .lu-libpic > .lu-plan, .lu-cfgpic > .lu-plan { position: absolute; inset: 0; height: 100%; }
-.lu-card .lu-ph, .lu-card .lu-plan { transition: transform 1.2s var(--lu-ease); }
+.fx .lu-card .lu-ph, .fx .lu-card .lu-plan { transition: transform 1.2s var(--lu-ease); }
 .fx .lu-card:hover .lu-ph, .fx .lu-card:hover > .lu-plan { transform: scale(1.025); }
 .lu-card-shade { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg, rgb(0 0 0 / .32), transparent 30%, transparent 48%, rgb(0 0 0 / .8)); }
 .lu-card-hit { position: absolute; inset: 0; z-index: 2; border: 0; background: none; border-radius: inherit; }
@@ -387,9 +392,10 @@ button.lu-tag:hover { border-color: var(--lu-accent); transform: translateY(-2px
 .lu-fav.is-on .lu-i { fill: currentColor; }
 .lu-amb-row { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(124px, 1fr); gap: 14px; overflow-x: auto; scroll-snap-type: x proximity; padding: 4px 2px 6px; scrollbar-width: thin; scrollbar-color: var(--lu-line) transparent; }
 .lu-amb { display: grid; gap: 10px; padding: 0; border: 0; background: none; text-align: left; scroll-snap-align: start; min-width: 0; }
-.lu-amb-pic { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #070707; box-shadow: 0 10px 26px #0008; outline: 2px solid transparent; outline-offset: 2px; transition: outline-color .3s, transform .4s var(--lu-ease); }
+.lu-amb-pic { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #070707; box-shadow: 0 10px 26px #0008; outline: 2px solid transparent; outline-offset: 2px; transition: outline-color .3s; }
+.fx .lu-amb-pic { transition: outline-color .3s, transform .4s var(--lu-ease); }
 .lu-amb-pic img { width: 100%; height: 100%; object-fit: cover; }
-.lu-amb:hover .lu-amb-pic { transform: translateY(-2px); }
+.fx .lu-amb:hover .lu-amb-pic { transform: translateY(-2px); }
 .lu-amb.is-sel .lu-amb-pic { outline-color: var(--lu-accent); box-shadow: 0 0 22px color-mix(in srgb, var(--mode-glow, #c9a35c) 40%, transparent); }
 .lu-amb-ck { position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--mode-action, #e0b96f); color: var(--mode-on-action, #1c1408); }
 .lu-amb-ck .lu-i { width: 13px; height: 13px; stroke-width: 2.4; }
@@ -431,11 +437,12 @@ button.lu-tag:hover { border-color: var(--lu-accent); transform: translateY(-2px
 .lu-heart:hover { color: var(--lu-accent); }
 .lu-heart.is-on { color: var(--lu-accent); }
 .lu-heart.is-on .lu-i { fill: currentColor; }
-.lu-heart:active { transform: scale(.9); }
+.fx .lu-heart:active { transform: scale(.9); }
 
 /* Barre du bas (zone, brouillon, aperçu, résultat) : reste visible pendant le défilement */
 .lu-dock-wrap { position: sticky; bottom: 12px; z-index: 8; }
 .lu-dock-wrap:empty { display: none; }
+.lu-dock-wrap:has(> .lu-dock.is-done) { position: static; }
 .lu-dock {
   display: flex; align-items: center; justify-content: space-between; gap: 14px 22px; flex-wrap: wrap; padding: 16px 18px 16px 26px;
   border-radius: 18px; border: 1px solid var(--lu-line-2); background: linear-gradient(160deg, rgb(28 27 24 / .96), rgb(12 12 11 / .97));
@@ -450,7 +457,8 @@ button.lu-tag:hover { border-color: var(--lu-accent); transform: translateY(-2px
 
 /* ---------- Bibliothèque ---------- */
 .lu-libgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-.lu-libcard { position: relative; isolation: isolate; overflow: hidden; border-radius: var(--lu-r); border: 1px solid var(--lu-line); background: var(--lu-card); transition: border-color .4s, transform .5s var(--lu-ease); }
+.lu-libcard { position: relative; isolation: isolate; overflow: hidden; border-radius: var(--lu-r); border: 1px solid var(--lu-line); background: var(--lu-card); transition: border-color .4s; }
+.fx .lu-libcard { transition: border-color .4s, transform .5s var(--lu-ease); }
 .lu-libcard:hover { border-color: var(--lu-line-2); }
 .fx .lu-libcard:hover { transform: translateY(-3px); }
 .lu-libpic { position: relative; aspect-ratio: 16 / 9.4; overflow: hidden; background: #050505; }
@@ -534,7 +542,8 @@ button.lu-tag:hover { border-color: var(--lu-accent); transform: translateY(-2px
 .lu-before { display: grid; align-content: start; }
 .lu-fixednote { color: var(--lu-faint); }
 .lu-progress { height: 4px; border-radius: 999px; background: rgb(255 255 255 / .08); overflow: hidden; }
-.lu-progress i { display: block; height: 100%; background: var(--mode-action, #e0b96f); border-radius: inherit; transition: width .35s ease; }
+.lu-progress i { display: block; height: 100%; background: var(--mode-action, #e0b96f); border-radius: inherit; }
+.fx .lu-progress i { transition: width .35s ease; }
 .lu-rgrid { display: grid; grid-template-columns: minmax(0, 1.95fr) minmax(280px, 1fr); gap: 18px; align-items: start; }
 .lu-rgrid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
 .lu-col { display: grid; gap: 18px; }
@@ -560,7 +569,8 @@ button.lu-tag:hover { border-color: var(--lu-accent); transform: translateY(-2px
 .lu-mem b { display: block; font: 500 16px/1.2 var(--lu-font); }
 .lu-mem small { display: block; margin-top: 4px; font-size: 13px; }
 .lu-save-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.lu-savebox { align-self: stretch; }
+.lu-savebox { align-self: start; }
+.lu-savebox > div > .lu-btn { margin-top: 16px; }
 
 /* Dialogue */
 .lu-dlg { position: absolute; inset: 0; z-index: 20; display: grid; align-items: start; justify-items: center; padding: 60px 16px; background: rgb(0 0 0 / .6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); border-radius: var(--lu-r); }
@@ -571,30 +581,34 @@ button.lu-tag:hover { border-color: var(--lu-accent); transform: translateY(-2px
 .lu-drift b { display: block; font-weight: 600; }
 .lu-drift span { display: block; margin-top: 3px; font-size: 13px; color: var(--lu-muted); }
 
-/* ================= Carte compacte (Vue d'ensemble) ================= */
-.lu-mini { padding: 22px 22px 16px; border-radius: var(--lu-r); border: 1px solid var(--lu-line); background: var(--lu-card); box-shadow: 0 18px 44px #0007, var(--mode-spec, none); }
-.lu-mini-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.lu-mini-head h3 { font: 600 19px/1.2 var(--lu-font); margin-right: auto !important; }
-.lu-mini-ic { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--lu-line-2); color: var(--lu-accent); background: color-mix(in srgb, var(--lu-accent) 8%, transparent); }
-.lu-mini-ic .lu-i { width: 20px; height: 20px; }
-.lu-mini-q { display: flex; gap: 6px; }
+/* ================= Corps de la carte « Éclairage » (Vue d'ensemble) =================
+   Le cadre fournit la carte, son titre, le compte et le lien « Ouvrir » : ici, seulement le contenu. */
+.lu-mini { display: grid; gap: 6px; }
+.lu-mini-q { display: flex; flex-wrap: wrap; gap: 6px; }
 .lu-mini-q button { padding: 8px 14px; border-radius: 10px; border: 1px solid var(--lu-line); background: rgb(8 8 8 / .5); font: 600 12.5px/1 var(--lu-font); color: var(--lu-muted); transition: color .3s, border-color .3s, background .3s; }
 .lu-mini-q button:hover:not(:disabled) { color: var(--lu-text); border-color: var(--lu-line-2); }
 .lu-mini-q button.is-on { color: var(--lu-accent); border-color: var(--lu-accent); background: color-mix(in srgb, var(--lu-accent) 10%, transparent); }
 .lu-mini-q button:disabled { opacity: .5; }
-.lu-mini-rows { margin-top: 10px !important; }
-.lu-mini-rows li { display: grid; grid-template-columns: 28px minmax(70px, 1fr) 54px minmax(90px, 1.6fr) auto; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--lu-line); }
+.lu-mini-rows li { display: grid; grid-template-columns: 24px minmax(0, 1fr) 46px auto; align-items: center; gap: 4px 10px; padding: 13px 0; border-bottom: 1px solid var(--lu-line); }
+.lu-mini-rows input[type="range"] { grid-column: 2 / 4; grid-row: 2; margin: 0; }
+.lu-mini-rows .lu-mini-sw { grid-column: 4; grid-row: 1 / 3; }
+@container lu (min-width: 440px) {
+  .lu-mini-rows li { grid-template-columns: 28px minmax(64px, 1fr) 50px minmax(90px, 1.7fr) auto; gap: 12px; }
+  .lu-mini-rows input[type="range"], .lu-mini-rows .lu-mini-sw { grid-column: auto; grid-row: auto; }
+}
 .lu-mini-rows li:last-child { border-bottom: 0; }
 .lu-mini-zi { color: var(--lu-accent); display: grid; }
 .lu-mini-zi .lu-i { width: 22px; height: 22px; }
 .lu-mini-rows b { font: 500 15px/1.2 var(--lu-font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .lu-mini-rows .lu-val { font: 600 13.5px/1 var(--lu-font); text-align: right; font-variant-numeric: tabular-nums; color: var(--lu-muted); }
 .lu-mini-rows li.is-on .lu-val { color: var(--lu-text); }
-.lu-mini-rows input[type="range"] { margin: 0; }
 .lu-mini-rows li:not(.is-on) input[type="range"] { opacity: .45; }
 .lu-mini-sw { display: flex; }
-.lu-mini-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--lu-line); margin-top: 4px; }
-.lu-mini-foot > span { font-size: 12.5px; color: var(--lu-muted); }
+.lu-mini-st { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--lu-muted); }
+.lu-mini-st:empty { display: none; }
+.lu-mini-st .lu-i { width: 15px; height: 15px; flex: none; }
+.lu-mini-st.is-warn { color: var(--lu-warn); }
+.lu-mini-st.is-busy { color: var(--lu-accent); }
 
 /* ================= Largeurs de conteneur ================= */
 @container lu (max-width: 900px) {
@@ -608,6 +622,8 @@ button.lu-tag:hover { border-color: var(--lu-accent); transform: translateY(-2px
   .lu-crow { grid-template-columns: 70px minmax(0, 1fr) auto; gap: 12px; }
   .lu-thumb { width: 70px; height: 70px; }
   .lu-hero-t { font-size: 30px; }
+  .lu-out { grid-template-columns: 96px minmax(0, 1fr); gap: 14px; }
+  .lu-out-pic { height: 68px; }
 }
 @container lu (max-width: 760px) {
   .lu-rooms, .lu-planview, .lu-zgrid, .lu-pgrid, .lu-cgrid, .lu-rgrid, .lu-rgrid2, .lu-cfggrid { grid-template-columns: minmax(0, 1fr); }
@@ -684,10 +700,6 @@ button.lu-tag:hover { border-color: var(--lu-accent); transform: translateY(-2px
   .lu-pl .lu-thumb { height: 52px; }
   .lu-pl-r { grid-column: 2; justify-items: start; text-align: left; }
   .lu-pl b { font-size: 16px; }
-  .lu-mini { padding: 18px 16px 12px; }
-  .lu-mini-rows li { grid-template-columns: 24px minmax(0, 1fr) 46px auto; gap: 10px; }
-  .lu-mini-rows input[type="range"] { grid-column: 2 / 4; grid-row: 2; }
-  .lu-mini-rows .lu-mini-sw { grid-column: 4; grid-row: 1 / 3; }
   .lu-dlg { padding: 30px 10px; }
 }
 @media (prefers-reduced-motion: reduce) {

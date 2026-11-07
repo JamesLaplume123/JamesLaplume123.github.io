@@ -349,7 +349,8 @@ BOULANCE = {
         {"k": "chambre", "name": "Chambre", "ic": "bed", "lab": [1236, 470], "poly": _box(1085, 262, 1390, 668),
          "tag": "Le repos, à votre rythme", "photo": "chambre", "baked": "violet", "ov": [[10, 16, 60, 28]]},
         {"k": "exterieur", "name": "Extérieur", "ic": "out", "lab": [1250, 742], "poly": _box(380, 690, 1420, 790),
-         "tag": "À la belle étoile", "photo": "exterieur", "baked": "off", "out": True, "ov": [[12, 66, 70, 96]]},
+         "tag": "À la belle étoile", "photo": "exterieur", "baked": "off", "out": True,
+         "ov": [[8, 68, 66, 100], [24, 28, 54, 46], [30, 40, 48, 78]]},
     ],
     "lights": [
         {"k": "couloir-g", "name": "Couloir · gauche", "short": "Bande gauche", "zone": "couloir", "kind": "rgb",

@@ -643,7 +643,7 @@ button.lu-tag:hover { border-color: var(--lu-accent); }
   .lu-tab { font-size: 14px; }
   .lu-acts { width: 100%; }
   .lu-acts .lu-btn { flex: 1 1 auto; padding: 0 14px; }
-  .lu-btn-wide { min-width: 0; width: 100%; }
+  .lu-btn-wide { min-width: 0; width: 100%; justify-content: center; gap: 10px; }
   .lu-filters { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
   .lu-filters .lu-seg { align-self: flex-start; }
   .lu-chip { padding: 9px 14px; font-size: 13px; }

@@ -83,7 +83,7 @@ PAGE = {
     "title": "Environnements intelligents | Solutions JARVIS",
     "description": "Faire travailler ensemble les technologies d’un lieu, sans rendre son utilisation compliquée.",
     "og_image": "/media/solutions/environnements-intelligents.webp",
-    "assets": ["coquille", "env"],
+    "assets": ["coquille", "lumieres", "env"],
     "content": f"""
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>

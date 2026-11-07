@@ -1611,8 +1611,8 @@ FLEUVE = {
 }
 
 BATEAU_POINTS = [
-    {"n": 1, "x": 190, "y": 98, "kind": "carburant", "name": "Poste d’essence de la marina", "what": "Carburant", "dist": "0,3 km", "info": "Ouvert jusqu’au 15 novembre (exemple)"},
-    {"n": 2, "x": 176, "y": 112, "kind": "vidange", "name": "Station de pompage", "what": "Vidange des eaux usées", "dist": "0,4 km", "info": "Gratuite pour les membres (exemple)"},
+    {"n": 1, "x": 198, "y": 94, "kind": "carburant", "name": "Poste d’essence de la marina", "what": "Carburant", "dist": "0,3 km", "info": "Ouvert jusqu’au 15 novembre (exemple)"},
+    {"n": 2, "x": 170, "y": 114, "kind": "vidange", "name": "Station de pompage", "what": "Vidange des eaux usées", "dist": "0,4 km", "info": "Gratuite pour les membres (exemple)"},
     {"n": 3, "x": 214, "y": 86, "kind": "eau", "name": "Quai municipal", "what": "Eau potable", "dist": "1,8 km", "info": "Fermée après la saison (exemple)"},
     {"n": 4, "x": 90, "y": 126, "kind": "service", "name": "Chantier d’hivernage", "what": "Sortie de l’eau", "dist": "18 km", "info": "Réservation confirmée (exemple)"},
 ]

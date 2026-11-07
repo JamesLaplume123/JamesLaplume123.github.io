@@ -416,9 +416,10 @@ PAGE = {
 <!-- Six solutions : l'aperçu complet, sans ouvrir les pages -->
 <section class="bento sols" id="capacites">
   <div class="head" data-rev>
-    <p class="kick">Six solutions · Un point de départ</p>
-    <h2 data-split>Votre besoin.<br><em>La bonne solution.</em></h2>
-    <p>Chacune s’ajoute à JARVIS comme une extension. Touchez-en une : elle s’ouvre dans le logiciel.</p>
+    <p class="kick">Six extensions · Une équipe</p>
+    <h2 data-split>Une équipe complète.<br><em>Déjà en poste.</em></h2>
+    <p>Réceptionniste, gardien, archiviste, technicien : chaque extension travaille pour vous comme
+    un employé de confiance, dans le même logiciel. Touchez-en une : elle s’ouvre dans JARVIS.</p>
   </div>
   <div class="sol-grid">
     {apercu_solutions()}

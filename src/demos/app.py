@@ -492,7 +492,7 @@ def v_espace():
 
 def v_outils():
     cards = "".join(
-        f'''<a class="ap-card ap-ext{" is-on" if c["slug"] in EXT_ON else ""}" href="/solutions/{c["slug"]}/" data-r>
+        f'''<a class="ap-card ap-ext{" is-on" if c["slug"] in EXT_ON else ""}" href="/solutions/{c["slug"]}/" data-ext="{c["slug"]}" data-r>
   <img src="{c["image"]}" alt="" loading="lazy" decoding="async">
   <span class="ap-ext-i">{icon(EXT_ICON[c["slug"]])}</span>
   <span class="ap-ext-t"><small>{c["label"]}</small><b>{c["title"]}</b><span>{c["short"]}</span></span>
@@ -500,10 +500,33 @@ def v_outils():
 </a>'''
         for c in CAPABILITIES
     )
+    panels = "".join(
+        f'''<article class="ap-extd" data-extd="{c["slug"]}" hidden>
+  <div class="ap-extd-h">
+    <button type="button" class="ap-back" data-ext-close>{icon("left")}<span>Mes outils</span></button>
+    <span class="ap-ext-i">{icon(EXT_ICON[c["slug"]])}</span>
+    <div class="ap-extd-t">
+      <small>{c["label"]}{NB}· {"Activée" if c["slug"] in EXT_ON else "Disponible · sur demande"}</small>
+      <b>{fr(c["title"])}</b>
+    </div>
+  </div>
+  <div class="ap-extd-b">
+    <div class="ap-extd-txt">
+      <p class="ap-extd-line">{fr(c["line"])}</p>
+      <ul class="ap-extd-pts">{"".join(f"<li>{icon('check')}<span><b>{fr(t)}</b><small>{fr(d)}</small></span></li>" for t, d in c["points"])}</ul>
+      <p class="ap-extd-for">{fr(c["pour"])}</p>
+      <a class="ap-btn ap-btn-go" href="/solutions/{c["slug"]}/">Voir la page complète{icon("right")}</a>
+    </div>
+    <img class="ap-extd-img" src="{c["image"]}" alt="" loading="lazy" decoding="async">
+  </div>
+</article>'''
+        for c in CAPABILITIES
+    )
     on = sum(1 for c in CAPABILITIES if c["slug"] in EXT_ON)
     return f"""{_head("", "Mes <em>outils</em>", "Vos extensions, autorisées par votre administrateur.",
                       f'<p class="ap-ext-n"><b>{len(CAPABILITIES)}</b> extensions · <b>{on}</b> activées</p>')}
-<div class="ap-exts">{cards}</div>"""
+<div class="ap-exts">{cards}</div>
+<div class="ap-extp">{panels}</div>"""
 
 
 def _hh(h):

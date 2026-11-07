@@ -321,6 +321,51 @@
       });
     });
 
+    /* ---------------------------------------------------------------- Mes outils : l'extension s'ouvre sur place */
+    (function () {
+      var v = $(".ap-v-outils");
+      if (!v) return;
+      var grid = $(".ap-exts", v), pile = $(".ap-extp", v), head = $(".ap-head", v);
+      var panels = $$(".ap-extd", v);
+      var wn = $('[data-ap="winname"]'), winBase = wn ? wn.textContent : "";
+      function show(slug) {
+        panels.forEach(function (d) { d.hidden = d.getAttribute("data-extd") !== slug; });
+        var t = $('[data-extd="' + slug + '"] .ap-extd-t b', v);
+        if (wn && t) {
+          winBase = wn.textContent.split(" / ")[0];
+          wn.textContent = (window.matchMedia("(max-width: 680px)").matches ? "" : winBase + " / ") + t.textContent;
+        }
+        v.classList.add("is-ext");
+        if (head) head.hidden = true;
+        grid.hidden = true;
+        pile.hidden = false;
+        var back = $(".ap-back", pile.querySelector('[data-extd="' + slug + '"]'));
+        if (back) back.focus({ preventScroll: true });
+      }
+      function back() {
+        if (wn && winBase) wn.textContent = winBase;
+        v.classList.remove("is-ext");
+        panels.forEach(function (d) { d.hidden = true; });
+        pile.hidden = true;
+        grid.hidden = false;
+        if (head) head.hidden = false;
+      }
+      v.addEventListener("click", function (e) {
+        var card = e.target.closest("[data-ext]");
+        if (card && v.contains(card)) {
+          /* Le visiteur reste dans le logiciel : l'extension s'ouvre ici, la page ne bouge pas. */
+          e.preventDefault();
+          stop();
+          show(card.getAttribute("data-ext"));
+          return;
+        }
+        if (e.target.closest("[data-ext-close]")) { e.preventDefault(); stop(); back(); }
+      });
+      v.addEventListener("keydown", function (e) { if (e.key === "Escape" && v.classList.contains("is-ext")) back(); });
+      hooks.outils = { leave: back };
+      pile.hidden = true;
+    })();
+
     /* ---------------------------------------------------------------- Mon espace : notifications */
     (function () {
       var v = $(".ap-v-espace");

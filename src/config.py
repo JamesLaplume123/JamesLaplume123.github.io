@@ -91,7 +91,7 @@ CAPABILITIES = [
         "slug": "securite-intelligente",
         "num": "03",
         "title": "Sécurité intelligente",
-        "label": "Caméras",
+        "label": "Sécurité",
         "short": "Transformer caméras, accès et alarmes en événements compréhensibles plutôt qu’en notifications isolées.",
         "image": "/media/solutions/securite-intelligente.webp",
         "pour": "Résidences, entreprises et propriétés réparties sur plusieurs sites",

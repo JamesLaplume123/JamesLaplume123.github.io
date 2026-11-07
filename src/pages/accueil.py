@@ -18,13 +18,13 @@ def apercu_solutions():
             f"<li><b>{t}</b><span>{d}</span></li>" for t, d in c["points"]
         )
         cartes.append(f"""<article class="sol-card" data-rev>
-      <a class="sol-shot" href="/solutions/{c['slug']}/" tabindex="-1" aria-hidden="true">
+      <a class="sol-shot" href="/solutions/{c['slug']}/#jarvis" tabindex="-1" aria-hidden="true">
         <img src="{c['image']}" alt="" loading="lazy" decoding="async">
         <span class="sol-num">{c['num']}</span>
       </a>
       <div class="sol-body">
         <p class="sol-kick">{c['label']}</p>
-        <h3><a href="/solutions/{c['slug']}/">{c['title']}</a></h3>
+        <h3><a href="/solutions/{c['slug']}/#jarvis">{c['title']}</a></h3>
         <p class="sol-for">Pour : {c['pour']}</p>
         <p class="sol-line">{c['line']}</p>
         <ul class="sol-pts">{points}</ul>

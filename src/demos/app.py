@@ -492,7 +492,7 @@ def v_espace():
 
 def v_outils():
     cards = "".join(
-        f'''<a class="ap-card ap-ext{" is-on" if c["slug"] in EXT_ON else ""}" href="/solutions/{c["slug"]}/" data-ext="{c["slug"]}" data-r>
+        f'''<a class="ap-card ap-ext{" is-on" if c["slug"] in EXT_ON else ""}" href="/solutions/{c["slug"]}/#jarvis" data-ext="{c["slug"]}" data-r>
   <img src="{c["image"]}" alt="" loading="lazy" decoding="async">
   <span class="ap-ext-i">{icon(EXT_ICON[c["slug"]])}</span>
   <span class="ap-ext-t"><small>{c["label"]}</small><b>{c["title"]}</b><span>{c["short"]}</span></span>
@@ -515,7 +515,7 @@ def v_outils():
       <p class="ap-extd-line">{fr(c["line"])}</p>
       <ul class="ap-extd-pts">{"".join(f"<li>{icon('check')}<span><b>{fr(t)}</b><small>{fr(d)}</small></span></li>" for t, d in c["points"])}</ul>
       <p class="ap-extd-for">{fr(c["pour"])}</p>
-      <a class="ap-btn ap-btn-go" href="/solutions/{c["slug"]}/">Voir la page complète{icon("right")}</a>
+      <a class="ap-btn ap-btn-go" href="/solutions/{c["slug"]}/#jarvis">Ouvrir dans JARVIS{icon("right")}</a>
     </div>
     <img class="ap-extd-img" src="{c["image"]}" alt="" loading="lazy" decoding="async">
   </div>

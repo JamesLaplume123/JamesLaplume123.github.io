@@ -65,7 +65,7 @@ STORIES_HTML = "".join(
         <ul>{''.join(f'<li>{p}</li>' for p in STORIES[c['slug']]['points'])}</ul>
         <p class="for">Particulièrement utile pour
         <b>{STORIES[c['slug']]['for']}</b></p>
-        <a class="pill ghost" href="/solutions/{c['slug']}/">Explorer cette solution</a>
+        <a class="pill ghost" href="/solutions/{c['slug']}/#jarvis">Explorer cette solution</a>
       </div>
     </article>"""
     for i, c in enumerate(CAPABILITIES)

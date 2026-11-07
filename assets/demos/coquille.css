@@ -17,6 +17,7 @@
   --x-photo: saturate(.95) brightness(.92);
   --x-font: "Jarvis Manrope", var(--sans);
   position: relative; width: min(86rem, 100%); margin: 0 auto; color: var(--x-text);
+  scroll-margin-top: 72px; /* arrivée directe dans JARVIS (#jarvis), sous l'en-tête du site */
 }
 :root[data-mode="platinum"] .xs { --x-text: #f7f9fc; --x-muted: #b9c2cf; --x-photo: saturate(.92) brightness(.97) contrast(1.04); }
 :root[data-mode="base"] .xs { --x-text: #f2f2f2; --x-muted: #b8b8b8; --x-photo: grayscale(.85) brightness(.85); }

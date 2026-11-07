@@ -16,11 +16,11 @@ def html(slug, inner):
         for (k, lab, _short, ic) in NAV
     )
     exts = "".join(
-        f'<a class="xs-ext{" is-on" if c["slug"] == slug else ""}" href="/solutions/{c["slug"]}/"'
+        f'<a class="xs-ext{" is-on" if c["slug"] == slug else ""}" href="/solutions/{c["slug"]}/#jarvis"'
         f'{" aria-current=\"page\"" if c["slug"] == slug else ""}>{icon(EXT_ICON[c["slug"]])}<span>{c["label"]}</span></a>'
         for c in CAPABILITIES
     )
-    return f"""<div class="xs" data-xs>
+    return f"""<div class="xs" id="jarvis" data-xs>
   <div class="xs-device">
     <div class="xs-screen">
       <img class="xs-banner" src="{BANNER}" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1990" height="342">

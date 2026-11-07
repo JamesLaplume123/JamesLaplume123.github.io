@@ -20,17 +20,16 @@
 <meta name="geo.region" content="CA-QC">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="/favicon.svg?v=20261106l">
+<link rel="icon" href="/favicon.svg?v=20261106m">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script>try{var m=new URLSearchParams(location.search).get("mode")||localStorage.getItem("jarvis-mode");if(m==="base"||m==="signature"||m==="platinum")document.documentElement.dataset.mode=m}catch(e){}</script>
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/wow.css?v=20261106l">
-<link rel="stylesheet" href="/assets/demos/app.css?v=20261106l">
-<link rel="stylesheet" href="/assets/demos/maison.css?v=20261106l">
-<link rel="stylesheet" href="/assets/demos/meteo.css?v=20261106l">
-<link rel="stylesheet" href="/assets/demos/boulance.css?v=20261106l">
-<link rel="stylesheet" href="/assets/demos/carte.css?v=20261106l">
-<link rel="stylesheet" href="/assets/demos/rust.css?v=20261106l">
+<link rel="stylesheet" href="/assets/css/wow.css?v=20261106m">
+<link rel="stylesheet" href="/assets/demos/app.css?v=20261106m">
+<link rel="stylesheet" href="/assets/demos/maison.css?v=20261106m">
+<link rel="stylesheet" href="/assets/demos/meteo.css?v=20261106m">
+<link rel="stylesheet" href="/assets/demos/rust.css?v=20261106m">
+<link rel="stylesheet" href="/assets/demos/labdirect.css?v=20261106m">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -108,7 +107,7 @@
     <p class="eyebrow">Notre mission</p>
     <h2 id="mission-titre">La technologie doit rendre libre. <em>Pas dépendant.</em></h2>
     <p>JARVIS existe pour une seule raison : vous redonner du temps et le contrôle de votre vie,
-    simplement. La sécurité privée en est le socle — chez vous, pas dans le nuage d’un autre.</p>
+    simplement.</p>
   </div>
   <ol class="pillars">
     <li data-rev>
@@ -774,144 +773,13 @@
 </div>
 </section>
 
-<!-- BouLance en direct : batteries réelles + radar -->
-<section class="sect" id="boulance" aria-labelledby="boulance-titre">
-  <div class="head shead" data-rev>
-    <p class="eyebrow"><i class="dot" aria-hidden="true"></i> Le laboratoire mobile · en direct</p>
-    <h2 id="boulance-titre">Les batteries de l’ambulance.<br><em>Pour vrai, en ce moment.</em></h2>
-    <p>Deux batteries LiFePO₄ de 280 Ah, lues par Home Assistant dans le véhicule et
-    affichées ici en direct. C’est exactement ce que JARVIS fera chez vous : des données vraies, jamais inventées.</p>
-  </div>
-  <div class="demo-shell bl" data-demo="boulance" data-rev>
-  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · BouLance · Énergie</b>
-    <span class="bl-state" data-bl="state"><i class="dot is-off" aria-hidden="true"></i>Connexion…</span>
-    <span class="tag tag-real">Données réelles</span></div>
-  <div class="demo-body bl-body">
-    <article class="bl-bat" data-bat="0">
-      <div class="bl-pack" aria-hidden="true">
-        <span class="bl-term neg">−</span><span class="bl-term pos">+</span>
-        <div class="bl-cell">
-          <svg class="bl-liquid" viewBox="0 0 200 400" preserveAspectRatio="none">
-            <defs><linearGradient id="bl-liq-0" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" style="stop-color:var(--bl-c, #34d399)"/>
-              <stop offset="1" style="stop-color:var(--bl-c2, #0f766e)"/></linearGradient></defs>
-            <path class="bl-wave w2" d=""></path><path class="bl-wave w1" d="" style="fill:url(#bl-liq-0)"></path>
-          </svg>
-          <div class="bl-bubbles"></div>
-          <svg class="bl-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
-          <div class="bl-shine"></div>
-          <b class="bl-soc"><span data-bl="soc">--</span><i>%</i></b>
-        </div>
-      </div>
-      <div class="bl-info">
-        <p class="bl-k">Batterie A <span class="bl-flag" data-bl="flag"></span></p>
-        <dl class="bl-stats">
-          <div><dt>Tension</dt><dd data-bl="v">—</dd></div>
-          <div><dt>Courant</dt><dd data-bl="a">—</dd></div>
-          <div><dt>Température</dt><dd data-bl="t">—</dd></div>
-          <div><dt>Énergie</dt><dd data-bl="wh">—</dd></div>
-          <div><dt>Écart cellules</dt><dd data-bl="cells">—</dd></div>
-          <div><dt>Cycles</dt><dd data-bl="cycles">—</dd></div>
-        </dl>
-        <p class="bl-mos"><span data-bl="chg">Charge</span><span data-bl="dsg">Décharge</span><span data-bl="bal">Équilibrage</span></p>
-      </div>
-    </article>
-    <div class="bl-mid">
-      <p class="bl-k">Réserve totale</p>
-      <p class="bl-total"><b data-bl="kwh">—</b><i>kWh</i></p>
-      <p class="bl-sub"><span data-bl="ah">— Ah</span> · <span data-bl="w">— W</span></p>
-      <div class="bl-flow" data-bl="flow" aria-hidden="true">
-        <span class="bl-node n-in">Solaire<br>et chargeur</span>
-        <span class="bl-node n-bat">Batteries</span>
-        <span class="bl-node n-out">Ambulance</span>
-        <svg viewBox="0 0 300 60" preserveAspectRatio="none"><path class="bl-wire" d="M40 30 H150 H260"/>
-          <circle class="bl-dot d1" r="4"/><circle class="bl-dot d2" r="4"/><circle class="bl-dot d3" r="4"/></svg>
-      </div>
-      <p class="bl-mode" data-bl="mode">—</p>
-      <div class="bl-chart">
-        <p class="bl-k">24 dernières heures</p>
-        <div class="bl-plot">
-          <svg viewBox="0 0 300 90" preserveAspectRatio="none" data-bl="chart" aria-label="Énergie stockée sur 24 heures">
-            <defs><linearGradient id="blg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".45"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
-            <path class="bl-area" d=""/><path class="bl-line" d="" pathLength="1"/>
-            <line class="bl-cross" x1="0" x2="0" y1="0" y2="90"/>
-          </svg>
-          <i class="bl-now" aria-hidden="true"></i>
-          <span class="bl-tip" aria-hidden="true"></span>
-        </div>
-        <p class="bl-axis"><span>il y a 24 h</span><span data-bl="range">—</span><span>maintenant</span></p>
-      </div>
-    </div>
-    <article class="bl-bat" data-bat="1">
-      <div class="bl-pack" aria-hidden="true">
-        <span class="bl-term neg">−</span><span class="bl-term pos">+</span>
-        <div class="bl-cell">
-          <svg class="bl-liquid" viewBox="0 0 200 400" preserveAspectRatio="none">
-            <defs><linearGradient id="bl-liq-1" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" style="stop-color:var(--bl-c, #34d399)"/>
-              <stop offset="1" style="stop-color:var(--bl-c2, #0f766e)"/></linearGradient></defs>
-            <path class="bl-wave w2" d=""></path><path class="bl-wave w1" d="" style="fill:url(#bl-liq-1)"></path>
-          </svg>
-          <div class="bl-bubbles"></div>
-          <svg class="bl-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
-          <div class="bl-shine"></div>
-          <b class="bl-soc"><span data-bl="soc">--</span><i>%</i></b>
-        </div>
-      </div>
-      <div class="bl-info">
-        <p class="bl-k">Batterie B <span class="bl-flag" data-bl="flag"></span></p>
-        <dl class="bl-stats">
-          <div><dt>Tension</dt><dd data-bl="v">—</dd></div>
-          <div><dt>Courant</dt><dd data-bl="a">—</dd></div>
-          <div><dt>Température</dt><dd data-bl="t">—</dd></div>
-          <div><dt>Énergie</dt><dd data-bl="wh">—</dd></div>
-          <div><dt>Écart cellules</dt><dd data-bl="cells">—</dd></div>
-          <div><dt>Cycles</dt><dd data-bl="cycles">—</dd></div>
-        </dl>
-        <p class="bl-mos"><span data-bl="chg">Charge</span><span data-bl="dsg">Décharge</span><span data-bl="bal">Équilibrage</span></p>
-      </div>
-    </article>
-    <div class="bl-wait" role="status">
-      <span class="bl-wait-ico" aria-hidden="true"><i></i><i></i><i></i></span>
-      <b>Liaison avec l’ambulance en cours</b>
-      <p>Les deux batteries s’affichent ici en direct, mesurées aux 5 secondes dans le véhicule.
-      Tant que la liaison ne répond pas, rien n’est inventé.</p>
-    </div>
-  </div>
-  <i class="bl-beat" aria-hidden="true"></i>
-  <p class="bl-foot"><span data-bl="age">En attente de la première mesure</span> · actualisé toutes les 5 secondes ·
-  source : Home Assistant de l’ambulance (BMS Bluetooth)</p>
-</div>
-  <div style="height:16px"></div>
-  <div class="demo-shell ct" data-demo="carte" data-rev>
-  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · Radar en direct</b>
-    <span class="ct-time" data-ct="time">—</span>
-    <span class="tag tag-real">Données réelles</span></div>
-  <div class="demo-body ct-body">
-    <div class="ct-map" data-ct="map" role="img" aria-label="Carte radar des précipitations autour de Saint-Hyacinthe">
-      <p class="ct-wait" data-ct="wait">Chargement de la carte…</p>
-    </div>
-    <div class="ct-card">
-      <p class="ct-k">BouLance · lieu de base</p>
-      <h3>Saint-Hyacinthe</h3>
-      <p class="ct-now"><b data-ct="temp">—</b><span data-ct="cond">Conditions actuelles</span></p>
-      <p class="ct-note">Position fixe, choisie par le propriétaire : aucune position en direct n’est publiée.</p>
-    </div>
-    <div class="ct-legend" aria-hidden="true"><span>Faible</span><i></i><span>Forte</span><em>Pluie · neige</em></div>
-  </div>
-  <div class="ct-bar">
-    <button type="button" class="ct-play" data-ct="play" aria-label="Mettre en pause l’animation">❚❚</button>
-    <div class="ct-track" data-ct="track"></div>
-    <span class="ct-src">Radar : Environnement et Changement climatique Canada · carte : OpenFreeMap, © OpenMapTiles, © contributeurs OpenStreetMap</span>
-  </div>
-</div>
-</section>
-
 <!-- Comment ça marche -->
 <section class="how" id="fonctionnement" aria-labelledby="how-titre">
   <div class="head" data-rev>
     <p class="eyebrow">Comment ça marche</p>
     <h2 id="how-titre" data-split>Domotique, sécurité et IA.<br><em>Un seul système, chez vous.</em></h2>
+    <p>Tout passe par le JARVIS Hub, un petit serveur installé sur place : vos règles, vos comptes,
+    votre journal et votre IA locale y restent. Pas d’abonnement obligatoire au nuage pour que tout fonctionne.</p>
   </div>
 
   <div class="flow" data-rev>
@@ -976,26 +844,6 @@
   </div>
 </section>
 
-<!-- Le Hub -->
-<section class="hub" aria-labelledby="hub-titre">
-  <figure class="hub-media wipe" data-rev>
-    <img decoding="async" src="/media/product/jarvis-hub-v1.webp" width="1672" height="941"
-         alt="JARVIS Hub posé sur un meuble d’une résidence contemporaine" loading="lazy">
-  </figure>
-  <div class="hub-copy" data-rev>
-    <p class="eyebrow">JARVIS Hub</p>
-    <h2 id="hub-titre">L’intelligence demeure <em>chez vous.</em></h2>
-    <p>Un petit serveur installé sur place garde vos règles, vos comptes, votre journal et
-    votre IA locale. Pas d’abonnement obligatoire au nuage pour que la maison fonctionne.</p>
-    <div class="chiprow">
-      <span class="chip">Local d’abord</span>
-      <span class="chip">Sauvegardes chiffrées</span>
-      <span class="chip">Décisions humaines</span>
-    </div>
-  </div>
-</section>
-
-<!-- Où en est JARVIS -->
 <!-- Écrit en Rust : pourquoi c'est plus sûr, et prêt pour l'IA -->
 <section class="sect rust-sect" id="rust" aria-labelledby="rust-titre">
   <div class="head shead" data-rev>
@@ -1052,6 +900,7 @@
 </div>
 </section>
 
+<!-- Où en est JARVIS -->
 <section class="status" aria-labelledby="status-titre">
   <div class="head" data-rev>
     <p class="eyebrow">Où en est JARVIS · novembre 2026</p>
@@ -1062,8 +911,8 @@
       <p>Côté personne et côté administration, du premier démarrage au partage.</p></article>
     <article class="stat" data-rev><b>En service</b><h3>Tableau JARVIS Signature</h3>
       <p>Il pilote déjà l’éclairage du laboratoire mobile, sur Home Assistant.</p></article>
-    <article class="stat" data-rev><b><span data-n="560">560</span><i>Ah</i></b><h3>premier terrain réel</h3>
-      <p>Une ambulance Ford 2017 transformée : énergie, réseau et diagnostic.</p></article>
+    <article class="stat" data-rev><b><span data-n="6">6</span></b><h3>extensions conçues</h3>
+      <p>Domotique, IA locale, sécurité, entreprise, réseau et continuité, chacune avec ses droits.</p></article>
     <article class="stat" data-rev><b>En cours</b><h3>Noyau du logiciel</h3>
       <p>Comptes sur invitation, droits, double authentification, journal et sauvegardes.</p></article>
   </div>
@@ -1081,9 +930,8 @@
 <section class="modes" id="modes">
   <div class="head" data-rev>
     <p class="eyebrow">Base · Signature · Platinum</p>
-    <h2 style="margin-top:1.1rem">Votre espace.<br><em>À votre image.</em></h2>
-    <p>Trois modes pour la même intelligence. Choisissez-en un : tout le site le suit,
-    comme l’interface de JARVIS.</p>
+    <h2 style="margin-top:1.1rem">Trois modes.<br><em>Une même intelligence.</em></h2>
+    <p>Choisissez-en un : tout le site le suit, comme l’interface de JARVIS.</p>
   </div>
   <div class="mode-tabs" role="group" aria-label="Choisir un mode d’affichage" data-rev>
     <button type="button" data-mode-set="base" aria-pressed="false">
@@ -1106,7 +954,7 @@
   <div class="head" data-rev>
     <p class="kick">Six solutions · Un point de départ</p>
     <h2 data-split>Votre besoin.<br><em>La bonne solution.</em></h2>
-    <p>L’essentiel de chacune, ici même. La page complète attend ceux qui veulent tout le détail.</p>
+    <p>Chacune s’ajoute à JARVIS comme une extension. Touchez-en une : elle s’ouvre dans le logiciel.</p>
   </div>
   <div class="sol-grid">
     <article class="sol-card" data-rev>
@@ -1117,10 +965,8 @@
       <div class="sol-body">
         <p class="sol-kick">Domotique</p>
         <h3><a href="/solutions/environnements-intelligents/#jarvis">Environnements intelligents</a></h3>
-        <p class="sol-for">Pour : Maisons, chalets et petits bâtiments</p>
-        <p class="sol-line">Un environnement qui comprend son état, s’adapte au contexte et demeure contrôlable simplement.</p>
-        <ul class="sol-pts"><li><b>Un écran pour tout</b><span>Lumières, chauffage, stores, verrous et énergie, pièce par pièce.</span></li><li><b>Des ambiances en une touche</b><span>Matin, Soirée, Cinéma, Nuit, Absent : réglées avec vous, modifiables.</span></li><li><b>Le contrôle reste humain</b><span>Déverrouiller ou ouvrir le garage demande toujours votre confirmation.</span></li></ul>
-        <span class="sol-go" aria-hidden="true">Voir la solution <i>↗</i></span>
+        <p class="sol-line">Faire travailler ensemble les technologies d’un lieu, sans rendre son utilisation compliquée.</p>
+        <span class="sol-go" aria-hidden="true">Ouvrir dans JARVIS <i>↗</i></span>
       </div>
     </article>
     <article class="sol-card" data-rev>
@@ -1131,10 +977,8 @@
       <div class="sol-body">
         <p class="sol-kick">IA locale</p>
         <h3><a href="/solutions/ia-privee-connaissances/#jarvis">IA privée et connaissances</a></h3>
-        <p class="sol-for">Pour : Familles, professionnels et équipes avec beaucoup de documents</p>
-        <p class="sol-line">Vos documents restent à leur place. L’IA vous aide à les comprendre et montre toujours d’où vient sa réponse.</p>
-        <ul class="sol-pts"><li><b>Des réponses vérifiables</b><span>Un clic sur la source affiche le passage qui justifie la réponse.</span></li><li><b>Vos documents restent chez vous</b><span>Traitement local sur le Hub, ou externe seulement si vous l’autorisez.</span></li><li><b>Des actions avec permission</b><span>Rien ne part sans votre « Approuver ».</span></li></ul>
-        <span class="sol-go" aria-hidden="true">Voir la solution <i>↗</i></span>
+        <p class="sol-line">Parler à ses propres informations, retrouver les bonnes preuves et préparer une action avec permission.</p>
+        <span class="sol-go" aria-hidden="true">Ouvrir dans JARVIS <i>↗</i></span>
       </div>
     </article>
     <article class="sol-card" data-rev>
@@ -1145,10 +989,8 @@
       <div class="sol-body">
         <p class="sol-kick">Sécurité</p>
         <h3><a href="/solutions/securite-intelligente/#jarvis">Sécurité intelligente</a></h3>
-        <p class="sol-for">Pour : Résidences, entreprises et propriétés réparties sur plusieurs sites</p>
-        <p class="sol-line">Une sécurité qui réunit le contexte, les preuves et les décisions, sans retirer le contrôle humain.</p>
-        <ul class="sol-pts"><li><b>Un seul fil</b><span>Caméras, sonnette, portes, détecteurs et alarme dans une même chronologie.</span></li><li><b>Des preuves classées</b><span>Les images utiles sont gardées avec l’événement, sur place.</span></li><li><b>Le dernier mot</b><span>JARVIS propose, vous approuvez. Rien ne se déverrouille tout seul.</span></li></ul>
-        <span class="sol-go" aria-hidden="true">Voir la solution <i>↗</i></span>
+        <p class="sol-line">Transformer caméras, accès et alarmes en événements compréhensibles plutôt qu’en notifications isolées.</p>
+        <span class="sol-go" aria-hidden="true">Ouvrir dans JARVIS <i>↗</i></span>
       </div>
     </article>
     <article class="sol-card" data-rev>
@@ -1159,10 +1001,8 @@
       <div class="sol-body">
         <p class="sol-kick">Entreprise</p>
         <h3><a href="/solutions/automatisation-operations/#jarvis">Automatisation d’entreprise</a></h3>
-        <p class="sol-for">Pour : PME, entreprises de services et équipes terrain</p>
-        <p class="sol-line">JARVIS relie les outils de l’entreprise, prépare les actions, demande une validation et conserve une trace.</p>
-        <ul class="sol-pts"><li><b>Moins de ressaisie</b><span>Les informations passent d’un outil à l’autre, sans copier-coller.</span></li><li><b>Vos règles, appliquées</b><span>Seuils, approbations, exceptions : écrits une fois, respectés chaque fois.</span></li><li><b>Une trace complète</b><span>Un journal clair de chaque étape, consultable en tout temps.</span></li></ul>
-        <span class="sol-go" aria-hidden="true">Voir la solution <i>↗</i></span>
+        <p class="sol-line">Faire circuler demandes, documents et approbations entre les outils que l’entreprise utilise déjà.</p>
+        <span class="sol-go" aria-hidden="true">Ouvrir dans JARVIS <i>↗</i></span>
       </div>
     </article>
     <article class="sol-card" data-rev>
@@ -1173,10 +1013,8 @@
       <div class="sol-body">
         <p class="sol-kick">Réseau</p>
         <h3><a href="/solutions/reseau-resilience/#jarvis">Réseau et cybersécurité</a></h3>
-        <p class="sol-for">Pour : Maisons connectées, PME et petits multi-sites</p>
-        <p class="sol-line">Une vue claire du réseau et de ses risques, avant que chaque problème devienne une urgence.</p>
-        <ul class="sol-pts"><li><b>Une carte que tout le monde comprend</b><span>Internet, routeur, zones et appareils, avec ce qui circule en direct.</span></li><li><b>Des diagnostics en mots simples</b><span>La vraie cause et une seule action proposée, que vous approuvez.</span></li><li><b>Une maison qui tient bon</b><span>Zones séparées, lien de secours, essentiel qui marche même sans Internet.</span></li></ul>
-        <span class="sol-go" aria-hidden="true">Voir la solution <i>↗</i></span>
+        <p class="sol-line">Comprendre l’infrastructure, surveiller les dépendances et conserver des accès privés fiables.</p>
+        <span class="sol-go" aria-hidden="true">Ouvrir dans JARVIS <i>↗</i></span>
       </div>
     </article>
     <article class="sol-card" data-rev>
@@ -1187,10 +1025,8 @@
       <div class="sol-body">
         <p class="sol-kick">Continuité</p>
         <h3><a href="/solutions/diagnostic-care/#jarvis">Diagnostic & continuité</a></h3>
-        <p class="sol-for">Pour : Tous les environnements équipés, du bâtiment au véhicule</p>
-        <p class="sol-line">Comprendre plus vite ce qui a changé, quoi vérifier et comment transmettre un dossier utile.</p>
-        <ul class="sol-pts"><li><b>Des réponses, pas des alarmes</b><span>Ce qui a changé, depuis quand et ce que ça veut dire, en mots simples.</span></li><li><b>Un dossier prêt à transmettre</b><span>Le bon technicien reçoit les preuves et la bonne pièce à apporter.</span></li><li><b>Une réparation prouvée</b><span>JARVIS suit les mesures après l’intervention et confirme le retour à la normale.</span></li></ul>
-        <span class="sol-go" aria-hidden="true">Voir la solution <i>↗</i></span>
+        <p class="sol-line">Passer d’un symptôme à des preuves, des vérifications et une remise en service documentée.</p>
+        <span class="sol-go" aria-hidden="true">Ouvrir dans JARVIS <i>↗</i></span>
       </div>
     </article>
   </div>
@@ -1201,8 +1037,7 @@
 <section class="offer" id="offre">
   <div class="head" data-rev>
     <h2>Choisissez votre <em>environnement.</em></h2>
-    <p>Un seul JARVIS, configuré pour votre réalité. Chaque déploiement commence
-    par une première preuve utile, définie avec vous.</p>
+    <p>Un seul JARVIS, configuré pour votre réalité : une maison, une entreprise ou un véhicule.</p>
   </div>
   <div class="plans">
     <article class="plan" data-rev>
@@ -1245,15 +1080,18 @@
   <div class="bg"><img decoding="async" src="/media/ambulance/ambulance-garage-lab-v1.webp"
        alt="Laboratoire mobile JARVIS — ambulance Ford 2017 dans le garage" loading="lazy"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Premier terrain de preuve</p>
+    <p class="eyebrow" data-rev><i class="dot ld-dot" aria-hidden="true"></i> Laboratoire mobile · en direct</p>
     <h2 data-rev>Le système sort<br><em>de l’écran.</em></h2>
-    <div class="specs" data-rev>
-      <div><b><span data-n="560">560</span><i>Ah</i></b><small>Énergie</small></div>
+    <p class="ld-lead" data-rev>Une ambulance Ford 2017 transformée en laboratoire. Ses deux batteries LiFePO₄
+    sont lues par Home Assistant et affichées ici, pour vrai, en ce moment.</p>
+    <div class="specs ld" data-labdirect data-rev>
+      <div class="ld-bat"><b><span data-ld="a">--</span><i>%</i></b><small>Batterie A</small></div>
+      <div class="ld-bat"><b><span data-ld="b">--</span><i>%</i></b><small>Batterie B</small></div>
+      <div><b><span data-ld="kwh">560</span><i data-ld="unit">Ah</i></b><small data-ld="kwh-l">Capacité</small></div>
       <div><b><span data-n="500">500</span><i>W</i></b><small>Solaire</small></div>
-      <div><b>V10</b><small>Ford 2017</small></div>
-      <div><b>En cours</b><small>Construction réelle</small></div>
     </div>
-    <p data-rev style="margin:0 0 3rem"><a class="pill ghost" href="/laboratoire-mobile/">Découvrir le laboratoire mobile</a></p>
+    <p class="ld-state" data-ld="state" data-rev>Connexion aux batteries…</p>
+    <p data-rev style="margin:0 0 3rem"><a class="pill ghost" href="/laboratoire-mobile/">Voir le laboratoire en direct</a></p>
   </div>
 </section>
 
@@ -1429,8 +1267,7 @@
 <!-- Appel -->
 <section class="cta" id="demo">
   <h2 data-rev>Voyez JARVIS<br><span>de vos yeux.</span></h2>
-  <p data-rev>Une rencontre, vos besoins réels, ce qui existe aujourd’hui —
-  et la première preuve utile définie ensemble.</p>
+  <p data-rev>Une rencontre, vos besoins réels, et ce qui fonctionne déjà aujourd’hui.</p>
   <div class="acts" data-rev><a class="pill" href="/contact/" data-magnet>Réserver une démo</a></div>
 </section>
 
@@ -1452,12 +1289,11 @@
   </div>
   <p class="foot-line"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span>Privé par conception</span></p>
 </footer>
-<script src="/assets/js/wow.js?v=20261106l" defer></script>
-<script src="/assets/demos/app.js?v=20261106l" defer></script>
-<script src="/assets/demos/maison.js?v=20261106l" defer></script>
-<script src="/assets/demos/meteo.js?v=20261106l" defer></script>
-<script src="/assets/demos/boulance.js?v=20261106l" defer></script>
-<script src="/assets/demos/carte.js?v=20261106l" defer></script>
-<script src="/assets/demos/rust.js?v=20261106l" defer></script>
+<script src="/assets/js/wow.js?v=20261106m" defer></script>
+<script src="/assets/demos/app.js?v=20261106m" defer></script>
+<script src="/assets/demos/maison.js?v=20261106m" defer></script>
+<script src="/assets/demos/meteo.js?v=20261106m" defer></script>
+<script src="/assets/demos/rust.js?v=20261106m" defer></script>
+<script src="/assets/demos/labdirect.js?v=20261106m" defer></script>
 </body>
 </html>

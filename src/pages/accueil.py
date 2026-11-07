@@ -1,22 +1,21 @@
 # Accueil — vendre JARVIS, le logiciel (refonte novembre 2026).
-# Parcours : promesse et aperçu en direct → visite de l'app (vraie interface) →
-# JARVIS en direct (vraies données + décisions simulées) → comment ça marche →
-# où en est le projet → modes → six solutions → offre → laboratoire → FAQ → démo.
+# Parcours (chaque idée dite une seule fois) : promesse → mission → l'app (vraie interface) →
+# la maison à essayer → la météo réelle et ce que JARVIS en ferait → comment ça marche (Hub
+# compris) → Rust → où en est le projet → modes → six solutions → offre → laboratoire mobile
+# (batteries en direct) → FAQ → démo. Le tableau complet des batteries et le radar vivent sur
+# /laboratoire-mobile/.
 # Les questions de la FAQ alimentent aussi les données structurées (FAQPage).
 
 import json
 
 from config import CAPABILITIES
-from demos import app, boulance, carte, maison, meteo, rust
+from demos import app, maison, meteo, rust
 
 
 def apercu_solutions():
-    """Les six solutions avec l'essentiel de chacune : assez pour décider, sans ouvrir la page."""
+    """Les six solutions en un coup d'œil; chacune s'ouvre dans JARVIS, comme une extension."""
     cartes = []
     for c in CAPABILITIES:
-        points = "".join(
-            f"<li><b>{t}</b><span>{d}</span></li>" for t, d in c["points"]
-        )
         cartes.append(f"""<article class="sol-card" data-rev>
       <a class="sol-shot" href="/solutions/{c['slug']}/#jarvis" tabindex="-1" aria-hidden="true">
         <img src="{c['image']}" alt="" loading="lazy" decoding="async">
@@ -25,10 +24,8 @@ def apercu_solutions():
       <div class="sol-body">
         <p class="sol-kick">{c['label']}</p>
         <h3><a href="/solutions/{c['slug']}/#jarvis">{c['title']}</a></h3>
-        <p class="sol-for">Pour : {c['pour']}</p>
-        <p class="sol-line">{c['line']}</p>
-        <ul class="sol-pts">{points}</ul>
-        <span class="sol-go" aria-hidden="true">Voir la solution <i>↗</i></span>
+        <p class="sol-line">{c['short']}</p>
+        <span class="sol-go" aria-hidden="true">Ouvrir dans JARVIS <i>↗</i></span>
       </div>
     </article>""")
     return "\n    ".join(cartes)
@@ -168,7 +165,7 @@ PAGE = {
     "url": "/",
     "v2": True,
     "title": "Domotique privée et sécurité intelligente au Québec | JARVIS",
-    "assets": ["app", "maison", "meteo", "boulance", "carte", "rust"],
+    "assets": ["app", "maison", "meteo", "rust", "labdirect"],
     "description": (
         "Domotique privée, sécurité intelligente et IA locale, installées chez vous. "
         "JARVIS relie vos appareils sans envoyer vos données au nuage. Saint-Hyacinthe, Québec."
@@ -230,7 +227,7 @@ PAGE = {
     <p class="eyebrow">Notre mission</p>
     <h2 id="mission-titre">La technologie doit rendre libre. <em>Pas dépendant.</em></h2>
     <p>JARVIS existe pour une seule raison : vous redonner du temps et le contrôle de votre vie,
-    simplement. La sécurité privée en est le socle — chez vous, pas dans le nuage d’un autre.</p>
+    simplement.</p>
   </div>
   <ol class="pillars">
     <li data-rev>
@@ -285,24 +282,13 @@ PAGE = {
   {meteo.html()}
 </section>
 
-<!-- BouLance en direct : batteries réelles + radar -->
-<section class="sect" id="boulance" aria-labelledby="boulance-titre">
-  <div class="head shead" data-rev>
-    <p class="eyebrow"><i class="dot" aria-hidden="true"></i> Le laboratoire mobile · en direct</p>
-    <h2 id="boulance-titre">Les batteries de l’ambulance.<br><em>Pour vrai, en ce moment.</em></h2>
-    <p>Deux batteries LiFePO₄ de 280 Ah, lues par Home Assistant dans le véhicule et
-    affichées ici en direct. C’est exactement ce que JARVIS fera chez vous : des données vraies, jamais inventées.</p>
-  </div>
-  {boulance.html()}
-  <div style="height:16px"></div>
-  {carte.html()}
-</section>
-
 <!-- Comment ça marche -->
 <section class="how" id="fonctionnement" aria-labelledby="how-titre">
   <div class="head" data-rev>
     <p class="eyebrow">Comment ça marche</p>
     <h2 id="how-titre" data-split>Domotique, sécurité et IA.<br><em>Un seul système, chez vous.</em></h2>
+    <p>Tout passe par le JARVIS Hub, un petit serveur installé sur place : vos règles, vos comptes,
+    votre journal et votre IA locale y restent. Pas d’abonnement obligatoire au nuage pour que tout fonctionne.</p>
   </div>
 
   <div class="flow" data-rev>
@@ -367,26 +353,6 @@ PAGE = {
   </div>
 </section>
 
-<!-- Le Hub -->
-<section class="hub" aria-labelledby="hub-titre">
-  <figure class="hub-media wipe" data-rev>
-    <img src="/media/product/jarvis-hub-v1.webp" width="1672" height="941"
-         alt="JARVIS Hub posé sur un meuble d’une résidence contemporaine" loading="lazy">
-  </figure>
-  <div class="hub-copy" data-rev>
-    <p class="eyebrow">JARVIS Hub</p>
-    <h2 id="hub-titre">L’intelligence demeure <em>chez vous.</em></h2>
-    <p>Un petit serveur installé sur place garde vos règles, vos comptes, votre journal et
-    votre IA locale. Pas d’abonnement obligatoire au nuage pour que la maison fonctionne.</p>
-    <div class="chiprow">
-      <span class="chip">Local d’abord</span>
-      <span class="chip">Sauvegardes chiffrées</span>
-      <span class="chip">Décisions humaines</span>
-    </div>
-  </div>
-</section>
-
-<!-- Où en est JARVIS -->
 <!-- Écrit en Rust : pourquoi c'est plus sûr, et prêt pour l'IA -->
 <section class="sect rust-sect" id="rust" aria-labelledby="rust-titre">
   <div class="head shead" data-rev>
@@ -398,6 +364,7 @@ PAGE = {
   {rust.html()}
 </section>
 
+<!-- Où en est JARVIS -->
 <section class="status" aria-labelledby="status-titre">
   <div class="head" data-rev>
     <p class="eyebrow">Où en est JARVIS · novembre 2026</p>
@@ -408,8 +375,8 @@ PAGE = {
       <p>Côté personne et côté administration, du premier démarrage au partage.</p></article>
     <article class="stat" data-rev><b>En service</b><h3>Tableau JARVIS Signature</h3>
       <p>Il pilote déjà l’éclairage du laboratoire mobile, sur Home Assistant.</p></article>
-    <article class="stat" data-rev><b><span data-n="560">560</span><i>Ah</i></b><h3>premier terrain réel</h3>
-      <p>Une ambulance Ford 2017 transformée : énergie, réseau et diagnostic.</p></article>
+    <article class="stat" data-rev><b><span data-n="6">6</span></b><h3>extensions conçues</h3>
+      <p>Domotique, IA locale, sécurité, entreprise, réseau et continuité, chacune avec ses droits.</p></article>
     <article class="stat" data-rev><b>En cours</b><h3>Noyau du logiciel</h3>
       <p>Comptes sur invitation, droits, double authentification, journal et sauvegardes.</p></article>
   </div>
@@ -427,9 +394,8 @@ PAGE = {
 <section class="modes" id="modes">
   <div class="head" data-rev>
     <p class="eyebrow">Base · Signature · Platinum</p>
-    <h2 style="margin-top:1.1rem">Votre espace.<br><em>À votre image.</em></h2>
-    <p>Trois modes pour la même intelligence. Choisissez-en un : tout le site le suit,
-    comme l’interface de JARVIS.</p>
+    <h2 style="margin-top:1.1rem">Trois modes.<br><em>Une même intelligence.</em></h2>
+    <p>Choisissez-en un : tout le site le suit, comme l’interface de JARVIS.</p>
   </div>
   <div class="mode-tabs" role="group" aria-label="Choisir un mode d’affichage" data-rev>
     <button type="button" data-mode-set="base" aria-pressed="false">
@@ -452,7 +418,7 @@ PAGE = {
   <div class="head" data-rev>
     <p class="kick">Six solutions · Un point de départ</p>
     <h2 data-split>Votre besoin.<br><em>La bonne solution.</em></h2>
-    <p>L’essentiel de chacune, ici même. La page complète attend ceux qui veulent tout le détail.</p>
+    <p>Chacune s’ajoute à JARVIS comme une extension. Touchez-en une : elle s’ouvre dans le logiciel.</p>
   </div>
   <div class="sol-grid">
     {apercu_solutions()}
@@ -464,8 +430,7 @@ PAGE = {
 <section class="offer" id="offre">
   <div class="head" data-rev>
     <h2>Choisissez votre <em>environnement.</em></h2>
-    <p>Un seul JARVIS, configuré pour votre réalité. Chaque déploiement commence
-    par une première preuve utile, définie avec vous.</p>
+    <p>Un seul JARVIS, configuré pour votre réalité : une maison, une entreprise ou un véhicule.</p>
   </div>
   <div class="plans">
     <article class="plan" data-rev>
@@ -508,15 +473,18 @@ PAGE = {
   <div class="bg"><img src="/media/ambulance/ambulance-garage-lab-v1.webp"
        alt="Laboratoire mobile JARVIS — ambulance Ford 2017 dans le garage" loading="lazy"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Premier terrain de preuve</p>
+    <p class="eyebrow" data-rev><i class="dot ld-dot" aria-hidden="true"></i> Laboratoire mobile · en direct</p>
     <h2 data-rev>Le système sort<br><em>de l’écran.</em></h2>
-    <div class="specs" data-rev>
-      <div><b><span data-n="560">560</span><i>Ah</i></b><small>Énergie</small></div>
+    <p class="ld-lead" data-rev>Une ambulance Ford 2017 transformée en laboratoire. Ses deux batteries LiFePO₄
+    sont lues par Home Assistant et affichées ici, pour vrai, en ce moment.</p>
+    <div class="specs ld" data-labdirect data-rev>
+      <div class="ld-bat"><b><span data-ld="a">--</span><i>%</i></b><small>Batterie A</small></div>
+      <div class="ld-bat"><b><span data-ld="b">--</span><i>%</i></b><small>Batterie B</small></div>
+      <div><b><span data-ld="kwh">560</span><i data-ld="unit">Ah</i></b><small data-ld="kwh-l">Capacité</small></div>
       <div><b><span data-n="500">500</span><i>W</i></b><small>Solaire</small></div>
-      <div><b>V10</b><small>Ford 2017</small></div>
-      <div><b>En cours</b><small>Construction réelle</small></div>
     </div>
-    <p data-rev style="margin:0 0 3rem"><a class="pill ghost" href="/laboratoire-mobile/">Découvrir le laboratoire mobile</a></p>
+    <p class="ld-state" data-ld="state" data-rev>Connexion aux batteries…</p>
+    <p data-rev style="margin:0 0 3rem"><a class="pill ghost" href="/laboratoire-mobile/">Voir le laboratoire en direct</a></p>
   </div>
 </section>
 
@@ -536,8 +504,7 @@ PAGE = {
 <!-- Appel -->
 <section class="cta" id="demo">
   <h2 data-rev>Voyez JARVIS<br><span>de vos yeux.</span></h2>
-  <p data-rev>Une rencontre, vos besoins réels, ce qui existe aujourd’hui —
-  et la première preuve utile définie ensemble.</p>
+  <p data-rev>Une rencontre, vos besoins réels, et ce qui fonctionne déjà aujourd’hui.</p>
   <div class="acts" data-rev><a class="pill" href="/contact/" data-magnet>Réserver une démo</a></div>
 </section>
 """,

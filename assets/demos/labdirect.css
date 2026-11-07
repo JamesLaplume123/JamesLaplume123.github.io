@@ -1,0 +1,17 @@
+/* Accueil, section du laboratoire mobile : les deux batteries de l'ambulance en direct
+   (mêmes données et mêmes couleurs que le tableau complet de /laboratoire-mobile/). */
+.band .ld-lead { max-width: 38rem; margin: 0 0 2.2rem; color: #d9d4ca; font-size: 1.05rem; line-height: 1.6; text-shadow: 0 2px 18px #000c; }
+.band .ld-dot { display: inline-block; width: 7px; height: 7px; margin-right: .45rem; border-radius: 50%; vertical-align: .1em; background: #34d399; box-shadow: 0 0 10px #34d399; }
+.ld .ld-bat b { color: var(--ld-c, #34d399); text-shadow: 0 0 26px color-mix(in srgb, var(--ld-c, #34d399) 45%, transparent); transition: color .6s; }
+.ld .ld-bat b i { color: color-mix(in srgb, var(--ld-c, #34d399) 70%, #bdbdc4); }
+.ld .ld-bat small::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: .45rem; border-radius: 50%; background: var(--ld-c, #34d399); vertical-align: .1em; }
+.ld.is-off .ld-bat b { color: #8f8a82; text-shadow: none; }
+.ld.is-off .ld-bat small::before { background: #8f8a82; }
+.band .ld-state { margin: -1.2rem 0 1.8rem; font: 500 .8rem/1.4 var(--mono, ui-monospace, monospace); letter-spacing: .04em; color: #b8b2a8; }
+.fx .band .ld-dot { animation: ldPulse 2.4s ease-in-out infinite; }
+@keyframes ldPulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .fx .band .ld-dot { animation: none; } }
+/* Téléphone : la photo passe derrière le texte, il faut plus d'ombre pour bien lire */
+@media (max-width: 680px) {
+  .band:has(.ld) .bg::after { background: linear-gradient(180deg, #000000a6 0%, #000000d1 40%, #000000eb 100%); }
+}

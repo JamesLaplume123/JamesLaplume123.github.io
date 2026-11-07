@@ -129,36 +129,32 @@
   </ol>
 </section>
 
-<!-- Vitrine de l'app (dossier User v25) : les écrans principaux déroulés, un par chapitre (assets/demos/app.*) -->
+<!-- Vitrine de l'app (dossier User v25) : le logiciel dans une seule fenêtre (assets/demos/app.*) -->
 <section class="vitrine" id="app" aria-label="JARVIS App">
   <div class="head" data-rev>
     <p class="eyebrow">JARVIS App · l’interface</p>
     <h2 data-split>Une seule application.<br><em>Toute votre vie connectée.</em></h2>
-    <p class="vitrine-lead">Voici les écrans principaux, tels qu’ils sont. Rien n’est une image&nbsp;:
-    chaque écran est la vraie interface, avec des données fictives.</p>
+    <p class="vitrine-lead">Le logiciel, tel quel. Choisissez un écran dans le menu de gauche&nbsp;:
+    il s’ouvre ici même, comme devant votre écran.</p>
   </div>
-  <div class="apx">
-  <nav class="apx-rail" aria-label="Les écrans de JARVIS App"><ol><li><a href="#ecran-accueil"><i>01</i><span>Accueil</span></a></li><li><a href="#ecran-assistant"><i>02</i><span>Assistant JARVIS</span></a></li><li><a href="#ecran-espace"><i>03</i><span>Mon espace</span></a></li><li><a href="#ecran-journee"><i>04</i><span>Ma journée</span></a></li><li><a href="#ecran-partage"><i>05</i><span>Mes partages</span></a></li><li><a href="#ecran-carte"><i>06</i><span>Carte</span></a></li><li><a href="#ecran-outils"><i>07</i><span>Mes outils</span></a></li></ol>
-    <p class="apx-note"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5"/><path d="M12 7.9v.1"/></svg><span>Données fictives · tout est cliquable</span></p>
-  </nav>
-  <section class="apx-ch" id="ecran-accueil" aria-labelledby="ecran-accueil-t">
-  <div class="apx-head" data-rev>
-    <p class="apx-k"><i>01</i><span>Accueil</span></p>
-    <h3 id="ecran-accueil-t">Votre journée, sur un seul écran.</h3>
-    <p>Messages, agenda, lieux et assistant réunis, à votre image.</p>
-  </div>
-  <div class="ap is-single" data-demo="app" data-single="accueil">
+  <div class="ap" data-demo="app">
   <div class="ap-stage">
     <div class="ap-glow" aria-hidden="true"></div>
     <div class="ap-tilt">
       <div class="ap-device">
-        <p class="ap-badge"><span>Démo · données fictives</span></p>
+        <div class="ap-win">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <b>JARVIS · Ma vie</b>
+          <span class="ap-win-sep" aria-hidden="true">/</span>
+          <span class="ap-win-name" data-ap="winname">Accueil</span>
+          <span class="tag tag-sim">Démo · données fictives</span>
+        </div>
         <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="JARVIS App, démonstration avec données fictives">
           <div class="ap-bg" aria-hidden="true"></div>
           <img class="ap-banner" src="/media/app/banniere-lac.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1990" height="342">
           <nav class="ap-side" aria-label="JARVIS App">
             <div class="ap-brand" aria-hidden="true"><b>JARVIS</b><small>Private Systems</small><em class="ap-modename"></em></div>
-            <div class="ap-nav" aria-label="Écrans de JARVIS App"><a class="ap-jump is-on" href="#ecran-accueil" aria-current='true' aria-label="Accueil"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg><span class="l-long">Accueil</span><span class="l-short" aria-hidden="true">Accueil</span></a><a class="ap-jump" href="#ecran-espace" aria-label="Mon espace"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"/><path d="M4.75 20c.9-3.6 3.75-5.5 7.25-5.5s6.35 1.9 7.25 5.5"/></svg><span class="l-long">Mon espace</span><span class="l-short" aria-hidden="true">Espace</span></a><a class="ap-jump" href="#ecran-carte" aria-label="Carte"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg><span class="l-long">Carte</span><span class="l-short" aria-hidden="true">Carte</span></a><a class="ap-jump" href="#ecran-outils" aria-label="Mes outils"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="4" y="13.25" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="13.25" width="6.75" height="6.75" rx="1.75"/></svg><span class="l-long">Mes outils</span><span class="l-short" aria-hidden="true">Outils</span></a></div>
+            <div class="ap-nav" role="tablist" aria-label="Écrans de JARVIS App" aria-orientation="vertical"><i class="ap-ind" aria-hidden="true"><i class="ap-prog"></i></i><button type="button" role="tab" id="ap-t-accueil" aria-controls="ap-p-accueil" aria-selected="true" tabindex="0" data-nav="accueil" aria-label="Accueil" class="is-on"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg><span class="l-long">Accueil</span><span class="l-short" aria-hidden="true">Accueil</span></button><button type="button" role="tab" id="ap-t-espace" aria-controls="ap-p-espace" aria-selected="false" tabindex="-1" data-nav="espace" aria-label="Mon espace"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"/><path d="M4.75 20c.9-3.6 3.75-5.5 7.25-5.5s6.35 1.9 7.25 5.5"/></svg><span class="l-long">Mon espace</span><span class="l-short" aria-hidden="true">Espace</span></button><button type="button" role="tab" id="ap-t-carte" aria-controls="ap-p-carte" aria-selected="false" tabindex="-1" data-nav="carte" aria-label="Carte"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg><span class="l-long">Carte</span><span class="l-short" aria-hidden="true">Carte</span></button><button type="button" role="tab" id="ap-t-outils" aria-controls="ap-p-outils" aria-selected="false" tabindex="-1" data-nav="outils" aria-label="Mes outils"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="4" y="13.25" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="13.25" width="6.75" height="6.75" rx="1.75"/></svg><span class="l-long">Mes outils</span><span class="l-short" aria-hidden="true">Outils</span></button></div>
             <button type="button" class="ap-admin" data-toast="Administration : comptes, droits et extensions. Réservée à l’administrateur de votre système."><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><path d="M15 5v4M9 10v4M17 15v4"/></svg><span class="l-long">Administration</span></button>
             <div class="ap-side-f"><p class="ap-motto">Votre espace.<br>À votre image.</p></div>
           </nav>
@@ -173,7 +169,7 @@
               <span class="ap-pin" title="Emplacement du Hub"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg></span>
               <span class="ap-me"><img class="ap-mono ap-face" src="/media/app/alex.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="96" height="96"><b>Alex</b><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></span>
             </header>
-            <div class="ap-views"><section class="ap-view ap-v-accueil is-on" role="group" id="ap-p-accueil-s" aria-label="Accueil" data-view="accueil" data-nav="accueil" data-dur="7000"><div class="ap-head" data-r style="--r:0">
+            <div class="ap-views"><section class="ap-view ap-v-accueil is-on" role="tabpanel" id="ap-p-accueil" aria-labelledby="ap-t-accueil" data-view="accueil" data-nav="accueil" data-title="Accueil" data-dur="7000"><div class="ap-head" data-r style="--r:0">
   <div><h3 class="ap-h1"><span data-ap="greet">Bonsoir</span> <em>Alex</em></h3><p class="ap-sub">Votre journée, simplement.</p></div><div class="ap-today"><span data-ap="date">Aujourd’hui</span><b><span data-ap="clock">19 h 42</span></b></div>
 </div>
 <div class="ap-card ap-notifs" data-r style="--r:1">
@@ -260,48 +256,7 @@
       <li><div><img class="ap-mono ap-face" src="/media/app/equipe.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="96" height="96"><span><b>Équipe Atelier</b><small>Le dossier est prêt. On en discute demain matin.</small></span><time>2 h</time></div></li>
     </ul>
   </article>
-</div></section></div>
-          </div>
-          <p class="ap-flash" role="status" aria-live="polite"></p>
-        </div>
-        <i class="ap-sweep" aria-hidden="true"></i>
-      </div>
-    </div>
-  </div>
-</div>
-</section><section class="apx-ch" id="ecran-assistant" aria-labelledby="ecran-assistant-t">
-  <div class="apx-head" data-rev>
-    <p class="apx-k"><i>02</i><span>Assistant JARVIS</span></p>
-    <h3 id="ecran-assistant-t">Il propose. Vous décidez.</h3>
-    <p>Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord.</p>
-  </div>
-  <div class="ap is-single" data-demo="app" data-single="assistant">
-  <div class="ap-stage">
-    <div class="ap-glow" aria-hidden="true"></div>
-    <div class="ap-tilt">
-      <div class="ap-device">
-        <p class="ap-badge"><span>Démo · données fictives</span></p>
-        <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="JARVIS App, démonstration avec données fictives">
-          <div class="ap-bg" aria-hidden="true"></div>
-          <img class="ap-banner" src="/media/app/banniere-lac.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1990" height="342">
-          <nav class="ap-side" aria-label="JARVIS App">
-            <div class="ap-brand" aria-hidden="true"><b>JARVIS</b><small>Private Systems</small><em class="ap-modename"></em></div>
-            <div class="ap-nav" aria-label="Écrans de JARVIS App"><a class="ap-jump is-on" href="#ecran-accueil" aria-current='true' aria-label="Accueil"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg><span class="l-long">Accueil</span><span class="l-short" aria-hidden="true">Accueil</span></a><a class="ap-jump" href="#ecran-espace" aria-label="Mon espace"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"/><path d="M4.75 20c.9-3.6 3.75-5.5 7.25-5.5s6.35 1.9 7.25 5.5"/></svg><span class="l-long">Mon espace</span><span class="l-short" aria-hidden="true">Espace</span></a><a class="ap-jump" href="#ecran-carte" aria-label="Carte"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg><span class="l-long">Carte</span><span class="l-short" aria-hidden="true">Carte</span></a><a class="ap-jump" href="#ecran-outils" aria-label="Mes outils"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="4" y="13.25" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="13.25" width="6.75" height="6.75" rx="1.75"/></svg><span class="l-long">Mes outils</span><span class="l-short" aria-hidden="true">Outils</span></a></div>
-            <button type="button" class="ap-admin" data-toast="Administration : comptes, droits et extensions. Réservée à l’administrateur de votre système."><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><path d="M15 5v4M9 10v4M17 15v4"/></svg><span class="l-long">Administration</span></button>
-            <div class="ap-side-f"><p class="ap-motto">Votre espace.<br>À votre image.</p></div>
-          </nav>
-          <div class="ap-main">
-            <header class="ap-top">
-              <button type="button" class="ap-search" data-go="assistant"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.25"/><path d="m20 20-4.5-4.5"/></svg><span>Que souhaitez-vous faire ?</span></button>
-              <span class="ap-status-time" data-ap="clock">19 h 42</span>
-              <span class="ap-wx" title="Saint-Hyacinthe · Environnement Canada">
-                <span class="ap-wx-i" aria-hidden="true"><svg class="ap-i wx-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.75"/><path d="M12 2.75v2M12 19.25v2M2.75 12h2M19.25 12h2M5.45 5.45l1.4 1.4M17.15 17.15l1.4 1.4M5.45 18.55l1.4-1.4M17.15 6.85l1.4-1.4"/></svg><svg class="ap-i wx-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14.6A7.5 7.5 0 0 1 9.4 5a7.5 7.5 0 1 0 9.6 9.6Z"/></svg><svg class="ap-i wx-cloud" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 18.5h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/></svg><svg class="ap-i wx-rain" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="m8.5 18-1 2.25M12.5 18l-1 2.25M16.5 18l-1 2.25"/></svg><svg class="ap-i wx-snow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="M8 18.5v.1M12 19.75v.1M16 18.5v.1M10 21.5v.1M14 21.5v.1"/></svg><svg class="ap-i wx-fog" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h16M6 13h12M4 16.5h16M8 20h8"/></svg></span>
-                <span><b><span data-ap="temp">—</span><span class="ap-unit"> °C</span></b><small>Saint-Hyacinthe<span class="ap-live"> · en direct</span></small></span>
-              </span>
-              <span class="ap-pin" title="Emplacement du Hub"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg></span>
-              <span class="ap-me"><img class="ap-mono ap-face" src="/media/app/alex.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="96" height="96"><b>Alex</b><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></span>
-            </header>
-            <div class="ap-views"><section class="ap-view ap-v-assistant is-on" role="group" id="ap-p-assistant-s" aria-label="Assistant JARVIS" data-view="assistant" data-nav="accueil" data-dur="13000"><div class="ap-head" data-r style="--r:0">
+</div></section><section class="ap-view ap-v-assistant" role="tabpanel" id="ap-p-assistant" aria-labelledby="ap-t-accueil" data-view="assistant" data-nav="accueil" data-title="Assistant JARVIS" data-dur="13000" inert><div class="ap-head" data-r style="--r:0">
   <div><p class="ap-crumb">Accueil <span>/</span> <b>Assistant</b></p><h3 class="ap-h1">Assistant <em>JARVIS</em></h3><p class="ap-sub">Parlez à JARVIS, tout simplement.</p></div>
 </div>
 <div class="ap-card ap-chat" data-r style="--r:1">
@@ -336,48 +291,7 @@
   </div>
   <div class="ap-composer" aria-hidden="true"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m19.5 11.5-7.4 7.4a4.5 4.5 0 0 1-6.4-6.4l7.7-7.7a3 3 0 0 1 4.2 4.2l-7.5 7.5a1.5 1.5 0 0 1-2.1-2.1l6.8-6.8"/></svg><span>Écrire à JARVIS…</span>
     <span class="ap-talk"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.75 11.5a6.25 6.25 0 0 0 12.5 0M12 17.75v2.75"/></svg>Parler</span><span class="ap-go"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></span></div>
-</div></section></div>
-          </div>
-          <p class="ap-flash" role="status" aria-live="polite"></p>
-        </div>
-        <i class="ap-sweep" aria-hidden="true"></i>
-      </div>
-    </div>
-  </div>
-</div>
-</section><section class="apx-ch" id="ecran-espace" aria-labelledby="ecran-espace-t">
-  <div class="apx-head" data-rev>
-    <p class="apx-k"><i>03</i><span>Mon espace</span></p>
-    <h3 id="ecran-espace-t">Votre quotidien, à votre image.</h3>
-    <p>Agenda, documents, appareils, connexions et partages : chaque chose à sa place.</p>
-  </div>
-  <div class="ap is-single" data-demo="app" data-single="espace">
-  <div class="ap-stage">
-    <div class="ap-glow" aria-hidden="true"></div>
-    <div class="ap-tilt">
-      <div class="ap-device">
-        <p class="ap-badge"><span>Démo · données fictives</span></p>
-        <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="JARVIS App, démonstration avec données fictives">
-          <div class="ap-bg" aria-hidden="true"></div>
-          <img class="ap-banner" src="/media/app/banniere-lac.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1990" height="342">
-          <nav class="ap-side" aria-label="JARVIS App">
-            <div class="ap-brand" aria-hidden="true"><b>JARVIS</b><small>Private Systems</small><em class="ap-modename"></em></div>
-            <div class="ap-nav" aria-label="Écrans de JARVIS App"><a class="ap-jump" href="#ecran-accueil" aria-label="Accueil"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg><span class="l-long">Accueil</span><span class="l-short" aria-hidden="true">Accueil</span></a><a class="ap-jump is-on" href="#ecran-espace" aria-current='true' aria-label="Mon espace"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"/><path d="M4.75 20c.9-3.6 3.75-5.5 7.25-5.5s6.35 1.9 7.25 5.5"/></svg><span class="l-long">Mon espace</span><span class="l-short" aria-hidden="true">Espace</span></a><a class="ap-jump" href="#ecran-carte" aria-label="Carte"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg><span class="l-long">Carte</span><span class="l-short" aria-hidden="true">Carte</span></a><a class="ap-jump" href="#ecran-outils" aria-label="Mes outils"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="4" y="13.25" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="13.25" width="6.75" height="6.75" rx="1.75"/></svg><span class="l-long">Mes outils</span><span class="l-short" aria-hidden="true">Outils</span></a></div>
-            <button type="button" class="ap-admin" data-toast="Administration : comptes, droits et extensions. Réservée à l’administrateur de votre système."><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><path d="M15 5v4M9 10v4M17 15v4"/></svg><span class="l-long">Administration</span></button>
-            <div class="ap-side-f"><p class="ap-motto">Votre espace.<br>À votre image.</p></div>
-          </nav>
-          <div class="ap-main">
-            <header class="ap-top">
-              <button type="button" class="ap-search" data-go="assistant"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.25"/><path d="m20 20-4.5-4.5"/></svg><span>Que souhaitez-vous faire ?</span></button>
-              <span class="ap-status-time" data-ap="clock">19 h 42</span>
-              <span class="ap-wx" title="Saint-Hyacinthe · Environnement Canada">
-                <span class="ap-wx-i" aria-hidden="true"><svg class="ap-i wx-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.75"/><path d="M12 2.75v2M12 19.25v2M2.75 12h2M19.25 12h2M5.45 5.45l1.4 1.4M17.15 17.15l1.4 1.4M5.45 18.55l1.4-1.4M17.15 6.85l1.4-1.4"/></svg><svg class="ap-i wx-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14.6A7.5 7.5 0 0 1 9.4 5a7.5 7.5 0 1 0 9.6 9.6Z"/></svg><svg class="ap-i wx-cloud" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 18.5h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/></svg><svg class="ap-i wx-rain" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="m8.5 18-1 2.25M12.5 18l-1 2.25M16.5 18l-1 2.25"/></svg><svg class="ap-i wx-snow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="M8 18.5v.1M12 19.75v.1M16 18.5v.1M10 21.5v.1M14 21.5v.1"/></svg><svg class="ap-i wx-fog" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h16M6 13h12M4 16.5h16M8 20h8"/></svg></span>
-                <span><b><span data-ap="temp">—</span><span class="ap-unit"> °C</span></b><small>Saint-Hyacinthe<span class="ap-live"> · en direct</span></small></span>
-              </span>
-              <span class="ap-pin" title="Emplacement du Hub"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg></span>
-              <span class="ap-me"><img class="ap-mono ap-face" src="/media/app/alex.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="96" height="96"><b>Alex</b><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></span>
-            </header>
-            <div class="ap-views"><section class="ap-view ap-v-espace is-on" role="group" id="ap-p-espace-s" aria-label="Mon espace" data-view="espace" data-nav="espace" data-dur="7500"><div class="ap-head" data-r style="--r:0">
+</div></section><section class="ap-view ap-v-espace" role="tabpanel" id="ap-p-espace" aria-labelledby="ap-t-espace" data-view="espace" data-nav="espace" data-title="Mon espace" data-dur="7500" inert><div class="ap-head" data-r style="--r:0">
   <div><h3 class="ap-h1">Mon <em>espace</em></h3><p class="ap-sub">Votre quotidien, à votre image.</p></div>
 </div>
 <div class="ap-es">
@@ -396,48 +310,7 @@
     <ul class="ap-nl"><li class="is-unread"><img class="ap-mono ap-face" src="/media/app/camille.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="96" height="96"><span><b>Camille</b><small>Nouveau message</small><em>JARVIS</em></span><time>il y a 10 min</time></li><li class="is-unread"><span class="ap-ring"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.75" y="5" width="16.5" height="15" rx="2.5"/><path d="M3.75 9.75h16.5M8 3v4M16 3v4"/></svg></span><span><b>Ma journée</b><small>Préparer les documents demain à 8 h 30</small><em>Agenda personnel</em></span><time>il y a 1 h</time></li><li class=""><span class="ap-ring is-blue"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h6.5L18 8v12.5H7z"/><path d="M13.5 3.5V8H18M9.75 12.5h5.5M9.75 16h5.5"/></svg></span><span><b>Mes documents</b><small>Camille a partagé Liste de matériel.pdf</small><em>Document partagé</em></span><time>hier</time></li></ul>
     <button type="button" class="ap-btn ap-markread" data-ap="markread"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Tout marquer comme lu</span></button>
   </aside>
-</div></section></div>
-          </div>
-          <p class="ap-flash" role="status" aria-live="polite"></p>
-        </div>
-        <i class="ap-sweep" aria-hidden="true"></i>
-      </div>
-    </div>
-  </div>
-</div>
-</section><section class="apx-ch" id="ecran-journee" aria-labelledby="ecran-journee-t">
-  <div class="apx-head" data-rev>
-    <p class="apx-k"><i>04</i><span>Ma journée</span></p>
-    <h3 id="ecran-journee-t">Tous vos agendas, enfin ensemble.</h3>
-    <p>Calendriers et tâches de toutes vos sources. Ce qui est en lecture seule le reste.</p>
-  </div>
-  <div class="ap is-single" data-demo="app" data-single="journee">
-  <div class="ap-stage">
-    <div class="ap-glow" aria-hidden="true"></div>
-    <div class="ap-tilt">
-      <div class="ap-device">
-        <p class="ap-badge"><span>Démo · données fictives</span></p>
-        <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="JARVIS App, démonstration avec données fictives">
-          <div class="ap-bg" aria-hidden="true"></div>
-          <img class="ap-banner" src="/media/app/banniere-lac.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1990" height="342">
-          <nav class="ap-side" aria-label="JARVIS App">
-            <div class="ap-brand" aria-hidden="true"><b>JARVIS</b><small>Private Systems</small><em class="ap-modename"></em></div>
-            <div class="ap-nav" aria-label="Écrans de JARVIS App"><a class="ap-jump" href="#ecran-accueil" aria-label="Accueil"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg><span class="l-long">Accueil</span><span class="l-short" aria-hidden="true">Accueil</span></a><a class="ap-jump is-on" href="#ecran-espace" aria-current='true' aria-label="Mon espace"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"/><path d="M4.75 20c.9-3.6 3.75-5.5 7.25-5.5s6.35 1.9 7.25 5.5"/></svg><span class="l-long">Mon espace</span><span class="l-short" aria-hidden="true">Espace</span></a><a class="ap-jump" href="#ecran-carte" aria-label="Carte"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg><span class="l-long">Carte</span><span class="l-short" aria-hidden="true">Carte</span></a><a class="ap-jump" href="#ecran-outils" aria-label="Mes outils"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="4" y="13.25" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="13.25" width="6.75" height="6.75" rx="1.75"/></svg><span class="l-long">Mes outils</span><span class="l-short" aria-hidden="true">Outils</span></a></div>
-            <button type="button" class="ap-admin" data-toast="Administration : comptes, droits et extensions. Réservée à l’administrateur de votre système."><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><path d="M15 5v4M9 10v4M17 15v4"/></svg><span class="l-long">Administration</span></button>
-            <div class="ap-side-f"><p class="ap-motto">Votre espace.<br>À votre image.</p></div>
-          </nav>
-          <div class="ap-main">
-            <header class="ap-top">
-              <button type="button" class="ap-search" data-go="assistant"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.25"/><path d="m20 20-4.5-4.5"/></svg><span>Que souhaitez-vous faire ?</span></button>
-              <span class="ap-status-time" data-ap="clock">19 h 42</span>
-              <span class="ap-wx" title="Saint-Hyacinthe · Environnement Canada">
-                <span class="ap-wx-i" aria-hidden="true"><svg class="ap-i wx-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.75"/><path d="M12 2.75v2M12 19.25v2M2.75 12h2M19.25 12h2M5.45 5.45l1.4 1.4M17.15 17.15l1.4 1.4M5.45 18.55l1.4-1.4M17.15 6.85l1.4-1.4"/></svg><svg class="ap-i wx-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14.6A7.5 7.5 0 0 1 9.4 5a7.5 7.5 0 1 0 9.6 9.6Z"/></svg><svg class="ap-i wx-cloud" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 18.5h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/></svg><svg class="ap-i wx-rain" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="m8.5 18-1 2.25M12.5 18l-1 2.25M16.5 18l-1 2.25"/></svg><svg class="ap-i wx-snow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="M8 18.5v.1M12 19.75v.1M16 18.5v.1M10 21.5v.1M14 21.5v.1"/></svg><svg class="ap-i wx-fog" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h16M6 13h12M4 16.5h16M8 20h8"/></svg></span>
-                <span><b><span data-ap="temp">—</span><span class="ap-unit"> °C</span></b><small>Saint-Hyacinthe<span class="ap-live"> · en direct</span></small></span>
-              </span>
-              <span class="ap-pin" title="Emplacement du Hub"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg></span>
-              <span class="ap-me"><img class="ap-mono ap-face" src="/media/app/alex.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="96" height="96"><b>Alex</b><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></span>
-            </header>
-            <div class="ap-views"><section class="ap-view ap-v-journee is-on" role="group" id="ap-p-journee-s" aria-label="Ma journée" data-view="journee" data-nav="espace" data-dur="8000"><div class="ap-head" data-r style="--r:0">
+</div></section><section class="ap-view ap-v-journee" role="tabpanel" id="ap-p-journee" aria-labelledby="ap-t-espace" data-view="journee" data-nav="espace" data-title="Ma journée" data-dur="8000" inert><div class="ap-head" data-r style="--r:0">
   <div><p class="ap-crumb">Mon espace <span>/</span> <b>Ma journée</b></p><h3 class="ap-h1">Ma <em>journée</em></h3><p class="ap-sub">Tous vos agendas, enfin ensemble.</p></div><button type="button" class="ap-btn ap-new" tabindex="-1" aria-hidden="true"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Événement</button>
 </div>
 <div class="ap-jr">
@@ -456,48 +329,7 @@
     <header class="ap-card-h"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><h4>Tâches</h4><span class="ap-count"><b data-ap="done">1</b> / 5 faites</span></header>
     <ul><li class="s-perso"><button type="button" class="ap-box" aria-pressed="false" aria-label="Marquer « Relire le dossier » comme faite"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><span><b>Relire le dossier</b><small><i class="ap-sw" aria-hidden="true"></i>Personnel · Demain, 14 h</small></span></li><li class="s-perso is-done"><button type="button" class="ap-box" aria-pressed="true" aria-label="Marquer « Réserver le souper » comme faite"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><span><b>Réserver le souper</b><small><i class="ap-sw" aria-hidden="true"></i>Personnel · Fait</small></span></li><li class="s-perso"><button type="button" class="ap-box" aria-pressed="false" aria-label="Marquer « Renouveler l’assurance » comme faite"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button><span><b>Renouveler l’assurance</b><small><i class="ap-sw" aria-hidden="true"></i>Personnel · Lundi</small></span></li><li class="s-trav is-ro"><span class="ap-box" title="Lecture seule"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.25"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg></span><span><b>Valider la soumission</b><small><i class="ap-sw" aria-hidden="true"></i>Travail · Vendredi · lecture seule</small></span></li><li class="s-fam is-ro"><span class="ap-box" title="Lecture seule"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.25"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg></span><span><b>Patins de Léo</b><small><i class="ap-sw" aria-hidden="true"></i>Famille · Demain, 12 h 30 · lecture seule</small></span></li></ul>
   </aside>
-</div></section></div>
-          </div>
-          <p class="ap-flash" role="status" aria-live="polite"></p>
-        </div>
-        <i class="ap-sweep" aria-hidden="true"></i>
-      </div>
-    </div>
-  </div>
-</div>
-</section><section class="apx-ch" id="ecran-partage" aria-labelledby="ecran-partage-t">
-  <div class="apx-head" data-rev>
-    <p class="apx-k"><i>05</i><span>Mes partages</span></p>
-    <h3 id="ecran-partage-t">Vous choisissez ce que vous partagez.</h3>
-    <p>Avec qui, pour combien de temps, et sous votre contrôle. Un accès retiré disparaît partout.</p>
-  </div>
-  <div class="ap is-single" data-demo="app" data-single="partage">
-  <div class="ap-stage">
-    <div class="ap-glow" aria-hidden="true"></div>
-    <div class="ap-tilt">
-      <div class="ap-device">
-        <p class="ap-badge"><span>Démo · données fictives</span></p>
-        <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="JARVIS App, démonstration avec données fictives">
-          <div class="ap-bg" aria-hidden="true"></div>
-          <img class="ap-banner" src="/media/app/banniere-lac.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1990" height="342">
-          <nav class="ap-side" aria-label="JARVIS App">
-            <div class="ap-brand" aria-hidden="true"><b>JARVIS</b><small>Private Systems</small><em class="ap-modename"></em></div>
-            <div class="ap-nav" aria-label="Écrans de JARVIS App"><a class="ap-jump" href="#ecran-accueil" aria-label="Accueil"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg><span class="l-long">Accueil</span><span class="l-short" aria-hidden="true">Accueil</span></a><a class="ap-jump is-on" href="#ecran-espace" aria-current='true' aria-label="Mon espace"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"/><path d="M4.75 20c.9-3.6 3.75-5.5 7.25-5.5s6.35 1.9 7.25 5.5"/></svg><span class="l-long">Mon espace</span><span class="l-short" aria-hidden="true">Espace</span></a><a class="ap-jump" href="#ecran-carte" aria-label="Carte"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg><span class="l-long">Carte</span><span class="l-short" aria-hidden="true">Carte</span></a><a class="ap-jump" href="#ecran-outils" aria-label="Mes outils"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="4" y="13.25" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="13.25" width="6.75" height="6.75" rx="1.75"/></svg><span class="l-long">Mes outils</span><span class="l-short" aria-hidden="true">Outils</span></a></div>
-            <button type="button" class="ap-admin" data-toast="Administration : comptes, droits et extensions. Réservée à l’administrateur de votre système."><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><path d="M15 5v4M9 10v4M17 15v4"/></svg><span class="l-long">Administration</span></button>
-            <div class="ap-side-f"><p class="ap-motto">Votre espace.<br>À votre image.</p></div>
-          </nav>
-          <div class="ap-main">
-            <header class="ap-top">
-              <button type="button" class="ap-search" data-go="assistant"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.25"/><path d="m20 20-4.5-4.5"/></svg><span>Que souhaitez-vous faire ?</span></button>
-              <span class="ap-status-time" data-ap="clock">19 h 42</span>
-              <span class="ap-wx" title="Saint-Hyacinthe · Environnement Canada">
-                <span class="ap-wx-i" aria-hidden="true"><svg class="ap-i wx-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.75"/><path d="M12 2.75v2M12 19.25v2M2.75 12h2M19.25 12h2M5.45 5.45l1.4 1.4M17.15 17.15l1.4 1.4M5.45 18.55l1.4-1.4M17.15 6.85l1.4-1.4"/></svg><svg class="ap-i wx-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14.6A7.5 7.5 0 0 1 9.4 5a7.5 7.5 0 1 0 9.6 9.6Z"/></svg><svg class="ap-i wx-cloud" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 18.5h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/></svg><svg class="ap-i wx-rain" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="m8.5 18-1 2.25M12.5 18l-1 2.25M16.5 18l-1 2.25"/></svg><svg class="ap-i wx-snow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="M8 18.5v.1M12 19.75v.1M16 18.5v.1M10 21.5v.1M14 21.5v.1"/></svg><svg class="ap-i wx-fog" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h16M6 13h12M4 16.5h16M8 20h8"/></svg></span>
-                <span><b><span data-ap="temp">—</span><span class="ap-unit"> °C</span></b><small>Saint-Hyacinthe<span class="ap-live"> · en direct</span></small></span>
-              </span>
-              <span class="ap-pin" title="Emplacement du Hub"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg></span>
-              <span class="ap-me"><img class="ap-mono ap-face" src="/media/app/alex.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="96" height="96"><b>Alex</b><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></span>
-            </header>
-            <div class="ap-views"><section class="ap-view ap-v-partage is-on" role="group" id="ap-p-partage-s" aria-label="Mes partages" data-view="partage" data-nav="espace" data-dur="8500"><div class="ap-head" data-r style="--r:0">
+</div></section><section class="ap-view ap-v-partage" role="tabpanel" id="ap-p-partage" aria-labelledby="ap-t-espace" data-view="partage" data-nav="espace" data-title="Mes partages" data-dur="8500" inert><div class="ap-head" data-r style="--r:0">
   <div><p class="ap-crumb">Mon espace <span>/</span> <b>Mes partages</b></p><h3 class="ap-h1">Je choisis <em>ce que je partage</em></h3><p class="ap-sub">Avec qui, pour combien de temps, et sous votre contrôle.</p></div>
 </div>
 <div class="ap-pt">
@@ -567,48 +399,7 @@
       <ol data-ap="log"><li class="ap-log-new" hidden><time>À l’instant</time><span></span></li><li><time>Il y a 40 min</time><span>Session de soutien ouverte, 2 h maximum</span></li><li><time>Il y a 2 h</time><span>Camille a ouvert « Notes de réunion »</span></li><li><time>Hier</time><span>Accès de Marc prolongé jusqu’à dimanche</span></li><li><time>Lundi</time><span>Code temporaire créé pour Sophie</span></li><li><time>1er novembre</time><span>Accès de Julie retiré partout</span></li></ol>
     </div>
   </div>
-</div></section></div>
-          </div>
-          <p class="ap-flash" role="status" aria-live="polite"></p>
-        </div>
-        <i class="ap-sweep" aria-hidden="true"></i>
-      </div>
-    </div>
-  </div>
-</div>
-</section><section class="apx-ch" id="ecran-carte" aria-labelledby="ecran-carte-t">
-  <div class="apx-head" data-rev>
-    <p class="apx-k"><i>06</i><span>Carte</span></p>
-    <h3 id="ecran-carte-t">Vos lieux, sans surveillance.</h3>
-    <p>La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée.</p>
-  </div>
-  <div class="ap is-single" data-demo="app" data-single="carte">
-  <div class="ap-stage">
-    <div class="ap-glow" aria-hidden="true"></div>
-    <div class="ap-tilt">
-      <div class="ap-device">
-        <p class="ap-badge"><span>Démo · données fictives</span></p>
-        <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="JARVIS App, démonstration avec données fictives">
-          <div class="ap-bg" aria-hidden="true"></div>
-          <img class="ap-banner" src="/media/app/banniere-lac.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1990" height="342">
-          <nav class="ap-side" aria-label="JARVIS App">
-            <div class="ap-brand" aria-hidden="true"><b>JARVIS</b><small>Private Systems</small><em class="ap-modename"></em></div>
-            <div class="ap-nav" aria-label="Écrans de JARVIS App"><a class="ap-jump" href="#ecran-accueil" aria-label="Accueil"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg><span class="l-long">Accueil</span><span class="l-short" aria-hidden="true">Accueil</span></a><a class="ap-jump" href="#ecran-espace" aria-label="Mon espace"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"/><path d="M4.75 20c.9-3.6 3.75-5.5 7.25-5.5s6.35 1.9 7.25 5.5"/></svg><span class="l-long">Mon espace</span><span class="l-short" aria-hidden="true">Espace</span></a><a class="ap-jump is-on" href="#ecran-carte" aria-current='true' aria-label="Carte"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg><span class="l-long">Carte</span><span class="l-short" aria-hidden="true">Carte</span></a><a class="ap-jump" href="#ecran-outils" aria-label="Mes outils"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="4" y="13.25" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="13.25" width="6.75" height="6.75" rx="1.75"/></svg><span class="l-long">Mes outils</span><span class="l-short" aria-hidden="true">Outils</span></a></div>
-            <button type="button" class="ap-admin" data-toast="Administration : comptes, droits et extensions. Réservée à l’administrateur de votre système."><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><path d="M15 5v4M9 10v4M17 15v4"/></svg><span class="l-long">Administration</span></button>
-            <div class="ap-side-f"><p class="ap-motto">Votre espace.<br>À votre image.</p></div>
-          </nav>
-          <div class="ap-main">
-            <header class="ap-top">
-              <button type="button" class="ap-search" data-go="assistant"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.25"/><path d="m20 20-4.5-4.5"/></svg><span>Que souhaitez-vous faire ?</span></button>
-              <span class="ap-status-time" data-ap="clock">19 h 42</span>
-              <span class="ap-wx" title="Saint-Hyacinthe · Environnement Canada">
-                <span class="ap-wx-i" aria-hidden="true"><svg class="ap-i wx-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.75"/><path d="M12 2.75v2M12 19.25v2M2.75 12h2M19.25 12h2M5.45 5.45l1.4 1.4M17.15 17.15l1.4 1.4M5.45 18.55l1.4-1.4M17.15 6.85l1.4-1.4"/></svg><svg class="ap-i wx-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14.6A7.5 7.5 0 0 1 9.4 5a7.5 7.5 0 1 0 9.6 9.6Z"/></svg><svg class="ap-i wx-cloud" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 18.5h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/></svg><svg class="ap-i wx-rain" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="m8.5 18-1 2.25M12.5 18l-1 2.25M16.5 18l-1 2.25"/></svg><svg class="ap-i wx-snow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="M8 18.5v.1M12 19.75v.1M16 18.5v.1M10 21.5v.1M14 21.5v.1"/></svg><svg class="ap-i wx-fog" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h16M6 13h12M4 16.5h16M8 20h8"/></svg></span>
-                <span><b><span data-ap="temp">—</span><span class="ap-unit"> °C</span></b><small>Saint-Hyacinthe<span class="ap-live"> · en direct</span></small></span>
-              </span>
-              <span class="ap-pin" title="Emplacement du Hub"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg></span>
-              <span class="ap-me"><img class="ap-mono ap-face" src="/media/app/alex.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="96" height="96"><b>Alex</b><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></span>
-            </header>
-            <div class="ap-views"><section class="ap-view ap-v-carte is-on" role="group" id="ap-p-carte-s" aria-label="Carte" data-view="carte" data-nav="carte" data-dur="8000"><div class="ap-head" data-r style="--r:0">
+</div></section><section class="ap-view ap-v-carte" role="tabpanel" id="ap-p-carte" aria-labelledby="ap-t-carte" data-view="carte" data-nav="carte" data-title="Carte" data-dur="8000" inert><div class="ap-head" data-r style="--r:0">
   <div><h3 class="ap-h1">Carte</h3><p class="ap-sub">Les éléments que vous êtes autorisé à voir.</p></div>
 </div>
 <div class="ap-ct">
@@ -653,48 +444,7 @@
       <p class="ap-fine" data-ap="posnote" hidden><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5"/><path d="M12 7.9v.1"/></svg><span>Démo : rien n’est demandé à votre appareil.</span></p>
     </aside>
   </div>
-</div></section></div>
-          </div>
-          <p class="ap-flash" role="status" aria-live="polite"></p>
-        </div>
-        <i class="ap-sweep" aria-hidden="true"></i>
-      </div>
-    </div>
-  </div>
-</div>
-</section><section class="apx-ch" id="ecran-outils" aria-labelledby="ecran-outils-t">
-  <div class="apx-head" data-rev>
-    <p class="apx-k"><i>07</i><span>Mes outils</span></p>
-    <h3 id="ecran-outils-t">Toutes vos extensions, au même endroit.</h3>
-    <p>Domotique, IA, caméras, entreprise, réseau, diagnostic : chacune s’active par l’administrateur et s’ouvre ici.</p>
-  </div>
-  <div class="ap is-single" data-demo="app" data-single="outils">
-  <div class="ap-stage">
-    <div class="ap-glow" aria-hidden="true"></div>
-    <div class="ap-tilt">
-      <div class="ap-device">
-        <p class="ap-badge"><span>Démo · données fictives</span></p>
-        <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="JARVIS App, démonstration avec données fictives">
-          <div class="ap-bg" aria-hidden="true"></div>
-          <img class="ap-banner" src="/media/app/banniere-lac.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1990" height="342">
-          <nav class="ap-side" aria-label="JARVIS App">
-            <div class="ap-brand" aria-hidden="true"><b>JARVIS</b><small>Private Systems</small><em class="ap-modename"></em></div>
-            <div class="ap-nav" aria-label="Écrans de JARVIS App"><a class="ap-jump" href="#ecran-accueil" aria-label="Accueil"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10.2 12 4l7.5 6.2V19a1 1 0 0 1-1 1h-4v-5.5h-5V20h-4a1 1 0 0 1-1-1z"/></svg><span class="l-long">Accueil</span><span class="l-short" aria-hidden="true">Accueil</span></a><a class="ap-jump" href="#ecran-espace" aria-label="Mon espace"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"/><path d="M4.75 20c.9-3.6 3.75-5.5 7.25-5.5s6.35 1.9 7.25 5.5"/></svg><span class="l-long">Mon espace</span><span class="l-short" aria-hidden="true">Espace</span></a><a class="ap-jump" href="#ecran-carte" aria-label="Carte"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg><span class="l-long">Carte</span><span class="l-short" aria-hidden="true">Carte</span></a><a class="ap-jump is-on" href="#ecran-outils" aria-current='true' aria-label="Mes outils"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="4" width="6.75" height="6.75" rx="1.75"/><rect x="4" y="13.25" width="6.75" height="6.75" rx="1.75"/><rect x="13.25" y="13.25" width="6.75" height="6.75" rx="1.75"/></svg><span class="l-long">Mes outils</span><span class="l-short" aria-hidden="true">Outils</span></a></div>
-            <button type="button" class="ap-admin" data-toast="Administration : comptes, droits et extensions. Réservée à l’administrateur de votre système."><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><path d="M15 5v4M9 10v4M17 15v4"/></svg><span class="l-long">Administration</span></button>
-            <div class="ap-side-f"><p class="ap-motto">Votre espace.<br>À votre image.</p></div>
-          </nav>
-          <div class="ap-main">
-            <header class="ap-top">
-              <button type="button" class="ap-search" data-go="assistant"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.25"/><path d="m20 20-4.5-4.5"/></svg><span>Que souhaitez-vous faire ?</span></button>
-              <span class="ap-status-time" data-ap="clock">19 h 42</span>
-              <span class="ap-wx" title="Saint-Hyacinthe · Environnement Canada">
-                <span class="ap-wx-i" aria-hidden="true"><svg class="ap-i wx-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.75"/><path d="M12 2.75v2M12 19.25v2M2.75 12h2M19.25 12h2M5.45 5.45l1.4 1.4M17.15 17.15l1.4 1.4M5.45 18.55l1.4-1.4M17.15 6.85l1.4-1.4"/></svg><svg class="ap-i wx-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14.6A7.5 7.5 0 0 1 9.4 5a7.5 7.5 0 1 0 9.6 9.6Z"/></svg><svg class="ap-i wx-cloud" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 18.5h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/></svg><svg class="ap-i wx-rain" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="m8.5 18-1 2.25M12.5 18l-1 2.25M16.5 18l-1 2.25"/></svg><svg class="ap-i wx-snow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.25 15h9.5a4 4 0 0 0 .55-7.95 5.5 5.5 0 0 0-10.6 1.35 3.3 3.3 0 0 0 .55 6.6Z"/><path d="M8 18.5v.1M12 19.75v.1M16 18.5v.1M10 21.5v.1M14 21.5v.1"/></svg><svg class="ap-i wx-fog" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h16M6 13h12M4 16.5h16M8 20h8"/></svg></span>
-                <span><b><span data-ap="temp">—</span><span class="ap-unit"> °C</span></b><small>Saint-Hyacinthe<span class="ap-live"> · en direct</span></small></span>
-              </span>
-              <span class="ap-pin" title="Emplacement du Hub"><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.25-5.4-6.25-10.6a6.25 6.25 0 0 1 12.5 0c0 5.2-6.25 10.6-6.25 10.6Z"/><circle cx="12" cy="9.9" r="2.3"/></svg></span>
-              <span class="ap-me"><img class="ap-mono ap-face" src="/media/app/alex.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="96" height="96"><b>Alex</b><svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></span>
-            </header>
-            <div class="ap-views"><section class="ap-view ap-v-outils is-on" role="group" id="ap-p-outils-s" aria-label="Mes outils" data-view="outils" data-nav="outils" data-dur="7000"><div class="ap-head" data-r style="--r:0">
+</div></section><section class="ap-view ap-v-outils" role="tabpanel" id="ap-p-outils" aria-labelledby="ap-t-outils" data-view="outils" data-nav="outils" data-title="Mes outils" data-dur="7000" inert><div class="ap-head" data-r style="--r:0">
   <div><h3 class="ap-h1">Mes <em>outils</em></h3><p class="ap-sub">Vos extensions, autorisées par votre administrateur.</p></div><p class="ap-ext-n"><b>6</b> extensions · <b>4</b> activées</p>
 </div>
 <div class="ap-exts"><a class="ap-card ap-ext is-on" href="/solutions/environnements-intelligents/" data-r style="--r:1">
@@ -735,8 +485,14 @@
       </div>
     </div>
   </div>
-</div>
-</section>
+  <div class="ap-caps">
+    <div class="ap-cap-txt" aria-live="polite"><div class="ap-cap is-on"><h3>Votre journée, sur un seul écran.</h3><p>Messages, agenda, lieux et assistant réunis, à votre image.</p></div><div class="ap-cap"><h3>Il propose. Vous décidez.</h3><p>Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord.</p></div><div class="ap-cap"><h3>Votre quotidien, à votre image.</h3><p>Agenda, documents, appareils, connexions et partages : chaque chose à sa place.</p></div><div class="ap-cap"><h3>Tous vos agendas, enfin ensemble.</h3><p>Calendriers et tâches de toutes vos sources. Ce qui est en lecture seule le reste.</p></div><div class="ap-cap"><h3>Vous choisissez ce que vous partagez.</h3><p>Avec qui, pour combien de temps, et sous votre contrôle. Un accès retiré disparaît partout.</p></div><div class="ap-cap"><h3>Vos lieux, sans surveillance.</h3><p>La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée.</p></div><div class="ap-cap"><h3>Toutes vos extensions, au même endroit.</h3><p>Domotique, IA, caméras, entreprise, réseau, diagnostic : chacune s’active par l’administrateur et s’ouvre ici.</p></div></div>
+    <div class="ap-ctrl">
+      <span class="ap-step"><b data-ap="step">01</b> / 07</span>
+      <button type="button" class="ap-play" data-ap="play" aria-label="Mettre la visite en pause"><svg class="ap-i i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11M15 6.5v11"/></svg><svg class="ap-i i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.75v12.5L18.5 12z"/></svg><span>Pause</span></button>
+      <span class="ap-hint">Touchez un écran : tout y est cliquable</span>
+    </div>
+  </div>
 </div>
 </section>
 

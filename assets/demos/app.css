@@ -97,7 +97,7 @@
 [data-demo="app"] .ap-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .8; }
 
 [data-demo="app"] .ap-screen {
-  position: relative; isolation: isolate; overflow: hidden; border-radius: 20px;
+  position: relative; isolation: isolate; overflow: hidden; border-radius: 0 0 20px 20px;
   display: grid; grid-template-columns: 208px minmax(0, 1fr); min-height: calc((min(1240px, 94vw, 100cqw) - 18px) / 1.6);
   background: var(--a-ground); font-family: var(--a-font); font-size: 14px; line-height: 1.4;
   font-feature-settings: "tnum" 0; -webkit-font-smoothing: antialiased; text-align: left;
@@ -881,7 +881,7 @@
   [data-demo="app"] .ap-sweep { inset: 8px; border-radius: 40px; }
   [data-demo="app"] .ap-badge { top: 18px; padding: 8px 14px; font-size: 13px; letter-spacing: .06em; border-color: #ffffff1f; box-shadow: none; }
   [data-demo="app"] .ap-badge::before { display: none; }
-  [data-demo="app"] .ap-screen { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; border-radius: 40px; font-size: 15px; }
+  [data-demo="app"] .ap-screen { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; border-radius: 0 0 40px 40px; font-size: 15px; }
   [data-demo="app"] .ap-banner { left: 0; width: 100%; top: 0; height: 270px; object-position: 62% 55%; }
   [data-demo="app"] .ap-main::before { top: 0; height: 270px; background: linear-gradient(180deg, #08070633, #0807068c); }
   [data-demo="app"] .ap-side { grid-row: 2; flex-direction: row; margin: 0; border-radius: 0; padding: 6px 10px 16px; border-top: 1px solid var(--a-line); background: #070605f2; box-shadow: none; }
@@ -1020,4 +1020,27 @@
 [data-demo="app"].is-single .ap-stage { padding-top: 0; }
 @media (max-width: 680px) {
   [data-demo="app"].is-single .ap-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+}
+
+/* ---------- Barre de fenêtre : on voit un logiciel, pas une image ---------- */
+[data-demo="app"] .ap-win {
+  display: flex; align-items: center; gap: .85rem;
+  padding: 12px 18px; border-radius: 20px 20px 0 0;
+  border-bottom: 1px solid #ffffff14;
+  background: linear-gradient(180deg, #151413, #0d0c0b);
+  font: 500 .72rem/1 var(--mono); letter-spacing: .13em; text-transform: uppercase; color: #cfcac1;
+}
+[data-demo="app"] .ap-win b { font-weight: 600; color: #fff; letter-spacing: .13em; }
+[data-demo="app"] .ap-win-sep { color: #ffffff2e; }
+[data-demo="app"] .ap-win-name { color: var(--gold-soft); }
+[data-demo="app"] .ap-win .tag { margin-left: auto; text-transform: uppercase; white-space: nowrap; }
+@media (max-width: 900px) {
+  [data-demo="app"] .ap-win { gap: .6rem; padding: 11px 14px; font-size: .64rem; letter-spacing: .1em; }
+  [data-demo="app"] .ap-win b { font-size: .64rem; }
+}
+@media (max-width: 680px) {
+  [data-demo="app"] .ap-win { border-radius: 40px 40px 0 0; padding: 14px 20px; }
+  [data-demo="app"] .ap-win .lights, [data-demo="app"] .ap-win-sep, [data-demo="app"] .ap-win b { display: none; }
+  [data-demo="app"] .ap-win .tag { margin-left: 0; }
+  [data-demo="app"] .ap-win-name { margin-right: auto; }
 }

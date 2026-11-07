@@ -706,7 +706,7 @@ def _device(only=None):
                f'<i class="ap-ind" aria-hidden="true"><i class="ap-prog"></i></i>{tabs}</div>')
         views = "".join(
             f'<section class="ap-view ap-v-{k}{" is-on" if i == 0 else ""}" role="tabpanel" id="ap-p-{k}" aria-labelledby="ap-t-{n}" '
-            f'data-view="{k}" data-nav="{n}" data-dur="{d}"{"" if i == 0 else " inert"}>{_stagger(fr(VIEWS[k]()))}</section>'
+            f'data-view="{k}" data-nav="{n}" data-title="{TITLE[k]}" data-dur="{d}"{"" if i == 0 else " inert"}>{_stagger(fr(VIEWS[k]()))}</section>'
             for i, (k, n, d, _t, _p) in enumerate(SCREENS)
         )
         caps = f"""
@@ -727,7 +727,13 @@ def _device(only=None):
     <div class="ap-glow" aria-hidden="true"></div>
     <div class="ap-tilt">
       <div class="ap-device">
-        <p class="ap-badge"><span>Démo · données fictives</span></p>
+        <div class="ap-win">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <b>JARVIS · Ma vie</b>
+          <span class="ap-win-sep" aria-hidden="true">/</span>
+          <span class="ap-win-name" data-ap="winname">Accueil</span>
+          <span class="tag tag-sim">Démo · données fictives</span>
+        </div>
         <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="{label}">
           <div class="ap-bg" aria-hidden="true"></div>
           <img class="ap-banner" src="{BANNER}" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1990" height="342">

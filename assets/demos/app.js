@@ -242,6 +242,8 @@
       cur = i;
       leave(views[prev], prev);
       var ti = tabOf(i);
+      var wn = $('[data-ap="winname"]');
+      if (wn && views[i]) wn.textContent = views[i].getAttribute("data-title") || views[i].getAttribute("aria-label") || "";
       tabs.forEach(function (t, k) {
         var on = k === ti;
         t.setAttribute("aria-selected", on ? "true" : "false");

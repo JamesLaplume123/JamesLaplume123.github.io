@@ -211,9 +211,9 @@
     return Math.round(on.reduce(function (t, l) { return t + V[l.k].lvl; }, 0) / on.length);
   }
   function zoneDot(e, z, V) {
-    var ls = e.zl[z.k];
-    for (var i = 0; i < ls.length; i++) if (V[ls[i].k].on || ls[i].kind === "regl") return dot(ls[i], V[ls[i].k]);
-    return "";
+    var ls = e.zl[z.k], ctrl = ls.filter(function (l) { return l.kind !== "regl"; });
+    for (var i = 0; i < ctrl.length; i++) if (V[ctrl[i].k].on) return dot(ctrl[i], V[ctrl[i].k]);
+    return ctrl.length ? "" : dot(ls[0], V[ls[0].k]);
   }
 
   /* ---------------------------------------------------------------- plans d'application (rien n'est envoyé ici) */

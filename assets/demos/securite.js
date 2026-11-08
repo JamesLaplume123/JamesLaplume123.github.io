@@ -5,6 +5,14 @@
    JARVIS relie les alertes et les fusionne en un seul événement expliqué.
    Les actions sensibles attendent « Approuver », puis : envoyé → confirmé
    (une commande n'est réussie qu'une fois l'état relu).
+   Six situations : livraison, visiteur de nuit, entrepôt, lecture de
+   plaques (registre des plaques tenu à jour), salle des serveurs (carte
+   révoquée, caméras du secteur qui s'éveillent, porte qui reste
+   verrouillée) et porte forcée, où JARVIS passe en mode urgence : liseré
+   rouge sobre, actions exécutées une à une (envoyé → confirmé, l'appel
+   sonne pour vrai avant d'être répondu), levée sur confirmation seulement.
+   La chronologie se bascule en vue « Incidents » : les alertes brutes
+   regroupées par incident, avec gravité, état et caméras concernées.
    Rendu de vrai flux : grain du capteur, dérive lente, exposition qui
    respire, débit qui monte quand ça bouge, bref artefact au mouvement;
    cadres d'analyse qui suivent avec un léger retard, confiance qui varie,
@@ -43,7 +51,7 @@
       "%;width:" + (W / v[2] * 100).toFixed(3) + "%;height:" + (H / v[3] * 100).toFixed(3) + "%";
   }
   function cvar(k) {
-    var m = { access: "alert", door: "alert", alert: "alert" };
+    var m = { access: "alert", door: "alert", alert: "alert", plate: "vehicle", grant: "parcel", lock: "parcel", log: "person", file: "move", siren: "alert", cam: "move" };
     return "var(--sx-" + (m[k] || k) + ")";
   }
 
@@ -60,7 +68,14 @@
     lights: '<svg viewBox="0 0 16 16"><path d="M6 13.5h4M6.3 11.3h3.4c0-1.7 2.1-2.5 2.1-5.1a3.8 3.8 0 0 0-7.6 0c0 2.6 2.1 3.4 2.1 5.1z"/></svg>',
     talk: '<svg viewBox="0 0 16 16"><path d="M2.5 6.3h2.6L8.6 3.5v9L5.1 9.7H2.5z"/><path d="M10.8 6a2.8 2.8 0 0 1 0 4M12.6 4.3a5.2 5.2 0 0 1 0 7.4"/></svg>',
     call: '<svg viewBox="0 0 16 16"><path d="M2.5 3.5h11v7.5h-6l-3 2.4V11h-2z"/><path d="M5.5 6.5h5M5.5 8.5h3"/></svg>',
-    cam: '<svg viewBox="0 0 16 16"><rect x="2" y="4.5" width="12" height="8.5" rx="1.5"/><circle cx="8" cy="8.7" r="2.3"/><path d="M5.5 4.5 6.5 3h3l1 1.5"/></svg>'
+    cam: '<svg viewBox="0 0 16 16"><rect x="2" y="4.5" width="12" height="8.5" rx="1.5"/><circle cx="8" cy="8.7" r="2.3"/><path d="M5.5 4.5 6.5 3h3l1 1.5"/></svg>',
+    plate: '<svg viewBox="0 0 16 16"><rect x="1.5" y="5" width="13" height="6.5" rx="1.2"/><path d="M4 8.2h1.6M7.2 8.2h1.6M10.4 8.2h1.6"/></svg>',
+    grant: '<svg viewBox="0 0 16 16"><rect x="2.5" y="4" width="11" height="8" rx="1.5"/><path d="M5 7h3.5M5 9.5h2"/><path d="m9.5 9 1.3 1.3L13 8"/></svg>',
+    log: '<svg viewBox="0 0 16 16"><path d="M4 2.5h8v11H4z"/><path d="M6 5.5h4M6 8h4M6 10.5h2.5"/></svg>',
+    lock: '<svg viewBox="0 0 16 16"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7"/></svg>',
+    urg: '<svg viewBox="0 0 16 16"><path d="M8 2.2 14 13H2Z"/><path d="M8 6.5v3M8 11.3v.2"/></svg>',
+    siren: '<svg viewBox="0 0 16 16"><path d="M4.5 13.5V9a3.5 3.5 0 0 1 7 0v4.5"/><path d="M3 13.5h10M8 2v1.6M3.2 4.2l1.1 1.1M12.8 4.2l-1.1 1.1"/></svg>',
+    file: '<svg viewBox="0 0 16 16"><path d="M4 2.5h5.5L12.5 5.5V13.5H4Z"/><path d="M9.5 2.5v3h3"/><path d="M6 8.5h4M6 11h4"/></svg>'
   };
 
   /* Silhouette simulée, vue de trois quarts tournée vers la droite
@@ -115,6 +130,70 @@
     '<path d="M5 18 24 9H58L39 18Z" fill="#c09663"/>' +
     '<path d="M14.5 18 33.5 9M22 18V43" stroke="#d9c49c" stroke-opacity=".3" stroke-width="2.2" fill="none"/>' +
     '<path d="M27 25H35V31H27Z" fill="#c8bca6" opacity=".4"/></svg>';
+  /* Voiture vue de dos (220 × 140, roues en bas) : carrosserie sombre en
+     dégradé, lunette, feux arrière, pare-chocs et plaque lisible (le texte
+     est posé par makeSubj). Même famille de rendu que les silhouettes. */
+  var CAR =
+    '<svg viewBox="0 0 220 140" aria-hidden="true" focusable="false">' +
+    '<defs><linearGradient id="cb@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3d44"/><stop offset=".45" stop-color="#1b1d22"/><stop offset="1" stop-color="#101114"/></linearGradient>' +
+    '<linearGradient id="cg@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c3640"/><stop offset="1" stop-color="#11151a"/></linearGradient>' +
+    '<linearGradient id="ct@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a74"/><stop offset=".55" stop-color="#e03a2c"/><stop offset="1" stop-color="#8a1f17"/></linearGradient></defs>' +
+    '<path class="c-tire" d="M32 116h32v14a5 5 0 0 1-5 5H37a5 5 0 0 1-5-5Z"/>' +
+    '<path class="c-tire" d="M156 116h32v14a5 5 0 0 1-5 5h-22a5 5 0 0 1-5-5Z"/>' +
+    '<path fill="url(#cg@)" d="M56 10q4-8 14-8h80q10 0 14 8l16 38H40Z"/>' +
+    '<path class="c-glass" d="M66 12h88l13 33H53Z"/>' +
+    '<path fill="url(#cb@)" d="M38 44q-16 3-20 18-3 26 0 48 1 12 14 12h156q13 0 14-12 3-22 0-48-4-15-20-18Z"/>' +
+    '<path class="c-sh" d="M18 70q92 10 184 0v8q-92 9-184 0Z"/>' +
+    '<path fill="url(#ct@)" d="M22 58h54q4 0 4 5v6q0 5-4 5H26q-5 0-5-6Z"/>' +
+    '<path fill="url(#ct@)" d="M198 58h-54q-4 0-4 5v6q0 5 4 5h52q5 0 5-6Z"/>' +
+    '<path class="c-bmp" d="M18 92h184v14q0 8-9 8H27q-9 0-9-8Z"/>' +
+    '<rect class="c-plt" x="82" y="97" width="56" height="20" rx="2.5"/>' +
+    '<rect class="c-pltl" x="83.2" y="98.2" width="53.6" height="17.6" rx="1.8"/>' +
+    '<text class="c-txt" x="110" y="112.5" text-anchor="middle">———</text></svg>';
+  /* Salle des serveurs, image de synthèse « caméra intérieure » (1672 × 941,
+     mêmes coordonnées que les photos) : rangée de baies à gauche, porte de
+     la salle et lecteur de badge à droite, plafonnier, sol réfléchissant.
+     Rendu volontairement sobre : la tuile ajoute grain, vignette et IR. */
+  function rackArt(x, y2, w, h, leds) {
+    var x2 = x + w, y1 = y2 - h, s = "";
+    s += '<path fill="#23272e" stroke="#5a626d" stroke-width="2.5" d="M' + x + " " + y1 + "H" + x2 + "V" + y2 + "H" + x + 'Z"/>';
+    for (var i = 1; i < 7; i++) {
+      var yy = y1 + h * i / 7;
+      s += '<path stroke="#39404b" stroke-width="3" d="M' + (x + w * .06) + " " + yy + "H" + (x2 - w * .2) + '"/>';
+    }
+    for (var j = 0; j < leds; j++) {
+      var ly = y1 + h * (.1 + .8 * j / (leds - 1)), c = j % 3 === 1 ? "#d9dbde" : "#f2f3f5";
+      s += '<circle cx="' + (x2 - w * .1) + '" cy="' + ly + '" r="' + (w > 240 ? 4.5 : 3) + '" fill="' + c + '" opacity="' + (j % 2 ? ".95" : ".55") + '"/>';
+    }
+    return s;
+  }
+  var SRV =
+    '<svg viewBox="0 0 1672 941" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
+    '<defs><linearGradient id="sw@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6d737c"/><stop offset="1" stop-color="#3c4148"/></linearGradient>' +
+    '<linearGradient id="sf@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4f58"/><stop offset="1" stop-color="#23262b"/></linearGradient>' +
+    '<radialGradient id="sl@" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#f2f4f6" stop-opacity=".55"/><stop offset="1" stop-color="#f2f4f6" stop-opacity="0"/></radialGradient>' +
+    '<radialGradient id="sv@" cx=".5" cy=".45" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></radialGradient></defs>' +
+    '<rect width="1672" height="941" fill="url(#sw@)"/>' +
+    '<path d="M0 0h1672v150L0 225Z" fill="#30343b"/>' +
+    '<ellipse cx="820" cy="140" rx="640" ry="100" fill="url(#sl@)"/>' +
+    '<rect x="300" y="96" width="980" height="16" rx="8" fill="#eceef1" opacity=".9" transform="rotate(-2 790 104)"/>' +
+    '<path d="M0 941V860l900-140 772 40v181Z" fill="url(#sf@)"/>' +
+    '<path d="M240 880 350 760h26L276 884Z" fill="#fff" opacity=".09"/>' +
+    '<path d="M700 820 800 735h20l-96 90Z" fill="#fff" opacity=".08"/>' +
+    '<path d="M1200 790h260v10h-260Z" fill="#fff" opacity=".07"/>' +
+    rackArt(0, 860, 300, 770, 9) + rackArt(330, 800, 230, 640, 8) +
+    rackArt(585, 755, 175, 540, 7) + rackArt(783, 722, 118, 465, 6) +
+    '<rect x="1148" y="228" width="276" height="514" fill="none" stroke="#6d747e" stroke-width="10"/>' +
+    '<rect x="1158" y="238" width="256" height="494" fill="#43484f"/>' +
+    '<path d="M1158 238h256v12l-256 16Z" fill="#fff" opacity=".1"/>' +
+    '<rect x="1176" y="300" width="90" height="150" fill="#272b31" stroke="#5a626d" stroke-width="3"/>' +
+    '<rect x="1384" y="470" width="12" height="42" rx="5" fill="#8a919b"/>' +
+    '<rect x="1178" y="170" width="216" height="40" rx="4" fill="#5a626d"/>' +
+    '<text x="1286" y="197" text-anchor="middle" font-size="22" letter-spacing="5" fill="#dde1e7" font-family="inherit">SALLE DES SERVEURS</text>' +
+    '<rect x="1452" y="428" width="44" height="72" rx="6" fill="#2a2e35" stroke="#767d88" stroke-width="2.5"/>' +
+    '<circle cx="1474" cy="450" r="6" fill="#e8eaec" opacity=".95"/>' +
+    '<rect x="1462" y="466" width="24" height="22" rx="3" fill="#3c4148"/>' +
+    '<rect width="1672" height="941" fill="url(#sv@)"/></svg>';
 
   /* ---------- Sites et caméras ---------- */
   var M = "/media/solutions/";
@@ -126,6 +205,8 @@
     parking: M + "security-enterprise-parking-v1.webp",
     quai: M + "security-enterprise-delivery-v1.webp"
   };
+  /* Scènes de synthèse (pas de photo) : la salle des serveurs. */
+  var ART = { srv: SRV };
   var SITES = {
     maison: {
       label: "Résidence · 4 caméras",
@@ -155,6 +236,36 @@
         { id: "badge", name: "Contrôle d’accès", idle: "Prêt" },
         { id: "motion", name: "Détecteur · entrepôt", idle: "Calme" },
         { id: "alarm", name: "Alarme", idle: "Armée" }
+      ]
+    },
+    stationnement: {
+      label: "Entreprise · stationnement",
+      cams: [
+        { img: "parking", name: "Voie d’entrée · lecteur", view: [90, 250, 800, 600], alt: "Caméra de la voie d’entrée du stationnement : barrière, lecteur de plaques et berline garée" },
+        { img: "parking", name: "Stationnement", view: v43(100), alt: "Caméra du stationnement de l’entreprise, avec un véhicule garé" },
+        { img: "parking", name: "Entrée principale", view: [900, 170, 740, 555], alt: "Vue rapprochée de l’entrée principale de l’entreprise" },
+        { img: "quai", name: "Quai de livraison", view: v43(330), alt: "Caméra du quai de livraison, avec le camion de l’entreprise" }
+      ],
+      sensors: [
+        { id: "barriere", name: "Barrière · entrée", idle: "Fermée" },
+        { id: "lpr", name: "Lecteur de plaques", idle: "En lecture" },
+        { id: "bell", name: "Interphone", idle: "Au repos" },
+        { id: "alarm", name: "Alarme", idle: "Désarmée" }
+      ]
+    },
+    serveurs: {
+      label: "Entreprise · intérieur",
+      cams: [
+        { img: "parking", name: "Stationnement", view: v43(60), alt: "Caméra du stationnement de l’entreprise, le soir" },
+        { img: "quai", name: "Entrée du personnel", view: [1230, 205, 442, 331.5], sleep: true, alt: "Vue rapprochée de l’entrée du personnel, porte vitrée éclairée" },
+        { img: "srv", name: "Corridor des serveurs", view: v43(300), ir: true, sleep: true, irlab: "intérieur", alt: "Caméra intérieure infrarouge : corridor des baies, porte de la salle des serveurs et lecteur de badge" },
+        { img: "quai", name: "Quai de livraison", view: v43(330), alt: "Caméra du quai de livraison, la nuit" }
+      ],
+      sensors: [
+        { id: "badge", name: "Lecteur · serveurs", idle: "Prêt" },
+        { id: "door", name: "Porte des serveurs", idle: "Verrouillée" },
+        { id: "motion", name: "Détecteur · corridor", idle: "Calme" },
+        { id: "alarm", name: "Alarme", idle: "Armée · partielle" }
       ]
     }
   };
@@ -278,12 +389,155 @@
         why: "même personne sur 3 caméras · badge · porte · détecteur",
         acts: [
           { fx: "dock", ico: "lights", label: "Allumer l’éclairage du quai", sent: "Commande envoyée aux projecteurs du quai", ok: "Confirmé · état relu : quai éclairé." },
-          { fx: "call", ico: "call", label: "Prévenir le responsable de garde", sent: "Message envoyé au responsable de garde", ok: "Confirmé · accusé de réception reçu." }
+          { fx: "call", ico: "call", label: "Prévenir le responsable de garde", sent: "Message envoyé au responsable de garde", ok: "Confirmé · accusé de réception reçu.", relay: true }
         ]
+      }
+    },
+
+    /* Lecture de plaques : deux véhicules à la barrière. Le premier est au
+       registre (barrière ouverte), le second est consigné comme visiteur
+       (photo + plaque), avec notification de courtoisie. Noms et plaques
+       fictifs. */
+    plaques: {
+      site: "stationnement", start: "17:05:46", rate: 8, mood: "", alarm: "Désarmée",
+      walkers: [
+        { id: "v1", tid: "52", img: "parking", kind: "car", plate: "XKE 204", keys: [[800, 680, 935, 300], [3400, 586, 730, 215], [7600, 586, 730, 215], [9400, 470, 415, 100]] },
+        { id: "v2", tid: "53", img: "parking", kind: "car", plate: "H2B 519", keys: [[10600, 685, 940, 300], [13200, 590, 734, 217], [18800, 590, 734, 217], [20400, 474, 418, 100]] }
+      ],
+      props: [
+        { img: "parking", kind: "chip", tile: 0, at: 5600, until: 9000, x: 490, y: 332, tone: "ok", html: "<b>XKE 204 · Québec</b><small>Autorisée · N. Tremblay, employée</small>" },
+        { img: "parking", kind: "chip", tile: 0, at: 15400, until: 20200, x: 490, y: 332, tone: "warn", html: "<b>H2B 519 · inconnue</b><small>Consignée · visiteur</small>" }
+      ],
+      boxes: [
+        { tile: 0, track: "v1", shape: "car", from: 1100, to: 9200, labels: [[1100, "Véhicule · 97" + PC, "vehicle"]] },
+        { tile: 0, rect: [543, 664, 86, 31], under: true, from: 3900, to: 7400, labels: [[3900, "Plaque · lecture…", "move"], [4700, "XKE 204 · Québec", "plate"]] },
+        { tile: 0, track: "v2", shape: "car", from: 10900, to: 20200, labels: [[10900, "Véhicule · 96" + PC, "vehicle"]] },
+        { tile: 0, rect: [546, 667, 87, 31], under: true, from: 13700, to: 18500, labels: [[13700, "Plaque · lecture…", "move"], [14500, "H2B 519 · inconnue", "person"]] }
+      ],
+      events: [
+        { t: 1100, k: "vehicle", title: "Véhicule — voie d’entrée", src: "Caméra 01 · 97" + PC, tile: 0 },
+        { t: 4700, k: "plate", title: "Plaque lue — XKE 204 · Québec", src: "Lecteur de plaques · voie d’entrée", sensor: "lpr", state: "XKE 204", tile: 0, reg: ["XKE 204", "Autorisée · N. Tremblay", "ok"] },
+        { t: 5800, k: "grant", title: "Véhicule autorisé — N. Tremblay, employée", src: "Registre des plaques · entrée permise", sensor: "barriere", state: "Ouverte", reset: 3600, tile: 0 },
+        { t: 10900, k: "vehicle", title: "Véhicule — voie d’entrée", src: "Caméra 01 · 96" + PC, tile: 0 },
+        { t: 14500, k: "plate", title: "Plaque lue — H2B 519 · inconnue", src: "Lecteur de plaques · aucun dossier", sensor: "lpr", state: "H2B 519", tile: 0 },
+        { t: 15600, k: "log", title: "Consignée comme visiteur — photo et plaque au registre", src: "Registre des plaques", sensor: "barriere", state: "Ouverte · visiteur", tile: 0, reg: ["H2B 519", "Visiteur consigné", "warn"] },
+        { t: 16900, k: "bell", title: "Notification de courtoisie — sans urgence", src: "Vers votre téléphone", tile: 0 }
+      ],
+      evidence: [
+        { tile: 0, t: 6900, c: [586, 660], w: 620, cap: "XKE 204" },
+        { tile: 1, t: 12800, c: [620, 700], w: 900, cap: "Stationnement" },
+        { tile: 0, t: 16300, c: [590, 664], w: 620, cap: "H2B 519" }
+      ],
+      reg: [["16 h 48", "GVR 882", "Autorisée · T. Côté", "ok"], ["16 h 31", "FLM 310", "Visiteur consigné", "warn"], ["16 h 02", "JPS 668", "Autorisée · M. Gagnon", "ok"]],
+      inc: {
+        lvl: "ok", lvlTxt: "Normal",
+        sum: "<b>17" + NBSP + "h" + NBSP + "06 — Entrée du stationnement :</b> XKE 204 (N. Tremblay, employée) reconnue au registre, barrière ouverte. H2B 519, inconnue, consignée comme visiteur : photo et plaque conservées, notification de courtoisie envoyée.",
+        why: "2 plaques lues · registre tenu à jour · barrière commandée 2 fois",
+        calm: "Aucune action requise. La lecture du visiteur reste au registre 30 jours.",
+        acts: []
+      }
+    },
+
+    /* Salle des serveurs : carte révoquée présentée deux fois. Les caméras
+       du secteur s'éveillent, la personne est suivie (même ID), la porte
+       reste verrouillée, le gestionnaire reçoit la photo. */
+    serveurs: {
+      site: "serveurs", start: "22:47:46", rate: 8, mood: "dim", alarm: "Armée · partielle",
+      walkers: [
+        { id: "a", tid: "23", img: "parking", kind: "dark", keys: [[600, 660, 650, 235], [2600, 1050, 590, 205], [4200, 1330, 470, 160]] },
+        { id: "b", tid: "23", img: "quai", kind: "dark", keys: [[4800, 1270, 545, 230], [6000, 1420, 515, 200], [7400, 1452, 505, 192]] },
+        { id: "c", tid: "23", img: "srv", kind: "dark", stay: true, keys: [[8200, 260, 905, 430], [10200, 720, 770, 330], [11600, 1120, 700, 290]] }
+      ],
+      props: [],
+      boxes: [
+        { tile: 0, track: "a", from: 900, to: 4100, labels: [[900, "Mouvement", "move"], [1700, P + "91" + PC, "person"]] },
+        { tile: 1, track: "b", from: 5000, to: 7300, labels: [[5000, P + "95" + PC, "person"]] },
+        { tile: 2, track: "c", from: 8400, labels: [[8400, P + "96" + PC, "person"], [12400, "Refus · essai 1", "alert"], [16400, "Refus · essai 2", "alert"]] }
+      ],
+      events: [
+        { t: 900, k: "move", title: "Mouvement — stationnement", src: "Caméra 01 · Stationnement", tile: 0 },
+        { t: 1800, k: "person", title: "Personne — stationnement", src: "Caméra 01 · 91" + PC, tile: 0 },
+        { t: 5200, k: "person", title: "Personne — entrée du personnel", src: "Caméra 02 · 95" + PC, tile: 1, wake: [1] },
+        { t: 12000, k: "access", title: "ID refusé — carte révoquée", src: "Lecteur · salle des serveurs", sensor: "badge", state: "Refusé · révoquée", tile: 2, wake: [2] },
+        { t: 13600, k: "cam", title: "Caméras du secteur réveillées", src: "Enregistrement continu · ID 23 suivie", tile: 2 },
+        { t: 16400, k: "alert", title: "2e essai — ID refusé", src: "Lecteur · salle des serveurs", sensor: "badge", state: "Refusé · 2e essai", tile: 2 },
+        { t: 17800, k: "bell", title: "Gestionnaire prévenu — photo jointe", src: "Notification · M. Bélanger", tile: 2, relay: true },
+        { t: 18800, k: "lock", title: "La porte des serveurs reste verrouillée", src: "Aucune ouverture · accès refusé consigné", sensor: "door", state: "Verrouillée · maintenue" }
+      ],
+      evidence: [
+        { tile: 0, t: 2600, c: [900, 560], w: 800, cap: "Stationnement" },
+        { tile: 2, t: 12600, c: [1250, 560], w: 760, cap: "Essai 1" },
+        { tile: 2, t: 16800, c: [1250, 560], w: 560, cap: "Essai 2 · refusé" }
+      ],
+      inc: {
+        lvl: "crit", lvlTxt: "Prioritaire",
+        sum: "<b>22" + NBSP + "h" + NBSP + "48 — Salle des serveurs :</b> une carte révoquée a été présentée deux fois au lecteur. La porte est restée verrouillée, la personne (ID 23) est suivie depuis le stationnement et le gestionnaire a reçu la photo.",
+        why: "même personne sur 3 caméras · 2 refus de badge · porte verrouillée",
+        acts: [
+          { fx: "srv", ico: "lock", label: "Verrouiller tout l’étage technique", sent: "Commande envoyée aux 4 portes de l’étage", ok: "Confirmé · état relu : 4 portes sur 4 verrouillées." },
+          { fx: "none", ico: "call", label: "Appeler le gestionnaire de garde", sent: "Appel lancé vers M. Bélanger", ok: "Confirmé · appel répondu, caméras partagées.", relay: true }
+        ]
+      }
+    },
+
+    /* Porte forcée, la nuit : escalade automatique en mode urgence. Les six
+       actions s'exécutent une à une (envoyé → confirmé), l'appel sonne pour
+       vrai, et la levée du mode demande une confirmation. */
+    forcee: {
+      site: "entrepot", start: "03:25:48", rate: 6, mood: "ir", alarm: "Armée",
+      walkers: [
+        { id: "a", tid: "41", img: "quai", kind: "hood", keys: [[500, 250, 690, 230], [2400, 1010, 700, 235], [3400, 1430, 565, 205], [3900, 1505, 530, 196], [5600, 1505, 530, 196], [6300, 1522, 512, 180]] }
+      ],
+      props: [
+        { img: "quai", kind: "door", at: 5200, rect: [1442, 266, 142, 254] }
+      ],
+      boxes: [
+        { tile: 2, track: "a", from: 900, to: 6200, labels: [[900, "Mouvement", "move"], [1700, P + "88" + PC, "person"], [4300, "Personne inconnue", "alert"]] },
+        { tile: 3, track: "a", from: 3600, to: 6200, labels: [[3600, P + "96" + PC, "person"], [4400, "Personne inconnue", "alert"]] },
+        { tile: 3, rect: [1442, 266, 142, 254], from: 5400, labels: [[5400, "Porte forcée", "urg"]] }
+      ],
+      events: [
+        { t: 1000, k: "move", title: "Mouvement — quai", src: "Caméra 03 · Quai de livraison", tile: 2 },
+        { t: 1900, k: "person", title: "Personne — quai de livraison", src: "Caméra 03 · 88" + PC, tile: 2 },
+        { t: 4400, k: "alert", title: "Personne inconnue — porte de service", src: "Caméra 04 · aucun badge présenté", tile: 3 },
+        { t: 5400, k: "urg", title: "Porte forcée — porte de service", src: "Capteur de choc · pêne forcé", sensor: "door", state: "Forcée", tile: 3 },
+        { t: 6600, k: "move", title: "Mouvement — entrepôt · zone armée", src: "Détecteur intérieur", sensor: "motion", state: "Mouvement" },
+        { t: 7400, k: "urg", title: "Intrusion confirmée — mode urgence", src: "JARVIS · escalade automatique", sensor: "alarm", state: "Intrusion", urgence: true }
+      ],
+      evidence: [
+        { tile: 2, t: 2600, c: [1000, 560], w: 900, cap: "Quai" },
+        { tile: 3, t: 4600, c: [1500, 440], w: 480, cap: "Porte de service" },
+        { tile: 3, t: 5900, c: [1500, 420], w: 420, cap: "Porte forcée" }
+      ],
+      inc: {
+        lvl: "urg", lvlTxt: "Urgence",
+        sum: "<b>3" + NBSP + "h" + NBSP + "26 — Intrusion :</b> la porte de service a été forcée pendant la nuit et une personne inconnue est entrée dans l’entrepôt. Zone armée, personne attendue : aucune. JARVIS passe en mode urgence.",
+        why: "porte forcée · personne inconnue · détecteur intérieur · zone armée",
+        acts: [],
+        phone: "appel au responsable, dossier envoyé · mode urgence.",
+        urg: {
+          acts: [
+            { ico: "cam", label: "Caméras du secteur en direct", ok: "Confirmé · 4 caméras en direct, enregistrement continu", ms: 1100 },
+            { ico: "lights", label: "Éclairage extérieur à 100" + NBSP + "%", ok: "Confirmé · état relu : 12 projecteurs allumés", ms: 1700, fx: "lights" },
+            { ico: "lock", label: "Verrouillage des zones sensibles", ok: "Confirmé · 3 zones verrouillées : bureaux, stock, serveurs", ms: 1500 },
+            { ico: "siren", label: "Sirène intérieure armée", ok: "Confirmée · déclenchement au prochain mouvement", ms: 1000 },
+            { ico: "call", label: "Appel au responsable de garde", call: true, ok: "Répondu à 0:07 · A. Roy en ligne", ms: 7000 },
+            { ico: "file", label: "Envoi du dossier — extraits et plan", ok: "Envoyé · reçu par A. Roy", ms: 1900 }
+          ],
+          end: "Incident consigné · 6 actions confirmées · relayé à A." + NBSP + "Roy"
+        }
       }
     }
   };
-  var ORDER = ["livraison", "visiteur", "entrepot"];
+  var ORDER = ["livraison", "visiteur", "entrepot", "plaques", "serveurs", "forcee"];
+
+  /* Incidents déjà au dossier (fictifs) pour la vue « Incidents ». */
+  var HIST = [
+    { sev: "crit", when: "Hier · 23 h 07", title: "Entrée après la fermeture — quai", st: "relaye", cams: "CAM 03 · CAM 04", n: 6 },
+    { sev: "warn", when: "Hier · 17 h 32", title: "Plaque inconnue récurrente — 3 lectures en 7 jours", st: "consigne", cams: "CAM 01", n: 3 },
+    { sev: "crit", when: "Lundi · 22 h 48", title: "Accès refusé répété — salle des serveurs", st: "relaye", cams: "CAM 02 · CAM 03", n: 5 },
+    { sev: "ok", when: "Lundi · 10 h 15", title: "Livraison — quai", st: "consigne", cams: "CAM 03", n: 4 }
+  ];
 
   /* ---------- Éléments ---------- */
   var body = $(".demo-body"), wall = $("[data-sec-wall]"), sensorsUl = $("[data-sec-sensors]");
@@ -293,6 +547,10 @@
   var calm = $("[data-sec-calm]"), follow = $("[data-sec-follow]"), phaseEl = $("[data-sec-phase]"), nRaw = $("[data-sec-n]"), live = $("[data-sec-live]");
   var clockEl = $("[data-sec-clock]"), siteEl = $("[data-sec-site]"), wires = $("[data-sec-wires]");
   var btns = $$("[data-sec-scen]"), replay = $("[data-sec-replay]");
+  var regBox = $("[data-sec-reg]"), regList = $("[data-sec-reglist]");
+  var urgBox = $("[data-sec-urg]"), urgList = $("[data-sec-urglist]"), urgEnd = $("[data-sec-urgend]"), urgLift = $("[data-sec-urglift]");
+  var lensT = $("[data-sec-lenst]"), lensBtns = $$("[data-sec-lens]"), lensView = $("[data-sec-lensv]");
+  var arrowK = $(".sec-arrow small"), phoneB = $(".sec-phone b");
   if (!wall || !feed || !inc || !calm) return;
 
   var curSite = "maison";
@@ -311,6 +569,7 @@
   var today = (function () { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); })();
 
   root.classList.add("is-live");
+  if (lensT) lensT.hidden = false;
 
   /* Minuteries annulables (une nouvelle situation efface les précédentes) */
   var timers = [];
@@ -321,6 +580,13 @@
   function buildStage(img, view, alt) {
     var s = el("div", "sec-stage");
     s.setAttribute("style", stageCss(view));
+    if (ART[img]) {
+      s.insertAdjacentHTML("afterbegin", ART[img].replace(/@/g, ++uid));
+      var sv = s.firstChild;
+      sv.setAttribute("class", "sec-scene");
+      if (alt) { sv.setAttribute("role", "img"); sv.setAttribute("aria-label", alt); sv.removeAttribute("aria-hidden"); }
+      return s;
+    }
     var im = document.createElement("img");
     im.decoding = "async";
     im.alt = alt || "";
@@ -338,6 +604,10 @@
       var cam = site.cams[i], old = t.stage, ns = buildStage(cam.img, cam.view, cam.alt);
       t.cam = cam;
       t.name.innerHTML = "<b>CAM 0" + (i + 1) + "</b> <span>" + cam.name + "</span>";
+      /* Caméra intérieure IR et caméra en veille, propres à chaque tuile */
+      tog(t.el, "is-irc", !!cam.ir);
+      var ir = $(".sec-ir", t.el);
+      if (ir) ir.innerHTML = "IR<span> · " + (cam.irlab || "nuit") + "</span>";
       if (animate && !reduce) {
         ns.classList.add("is-enter");
         old.parentNode.insertBefore(ns, old.nextSibling);
@@ -350,7 +620,8 @@
             setTimeout(function () { if (old.parentNode) old.parentNode.removeChild(old); }, 800);
           });
         };
-        if (im.decode) im.decode().then(go, go); else im.onload = go;
+        if (!im) requestAnimationFrame(go);
+        else if (im.decode) im.decode().then(go, go); else im.onload = go;
       } else {
         old.parentNode.replaceChild(ns, old);
       }
@@ -367,6 +638,13 @@
     }).join("");
   }
   function sensorEl(id) { return sensorsUl.querySelector('[data-sensor="' + id + '"]'); }
+  function sensorReset(id) {
+    var li = sensorEl(id);
+    if (!li || !run) return;
+    var def = SITES[run.sc.site].sensors.filter(function (s) { return s.id === id; })[0];
+    li.querySelector("b").textContent = def ? (def.id === "alarm" ? run.sc.alarm : def.idle) : "";
+    li.classList.remove("is-set", "is-hit");
+  }
   function sensorHit(id, state, k) {
     var li = sensorEl(id);
     if (!li) return;
@@ -374,12 +652,15 @@
     li.querySelector("b").textContent = state;
     li.classList.add("is-set");
     li.classList.remove("is-hit"); void li.offsetWidth; li.classList.add("is-hit");
-    if (id === "bell") {
-      later(function () {
-        li.querySelector("b").textContent = "Au repos";
-        li.classList.remove("is-set", "is-hit");
-      }, 3400);
-    }
+    if (id === "bell") later(function () { sensorReset(id); }, 3400);
+  }
+  /* Une caméra en veille s'éveille : le flux s'accroche, REC remplace VEILLE */
+  function wake(i) {
+    var tile = tiles[i];
+    if (!tile.el.classList.contains("is-sleep")) return;
+    tile.el.classList.remove("is-sleep");
+    glitch(tile);
+    flashTile(tile, true);
   }
 
   /* ---------- Silhouettes ---------- */
@@ -406,13 +687,22 @@
   }
   function carrying(w, t) { return w.carry === true || (w.carry && t >= w.carry[0] && t < w.carry[1]); }
   var uid = 0;
-  function makeSubj(w) { uid++; return el("div", "sec-subj k-" + w.kind, PERSON.replace(/@/g, uid)); }
+  function makeSubj(w) {
+    uid++;
+    if (w.kind === "car") {
+      var n = el("div", "sec-subj k-car", CAR.replace(/@/g, uid));
+      n.querySelector(".c-txt").textContent = w.plate || "";
+      return n;
+    }
+    return el("div", "sec-subj k-" + w.kind, PERSON.replace(/@/g, uid));
+  }
   function placeSubj(n, p, w, t) {
     var s = n.style;
     s.setProperty("--x", pct(p.x, W));
     s.setProperty("--y", pct(p.y, H));
     s.setProperty("--h", pct(p.h, H)); // vraie hauteur (pas d'agrandissement flou d'une image)
     s.opacity = p.o.toFixed(3);
+    if (w.kind === "car") return; // une voiture ne marche pas et ne se retourne pas
     tog(n, "is-walk", p.mv);
     if (p.left != null) tog(n, "is-left", p.left);
     tog(n, "is-carry", carrying(w, t));
@@ -435,6 +725,10 @@
   function makeProp(p) {
     var art = p.kind === "parcel" ? PARCEL : p.kind === "door" ? CORRIDOR : null;
     var n = el("div", "sec-prop p-" + p.kind, art && art.replace(/@/g, ++uid));
+    if (p.kind === "chip") {
+      n.innerHTML = p.html;
+      n.classList.add("is-" + (p.tone || "ok"));
+    }
     var r = p.rect || (p.kind === "parcel" ? [p.x - 32, p.y - 45, 64, 46] : [p.x, p.y, 0, 0]);
     n.style.setProperty("--x", pct(r[0], W)); n.style.setProperty("--y", pct(r[1], H));
     n.style.setProperty("--w", pct(r[2], W)); n.style.setProperty("--h", pct(r[3], H));
@@ -449,8 +743,8 @@
     var on = propOn(p, t), rec = run.pn[i];
     if (on && !rec) {
       rec = run.pn[i] = [];
-      tiles.forEach(function (tile) {
-        if (tile.cam.img !== p.img) return;
+      tiles.forEach(function (tile, ti) {
+        if (tile.cam.img !== p.img || (p.tile != null && p.tile !== ti)) return;
         var n = makeProp(p);
         tile.stage.appendChild(n);
         rec.push(n);
@@ -468,6 +762,10 @@
     if (b.rect) return b.rect;
     var p = walkerAt(run.wmap[b.track], t);
     if (!p || p.o < .25) return null;
+    if (b.shape === "car") {
+      var cw = p.h * 1.5;
+      return [p.x - cw / 2, p.y - p.h * 1.02, cw, p.h * 1.05];
+    }
     return [p.x - p.h * .2, p.y - p.h * 1.03, p.h * .4, p.h * 1.06];
   }
   function makeBox() {
@@ -530,6 +828,7 @@
     }
     if (!rb.node || rb.node.parentNode !== tile.stage) {
       rb.node = makeBox(); tile.stage.appendChild(rb.node); rb.lab = -1; rb.r = null;
+      tog(rb.node, "is-under", !!b.under);
       if (w) { rb.trail = makeTrail(b.labels[0][2]); tile.stage.appendChild(rb.trail); }
     }
     var j = boxLabel(b, t);
@@ -556,7 +855,7 @@
   /* État de chaque tuile, et caméra « active » mise en avant : celle de la
      dernière alerte tant qu'une personne y est suivie (ou pendant 2,6 s),
      sinon toute autre caméra qui suit quelqu'un. */
-  var ST = { move: "Mouvement", person: "Personne", vehicle: "Véhicule", parcel: "Colis", alert: "Alerte", known: "Connu" };
+  var ST = { move: "Mouvement", person: "Personne", vehicle: "Véhicule", parcel: "Colis", alert: "Alerte", known: "Connu", plate: "Plaque", access: "Accès", urg: "Urgence" };
   function tileStatus(t) {
     var best = [null, null, null, null], seen = [false, false, false, false];
     run.boxes.forEach(function (rb) {
@@ -663,8 +962,28 @@
       hit(tiles[ev.tile], ev.k);
       if (/^(move|person|vehicle)$/.test(ev.k)) glitch(tiles[ev.tile]);
     }
-    if (ev.sensor) sensorHit(ev.sensor, ev.state, ev.k);
+    if (ev.sensor) {
+      sensorHit(ev.sensor, ev.state, ev.k);
+      if (ev.reset) later(function () { sensorReset(ev.sensor); }, ev.reset);
+    }
+    if (ev.wake) ev.wake.forEach(wake);
+    if (ev.reg) addReg(hmin(simAt(ev.t)), ev.reg[0], ev.reg[1], ev.reg[2], true);
+    if (ev.relay) run.relayed = true;
+    if (ev.urgence) urgOn();
+    if (feed.classList.contains("is-lens")) buildLens();
     comet(ev.sensor ? sensorEl(ev.sensor) : tiles[ev.tile].view, li, ev.k);
+  }
+  /* « 17 h 06 » pour le registre des plaques */
+  function hmin(s) {
+    s = Math.floor(s) % 86400;
+    return Math.floor(s / 3600) + NBSP + "h" + NBSP + pad(Math.floor(s / 60) % 60);
+  }
+  function addReg(when, plate, st, cls, fresh) {
+    if (!regList) return;
+    var li = el("li", "r-" + cls + (fresh ? " is-new" : ""),
+      "<time>" + when + "</time><b>" + plate + "</b><span>" + st + "</span>");
+    regList.insertBefore(li, regList.firstChild);
+    while (regList.children.length > 5) regList.removeChild(regList.lastChild);
   }
   /* Compteur à rouleau : l'ancien chiffre monte et sort, le nouveau entre
      (sans html.fx, seul le nouveau chiffre est visible). */
@@ -690,8 +1009,11 @@
     buildThumbs();
     feed.classList.add("is-merged");
     inc.classList.add("is-on");
-    phase("1 événement compris", "ok");
+    if (run.urg) phase("Mode urgence", "urg");
+    else phase("1 événement compris", "ok");
     live.textContent = sum.textContent;
+    if (run.sc.inc.urg) urgRun();
+    if (feed.classList.contains("is-lens")) buildLens();
   }
   function donePhase() {
     root.classList.add("is-done");
@@ -710,6 +1032,22 @@
     lvl.className = "sec-lvl is-" + I.lvl;
     lvl.textContent = I.lvlTxt;
     when.textContent = "Durée · " + dur(sc);
+    /* Compte de la situation : flèche, téléphone, registre, mode urgence */
+    if (arrowK) arrowK.textContent = "1 notification au lieu de " + sc.events.length;
+    if (phoneB) phoneB.textContent = I.phone || "1 notification au lieu de " + sc.events.length + ".";
+    if (regBox) {
+      regBox.hidden = !sc.reg;
+      regList.innerHTML = "";
+      (sc.reg || []).slice().reverse().forEach(function (r) { addReg(r[0], r[1], r[2], r[3]); });
+    }
+    if (urgBox) {
+      urgBox.hidden = !I.urg;
+      urgList.innerHTML = "";
+      urgEnd.hidden = true;
+      urgEnd.textContent = "";
+      urgLift.hidden = true;
+      urgLift.innerHTML = "";
+    }
     sum.innerHTML = I.sum;
     why.innerHTML = '<span class="sec-icos" aria-hidden="true">' + sc.events.map(function (e, i) {
       return '<i class="t-' + e.k + '" style="--i:' + i + '">' + (ICON[e.k] || ICON.move) + "</i>";
@@ -733,7 +1071,7 @@
     sc.evidence.forEach(function (e, i) {
       var tile = tiles[e.tile], cam = tile.cam, vw = e.w, vh = vw / 1.6;
       var v = [clamp(e.c[0] - vw / 2, 0, W - vw), clamp(e.c[1] - vh / 2, 0, H - vh), vw, vh];
-      var fig = el("figure", "sec-th"), view = el("div", "sec-th-view" + (sc.mood === "ir" ? " is-ir" : ""));
+      var fig = el("figure", "sec-th"), view = el("div", "sec-th-view" + (sc.mood === "ir" || cam.ir ? " is-ir" : ""));
       var s = buildStage(cam.img, v, "Preuve : " + (e.cap || cam.name));
       fig.style.setProperty("--i", i);
       sc.walkers.forEach(function (w) {
@@ -789,6 +1127,7 @@
       flow[2].classList.remove("is-cur"); flow[2].classList.add("is-done");
       li.setAttribute("data-state", "done");
       st.textContent = a.ok;
+      if (a.relay && run) { run.relayed = true; if (feed.classList.contains("is-lens")) buildLens(); }
       confirmed(a.fx);
     }, reduce ? 700 : 2500);
   }
@@ -798,6 +1137,7 @@
   function effect(fx) {
     if (fx === "lights") lightTiles([0, 1, 2, 3]);
     if (fx === "dock") lightTiles([2, 3]);
+    if (fx === "srv") { sensorHit("door", "Verrouillée · étage", "lock"); flashTile(tiles[2], true); }
     if (fx === "talk") {
       var t = tiles[2], say = el("div", "sec-say", ICON.talk.replace("<svg", '<svg aria-hidden="true"') +
         "<span>« Bonjour. Cette propriété est sous surveillance. Puis-je vous aider? »</span>");
@@ -818,6 +1158,146 @@
       addFollow(hms(simAt(leaveAt)) + " — la personne quitte la terrasse après le message.");
     }, reduce ? 0 : 3100);
   }
+
+  /* ---------- Mode urgence ----------
+     Escalade automatique, sobre : liseré rouge fin sur le mur, incrustation
+     « MODE URGENCE », actions exécutées une à une (chacune confirmée avant
+     la suivante, l'appel sonne pour vrai). La levée demande confirmation. */
+  function urgOn() {
+    if (!run || run.urg) return;
+    run.urg = true;
+    root.classList.add("is-urgence");
+    phase("Mode urgence", "urg");
+    tiles.forEach(function (t) {
+      var c = el("span", "sec-urgosd", "Mode urgence");
+      c.setAttribute("aria-hidden", "true");
+      t.el.appendChild(c);
+    });
+    live.textContent = "JARVIS passe en mode urgence.";
+  }
+  function urgOff() {
+    if (run) run.urg = false;
+    root.classList.remove("is-urgence");
+    $$(".sec-urgosd").forEach(function (n) { n.parentNode.removeChild(n); });
+    phase("1 événement compris", "ok");
+  }
+  function urgRun() {
+    var U = run.sc.inc.urg;
+    urgList.innerHTML = U.acts.map(function (a, i) {
+      return '<li data-state="wait"><span class="sec-act-ico" aria-hidden="true">' + ICON[a.ico] +
+        "</span><b>" + a.label + '</b><span class="sec-urg-st" role="status"></span></li>';
+    }).join("");
+    var rows = $$("li", urgList);
+    if (reduce) {
+      rows.forEach(function (li, i) {
+        li.setAttribute("data-state", "done");
+        $(".sec-urg-st", li).textContent = U.acts[i].ok;
+      });
+      urgDone();
+      return;
+    }
+    var i = 0;
+    function next() {
+      if (!run || run.sc.inc.urg !== U) return; // la situation a changé
+      if (i >= rows.length) { urgDone(); return; }
+      var a = U.acts[i], li = rows[i], st = $(".sec-urg-st", li), iv = 0;
+      li.setAttribute("data-state", "go");
+      if (a.call) {
+        var sec = 0;
+        st.textContent = "Sonnerie · 0:00…";
+        iv = setInterval(function () {
+          sec++;
+          if (sec * 1000 < a.ms) st.textContent = "Sonnerie · 0:" + pad(sec) + "…";
+        }, 1000);
+        timers.push(iv); // clearTimeout efface aussi un intervalle (même liste)
+      } else {
+        st.textContent = "Envoi de la commande…";
+      }
+      if (a.fx) effect(a.fx);
+      later(function () {
+        if (iv) clearInterval(iv);
+        li.setAttribute("data-state", "done");
+        st.textContent = a.ok;
+        i++;
+        later(next, 380);
+      }, a.ms);
+    }
+    next();
+  }
+  function urgDone() {
+    run.relayed = true;
+    urgEnd.textContent = run.sc.inc.urg.end;
+    urgEnd.hidden = false;
+    urgLift.innerHTML = '<button type="button" data-urg="lift">Lever le mode urgence</button>';
+    urgLift.hidden = false;
+    live.textContent = urgEnd.textContent;
+    if (feed.classList.contains("is-lens")) buildLens();
+  }
+  if (urgLift) urgLift.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("button[data-urg]");
+    if (!b || !run) return;
+    var k = b.getAttribute("data-urg");
+    if (k === "lift") {
+      urgLift.innerHTML = '<span class="sec-urg-q">Confirmer la levée du mode urgence?</span>' +
+        '<span class="sec-urg-btns"><button type="button" data-urg="yes">Lever</button>' +
+        '<button type="button" data-urg="no">Garder</button></span>';
+    } else if (k === "no") {
+      urgLift.innerHTML = '<button type="button" data-urg="lift">Lever le mode urgence</button>';
+    } else if (k === "yes") {
+      urgOff();
+      urgLift.hidden = true;
+      urgLift.innerHTML = "";
+      addFollow(hms(simAt(run.t)) + " — mode urgence levé par vous · les caméras du secteur restent en direct.");
+    }
+  });
+
+  /* ---------- Vue « Incidents » ----------
+     Les alertes brutes, regroupées par incident : gravité, état (ouvert,
+     consigné, relayé) et caméras concernées. La situation en cours s'ajoute
+     au-dessus des incidents déjà au dossier. */
+  var LENS_TITLE = {
+    livraison: "Livraison — entrée avant",
+    visiteur: "Visiteur inconnu la nuit — terrasse",
+    entrepot: "Entrée après la fermeture — quai",
+    plaques: "Plaque inconnue consignée — entrée",
+    serveurs: "Accès refusé répété — salle des serveurs",
+    forcee: "Intrusion — porte forcée · mode urgence"
+  };
+  var LENS_ST = { ouvert: "Ouvert", consigne: "Consigné", relaye: "Relayé" };
+  function lensRow(it) {
+    return '<li class="sec-i sv-' + it.sev + (it.cur ? " is-cur" : "") + '"><i class="sec-i-dot" aria-hidden="true"></i>' +
+      "<div><b>" + it.title + "</b><small>" + it.when + " · " + it.n + " alertes · " + it.cams + "</small></div>" +
+      '<span class="sec-i-st st-' + it.st + '">' + LENS_ST[it.st] + "</span></li>";
+  }
+  function buildLens() {
+    if (!lensView) return;
+    var sc = run.sc, seen = {}, cams = [];
+    sc.events.forEach(function (e) {
+      if (e.tile == null || seen[e.tile]) return;
+      seen[e.tile] = 1;
+      cams.push("CAM 0" + (e.tile + 1));
+    });
+    var cur = {
+      sev: sc.inc.lvl === "ok" ? "ok" : sc.inc.lvl === "warn" ? "warn" : "crit",
+      when: "En cours · " + hmin(secs(sc.start)),
+      title: LENS_TITLE[run.key] || "Situation en cours",
+      st: run.phase >= 3 ? (run.relayed ? "relaye" : "consigne") : "ouvert",
+      cams: cams.sort().join(" · "), n: Math.max(run.n, 1), cur: true
+    };
+    lensView.innerHTML = [cur].concat(HIST).map(lensRow).join("");
+  }
+  function setLens(mode) {
+    var on = mode === "incidents";
+    lensBtns.forEach(function (b) {
+      b.setAttribute("aria-pressed", String((b.getAttribute("data-sec-lens") === "incidents") === on));
+    });
+    tog(feed, "is-lens", on);
+    lensView.hidden = !on;
+    if (on) buildLens();
+  }
+  lensBtns.forEach(function (b) {
+    b.addEventListener("click", function () { setLens(b.getAttribute("data-sec-lens")); });
+  });
 
   /* ---------- Horloge simulée ---------- */
   function simAt(t) {
@@ -871,10 +1351,13 @@
     clearLater();
     var sc = JSON.parse(JSON.stringify(SC[key]));
     setSite(sc.site, !!run);
+    root.classList.remove("is-urgence");
+    $$(".sec-urgosd").forEach(function (n) { n.parentNode.removeChild(n); });
     tiles.forEach(function (tile, i) {
       tile.cam = SITES[sc.site].cams[i];
       $$(".sec-subj, .sec-box, .sec-trail, .sec-prop, .sec-say, .sec-snap", tile.el).forEach(function (n) { n.parentNode.removeChild(n); });
       tile.el.classList.remove("is-lit", "is-hit", "is-flash", "is-shot", "is-glitch", "is-act");
+      tog(tile.el, "is-sleep", !!tile.cam.sleep);
       tile.k = null;
       tile.busy = false;
     });
@@ -895,12 +1378,14 @@
     var end = sc.events[sc.events.length - 1].t;
     run = {
       key: key, sc: sc, t: 0, lt: 0, ev: 0, shot: 0, phase: 0, n: 0, lastS: -1, lastTile: null, lastT: -1e9, brT: 0,
+      urg: false, relayed: false,
       wn: {}, pn: {}, dir: {}, wmap: {},
       boxes: sc.boxes.map(function (b, i) { return { def: b, node: null, trail: null, r: null, lab: -1, seed: i * 1.7 + .4 }; }),
       T: { link: end + 700, collapse: end + 2000, reveal: end + 2800, done: end + 4000 }
     };
     sc.walkers.forEach(function (w) { run.wmap[w.id] = w; });
     renderInc(sc);
+    setLens("alertes");
     phase("En écoute", "idle");
     if (reduce) {
       run.t = run.T.done;

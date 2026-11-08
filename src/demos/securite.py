@@ -1,8 +1,11 @@
 # Démo interactive — Sécurité intelligente (solution 03).
 # « Six notifications deviennent un seul événement compris. »
 # Mur de quatre caméras simulées + chronologie qui se construit, puis se
-# regroupe en un seul événement. Le comportement vit dans
-# assets/demos/securite.js ; le style dans assets/demos/securite.css.
+# regroupe en un seul événement. Six situations : livraison, visiteur de
+# nuit, entrepôt, lecture de plaques (registre), salle des serveurs (accès
+# refusé), porte forcée (mode urgence). La chronologie offre aussi une vue
+# « Incidents ». Le comportement vit dans assets/demos/securite.js ;
+# le style dans assets/demos/securite.css.
 #
 # Sans JavaScript, ce balisage montre un état final lisible : les quatre
 # caméras de la résidence et l'événement « Livraison » déjà résumé.
@@ -80,7 +83,7 @@ def _cam(i, img, name, view, alt):
             </div>
             <figcaption class="sec-hud">
               <span class="sec-name"><b>CAM 0{i + 1}</b> <span>{name}</span></span>
-              <span class="sec-tr" aria-hidden="true"><span class="sec-br" data-sec-br>{BITRATES[i]} Mb/s</span><span class="sec-rec">REC</span></span>
+              <span class="sec-tr" aria-hidden="true"><span class="sec-br" data-sec-br>{BITRATES[i]} Mb/s</span><span class="sec-rec">REC</span><span class="sec-slp">Veille</span></span>
               <span class="sec-ir" aria-hidden="true">IR<span> · nuit</span></span>
               <time class="sec-ts" data-sec-ts>21:42:58</time>
               <span class="sec-st t-calm" data-sec-st>Calme</span>
@@ -117,9 +120,12 @@ HTML = f"""
         <button type="button" data-sec-scen="livraison" aria-pressed="true"><small>21 h 42 · Résidence</small><b>Livraison</b></button>
         <button type="button" data-sec-scen="visiteur" aria-pressed="false"><small>2 h 13 · Résidence</small><b>Visiteur inconnu la nuit</b></button>
         <button type="button" data-sec-scen="entrepot" aria-pressed="false"><small>23 h 07 · Entreprise</small><b>Entrepôt après la fermeture</b></button>
+        <button type="button" data-sec-scen="plaques" aria-pressed="false"><small>17 h 06 · Entreprise</small><b>Lecture de plaques</b></button>
+        <button type="button" data-sec-scen="serveurs" aria-pressed="false"><small>22 h 48 · Entreprise</small><b>Salle des serveurs</b></button>
+        <button type="button" data-sec-scen="forcee" aria-pressed="false"><small>3 h 26 · Entreprise</small><b>Porte forcée · urgence</b></button>
       </div>
       <ul class="sec-legend" aria-label="Légende des détections">
-        <li class="t-person">Personne</li><li class="t-vehicle">Véhicule</li><li class="t-parcel">Colis</li><li class="t-move">Mouvement</li><li class="t-alert">Alerte</li>
+        <li class="t-person">Personne</li><li class="t-vehicle">Véhicule</li><li class="t-parcel">Colis</li><li class="t-move">Mouvement</li><li class="t-alert">Alerte</li><li class="t-urg">Urgence</li>
       </ul>
     </div>
 
@@ -130,6 +136,10 @@ HTML = f"""
         <ul class="sec-sensors" data-sec-sensors aria-label="Autres capteurs">
           {"".join(_sensor(*s) for s in SENSORS)}
         </ul>
+        <section class="sec-reg" data-sec-reg hidden aria-label="Registre des plaques (simulation)">
+          <p class="sec-reg-k">Registre des plaques<span>Dernières lectures · simulation</span></p>
+          <ol class="sec-reg-list" data-sec-reglist></ol>
+        </section>
       </div>
 
       <section class="sec-feed" aria-label="Chronologie des alertes">
@@ -140,8 +150,13 @@ HTML = f"""
             <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8a5 5 0 1 0 1.6-3.7M3 2.5v2.8h2.8"/></svg>Rejouer
           </button>
         </div>
+        <div class="sec-lens-t" data-sec-lenst role="group" aria-label="Vue de la chronologie" hidden>
+          <button type="button" data-sec-lens="alertes" aria-pressed="true">Alertes</button>
+          <button type="button" data-sec-lens="incidents" aria-pressed="false">Incidents</button>
+        </div>
         <div class="sec-feed-stage">
           <p class="sec-empty" data-sec-empty hidden><i aria-hidden="true"></i>Caméras et capteurs en écoute · aucune alerte pour l’instant</p>
+          <ol class="sec-lensv" data-sec-lensv hidden aria-label="Incidents récents (simulation)"></ol>
           <ol class="sec-raw" data-sec-raw aria-label="Alertes brutes"></ol>
           <article class="sec-inc is-on" data-sec-inc>
             <div class="sec-inc-top">
@@ -155,6 +170,12 @@ HTML = f"""
             <div class="sec-acts" data-sec-acts hidden>
               <p class="sec-acts-k">JARVIS propose · vous décidez</p>
               <ul data-sec-actlist></ul>
+            </div>
+            <div class="sec-urg" data-sec-urg hidden>
+              <p class="sec-urg-k"><i aria-hidden="true"></i>Mode urgence — actions exécutées une à une</p>
+              <ol class="sec-urg-list" data-sec-urglist></ol>
+              <p class="sec-urg-end" data-sec-urgend hidden></p>
+              <div class="sec-urg-lift" data-sec-urglift hidden></div>
             </div>
             <div class="sec-follow" data-sec-follow></div>
             <p class="sec-keep"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7"/></svg>Preuves conservées sur place · 30 jours</p>
@@ -172,5 +193,5 @@ HTML = f"""
     <p class="sec-sr" aria-live="polite" data-sec-live></p>
   </div>
 </div>
-<p class="demo-hint">Choisissez une situation · approuvez ou ignorez les actions proposées · tout est simulé</p>
+<p class="demo-hint">Choisissez une situation · approuvez les actions proposées · basculez la chronologie en vue « Incidents » · tout est simulé</p>
 """

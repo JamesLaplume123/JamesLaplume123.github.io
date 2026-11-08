@@ -173,7 +173,7 @@ SCREENS = [
     ("appels", "espace", 8500, "JARVIS répond quand vous ne pouvez pas.",
      "Appels et visioconférences, en personnel comme en professionnel. Un numéro inconnu est filtré d’abord par JARVIS, et vous gardez le dernier mot."),
     ("carte", "carte", 9500, "Tous vos lieux, d’un coup d’œil.",
-     "BouLance au Lac-Saint-Jean, la maison, le chalet, le bureau, l’atelier et la ferme : chaque environnement en direct, à sa vraie place."),
+     "BouLance au Lac-Saint-Jean, la résidence, le chalet, le bureau, le garage de collection et la ferme : chaque environnement en direct, à sa vraie place."),
     ("outils", "outils", 7000, "Toutes vos extensions, au même endroit.",
      "Domotique, IA, caméras, entreprise, réseau, diagnostic, mobilité : chacune s’ouvre d’un seul clic, directement dans JARVIS."),
 ]
@@ -230,13 +230,13 @@ ENVS = [
      "chips": [("battery", "Batteries", "—", "soc"), ("shield", "Alarme", "Armée", ""), ("thermo", "Intérieur", "19 °C", "")],
      "rows": [("route", f"Arrivé hier, 17 h 40 · {ROUTE_KM} km depuis la Maison"), ("pin", "Camping municipal de Roberval · Tour du Lac-Saint-Jean"),
               ("info", "Batteries mesurées en direct · le reste, données d’exemple")]},
-    {"key": "maison", "name": "Maison", "kind": "Résidence", "place": "Saint-Hyacinthe",
+    {"key": "maison", "name": "Résidence", "kind": "Résidence de prestige", "place": "Saint-Hyacinthe",
      "lat": 45.655, "lon": -73.020, "icon": "home", "img": "/media/solutions/environnements-intelligents.webp", "pos": "70% 42%",
      "w": 22, "grp": "sth", "short": "21 °C · chauffage réduit", "state": "ok",
      "chips": [("shield", "Système", "Armé", ""), ("thermo", "Salon", "21 °C", ""), ("users", "Présence", "Personne", "")],
      "rows": [("clock", "Retour prévu pour 17 h · préchauffage à 16 h 15"), ("check", "Portes verrouillées · stores fermés"),
               ("info", "Données d’exemple")]},
-    {"key": "chalet", "name": "Chalet", "kind": "Résidence secondaire", "place": "Saint-Donat · Lac Archambault",
+    {"key": "chalet", "name": "Chalet", "kind": "Chalet d’architecte", "place": "Saint-Donat · Lac Archambault",
      "lat": 46.318, "lon": -74.222, "icon": "tree", "img": "/media/concept/jarvis-hero-architecture-v1.webp", "pos": "30% 50%",
      "w": 60, "short": "Hors saison · 12 °C maintenu", "state": "ok",
      "chips": [("drop", "Eau", "Coupée", ""), ("camera", "Caméras", "Actives", ""), ("thermo", "Intérieur", "12 °C", "")],
@@ -248,12 +248,12 @@ ENVS = [
      "chips": [("lock", "Accès", "Verrouillés", ""), ("devices", "Postes", "3 en veille", ""), ("thermo", "Bureaux", "17 °C", "")],
      "rows": [("calendar", "Ouverture lundi, 8 h · chauffage à 7 h 15"), ("check", "Sauvegarde de la nuit réussie"),
               ("info", "Données d’exemple")]},
-    {"key": "atelier", "name": "Atelier", "kind": "Garage · atelier mécanique", "place": "Sainte-Rosalie",
+    {"key": "atelier", "name": "Garage", "kind": "Garage de collection", "place": "Sainte-Rosalie",
      "lat": 45.643, "lon": -72.893, "icon": "garage", "img": "/media/solutions/camera-garage-supercars-v1.webp", "pos": "55% 40%",
-     "w": 22, "grp": "sth", "short": "Portes fermées · 2 véhicules", "state": "ok",
-     "chips": [("garage", "Portes", "Fermées", ""), ("pulse", "Compresseur", "Arrêté", ""), ("thermo", "Atelier", "16 °C", "")],
-     "rows": [("check", "Monoxyde : 8 ppm, normal"), ("camera", "2 véhicules reconnus à l’intérieur"), ("info", "Données d’exemple")]},
-    {"key": "ferme", "name": "Ferme", "kind": "Exploitation laitière", "place": "Montérégie",
+     "w": 22, "grp": "sth", "short": "Portes fermées · 6 voitures sur 7", "state": "ok",
+     "chips": [("garage", "Portes", "Fermées", ""), ("drop", "Humidité", "45 %", ""), ("thermo", "Garage", "15 °C", "")],
+     "rows": [("check", "Mainteneurs de charge : 6 sur 6"), ("route", "Escalade noir de retour vers 18 h"), ("info", "Données d’exemple")]},
+    {"key": "ferme", "name": "Ferme", "kind": "Ferme multi-élevage", "place": "Montérégie",
      "lat": 45.565, "lon": -72.950, "icon": "barn", "img": media("/media/env/ferme.webp"), "pos": "50% 50%",
      "w": 22, "grp": "sth", "short": "Traite de 17 h terminée", "state": "ok",
      "chips": [("thermo", "Étable", "8 °C", ""), ("drop", "Abreuvoirs", "Normaux", ""), ("shield", "Bâtiments", "Fermés", "")],
@@ -649,7 +649,7 @@ def v_espace():
     <button type="button" class="ap-card ap-explore" data-go="carte" data-r>
       <img src="{BANNER}" alt="" loading="lazy" decoding="async">
       <span class="ap-tile-i">{icon("map")}</span>
-      <span class="ap-tile-t"><b>Explorer la carte</b><small>BouLance, la maison, le chalet, le bureau, l’atelier et la ferme, en direct.</small></span>
+      <span class="ap-tile-t"><b>Explorer la carte</b><small>BouLance, la résidence, le chalet, le bureau, le garage de collection et la ferme, en direct.</small></span>
       <span class="ap-btn">Ouvrir la carte{icon("right")}</span>
     </button>
   </div>

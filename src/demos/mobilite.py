@@ -7,8 +7,9 @@
 #      Saint-Hyacinthe au Lac-Saint-Jean, et des suggestions calculées selon la distance, les
 #      heures d'ouverture, le soleil et l'état du véhicule. Six modes de voyage replanifient.
 #   2. Journal de voyage : photos et points géolocalisés sur la carte, chronologie, « Mes voyages ».
-#   3. Véhicules : garage connecté (VR, berline électrique, sportive, vélo électrique), ce qui passe
-#      par la connexion du constructeur et ce qui passe par le boîtier JARVIS de base.
+#   3. Véhicules : garage connecté pour un client au quotidien (VR, VUS électrique familial, vélo
+#      électrique) et une collection de luxe (Huracán, 296 GTB, GT-R, RS4 Avant, G63, Range Rover,
+#      Escalade) : ce qui passe par la connexion du constructeur et ce qui passe par le boîtier JARVIS.
 #
 # La géométrie (fleuve, fjord, lac, routes, trajets) est calculée ici en kilomètres, puis transmise à
 # assets/demos/mobilite.js en JSON. Les étiquettes et repères sont en HTML par-dessus la carte pour
@@ -62,6 +63,8 @@ ICO = {
     "vr": '<path d="M2.5 16.5V7.5a1 1 0 0 1 1-1h11.5v10M15 9.5h3.2l3.3 3.5v3.5H15"/><circle cx="7" cy="17.3" r="1.8"/><circle cx="17.6" cy="17.3" r="1.8"/><path d="M6 9.5h5M8.5 7v5"/>',
     "berline": '<path d="M3 16.5v-3l2.2-.6L8 8.8h7.4l3.4 4 2.2.7v3"/><circle cx="7" cy="16.8" r="1.8"/><circle cx="17" cy="16.8" r="1.8"/><path d="M8.8 16.8h6.4M8.6 12.6h9"/>',
     "sportive": '<path d="M2.5 16.3v-2l3.2-1.3 3.3-2.8h5.6l3.8 2.8 3.1.8v2.5"/><circle cx="7" cy="16.6" r="1.8"/><circle cx="17.3" cy="16.6" r="1.8"/><path d="M8.8 16.6h6.7"/>',
+    "supercar": '<path d="M2 16.4v-1.6l4.5-1.6 4.2-2.6h4.6l3.6 2.4 3.1 1.1v2.3"/><circle cx="7" cy="16.7" r="1.7"/><circle cx="17.6" cy="16.7" r="1.7"/><path d="M8.7 16.7h7.2M10.8 13.2h6.4"/>',
+    "vus": '<path d="M3 17V11.5l2.2-4.5h10.6l3 4.5 2.2.6V17"/><circle cx="7.3" cy="17.2" r="1.8"/><circle cx="17" cy="17.2" r="1.8"/><path d="M9.1 17.2h6.1M3 11.5h18M10.5 7v4.5"/>',
     "velo": '<circle cx="6" cy="16" r="3.5"/><circle cx="18" cy="16" r="3.5"/><path d="M6 16l4-7h5l3 7M10 9 8.8 6.5H7M15 9l-1.6-3h2.4M12.5 16 10 9"/>',
     "lock": '<rect x="5.5" y="10.5" width="13" height="9.5" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>',
     "unlock": '<rect x="5.5" y="10.5" width="13" height="9.5" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 6.8-1.2"/>',
@@ -390,9 +393,15 @@ PHOTO_DESC = {
     "sherbrooke": "Gorge de la rivière Magog à Sherbrooke",
     "cote-beaupre": "Route de la Côte-de-Beaupré, fleuve et Île d’Orléans à droite",
     "sainte-anne": "Canyon et chute Sainte-Anne, passerelle suspendue",
-    "berline-electrique": "Berline électrique noire sans logo, recharge dans un garage moderne",
-    "sportive": "Voiture sport rouge sans logo dans un garage sombre",
+    "vus-electrique": "VUS électrique familial blanc, sans logo, en recharge dans le garage chauffé d’une résidence moderne, le soir",
     "velo-electrique": "Vélo électrique noir et or appuyé contre un mur, lumière du soir",
+    "lamborghini-huracan": "Lamborghini Huracán vert ou noir mat dans un garage de collection sombre, rampes DEL au plafond, sans plaque",
+    "ferrari-296": "Ferrari 296 GTB rouge branchée à une borne murale dans un garage de collection éclairé, vue de trois quarts",
+    "nissan-gt-r-r35": "Nissan GT-R R35 gris foncé dans un garage de collection, lumière rasante, sans plaque",
+    "audi-rs4-avant": "Audi RS4 Avant gris Nardo dans un garage de collection, pneus d’hiver, vue de trois quarts avant",
+    "mercedes-amg-g63": "Mercedes-AMG G63 noir dans un garage de collection, phares allumés, sol de béton poli",
+    "cadillac-escalade": "Cadillac Escalade noir sur une autoroute québécoise au crépuscule, phares allumés",
+    "range-rover": "Range Rover noir ou gris foncé dans un garage de collection, éclairage chaud, sans plaque",
 }
 
 
@@ -510,8 +519,18 @@ CAPS = [("loc", "Localisation", "pin"), ("lock", "Verrouillage", "lock"), ("clim
         ("nrj", "Énergie et recharge", "bolt"), ("pneus", "Pression des pneus", "pneu"), ("diag", "Codes défaut (diagnostic)", "obd"),
         ("garde", "Alerte de mouvement", "eye"), ("zone", "Géorepérage", "zone")]
 
+COLL_ENV = "/solutions/environnements-intelligents/#jarvis"
+
+
+def _veh_img(slug, repli=None, pos="50% 55%"):
+    """Photo media/mobilite/<slug>.webp si elle existe; sinon la photo de repli (agrandie) ou le panneau « Photo à venir »."""
+    p = ph(slug)
+    return {"img": p or repli, "pos": pos, "zoom": not p and bool(repli)}
+
+
 VEHICLES = [
-    {"id": "vr", "nom": "VR BouLance", "type": "Ambulance Ford 2017 convertie", "ico": "vr",
+    # ---------------- Au quotidien ----------------
+    {"id": "vr", "grp": "q", "nom": "VR BouLance", "type": "Ambulance Ford 2017 convertie", "ico": "vr",
      "img": "/media/ambulance/ambulance-ford-2017-hd.jpg", "pos": "50% 62%", "real_photo": True,
      "conn": "Boîtier JARVIS + Hub de la cellule", "connk": "b",
      "where": "En route · A-20, près de Québec", "lvl": ("Carburant", 54),
@@ -524,40 +543,24 @@ VEHICLES = [
                "Confirmé · alerte de mouvement armée."),
               ("partage", "Partager ma position pendant 2 h", "pin", "Partager la position du VR avec Camille pendant 2 heures?",
                "Confirmé · position partagée jusqu’à 13 h 05, arrêt automatique ensuite.")],
+     "envlink": ("Ouvrir la cellule dans Environnements", "Lumières, eau, énergie et chauffage du VR"),
      "note": "La cellule (lumières, eau, énergie, chauffage Webasto) se gère dans Environnements; ses niveaux d’eau et de propane guident le copilote. Ici : le véhicule et le trajet."},
-    {"id": "ev", "nom": "Berline électrique", "type": "Connexion du constructeur", "ico": "berline",
-     "img": ph("berline-electrique") or "/media/solutions/camera-garage-supercars-v1.webp", "pos": "36% 66%",
-     "zoom": not bool(photo("berline-electrique")),
+    {"id": "vus", "grp": "q", "nom": "VUS électrique familial", "type": "7 places · connexion du constructeur", "ico": "vus",
+     **_veh_img("vus-electrique"),
      "conn": "Connexion du constructeur (application officielle autorisée)", "connk": "c",
-     "where": "Maison · garage, Saint-Hyacinthe", "lvl": ("Batterie", 72),
+     "where": "Résidence · garage chauffé", "lvl": ("Batterie", 72),
      "caps": {"loc": "c", "lock": "c", "clim": "c", "nrj": "c", "pneus": "c", "diag": "b", "garde": "c", "zone": "b"},
-     "stats": [("Batterie", "72 % · 338 km", 72), ("Limite de recharge", "80 %", 80)],
-     "info": [("Recharge", "Branchée · reprise à 21 h (tarif réduit)"), ("Mode Sentinelle", "Désactivé à la maison"), ("Portes", "Verrouillées")],
-     "cmds": [("clim", "Préchauffer l’habitacle", "chaud", "Préchauffer l’habitacle à 21 °C pour un départ à 7 h 30?",
+     "stats": [("Batterie", "72 % · 410 km", 72), ("Limite de recharge", "80 %", 80)],
+     "info": [("Recharge", "Branchée · reprise à 21 h (tarif réduit)"), ("Sièges d’enfant", "2 · rangée du milieu"), ("Portes", "Verrouillées")],
+     "cmds": [("clim", "Préchauffer l’habitacle", "chaud", "Préchauffer l’habitacle à 21 °C pour le départ de l’école, à 7 h 30?",
                "Confirmé · habitacle à 21 °C à 7 h 30, dégivrage compris."),
-              ("lock", "Déverrouiller", "unlock", "Déverrouiller la berline? Elle est dans le garage, à 0 m de vous.",
+              ("lock", "Déverrouiller", "unlock", "Déverrouiller le VUS? Il est dans le garage de la résidence.",
                "Confirmé · état relu : portes déverrouillées. Reverrouillage automatique dans 2 min."),
-              ("sentinelle", "Activer le mode Sentinelle", "eye", "Activer le mode Sentinelle (caméras du véhicule en veille)?",
-               "Confirmé · Sentinelle active."),
               ("charge", "Recharger maintenant", "bolt", "Commencer la recharge maintenant, au tarif de jour?",
                "Confirmé · recharge en cours, 11 kW.")],
-     "note": "Tout ce que le constructeur autorise passe par sa connexion officielle; JARVIS n’invente pas de commande."},
-    {"id": "sport", "nom": "Sportive", "type": "Sans application · boîtier JARVIS de base", "ico": "sportive",
-     "img": ph("sportive") or "/media/solutions/camera-garage-supercars-v1.webp", "pos": "74% 64%",
-     "zoom": not bool(photo("sportive")),
-     "conn": "Boîtier JARVIS de base : OBD-II + GPS + batterie de secours", "connk": "b",
-     "where": "Remisée · garage, Saint-Hyacinthe", "lvl": ("Batterie 12 V", 88),
-     "caps": {"loc": "b", "lock": None, "clim": None, "nrj": "b", "pneus": "b", "diag": "b", "garde": "b", "zone": "b"},
-     "stats": [("Batterie 12 V", "12,6 V · 88 %", 88), ("Essence", "61 %", 61)],
-     "tires": ["34", "34", "36", "35"],
-     "info": [("Codes défaut", "Aucun"), ("Remisage", "Mainteneur de charge branché"), ("Zone", "Garage · rayon de 150 m")],
-     "cmds": [("garage", "Activer le mode garage", "garage", "Activer le mode garage? Vous serez averti si le moteur démarre ou si la voiture sort de la zone.",
-               "Confirmé · mode garage actif, zone de 150 m."),
-              ("zone", "Me prévenir si elle sort de la zone", "zone", "Activer l’alerte de géorepérage autour du garage?",
-               "Confirmé · géorepérage actif.")],
-     "note": "Pas d’application? Le boîtier se branche au port OBD-II : état, pneus, position et alertes. Verrouiller ou chauffer à distance demande la connexion du constructeur."},
-    {"id": "velo", "nom": "Vélo électrique", "type": "Traceur JARVIS · GPS + mouvement", "ico": "velo",
-     "img": ph("velo-electrique"), "pos": "50% 50%",
+     "note": "La voiture de tous les jours : tout ce que le constructeur autorise passe par sa connexion officielle; JARVIS n’invente pas de commande."},
+    {"id": "velo", "grp": "q", "nom": "Vélo électrique", "type": "Traceur JARVIS · GPS + mouvement", "ico": "velo",
+     **_veh_img("velo-electrique"),
      "conn": "Traceur JARVIS dissimulé dans le cadre", "connk": "t",
      "where": "Porte-vélo du VR · en route", "lvl": ("Batterie", 64),
      "caps": {"loc": "t", "lock": None, "clim": None, "nrj": "t", "pneus": None, "diag": None, "garde": "t", "zone": "t"},
@@ -568,6 +571,102 @@ VEHICLES = [
               ("antivol", "Désarmer l’antivol", "unlock", "Désarmer l’antivol du vélo? Il ne vous préviendra plus s’il bouge.",
                "Confirmé · antivol désarmé. Réarmement automatique à 22 h.")],
      "note": "Un petit traceur suffit : batterie, position et alerte si quelqu’un le déplace."},
+    # ---------------- La collection ----------------
+    {"id": "huracan", "grp": "c", "nom": "Lamborghini Huracán", "type": "V10 · boîtier JARVIS de base", "ico": "supercar",
+     **_veh_img("lamborghini-huracan"),
+     "conn": "Boîtier JARVIS : OBD-II + GPS + batterie de secours", "connk": "b",
+     "where": "Garage de collection · baie 1", "lvl": ("Batterie 12 V", 96),
+     "caps": {"loc": "b", "lock": None, "clim": None, "nrj": "b", "pneus": "b", "diag": "b", "garde": "b", "zone": "b"},
+     "stats": [("Batterie 12 V", "12,8 V · 96 %", 96), ("Essence", "78 % · super 94", 78)],
+     "tires": ["29", "29", "33", "33"],
+     "info": [("Remisage", "Mainteneur de charge · mode remisage"), ("Kilométrage", "8 420 km"), ("Dernière sortie", "Il y a 19 jours"), ("Codes défaut", "Aucun")],
+     "cmds": [("garage", "Activer le mode garage", "garage", "Activer le mode garage? Vous serez averti si le moteur démarre ou si la voiture quitte la baie 1.",
+               "Confirmé · mode garage actif."),
+              ("zone", "Me prévenir si elle sort de la zone", "zone", "Activer l’alerte de géorepérage autour du garage de collection?",
+               "Confirmé · géorepérage actif, rayon de 150 m.")],
+     "envlink": ("Ouvrir le garage de collection", "Humidité, portes, mainteneurs et caméras"),
+     "note": "Ce modèle n’offre pas de commande à distance utile : le boîtier lit l’état, les pneus et la position, et surveille. Ouvrir ou démarrer reste à la clé."},
+    {"id": "f296", "grp": "c", "nom": "Ferrari 296 GTB", "type": "V6 hybride rechargeable · boîtier JARVIS", "ico": "supercar",
+     **_veh_img("ferrari-296", "/media/solutions/camera-garage-supercars-v1.webp", "74% 64%"),
+     "conn": "Boîtier JARVIS + borne du garage", "connk": "b",
+     "where": "Garage de collection · baie 2", "lvl": ("Batterie 12 V", 94),
+     "caps": {"loc": "b", "lock": None, "clim": None, "nrj": "b", "pneus": "b", "diag": "b", "garde": "b", "zone": "b"},
+     "stats": [("Batterie 12 V", "12,7 V · 94 %", 94), ("Batterie hybride", "100 % · lue par la borne", 100), ("Essence", "64 %", 64)],
+     "tires": ["32", "32", "32", "32"],
+     "info": [("Recharge", "Terminée · borne 2 du garage"), ("Entretien annuel", "Dans 11 jours"), ("Kilométrage", "3 160 km"), ("Codes défaut", "Aucun")],
+     "cmds": [("garage", "Activer le mode garage", "garage", "Activer le mode garage pour la 296?",
+               "Confirmé · mode garage actif."),
+              ("charge", "Recharger la batterie hybride", "bolt", "Démarrer la borne 2 pour recharger la batterie hybride (environ 2 h 30)?",
+               "Confirmé · borne 2 active · la recharge s’arrêtera seule à 100 %.")],
+     "envlink": ("Ouvrir le garage de collection", "Humidité, portes, mainteneurs et caméras"),
+     "note": "La recharge passe par la borne du garage, que JARVIS commande; le reste vient du boîtier OBD-II. Aucune commande du véhicule n’est inventée."},
+    {"id": "gtr", "grp": "c", "nom": "Nissan GT-R R35", "type": "V6 biturbo · boîtier JARVIS de base", "ico": "sportive",
+     **_veh_img("nissan-gt-r-r35"),
+     "conn": "Boîtier JARVIS : OBD-II + GPS + batterie de secours", "connk": "b",
+     "where": "Garage de collection · baie 3", "lvl": ("Batterie 12 V", 90),
+     "caps": {"loc": "b", "lock": None, "clim": None, "nrj": "b", "pneus": "b", "diag": "b", "garde": "b", "zone": "b"},
+     "stats": [("Batterie 12 V", "12,7 V · 90 %", 90), ("Essence", "52 %", 52)],
+     "tires": ["36", "36", "36", "36"],
+     "info": [("Huile de boîte", "Dans ≈ 2 600 km"), ("Kilométrage", "27 400 km"), ("Remisage", "Mainteneur de charge branché"), ("Codes défaut", "Aucun")],
+     "cmds": [("diag", "Lancer un diagnostic OBD-II", "obd", "Lire les codes défaut et l’état du moteur maintenant?",
+               "Confirmé · aucun code défaut, température d’huile de boîte normale."),
+              ("garage", "Activer le mode garage", "garage", "Activer le mode garage pour la GT-R?",
+               "Confirmé · mode garage actif.")],
+     "envlink": ("Ouvrir le garage de collection", "Humidité, portes, mainteneurs et caméras"),
+     "note": "Une sportive sans application à distance : le boîtier JARVIS suffit pour l’état, les pneus, les codes défaut et l’alerte de mouvement."},
+    {"id": "rs4", "grp": "c", "nom": "Audi RS4 Avant", "type": "Familiale sport · constructeur + boîtier", "ico": "berline",
+     **_veh_img("audi-rs4-avant"),
+     "conn": "Connexion du constructeur (verrouillage, position, état) + boîtier JARVIS (pneus, diagnostic)", "connk": "c",
+     "where": "Garage de collection · baie 4", "lvl": ("Essence", 81),
+     "caps": {"loc": "c", "lock": "c", "clim": None, "nrj": "c", "pneus": "b", "diag": "b", "garde": "c", "zone": "b"},
+     "stats": [("Essence", "81 % · 520 km", 81), ("Batterie 12 V", "12,6 V", 88)],
+     "tires": ["38", "38", "38", "38"],
+     "info": [("Portes", "Verrouillées"), ("Pneus", "Hiver · posés le 3 novembre"), ("Kilométrage", "41 900 km")],
+     "cmds": [("lock", "Déverrouiller", "unlock", "Déverrouiller la RS4? Elle est à la baie 4 du garage de collection.",
+               "Confirmé · état relu : portes déverrouillées. Reverrouillage automatique dans 2 min."),
+              ("zone", "Me prévenir si elle sort de la zone", "zone", "Activer l’alerte de géorepérage autour du garage?",
+               "Confirmé · géorepérage actif.")],
+     "envlink": ("Ouvrir le garage de collection", "Humidité, portes, mainteneurs et caméras"),
+     "note": "La connexion du constructeur couvre le verrouillage, la position et l’état; ce modèle n’offre pas de climatisation à distance, donc la commande n’apparaît pas."},
+    {"id": "g63", "grp": "c", "nom": "Mercedes-AMG G63 noir", "type": "VUS · connexion du constructeur", "ico": "vus",
+     **_veh_img("mercedes-amg-g63"),
+     "conn": "Connexion du constructeur (application officielle autorisée)", "connk": "c",
+     "where": "Garage de collection · baie 5", "lvl": ("Essence", 68),
+     "caps": {"loc": "c", "lock": "c", "clim": "c", "nrj": "c", "pneus": "c", "diag": "b", "garde": "c", "zone": "c"},
+     "stats": [("Essence", "68 % · 430 km", 68), ("Batterie 12 V", "12,6 V", 86)],
+     "info": [("Portes", "Verrouillées"), ("Alarme du véhicule", "Armée"), ("Kilométrage", "18 300 km")],
+     "cmds": [("clim", "Démarrer et préchauffer", "chaud", "Démarrer le G63 à distance et préchauffer l’habitacle à 21 °C? L’extraction du garage sera forcée pendant 15 minutes.",
+               "Confirmé · moteur en marche, habitacle à 21 °C dans 10 min, extraction du garage au maximum."),
+              ("lock", "Déverrouiller", "unlock", "Déverrouiller le G63? Il est à la baie 5 du garage de collection.",
+               "Confirmé · état relu : portes déverrouillées. Reverrouillage automatique dans 2 min.")],
+     "envlink": ("Ouvrir le garage de collection", "Humidité, portes, mainteneurs et caméras"),
+     "note": "Démarrer dans un garage fermé déclenche toujours l’extraction : JARVIS relie la commande du véhicule et le garage."},
+    {"id": "range", "grp": "c", "nom": "Range Rover", "type": "VUS · connexion du constructeur", "ico": "vus",
+     **_veh_img("range-rover"),
+     "conn": "Connexion du constructeur (application officielle autorisée)", "connk": "c",
+     "where": "Garage de collection · baie 6", "lvl": ("Essence", 74),
+     "caps": {"loc": "c", "lock": "c", "clim": "c", "nrj": "c", "pneus": "c", "diag": "b", "garde": "c", "zone": "b"},
+     "stats": [("Essence", "74 % · 610 km", 74), ("Batterie 12 V", "12,5 V", 84)],
+     "info": [("Portes", "Verrouillées"), ("Suspension", "Hauteur d’accès"), ("Kilométrage", "22 750 km")],
+     "cmds": [("clim", "Préclimatiser l’habitacle", "chaud", "Préclimatiser l’habitacle à 21 °C pour un départ à 8 h?",
+               "Confirmé · habitacle à 21 °C à 8 h."),
+              ("lock", "Verrouiller", "lock", "Verrouiller le Range Rover?",
+               "Confirmé · état relu : portes verrouillées.")],
+     "envlink": ("Ouvrir le garage de collection", "Humidité, portes, mainteneurs et caméras"),
+     "note": "Préclimatisation, verrouillage, position et pneus passent par la connexion officielle; le boîtier JARVIS ajoute le diagnostic détaillé."},
+    {"id": "escalade", "grp": "c", "nom": "Cadillac Escalade noir", "type": "VUS · connexion du constructeur", "ico": "vus",
+     **_veh_img("cadillac-escalade"),
+     "conn": "Connexion du constructeur (application officielle autorisée)", "connk": "c",
+     "where": "En route · A-20, retour vers 18 h", "lvl": ("Essence", 46),
+     "caps": {"loc": "c", "lock": "c", "clim": "c", "nrj": "c", "pneus": "c", "diag": "c", "garde": "c", "zone": "b"},
+     "stats": [("Essence", "46 % · 330 km", 46), ("Arrivée prévue", "18 h 05 · 42 km", 70)],
+     "info": [("Conducteur", "Alexandre"), ("Pneus", "4 sur 4 conformes"), ("Santé du véhicule", "Aucun avis du constructeur")],
+     "cmds": [("arrivee", "Préparer l’arrivée au garage", "garage", "À son arrivée, ouvrir la porte 1 du garage de collection après un coup d’œil à la caméra, puis allumer l’éclairage?",
+               "Confirmé · la porte s’ouvrira à 50 m du garage, après votre accord sur la caméra."),
+              ("partage", "Partager la position pendant 1 h", "pin", "Partager la position de l’Escalade avec Marie pendant 1 heure?",
+               "Confirmé · position partagée jusqu’à 18 h 35.")],
+     "envlink": ("Ouvrir le garage de collection", "Humidité, portes, mainteneurs et caméras"),
+     "note": "En route, les commandes d’ouverture du véhicule sont verrouillées; JARVIS prépare plutôt le garage pour son retour."},
 ]
 
 
@@ -786,18 +885,22 @@ def _vehicle_panel(v, first):
     if v.get("tires"):
         t = v["tires"]
         tires = f"""<div class="mb-tires" aria-label="Pression des pneus (psi)"><small>Pression des pneus · psi</small>
-          <div class="mb-tires-g"><b>{t[0]}</b><b>{t[1]}</b><span class="mb-tires-car">{ico("sportive")}</span><b>{t[2]}</b><b>{t[3]}</b></div></div>"""
+          <div class="mb-tires-g"><b>{t[0]}</b><b>{t[1]}</b><span class="mb-tires-car">{ico(v["ico"])}</span><b>{t[2]}</b><b>{t[3]}</b></div></div>"""
     cmds = "".join(
         f'<button type="button" class="mb-cmd" data-cmd="{k}" data-q="{q}" data-ok="{ok}">{ico(ic)}<span>{lab}</span></button>'
         for k, lab, ic, q, ok in v["cmds"])
     link = ""
-    if v["id"] == "vr":
-        link = (f'<a class="mb-envlink" href="/solutions/environnements-intelligents/#jarvis">{app_icon("home")}'
-                f'<span><b>Ouvrir la cellule dans Environnements</b><small>Lumières, eau, énergie et chauffage du VR</small></span>{ico("fleche")}</a>')
+    if v.get("envlink"):
+        t, st = v["envlink"]
+        link = (f'<a class="mb-envlink" href="{COLL_ENV}">{app_icon("home" if v["id"] == "vr" else "garage")}'
+                f'<span><b>{t}</b><small>{st}</small></span>{ico("fleche")}</a>')
     conn_cls = {"c": "is-c", "b": "is-b", "t": "is-b"}[v["connk"]]
     zoom = " is-zoom" if v.get("zoom") else ""
     real = '<span class="mb-real">Photo réelle</span>' if v.get("real_photo") else ""
-    return f"""<article class="mb-veh" data-veh="{v['id']}"{'' if first else ' hidden'}>
+    if v["grp"] == "c":
+        real = f'<span class="mb-lux">{ico("etoile")}Collection</span>'
+
+    return f"""<article class="mb-veh{' is-lux' if v['grp'] == 'c' else ''}" data-veh="{v['id']}"{'' if first else ' hidden'}>
       <figure class="mb-veh-ph{zoom}">{_photo_box(v['img'], v['nom'], '', v['pos'])}{real}
         <figcaption><small>{v['type']}</small><b>{v['nom']}</b><span>{ico('pin')}{v['where']}</span></figcaption>
       </figure>
@@ -820,20 +923,29 @@ def _vehicle_panel(v, first):
     </article>"""
 
 
-def _vehicules():
-    tabs = "".join(
-        f"""<button type="button" class="mb-vtab{' is-on' if i == 0 else ''}" data-veh="{v['id']}" aria-pressed="{'true' if i == 0 else 'false'}">
+def _vtab(v, on):
+    lux = " is-lux" if v["grp"] == "c" else ""
+    return f"""<button type="button" class="mb-vtab{lux}{' is-on' if on else ''}" data-veh="{v['id']}" aria-pressed="{'true' if on else 'false'}">
           <span class="mb-vtab-i">{ico(v['ico'])}</span><span class="mb-vtab-t"><b>{v['nom']}</b><small>{v['where']}</small></span>
           <span class="mb-vtab-l l-{_lvl_cls(v['lvl'][1])}"><i style="width:{v['lvl'][1]}%"></i></span><em>{v['lvl'][0]} {v['lvl'][1]}{NB}%</em>
         </button>"""
-        for i, v in enumerate(VEHICLES))
+
+
+def _vehicules():
+    q = [v for v in VEHICLES if v["grp"] == "q"]
+    c = [v for v in VEHICLES if v["grp"] == "c"]
+    au_garage = sum(1 for v in c if v["where"].startswith("Garage"))
+    tabs = (f'<p class="mb-vgrp">{ico("vr")}<span><b>Au quotidien</b><small>VR, voiture familiale et vélo</small></span></p>'
+            + "".join(_vtab(v, i == 0) for i, v in enumerate(q))
+            + f'<p class="mb-vgrp is-lux">{ico("etoile")}<span><b>La collection</b><small>{len(c)}{NB}voitures · {au_garage}{NB}au garage · humidité 45{NB}%</small></span></p>'
+            + "".join(_vtab(v, False) for v in c))
     panels = "".join(_vehicle_panel(v, i == 0) for i, v in enumerate(VEHICLES))
     return f"""
 <div class="mb-pane" data-pane="vehicules" role="tabpanel" aria-label="Véhicules" hidden>
   <div class="mb-garage">
     <div class="mb-vtabs" role="group" aria-label="Mes véhicules">{tabs}
       <div class="mb-addv">{ico("obd")}<span><b>Votre voiture n’a pas d’application?</b>
-        <small>Le boîtier JARVIS de base se branche au port OBD-II : position, état, pneus et alertes, dans n’importe quelle voiture depuis 1996.</small></span></div>
+        <small>Le boîtier JARVIS de base se branche au port OBD-II : position, état, pneus et alertes, dans n’importe quelle voiture depuis 1996, de la familiale à la supercar.</small></span></div>
     </div>
     <div class="mb-vpanels">{panels}</div>
   </div>

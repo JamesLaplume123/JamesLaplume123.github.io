@@ -1378,6 +1378,34 @@
     return head(c.icon, c.title, c.sub, "") + '<div class="ev-eq"><figure class="ev-eq-ph' + (c.photo ? " has-img" : "") + '">' + ph + "</figure><div class=\"ev-eq-s\"><small>État</small><b class=\"t-" + tone + '">' + dot(tone) + esc(state) + "</b>" + rows + "</div></div>" + viz +
       action + (c.note ? '<p class="ev-fine is-c">' + ic("info") + esc(c.note) + "</p>" : "");
   };
+  /* ---------- Ferme : vue d'ensemble des bâtiments et en-tête du détail d'un bâtiment ---------- */
+  function bph(src, alt, icon, label) {
+    return src ? '<img src="' + src + '" alt="' + esc(alt) + '" loading="lazy" decoding="async">'
+      : '<span class="ev-bph-a" role="img" aria-label="' + esc(alt) + ' · photo à venir">' + ic(icon) + "<small>" + esc(label || "Photo à venir") + "</small></span>";
+  }
+  var BTONE = { ok: "Normal", gold: "Surveillé", warn: "À vérifier", muted: "En veille" };
+  K.batiments = function (c, e) {
+    var n = c.items.length, warn = c.items.filter(function (b) { return b.tone === "warn"; }).length;
+    var right = '<span class="ev-count"><b>' + (n - warn) + "</b> / " + n + " normaux</span>" + (warn ? '<span class="ev-tag t-warn">' + warn + " à vérifier</span>" : "");
+    return head("barn", c.title, esc(c.sub || ""), right) + '<div class="ev-bats">' + c.items.map(function (b) {
+      return '<button type="button" class="ev-bat" data-tone="' + b.tone + '" data-a="go" data-v="' + esc(b.go) + '">' +
+        '<figure class="ev-bat-ph' + (b.photo ? " has-img" : "") + '">' + bph(b.photo, b.name, b.icon) +
+        '<span class="ev-bat-st">' + dot(b.tone) + esc(b.state || BTONE[b.tone] || "") + "</span></figure>" +
+        '<span class="ev-bat-b"><span class="ev-bat-n">' + ic(b.icon) + "<b>" + esc(b.name) + "</b></span>" +
+        '<span class="ev-bat-k">' + b.kpis.map(function (k) { return "<span><small>" + esc(k[0]) + "</small><b>" + esc(k[1]) + "</b></span>"; }).join("") + "</span>" +
+        '<span class="ev-bat-a">' + ic(b.tone === "warn" ? "warn" : "info") + "<span>" + esc(b.alert) + "</span>" + ic("right", "ev-chev") + "</span></span></button>";
+    }).join("") + "</div>";
+  };
+  K.batiment = function (c, e) {
+    var chips = (c.chips || []).map(function (x) { return '<span class="ev-bh-c" data-tone="' + (x[3] || "ok") + '">' + ic(x[0]) + "<small>" + esc(x[1]) + "</small><b>" + dot(x[3] || "ok") + esc(x[2]) + "</b></span>"; }).join("");
+    var src = (c.sources || []).map(function (s) { return "<span>" + ic("radar") + esc(s) + "</span>"; }).join("");
+    return '<div class="ev-bh"><div class="ev-bh-ph">' +
+      '<figure class="ev-bat-ph' + (c.photoExt ? " has-img" : "") + '">' + bph(c.photoExt, "Extérieur · " + c.name, c.icon) + "<figcaption>Extérieur</figcaption></figure>" +
+      '<figure class="ev-bat-ph' + (c.photoInt ? " has-img" : "") + '">' + bph(c.photoInt, "Intérieur · " + c.name, c.icon) + "<figcaption>Intérieur</figcaption></figure></div>" +
+      '<div class="ev-bh-b">' + head(c.icon, c.name, esc(c.sub || ""), '<span class="ev-tag">données d’exemple</span>') +
+      '<div class="ev-bh-cs">' + chips + "</div>" +
+      (src ? '<p class="ev-k">Sources de données</p><div class="ev-bh-src">' + src + "</div>" : "") + "</div></div>";
+  };
   K.inspection = function (c, e) {
     var t = dayAt(c.d, c.h || "14:00");
     return '<div class="ev-insp"><span class="ev-ci">' + ic("calendar") + "</span><span><b>" + esc(c.title) + "</b><small>" + esc(c.sub) + "</small></span>" +

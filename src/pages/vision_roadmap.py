@@ -74,21 +74,23 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">02 · Security Pro · vision</p>
-      <h2 style="margin-top:1rem">Un audit autorisé, <em>piloté par l’IA.</em></h2>
+      <h2 style="margin-top:1rem">Une vraie firme de sécurité privée, <em>augmentée par l’IA.</em></h2>
     </div>
     <div class="side" data-rev>
-      <p>Avec votre autorisation écrite seulement, JARVIS commence par cartographier votre
-      surface publique à partir de sources ouvertes (OSINT), puis orchestre les outils d’audit
-      sur votre propre infrastructure, par MCP, un appel à la fois. Le Core vérifie chaque appel
-      contre le mandat; la correction attend votre accord; un retest la prouve.</p>
+      <p>Tests d’intrusion, red team, OSINT et enquêtes, conformité à la Loi 25, réponse aux
+      incidents et soutien aux forces de l’ordre : six lignes de service, une même rigueur. Chaque
+      mission part d’un mandat écrit; l’IA accélère, un professionnel valide, chaque accès est
+      journalisé et chaque preuve est hachée.</p>
       <span class="chip chip-sim">Vision · données fictives</span>
     </div>
   </div>
   @@PENTEST@@
   <p class="form-note" data-rev style="max-width:76rem;margin:1.6rem auto 0">Différence
   importante : l’administration réseau JARVIS surveille au quotidien; Security Pro intervient
-  dans une mission limitée, autorisée et documentée. Méthodes de référence : NIST SP 800-115,
-  OWASP WSTG, MITRE ATT&amp;CK.</p>
+  dans une mission limitée, autorisée et documentée. Méthodes de référence : PTES, OWASP WSTG,
+  MITRE ATT&amp;CK, NIST SP 800-115 et 800-61, ISO/IEC 27037. Avant toute mission réelle : permis
+  d’agence d’investigation du Bureau de la sécurité privée, assurance responsabilité et
+  vérification des antécédents de chaque analyste.</p>
 </section>
 
 <section class="sect" id="multi-site">

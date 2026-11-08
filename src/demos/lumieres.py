@@ -281,10 +281,8 @@ def _plan_bateau():
     b += _l(600, 214, 600, 386, "w2")
     b += _p("M620,244 L752,252 C786,268 798,290 798,300 C798,310 786,332 752,348 L620,356 Z", "fu")
     b += _r(628, 262, 30, 28, "fu2", 6) + _r(628, 310, 30, 28, "fu2", 6)
-    # Mât et bôme
-    b += _c(560, 300, 9, "fu") + _l(560, 300, 270, 300, "fu2 dash")
-    b += _t(110, 452, "LONGUEUR 13,7 M · BAU 4,2 M") + _t(780, 470, "TRIBORD", "middle") + _t(780, 140, "BÂBORD", "middle")
-    return _frame(b, "VOILIER")
+    b += _t(110, 452, "LONGUEUR 15,8 M · BAU 4,8 M") + _t(780, 470, "TRIBORD", "middle") + _t(780, 140, "BÂBORD", "middle")
+    return _frame(b, "YACHT · 52 PIEDS")
 
 
 def _plan_avion():
@@ -602,7 +600,7 @@ FERME = _env(
 BATEAU_STATE = {"carre": [1, "heure-doree", 60], "cabine": [0, "nuit-douce", 20], "cockpit": [1, "heure-doree", 40],
                 "pont": [0, "heure-doree", 40], "feux": [1, "navigation", 100]}
 BATEAU = _env(
-    "Le voilier", "Bateau", "le bateau", "carre", _plan_bateau(),
+    "Le yacht", "Bateau", "le bateau", "carre", _plan_bateau(),
     [
         {"k": "carre", "name": "Carré", "ic": "sofa", "lab": [446, 240], "poly": _box(300, 212, 600, 388),
          "tag": "La table et la cuisine de bord"},

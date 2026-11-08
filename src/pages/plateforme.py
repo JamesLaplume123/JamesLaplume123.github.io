@@ -1,17 +1,18 @@
-# JARVIS (plateforme) — le produit en scène : App, Core, Hub, et pourquoi le noyau est en Rust.
+# JARVIS (plateforme) — le produit en scène : le Hub et son IA, les extensions qui travaillent ensemble,
+# l’App, le noyau en Rust et l’offre (Hub + extensions + services).
 
-from demos import app, rust
+from demos import app, hub, rust
 
 PAGE = {
     "url": "/plateforme/",
     "v2": True,
-    "title": "JARVIS | App, Core et Hub",
+    "title": "JARVIS | Le Hub, son IA et ses extensions",
     "description": (
-        "Découvrez comment JARVIS App, JARVIS Core et JARVIS Hub forment un "
-        "système privé, local et contrôlé."
+        "Le Hub installé chez vous, son IA locale en français et sept extensions qui "
+        "travaillent ensemble : un système privé, local et contrôlé."
     ),
     "og_image": "/media/product/user/accueil-og.jpg",
-    "assets": ["app", "rust"],
+    "assets": ["app", "rust", "hub"],
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="" fetchpriority="high"></div>
@@ -21,8 +22,9 @@ PAGE = {
     <p class="lead" data-rev>Parlez à JARVIS App. JARVIS Core comprend le contexte et applique
     vos règles. JARVIS Hub garde l’intelligence près de vos systèmes.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="#app">Voir l’interface</a>
-      <a class="pill ghost" href="/confiance/">Confiance et gouvernance</a>
+      <a class="pill" href="#hub">Découvrir le Hub</a>
+      <a class="pill ghost" href="#app">Voir l’interface</a>
+      <a class="pill ghost" href="#offre">L’offre</a>
     </div>
     <div class="meta" data-rev>
       <span class="chip">Interface · JARVIS App</span>
@@ -30,6 +32,34 @@ PAGE = {
       <span class="chip">Sur place · JARVIS Hub</span>
     </div>
   </div>
+</section>
+
+<section class="sect hb-sect" id="hub" aria-label="Le Hub, cœur de JARVIS">
+  """ + hub.coeur() + """
+</section>
+
+<section class="sect alt hb-sect" id="ia" aria-labelledby="ia-titre">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">L’IA au cœur</p>
+      <h2 id="ia-titre">Une IA qui comprend.<br><em>Et qui vous laisse décider.</em></h2>
+    </div>
+    <p data-rev>Une seule IA, installée sur le Hub, relie tout le système. Vous lui parlez comme à une personne;
+    elle consulte les extensions, propose un plan, attend votre confirmation et explique pourquoi.</p>
+  </div>
+  """ + hub.ia() + """
+</section>
+
+<section class="sect hb-sect" id="ensemble" aria-labelledby="ensemble-titre">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Comment les extensions travaillent ensemble</p>
+      <h2 id="ensemble-titre">Chacune son rôle.<br><em>Toutes reliées par le Hub.</em></h2>
+    </div>
+    <p data-rev>Les extensions s’influencent, mais jamais n’importe comment : chacune garde son domaine,
+    publie ce qu’elle observe et écoute ce qui la concerne. Le Hub fait respecter les droits et garde la trace.</p>
+  </div>
+  """ + hub.ensemble() + """
 </section>
 
 <section class="vitrine" id="app" aria-label="JARVIS App">
@@ -99,7 +129,7 @@ PAGE = {
   <div class="chiprow" data-rev>
     <span class="chip chip-sim">Une identité</span>
     <span class="chip">Des permissions</span>
-    <span class="chip">Six capacités</span>
+    <span class="chip">Sept extensions</span>
     <span class="chip">Une trace complète</span>
   </div>
 </section>
@@ -112,24 +142,6 @@ PAGE = {
     recommandent les agences de cybersécurité pour le logiciel critique — et bâti pour accueillir l’IA sans lui céder les clés.</p>
   </div>
   """ + rust.html() + """
-</section>
-
-<section class="hub" aria-labelledby="hub-titre">
-  <figure class="hub-media wipe" data-rev>
-    <img src="/media/product/jarvis-hub-v1.webp" width="1672" height="941"
-         alt="JARVIS Hub intégré dans une résidence haut de gamme" loading="lazy">
-  </figure>
-  <div class="hub-copy" data-rev>
-    <p class="eyebrow">JARVIS Hub</p>
-    <h2 id="hub-titre">La présence physique <em>de JARVIS.</em></h2>
-    <p>Dimensionné et intégré selon le lieu, il exécute le noyau, garde les fonctions essentielles
-    même sans Internet et n’installe que des mises à jour signées.</p>
-    <div class="chiprow">
-      <span class="chip">Exécute le noyau</span>
-      <span class="chip">Continuité sans Internet</span>
-      <span class="chip">Mises à jour signées</span>
-    </div>
-  </div>
 </section>
 
 <section class="sect alt" id="experience">
@@ -271,6 +283,18 @@ PAGE = {
       <p>Demandes, sources, approbations et résultats peuvent être conservés selon le mandat.</p>
     </article>
   </div>
+</section>
+
+<section class="sect alt hb-sect" id="offre" aria-labelledby="offre-titre">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">L’offre</p>
+      <h2 id="offre-titre">Le Hub, puis vos extensions.<br><em>Rien de plus que le nécessaire.</em></h2>
+    </div>
+    <p data-rev>Chaque client part du Hub. On y ajoute les extensions dont le lieu a besoin, aujourd’hui ou plus tard,
+    avec l’installation, l’entretien et le soutien. Trois exemples typiques, ou une composition sur mesure.</p>
+  </div>
+  """ + hub.offre() + """
 </section>
 
 <section class="cta">

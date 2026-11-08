@@ -1,6 +1,7 @@
 # Solutions — reconnaître son problème et choisir la bonne capacité. Version wow.
 
 from config import CAPABILITIES
+import galerie
 
 GUIDE = [
     ("environnements-intelligents", "Votre lieu dépend de plusieurs applications qui ne se parlent pas?"),
@@ -80,6 +81,7 @@ STORIES_HTML = "".join(
 
 PAGE = {
     "url": "/solutions/",
+    "assets": ["galerie"],
     "v2": True,
     "title": "Solutions | JARVIS Private Systems",
     "description": (
@@ -127,6 +129,7 @@ PAGE = {
   </div>
   {STORIES_HTML}
 </section>
+{galerie.solutions_clients()}
 
 <section class="statement">
   <p class="eyebrow" data-rev>Une fondation commune</p>

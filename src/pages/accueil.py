@@ -11,6 +11,7 @@ import json
 from config import CAPABILITIES
 from demos import app, maison, meteo
 from partials import ext_icon
+import galerie
 
 
 def apercu_solutions():
@@ -193,7 +194,7 @@ PAGE = {
     "url": "/",
     "v2": True,
     "title": "Domotique privée et sécurité intelligente au Québec | JARVIS",
-    "assets": ["app", "maison", "meteo", "labdirect"],
+    "assets": ["app", "maison", "meteo", "labdirect", "galerie"],
     "description": (
         "Domotique privée, sécurité intelligente et IA locale, installées chez vous. "
         "JARVIS relie vos appareils sans envoyer vos données au nuage. Saint-Hyacinthe, Québec."
@@ -276,6 +277,9 @@ PAGE = {
     </li>
   </ol>
 </section>
+
+<!-- Pour qui : clients ordinaires et de prestige (src/galerie.py) -->
+{galerie.clients_fr()}
 
 <!-- Vitrine de l'app (dossier User v25) : le logiciel dans une seule fenêtre (assets/demos/app.*) -->
 <section class="vitrine" id="app" aria-label="JARVIS App">
@@ -398,6 +402,8 @@ PAGE = {
 </section>
 
 <!-- L'offre : le Hub, puis les extensions utiles à chaque environnement (détail : /plateforme/#offre) -->
+{galerie.accueil_panorama()}
+
 <section class="offer" id="offre" aria-labelledby="offre-titre">
   <div class="head" data-rev>
     <p class="eyebrow">L’offre</p>

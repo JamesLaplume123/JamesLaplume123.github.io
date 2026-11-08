@@ -1,7 +1,10 @@
 # English overview — one page; the detailed edition stays in French. Wow version.
 
+import galerie
+
 PAGE = {
     "url": "/en/",
+    "assets": ["galerie"],
     "v2": True,
     "lang": "en",
     "title": "JARVIS Private Systems | Private intelligence and connected systems",
@@ -37,6 +40,8 @@ PAGE = {
   <p data-rev>The project is organized into six solution families. The detailed multi-page
   edition is currently maintained in French.</p>
 </section>
+
+""" + galerie.clients_en() + """
 
 <section class="sect alt">
   <div class="cards">

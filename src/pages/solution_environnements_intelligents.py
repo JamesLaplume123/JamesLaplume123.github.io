@@ -88,7 +88,7 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solution 01 / 06</p>
+    <p class="eyebrow" data-rev>Solution 01 / 07</p>
     <h1 data-rev>Environnements <em>intelligents.</em></h1>
     <p class="lead" data-rev>Un environnement qui comprend son état, s’adapte au contexte et
     demeure contrôlable simplement.</p>

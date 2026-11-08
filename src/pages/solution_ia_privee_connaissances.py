@@ -44,7 +44,7 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/solutions/ia-privee-connaissances.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solution 02 / 06</p>
+    <p class="eyebrow" data-rev>Solution 02 / 07</p>
     <h1 data-rev>IA privée et <em>connaissances.</em></h1>
     <p class="lead" data-rev>Vos documents restent à leur place. L’IA vous aide à les
     comprendre — et montre toujours d’où vient sa réponse.</p>

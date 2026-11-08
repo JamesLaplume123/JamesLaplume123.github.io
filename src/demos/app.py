@@ -144,8 +144,8 @@ SCREENS = [
      "Domotique, IA, caméras, entreprise, réseau, diagnostic : chacune s’active par l’administrateur et s’ouvre ici."),
 ]
 
-# Mes outils : les extensions sont les six solutions du site (config.py); chacune ouvre sa page.
-EXT_ICON = {"environnements-intelligents": "home", "ia-privee-connaissances": "spark", "securite-intelligente": "shield",
+# Mes outils : les extensions sont les solutions du site (config.py); chacune ouvre sa page.
+EXT_ICON = {"mobilite": "route", "environnements-intelligents": "home", "ia-privee-connaissances": "spark", "securite-intelligente": "shield",
             "automatisation-operations": "flow", "reseau-resilience": "net", "diagnostic-care": "pulse"}
 EXT_ON = {"environnements-intelligents", "ia-privee-connaissances", "securite-intelligente", "automatisation-operations", "reseau-resilience"}
 

@@ -13,7 +13,7 @@ SITE = {
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
-    "asset_version": "20261108b",
+    "asset_version": "20261108c",
     # Adresse du service du site (formulaire → Resend → JARVIS, compteur). Vide tant
     # que le Worker Cloudflare n'est pas déployé : le formulaire passe alors par FormSubmit.
     "api": "https://jarvis-site-api.laplumejames.workers.dev",
@@ -197,7 +197,7 @@ SEO = {
     "/solutions/": (
         "Solutions de domotique, sécurité et IA privée | JARVIS",
         "Domotique, sécurité intelligente, IA locale, automatisation d’entreprise, réseau et "
-        "diagnostic : six solutions privées qui fonctionnent seules ou ensemble.",
+        "diagnostic : sept solutions privées qui fonctionnent seules ou ensemble.",
     ),
     "/solutions/environnements-intelligents/": (
         "Domotique privée et maison intelligente au Québec | JARVIS",

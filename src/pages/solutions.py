@@ -44,6 +44,13 @@ STORIES = {
     },
 }
 
+STORIES["mobilite"] = {
+    "result": "Un copilote de route qui propose le bon arrêt au bon moment, et un journal qui garde chaque voyage sur la carte.",
+    "points": ["Suggestions selon la distance, l’ouverture, le soleil et le véhicule", "Photos et arrêts géolocalisés automatiquement", "VR, voitures et vélos électriques connectés"],
+    "for": "VR, voitures, véhicules électriques et vélos électriques",
+}
+GUIDE.append(("mobilite", "Vous voyagez et passez plus de temps à chercher qu’à profiter de la route?"))
+
 GUIDE_HTML = "".join(
     f"""<a class="row" href="#{slug}" data-rev>
       <i>Question {i + 1:02d}</i>
@@ -59,7 +66,7 @@ STORIES_HTML = "".join(
         <img src="{c['image']}" alt="Aperçu de la solution {c['title']}" loading="lazy">
       </figure>
       <div data-rev>
-        <p class="num">{c['num']} / 06</p>
+        <p class="num">{c['num']} / 07</p>
         <h3>{c['title']}</h3>
         <p class="res">{STORIES[c['slug']]['result']}</p>
         <ul>{''.join(f'<li>{p}</li>' for p in STORIES[c['slug']]['points'])}</ul>
@@ -76,7 +83,7 @@ PAGE = {
     "v2": True,
     "title": "Solutions | JARVIS Private Systems",
     "description": (
-        "Six familles de solutions pour les environnements intelligents, l’IA privée, "
+        "Sept familles de solutions pour les environnements intelligents, l’IA privée, "
         "la sécurité, les opérations, le réseau et le diagnostic."
     ),
     "og_image": "/media/solutions/environnements-intelligents.webp",
@@ -85,7 +92,7 @@ PAGE = {
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
     <p class="eyebrow" data-rev>Solutions JARVIS</p>
-    <h1 data-rev>Six solutions.<br><em>Une architecture commune.</em></h1>
+    <h1 data-rev>Sept solutions.<br><em>Une architecture commune.</em></h1>
     <p class="lead" data-rev>Commencez par un problème concret. Chaque solution peut fonctionner
     seule; JARVIS permet ensuite de les relier sans tout reconstruire.</p>
     <div class="meta" data-rev>
@@ -113,10 +120,10 @@ PAGE = {
 <section class="sect alt">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">Les six solutions</p>
+      <p class="eyebrow">Les sept solutions</p>
       <h2 style="margin-top:1rem">Des résultats distincts.<br><em>Une expérience cohérente.</em></h2>
     </div>
-    <p data-rev>Six points d’entrée, selon le problème à résoudre.</p>
+    <p data-rev>Sept points d’entrée, selon le problème à résoudre.</p>
   </div>
   {STORIES_HTML}
 </section>

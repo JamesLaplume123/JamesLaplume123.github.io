@@ -78,7 +78,7 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Programme de recherche</p>
-      <h2 style="margin-top:1rem">Les six solutions produisent <em>leurs propres
+      <h2 style="margin-top:1rem">Les sept solutions produisent <em>leurs propres
       questions.</em></h2>
     </div>
     <p data-rev>Le laboratoire mobile JARVIS est un premier terrain d’essai. D’autres

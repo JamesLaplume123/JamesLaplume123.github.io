@@ -58,7 +58,7 @@ def solution_page(d):
 <section class="band top">
   <div class="bg"><img src="{d['image']}" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solution {num} / 06</p>
+    <p class="eyebrow" data-rev>Solution {num} / 07</p>
     <h1 data-rev>{d['h1']}</h1>
     <p class="lead" data-rev>{d['lead']}</p>
     <div class="acts" data-rev>

@@ -1,7 +1,7 @@
 # Accueil — vendre JARVIS, le logiciel (refonte novembre 2026).
 # Parcours (chaque idée dite une seule fois) : promesse → mission → l'app (vraie interface) →
 # la maison à essayer → la météo réelle et ce que JARVIS en ferait → comment ça marche (Hub
-# compris) → Rust → où en est le projet → modes → six solutions → offre → laboratoire mobile
+# compris) → Rust → où en est le projet → modes → sept solutions → offre → laboratoire mobile
 # (batteries en direct) → FAQ → démo. Le tableau complet des batteries et le radar vivent sur
 # /laboratoire-mobile/.
 # Les questions de la FAQ alimentent aussi les données structurées (FAQPage).
@@ -13,7 +13,7 @@ from demos import app, maison, meteo, rust
 
 
 def apercu_solutions():
-    """Les six solutions en un coup d'œil; chacune s'ouvre dans JARVIS, comme une extension."""
+    """Les solutions en un coup d'œil; chacune s'ouvre dans JARVIS, comme une extension."""
     cartes = []
     for c in CAPABILITIES:
         cartes.append(f"""<article class="sol-card" data-rev>
@@ -413,10 +413,10 @@ PAGE = {
   </div>
 </section>
 
-<!-- Six solutions : l'aperçu complet, sans ouvrir les pages -->
+<!-- Les solutions : l'aperçu complet, sans ouvrir les pages -->
 <section class="bento sols" id="capacites">
   <div class="head" data-rev>
-    <p class="kick">Six extensions · Une équipe</p>
+    <p class="kick">Sept extensions · Une équipe</p>
     <h2 data-split>Une équipe complète.<br><em>Déjà en poste.</em></h2>
     <p>Réceptionniste, gardien, archiviste, technicien : chaque extension travaille pour vous comme
     un employé de confiance, dans le même logiciel. Touchez-en une : elle s’ouvre dans JARVIS.</p>
@@ -424,7 +424,7 @@ PAGE = {
   <div class="sol-grid">
     {apercu_solutions()}
   </div>
-  <p class="sol-all" data-rev><a class="pill ghost" href="/solutions/">Comparer les six solutions</a></p>
+  <p class="sol-all" data-rev><a class="pill ghost" href="/solutions/">Comparer les sept solutions</a></p>
 </section>
 
 <!-- Offre -->

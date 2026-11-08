@@ -100,7 +100,7 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect sol-demo" id="essayer">
+<section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Essayez · démonstration interactive</p>
@@ -114,7 +114,7 @@ PAGE = {
   {coquille.html("environnements-intelligents", env.html())}
 </section>
 
-<section class="sect alt">
+<section class="sect alt" id="eclairage" data-toc="Éclairage">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Module Éclairage · concept en conception</p>
@@ -147,7 +147,7 @@ PAGE = {
 
 {clair_section(CLAIR)}
 
-<section class="sect alt" id="journee">
+<section class="sect alt" id="journee" data-toc="Une journée">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Un exemple vécu</p>
@@ -186,7 +186,7 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect">
+<section class="sect" id="cameras" data-toc="Caméras">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Caméras de la propriété · données simulées</p>
@@ -211,7 +211,7 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect sol-trust">
+<section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>
     <div>
       <p class="eyebrow">Déploiement responsable</p>

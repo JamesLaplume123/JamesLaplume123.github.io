@@ -56,23 +56,22 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect sol-demo" id="outil">
+<section class="sect sol-demo" id="outil" data-toc="Essayer">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Essayez-le · données simulées</p>
       <h2>Parlez à vos propres documents. <em>Chaque réponse montre sa
       preuve.</em></h2>
     </div>
-    <p data-rev>Choisissez une question. JARVIS fouille les six documents d’un atelier fictif,
-    répond en citant ses sources et vous montre le passage exact. Puis il propose une action :
-    elle attend votre « Approuver ». Rien ne quitte le Hub.</p>
+    <p data-rev>Choisissez une question : JARVIS répond en citant le passage exact, puis propose
+    une action qui attend votre « Approuver ». Rien ne quitte le Hub.</p>
   </div>
   """ + coquille.html("ia-privee-connaissances", DEMO) + """
 </section>
 
 """ + clair_section(CLAIR) + """
 
-<section class="sect alt">
+<section class="sect alt" id="controle" data-toc="Le contrôle">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Le contrôle, en trois crans</p>
@@ -103,7 +102,7 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect alt">
+<section class="sect alt" id="perimetres" data-toc="Périmètres">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">À qui appartient quoi</p>
@@ -134,7 +133,7 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect sol-trust">
+<section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>
     <div>
       <p class="eyebrow">Déploiement responsable</p>

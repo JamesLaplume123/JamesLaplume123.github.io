@@ -58,20 +58,19 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect sol-demo" id="essayer">
+<section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Essayez · démonstration interactive</p>
       <h2>Saint-Hyacinthe → Lac-Saint-Jean. <em>Le copilote s’occupe du reste.</em></h2>
     </div>
-    <p data-rev>Le VR roule vers Québec, Charlevoix, Tadoussac et le Lac-Saint-Jean. À droite, JARVIS propose
-    des arrêts calculés selon la distance, les heures d’ouverture, le soleil et l’état du véhicule. Changez de
-    mode : le voyage se replanifie. Acceptez un arrêt : il s’ajoute à la route et au journal.</p>
+    <p data-rev>À droite, JARVIS propose des arrêts selon la distance, les heures d’ouverture, le soleil
+    et l’état du véhicule. Acceptez-en un : il s’ajoute à la route.</p>
   </div>
   {coquille.html("mobilite", mobilite.HTML)}
 </section>
 
-<section class="sect alt mb-rule-s">
+<section class="sect alt mb-rule-s" id="lieu-ou-route" data-toc="Lieu ou route">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Environnements ou Mobilité?</p>
@@ -106,7 +105,7 @@ PAGE = {
 
 {clair_section(CLAIR)}
 
-<section class="sect">
+<section class="sect" id="modes-voyage" data-toc="Six façons de voyager">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Six façons de voyager</p>
@@ -131,7 +130,7 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect alt">
+<section class="sect alt" id="garage" data-toc="Vos véhicules">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Garage connecté</p>
@@ -151,7 +150,7 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect sol-trust">
+<section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>
     <div>
       <p class="eyebrow">Déploiement responsable</p>

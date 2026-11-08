@@ -115,18 +115,16 @@ DATA = {
     "image": "/media/solutions/jarvis-enterprise-operations-v1.webp",
     "h1": "Votre réception ne manque <em>plus un appel.</em>",
     "lead": (
-        "JARVIS répond au téléphone de l’entreprise comme une réceptionniste : il identifie l’appelant, "
-        "suit la procédure de votre équipe, demande un accord humain pour les gestes sensibles et "
-        "consigne tout. Et derrière le téléphone, il fait circuler demandes, documents et approbations."
+        "JARVIS répond au téléphone comme une réceptionniste, suit la procédure de votre équipe et "
+        "vous demande votre accord pour les gestes sensibles. Derrière, il fait circuler demandes, "
+        "documents et approbations."
     ),
     "for": "PME, entreprises de services et équipes terrain",
     "demo_title": "Le téléphone sonne. <em>JARVIS répond.</em>",
     "demo_copy": (
-        "Regardez JARVIS prendre un appel réel : il reconnaît la cliente, déplace son rendez-vous et "
-        "s’arrête net quand la procédure exige un humain — vous. Essayez aussi « Je veux parler à "
-        "quelqu’un » : l’appel est transféré avec tout le contexte. Trois autres scénarios : une "
-        "demande d’achat, un nouveau client, une facture qui ne concorde pas. Plus bas : votre "
-        f"secteur, parmi {len(SECTEURS)}, avec ses vrais problèmes et l’automatisation qui règle chacun."
+        "Regardez JARVIS prendre un appel : il reconnaît la cliente, déplace son rendez-vous et "
+        "s’arrête quand la procédure exige un humain — vous. Plus bas : votre secteur, parmi "
+        f"{len(SECTEURS)}, et l’automatisation qui règle chacun de ses problèmes."
     ),
     "demo_html": DEMO,
     "assets": ["automatisation"],

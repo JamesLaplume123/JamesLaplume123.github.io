@@ -32,12 +32,11 @@ PAGE = {
   <div class="band-inner">
     <p class="eyebrow" data-rev>Vision et feuille de route</p>
     <h1 data-rev style="max-width:none">Une vie entière.<br><em>Un seul système privé.</em></h1>
-    <p class="lead" data-rev>À long terme, JARVIS relie la maison, les habitudes, le travail et la
-    sécurité dans un système installé chez vous — qui explique chaque suggestion, n’agit
-    qu’avec votre accord et garde vos données à la maison.</p>
+    <p class="lead" data-rev>Où va JARVIS à long terme, et où il en est aujourd’hui. Toujours installé
+    chez vous, toujours avec votre accord.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="#vie">Voir une vie entière</a>
-      <a class="pill ghost" href="#securite-pro">Voir l’audit autorisé</a>
+      <a class="pill" href="#feuille-de-route">Où en est JARVIS</a>
+      <a class="pill ghost" href="#vie">Voir la vision</a>
     </div>
     <div class="meta" data-rev>
       <span class="chip" style="display:inline-flex;align-items:center;gap:.6rem"><i class="dot" aria-hidden="true"></i>Aujourd’hui · étape 1 : noyau, comptes et interfaces</span>
@@ -46,18 +45,16 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect" id="vie">
+<section class="sect" id="vie" data-toc="Une vie entière">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">01 · Personal Intelligence · vision</p>
       <h2 style="margin-top:1rem">Comprendre vos habitudes. <em>Choisir votre avenir.</em></h2>
     </div>
     <div class="side" data-rev>
-      <p>Votre montre, votre téléphone, votre agenda, votre banque, votre maison et votre voiture
-      savent chacun leur part. JARVIS relie seulement ce que vous autorisez, sur le Hub installé
-      chez vous : il repère ce qui vous nuit, vous montre où mène chaque chemin, propose
-      l’automatisation qui règle le problème et vous coache vers vos objectifs. Vous décidez à
-      chaque étape.</p>
+      <p>Montre, téléphone, agenda, banque, maison et voiture savent chacun leur part. JARVIS relie
+      seulement ce que vous autorisez, repère ce qui vous nuit et vous aide à atteindre vos
+      objectifs. Vous décidez à chaque étape.</p>
       <span class="chip chip-sim">Vision · données d’exemple</span>
     </div>
   </div>
@@ -70,7 +67,7 @@ PAGE = {
   permission, révocable séparément.</p>
 </section>
 
-<section class="sect alt" id="securite-pro">
+<section class="sect alt" id="securite-pro" data-toc="Security Pro">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">02 · Security Pro · vision</p>
@@ -93,7 +90,7 @@ PAGE = {
   vérification des antécédents de chaque analyste.</p>
 </section>
 
-<section class="sect" id="multi-site">
+<section class="sect" id="multi-site" data-toc="Plusieurs lieux">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">03 · JARVIS Multi-Site · vision à long terme</p>
@@ -135,7 +132,7 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect alt" id="feuille-de-route">
+<section class="sect alt" id="feuille-de-route" data-toc="Où en est JARVIS">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">04 · État réel du projet</p>

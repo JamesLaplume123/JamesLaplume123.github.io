@@ -56,6 +56,53 @@
     });
   }
 
+  /* ---------- Menu des extensions (déroulant de « Solutions ») ---------- */
+  $$("[data-mega]").forEach(function (dd) {
+    var t = $("[data-mega-t]", dd);
+    var set = function (open) {
+      dd.classList.toggle("is-open", open);
+      t.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+    t.addEventListener("click", function (e) {
+      e.stopPropagation();
+      set(!dd.classList.contains("is-open"));
+    });
+    dd.addEventListener("focusout", function (e) {
+      if (!dd.contains(e.relatedTarget)) set(false);
+    });
+    document.addEventListener("click", function (e) { if (!dd.contains(e.target)) set(false); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && dd.classList.contains("is-open")) { set(false); t.focus(); }
+    });
+  });
+
+  /* ---------- Menu de sections collant : section en cours surlignée ---------- */
+  var toc = $("[data-toc-nav]");
+  if (toc && "IntersectionObserver" in window) {
+    var tocLinks = $$(".toc-in a", toc);
+    var tocRow = $(".toc-in", toc);
+    var fade = function () { tocRow.classList.toggle("is-scroll", tocRow.scrollWidth - tocRow.scrollLeft > tocRow.clientWidth + 4); };
+    tocRow.addEventListener("scroll", fade, { passive: true });
+    addEventListener("resize", fade);
+    fade();
+    var byId = {};
+    tocLinks.forEach(function (a) { byId[a.getAttribute("href").slice(1)] = a; });
+    var mark = function (id) {
+      tocLinks.forEach(function (a) { a.classList.toggle("is-on", a === byId[id]); });
+      var a = byId[id], row = a && a.parentNode;
+      if (a && row.scrollWidth > row.clientWidth) {
+        row.scrollTo({ left: a.offsetLeft - row.clientWidth / 2 + a.offsetWidth / 2, behavior: "smooth" });
+      }
+    };
+    var tio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) mark(en.target.id); });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    Object.keys(byId).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) tio.observe(el);
+    });
+  }
+
   /* ---------- Sélecteurs de contenu (ex. : moments de la journée) ---------- */
   $$("[data-swap-group]").forEach(function (group) {
     var dataEl = document.getElementById(group.getAttribute("data-swap-group"));

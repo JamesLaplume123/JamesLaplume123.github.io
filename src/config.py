@@ -22,8 +22,9 @@ SITE = {
 
 # Navigation principale (architecture d'information approuvée, docs/SITE_INFORMATION_ARCHITECTURE.md)
 NAV = [
-    {"url": "/solutions/", "label": "Solutions"},
+    {"url": "/solutions/", "label": "Solutions", "menu": True},
     {"url": "/plateforme/", "label": "JARVIS"},
+    {"url": "/plateforme/#offre", "label": "L’offre"},
     {"url": "/laboratoire-mobile/", "label": "Laboratoire mobile"},
     {"url": "/vision-roadmap/", "label": "Vision"},
 ]
@@ -37,6 +38,7 @@ FOOTER_COLUMNS = [
         "links": [
             {"url": "/solutions/", "label": "Solutions"},
             {"url": "/plateforme/", "label": "JARVIS"},
+            {"url": "/plateforme/#offre", "label": "L’offre"},
             {"url": "/laboratoire-mobile/", "label": "Laboratoire mobile"},
             {"url": "/recherche/", "label": "Recherche"},
         ],
@@ -59,6 +61,7 @@ FOOTER_COLUMNS = [
 CAPABILITIES = [
     {
         "slug": "environnements-intelligents",
+        "menu": "Lumières, chauffage, verrous et énergie sur un seul écran.",
         "num": "01",
         "title": "Environnements intelligents",
         "label": "Domotique",
@@ -74,6 +77,7 @@ CAPABILITIES = [
     },
     {
         "slug": "ia-privee-connaissances",
+        "menu": "Posez une question à vos documents; la source est montrée.",
         "num": "02",
         "title": "IA privée et connaissances",
         "label": "IA locale",
@@ -89,6 +93,7 @@ CAPABILITIES = [
     },
     {
         "slug": "securite-intelligente",
+        "menu": "Caméras et alarmes réunies en événements clairs.",
         "num": "03",
         "title": "Sécurité intelligente",
         "label": "Sécurité",
@@ -104,6 +109,7 @@ CAPABILITIES = [
     },
     {
         "slug": "automatisation-operations",
+        "menu": "Réception, demandes et approbations qui circulent seules.",
         "num": "04",
         "title": "Automatisation d’entreprise",
         "label": "Entreprise",
@@ -119,6 +125,7 @@ CAPABILITIES = [
     },
     {
         "slug": "reseau-resilience",
+        "menu": "La carte de votre réseau et ses risques, en mots simples.",
         "num": "05",
         "title": "Réseau et cybersécurité",
         "label": "Réseau",
@@ -134,6 +141,7 @@ CAPABILITIES = [
     },
     {
         "slug": "diagnostic-care",
+        "menu": "Du symptôme à la cause, avec un dossier prêt à transmettre.",
         "num": "06",
         "title": "Diagnostic & continuité",
         "label": "Continuité",
@@ -149,6 +157,7 @@ CAPABILITIES = [
     },
     {
         "slug": "mobilite",
+        "menu": "Un copilote de route pour le VR, la voiture ou le vélo.",
         "num": "07",
         "title": "Mobilité",
         "label": "Mobilité",

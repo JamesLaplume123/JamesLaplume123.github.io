@@ -28,7 +28,7 @@ def clair_section(c):
         for i, (t, p) in enumerate(c["obtenez"])
     )
     return f"""
-<section class="clair" aria-labelledby="clair-titre">
+<section class="clair" id="en-clair" data-toc="En clair" aria-labelledby="clair-titre">
   <div class="clair-head" data-rev>
     <p class="eyebrow">En clair</p>
     <h2 id="clair-titre">{c['quoi']}</h2>
@@ -69,7 +69,7 @@ def solution_page(d):
   </div>
 </section>
 
-<section class="sect sol-demo">
+<section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Essayez · démonstration interactive</p>
@@ -83,7 +83,7 @@ def solution_page(d):
 
 {clair_section(d.get("clair"))}
 
-<section class="sect sol-trust">
+<section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>
     <div>
       <p class="eyebrow">Déploiement responsable</p>

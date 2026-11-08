@@ -42,11 +42,9 @@ DATA = {
     },
     "demo_title": "Neuf modules. <em>Une seule plateforme de sécurité.</em>",
     "demo_copy": (
-        "Le mur vidéo regroupe les alertes en un seul événement compris. Autour de lui : le contrôle "
-        "d’accès et le talonnage, les plaques et le suivi des véhicules sur le plan du site, la recherche "
-        "d’une personne par son apparence, les zones et leurs règles, le dossier d’incident prêt pour la "
-        "police, la carte de tous vos sites, les rondes des agents et la conformité à la Loi 25. "
-        "Passez d’un module à l’autre : tout est simulé, avec des données d’exemple."
+        "Le mur vidéo regroupe les alertes en un seul événement compris. Autour de lui : accès, "
+        "véhicules, zones, incidents, sites, rondes et Loi 25. Passez d’un module à l’autre en haut de "
+        "la fenêtre. Données d’exemple."
     ),
     "demo_html": DEMO_HTML,
     "assets": ["securite"],

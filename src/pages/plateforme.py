@@ -34,35 +34,35 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect hb-sect" id="hub" aria-label="Le Hub, cœur de JARVIS">
+<section class="sect hb-sect" id="hub" data-toc="Le Hub" aria-label="Le Hub, cœur de JARVIS">
   """ + hub.coeur() + """
 </section>
 
-<section class="sect alt hb-sect" id="ia" aria-labelledby="ia-titre">
+<section class="sect alt hb-sect" id="ia" data-toc="L’IA" aria-labelledby="ia-titre">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">L’IA au cœur</p>
       <h2 id="ia-titre">Une IA qui comprend.<br><em>Et qui vous laisse décider.</em></h2>
     </div>
-    <p data-rev>Une seule IA, installée sur le Hub, relie tout le système. Vous lui parlez comme à une personne;
-    elle consulte les extensions, propose un plan, attend votre confirmation et explique pourquoi.</p>
+    <p data-rev>Une seule IA, sur le Hub. Vous lui parlez normalement; elle propose un plan, explique
+    pourquoi et attend votre accord.</p>
   </div>
   """ + hub.ia() + """
 </section>
 
-<section class="sect hb-sect" id="ensemble" aria-labelledby="ensemble-titre">
+<section class="sect hb-sect" id="ensemble" data-toc="Les extensions ensemble" aria-labelledby="ensemble-titre">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Comment les extensions travaillent ensemble</p>
       <h2 id="ensemble-titre">Chacune son rôle.<br><em>Toutes reliées par le Hub.</em></h2>
     </div>
-    <p data-rev>Les extensions s’influencent, mais jamais n’importe comment : chacune garde son domaine,
-    publie ce qu’elle observe et écoute ce qui la concerne. Le Hub fait respecter les droits et garde la trace.</p>
+    <p data-rev>Chaque extension garde son domaine et partage ce qu’elle observe. Le Hub fait respecter
+    les droits et garde la trace.</p>
   </div>
   """ + hub.ensemble() + """
 </section>
 
-<section class="vitrine" id="app" aria-label="JARVIS App">
+<section class="vitrine" id="app" data-toc="L’app" aria-label="JARVIS App">
   <div class="head" data-rev>
     <p class="eyebrow">JARVIS App · essayez-la</p>
     <h2>Votre espace. <em>À votre image.</em></h2>
@@ -134,17 +134,17 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect rust-sect" id="rust" aria-labelledby="rust-titre">
+<section class="sect rust-sect" id="rust" data-toc="Rust" aria-labelledby="rust-titre">
   <div class="head shead" data-rev>
     <p class="eyebrow">Le logiciel · écrit en Rust</p>
     <h2 id="rust-titre">Sûr par construction. <em>Pas par promesse.</em></h2>
-    <p>Le noyau de JARVIS garde vos comptes, vos droits et vos secrets. Il est écrit en Rust, le langage que
-    recommandent les agences de cybersécurité pour le logiciel critique — et bâti pour accueillir l’IA sans lui céder les clés.</p>
+    <p>Le noyau qui garde vos comptes, vos droits et vos secrets est écrit en Rust, le langage que
+    recommandent les agences de cybersécurité pour le logiciel critique.</p>
   </div>
   """ + rust.html() + """
 </section>
 
-<section class="sect alt" id="experience">
+<section class="sect alt" id="experience" data-toc="Comptes et droits">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">JARVIS App · expérience de base</p>
@@ -285,14 +285,14 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect alt hb-sect" id="offre" aria-labelledby="offre-titre">
+<section class="sect alt hb-sect" id="offre" data-toc="L’offre" aria-labelledby="offre-titre">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">L’offre</p>
       <h2 id="offre-titre">Le Hub, puis vos extensions.<br><em>Rien de plus que le nécessaire.</em></h2>
     </div>
-    <p data-rev>Chaque client part du Hub. On y ajoute les extensions dont le lieu a besoin, aujourd’hui ou plus tard,
-    avec l’installation, l’entretien et le soutien. Trois exemples typiques, ou une composition sur mesure.</p>
+    <p data-rev>Chaque client part du Hub. On ajoute les extensions utiles, maintenant ou plus tard, avec
+    l’installation, l’entretien et le soutien.</p>
   </div>
   """ + hub.offre() + """
 </section>

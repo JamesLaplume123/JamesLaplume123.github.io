@@ -1,63 +1,95 @@
-# Vision et feuille de route — une vie entière sur JARVIS (Personal Intelligence),
-# l'audit de sécurité autorisé piloté par l'IA (Security Pro), Multi-Site, puis
-# l'état réel du logiciel. Les deux premières sections sont des démonstrations
-# interactives à données fictives; la feuille de route, elle, est réelle.
+# Vision et feuille de route — le manifeste de JARVIS : rendre les gens libres.
+# Manifeste → horizons (maintenant, 12 mois, 3 ans, 10 ans) → une journée avec JARVIS
+# (famille et résidence de prestige) → Personal Intelligence → firme de sécurité privée →
+# tous vos lieux → recherche et partenariats → principes → feuille de route réelle.
+# Les sections de vision sont des démonstrations à données d'exemple; la feuille de route
+# est réelle (src/demos/feuille.py).
 
 import re
 
-from demos import feuille, pentest, vie
+from demos import feuille, pentest, vie, vision
 
 
 def _fr(s):
     """Typographie française du texte de la page (pas des démos : leur géométrie reste intacte)."""
-    s = re.sub(r"(\d) (minutes|h)\b", "\\1\u00a0\\2", s)
+    s = re.sub(r"(\d) (minutes|h|ans|mois)\b", "\\1\u00a0\\2", s)
     s = re.sub(r"\s+([:;?!»])", "\u00a0\\1", s)
     return s.replace("« ", "«\u00a0")
+
+
+def _head(num, eyebrow, titre, texte, chip=None, ident=""):
+    chip_html = f'\n      <span class="chip chip-sim">{chip}</span>' if chip else ""
+    return f"""<div class="sect-head vn-head">
+    <div data-rev>
+      <p class="eyebrow">{num} · {eyebrow}</p>
+      <h2{ident} style="margin-top:1rem">{titre}</h2>
+    </div>
+    <div class="side" data-rev>
+      <p>{texte}</p>{chip_html}
+    </div>
+  </div>"""
 
 
 PAGE = {
     "url": "/vision-roadmap/",
     "v2": True,
-    "title": "Vision JARVIS : une vie entière, un système privé | Feuille de route",
+    "title": "Vision JARVIS : rendre les gens libres | Feuille de route",
     "description": (
-        "La vision à long terme de JARVIS : habitudes, sommeil, maison et sécurité reliés "
-        "dans un système privé installé chez vous, un audit de sécurité autorisé piloté par "
-        "l’IA, et l’état réel du projet."
+        "Le manifeste de JARVIS : un système privé installé chez vous qui rend du temps, garde "
+        "vos données et vous laisse décider. Horizons à 12 mois, 3 ans et 10 ans, une journée "
+        "avec JARVIS, la firme de sécurité privée, la recherche et l’état réel du projet."
     ),
     "og_image": "/media/concept/jarvis-future-ecosystem-v1.webp",
-    "assets": ["vie", "pentest", "feuille"],
+    "assets": ["vision", "vie", "pentest", "feuille"],
     "content": _fr("""
-<section class="band top">
+<section class="band top vn-hero">
   <div class="bg"><img src="/media/concept/jarvis-future-ecosystem-v1.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Vision et feuille de route</p>
-    <h1 data-rev style="max-width:none">Une vie entière.<br><em>Un seul système privé.</em></h1>
-    <p class="lead" data-rev>Où va JARVIS à long terme, et où il en est aujourd’hui. Toujours installé
-    chez vous, toujours avec votre accord.</p>
+    <p class="eyebrow" data-rev>Vision · le manifeste de JARVIS</p>
+    <h1 data-rev style="max-width:none">Rendre les gens libres.<br><em>Un système privé à la fois.</em></h1>
+    <p class="lead" data-rev>Une maison, une entreprise, un véhicule, un yacht ou un jet : JARVIS
+    les comprend, les relie et s’en occupe, chez vous, avec votre accord. Voici où il va, et où il
+    en est vraiment.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="#feuille-de-route">Où en est JARVIS</a>
-      <a class="pill ghost" href="#vie">Voir la vision</a>
+      <a class="pill" href="#horizons">Voir les horizons</a>
+      <a class="pill ghost" href="#journee">Une journée avec JARVIS</a>
+      <a class="pill ghost" href="#feuille-de-route">Où en est JARVIS</a>
     </div>
-    <div class="meta" data-rev>
-      <span class="chip" style="display:inline-flex;align-items:center;gap:.6rem"><i class="dot" aria-hidden="true"></i>Aujourd’hui · étape 1 : noyau, comptes et interfaces</span>
-      <span class="chip chip-sim">Vision · démonstrations à données fictives</span>
+    <div class="vn-hero-n" data-rev>
+      <span><b>7</b>extensions reliées</span>
+      <span><b>1</b>Hub, chez vous</span>
+      <span><b>0</b>donnée vendue</span>
+      <span><b>4</b>horizons, de maintenant à 10 ans</span>
     </div>
   </div>
 </section>
 
-<section class="sect" id="vie" data-toc="Une vie entière">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">01 · Personal Intelligence · vision</p>
-      <h2 style="margin-top:1rem">Comprendre vos habitudes. <em>Choisir votre avenir.</em></h2>
-    </div>
-    <div class="side" data-rev>
-      <p>Montre, téléphone, agenda, banque, maison et voiture savent chacun leur part. JARVIS relie
-      seulement ce que vous autorisez, repère ce qui vous nuit et vous aide à atteindre vos
-      objectifs. Vous décidez à chaque étape.</p>
-      <span class="chip chip-sim">Vision · données d’exemple</span>
-    </div>
-  </div>
+<section class="sect" id="manifeste" data-toc="Le manifeste">
+  @@MANIFESTE@@
+</section>
+
+<section class="sect alt" id="horizons" data-toc="Les horizons">
+  """ + _head("01", "Ligne du temps", "Maintenant. 12 mois. 3 ans. <em>10 ans.</em>",
+              "Quatre horizons, huit jalons chacun : le Hub et les sept extensions avancent ensemble, "
+              "du laboratoire mobile d’aujourd’hui aux résidences de prestige de demain.",
+              "Maintenant · réel · ensuite · objectifs") + """
+  @@HORIZONS@@
+</section>
+
+<section class="sect" id="journee" data-toc="Une journée">
+  """ + _head("02", "Une journée avec JARVIS", "Une famille. Une résidence de prestige. <em>La même liberté.</em>",
+              "Du réveil à la nuit, ce que JARVIS fait seul et ce qu’il vous laisse décider. Choisissez "
+              "un client, puis touchez un moment de la journée.",
+              "Vision · données d’exemple") + """
+  @@JOURNEE@@
+</section>
+
+<section class="sect alt" id="vie" data-toc="Personal Intelligence">
+  """ + _head("03", "Personal Intelligence · vision", "Comprendre vos habitudes. <em>Choisir votre avenir.</em>",
+              "Montre, téléphone, agenda, banque, maison et voiture savent chacun leur part. JARVIS relie "
+              "seulement ce que vous autorisez, repère ce qui vous nuit et vous aide à atteindre vos "
+              "objectifs. Vous décidez à chaque étape.",
+              "Vision · données d’exemple") + """
   @@VIE@@
   <p class="form-note" data-rev style="max-width:76rem;margin:1.6rem auto 0">Règle centrale :
   JARVIS relie les outils choisis; il ne remplace ni le médecin, ni le conseiller financier, ni
@@ -67,21 +99,13 @@ PAGE = {
   permission, révocable séparément.</p>
 </section>
 
-<section class="sect alt" id="securite-pro" data-toc="Security Pro">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">02 · Security Pro · vision</p>
-      <h2 style="margin-top:1rem">Une vraie firme de sécurité privée, <em>augmentée par l’IA.</em></h2>
-    </div>
-    <div class="side" data-rev>
-      <p>Tests d’intrusion, red team, OSINT et enquêtes, conformité à la Loi 25, réponse aux
-      incidents et soutien aux forces de l’ordre : six lignes de service, une même rigueur. Chaque
-      mission part d’un mandat écrit; l’IA accélère, un professionnel valide, chaque accès est
-      journalisé et chaque preuve est hachée.</p>
-      <span class="chip chip-sim">Vision · données fictives</span>
-    </div>
-  </div>
-  @@PENTEST@@
+<section class="sect" id="securite-pro" data-toc="La firme de sécurité">
+  """ + _head("04", "Security Pro · vision", "Une vraie firme de sécurité privée, <em>augmentée par l’IA.</em>",
+              "Six lignes de service, une même rigueur. Chaque mission part d’un mandat écrit; l’IA "
+              "accélère, un professionnel valide, chaque accès est journalisé et chaque preuve est hachée.",
+              "Vision · données fictives") + """
+  @@FIRME@@
+  <div style="margin-top:3.2rem">@@PENTEST@@</div>
   <p class="form-note" data-rev style="max-width:76rem;margin:1.6rem auto 0">Différence
   importante : l’administration réseau JARVIS surveille au quotidien; Security Pro intervient
   dans une mission limitée, autorisée et documentée. Méthodes de référence : PTES, OWASP WSTG,
@@ -90,81 +114,39 @@ PAGE = {
   vérification des antécédents de chaque analyste.</p>
 </section>
 
-<section class="sect" id="multi-site" data-toc="Plusieurs lieux">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">03 · JARVIS Multi-Site · vision à long terme</p>
-      <h2 style="margin-top:1rem">Une décision. <em>Plusieurs environnements qui se
-      coordonnent.</em></h2>
-    </div>
-    <div class="side" data-rev>
-      <p>Chaque lieu conserve ses fonctions locales et ses propres règles. Seul le contexte
-      nécessaire et autorisé circule entre les environnements.</p>
-      <span class="chip chip-sim">Vision à long terme</span>
-    </div>
-  </div>
-  <div class="shots" data-rev>
-    <figure>
-      <img src="/media/solutions/environnements-intelligents.webp" alt="Résidence reliée à JARVIS Multi-Site" loading="lazy">
-      <figcaption><b>Maison</b><span>Son Hub · ses règles</span></figcaption>
-    </figure>
-    <figure>
-      <img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="Laboratoire mobile relié à JARVIS Multi-Site" loading="lazy">
-      <figcaption><b>Véhicule</b><span>Son Hub · ses données</span></figcaption>
-    </figure>
-    <figure>
-      <img src="/media/solutions/jarvis-enterprise-operations-v1.webp" alt="Entreprise reliée à JARVIS Multi-Site" loading="lazy">
-      <figcaption><b>Entreprise</b><span>Son Hub · ses permissions</span></figcaption>
-    </figure>
-  </div>
-  <div class="cards two" style="margin-top:16px">
-    <article class="card" data-rev>
-      <h3>Les données détaillées ne sont pas fusionnées.</h3>
-      <p>Vidéos, dossiers, positions détaillées et secrets techniques restent dans chaque
-      lieu. Seul le petit événement utile circule : « arrivée prévue dans 32 minutes »,
-      une alerte à vérifier, une décision approuvée.</p>
-    </article>
-    <article class="card" data-rev>
-      <h3>Liaison interrompue : rien d’essentiel ne s’arrête.</h3>
-      <p>Multi-Site améliore la coordination; il ne remplace jamais le fonctionnement local
-      de la maison, du véhicule ou de l’entreprise.</p>
-    </article>
-  </div>
+<section class="sect alt" id="multi-site" data-toc="Tous vos lieux">
+  """ + _head("05", "JARVIS Multi-Site · vision à long terme", "Une décision. <em>Tous vos lieux qui se coordonnent.</em>",
+              "Chaque lieu garde son Hub, ses fonctions locales et ses propres règles. Seul le petit "
+              "événement utile et autorisé circule entre eux.",
+              "Vision à long terme") + """
+  @@LIEUX@@
+</section>
+
+<section class="sect" id="recherche" data-toc="Recherche">
+  """ + _head("06", "Recherche", "IA locale, matériel et Rust. <em>Les fondations de demain.</em>",
+              "Ce qui rend JARVIS possible sans nuage : une IA qui tourne chez vous, un Hub conçu pour "
+              "durer et un noyau écrit pour être sûr.") + """
+  @@RECHERCHE@@
+</section>
+
+<section class="sect alt" id="partenariats" data-toc="Partenariats">
+  """ + _head("07", "Partenariats", "Seul, on va vite. <em>Ensemble, on va loin.</em>",
+              "JARVIS coordonne; les métiers restent aux experts. Les partenaires cherchés aujourd’hui, "
+              "pour installer, entretenir et protéger.") + """
+  @@PARTENAIRES@@
+</section>
+
+<section class="sect" id="principes" data-toc="Principes">
+  """ + _head("08", "Principes", "Ce qui ne changera jamais.",
+              "Six engagements qui passent avant toute fonction, toute vente et toute croissance.") + """
+  @@PRINCIPES@@
 </section>
 
 <section class="sect alt" id="feuille-de-route" data-toc="Où en est JARVIS">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">04 · État réel du projet</p>
-      <h2 style="margin-top:1rem">Ce qui existe. Ce qui se construit. <em>Ce qui viendra
-      après.</em></h2>
-    </div>
-    <p data-rev>Tout ce qui précède est une vision, montrée avec des données fictives. Le
-    travail réel est précis : bâtir le logiciel étape par étape, le mettre en service sur le
-    laboratoire mobile, puis le faire auditer avant toute vente.</p>
-  </div>
+  """ + _head("09", "État réel du projet", "Ce qui existe. Ce qui se construit. <em>Ce qui viendra après.</em>",
+              "Tout ce qui précède est une vision. Voici le travail réel, jalon par jalon : filtrez par "
+              "solution ou par état.") + """
   @@FEUILLE@@
-  <div class="cards" style="margin-top:3.2rem">
-    <article class="card" data-rev>
-      <span class="chip" style="display:inline-flex;align-items:center;gap:.6rem"><i class="dot" aria-hidden="true"></i>Réel · en cours</span>
-      <h3>Laboratoire mobile JARVIS</h3>
-      <p>La conversion de la Ford 2017 V10 avance réellement : habitation, énergie, eau,
-      confort, réseau, systèmes d’origine et instrumentation.</p>
-    </article>
-    <article class="card" data-rev>
-      <span class="chip" style="display:inline-flex;align-items:center;gap:.6rem"><i class="dot" aria-hidden="true"></i>En construction · étape 1</span>
-      <h3>Logiciel JARVIS : App, Core et Hub</h3>
-      <p>Le noyau, les comptes et les deux interfaces se bâtissent maintenant, avec des
-      vérifications automatiques à chaque changement et des modules simulés clairement
-      identifiés.</p>
-    </article>
-    <article class="card" data-rev>
-      <span class="chip chip-sim">Vision · en conception</span>
-      <h3>Personal Intelligence, Security Pro, Multi-Site</h3>
-      <p>Les démonstrations de cette page montrent le fonctionnement visé. Chaque extension
-      deviendra un chantier à part, seulement après les preuves de l’étape précédente.</p>
-    </article>
-  </div>
 </section>
 
 <section class="cta">
@@ -173,5 +155,16 @@ PAGE = {
   définie.</p>
   <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
 </section>
-""").replace("@@VIE@@", vie.html()).replace("@@PENTEST@@", pentest.html()).replace("@@FEUILLE@@", feuille.html()),
+""")
+    .replace("@@MANIFESTE@@", vision.manifeste())
+    .replace("@@HORIZONS@@", vision.horizons())
+    .replace("@@JOURNEE@@", vision.journee())
+    .replace("@@VIE@@", vie.html())
+    .replace("@@FIRME@@", vision.firme())
+    .replace("@@PENTEST@@", pentest.html())
+    .replace("@@LIEUX@@", vision.lieux())
+    .replace("@@RECHERCHE@@", vision.recherche())
+    .replace("@@PARTENAIRES@@", vision.partenaires())
+    .replace("@@PRINCIPES@@", vision.principes())
+    .replace("@@FEUILLE@@", feuille.html()),
 }

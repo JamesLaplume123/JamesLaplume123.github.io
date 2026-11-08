@@ -106,9 +106,10 @@ PAGE = {
       <p class="eyebrow">Essayez · démonstration interactive</p>
       <h2>Un seul logiciel. <em>Tous vos lieux.</em></h2>
     </div>
-    <p data-rev>BouLance, maison, chalet, entreprise, atelier, ferme, bateau ou avion : les mêmes
-    sections et les mêmes gestes, seules les données changent. Chaque commande est envoyée, puis
-    confirmée. Les batteries de BouLance sont réelles.</p>
+    <p data-rev>L’accueil réunit tous vos lieux : alertes, sécurité, énergie, présence et entretien
+    d’un seul regard, un mode appliqué à plusieurs lieux et un journal commun. Puis chaque tableau
+    (BouLance, maison, chalet, bureau, atelier, ferme, bateau, avion) garde les mêmes gestes.
+    Chaque commande est envoyée, puis confirmée. Les batteries de BouLance sont réelles.</p>
   </div>
   {coquille.html("environnements-intelligents", env.html())}
 </section>

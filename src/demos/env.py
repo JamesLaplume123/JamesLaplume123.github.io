@@ -38,7 +38,7 @@ def _fr(s):
     return s.replace(" – ", NB + "–" + NB).replace(" · ", NB + "· ")
 
 
-_SKIP = {"type", "icon", "img", "art", "plan", "pos", "map", "go", "key", "k", "tone", "kind", "sky", "p24", "amb", "id"}
+_SKIP = {"type", "icon", "img", "art", "pos", "map", "go", "key", "k", "tone", "kind", "sky", "p24", "amb", "id"}
 
 
 def _typo(v, key=None):
@@ -64,6 +64,85 @@ def photo_ou_attente(cle, alt, pos="50% 50%"):
     if os.path.exists(chemin):
         return {"img": "/media/env/" + cle + ".webp", "pos": pos, "alt": alt}
     return {"ph": True, "alt": alt}
+
+
+_MEDIA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "media", "env")
+PHOTOS_ATTENDUES = []  # (fichier, description) : photos que James peut générer plus tard
+
+
+def _slug(s):
+    s = s.lower()
+    for a, b in (("àâä", "a"), ("éèêë", "e"), ("îï", "i"), ("ôö", "o"), ("ùûü", "u"), ("ç", "c"), ("œ", "oe")):
+        for ch in a:
+            s = s.replace(ch, b)
+    return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
+
+
+def _photo(dossier, nom, description):
+    """Emplacement photo : media/env/<dossier>/<nom>.webp s'il existe au build, sinon None (panneau « Photo à venir »)."""
+    PHOTOS_ATTENDUES.append(("media/env/" + dossier + "/" + nom + ".webp", description))
+    if os.path.exists(os.path.join(_MEDIA, dossier, nom + ".webp")):
+        return "/media/env/" + dossier + "/" + nom + ".webp"
+    return None
+
+
+# ---------------------------------------------------------------------------------------------
+# Sources des listes et de l'entretien : d'où vient chaque élément, et comment l'échéance est calculée.
+#   fab      Manuel du fabricant (intervalle)          compteur  Compteur kilométrique ou heures moteur
+#   capteur  Mesure d'un capteur                        saison    Saison et météo
+#   vous     Ajouté par vous                            jarvis    Recommandé par JARVIS selon l'usage
+#   regle    Règlement en vigueur
+# Une source s'écrit « sorte|détail » dans les listes; l'entretien utilise les fonctions ci-dessous.
+# ---------------------------------------------------------------------------------------------
+
+def _src(s):
+    if isinstance(s, dict) or s is None:
+        return s
+    k, _, t = s.partition("|")
+    return {"k": k, "t": t}
+
+
+def M(icon, title, detail, src):
+    """Ligne d'entretien : l'échéance (jours) et l'état découlent de la source."""
+    due = src["due"]
+    return [icon, title, detail, due, "late" if due < 0 else "soon" if due <= 14 else "ok", src]
+
+
+def fab(ref, every, n, last):
+    """Intervalle du fabricant : fait il y a -last jours, à refaire aux n jours."""
+    return {"k": "fab", "ref": ref, "every": every, "basis": "date", "n": n, "last": last, "due": last + n}
+
+
+def compteur(ref, every, now, at, rate, unit="km", k="compteur"):
+    """Compteur (km, heures, cycles, traites) : now depuis le dernier entretien, à refaire à at, rythme moyen rate par jour."""
+    return {"k": k, "ref": ref, "every": every, "basis": "count", "now": now, "at": at, "rate": rate, "unit": unit,
+            "due": int(round((at - now) / rate))}
+
+
+def src_fixe(k, ref, due, why=""):
+    """Échéance fixée par une saison, un capteur, vous, JARVIS ou un règlement."""
+    return {"k": k, "ref": ref, "why": why, "basis": "fixed", "due": due}
+
+
+def regle_date(ref, mmdd, why=""):
+    """Règlement à date fixe (MM-JJ) : l'échéance est calculée pour la vraie date."""
+    import datetime
+    today = datetime.date.today()
+    m, d = (int(x) for x in mmdd.split("-"))
+    t = datetime.date(today.year, m, d)
+    if t < today:
+        t = datetime.date(today.year + 1, m, d)
+    return {"k": "regle", "ref": ref, "why": why, "basis": "date-fixe", "mmdd": mmdd, "due": (t - today).days}
+
+
+def O(label, state, tone, zone, ago, who="", lock=None, icon=None):
+    """Une ouverture (porte, fenêtre, trappe) : état, zone, dernière ouverture (minutes) et par qui."""
+    o = {"label": label, "state": state, "tone": tone, "zone": zone, "ago": ago, "who": who}
+    if lock is not None:
+        o["lock"] = lock
+    if icon:
+        o["icon"] = icon
+    return o
 
 
 # =============================================================================================
@@ -110,7 +189,7 @@ BOULANCE_POINTS = [
 
 BOULANCE = {
     "key": "boulance", "name": "BouLance", "kind": "Véhicule récréatif", "place": "Roberval · Lac-Saint-Jean",
-    "mobile": True, "plan": "rv", "icon": "rv", "meIcon": "rv", "points": BOULANCE_POINTS,
+    "mobile": True, "icon": "rv", "meIcon": "rv", "points": BOULANCE_POINTS,
     "geo": {"lat": 48.52, "lon": -72.23, "place": "Roberval, Lac-Saint-Jean"},
     "banner": {"img": "/media/env/boulance.webp", "pos": "62% 50%", "alt": "BouLance, le véhicule récréatif, au bord d’un lac au crépuscule"},
     "titles": {"voyage": "Voyage et entretien"},
@@ -147,25 +226,32 @@ BOULANCE = {
     },
     "s": {
         "apercu": [
-            C("kpi", 3, icon="battery", label="Batterie cellule", value="78 %", sub="Autonomie estimée : 18 h", bar=78, tone="bat", go="energie", live="soc"),
-            C("kpi", 3, icon="drop", label="Eau propre", value="72 %", sub="108 sur 150 L", bar=72, tone="water", go="eau"),
-            C("kpi", 3, icon="thermo", label="Intérieur", value="21 °C", sub="Humidité 45 %", subicon="drop", tone="gold", go="confort"),
-            C("kpi", 3, icon="wifi", label="Internet", value="LTE active", dot="ok", sub="Starlink en secours", subicon="satellite", tone="ok", go="internet"),
+            C("kpi", 3, icon="battery", label="Batteries", value="78 %", sub="Autonomie estimée : 18 h", bar=78, tone="bat", go="energie", live="soc"),
+            C("kpi", 3, icon="drop", label="Eau propre", value="72 %", sub="108 sur 150 L · ≈ 4 jours au rythme actuel", bar=72, tone="water", go="eau"),
+            C("kpi", 3, icon="thermo", label="Intérieur", value="21 °C", sub="Consigne 21 °C · fournaise au propane", subicon="fire", tone="heat", go="confort"),
+            C("kpi", 3, icon="wifi", label="Internet", value="LTE active", dot="ok", sub="62 Go restants · Starlink en secours", subicon="satellite", tone="ok", go="internet"),
             C("conditions", 7, title="Conditions au stationnement"),
             C("lumieres", 5),
+            C("upcoming", 7, title="Prochaines 48 heures", icon="snowflake", note="Nuit froide prévue : −6 °C vers 5 h.",
+              text="Câble chauffant des conduites branché · consigne de nuit à 18 °C suggérée.", go="confort"),
+            C("secsum", 5),
             C("around", 7, title="Autour de BouLance", map="lac", view=[40, 96, 200, 120],
-              list=[["drop", "water", "Remplissage d’eau", "2 à proximité"], ["dump", "ok", "Vidange", "3 à proximité"],
-                    ["fuel", "muted", "Carburant", "4 à proximité"]],
+              list=[["drop", "water", "Remplissage d’eau", "2 à proximité · 2,4 km"], ["dump", "ok", "Vidange", "3 à proximité · 1,1 km"],
+                    ["fuel", "muted", "Carburant", "4 à proximité · 0,8 km"]],
               pins="points", btn=["Points de service", "eau:points"]),
             C("checklist", 5, id="depart", title="Préparer le départ", icon="clip",
-              items=[["Coffres fermés", True], ["Objets rangés", True], ["Câble extérieur débranché", False], ["Marche rentrée", False]]),
-            C("remember", 7, icon="snowflake", title="Nuit froide prévue : −6 °C.",
-              text="Protéger les conduites d’eau et vérifier la consigne de chauffage.", go="confort"),
-            C("trip", 5, title="Mon voyage", name="Tour du Lac-Saint-Jean", next="Prochaine étape : Saint-Félicien", go="voyage"),
+              items=[["Coffres fermés", True, "capteur|Contacteurs des coffres · lu il y a 2 min"],
+                     ["Objets rangés", True, "vous|Coché par Marie ce matin"],
+                     ["Câble extérieur débranché", False, "capteur|Prise de quai · 30 A encore détectés"],
+                     ["Marche rentrée", False, "capteur|Fin de course de la marche électrique"],
+                     ["Propane fermé pour la route", False, "fab|Manuel du véhicule · avant chaque déplacement"]]),
+            C("trip", 12, title="Mon voyage", name="Tour du Lac-Saint-Jean", next="Prochaine étape : Saint-Félicien", go="voyage",
+              stages=["Alma", "Chambord", "Roberval", "Saint-Félicien", "Dolbeau-Mistassini", "Péribonka", "Alma"], at=2,
+              done="146 km", left="110 km", eta="Départ dans 2 jours · 10 h"),
         ],
         "confort": [
             ["synthese", "Synthèse", [
-                C("thermostat", 7, title="Thermostat", sub="Température et mode de confort", set=21, min=10, max=28, inside=21,
+                C("thermostat", 7, title="Thermostat", sub="Température et mode de confort", set=22, min=10, max=28, inside=21,
                   rows=[["home", "Température intérieure", "21 °C"], ["fire", "Chauffage", "Auto · fournaise au propane"],
                         ["snowflake", "Climatisation", "En veille"]]),
                 C("trends", 5, items=[
@@ -179,7 +265,7 @@ BOULANCE = {
                 C("cold", 3, title="Réfrigération", sub="Températures actuelles",
                   rows=[["fridge", "Réfrigérateur", "4 °C"], ["snowflake", "Congélateur", "−18 °C"]]),
             ]],
-            ["meteo", "Météo", [C("wxnow", 8), C("measures", 4, h=3), C("hourly", 8), C("days", 8)]],
+            ["meteo", "Météo", [C("wxnow", 7), C("days", 5), C("hourly", 12)]],
             ["soleil", "Soleil et lune", [C("sun", 8), C("moments", 4), C("sunpos", 7), C("moon", 5)]],
         ],
         "energie": [
@@ -226,18 +312,20 @@ BOULANCE = {
         ],
         "securite": [
             ["synthese", "Synthèse", [
-                C("openings", 7, title="Ouvertures", sub="État des accès du véhicule", plan="rv",
-                  points=[{"x": 78, "y": 70, "label": "Porte cellule", "state": "Fermée", "tone": "ok"},
-                          {"x": 88, "y": 24, "label": "Cabine", "state": "Fermée", "tone": "ok"},
-                          {"x": 30, "y": 72, "label": "Coffre", "state": "Fermé", "tone": "ok"},
-                          {"x": 52, "y": 24, "label": "Baie cuisine", "state": "Entrouverte", "tone": "warn"},
-                          {"x": 40, "y": 48, "label": "Lanterneau", "state": "Fermé", "tone": "ok"}]),
-                C("list", 5, icon="radar", title="Détection", sub="Capteurs de sécurité à bord",
+                C("openings", 12, title="Ouvertures", sub="Portes, coffres, fenêtres et lanterneaux", env="boulance",
+                  points=[O("Porte de la cellule", "Verrouillée", "ok", "Accès", 42, "Marie", lock=True, icon="door"),
+                          O("Portière du conducteur", "Verrouillée", "ok", "Accès", 260, "James", lock=True, icon="car"),
+                          O("Portière du passager", "Verrouillée", "ok", "Accès", 1440, "James", lock=True, icon="car"),
+                          O("Coffre de rangement", "Fermé", "ok", "Soutes et coffres", 46, "Marie", lock=False, icon="box"),
+                          O("Soute des réservoirs", "Fermée", "ok", "Soutes et coffres", 2900, "James", lock=False, icon="tank"),
+                          O("Baie de la cuisine", "Entrouverte", "warn", "Fenêtres et toit", 190, "Aération pendant la cuisson", icon="window"),
+                          O("Lanterneau du salon", "Fermé", "ok", "Fenêtres et toit", 600, "", icon="window")]),
+                C("list", 4, icon="radar", title="Détection", sub="Capteurs de sécurité à bord",
                   rows=[["co", "Monoxyde de carbone", "0 ppm", "ok"], ["flame", "Propane", "Normal", "ok"],
                         ["smoke", "Fumée", "Normal", "ok"], ["thermo", "Gel des conduites", "Surveillé", "ok"]]),
-                C("cams", 7, items=[], empty="Aucune caméra n’est encore reliée à BouLance.",
+                C("cams", 4, items=[], empty="Aucune caméra n’est encore reliée à BouLance.",
                   emptysub="Les caméras de recul et d’entrée apparaîtront ici dès leur branchement. Aucune image n’est simulée."),
-                C("events", 5, items=[[42, "Porte cellule fermée", "Accès sécurisé", "ok"], [46, "Coffre fermé", "Accès sécurisé", "ok"],
+                C("events", 4, items=[[42, "Porte cellule fermée", "Accès sécurisé", "ok"], [46, "Coffre fermé", "Accès sécurisé", "ok"],
                                       [57, "Mode Nuit prévisualisé", "Aucun changement appliqué", "gold"],
                                       [190, "Baie cuisine entrouverte", "Aération pendant la cuisson", "warn"]]),
                 C("toggle", 6, icon="shield", key="surv", title="Surveillance des ouvertures", sub="Surveillance active de tous les accès", on=True, critical=True),
@@ -320,28 +408,53 @@ BOULANCE = {
             ["listes", "Listes", [
                 C("lists", 12, lists=[
                     {"k": "depart", "l": "Départ", "sub": "Les étapes essentielles avant de prendre la route.", "icon": "list",
-                     "items": [["Fermer les fenêtres", "Validation manuelle", True], ["Verrouiller les coffres", "Confirmé par capteur · exemple", True],
-                               ["Débrancher l’alimentation", "Validation manuelle", True], ["Ranger les objets mobiles", "Contrôler la cuisine et les surfaces.", False],
-                               ["Vérifier les niveaux", "Eau, propane et batteries.", False], ["Replier le marchepied", "Confirmé par capteur · exemple", False]]},
+                     "items": [["Fermer les fenêtres", "Baie de la cuisine encore entrouverte", True, "capteur|Contacteurs des fenêtres"],
+                               ["Verrouiller les coffres", "Confirmé par capteur", True, "capteur|Contacteurs des coffres · lu il y a 2 min"],
+                               ["Débrancher l’alimentation", "Prise de quai", True, "capteur|Prise de quai · courant mesuré"],
+                               ["Ranger les objets mobiles", "Contrôler la cuisine et les surfaces.", False, "vous|Ajouté par Marie · votre liste"],
+                               ["Vérifier les niveaux", "Eau, propane et batteries.", False, "jarvis|Niveaux lus par JARVIS · eau 72 %, propane 62 %"],
+                               ["Fermer le propane", "Robinet de la bonbonne", False, "fab|Manuel du véhicule · avant chaque déplacement"],
+                               ["Replier le marchepied", "Confirmé par capteur", False, "capteur|Fin de course de la marche électrique"]]},
                     {"k": "install", "l": "Installation", "sub": "À l’arrivée sur le site.", "icon": "tent",
-                     "items": [["Mettre de niveau", "Vérins et cales", True], ["Brancher l’alimentation", "Secteur 30 A", True],
-                               ["Ouvrir l’eau", "Pompe ou raccord municipal", False], ["Déployer l’auvent", "Si le vent le permet", False], ["Allumer le chauffage", "Consigne 21 °C", False]]},
+                     "items": [["Mettre de niveau", "Vérins et cales", True, "capteur|Inclinomètre · +0,4° mesuré"],
+                               ["Brancher l’alimentation", "Secteur 30 A", True, "capteur|Prise de quai · courant mesuré"],
+                               ["Ouvrir l’eau", "Pompe ou raccord municipal", False, "fab|Manuel du véhicule · mise en service"],
+                               ["Déployer l’auvent", "Si le vent le permet (limite 30 km/h)", False, "saison|Vent mesuré : 18 km/h"],
+                               ["Allumer le chauffage", "Consigne 21 °C", False, "saison|Nuit à −6 °C prévue"]]},
                     {"k": "hiver", "l": "Froid", "sub": "Nuits sous zéro.", "icon": "snowflake",
-                     "items": [["Câble chauffant des conduites", "Vérifier le branchement", True], ["Réservoirs à moins de 80 %", "Laisser de la place au gel", False],
-                               ["Antigel dans les siphons", "Eaux grises et noires", False], ["Couvercles des évents", "Ventilation sans infiltration", False]]},
+                     "items": [["Câble chauffant des conduites", "Vérifier le branchement", True, "saison|Nuits sous 0 °C prévues · Environnement Canada (exemple)"],
+                               ["Réservoirs à moins de 80 %", "Laisser de la place au gel", False, "capteur|Jauges des réservoirs · eaux grises 34 %"],
+                               ["Antigel dans les siphons", "Eaux grises et noires", False, "fab|Manuel du véhicule · sous −5 °C"],
+                               ["Couvercles des évents", "Ventilation sans infiltration", False, "jarvis|Recommandé : neige prévue jeudi"]]},
                     {"k": "courses", "l": "Courses", "sub": "Haltes et ravitaillement.", "icon": "cart",
-                     "items": [["Propane", "Remplir une bonbonne", True], ["Eau potable", "Bidons de 20 L", True], ["Épicerie", "Roberval", True],
-                               ["Bleuets séchés", "Spécialité de la région", True], ["Lave-glace −40 °C", "", False], ["Piles AA", "", False],
-                               ["Bois d’allumage", "", False], ["Café", "", False], ["Fromage en grains", "", False]]},
+                     "items": [["Propane", "Remplir une bonbonne", True, "jarvis|Propane à 62 % · ≈ 9 jours au rythme du chauffage"],
+                               ["Eau potable", "Bidons de 20 L", True, "vous|Ajouté par vous"], ["Épicerie", "Roberval", True, "vous|Ajouté par vous"],
+                               ["Bleuets séchés", "Spécialité de la région", True, "vous|Ajouté par Marie"], ["Lave-glace −40 °C", "", False, "saison|Neige et froid prévus"],
+                               ["Piles AA", "", False, "jarvis|Pile faible : détecteur de fumée"], ["Bois d’allumage", "", False, "vous|Ajouté par vous"],
+                               ["Café", "", False, "vous|Ajouté par Marie"], ["Fromage en grains", "", False, "vous|Ajouté par vous"]]},
                 ]),
             ]],
             ["entretien", "Entretien", [
-                C("maint", 8, h=2, rows=[["wheel", "Pneus d’hiver", "Obligatoires au Québec dès le 1er décembre", 9, "soon"],
-                                     ["awning", "Inspection de l’auvent et des joints", "Atelier d’exemple", 5, "soon"],
-                                     ["engine", "Vidange d’huile du moteur", "Aux 8 000 km · 6 240 km parcourus", 40, "ok"],
-                                     ["battery", "Contrôle des batteries", "Serrage des bornes et équilibrage", 21, "ok"],
-                                     ["fire", "Entretien de la fournaise", "Annuel · fait le 2 octobre", 330, "ok"],
-                                     ["co", "Détecteurs CO et propane", "Test mensuel", -2, "late"]]),
+                C("maint", 8, h=2, rows=[
+                    M("wheel", "Pneus d’hiver", "Pose avant la date limite",
+                      regle_date("Règlement québécois : pneus d’hiver obligatoires du 1er décembre au 15 mars", "12-01")),
+                    M("awning", "Inspection de l’auvent et des joints", "Atelier d’exemple · étanchéité du toit",
+                      fab("Manuel du fabricant du véhicule · joints et scellants", "aux 12 mois", 365, -360)),
+                    M("engine", "Vidange d’huile du moteur", "Huile et filtre",
+                      compteur("Compteur kilométrique · lu par la prise de diagnostic du moteur", "aux 8 000 km", 6240, 8000, 80)),
+                    M("battery", "Contrôle des batteries", "Serrage des bornes et équilibrage des cellules",
+                      compteur("Recommandé par JARVIS selon l’usage réel des batteries", "aux 60 cycles", 41, 60, 0.9, "cycles", "jarvis")),
+                    M("wheel", "Pression des pneus", "Pneu avant gauche à 74 psi · cible 80 psi",
+                      src_fixe("capteur", "Capteurs de pression des pneus", 2, "Écart de 6 psi mesuré ce matin, à froid")),
+                    M("drop", "Purge du chauffe-eau", "Avant les nuits sous −5 °C",
+                      src_fixe("saison", "Météo du secteur et saison", 4, "Trois nuits sous −5 °C prévues cette semaine")),
+                    M("fire", "Entretien de la fournaise", "Annuel · fait le 2 octobre",
+                      fab("Manuel de la fournaise au propane", "aux 12 mois", 365, -37)),
+                    M("co", "Détecteurs CO et propane", "Bouton d’essai et alarme sonore",
+                      fab("Manuel des détecteurs", "test mensuel", 30, -32)),
+                    M("clip", "Nettoyer les moustiquaires", "Baie de la cuisine et lanterneau",
+                      src_fixe("vous", "Ajouté par Marie le 3 novembre", 12)),
+                ]),
                 C("next", 4, icon="wrench", kick="Prochain rendez-vous", title="Inspection de l’auvent et des joints", d=5, h="14:00"),
                 C("next", 4, icon="wheel", kick="À planifier", title="Pose des pneus d’hiver", text="Le Québec exige les pneus d’hiver du 1er décembre au 15 mars."),
             ]],
@@ -393,7 +506,7 @@ BOULANCE = {
 # =============================================================================================
 
 def T_meteo():
-    return ["meteo", "Météo", [C("wxnow", 8), C("measures", 4, h=3), C("hourly", 8), C("days", 8)]]
+    return ["meteo", "Météo", [C("wxnow", 7), C("days", 5), C("hourly", 12)]]
 
 
 def T_soleil():
@@ -448,7 +561,7 @@ QUARTIER = {  # quartier stylisé au bord de la Yamaska (200 unités par kilomè
 }
 
 MAISON = {
-    "key": "maison", "name": "Maison", "kind": "Résidence", "place": "Saint-Hyacinthe · Montérégie", "icon": "home", "meIcon": "home", "plan": "house",
+    "key": "maison", "name": "Maison", "kind": "Résidence", "place": "Saint-Hyacinthe · Montérégie", "icon": "home", "meIcon": "home",
     "geo": {"lat": 45.63, "lon": -72.96, "place": "Saint-Hyacinthe, Montérégie"},
     "banner": {"img": "/media/solutions/environnements-intelligents.webp", "pos": "70% 42%", "alt": "Intérieur d’une résidence au crépuscule, vue sur le lac"},
     "titles": {"voyage": "Entretien"}, "voyageIcon": "calendar",
@@ -481,13 +594,13 @@ MAISON = {
               btn=["Alertes du secteur", "securite:alertes"]),
             C("checklist", 5, id="nuit", title="Avant la nuit", icon="moon",
               items=[["Portes verrouillées", True], ["Porte de garage fermée", True], ["Fenêtre de la chambre fermée", False], ["Bac bleu au chemin", False]]),
-            C("remember", 7, icon="bolt", title="Pointe Hydro-Québec demain, de 6 h à 9 h.",
+            C("upcoming", 7, title="Prochaines 48 heures", icon="bolt", note="Pointe Hydro-Québec demain, de 6 h à 9 h.",
               text="Le préchauffage commencera à 4 h 30 et la recharge de la voiture sera reportée.", go="energie:pointe"),
             C("next", 5, icon="wrench", kick="Prochain rendez-vous", title="Entretien de la thermopompe", d=3, h="10:00"),
         ],
         "confort": [
             ["synthese", "Synthèse", [
-                C("thermostat", 7, title="Thermostat", sub="Rez-de-chaussée · thermopompe", set=21, min=15, max=26, inside=21,
+                C("thermostat", 7, title="Thermostat", sub="Rez-de-chaussée · thermopompe", set=21.5, min=15, max=26, inside=21,
                   rows=[["home", "Salon", "21 °C"], ["fire", "Chauffage", "Thermopompe · Auto"], ["snowflake", "Climatisation", "Hors saison"]]),
                 C("trends", 5, items=[
                     {"icon": "thermo", "title": "Température intérieure", "value": "21 °C", "state": "Stable", "tone": "ok", "c": "gold",
@@ -556,20 +669,21 @@ MAISON = {
         ],
         "securite": [
             ["synthese", "Synthèse", [
-                C("openings", 7, title="Ouvertures", sub="Portes et fenêtres de la maison", plan="house",
-                  points=[{"x": 52, "y": 89, "label": "Porte avant", "state": "Verrouillée", "tone": "ok"},
-                          {"x": 48, "y": 11, "label": "Porte-patio", "state": "Verrouillée", "tone": "ok"},
-                          {"x": 84, "y": 89, "label": "Porte de garage", "state": "Fermée", "tone": "ok"},
-                          {"x": 7, "y": 31, "label": "Fenêtre de la chambre", "state": "Entrouverte", "tone": "warn"},
-                          {"x": 63, "y": 67, "label": "Porte du garage intérieure", "state": "Fermée", "tone": "ok"}]),
-                C("list", 5, icon="radar", title="Détection", sub="Capteurs de la maison",
+                C("openings", 12, title="Ouvertures", sub="Portes et fenêtres de la maison", env="maison",
+                  points=[O("Porte avant", "Verrouillée", "ok", "Portes", 95, "Marie", lock=True, icon="door"),
+                          O("Porte-patio", "Verrouillée", "ok", "Portes", 300, "Léa", lock=True, icon="door"),
+                          O("Porte du garage intérieure", "Fermée", "ok", "Portes", 52, "James", lock=False, icon="door"),
+                          O("Porte de garage", "Fermée", "ok", "Garage", 50, "James", lock=False, icon="garage"),
+                          O("Fenêtre de la chambre", "Entrouverte", "warn", "Fenêtres", 180, "Aération de la chambre", icon="window"),
+                          O("Fenêtres du salon", "Fermées", "ok", "Fenêtres", 4300, "", icon="window")]),
+                C("list", 4, icon="radar", title="Détection", sub="Capteurs de la maison",
                   rows=[["smoke", "Fumée", "Normal", "ok"], ["co", "Monoxyde de carbone", "0 ppm", "ok"], ["drop", "Dégât d’eau", "Aucun", "ok"],
                         ["thermo", "Gel · garage", "7 °C", "ok"]]),
-                C("cams", 7, items=[["/media/solutions/camera-front-entry-v1.webp", "Entrée avant", "Caméra de l’entrée avant", "Aucun événement"],
+                C("cams", 4, items=[["/media/solutions/camera-front-entry-v1.webp", "Entrée avant", "Caméra de l’entrée avant", "Aucun événement"],
                                      ["/media/solutions/camera-driveway-garage-v1.webp", "Allée et garage", "Caméra de l’allée et du garage", "Portes fermées"],
                                      ["/media/solutions/camera-rear-terrace-v1.webp", "Terrasse", "Caméra de la terrasse arrière", "Accès fermé"],
                                      ["/media/solutions/camera-pool-spa-v1.webp", "Piscine et spa", "Caméra de la piscine", "Spa couvert"]]),
-                C("events", 5, items=[[12, "Porte de garage fermée", "Par Alex · confirmé", "ok"], [35, "Mouvement · allée", "Livraison d’exemple", "gold"],
+                C("events", 4, items=[[12, "Porte de garage fermée", "Par Alex · confirmé", "ok"], [35, "Mouvement · allée", "Livraison d’exemple", "gold"],
                                       [180, "Système armé · nuit", "Automatisation de 23 h", "ok"], [300, "Fenêtre de la chambre entrouverte", "Depuis 19 h 40", "warn"]]),
                 C("toggle", 6, icon="shield", key="surv", title="Système d’alarme", sub="Armé · mode nuit", on=True, critical=True),
                 C("toggle", 6, icon="bell", key="notif", title="Notifications", sub="Alertes sur vos appareils", on=True),
@@ -643,9 +757,20 @@ MAISON = {
                 ]),
             ]],
             ["entretien", "Entretien", [
-                C("maint", 8, h=2, rows=[["fan", "Filtres de l’échangeur d’air", "Aux 3 mois", -2, "late"], ["fire", "Thermopompe", "Entretien annuel", 3, "soon"],
-                                          ["fireplace", "Ramonage de la cheminée", "Annuel", 5, "soon"], ["drop", "Robinets extérieurs", "Purger avant le gel", 1, "soon"],
-                                          ["smoke", "Détecteurs de fumée et CO", "Test mensuel", 14, "ok"], ["heater", "Chauffe-eau", "Vidange annuelle", 120, "ok"]]),
+                C("maint", 8, h=2, rows=[
+                    M("fan", "Filtres de l’échangeur d’air", "Filtres lavables",
+                      fab("Manuel de l’échangeur d’air", "aux 3 mois", 90, -92)),
+                    M("fire", "Thermopompe", "Entretien annuel avant l’hiver",
+                      fab("Manuel de la thermopompe · nettoyage des serpentins", "aux 12 mois", 365, -362)),
+                    M("fireplace", "Ramonage de la cheminée", "Avant la saison de chauffage",
+                      src_fixe("saison", "Saison de chauffage", 5, "Premières flambées prévues ce week-end")),
+                    M("drop", "Robinets extérieurs", "Purger avant le gel",
+                      src_fixe("saison", "Météo du quartier", 1, "Première nuit sous −2 °C prévue demain")),
+                    M("smoke", "Détecteurs de fumée et CO", "Test mensuel",
+                      fab("Manuel des détecteurs", "test mensuel", 30, -16)),
+                    M("heater", "Chauffe-eau", "Vidange annuelle",
+                      compteur("Recommandé par JARVIS selon la consommation d’eau chaude", "aux 60 000 L", 41800, 60000, 150, "L", "jarvis")),
+                ]),
                 C("next", 4, icon="wrench", kick="Prochain rendez-vous", title="Entretien de la thermopompe", d=3, h="10:00"),
                 C("next", 4, icon="fan", kick="En retard", title="Filtres de l’échangeur d’air", text="Prévu il y a 2 jours · 10 minutes à faire soi-même."),
             ]],
@@ -713,7 +838,7 @@ ARCHAMBAULT = {  # lac stylisé (20 unités par kilomètre)
 del ARCHAMBAULT["lake"]
 
 CHALET = {
-    "key": "chalet", "name": "Chalet", "kind": "Résidence secondaire", "place": "Saint-Donat · Lac Archambault", "icon": "tree", "meIcon": "home", "plan": "chalet",
+    "key": "chalet", "name": "Chalet", "kind": "Résidence secondaire", "place": "Saint-Donat · Lac Archambault", "icon": "tree", "meIcon": "home",
     "geo": {"lat": 46.32, "lon": -74.22, "place": "Saint-Donat, Lanaudière"},
     "banner": {"img": "/media/concept/jarvis-hero-architecture-v1.webp", "pos": "30% 50%", "alt": "Résidence boisée au bord d’un lac, au crépuscule"},
     "titles": {"voyage": "Entretien"}, "voyageIcon": "calendar",
@@ -748,7 +873,7 @@ CHALET = {
               btn=["Alertes du secteur", "securite:alertes"]),
             C("checklist", 5, id="arrivee", title="Préparer l’arrivée", icon="clip",
               items=[["Déneigement du chemin", True], ["Chauffage remonté 6 h avant", False], ["Eau ouverte et purgée", False], ["Spa préchauffé", False]]),
-            C("remember", 7, icon="snowflake", title="Avertissement de neige : 15 à 20 cm.",
+            C("upcoming", 7, title="Prochaines 48 heures", icon="snowflake", note="Avertissement de neige : 15 à 20 cm.",
               text="Le chemin du lac sera déneigé demain matin. Arrivée prévue dans quelques jours.", go="securite:alertes"),
             C("next", 5, icon="home", kick="Prochaine arrivée", title="Séjour en famille", d=6, h="18:00", countdown=True),
         ],
@@ -813,17 +938,17 @@ CHALET = {
         ],
         "securite": [
             ["synthese", "Synthèse", [
-                C("openings", 7, title="Ouvertures", sub="Accès du chalet", plan="chalet",
-                  points=[{"x": 10, "y": 56, "label": "Porte principale", "state": "Verrouillée", "tone": "ok"},
-                          {"x": 55, "y": 72, "label": "Porte-fenêtre", "state": "Verrouillée", "tone": "ok"},
-                          {"x": 60, "y": 13, "label": "Fenêtre de la mezzanine", "state": "Fermée", "tone": "ok"},
-                          {"x": 88, "y": 44, "label": "Remise", "state": "Verrouillée", "tone": "ok"},
-                          {"x": 25, "y": 47, "label": "Trappe du vide sanitaire", "state": "Fermée", "tone": "ok"}]),
-                C("list", 5, icon="radar", title="Détection", sub="Capteurs du chalet",
+                C("openings", 12, title="Ouvertures", sub="Accès du chalet", env="chalet",
+                  points=[O("Porte principale", "Verrouillée", "ok", "Portes", 7200, "James", lock=True, icon="door"),
+                          O("Porte-fenêtre de la terrasse", "Verrouillée", "ok", "Portes", 7300, "James", lock=True, icon="door"),
+                          O("Remise", "Verrouillée", "ok", "Dépendances", 7250, "James", lock=True, icon="box"),
+                          O("Fenêtre de la mezzanine", "Fermée", "ok", "Fenêtres", 12000, "", icon="window"),
+                          O("Trappe du vide sanitaire", "Fermée", "ok", "Dépendances", 40000, "", icon="box")]),
+                C("list", 4, icon="radar", title="Détection", sub="Capteurs du chalet",
                   rows=[["smoke", "Fumée", "Normal", "ok"], ["co", "Monoxyde de carbone", "0 ppm", "ok"], ["flame", "Propane", "Normal", "ok"],
                         ["thermo", "Gel", "Intérieur 12 °C", "ok"], ["eye", "Mouvement", "Aucun depuis 5 jours", "ok"]]),
-                C("cams", 7, items=[], empty="La caméra du chemin n’est pas encore reliée.", emptysub="Elle apparaîtra ici dès son branchement. Aucune image n’est simulée."),
-                C("events", 5, items=[[110, "Déneigeur détecté", "Chemin du lac · prévu", "gold"], [2900, "Mode Hors saison appliqué", "Par James · 4 / 4 confirmés", "ok"],
+                C("cams", 4, items=[], empty="La caméra du chemin n’est pas encore reliée.", emptysub="Elle apparaîtra ici dès son branchement. Aucune image n’est simulée."),
+                C("events", 4, items=[[110, "Déneigeur détecté", "Chemin du lac · prévu", "gold"], [2900, "Mode Hors saison appliqué", "Par James · 4 / 4 confirmés", "ok"],
                                       [2920, "Vanne principale fermée", "Confirmée", "ok"], [2930, "Porte principale verrouillée", "Confirmée", "ok"]]),
                 C("toggle", 6, icon="shield", key="surv", title="Système d’alarme", sub="Armé · absence", on=True, critical=True),
                 C("toggle", 6, icon="bell", key="notif", title="Notifications", sub="Alertes sur vos appareils", on=True),
@@ -890,9 +1015,18 @@ CHALET = {
                 ]),
             ]],
             ["entretien", "Entretien", [
-                C("maint", 8, h=2, rows=[["fireplace", "Ramonage du foyer", "Annuel · avant l’usage", 9, "soon"], ["gen", "Génératrice", "Entretien annuel", 160, "ok"],
-                                          ["drop", "Analyse de l’eau du puits", "Annuelle", 220, "ok"], ["smoke", "Détecteurs", "Test mensuel", -4, "late"],
-                                          ["tank", "Inspection du réservoir de propane", "Fournisseur", 40, "ok"]]),
+                C("maint", 8, h=2, rows=[
+                    M("fireplace", "Ramonage du foyer", "Avant l’usage de la saison",
+                      fab("Manuel du foyer au gaz", "aux 12 mois", 365, -356)),
+                    M("gen", "Génératrice", "Entretien annuel",
+                      compteur("Compteur d’heures de la génératrice", "aux 100 heures", 52, 100, 0.3, "h")),
+                    M("drop", "Analyse de l’eau du puits", "Bactéries et nitrates",
+                      fab("Recommandation pour les puits privés", "aux 12 mois", 365, -145)),
+                    M("smoke", "Détecteurs", "Test mensuel",
+                      fab("Manuel des détecteurs", "test mensuel", 30, -34)),
+                    M("tank", "Inspection du réservoir de propane", "Fournisseur",
+                      src_fixe("vous", "Ajouté par James · rendez-vous du fournisseur", 40)),
+                ]),
                 C("next", 4, icon="fireplace", kick="Prochain rendez-vous", title="Ramonage du foyer", d=9, h="10:00"),
                 C("next", 4, icon="smoke", kick="En retard", title="Test des détecteurs", text="À faire à la prochaine arrivée."),
             ]],
@@ -955,7 +1089,7 @@ CENTRE = {
 }
 
 ENTREPRISE = {
-    "key": "entreprise", "name": "Bureau", "kind": "Entreprise · bureaux", "place": "Saint-Hyacinthe · centre-ville", "icon": "brief", "meIcon": "city", "plan": "office",
+    "key": "entreprise", "name": "Bureau", "kind": "Entreprise · bureaux", "place": "Saint-Hyacinthe · centre-ville", "icon": "brief", "meIcon": "city",
     "geo": {"lat": 45.626, "lon": -72.957, "place": "Saint-Hyacinthe, centre-ville"},
     "banner": {"img": "/media/solutions/jarvis-enterprise-operations-v1.webp", "pos": "50% 50%", "alt": "Bureaux de direction au crépuscule, vue sur la ville"},
     "titles": {"voyage": "Entretien"}, "voyageIcon": "calendar",
@@ -989,7 +1123,7 @@ ENTREPRISE = {
               btn=["Accès et caméras", "securite"]),
             C("checklist", 5, id="ouverture", title="Ouverture des bureaux", icon="clip",
               items=[["Portes en mode horaire", True], ["CVC en mode occupé", True], ["Accueil allumé", True], ["Salle de réunion préparée", False]]),
-            C("remember", 7, icon="bolt", title="Événement de pointe demain, de 7 h à 9 h.",
+            C("upcoming", 7, title="Prochaines 48 heures", icon="bolt", note="Événement de pointe demain, de 7 h à 9 h.",
               text="Le plan de délestage réduira les bornes et préchauffera le bâtiment dès 6 h.", go="energie:pointe"),
             C("next", 5, icon="wrench", kick="Prochaine inspection", title="Gicleurs · inspection annuelle", d=5, h="09:00"),
         ],
@@ -1056,18 +1190,18 @@ ENTREPRISE = {
         ],
         "securite": [
             ["synthese", "Synthèse", [
-                C("openings", 7, title="Accès", sub="Portes et zones protégées", plan="office",
-                  points=[{"x": 60, "y": 89, "label": "Entrée principale", "state": "Horaire · ouverte", "tone": "ok"},
-                          {"x": 95, "y": 33, "label": "Porte de service", "state": "Verrouillée", "tone": "ok"},
-                          {"x": 45, "y": 62, "label": "Salle des serveurs", "state": "Badge requis", "tone": "ok"},
-                          {"x": 5, "y": 75, "label": "Issue de secours", "state": "Fermée", "tone": "ok"},
-                          {"x": 74, "y": 28, "label": "Salle de réunion", "state": "Libre", "tone": "ok"}]),
-                C("list", 5, icon="radar", title="Détection", sub="Capteurs du bâtiment",
+                C("openings", 12, title="Accès", sub="Portes et zones protégées", env="entreprise",
+                  points=[O("Entrée principale", "Ouverte · horaire", "ok", "Entrées", 3, "Badge de l’accueil", lock=True, icon="door"),
+                          O("Porte de service", "Verrouillée", "ok", "Entrées", 140, "Livreur accompagné", lock=True, icon="door"),
+                          O("Issue de secours", "Fermée", "ok", "Entrées", 20000, "", lock=False, icon="door"),
+                          O("Salle des serveurs", "Verrouillée · badge requis", "ok", "Zones protégées", 75, "Alex", lock=True, icon="cpu"),
+                          O("Salle de réunion", "Libre", "ok", "Zones protégées", 30, "Équipe des ventes", lock=False, icon="users")]),
+                C("list", 4, icon="radar", title="Détection", sub="Capteurs du bâtiment",
                   rows=[["smoke", "Fumée", "Normal", "ok"], ["co", "Monoxyde de carbone", "0 ppm", "ok"], ["drop", "Inondation · serveurs", "Sec", "ok"],
                         ["eye", "Intrusion", "Désarmée · heures d’ouverture", "muted"]]),
-                C("cams", 7, items=[["/media/solutions/security-enterprise-delivery-v1.webp", "Quai de livraison", "Caméra du quai de livraison", "Livraison attendue"],
+                C("cams", 4, items=[["/media/solutions/security-enterprise-delivery-v1.webp", "Quai de livraison", "Caméra du quai de livraison", "Livraison attendue"],
                                      ["/media/solutions/security-enterprise-parking-v1.webp", "Stationnement", "Caméra du stationnement", "18 places libres"]]),
-                C("events", 5, items=[[6, "Badge accepté · porte de service", "Livreur d’exemple · accompagné", "ok"], [48, "Visiteur inscrit", "Accueil", "gold"],
+                C("events", 4, items=[[6, "Badge accepté · porte de service", "Livreur d’exemple · accompagné", "ok"], [48, "Visiteur inscrit", "Accueil", "gold"],
                                       [95, "Mode Ouverture appliqué", "Automatique · 7 h 30", "ok"], [610, "Alarme de la porte de service", "Fausse alerte · vérifiée par Sophie", "warn"]]),
                 C("toggle", 6, icon="shield", key="surv", title="Contrôle d’accès", sub="Badges et horaires actifs", on=True, critical=True),
                 C("toggle", 6, icon="bell", key="notif", title="Notifications", sub="Responsable de garde", on=True),
@@ -1137,9 +1271,18 @@ ENTREPRISE = {
                 ]),
             ]],
             ["entretien", "Entretien", [
-                C("maint", 8, h=2, rows=[["shield", "Gicleurs", "Inspection annuelle", 5, "soon"], ["fan", "Filtres du CVC", "Aux 3 mois", 18, "ok"],
-                                          ["battery", "Onduleur", "Test de décharge", 30, "ok"], ["smoke", "Alarme incendie", "Vérification annuelle", 60, "ok"],
-                                          ["door", "Porte de service", "Ferme-porte à ajuster", -1, "late"]]),
+                C("maint", 8, h=2, rows=[
+                    M("shield", "Gicleurs", "Inspection annuelle",
+                      src_fixe("regle", "Code de sécurité incendie · inspection annuelle obligatoire", 5)),
+                    M("fan", "Filtres du CVC", "Aux 3 mois",
+                      compteur("Recommandé par JARVIS selon les heures de ventilation", "aux 1 000 heures", 820, 1000, 10, "h", "jarvis")),
+                    M("battery", "Onduleur", "Test de décharge",
+                      fab("Manuel de l’onduleur", "aux 6 mois", 182, -152)),
+                    M("smoke", "Alarme incendie", "Vérification annuelle",
+                      src_fixe("regle", "Code de sécurité incendie · vérification annuelle", 60)),
+                    M("door", "Porte de service", "Ferme-porte à ajuster",
+                      src_fixe("capteur", "Contacteur de la porte de service", -1, "Fermeture lente mesurée : 9 s au lieu de 4 s")),
+                ]),
                 C("next", 4, icon="shield", kick="Prochaine inspection", title="Gicleurs", d=5, h="09:00"),
                 C("next", 4, icon="door", kick="En retard", title="Ferme-porte de la porte de service", text="Signalé hier par l’équipe."),
             ]],
@@ -1192,7 +1335,7 @@ PARC = {
 }
 
 GARAGE = {
-    "key": "garage", "name": "Atelier", "kind": "Garage · atelier mécanique", "place": "Saint-Hyacinthe · Sainte-Rosalie", "icon": "garage", "meIcon": "garage", "plan": "shop",
+    "key": "garage", "name": "Atelier", "kind": "Garage · atelier mécanique", "place": "Saint-Hyacinthe · Sainte-Rosalie", "icon": "garage", "meIcon": "garage",
     "geo": {"lat": 45.645, "lon": -72.905, "place": "Sainte-Rosalie, Saint-Hyacinthe"},
     "banner": {"img": "/media/solutions/camera-garage-supercars-v1.webp", "pos": "55% 40%", "alt": "Intérieur d’un garage éclairé avec deux voitures"},
     "titles": {"voyage": "Entretien"}, "voyageIcon": "calendar",
@@ -1224,7 +1367,7 @@ GARAGE = {
               btn=["Agenda de l’atelier", "voyage:agenda"]),
             C("checklist", 5, id="fermeture", title="Fermer l’atelier", icon="clip",
               items=[["Compresseur purgé", False], ["Portes de garage fermées", True], ["Postes de soudure coupés", True], ["Alarme armée", False]]),
-            C("remember", 7, icon="truck", title="Livraison de pièces aujourd’hui à 14 h.", text="La porte 2 peut s’ouvrir à distance après votre confirmation.", go="equipements"),
+            C("upcoming", 7, title="Prochaines 48 heures", icon="truck", note="Livraison de pièces aujourd’hui à 14 h.", text="La porte 2 peut s’ouvrir à distance après votre confirmation.", go="equipements"),
             C("next", 5, icon="wrench", kick="Prochain client", title="Pose des pneus d’hiver · 2 véhicules", d=1, h="08:30"),
         ],
         "confort": [
@@ -1275,17 +1418,17 @@ GARAGE = {
         ],
         "securite": [
             ["synthese", "Synthèse", [
-                C("openings", 7, title="Ouvertures", sub="Portes de l’atelier", plan="shop",
-                  points=[{"x": 26, "y": 89, "label": "Porte de garage 1", "state": "Fermée", "tone": "ok"},
-                          {"x": 59, "y": 89, "label": "Porte de garage 2", "state": "Fermée", "tone": "ok"},
-                          {"x": 86, "y": 89, "label": "Porte d’homme", "state": "Verrouillée", "tone": "ok"},
-                          {"x": 93, "y": 24, "label": "Fenêtre du bureau", "state": "Fermée", "tone": "ok"},
-                          {"x": 20, "y": 21, "label": "Armoire à outils", "state": "Verrouillée", "tone": "ok"}]),
-                C("list", 5, icon="radar", title="Détection", sub="Capteurs de l’atelier",
+                C("openings", 12, title="Ouvertures", sub="Portes de l’atelier", env="garage",
+                  points=[O("Porte de garage 1", "Fermée", "ok", "Baies", 120, "Marc", lock=False, icon="garage"),
+                          O("Porte de garage 2", "Fermée", "ok", "Baies", 18, "Marc", lock=False, icon="garage"),
+                          O("Porte d’homme", "Verrouillée", "ok", "Entrées", 64, "Marc", lock=True, icon="door"),
+                          O("Fenêtre du bureau", "Fermée", "ok", "Entrées", 3000, "", icon="window"),
+                          O("Armoire à outils", "Verrouillée", "ok", "Rangement", 240, "Julien", lock=True, icon="box")]),
+                C("list", 4, icon="radar", title="Détection", sub="Capteurs de l’atelier",
                   rows=[["co", "Monoxyde de carbone", "8 ppm", "ok"], ["flame", "Gaz combustibles", "Normal", "ok"], ["smoke", "Fumée", "Normal", "ok"], ["drop", "Inondation", "Aucune", "ok"]]),
-                C("cams", 7, items=[["/media/solutions/camera-garage-supercars-v1.webp", "Intérieur", "Caméra intérieure de l’atelier", "2 véhicules"],
+                C("cams", 4, items=[["/media/solutions/camera-garage-supercars-v1.webp", "Intérieur", "Caméra intérieure de l’atelier", "2 véhicules"],
                                      ["/media/solutions/camera-driveway-garage-v1.webp", "Cour", "Caméra de la cour", "Aucun mouvement"]]),
-                C("events", 5, items=[[18, "Porte de garage 2 fermée", "Par Marc · confirmé", "ok"], [45, "Extraction forcée · 15 min", "CO à 26 ppm pendant un essai moteur", "warn"],
+                C("events", 4, items=[[18, "Porte de garage 2 fermée", "Par Marc · confirmé", "ok"], [45, "Extraction forcée · 15 min", "CO à 26 ppm pendant un essai moteur", "warn"],
                                       [120, "Porte d’homme déverrouillée", "Badge de Marc", "ok"], [900, "Alarme armée", "Mode Fermé", "ok"]]),
                 C("toggle", 6, icon="shield", key="surv", title="Alarme de l’atelier", sub="Désarmée · heures d’ouverture", on=True, critical=True),
                 C("toggle", 6, icon="bell", key="notif", title="Notifications", sub="CO et intrusion", on=True),
@@ -1344,8 +1487,18 @@ GARAGE = {
                 ]),
             ]],
             ["entretien", "Entretien", [
-                C("maint", 8, h=2, rows=[["jacks", "Pont élévateur", "Inspection annuelle", 4, "soon"], ["compress", "Compresseur", "Vidange d’huile", 35, "ok"],
-                                          ["fan", "Extraction", "Nettoyage des filtres", -6, "late"], ["co", "Détecteurs de CO", "Étalonnage", 90, "ok"], ["fire", "Extincteurs", "Inspection mensuelle", 12, "ok"]]),
+                C("maint", 8, h=2, rows=[
+                    M("jacks", "Pont élévateur", "Inspection annuelle",
+                      src_fixe("regle", "Règlement sur la santé et la sécurité du travail · inspection annuelle", 4)),
+                    M("compress", "Compresseur", "Vidange d’huile",
+                      compteur("Compteur d’heures du compresseur", "aux 500 heures", 1284 - 1000 + 0, 500, 6, "h")),
+                    M("fan", "Extraction", "Nettoyage des filtres",
+                      compteur("Recommandé par JARVIS selon les heures d’extraction", "aux 200 heures", 236, 200, 6, "h", "jarvis")),
+                    M("co", "Détecteurs de CO", "Étalonnage",
+                      fab("Manuel des détecteurs de CO", "aux 6 mois", 182, -92)),
+                    M("fire", "Extincteurs", "Inspection mensuelle",
+                      fab("Fiche de l’extincteur", "inspection mensuelle", 30, -18)),
+                ]),
                 C("next", 4, icon="jacks", kick="Prochaine inspection", title="Pont élévateur", d=4, h="10:00"),
                 C("next", 4, icon="fan", kick="En retard", title="Filtres d’extraction", text="Prévu il y a 6 jours."),
             ]],
@@ -1400,7 +1553,7 @@ RANGS = {
 }
 
 FERME = {
-    "key": "ferme", "name": "Ferme", "kind": "Exploitation laitière et veaux", "place": "Montérégie", "icon": "barn", "meIcon": "barn", "plan": "farm",
+    "key": "ferme", "name": "Ferme", "kind": "Exploitation laitière et veaux", "place": "Montérégie", "icon": "barn", "meIcon": "barn",
     "geo": {"lat": 45.55, "lon": -72.95, "place": "Montérégie"},
     "banner": photo_ou_attente("ferme", "Les bâtiments de l’exploitation : étable, laiterie et silos"),
     "titles": {"voyage": "Entretien", "confort": "Ambiance des bâtiments"}, "voyageIcon": "calendar",
@@ -1436,7 +1589,7 @@ FERME = {
             C("kpi", 4, icon="shield", label="Accès biosécurité", value="Contrôlés", dot="ok", sub="2 visiteurs au registre aujourd’hui", subicon="users", tone="ok", go="securite"),
             C("conditions", 7, title="Conditions aux champs"),
             C("lumieres", 5),
-            C("remember", 7, icon="fan", title="Panne de ventilation = urgence animale.",
+            C("upcoming", 7, title="Prochaines 48 heures", icon="fan", note="Panne de ventilation = urgence animale.",
               text="Génératrice et alarme testées chaque semaine · dernier essai en charge lundi, réussi.", go="energie:secours"),
             C("checklist", 5, id="soir", title="Tournée du soir", icon="clip",
               items=[["Traite terminée", False], ["Lavage du système de traite", False], ["Abreuvoirs vérifiés", True], ["Registre des visiteurs à jour", True]]),
@@ -1521,18 +1674,18 @@ FERME = {
         ],
         "securite": [
             ["synthese", "Synthèse", [
-                C("openings", 7, title="Bâtiments", sub="Portes et accès de la ferme", plan="farm",
-                  points=[{"x": 38, "y": 48, "label": "Étable des vaches", "state": "Fermée", "tone": "ok"},
-                          {"x": 13, "y": 32, "label": "Laiterie", "state": "Fermée · code", "tone": "ok"},
-                          {"x": 27, "y": 62, "label": "Grange", "state": "Ouverte", "tone": "warn"},
-                          {"x": 73, "y": 48, "label": "Garage", "state": "Fermé", "tone": "ok"},
-                          {"x": 27, "y": 6, "label": "Barrière du chemin", "state": "Fermée", "tone": "ok"}]),
-                C("list", 5, icon="bell", title="Alarmes", sub="Testées chaque semaine · exemple",
+                C("openings", 12, title="Bâtiments", sub="Portes et accès de la ferme", env="ferme",
+                  points=[O("Étable des vaches", "Fermée", "ok", "Bâtiments d’élevage", 70, "Tournée du matin", lock=False, icon="barn"),
+                          O("Laiterie", "Fermée · code", "ok", "Bâtiments d’élevage", 210, "Camion de lait", lock=True, icon="milk"),
+                          O("Grange", "Ouverte", "warn", "Bâtiments d’élevage", 35, "Livraison de foin", lock=False, icon="barn"),
+                          O("Garage de la machinerie", "Fermé", "ok", "Cour", 400, "Philippe", lock=False, icon="garage"),
+                          O("Barrière du chemin", "Fermée", "ok", "Cour", 210, "Camion de lait", lock=False, icon="fence")]),
+                C("list", 4, icon="bell", title="Alarmes", sub="Testées chaque semaine · exemple",
                   rows=[["smoke", "Incendie · étable et grange", "Normal", "ok"], ["wind", "CO₂ · étable", "2 400 ppm", "ok"], ["fan", "Ventilation", "Aucune panne", "ok"],
                         ["milk", "Température du tank", "2,8 °C", "ok"], ["gen", "Génératrice", "Prête · aucune alarme", "ok"]]),
-                C("cams", 7, items=[], empty="Les caméras d’étable ne sont pas encore reliées.",
+                C("cams", 4, items=[], empty="Les caméras d’étable ne sont pas encore reliées.",
                   emptysub="Allées, enclos de vêlage et quai de collecte apparaîtront ici dès leur branchement. Aucune image n’est simulée."),
-                C("events", 5, items=[[25, "Porte de la grange ouverte", "Chargement de foin", "warn"], [95, "Visiteur inscrit au registre", "Vétérinaire · zone propre", "ok"],
+                C("events", 4, items=[[25, "Porte de la grange ouverte", "Chargement de foin", "warn"], [95, "Visiteur inscrit au registre", "Vétérinaire · zone propre", "ok"],
                                       [400, "Traite du matin terminée", "124 vaches · 2 h 05", "ok"], [520, "Collecte du lait", "6 200 L · tank lavé", "ok"]]),
                 C("list", 12, icon="shield", title="Accès biosécurité", sub="Registre et zones · données d’exemple",
                   rows=[["users", "Registre des visiteurs", "2 aujourd’hui · vétérinaire, livreur", "ok"], ["key", "Entrée de la laiterie", "Code · zone propre", "ok"],
@@ -1611,12 +1764,20 @@ FERME = {
                 ]),
             ]],
             ["entretien", "Entretien", [
-                C("maint", 8, h=2, rows=[["gen", "Génératrice · essai en charge et vidange", "Contrat d’entretien · exemple", 3, "soon"],
-                                          ["milk", "Lavage acide du tank à lait", "Après chaque collecte · cycle complet le dimanche", 2, "soon"],
-                                          ["sliders", "Calibration des sondes", "Température, NH₃ et CO₂ · aux 6 mois", 5, "soon"],
-                                          ["fan", "Ventilateurs · nettoyage des pales", "Mensuel", -3, "late"],
-                                          ["milk", "Manchons de la trayeuse", "Aux 2 500 traites", 12, "ok"],
-                                          ["fence", "Clôtures · isolateurs et tension", "Avant l’hiver", 30, "ok"]]),
+                C("maint", 8, h=2, rows=[
+                    M("gen", "Génératrice · essai en charge et vidange", "Contrat d’entretien · exemple",
+                      compteur("Compteur d’heures de la génératrice", "aux 250 heures", 241, 250, 3, "h")),
+                    M("milk", "Lavage acide du tank à lait", "Cycle complet le dimanche",
+                      fab("Manuel du tank à lait", "chaque semaine", 7, -5)),
+                    M("sliders", "Calibration des sondes", "Température, NH₃ et CO₂",
+                      fab("Manuel des sondes d’ambiance", "aux 6 mois", 182, -177)),
+                    M("fan", "Ventilateurs · nettoyage des pales", "Poussière et efficacité",
+                      src_fixe("capteur", "Courant des moteurs de ventilation", -3, "Consommation en hausse de 12 % : pales encrassées")),
+                    M("milk", "Manchons de la trayeuse", "Remplacement",
+                      compteur("Compteur de traites de la trayeuse", "aux 2 500 traites", 2210, 2500, 24, "traites")),
+                    M("fence", "Clôtures · isolateurs et tension", "Avant l’hiver",
+                      src_fixe("saison", "Saison · avant le gel du sol", 30)),
+                ]),
                 C("next", 4, icon="gen", kick="Prochain entretien", title="Génératrice · essai en charge", d=3, h="13:00"),
                 C("next", 4, icon="fan", kick="En retard", title="Ventilateurs de l’étable", text="Nettoyage des pales prévu il y a 3 jours."),
             ]],
@@ -1690,7 +1851,7 @@ BATEAU_POINTS = [
 ]
 
 BATEAU = {
-    "key": "bateau", "name": "Bateau", "kind": "Voilier de 34 pieds", "place": "Sorel-Tracy · fleuve Saint-Laurent", "icon": "boat", "meIcon": "boat", "plan": "boat",
+    "key": "bateau", "name": "Bateau", "kind": "Voilier de 34 pieds", "place": "Sorel-Tracy · fleuve Saint-Laurent", "icon": "boat", "meIcon": "boat",
     "mobile": True, "points": BATEAU_POINTS,
     "geo": {"lat": 46.04, "lon": -73.12, "place": "Marina de Sorel-Tracy"},
     "banner": photo_ou_attente("bateau", "Le voilier amarré au quai de la marina", "50% 55%"),
@@ -1725,7 +1886,7 @@ BATEAU = {
               btn=["Points de service", "eau:points"]),
             C("checklist", 5, id="sortie", title="Préparer la sortie", icon="clip",
               items=[["Météo maritime consultée", True], ["Gilets et fusées à bord", True], ["Alimentation de quai débranchée", False], ["Moteur réchauffé", False]]),
-            C("remember", 7, icon="wind", title="Avis de vent fort cet après-midi.", text="Sud-ouest 20 nœuds en rafales · reporter le convoyage à demain matin.", go="securite:alertes"),
+            C("upcoming", 7, title="Prochaines 48 heures", icon="wind", note="Avis de vent fort cet après-midi.", text="Sud-ouest 20 nœuds en rafales · reporter le convoyage à demain matin.", go="securite:alertes"),
             C("trip", 5, title="Mon convoyage", name="Vers le chantier d’hivernage", next="Sortie de l’eau dans quelques jours", go="voyage"),
         ],
         "confort": [
@@ -1782,17 +1943,17 @@ BATEAU = {
         ],
         "securite": [
             ["synthese", "Synthèse", [
-                C("openings", 7, title="Ouvertures", sub="Accès du voilier", plan="boat",
-                  points=[{"x": 53, "y": 50, "label": "Descente", "state": "Fermée · cadenas", "tone": "ok"},
-                          {"x": 76, "y": 50, "label": "Écoutille avant", "state": "Fermée", "tone": "ok"},
-                          {"x": 20, "y": 50, "label": "Coffre de cockpit", "state": "Fermé", "tone": "ok"},
-                          {"x": 46, "y": 37, "label": "Hublot tribord", "state": "Entrouvert", "tone": "warn"},
-                          {"x": 93, "y": 50, "label": "Baille à mouillage", "state": "Fermée", "tone": "ok"}]),
-                C("list", 5, icon="radar", title="Détection", sub="Capteurs à bord",
+                C("openings", 12, title="Ouvertures", sub="Accès du voilier", env="bateau",
+                  points=[O("Descente", "Fermée · cadenas", "ok", "Pont", 160, "James", lock=True, icon="door"),
+                          O("Écoutille avant", "Fermée", "ok", "Pont", 3000, "", icon="window"),
+                          O("Coffre de cockpit", "Fermé", "ok", "Cockpit", 170, "James", lock=False, icon="box"),
+                          O("Baille à mouillage", "Fermée", "ok", "Pont", 5800, "", icon="anchor"),
+                          O("Hublot tribord", "Entrouvert", "warn", "Cabine", 400, "Aération de la cabine", icon="window")]),
+                C("list", 4, icon="radar", title="Détection", sub="Capteurs à bord",
                   rows=[["co", "Monoxyde de carbone", "0 ppm", "ok"], ["flame", "Propane · fond de cale", "Normal", "ok"], ["drop", "Eau dans la cale", "Sec", "ok"],
                         ["anchor", "Alarme de mouillage", "Au quai · inactive", "muted"]]),
-                C("cams", 7, items=[], empty="La caméra du cockpit n’est pas encore reliée.", emptysub="Elle apparaîtra ici dès son branchement. Aucune image n’est simulée."),
-                C("events", 5, items=[[30, "Alimentation de quai rétablie", "Après une coupure de 2 min", "gold"], [160, "Descente cadenassée", "Par James", "ok"],
+                C("cams", 4, items=[], empty="La caméra du cockpit n’est pas encore reliée.", emptysub="Elle apparaîtra ici dès son branchement. Aucune image n’est simulée."),
+                C("events", 4, items=[[30, "Alimentation de quai rétablie", "Après une coupure de 2 min", "gold"], [160, "Descente cadenassée", "Par James", "ok"],
                                       [400, "Hublot tribord entrouvert", "Aération de la cabine", "warn"], [1500, "Pompe de cale · test", "Réussi", "ok"]]),
                 C("toggle", 6, icon="shield", key="surv", title="Surveillance du voilier", sub="Ouvertures, cale et quai", on=True, critical=True),
                 C("toggle", 6, icon="bell", key="notif", title="Notifications", sub="Cale et coupure de quai", on=True),
@@ -1870,8 +2031,18 @@ BATEAU = {
                 ]),
             ]],
             ["entretien", "Entretien", [
-                C("maint", 8, h=2, rows=[["anchor", "Sortie de l’eau et hivernage", "Chantier d’exemple", 7, "soon"], ["engine", "Hivernage du moteur", "Antigel et huile", 7, "soon"],
-                                          ["drop", "Anodes", "Remplacement annuel", 160, "ok"], ["waves", "Peinture antisalissure", "Au printemps", 170, "ok"], ["shield", "Fusées de détresse", "Expirent en mai", 190, "ok"]]),
+                C("maint", 8, h=2, rows=[
+                    M("anchor", "Sortie de l’eau et hivernage", "Chantier d’exemple",
+                      src_fixe("saison", "Saison de navigation · eau à 6 °C", 7, "Rendez-vous du chantier confirmé")),
+                    M("engine", "Hivernage du moteur", "Antigel et huile",
+                      compteur("Compteur d’heures du moteur", "aux 100 heures ou à l’hivernage", 94, 100, 0.9, "h")),
+                    M("drop", "Anodes", "Remplacement annuel",
+                      fab("Manuel du moteur et de l’hélice", "aux 12 mois", 365, -205)),
+                    M("waves", "Peinture antisalissure", "Au printemps",
+                      src_fixe("saison", "Saison · avant la mise à l’eau", 170)),
+                    M("shield", "Fusées de détresse", "Expirent en mai",
+                      src_fixe("regle", "Règlement sur les petits bâtiments · date de péremption", 190)),
+                ]),
                 C("next", 4, icon="anchor", kick="Prochain rendez-vous", title="Sortie de l’eau", d=7, h="09:00"),
                 C("next", 4, icon="engine", kick="Avec le chantier", title="Hivernage du moteur", text="Antigel, huile et filtres au moment de la sortie."),
             ]],
@@ -1943,7 +2114,7 @@ AVION_POINTS = [
 ]
 
 AVION = {
-    "key": "avion", "name": "Avion", "kind": "Monomoteur quatre places", "place": "Saint-Jean-sur-Richelieu · CYJN", "icon": "plane", "meIcon": "hangar", "plan": "plane",
+    "key": "avion", "name": "Avion", "kind": "Monomoteur quatre places", "place": "Saint-Jean-sur-Richelieu · CYJN", "icon": "plane", "meIcon": "hangar",
     "mobile": True, "points": AVION_POINTS,
     "geo": {"lat": 45.29, "lon": -73.28, "place": "Aéroport de Saint-Jean-sur-Richelieu"},
     "banner": photo_ou_attente("avion", "L’avion monomoteur devant son hangar", "50% 55%"),
@@ -1978,7 +2149,7 @@ AVION = {
               btn=["Services du terrain", "eau:points"]),
             C("checklist", 5, id="prevol", title="Préparer le vol", icon="clip",
               items=[["Météo et NOTAM consultés", True], ["Plan de vol déposé", False], ["Purges de carburant", False], ["Cache-pitot retiré", False]]),
-            C("remember", 7, icon="warn", title="Piste 11-29 fermée pour travaux (exemple).", text="Décollage prévu sur la piste 24 · vent 250° à 12 nœuds.", go="securite:alertes"),
+            C("upcoming", 7, title="Prochaines 48 heures", icon="warn", note="Piste 11-29 fermée pour travaux (exemple).", text="Décollage prévu sur la piste 24 · vent 250° à 12 nœuds.", go="securite:alertes"),
             C("trip", 5, title="Mon prochain vol", name="Vers Sherbrooke (CYSC)", next="Départ prévu demain à 10 h", go="voyage"),
         ],
         "confort": [
@@ -2029,16 +2200,16 @@ AVION = {
         ],
         "securite": [
             ["synthese", "Synthèse", [
-                C("openings", 7, title="Hangar et avion", sub="Accès et ouvertures", plan="plane",
-                  points=[{"x": 50, "y": 92, "label": "Porte du hangar", "state": "Fermée", "tone": "ok"},
-                          {"x": 44, "y": 44, "label": "Porte gauche", "state": "Verrouillée", "tone": "ok"},
-                          {"x": 56, "y": 44, "label": "Porte droite", "state": "Verrouillée", "tone": "ok"},
-                          {"x": 50, "y": 62, "label": "Soute à bagages", "state": "Fermée", "tone": "ok"},
-                          {"x": 50, "y": 22, "label": "Trappe à huile", "state": "Fermée", "tone": "ok"}]),
-                C("list", 5, icon="radar", title="Détection", sub="Capteurs du hangar",
+                C("openings", 12, title="Hangar et avion", sub="Accès et ouvertures", env="avion",
+                  points=[O("Porte du hangar", "Fermée", "ok", "Hangar", 1300, "James", lock=True, icon="hangar"),
+                          O("Porte gauche de l’avion", "Verrouillée", "ok", "Avion", 1305, "James", lock=True, icon="plane"),
+                          O("Porte droite de l’avion", "Verrouillée", "ok", "Avion", 1305, "James", lock=True, icon="plane"),
+                          O("Soute à bagages", "Fermée", "ok", "Avion", 1310, "James", lock=False, icon="box"),
+                          O("Trappe à huile", "Fermée", "ok", "Avion", 1500, "Inspection prévol", lock=False, icon="engine")]),
+                C("list", 4, icon="radar", title="Détection", sub="Capteurs du hangar",
                   rows=[["co", "CO · hangar", "0 ppm", "ok"], ["flame", "Vapeurs de carburant", "Aucune", "ok"], ["smoke", "Fumée", "Normal", "ok"], ["eye", "Mouvement", "Aucun", "ok"]]),
-                C("cams", 7, items=[], empty="La caméra du hangar n’est pas encore reliée.", emptysub="Elle apparaîtra ici dès son branchement. Aucune image n’est simulée."),
-                C("events", 5, items=[[1300, "Porte du hangar fermée", "Après le vol · par James", "ok"], [1310, "Housse du moteur posée", "Liste après vol", "ok"],
+                C("cams", 4, items=[], empty="La caméra du hangar n’est pas encore reliée.", emptysub="Elle apparaîtra ici dès son branchement. Aucune image n’est simulée."),
+                C("events", 4, items=[[1300, "Porte du hangar fermée", "Après le vol · par James", "ok"], [1310, "Housse du moteur posée", "Liste après vol", "ok"],
                                       [1320, "Avion rentré au hangar", "Vol local · 1 h 10", "ok"]]),
                 C("toggle", 6, icon="shield", key="surv", title="Surveillance du hangar", sub="Porte, mouvement et vapeurs", on=True, critical=True),
                 C("toggle", 6, icon="bell", key="notif", title="Notifications", sub="Sur vos appareils", on=True),
@@ -2113,9 +2284,18 @@ AVION = {
                 ]),
             ]],
             ["entretien", "Entretien", [
-                C("maint", 8, h=2, rows=[["wrench", "Inspection annuelle", "Obligatoire · atelier d’exemple", 24, "soon"], ["engine", "Vidange d’huile", "Aux 50 heures · 41 h depuis", 30, "ok"],
-                                          ["battery", "Batterie de bord", "Test de capacité", -3, "late"], ["radar", "Balise de détresse (ELT)", "Batterie à remplacer", 120, "ok"],
-                                          ["doc", "Certificat de navigabilité", "À jour", 200, "ok"]]),
+                C("maint", 8, h=2, rows=[
+                    M("wrench", "Inspection annuelle", "Atelier d’exemple",
+                      src_fixe("regle", "Règlement de l’aviation canadien · inspection annuelle", 24)),
+                    M("engine", "Vidange d’huile", "Huile et filtre",
+                      compteur("Compteur d’heures du moteur (tachymètre)", "aux 50 heures", 41, 50, 0.3, "h")),
+                    M("battery", "Batterie de bord", "Test de capacité",
+                      fab("Manuel de la batterie", "aux 6 mois", 182, -185)),
+                    M("radar", "Balise de détresse (ELT)", "Batterie à remplacer",
+                      fab("Manuel de la balise", "date de péremption de la pile", 1825, -1705)),
+                    M("doc", "Certificat de navigabilité", "À jour",
+                      src_fixe("regle", "Règlement de l’aviation canadien", 200)),
+                ]),
                 C("next", 4, icon="wrench", kick="Prochain rendez-vous", title="Inspection annuelle", d=24, h="09:00"),
                 C("next", 4, icon="battery", kick="En retard", title="Test de la batterie de bord", text="Prévu il y a 3 jours."),
             ]],
@@ -2152,9 +2332,93 @@ AVION = {
 
 ENVS = [BOULANCE, MAISON, CHALET, ENTREPRISE, GARAGE, FERME, BATEAU, AVION]
 
+# =============================================================================================
+# Multisite : l'état de chaque lieu vu de l'accueil (présence, sécurité, alertes) et la
+# correspondance des modes communs (Absence, Nuit, Grand froid) avec les modes propres au lieu.
+# Les retards d'entretien et les ouvertures restées ouvertes s'ajoutent seuls aux alertes.
+# =============================================================================================
+
+SITES = {
+    "boulance": {"who": "James et Marie · à bord", "n": 2, "armed": True, "arm": "Ouvertures surveillées", "inside": 21,
+                 "alerts": [["water", "Nuit froide : −6 °C vers 5 h", "Conduites protégées · consigne de nuit suggérée", "confort"]],
+                 "multi": {"absence": "absence", "nuit": "nuit", "froid": "hivernage"}},
+    "maison": {"who": "Léa · à la maison", "n": 1, "armed": True, "arm": "Armé · périmètre", "inside": 21,
+               "alerts": [["gold", "Pointe Hydro-Québec demain, de 6 h à 9 h", "Préchauffage prévu à 5 h", "energie"]],
+               "multi": {"absence": "absent", "nuit": "nuit", "froid": "vacances"}},
+    "chalet": {"who": "Personne · inoccupé depuis 5 jours", "n": 0, "armed": True, "arm": "Armé · hors saison", "inside": 12,
+               "alerts": [["warn", "Avertissement de neige : 15 à 20 cm", "Déneigeur prévu · chemin du lac", "securite:alertes"]],
+               "multi": {"absence": "horssaison", "nuit": "horssaison", "froid": "horssaison"}},
+    "entreprise": {"who": "14 personnes sur 22", "n": 14, "armed": False, "arm": "Désarmé · heures d’ouverture", "inside": 21.5,
+                   "alerts": [["gold", "Événement de pointe demain, de 7 h à 9 h", "Plan de délestage prêt", "energie"]],
+                   "multi": {"absence": "fermeture", "nuit": "fermeture", "froid": "findesemaine"}},
+    "garage": {"who": "Marc et Julien", "n": 2, "armed": False, "arm": "Désarmé · atelier ouvert", "inside": 16,
+               "alerts": [["gold", "Livraison de pièces à 14 h", "Porte 2 à ouvrir après confirmation", "equipements"]],
+               "multi": {"absence": "ferme", "nuit": "ferme", "froid": "ferme"}},
+    "ferme": {"who": "Philippe · tournée à 17 h", "n": 1, "armed": True, "arm": "Périmètre surveillé", "inside": 12.4,
+              "alerts": [],
+              "multi": {"absence": None, "nuit": "nuit", "froid": None}},
+    "bateau": {"who": "Personne · au quai", "n": 0, "armed": True, "arm": "Armé · au quai", "inside": 13,
+               "alerts": [["warn", "Avis de vent fort cet après-midi", "Sud-ouest 20 nœuds en rafales", "securite:alertes"]],
+               "multi": {"absence": "quai", "nuit": "quai", "froid": "hivernage"}},
+    "avion": {"who": "Personne · au hangar", "n": 0, "armed": True, "arm": "Armé · hangar fermé", "inside": 6,
+              "alerts": [["gold", "Piste 11-29 fermée pour travaux", "Décollage prévu sur la piste 24", "securite:alertes"]],
+              "multi": {"absence": "hangar", "nuit": "hangar", "froid": "hangar"}},
+}
+
+MULTI_MODES = [
+    {"k": "absence", "icon": "lock", "label": "Absence", "sub": "Sécurité et économie partout"},
+    {"k": "nuit", "icon": "moon", "label": "Nuit", "sub": "Tout veille, l’essentiel reste actif"},
+    {"k": "froid", "icon": "snowflake", "label": "Grand froid", "sub": "Protection contre le gel"},
+]
+
+
+def _cards(e):
+    """Toutes les cartes d'un environnement, quels que soient les onglets."""
+    for sec in e["s"].values():
+        if sec and isinstance(sec[0], list):
+            for tab in sec:
+                yield from tab[2]
+        else:
+            yield from sec
+
+
+def _source_devinee(label, note, liste):
+    """Source d'un élément de liste sans source écrite : capteur si le texte le dit, saison pour les listes
+    de froid ou d'hivernage, vous pour les courses, sinon la liste type de JARVIS pour ce lieu."""
+    t = (label + " " + (note or "")).lower()
+    if "capteur" in t:
+        return {"k": "capteur", "t": "Confirmé par capteur"}
+    if liste in ("hiver", "froid", "hivernage", "hivernal", "saison") or "gel" in t or "antigel" in t:
+        return {"k": "saison", "t": "Saison et météo du lieu"}
+    if liste in ("courses", "achats", "epicerie"):
+        return {"k": "vous", "t": "Ajouté par vous"}
+    return {"k": "jarvis", "t": "Liste type de JARVIS pour ce lieu · modifiable"}
+
+
+def _prepare(e):
+    """Complète un environnement pour l'affichage : sources, emplacements photo, état multisite."""
+    e = dict(e)
+    e["site"] = SITES.get(e["key"], {})
+    for c in _cards(e):
+        if c["type"] == "checklist":
+            c["items"] = [[it[0], it[1], _src(it[2]) if len(it) > 2 else _source_devinee(it[0], "", c.get("id", ""))] for it in c["items"]]
+        elif c["type"] == "lists":
+            for L in c["lists"]:
+                L["items"] = [[it[0], it[1], it[2], _src(it[3]) if len(it) > 3 else _source_devinee(it[0], it[1], L["k"])] for it in L["items"]]
+        elif c["type"] == "equip":
+            nom = e["key"] + "-" + _slug(c["title"])
+            c["photo"] = _photo("equip", nom, c["title"] + " · " + c.get("sub", "") + " (" + e["name"] + ")")
+        elif c["type"] == "openings":
+            for o in c["points"]:
+                nom = e["key"] + "-" + _slug(o["label"])
+                o["photo"] = _photo("ouvertures", nom, o["label"] + " (" + e["name"] + ")")
+    return e
+
 
 def data():
-    return {"order": [e["key"] for e in ENVS], "envs": _typo(ENVS)}
+    del PHOTOS_ATTENDUES[:]
+    envs = [_prepare(e) for e in ENVS]
+    return {"order": [e["key"] for e in ENVS], "envs": _typo(envs), "multi": _typo(MULTI_MODES)}
 
 
 def html():

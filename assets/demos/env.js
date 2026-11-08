@@ -76,6 +76,7 @@
     return d === 0 ? "aujourd’hui" : d === 1 ? "demain" : d === -1 ? "hier" : d > 1 && d < 7 ? JOURS[wd(t)] : dateLong(t);
   }
   function relAt(t) { return cap(rel(t)) + " · " + hm(t); }
+  function lc1(s) { return s.charAt(0).toLowerCase() + s.slice(1); }
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
   function dur(ms) {
     var m = Math.max(0, Math.round(ms / 60000)), d = Math.floor(m / 1440), h = Math.floor((m % 1440) / 60), mi = m % 60;
@@ -259,25 +260,43 @@
   };
   function ic(n, c) { return '<svg class="ev-i' + (c ? " " + c : "") + '" viewBox="0 0 24 24" aria-hidden="true">' + (I[n] || I.info) + "</svg>"; }
 
-  /* Pictogrammes météo en couleur (48 × 48) : d dégagé, p partiel, c couvert, r pluie, w neige, f brouillard */
+  /* Pictogrammes météo en couleur (48 × 48) : d dégagé, p partiel, c couvert, r pluie, w neige, f brouillard.
+     Dégradés communs (soleil, nuage, lune, cadran du thermostat) déclarés une seule fois dans le document. */
+  var DEFS = '<svg class="ev-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>' +
+    '<radialGradient id="evw-sun" cx="40%" cy="36%" r="70%"><stop offset="0" stop-color="#fff6d2"/><stop offset=".45" stop-color="#ffd25c"/><stop offset="1" stop-color="#f59a1f"/></radialGradient>' +
+    '<radialGradient id="evw-halo" cx="50%" cy="50%" r="50%"><stop offset=".35" stop-color="#ffc24a" stop-opacity=".55"/><stop offset="1" stop-color="#ffc24a" stop-opacity="0"/></radialGradient>' +
+    '<linearGradient id="evw-cloud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#dfe5ec"/><stop offset="1" stop-color="#a9b4c1"/></linearGradient>' +
+    '<linearGradient id="evw-cloud2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9d1dc"/><stop offset="1" stop-color="#6f7c8c"/></linearGradient>' +
+    '<radialGradient id="evw-moon" cx="38%" cy="34%" r="72%"><stop offset="0" stop-color="#fffaf0"/><stop offset=".7" stop-color="#e3dac4"/><stop offset="1" stop-color="#a99f88"/></radialGradient>' +
+    '<linearGradient id="evw-drop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fd0ff"/><stop offset="1" stop-color="#3d8ff0"/></linearGradient>' +
+    '<linearGradient id="evd-bezel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a4a4a"/><stop offset=".22" stop-color="#1b1b1b"/><stop offset=".55" stop-color="#0a0a0a"/><stop offset=".8" stop-color="#2b2b2b"/><stop offset="1" stop-color="#101010"/></linearGradient>' +
+    '<radialGradient id="evd-face" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#1a1918"/><stop offset=".7" stop-color="#070707"/><stop offset="1" stop-color="#000"/></radialGradient>' +
+    '<linearGradient id="evd-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
+    '<linearGradient id="evd-heat" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ffb347"/><stop offset=".6" stop-color="#ff8a3d"/><stop offset="1" stop-color="#ff5f3d"/></linearGradient>' +
+    '<linearGradient id="evd-cool" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#7cc4ff"/><stop offset="1" stop-color="#3d8ff0"/></linearGradient>' +
+    '<linearGradient id="evd-hold" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#6ee7b7"/><stop offset="1" stop-color="#34d399"/></linearGradient>' +
+    "</defs></svg>";
+  root.insertAdjacentHTML("afterbegin", DEFS);
   var WXC = {
-    sun: '<circle cx="24" cy="24" r="8.5" class="w-sun"/><path class="w-ray" d="M24 7v5M24 36v5M7 24h5M36 24h5M12 12l3.5 3.5M32.5 32.5 36 36M12 36l3.5-3.5M32.5 15.5 36 12"/>',
-    moon: '<path class="w-moon" d="M31 30.5A12 12 0 0 1 19.5 13.5a12 12 0 1 0 11.5 17Z"/>',
-    cloud: '<path class="w-cloud" d="M15 37h19a7.5 7.5 0 0 0 1.1-14.9 10.5 10.5 0 0 0-20.1 2.4A6.3 6.3 0 0 0 15 37Z"/>',
-    sunsmall: '<circle cx="18" cy="18" r="7" class="w-sun"/><path class="w-ray" d="M18 5v3.5M5 18h3.5M8.8 8.8l2.4 2.4M27.2 8.8l-2.4 2.4"/>',
-    moonsmall: '<path class="w-moon" d="M25 22A9 9 0 0 1 16.5 9.5a9 9 0 1 0 8.5 12.5Z"/>',
-    cloudlow: '<path class="w-cloud" d="M17 40h17a7 7 0 0 0 1-13.9 9.5 9.5 0 0 0-18.2 2.2A5.8 5.8 0 0 0 17 40Z"/>',
-    rain: '<path class="w-rain" d="M18 40l-2 4.5M25 40l-2 4.5M32 40l-2 4.5"/>',
-    snow: '<g class="w-snow"><circle cx="17" cy="42" r="1.6"/><circle cx="24" cy="44.5" r="1.6"/><circle cx="31" cy="42" r="1.6"/></g>',
+    halo: '<circle cx="24" cy="24" r="17" fill="url(#evw-halo)" class="w-halo"/>',
+    sun: '<g class="w-rays"><path class="w-ray" d="M24 6.5v4M24 37.5v4M6.5 24h4M37.5 24h4M11.6 11.6l2.8 2.8M33.6 33.6l2.8 2.8M11.6 36.4l2.8-2.8M33.6 14.4l2.8-2.8"/></g><circle cx="24" cy="24" r="8.6" fill="url(#evw-sun)" class="w-sun"/>',
+    moon: '<path class="w-moon" fill="url(#evw-moon)" d="M31 30.5A12 12 0 0 1 19.5 13.5a12 12 0 1 0 11.5 17Z"/>',
+    cloud: '<path class="w-cloud" fill="url(#evw-cloud)" d="M15 37h19a7.5 7.5 0 0 0 1.1-14.9 10.5 10.5 0 0 0-20.1 2.4A6.3 6.3 0 0 0 15 37Z"/>',
+    cloudd: '<path class="w-cloud" fill="url(#evw-cloud2)" d="M15 33h19a7.5 7.5 0 0 0 1.1-14.9 10.5 10.5 0 0 0-20.1 2.4A6.3 6.3 0 0 0 15 33Z"/>',
+    sunsmall: '<g class="w-rays"><path class="w-ray" d="M18 5v3.5M5 18h3.5M8.8 8.8l2.4 2.4M27.2 8.8l-2.4 2.4"/></g><circle cx="18" cy="18" r="7" fill="url(#evw-sun)" class="w-sun"/>',
+    moonsmall: '<path class="w-moon" fill="url(#evw-moon)" d="M25 22A9 9 0 0 1 16.5 9.5a9 9 0 1 0 8.5 12.5Z"/>',
+    cloudlow: '<path class="w-cloud w-drift" fill="url(#evw-cloud)" d="M17 40h17a7 7 0 0 0 1-13.9 9.5 9.5 0 0 0-18.2 2.2A5.8 5.8 0 0 0 17 40Z"/>',
+    rain: '<path class="w-rain" d="M18 38l-2 4.5M25 38l-2 4.5M32 38l-2 4.5"/>',
+    snow: '<g class="w-snow"><circle cx="17" cy="40" r="1.7"/><circle cx="24" cy="43" r="1.7"/><circle cx="31" cy="40" r="1.7"/></g>',
     fog: '<path class="w-fog" d="M10 30h28M13 35h22M10 40h28"/>'
   };
   function wxi(code, night, cls) {
     var b = "";
-    if (code === "d") b = night ? WXC.moon : WXC.sun;
+    if (code === "d") b = night ? WXC.moon : WXC.halo + WXC.sun;
     else if (code === "p") b = (night ? WXC.moonsmall : WXC.sunsmall) + WXC.cloudlow;
     else if (code === "c") b = WXC.cloud;
-    else if (code === "r") b = WXC.cloud.replace("37h", "33h") + WXC.rain;
-    else if (code === "w") b = WXC.cloud.replace("37h", "33h") + WXC.snow;
+    else if (code === "r") b = WXC.cloudd + WXC.rain;
+    else if (code === "w") b = WXC.cloudd + WXC.snow;
     else if (code === "f") b = WXC.cloud.replace("37h", "26h") + WXC.fog;
     return '<svg class="ev-wx' + (cls ? " " + cls : "") + '" viewBox="0 0 48 48" aria-hidden="true">' + b + "</svg>";
   }
@@ -447,7 +466,7 @@
     return { srcs: srcs, load: load, batt: batt };
   }
   function liveWanted() {
-    return visible && !document.hidden && API && S.env === "boulance" && (S.view === "picker" || S.sec === "apercu" || S.sec === "energie" || S.sec === "internet");
+    return visible && !document.hidden && API && (S.view === "home" || (S.env === "boulance" && (S.sec === "apercu" || S.sec === "energie" || S.sec === "internet")));
   }
   function liveTick(force) {
     if (!API) { if (LIVE.ok === null) { LIVE.ok = false; paintLive(); } return; }
@@ -478,6 +497,7 @@
       if (c && K[c.type]) { el.innerHTML = K[c.type](c, cur(), i, true); el.classList.remove("is-new"); }
     });
     app.querySelectorAll("[data-live-pick]").forEach(function (el) { el.innerHTML = pickStatus(E[el.getAttribute("data-live-pick")]); });
+    app.querySelectorAll("[data-live-cell]").forEach(function (el) { var x = siteOf(E[el.getAttribute("data-live-cell")]); el.innerHTML = enCell(x, batColor(x.soc)); });
   }
   function liveTag(b) {
     if (b.live) return '<span class="ev-tag is-live" title="Mesure reçue des batteries de BouLance">réel</span>';
@@ -563,10 +583,11 @@
     function P(p) { return [(p[0] - v[0]) * sx, (p[1] - v[1]) * sy]; }
     function at(p) { var q = P(p); return "left:" + (q[0] / 4).toFixed(2) + "%;top:" + (q[1] / 2.4).toFixed(2) + "%"; }
     function inside(p) { var q = P(p); return q[0] > 6 && q[0] < 394 && q[1] > 6 && q[1] < 234; }
-    var id = uid(), svg = '<defs><pattern id="' + id + '" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".55"/></pattern></defs>' +
+    /* Fond noir : quadrillage très fin, eau en noir bleuté avec rive lumineuse, routes en filets dorés */
+    var id = uid(), svg = '<defs><pattern id="' + id + '" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16"/></pattern></defs>' +
       '<rect class="m-land" width="400" height="240"/><rect class="m-tex" width="400" height="240" fill="url(#' + id + ')"/>';
     (M.fields || []).forEach(function (f) { svg += '<path class="m-field" d="M' + f.map(function (p) { return f2(P(p)); }).join(" L") + 'Z"/>'; });
-    (M.water || []).forEach(function (w) { svg += '<path class="m-water" d="' + sp(w.map(P), true) + '"/>'; });
+    (M.water || []).forEach(function (w) { var d = sp(w.map(P), true); svg += '<path class="m-shore" d="' + d + '"/><path class="m-water" d="' + d + '"/>'; });
     (M.rivers || []).forEach(function (r) { svg += '<path class="m-river" d="' + sp(r.map(P), false) + '"/>'; });
     (M.roads || []).forEach(function (r) { svg += '<path class="m-road' + (r.minor ? " is-minor" : "") + (r.rail ? " is-rail" : "") + '" d="' + (r.straight ? "M" + r.pts.map(function (p) { return f2(P(p)); }).join(" L") : sp(r.pts.map(P), false)) + '"/>'; });
     (M.blocks || []).forEach(function (b) { var a = P([b[0], b[1]]), c = P([b[0] + b[2], b[1] + b[3]]); svg += '<rect class="m-block' + (b[4] ? " is-" + b[4] : "") + '" x="' + a[0].toFixed(1) + '" y="' + a[1].toFixed(1) + '" width="' + (c[0] - a[0]).toFixed(1) + '" height="' + (c[1] - a[1]).toFixed(1) + '" rx="1.5"/>'; });
@@ -593,49 +614,9 @@
     var kmW = v[2] / M.km, target = kmW * 0.22, steps = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50], L = steps.filter(function (s) { return s <= target; }).pop() || steps[0];
     html += '<span class="m-scale" style="--w:' + (L / kmW * 100).toFixed(2) + '%"><i></i>' + nf(L, L < 1 ? 1 : 0) + NB + "km</span>";
     if (o.ring) html += '<span class="m-ringl" style="' + at([M.me[0], M.me[1] + o.ring * M.km * 0.98]) + '">' + o.ring + NB + "km</span>";
-    return '<div class="ev-map' + (o.cls ? " " + o.cls : "") + '"><svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + svg + "</svg>" + html +
+    return '<div class="ev-map' + (o.cls ? " " + o.cls : "") + '"><svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + svg + '</svg><span class="m-vig" aria-hidden="true"></span>' + html +
       '<span class="m-note">' + (M.note || "Carte illustrative") + "</span></div>";
   }
-
-  /* ======================================================================================
-     Plans techniques vus du dessus (cartes « Ouvertures »)
-     ====================================================================================== */
-  var PLAN = {
-    rv: '<svg viewBox="0 0 300 140" class="ev-plan" aria-hidden="true"><path class="p-body" d="M28 30h222c14 0 26 8 30 20v40c-4 12-16 20-30 20H28c-6 0-10-4-10-10V40c0-6 4-10 10-10Z"/>' +
-      '<path class="p-glass" d="M262 34c8 4 13 10 14 18v36c-1 8-6 14-14 18"/><path class="p-line" d="M248 30v80M210 30v80"/>' +
-      '<rect class="p-roof" x="104" y="57" width="26" height="26" rx="3"/><rect class="p-roof" x="58" y="62" width="18" height="16" rx="2"/>' +
-      '<g class="p-solar"><rect x="146" y="42" width="24" height="56" rx="2"/><rect x="174" y="42" width="24" height="56" rx="2"/><path d="M146 61h24M146 80h24M174 61h24M174 80h24"/></g>' +
-      '<path class="p-mirror" d="M262 30l8-8M262 110l8 8"/><g class="p-wheel"><rect x="44" y="24" width="28" height="5" rx="2"/><rect x="78" y="24" width="28" height="5" rx="2"/><rect x="222" y="24" width="28" height="5" rx="2"/>' +
-      '<rect x="44" y="111" width="28" height="5" rx="2"/><rect x="78" y="111" width="28" height="5" rx="2"/><rect x="222" y="111" width="28" height="5" rx="2"/></g>' +
-      '<path class="p-arrow" d="M286 70h8M290 66l4 4-4 4"/></svg>',
-    house: '<svg viewBox="0 0 300 180" class="ev-plan" aria-hidden="true"><path class="p-body" d="M20 20h170v60h90v80H20Z"/>' +
-      '<path class="p-room" d="M20 20h80v70H20zM100 20h90v60h-90zM20 90h80v70H20zM100 80h90v80h-90zM190 80h90v80h-90z"/>' +
-      '<path class="p-door" d="M150 160a14 14 0 0 1 14-14M232 160h40M60 20a12 12 0 0 1 12 12"/>' +
-      '<text class="p-txt" x="34" y="50">CHAMBRE</text><text class="p-txt" x="118" y="45">CUISINE</text><text class="p-txt" x="40" y="128">BUREAU</text><text class="p-txt" x="122" y="118">SALON</text><text class="p-txt" x="214" y="118">GARAGE</text></svg>',
-    chalet: '<svg viewBox="0 0 300 180" class="ev-plan" aria-hidden="true"><path class="p-room" d="M30 130h200v34H30z" style="stroke-dasharray:4 4"/><path class="p-body" d="M30 24h200v106H30Z"/>' +
-      '<path class="p-room" d="M30 24h90v60H30zM120 24h110v106H120zM30 84h90v46H30z"/><rect class="p-roof" x="244" y="40" width="40" height="40" rx="2"/>' +
-      '<path class="p-door" d="M150 130a14 14 0 0 1 14-14M60 24a12 12 0 0 1 12 12"/><circle class="p-door" cx="210" cy="50" r="9"/>' +
-      '<text class="p-txt" x="42" y="58">CHAMBRE</text><text class="p-txt" x="146" y="78">SÉJOUR · FOYER</text><text class="p-txt" x="44" y="112">SALLE D’EAU</text><text class="p-txt" x="96" y="152">TERRASSE</text><text class="p-txt" x="245" y="96">REMISE</text></svg>',
-    office: '<svg viewBox="0 0 300 180" class="ev-plan" aria-hidden="true"><path class="p-body" d="M16 20h268v140H16Z"/>' +
-      '<path class="p-room" d="M16 20h70v60H16zM86 20h70v60H86zM156 20h128v60H156zM16 110h90v50H16zM106 110h60v50h-60zM230 110h54v50h-54z"/>' +
-      '<path class="p-door" d="M180 160a16 16 0 0 1 16-16M284 60a14 14 0 0 1-14 14"/>' +
-      '<text class="p-txt" x="28" y="54">BUREAUX</text><text class="p-txt" x="98" y="54">BUREAUX</text><text class="p-txt" x="186" y="54">SALLE DE RÉUNION</text><text class="p-txt" x="30" y="140">ACCUEIL</text><text class="p-txt" x="112" y="140">SERVEURS</text><text class="p-txt" x="236" y="140">CUISINETTE</text></svg>',
-    shop: '<svg viewBox="0 0 300 180" class="ev-plan" aria-hidden="true"><path class="p-body" d="M20 20h260v140H20Z"/>' +
-      '<path class="p-room" d="M210 20h70v54h-70z"/><path class="p-door" d="M40 160h76M140 160h76M248 160a16 16 0 0 1 16-16"/>' +
-      '<path class="p-line" d="M40 156h76M140 156h76"/><rect class="p-roof" x="30" y="30" width="60" height="14" rx="2"/><rect class="p-roof" x="44" y="80" width="56" height="26" rx="5"/><rect class="p-roof" x="144" y="80" width="56" height="26" rx="5"/>' +
-      '<text class="p-txt" x="218" y="50">BUREAU</text><text class="p-txt" x="36" y="40">ÉTABLI</text><text class="p-txt" x="50" y="140">BAIE 1</text><text class="p-txt" x="150" y="140">BAIE 2</text></svg>',
-    farm: '<svg viewBox="0 0 300 180" class="ev-plan" aria-hidden="true"><path class="p-body" d="M20 30h170v56H20Z"/><path class="p-room" d="M20 30h40v56H20zM190 46h60v40h-60z"/>' +
-      '<path class="p-body" d="M30 112h100v48H30Z"/><circle class="p-roof" cx="214" cy="126" r="16"/><circle class="p-roof" cx="252" cy="126" r="16"/><path class="p-room" d="M150 112h34v48h-34z"/>' +
-      '<path class="p-door" d="M100 86h30M30 136h-10M20 10h120" style="stroke-dasharray:3 4"/>' +
-      '<text class="p-txt" x="86" y="62">ÉTABLE</text><text class="p-txt" x="26" y="62">LAITERIE</text><text class="p-txt" x="198" y="70">GARAGE</text><text class="p-txt" x="58" y="140">GRANGE</text><text class="p-txt" x="152" y="140">ATELIER</text><text class="p-txt" x="210" y="156">SILOS</text></svg>',
-    boat: '<svg viewBox="0 0 300 140" class="ev-plan" aria-hidden="true"><path class="p-body" d="M20 46c0-10 6-16 16-16h150c40 0 80 18 104 40-24 22-64 40-104 40H36c-10 0-16-6-16-16Z"/>' +
-      '<path class="p-room" d="M30 46h70v48H30z"/><path class="p-roof" d="M110 44h90c16 0 30 12 34 26-4 14-18 26-34 26h-90z"/><rect class="p-roof" x="214" y="62" width="16" height="16" rx="3"/>' +
-      '<circle class="p-door" cx="160" cy="70" r="4"/><path class="p-line" d="M160 70H34M100 70h-6"/><path class="p-glass" d="M128 52h20M128 88h20M168 52h16M168 88h16"/>' +
-      '<text class="p-txt" x="40" y="66">COCKPIT</text><text class="p-txt" x="122" y="74">CABINE</text></svg>',
-    plane: '<svg viewBox="0 0 300 180" class="ev-plan" aria-hidden="true"><path class="p-room" d="M10 14h280v152H10z" style="stroke-dasharray:5 5"/><path class="p-door" d="M10 166h280" style="stroke-width:3"/>' +
-      '<path class="p-body" d="M150 30c6 0 9 6 9 14v26h112c4 0 6 3 6 7v4c0 4-2 6-6 6H159v34l22 6v8h-62v-8l22-6V87H29c-4 0-6-2-6-6v-4c0-4 2-7 6-7h112V44c0-8 3-14 9-14Z"/>' +
-      '<path class="p-line" d="M146 28h8M150 22v6"/><path class="p-glass" d="M144 58h12"/><text class="p-txt" x="18" y="30">HANGAR</text><text class="p-txt" x="112" y="160">PORTE DU HANGAR</text></svg>'
-  };
 
   /* ======================================================================================
      Cartes : chaque sorte reçoit (carte, environnement, index) et rend son contenu
@@ -648,6 +629,7 @@
     var v = c.value, sub = c.sub, b = null, pct = c.bar, color = null, tag = "";
     if (c.live === "soc") { b = bat(e); v = nf(b.soc) + NB + "%"; pct = b.soc; sub = b.autonomy; color = batColor(b.soc); tag = liveTag(b); }
     else if (c.tone === "bat") color = batColor(pct);
+    else if (c.tone === "heat") color = "#ff9f5a";
     if (v === "solar:today" || v === "solar:sofar") { var so = solarDay(e); v = so ? nf((v === "solar:today" ? so.total : so.sofar) / 1000, 1) + NB + "kWh" : "—"; }
     var inner = '<span class="ev-ki t-' + (c.tone || "gold") + '"' + (color ? ' style="--tc:' + color + '"' : "") + ">" + ic(c.icon) + "</span>" +
       '<span class="ev-kb"><span class="ev-kl">' + esc(c.label) + tag + "</span>" +
@@ -699,19 +681,79 @@
     if (!r.checks[id]) r.checks[id] = items.map(function (x) { return !!x[1]; });
     return r.checks[id];
   }
+  /* Sources : d'où vient chaque élément d'une liste ou d'un entretien */
+  var SRC = { fab: ["doc", "Manuel du fabricant", "Intervalle ou consigne tirés du manuel du fabricant."],
+    compteur: ["gauge", "Compteur", "Calculé à partir du compteur : kilomètres, heures moteur, cycles ou volume."],
+    capteur: ["radar", "Capteur", "Vérifié automatiquement par un capteur relié à JARVIS."],
+    saison: ["cloudsun", "Saison et météo", "Ajouté selon la saison et la météo prévue sur le lieu."],
+    vous: ["users2", "Ajouté par vous", "Ajouté par vous ou par un membre de votre équipe."],
+    jarvis: ["sparkle", "Recommandé par JARVIS", "Recommandé par JARVIS selon l’usage réel du lieu."],
+    regle: ["shield", "Règlement", "Exigé par un règlement en vigueur."] };
+  function srcChip(s, full) {
+    if (!s) return "";
+    var d = SRC[s.k] || SRC.jarvis, t = s.t || s.ref || "";
+    return '<span class="ev-src s-' + esc(s.k) + '"' + (t && !full ? ' title="' + esc(t) + '"' : "") + ">" + ic(d[0]) + "<b>" + d[1] + "</b>" + (full && t ? "<em>" + esc(t) + "</em>" : "") + "</span>";
+  }
   K.checklist = function (c, e) {
     var st = checks(e, c.id, c.items), done = st.filter(Boolean).length, pct = done / st.length * 100;
-    return head(c.icon || "clip", c.title, "", '<span class="ev-count"><b>' + done + "</b> / " + st.length + " terminées</span>" + bar(pct, "t-ok is-sm")) +
+    return head(c.icon || "clip", c.title, "Chaque élément indique d’où il vient", '<span class="ev-count"><b>' + done + "</b> / " + st.length + " terminées</span>" + bar(pct, "t-ok is-sm")) +
       '<ul class="ev-checks">' + c.items.map(function (it, i) {
-        return '<li><button type="button" class="ev-check' + (st[i] ? " is-on" : "") + '" data-a="chk" data-v="' + c.id + ":" + i + '" aria-pressed="' + st[i] + '"><span class="ev-box">' + ic("check") + "</span>" + esc(it[0]) + ic("right", "ev-chev") + "</button></li>";
+        return '<li><button type="button" class="ev-check' + (st[i] ? " is-on" : "") + '" data-a="chk" data-v="' + c.id + ":" + i + '" aria-pressed="' + st[i] + '"><span class="ev-box">' + ic("check") + "</span>" +
+          '<span class="ev-chk-t"><span>' + esc(it[0]) + "</span>" + srcChip(it[2], true) + "</span></button></li>";
       }).join("") + "</ul>";
   };
 
-  K.remember = function (c, e) {
-    return head("bell", "À retenir", "", "") + '<button type="button" class="ev-remember" data-a="go" data-v="' + (c.go || "confort") + '"><span class="ev-ri t-water">' + ic(c.icon || "info") + "</span><span><b>" + esc(c.title) + "</b><small>" + esc(c.text) + "</small></span>" + ic("right", "ev-chev") + "</button>";
+  /* Prochaines 48 heures : ce qui compte bientôt, réuni d'une seule lecture (rappel du lieu, soleil, agenda, entretien) */
+  K.upcoming = function (c, e) {
+    var now = NOW(), items = [], sd = sunDay(e), sd1 = sunDay(e, 1), ag = findCard(e, "agenda"), mt = findCard(e, "maint");
+    if (c.note) items.push({ t: now - 1, pin: true, icon: c.icon || "info", tone: "water", title: c.note, text: c.text || "", go: c.go, when: "À retenir" });
+    if (sd.set && sd.set > now) items.push({ t: sd.set, icon: "sunset", tone: "gold", title: "Coucher du soleil", text: "Éclairage extérieur selon votre règle", go: "eclairage" });
+    if (sd1.rise) items.push({ t: sd1.rise, icon: "sunrise", tone: "gold", title: "Lever du soleil", text: "Durée du jour : " + dur(sd1.set - sd1.rise), go: "confort:soleil" });
+    if (ag) ag.events.forEach(function (ev) {
+      var t = dayAt(ev[0], ev[1]);
+      if (t > now && t < now + 48 * 3600e3 && ev[4] !== "stay") items.push({ t: t, icon: ev[4] === "maint" ? "wrench" : ev[4] === "flight" ? "plane" : ev[4] === "peak" ? "bolt" : "calendar", tone: ev[4] === "maint" ? "water" : "gold", title: ev[3], text: "À l’agenda", go: "voyage:agenda" });
+    });
+    if (mt) mt.rows.forEach(function (m) {
+      var due = m[5] ? dueOf(m[5]) : m[3];
+      if (due <= 2) items.push({ t: due < 0 ? now - 2 : dayAt(due, "09:00"), icon: m[0], tone: due < 0 ? "err" : "warn", title: m[1], text: "Source : " + (m[5] ? lc1((SRC[m[5].k] || SRC.jarvis)[1]) : m[2]), go: "voyage:entretien",
+        when: due < 0 ? "En retard de " + (-due) + NB + "j" : null });
+    });
+    items.sort(function (a, b) { return (b.pin ? 1 : 0) - (a.pin ? 1 : 0) || (b.tone === "err" ? 1 : 0) - (a.tone === "err" ? 1 : 0) || a.t - b.t; });
+    return head("clock", c.title || "Prochaines 48 heures", "Ce qui compte bientôt, au même endroit", "") + '<ol class="ev-up">' + items.slice(0, 5).map(function (it) {
+      return '<li><button type="button" class="ev-upi t-' + it.tone + (it.pin ? " is-pin" : "") + '" data-a="go" data-v="' + esc(it.go || "apercu") + '"><span class="ev-ri">' + ic(it.icon) + "</span>" +
+        '<span class="ev-upi-b"><em>' + (it.when || cap(rel(it.t)) + " · " + hm(it.t)) + "</em><b>" + esc(it.title) + "</b><small>" + esc(it.text) + "</small></span>" + ic("right", "ev-chev") + "</button></li>";
+    }).join("") + "</ol>";
+  };
+
+  /* Sécurité en un regard : système armé, ouvertures, détection, caméras */
+  function armedOf(e) { var r = rt(e); return r.armed != null ? r.armed : !!(e.site && e.site.armed); }
+  K.secsum = function (c, e) {
+    var armed = armedOf(e), op = findCard(e, "openings"), det = null, cams = findCard(e, "cams");
+    tabsOf(e, "securite").forEach(function (t) { t[2].forEach(function (x) { if (!det && x.type === "list" && (x.icon === "radar" || x.icon === "bell")) det = x; }); });
+    var ops = op ? opsOf(e, op) : [], openI = [], detBad = det ? det.rows.filter(function (r) { return r[3] && r[3] !== "ok" && r[3] !== "muted"; }).length : 0;
+    ops.forEach(function (o, j) { if (o.tone === "warn") openI.push(j); });
+    var rows = [
+      ["lock", "Ouvertures", op ? (ops.length - openI.length) + " / " + ops.length + " fermées" : "—", openI.length ? "warn" : "ok", openI.length ? op.points[openI[0]].label + " · " + ops[openI[0]].state.toLowerCase() : "Toutes fermées"],
+      ["radar", "Détection", det ? (detBad ? detBad + " à vérifier" : "Normale") : "—", detBad ? "warn" : "ok", det ? det.rows.length + " capteurs surveillés" : ""],
+      ["camera", "Caméras", cams && cams.items.length ? cams.items.length + " reliées" : "Aucune reliée", cams && cams.items.length ? "ok" : "muted", cams && cams.items.length ? "Accès : propriétaire uniquement" : "Aucune image n’est simulée"]
+    ];
+    return head("shield", "Sécurité", esc((e.site && e.site.arm) || ""), "") +
+      '<div class="ev-sec-st' + (armed ? " is-armed" : "") + '"><span class="ev-sec-ring">' + ic("shield") + "</span><span><b>" + (armed ? "Système armé" : "Système désarmé") + "</b><small>" +
+      (armed ? "Toute ouverture déclenche une alerte" : "Intrusion en pause · fumée et CO toujours surveillés") + "</small></span>" +
+      '<button type="button" class="ev-btn is-sm' + (armed ? "" : " is-primary") + '" data-a="arm" data-v="' + e.key + '">' + ic(armed ? "unlock" : "lock") + (armed ? "Désarmer" : "Armer") + "</button></div>" +
+      rows.map(function (r) { return '<div class="ev-row"><span class="ev-ri t-' + (r[3] === "muted" ? "gold" : r[3]) + '">' + ic(r[0]) + "</span><span><b>" + r[1] + "</b><small>" + esc(r[4]) + "</small></span><b class=\"t-" + r[3] + '">' + (r[3] !== "muted" ? dot(r[3]) : "") + esc(r[2]) + "</b></div>"; }).join("") +
+      '<button type="button" class="ev-btn is-wide" data-a="go" data-v="securite">' + ic("shield") + "Ouvrir la sécurité" + ic("right") + "</button>";
   };
 
   K.trip = function (c, e) {
+    if (!c.big && c.stages) {
+      var n = c.stages.length, dots = c.stages.map(function (st, i) {
+        return '<li class="' + (i < c.at ? "is-done" : i === c.at ? "is-here" : i === c.at + 1 ? "is-next" : "") + '" style="--x:' + (i / (n - 1) * 100).toFixed(2) + '%"><i></i><span>' + esc(st) + "</span></li>";
+      }).join("");
+      return head("route", c.title, esc(c.name), '<button type="button" class="ev-btn is-sm" data-a="go" data-v="' + c.go + '">' + ic("map") + "Ouvrir le voyage" + ic("right") + "</button>") +
+        '<div class="ev-stg"><ol style="--p:' + (c.at / (n - 1) * 100).toFixed(2) + '%">' + dots + "</ol></div>" +
+        '<div class="ev-stg-f"><span>' + ic("check") + "<small>Parcouru</small><b>" + esc(c.done) + "</b></span><span>" + ic("route") + "<small>" + esc(c.next) + "</small><b>" + esc(c.left) + " restants</b></span><span>" + ic("clock") + "<small>Prochain départ</small><b>" + esc(c.eta) + "</b></span></div>";
+    }
     if (!c.big) {
       return head("route", c.title, "", "") + '<div class="ev-trip-s"><span><b>' + esc(c.name) + "</b><small>" + esc(c.next) + "</small></span>" +
         '<button type="button" class="ev-btn" data-a="go" data-v="' + c.go + '">' + ic("map") + "Ouvrir le voyage" + ic("right") + "</button></div>";
@@ -724,14 +766,42 @@
   };
 
   /* ---------- Confort ---------- */
+  /* Cadran de thermostat : lunette métallique, verre noir, graduations, arc de chauffe entre la température
+     actuelle et la consigne. Se règle au toucher (glisser), aux boutons ou aux flèches du clavier. */
+  function dialAng(c, v) { return -135 + clamp((v - c.min) / (c.max - c.min), 0, 1) * 270; }
+  function dialNow(c) { return c.now != null ? c.now : c.inside != null ? c.inside : c.set; }
+  function dialSVG(c, v, key) {
+    var now = dialNow(c), aV = dialAng(c, v), aN = dialAng(c, now), mode = v > now + 0.25 ? "heat" : v < now - 0.25 ? (key === "hot" ? "hold" : "cool") : "hold";
+    var lo = Math.min(aV, aN), hi = Math.max(aV, aN), ticks = "";
+    for (var i = 0; i <= 60; i++) {
+      var a = -135 + i * 4.5, maj = i % 10 === 0, p0 = pol(100, 100, maj ? 70 : 73, a), p1 = pol(100, 100, 79, a);
+      ticks += '<line class="d-tk' + (maj ? " is-maj" : "") + (a >= lo - 0.1 && a <= hi + 0.1 && hi - lo > 0.5 ? " is-on" : "") + '" x1="' + p0[0].toFixed(1) + '" y1="' + p0[1].toFixed(1) + '" x2="' + p1[0].toFixed(1) + '" y2="' + p1[1].toFixed(1) + '"/>';
+    }
+    var kn = pol(100, 100, 62, aV), cn = pol(100, 100, 86, aN), cn2 = pol(100, 100, 92, aN);
+    var arc = hi - lo > 0.5 ? '<path class="d-val is-' + mode + '" d="' + arcD(100, 100, 62, lo, hi) + '"/>' : "";
+    return '<svg class="ev-dsvg is-' + mode + '" viewBox="0 0 200 200" aria-hidden="true">' +
+      '<circle cx="100" cy="100" r="98" fill="url(#evd-bezel)" class="d-bezel"/><circle cx="100" cy="100" r="90" class="d-bezel-in"/>' +
+      '<circle cx="100" cy="100" r="88" fill="url(#evd-face)"/>' + ticks +
+      '<path class="d-track" d="' + arcD(100, 100, 62, -135, 135) + '"/>' + arc +
+      '<line class="d-now" x1="' + cn[0].toFixed(1) + '" y1="' + cn[1].toFixed(1) + '" x2="' + cn2[0].toFixed(1) + '" y2="' + cn2[1].toFixed(1) + '"/>' +
+      '<circle class="d-knob is-' + mode + '" cx="' + kn[0].toFixed(1) + '" cy="' + kn[1].toFixed(1) + '" r="6.5"/>' +
+      '<ellipse cx="100" cy="58" rx="66" ry="40" fill="url(#evd-glass)" class="d-glass"/></svg>';
+  }
+  function dialMode(c, v, key) {
+    var now = dialNow(c);
+    if (v > now + 0.25) return ["heat", "fire", key === "hot" ? "Chauffe" : "Chauffage"];
+    if (v < now - 0.25) return key === "hot" ? ["hold", "leaf", "Refroidit lentement"] : ["cool", "snowflake", "Refroidissement"];
+    return ["hold", "check", "Consigne atteinte"];
+  }
   function dialCard(c, e, key, title, sub, icon, unit) {
-    var r = rt(e), v = r.vals[key] != null ? r.vals[key] : c.set, pct = (v - c.min) / (c.max - c.min) * 100, st = r.pend[key];
+    var r = rt(e), v = r.vals[key] != null ? r.vals[key] : c.set, st = r.pend[key], md = dialMode(c, v, key);
     var status = st === "send" ? '<span class="ev-sent is-wait">' + ic("refresh") + "Envoi de la consigne…</span>"
-      : st === "ok" ? '<span class="ev-sent">' + ic("check") + "Consigne confirmée par l’appareil</span>" : '<span class="ev-sent is-idle">' + ic("info") + "Chaque changement est envoyé, puis confirmé</span>";
+      : st === "ok" ? '<span class="ev-sent">' + ic("check") + "Consigne confirmée par l’appareil</span>" : '<span class="ev-sent is-idle">' + ic("info") + "Glissez sur le cadran ou utilisez + et −</span>";
     return head(icon, title, sub, "") + '<div class="ev-dialw"><div class="ev-dial">' +
       '<button type="button" class="ev-round" data-a="step" data-v="' + key + ':-1" aria-label="Baisser la consigne">' + ic("minus") + "</button>" +
-      '<div class="ev-dial-g">' + gauge(pct, { knob: true, grad: ["#f0c46b", "var(--e-acc)"], cls: "is-dial" }) +
-      '<div class="ev-dial-v"><small>Consigne</small><b>' + nf(v, v % 1 ? 1 : 0) + NB + unit + "</b>" + (c.now != null ? "<small>Actuelle " + deg(c.now) + "</small>" : "") + "</div></div>" +
+      '<div class="ev-dial-g" data-dial="' + key + '" role="slider" tabindex="0" aria-label="Consigne · ' + esc(title) + '" aria-valuemin="' + c.min + '" aria-valuemax="' + c.max + '" aria-valuenow="' + v + '" aria-valuetext="' + nf(v, v % 1 ? 1 : 0) + " " + unit + '">' +
+      dialSVG(c, v, key) + '<div class="ev-dial-v"><span class="ev-dial-m is-' + md[0] + '" data-dm>' + ic(md[1]) + md[2] + "</span><b data-dv>" + nf(v, v % 1 ? 1 : 0) + "<sup>" + unit + "</sup></b>" +
+      "<small>Actuelle " + deg(dialNow(c)) + "</small></div></div>" +
       '<button type="button" class="ev-round" data-a="step" data-v="' + key + ':1" aria-label="Monter la consigne">' + ic("plus") + "</button></div>" + status + "</div>";
   }
   K.thermostat = function (c, e) {
@@ -774,37 +844,71 @@
       return '<div class="ev-row is-lg"><span class="ev-ri t-water">' + ic(r[0]) + "</span><span><small>" + esc(r[1]) + "</small><b>" + esc(r[2]) + "</b></span>" + ic("right", "ev-chev") + "</div>";
     }).join("");
   };
-  K.wxnow = function (c, e) {
-    var n = wxNow(e);
-    return head("clock", "Météo actuelle", "Conditions de l’heure · " + esc(e.wx.src), "") +
-      '<div class="ev-wxnow"><div class="ev-wxnow-m">' + wxi(n.code, n.night, "is-xl") + "<div><b>" + deg(n.t) + "</b><span>" + n.cond + "</span>" +
-      '<button type="button" class="ev-place" data-a="toast" data-v="Position : ' + esc(e.geo.place) + ' (exemple)">' + ic("pin") + esc(e.geo.place) + ic("right") + "</button></div></div>" +
-      '<div class="ev-wxnow-s">' + '<div class="ev-row"><span class="ev-ri t-gold">' + ic("thermo") + "</span><span><small>Ressenti</small><b>" + deg(n.feels) + "</b></span></div>" +
-      '<div class="ev-row"><span class="ev-ri t-gold">' + ic("up") + "</span><span><small>Aujourd’hui (max.)</small><b>" + deg(n.hi) + "</b></span></div>" +
-      '<div class="ev-row"><span class="ev-ri t-water">' + ic("down") + "</span><span><small>Nuit (min.)</small><b>" + deg(n.lo) + "</b></span></div></div></div>";
-  };
-  K.measures = function (c, e) {
-    var w = e.wx, n = wxNow(e);
-    var rows = [["drop", "Humidité", w.hum + NB + "%"], ["drop", "Point de rosée", deg(w.dew)], ["rain", "Probabilité de précipitations", n.pop + NB + "%"],
-      ["wind", "Vent · " + w.dir, w.wind + NB + "km/h"], ["wind", "Rafales", w.gust + NB + "km/h"], ["eye", "Visibilité", w.vis + NB + "km"],
-      ["gauge", "Pression · " + w.trend.toLowerCase(), w.hpa + NB + "hPa"], ["sun", "Indice UV · faible", String(w.uv)], ["leaf", "Cote air santé · faible", String(w.cas)]];
-    return head("chart", "Conditions et mesures", "", "") + rows.map(function (r) { return '<div class="ev-row"><span class="ev-ri t-gold">' + ic(r[0]) + "</span><span><small>" + r[1] + "</small></span><b>" + r[2] + "</b></div>"; }).join("");
-  };
-  K.hourly = function (c, e) {
-    var now = NOW(), h0 = lp(now).h, cols = "";
-    for (var i = 1; i <= 6; i++) {
-      var t = now + i * 3600e3, hr = (h0 + i) % 24;
-      cols += "<div><small>" + hh(hr) + "</small>" + wxi(skyAt(e, t), isNight(e, t)) + "<b>" + deg(e.wx.t24[hr]) + "</b><span>" + ic("drop") + popAt(e, t) + NB + "%</span></div>";
+  var DIRS = { "Nord": 0, "Nord-est": 45, "Est": 90, "Sud-est": 135, "Sud": 180, "Sud-ouest": 225, "Ouest": 270, "Nord-ouest": 315 };
+  /* Couleur d'une température (froid bleu → doux vert → chaud orangé), pour les plages des prévisions */
+  var TSTOPS = [[-25, [79, 108, 255]], [-8, [102, 178, 255]], [3, [127, 224, 192]], [14, [255, 210, 92]], [24, [255, 138, 61]], [34, [255, 95, 61]]];
+  function tcol(T) {
+    for (var i = 1; i < TSTOPS.length; i++) {
+      if (T <= TSTOPS[i][0] || i === TSTOPS.length - 1) {
+        var a = TSTOPS[i - 1], b = TSTOPS[i], f = clamp((T - a[0]) / (b[0] - a[0]), 0, 1);
+        return "rgb(" + a[1].map(function (v, k) { return Math.round(v + (b[1][k] - v) * f); }).join(" ") + ")";
+      }
     }
-    return head("clock", "Prévisions horaires", "Prochaines heures", "") + '<div class="ev-hours">' + cols + "</div>";
+    return "rgb(255 138 61)";
+  }
+  K.wxnow = function (c, e) {
+    var n = wxNow(e), w = e.wx, sky = n.night ? (n.code === "d" || n.code === "p" ? "n" : n.code + " is-night") : n.code, from = DIRS[w.dir] != null ? DIRS[w.dir] : 270;
+    var tiles = [
+      ["Vent · " + esc(w.dir), w.wind + NB + "km/h", "Rafales " + w.gust + NB + "km/h", '<span class="ev-compass" style="--a:' + (from + 180) + 'deg">' + ic("nav") + "</span>"],
+      ["Humidité", w.hum + NB + "%", "Point de rosée " + deg(w.dew), ic("drop")],
+      ["Précipitations", n.pop + NB + "%", "Probabilité dans l’heure", ic("cloud")],
+      ["Pression", w.hpa + NB + "hPa", cap(w.trend.toLowerCase()), ic("gauge")],
+      ["Visibilité", w.vis + NB + "km", w.vis >= 20 ? "Excellente" : w.vis >= 8 ? "Bonne" : "Réduite", ic("eye")],
+      ["Indice UV", String(w.uv), w.uv <= 2 ? "Faible" : w.uv <= 5 ? "Modéré" : "Élevé", ic("sun")]
+    ].map(function (t) { return '<div class="ev-wxt"><span class="ev-wxt-i">' + t[3] + "</span><small>" + t[0] + "</small><b>" + t[1] + "</b><em>" + t[2] + "</em></div>"; }).join("");
+    return '<div class="ev-wxhero sky-' + sky + '"><div class="ev-wxh-m">' + wxi(n.code, n.night, "is-xl") +
+      '<div class="ev-wxh-t"><small>' + ic("pin", "is-sm") + esc(e.geo.place) + "</small><b>" + deg(n.t) + "</b><span>" + n.cond + "</span>" +
+      "<em>Ressenti " + deg(n.feels) + '<i aria-hidden="true">·</i>Max. ' + deg(n.hi) + '<i aria-hidden="true">·</i>Min. ' + deg(n.lo) + "</em></div></div>" +
+      '<div class="ev-wxh-s">' + tiles + "</div>" +
+      '<p class="ev-wxh-f">' + ic("clock", "is-sm") + "Mise à jour à " + hm(NOW() - w.upd * 60000) + " · " + esc(w.src) + "</p></div>";
   };
+  /* Prévisions horaires : 12 heures, courbe de température au-dessus des pictogrammes, lever et coucher marqués */
+  K.hourly = function (c, e) {
+    var now = NOW(), h0 = lp(now).h, N = c.n || 12, temps = [], cols = "", sd = sunDay(e), sd1 = sunDay(e, 1);
+    var marks = [[sd.rise, "sunrise", "Lever"], [sd.set, "sunset", "Coucher"], [sd1.rise, "sunrise", "Lever"]];
+    for (var i = 0; i < N; i++) {
+      var t = now + i * 3600e3, hr = (h0 + i) % 24, T = i === 0 ? wxNow(e).t : e.wx.t24[hr], pop = popAt(e, t);
+      temps.push(T);
+      var mk = marks.filter(function (m) { return m[0] && m[0] > t - (i === 0 ? 0 : 1800e3) && m[0] <= t + 1800e3 && m[0] > now; })[0];
+      cols += '<div class="' + (i === 0 ? "is-now" : "") + '"><small>' + (i === 0 ? "Maint." : hh(hr)) + "</small>" + wxi(skyAt(e, t), isNight(e, t)) +
+        '<span class="ev-hp" title="Probabilité de précipitations"><i style="height:' + Math.max(4, pop) + '%"></i></span><em>' + pop + NB + "%</em>" +
+        (mk ? '<span class="ev-hsun">' + ic(mk[1]) + hm(mk[0]) + "</span>" : "") + "</div>";
+    }
+    var lo = Math.min.apply(null, temps), hi = Math.max.apply(null, temps), rg = Math.max(1, hi - lo);
+    var pts = temps.map(function (T, i) { return [(i + 0.5) / N * 1000, 14 + (1 - (T - lo) / rg) * 44]; }), id = uid();
+    var lbl = temps.map(function (T, i) { return '<span style="left:' + ((i + 0.5) / N * 100).toFixed(2) + "%;top:" + (pts[i][1] - 4).toFixed(1) + 'px">' + nf(T) + "°</span>"; }).join("");
+    var svg = '<svg class="ev-hrs-c" viewBox="0 0 1000 72" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="0">' +
+      temps.map(function (T, i) { return '<stop offset="' + ((i + 0.5) / N).toFixed(3) + '" stop-color="' + tcol(T) + '"/>'; }).join("") + "</linearGradient></defs>" +
+      '<path class="ev-hrs-a" d="' + sp(pts, false, 0.9) + " L1000 72 L0 72Z" + '" fill="url(#' + id + ')"/><path class="ev-hrs-l" d="' + sp(pts, false, 0.9) + '" stroke="url(#' + id + ')" vector-effect="non-scaling-stroke"/></svg>';
+    return head("clock", "Prévisions horaires", "Les 12 prochaines heures · température, ciel et précipitations", "") +
+      '<div class="ev-hrs"><div class="ev-hrs-in" style="--n:' + N + '"><div class="ev-hrs-cw">' + svg + '<div class="ev-hrs-lb">' + lbl + "</div></div>" +
+      '<div class="ev-hrs-g">' + cols + "</div></div></div>";
+  };
+  /* Prévisions sur 5 jours : plage minimum-maximum colorée selon la température, position actuelle aujourd'hui */
   K.days = function (c, e) {
-    var n = wxNow(e), cols = e.wx.days.map(function (d, i) {
-      var t = NOW() + i * 864e5, name = i === 0 ? "Aujourd’hui" : cap(JOURS[wd(t)]);
-      var hi = i === 0 ? n.hi : d[1], lo = i === 0 ? n.lo : d[2];
-      return '<div class="' + (i === 0 ? "is-on" : "") + '"><small>' + name + "</small>" + wxi(ICON2CODE[d[0]] || "p", false) + "<b>" + deg(hi) + ' <em>/ ' + deg(lo) + "</em></b><span>" + ic("drop") + d[3] + NB + "%</span></div>";
+    var n = wxNow(e), rows = e.wx.days.map(function (d, i) { return { d: d, lo: i === 0 ? n.lo : d[2], hi: i === 0 ? n.hi : d[1] }; });
+    var L = Math.min.apply(null, rows.map(function (r) { return r.lo; })), H = Math.max.apply(null, rows.map(function (r) { return r.hi; })), rg = Math.max(1, H - L);
+    var html = rows.map(function (r, i) {
+      var t = NOW() + i * 864e5, name = i === 0 ? "Aujourd’hui" : i === 1 ? "Demain" : cap(JOURS[wd(t)]);
+      var a = (r.lo - L) / rg * 100, w = Math.max(6, (r.hi - r.lo) / rg * 100);
+      var now = i === 0 ? '<em style="left:' + clamp((n.t - L) / rg * 100, 0, 100).toFixed(1) + '%" title="Maintenant : ' + deg(n.t) + '"></em>' : "";
+      return '<div class="ev-dr' + (i === 0 ? " is-on" : "") + '"><b>' + name + "</b>" + wxi(ICON2CODE[r.d[0]] || "p", false) +
+        '<span class="ev-dpop' + (r.d[3] >= 50 ? " is-hi" : "") + '">' + ic("drop") + r.d[3] + NB + "%</span>" +
+        '<span class="ev-dt is-lo">' + nf(r.lo) + "°</span>" +
+        '<span class="ev-drg"><i style="left:' + a.toFixed(1) + "%;width:" + w.toFixed(1) + "%;background:linear-gradient(90deg," + tcol(r.lo) + "," + tcol(r.hi) + ')"></i>' + now + "</span>" +
+        '<span class="ev-dt">' + nf(r.hi) + "°</span></div>";
     }).join("");
-    return head("calendar", "Prévisions sur 5 jours", "Tendance et risque de précipitations", "") + '<div class="ev-days">' + cols + "</div>";
+    return head("calendar", "Prévisions sur 5 jours", "Minimum, maximum et risque de précipitations", "") + '<div class="ev-days">' + html + "</div>";
   };
 
   /* ---------- Soleil et lune (calculés pour la vraie date) ---------- */
@@ -817,14 +921,13 @@
     var arcPts = [], passed = [];
     for (var i = 0; i <= 40; i++) { var q = i / 40; arcPts.push(pt(q)); if (q <= p) passed.push(pt(q)); }
     var sp2 = pt(clamp(p, 0, 1));
-    var hills = "M0 214 C60 190 110 200 160 182 C210 164 250 196 300 190 C360 182 380 150 440 160 C500 170 520 196 580 188 C640 180 660 152 720 162 C780 172 820 196 880 186 C930 178 960 196 1000 192 L1000 260 L0 260Z";
-    var trees = "";
-    var R = rng(hash(e.key + "trees"));
-    for (var tI = 0; tI < 26; tI++) { var tx = R() * 1000, th = 8 + R() * 14; trees += "M" + tx.toFixed(0) + " 216 l" + (th * 0.35).toFixed(1) + " -" + th.toFixed(1) + " l" + (th * 0.35).toFixed(1) + " " + th.toFixed(1) + "Z"; }
     var svg = '<svg class="ev-sunarc" viewBox="0 0 1000 260" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
-      '<defs><linearGradient id="evsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-sky0"/><stop offset=".75" class="s-sky1"/><stop offset="1" class="s-sky2"/></linearGradient></defs>' +
-      '<rect width="1000" height="260" fill="url(#evsky)"/><path class="s-hill" d="' + hills + '"/><path class="s-tree" d="' + trees + '"/>' +
-      '<path class="s-water" d="M0 216H1000V260H0Z"/><path class="s-arc" d="' + sp(arcPts, false) + '"/>' + (passed.length > 1 ? '<path class="s-arc is-done" d="' + sp(passed, false) + '"/>' : "") +
+      '<defs><linearGradient id="evsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-sky0"/><stop offset=".78" class="s-sky1"/><stop offset="1" class="s-sky2"/></linearGradient>' +
+      '<radialGradient id="evglow" cx="50%" cy="100%" r="60%"><stop offset="0" class="s-glow0"/><stop offset="1" class="s-glow1"/></radialGradient>' +
+      '<linearGradient id="evsea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-sea0"/><stop offset="1" class="s-sea1"/></linearGradient></defs>' +
+      '<rect width="1000" height="260" fill="url(#evsky)"/><ellipse cx="' + (isDay ? sp2[0] : 500).toFixed(0) + '" cy="216" rx="420" ry="120" fill="url(#evglow)" class="s-gl' + (isDay ? "" : " is-night") + '"/>' +
+      '<path class="s-water" d="M0 216H1000V260H0Z" fill="url(#evsea)"/>' + (isDay ? '<path class="s-refl" d="M' + (sp2[0] - 40).toFixed(0) + " 224h80M" + (sp2[0] - 26).toFixed(0) + " 234h52M" + (sp2[0] - 14).toFixed(0) + ' 244h28"/>' : "") +
+      '<path class="s-arc" d="' + sp(arcPts, false) + '"/>' + (passed.length > 1 ? '<path class="s-arc is-done" d="' + sp(passed, false) + '"/>' : "") +
       '<line class="s-hz" x1="0" x2="1000" y1="216" y2="216"/>' +
       (isDay ? '<line class="s-drop" x1="' + sp2[0].toFixed(0) + '" x2="' + sp2[0].toFixed(0) + '" y1="' + sp2[1].toFixed(0) + '" y2="216"/>' : "") +
       '<circle class="s-end" cx="' + x0 + '" cy="' + base + '" r="7"/><circle class="s-end" cx="' + x1 + '" cy="' + base + '" r="7"/>' + "</svg>";
@@ -1085,14 +1188,48 @@
   K.note = function (c) { return '<p class="ev-note">' + ic(c.icon || "info") + "<span>" + esc(c.text) + "</span></p>"; };
 
   /* ---------- Sécurité ---------- */
+  /* Ouvertures : une fiche par porte, fenêtre ou trappe, regroupées par zone; état clair, dernière ouverture,
+     verrou à un geste (déverrouiller demande toujours confirmation), photo du lieu dès qu'elle est fournie. */
+  function opsOf(e, c) {
+    var r = rt(e);
+    if (!r.ops) r.ops = c.points.map(function (o) { return { state: o.state, tone: o.tone, ago: o.ago, who: o.who, locked: /verrouill|cadenas/i.test(o.state) }; });
+    return r.ops;
+  }
+  function findCard(e, type) {
+    var out = null;
+    Object.keys(e.s).forEach(function (k) {
+      tabsOf(e, k).forEach(function (t) { t[2].forEach(function (c) { if (!out && c.type === type) out = c; }); });
+    });
+    return out;
+  }
   K.openings = function (c, e) {
-    var pts = c.points.map(function (p, i) {
-      return '<span class="ev-op t-' + p.tone + '" style="left:' + p.x + "%;top:" + p.y + '%"><b>' + (i + 1) + "</b></span>";
+    var ops = opsOf(e, c), open = [], zones = [], byZ = {}, lockable = 0;
+    c.points.forEach(function (o, j) {
+      var st = ops[j];
+      if (st.tone === "warn") open.push(j);
+      if (o.lock && !st.locked) lockable++;
+      if (!byZ[o.zone]) { byZ[o.zone] = []; zones.push(o.zone); }
+      byZ[o.zone].push(j);
+    });
+    var closed = c.points.length - open.length;
+    var banner = open.length ? '<div class="ev-opb t-warn"><span class="ev-opb-i">' + ic("warn") + "</span><span><b>" + open.map(function (j) { return esc(c.points[j].label); }).join(", ") +
+        (open.length > 1 ? " restent ouvertes" : " " + (/e$/.test(ops[open[0]].state.split(" ")[0]) ? "restée " : "resté ") + esc(ops[open[0]].state.toLowerCase().split(" ")[0])) + "</b><small>Depuis " + dur(ops[open[0]].ago * 60000) +
+        (ops[open[0]].who ? " · " + esc(ops[open[0]].who) : "") + "</small></span>" +
+        '<button type="button" class="ev-btn is-sm" data-a="toast" data-v="Rappel prévu dans 30 minutes si l’ouverture est encore détectée.">' + ic("bell") + "Me le rappeler</button></div>"
+      : '<div class="ev-opb t-ok"><span class="ev-opb-i">' + ic("check") + "</span><span><b>Tout est fermé" + (c.points.some(function (o) { return o.lock; }) ? " et verrouillé" : "") + "</b><small>Dernière vérification à " + hm(NOW() - 120000) + "</small></span></div>";
+    var body = zones.map(function (z) {
+      return '<div class="ev-opz"><p class="ev-opz-h">' + esc(z) + "<span>" + byZ[z].length + "</span></p><div class=\"ev-ots\">" + byZ[z].map(function (j) {
+        var o = c.points[j], st = ops[j], ph = o.photo ? '<img src="' + o.photo + '" alt="' + esc(o.label) + '" loading="lazy" decoding="async">'
+          : '<span class="ev-ot-pha">' + ic(o.icon || "door") + "<small>Photo à venir</small></span>";
+        var since = st.tone === "warn" ? "Depuis " + dur(st.ago * 60000) : cap(ago(st.ago));
+        var btn = o.lock ? '<button type="button" class="ev-ot-lk' + (st.locked ? " is-on" : "") + '" data-a="oplock" data-v="' + j + '" aria-label="' + (st.locked ? "Déverrouiller " : "Verrouiller ") + esc(o.label) + '"' + (st.busy ? " disabled" : "") + ">" +
+          (st.busy ? ic("refresh", "is-spin") + "<span>Envoi…</span>" : ic(st.locked ? "lock" : "unlock") + "<span>" + (st.locked ? "Verrouillée" : "Verrouiller") + "</span>") + "</button>" : "";
+        return '<article class="ev-ot t-' + st.tone + (st.locked ? " is-locked" : "") + '"><figure class="ev-ot-ph">' + ph + "</figure>" +
+          '<div class="ev-ot-b"><b>' + esc(o.label) + '</b><span class="ev-ot-st">' + dot(st.tone) + esc(st.state) + "</span><small>" + since + (st.who ? " · " + esc(st.who) : "") + "</small></div>" + btn + "</article>";
+      }).join("") + "</div></div>";
     }).join("");
-    var list = c.points.map(function (p, i) {
-      return '<div class="ev-opl"><span class="ev-opn t-' + p.tone + '">' + (i + 1) + "</span><span>" + esc(p.label) + "</span><b class=\"t-" + p.tone + '">' + dot(p.tone) + esc(p.state) + "</b></div>";
-    }).join("");
-    return head("lock", c.title, c.sub, "") + '<div class="ev-opw"><div class="ev-plan-w">' + (PLAN[c.plan] || "") + pts + "</div><div class=\"ev-opls\">" + list + "</div></div>";
+    return head("lock", c.title, c.sub, '<span class="ev-opc"><b>' + closed + "</b> / " + c.points.length + " fermées</span>") + banner + body +
+      (lockable ? '<button type="button" class="ev-btn is-wide" data-a="oplockall">' + ic("lock") + "Tout verrouiller (" + lockable + ")</button>" : "");
   };
   K.cams = function (c, e) {
     if (!c.items || !c.items.length) {
@@ -1237,7 +1374,8 @@
       action = '<div class="ev-eqt">' + ic("power") + "<span>" + esc(c.toggle.label) + "</span>" + sw(on, "eqt", String(i), c.toggle.label) + "</div>";
       state = on ? c.toggle.on : c.toggle.off; tone = on ? "ok" : "muted";
     }
-    return head(c.icon, c.title, c.sub, "") + '<div class="ev-eq"><div class="ev-eq-i">' + ic(c.icon) + "</div><div class=\"ev-eq-s\"><small>État</small><b class=\"t-" + tone + '">' + dot(tone) + esc(state) + "</b>" + rows + "</div></div>" + viz +
+    var ph = c.photo ? '<img src="' + c.photo + '" alt="' + esc(c.title) + '" loading="lazy" decoding="async">' : '<span class="ev-eq-pha">' + ic(c.icon) + "<small>Photo à venir</small></span>";
+    return head(c.icon, c.title, c.sub, "") + '<div class="ev-eq"><figure class="ev-eq-ph' + (c.photo ? " has-img" : "") + '">' + ph + "</figure><div class=\"ev-eq-s\"><small>État</small><b class=\"t-" + tone + '">' + dot(tone) + esc(state) + "</b>" + rows + "</div></div>" + viz +
       action + (c.note ? '<p class="ev-fine is-c">' + ic("info") + esc(c.note) + "</p>" : "");
   };
   K.inspection = function (c, e) {
@@ -1293,11 +1431,13 @@
     var tabs = '<div class="ev-seg is-lists" role="group" aria-label="Listes">' + c.lists.map(function (l) { return '<button type="button" class="' + (l.k === L.k ? "is-on" : "") + '" data-a="list" data-v="' + l.k + '" aria-pressed="' + (l.k === L.k) + '">' + esc(l.l) + "</button>"; }).join("") + "</div>";
     var items = L.items.map(function (it, i) {
       return '<li class="' + (i === selI ? "is-sel" : "") + '"><button type="button" class="ev-check' + (st[i] ? " is-on" : "") + '" data-a="chk" data-v="list:' + L.k + ":" + i + '" aria-pressed="' + st[i] + '" aria-label="' + esc(it[0]) + '"><span class="ev-box">' + ic("check") + "</span></button>" +
-        '<button type="button" class="ev-li" data-a="lsel" data-v="' + L.k + ":" + i + '"><span>' + esc(it[0]) + "</span><small>" + (st[i] ? esc(it[1] || "Fait") : "À valider") + "</small>" + ic("right", "ev-chev") + "</button></li>";
+        '<button type="button" class="ev-li" data-a="lsel" data-v="' + L.k + ":" + i + '"><span><span>' + esc(it[0]) + "</span>" + srcChip(it[3]) + "</span><small>" + (st[i] ? "Fait" : "À valider") + "</small>" + ic("right", "ev-chev") + "</button></li>";
     }).join("");
     var sel = selI >= 0 ? L.items[selI] : null;
     var detail = sel ? '<div class="ev-ld">' + head("box", sel[0], "", "") + '<span class="ev-flag t-' + (st[selI] ? "ok" : "warn") + '">' + (st[selI] ? "Terminé" : "À faire") + "</span>" +
-      '<p class="ev-row">' + ic("users2") + "Validation manuelle</p><p class=\"ev-fine\">" + esc(sel[1] || "Aucune note.") + "</p>" +
+      (sel[1] ? '<p class="ev-ld-n">' + esc(sel[1]) + "</p>" : "") +
+      '<div class="ev-why"><p class="ev-k">D’où vient cet élément?</p>' + srcChip(sel[3], true) + "<small>" + (SRC[(sel[3] || {}).k] || SRC.jarvis)[2] + "</small>" +
+      '<p class="ev-why-v">' + ic(sel[3] && sel[3].k === "capteur" ? "radar" : "users2") + (sel[3] && sel[3].k === "capteur" ? "Validation automatique par le capteur, confirmable à la main" : "Validation manuelle") + "</p></div>" +
       '<button type="button" class="ev-btn is-primary is-wide" data-a="chk" data-v="list:' + L.k + ":" + selI + '">' + ic("check") + (st[selI] ? "Marquer comme à faire" : "Marquer comme terminé") + "</button></div>"
       : '<div class="ev-ld is-done">' + ic("check") + "<b>Liste terminée.</b><small>Tout est prêt.</small></div>";
     var others = c.lists.filter(function (l) { return l.k !== L.k; }).map(function (l) {
@@ -1308,14 +1448,37 @@
       '<div class="ev-lists"><div class="ev-lmain">' + head(L.icon || "list", L.l, esc(L.sub), '<span class="ev-count"><b>' + done + "</b> / " + st.length + " terminés · " + nf(done / st.length * 100) + NB + "%</span>" + bar(done / st.length * 100, "t-gold is-sm")) +
       '<ul class="ev-litems">' + items + "</ul></div>" + detail + "</div>" + '<div class="ev-lsums">' + others + "</div>";
   };
+  /* Échéance d'un entretien selon sa source (les règlements à date fixe sont calculés pour la vraie date) */
+  function dueOf(s) {
+    if (s.basis !== "date-fixe") return s.due;
+    var p = lp(NOW()), x = s.mmdd.split("-"), today = Date.UTC(p.y, p.m - 1, p.d), target = Date.UTC(p.y, +x[0] - 1, +x[1]);
+    if (target < today) target = Date.UTC(p.y + 1, +x[0] - 1, +x[1]);
+    return Math.round((target - today) / 864e5);
+  }
+  function fmtN(v) { return nf(v, v % 1 ? 1 : 0); }
   K.maint = function (c, e) {
-    var r = rt(e), plan = r.vals.mplan || {};
-    return head("wrench", c.title || "Entretien à venir", "Inspections, rendez-vous et rappels", "") + '<div class="ev-maint">' + c.rows.map(function (m, i) {
-      var t = dayAt(m[3], "09:00"), tone = m[4] === "late" ? "err" : m[4] === "soon" ? "warn" : "ok", lab = m[4] === "late" ? "En retard" : m[4] === "soon" ? "Bientôt" : "À jour";
-      var when = m[3] < 0 ? "Prévu " + ago(-m[3] * 1440).replace("il y a", "il y a") : m[3] === 0 ? "Aujourd’hui" : "Dans " + m[3] + NB + "j · " + dateShort(t);
-      return '<div class="ev-mrow"><span class="ev-ri t-gold">' + ic(m[0]) + "</span><span><b>" + esc(m[1]) + "</b><small>" + esc(m[2]) + "</small></span><span class=\"ev-mwhen\">" + when + "</span>" +
-        '<span class="ev-flag t-' + tone + '">' + lab + "</span>" + '<button type="button" class="ev-btn is-sm' + (plan[i] ? " is-done" : "") + '" data-a="mplan" data-v="' + i + '">' + (plan[i] ? ic("check") + "Planifié" : "Planifier") + "</button></div>";
-    }).join("") + "</div>";
+    var r = rt(e), plan = r.vals.mplan || {}, kinds = {};
+    var rows = c.rows.map(function (m, i) {
+      var s = m[5], due = s ? dueOf(s) : m[3], tone = due < 0 ? "err" : due <= 14 ? "warn" : "ok", lab = due < 0 ? "En retard" : due <= 14 ? "Bientôt" : "À jour";
+      var t = dayAt(due, "09:00"), when = due < 0 ? "En retard de " + (-due) + NB + "j" : due === 0 ? "Aujourd’hui" : "Dans " + due + NB + "j · " + dateShort(t);
+      var prog = null, calc = "";
+      if (s) {
+        kinds[s.k] = (kinds[s.k] || 0) + 1;
+        if (s.basis === "date") { prog = -s.last / s.n; calc = "Fait il y a " + (-s.last) + NB + "j · à refaire " + s.every; }
+        else if (s.basis === "count") { prog = s.now / s.at; calc = fmtN(s.now) + NB + s.unit + " depuis le dernier entretien, sur " + fmtN(s.at) + NB + s.unit + " · rythme ≈ " + fmtN(s.rate) + NB + s.unit + " par jour"; }
+        else if (s.basis === "date-fixe") calc = "Date limite : " + dateLong(t);
+        else calc = s.why || "";
+      }
+      return '<div class="ev-mrow t-' + tone + '"><span class="ev-ri t-' + tone + '">' + ic(m[0]) + '</span><div class="ev-mb"><p class="ev-mt"><b>' + esc(m[1]) + "</b><small>" + esc(m[2]) + "</small></p>" +
+        (s ? '<p class="ev-msrc">' + srcChip(s) + "<span>" + esc(s.ref) + "</span></p>" : "") +
+        (prog != null ? '<span class="ev-mprog" title="' + nf(clamp(prog, 0, 1.5) * 100) + ' % de l’intervalle"><i style="width:' + clamp(prog * 100, 2, 100).toFixed(1) + '%"></i></span>' : "") +
+        (calc ? '<p class="ev-mcalc">' + ic("info") + "<span>" + esc(calc) + " → <b>" + (due < 0 ? "en retard de " + (-due) + NB + "j" : due === 0 ? "échéance aujourd’hui" : "échéance dans " + due + NB + "j") + "</b></span></p>" : "") + "</div>" +
+        '<div class="ev-mside"><span class="ev-flag t-' + tone + '">' + lab + '</span><span class="ev-mwhen">' + when + "</span>" +
+        '<button type="button" class="ev-btn is-sm' + (plan[i] ? " is-done" : "") + '" data-a="mplan" data-v="' + i + '">' + (plan[i] ? ic("check") + "Planifié" : "Planifier") + "</button></div></div>";
+    }).join("");
+    var legend = Object.keys(SRC).filter(function (k) { return kinds[k]; }).map(function (k) { return '<span class="ev-src s-' + k + '">' + ic(SRC[k][0]) + "<b>" + SRC[k][1] + "</b><em>" + kinds[k] + "</em></span>"; }).join("");
+    return head("wrench", c.title || "Entretien à venir", "Chaque échéance est calculée à partir de sa source", "") +
+      (legend ? '<div class="ev-mleg">' + legend + "</div>" : "") + '<div class="ev-maint">' + rows + "</div>";
   };
 
   /* ---------- Modes et activité ---------- */
@@ -1379,7 +1542,7 @@
     if (s.length && !Array.isArray(s[0])) return [["", "", s]];
     return s;
   }
-  var S = { view: "env", env: D.order[0], sec: "apercu", tab: {} };
+  var S = { view: "home", env: D.order[0], sec: "apercu", tab: {} };
 
   function banner(e, cls) {
     var b = e.banner || {};
@@ -1401,18 +1564,199 @@
       return '<span class="ev-ps">' + ic(s[0]) + "<small>" + esc(s[1]) + "</small><b class=\"t-" + t + '">' + esc(v) + "</b></span>";
     }).join("");
   }
-  function picker() {
-    var cards = D.order.map(function (k) {
-      var e = E[k];
+  /* ======================================================================================
+     Accueil multisite : tous les lieux d'un regard, alertes réunies, comparaison,
+     mode appliqué à plusieurs lieux (avec confirmation) et journal consolidé.
+     ====================================================================================== */
+  function siteOf(e) {
+    var site = e.site || {}, al = [], mt = findCard(e, "maint"), op = findCard(e, "openings"), next = null;
+    (site.alerts || []).forEach(function (a) { al.push({ tone: a[0], title: a[1], text: a[2], go: a[3], env: e.key }); });
+    if (op) opsOf(e, op).forEach(function (o, j) { if (o.tone === "warn") al.push({ tone: "warn", title: op.points[j].label + " · " + o.state.toLowerCase(), text: "Depuis " + dur(o.ago * 60000) + (o.who ? " · " + o.who : ""), go: "securite", env: e.key }); });
+    if (mt) mt.rows.forEach(function (m, i) {
+      var due = m[5] ? dueOf(m[5]) : m[3];
+      if (due < 0 && !((rt(e).vals.mplan || {})[i])) al.push({ tone: "err", title: m[1] + " · en retard de " + (-due) + NB + "j", text: m[5] ? "Source : " + lc1((SRC[m[5].k] || SRC.jarvis)[1]) : m[2], go: "voyage:entretien", env: e.key });
+      if (due >= 0 && (!next || due < next.due)) next = { due: due, title: m[1] };
+    });
+    var b = bat(e), load = e.energy ? (b.live ? Math.abs(b.w || 0) : exampleFlow(e).load) : 0;
+    return { site: site, alerts: al, armed: armedOf(e), soc: b.soc, live: b.live, load: load, wx: wxNow(e), next: next, n: site.n || 0 };
+  }
+  function alertsAll() {
+    var all = [];
+    D.order.forEach(function (k) { all = all.concat(siteOf(E[k]).alerts); });
+    var rank = { err: 0, warn: 1, water: 2, gold: 3 };
+    return all.sort(function (a, b) { return (a.tone in rank ? rank[a.tone] : 3) - (b.tone in rank ? rank[b.tone] : 3); });
+  }
+  function greet() { var h = lp(NOW()).h; return h < 5 ? "Bonne nuit" : h < 12 ? "Bonjour" : h < 18 ? "Bon après-midi" : "Bonsoir"; }
+  function whenTxt(d) { return d === 0 ? "aujourd’hui" : d === 1 ? "demain" : "dans " + d + NB + "j"; }
+
+  var H = { cmp: "load", af: "urgent", alAll: false, tl: "all", tlAll: false, mm: "absence", sel: null, res: "", run: false, anim: true };
+  function mmLocal(e, k) { var m = e.site && e.site.multi ? e.site.multi[k] : null, mc = findCard(e, "modes"); return m && mc ? mc.items.filter(function (x) { return x.k === m; })[0] || null : null; }
+  function mmSel() {
+    if (!H.sel) { H.sel = {}; D.order.forEach(function (k) { H.sel[k] = !!mmLocal(E[k], H.mm) && !(E[k].site || {}).n; }); }
+    return H.sel;
+  }
+
+  var HP = {};
+  HP.sum = function () {
+    var S2 = D.order.map(function (k) { return siteOf(E[k]); }), al = alertsAll(), urgent = al.filter(function (a) { return a.tone === "err" || a.tone === "warn"; });
+    var armed = S2.filter(function (x) { return x.armed; }).length, off = D.order.filter(function (k, i) { return !S2[i].armed; }).map(function (k) { return E[k].name; });
+    var ppl = S2.reduce(function (a, x) { return a + x.n; }, 0), occ = S2.filter(function (x) { return x.n > 0; }).length, load = S2.reduce(function (a, x) { return a + x.load; }, 0);
+    var nx = null;
+    D.order.forEach(function (k, i) { var n = S2[i].next; if (n && (!nx || n.due < nx.due)) nx = { due: n.due, title: n.title, env: E[k] }; });
+    var t = [
+      ["grid", "Lieux", D.order.length + " / " + D.order.length, "en ligne · synchronisés il y a 12 s", "ok", ""],
+      ["bell", "Alertes", String(urgent.length), urgent.length ? al.filter(function (a) { return a.tone === "err"; }).length + " en retard · " + al.filter(function (a) { return a.tone === "warn"; }).length + " à vérifier" : "Rien à signaler", urgent.length ? "warn" : "ok", "alerts"],
+      ["shield", "Sécurité", armed + " / " + D.order.length + " armés", off.length ? "Désarmés : " + off.join(", ") : "Tous les lieux sont armés", armed === D.order.length ? "ok" : "gold", ""],
+      ["users", "Présence", ppl + " personne" + (ppl > 1 ? "s" : ""), occ + " lieu" + (occ > 1 ? "x" : "") + " occupé" + (occ > 1 ? "s" : "") + " · " + (D.order.length - occ) + " vides", "gold", ""],
+      ["bolt", "Énergie", fmtW(load), "Puissance appelée, tous les lieux", "gold", "cmp"],
+      ["wrench", "Prochain entretien", nx ? cap(whenTxt(nx.due)) : "—", nx ? nx.title + " · " + nx.env.name : "", "water", ""]
+    ];
+    return t.map(function (x, i) {
+      var inner = '<span class="ev-hs-i t-' + x[4] + '">' + ic(x[0]) + '</span><span class="ev-hs-b"><small>' + x[1] + "</small><b>" + esc(x[2]) + "</b><em>" + esc(x[3]) + "</em></span>";
+      return x[5] ? '<button type="button" class="ev-hs" data-a="hjump" data-v="' + x[5] + '" style="--i:' + i + '">' + inner + "</button>" : '<div class="ev-hs" style="--i:' + i + '">' + inner + "</div>";
+    }).join("");
+  };
+  HP.board = function () {
+    var rows = D.order.map(function (k) {
+      var e = E[k], x = siteOf(e), urgent = x.alerts.filter(function (a) { return a.tone === "err" || a.tone === "warn"; }).length;
+      var col = batColor(x.soc);
+      return '<button type="button" class="ev-brow" data-a="env" data-v="' + k + '">' +
+        '<span class="ev-b-site"><span class="ev-b-ic">' + ic(e.icon || "home") + '</span><span><b>' + esc(e.name) + "</b><small>" + esc(e.place) + "</small></span></span>" +
+        '<span class="ev-b-c" data-l="Sécurité"><span class="ev-b-arm' + (x.armed ? " is-on" : "") + '">' + ic(x.armed ? "shield" : "unlock") + (x.armed ? "Armé" : "Désarmé") + "</span></span>" +
+        '<span class="ev-b-c" data-l="Intérieur"><b>' + (x.site.inside != null ? deg(x.site.inside, x.site.inside % 1 ? 1 : 0) : "—") + "</b></span>" +
+        '<span class="ev-b-c is-wx" data-l="Extérieur">' + wxi(x.wx.code, x.wx.night) + "<b>" + deg(x.wx.t) + "</b></span>" +
+        '<span class="ev-b-c is-en" data-l="Énergie"' + (k === "boulance" ? ' data-live-cell="boulance"' : "") + ">" + enCell(x, col) + "</span>" +
+        '<span class="ev-b-c" data-l="Présence"><small class="ev-b-who">' + ic(x.n ? "users2" : "home", "is-sm") + esc(x.site.who || "—") + "</small></span>" +
+        '<span class="ev-b-c" data-l="Entretien"><small>' + (x.next ? esc(x.next.title) + "<em>" + cap(whenTxt(x.next.due)) + "</em>" : "—") + "</small></span>" +
+        '<span class="ev-b-c" data-l="Alertes">' + (urgent ? '<span class="ev-b-al t-' + (x.alerts.some(function (a) { return a.tone === "err"; }) ? "err" : "warn") + '">' + urgent + "</span>" : '<span class="ev-b-al t-ok">' + ic("check") + "</span>") + "</span>" +
+        ic("right", "ev-chev") + "</button>";
+    }).join("");
+    return head("grid", "Tous vos lieux, en direct", "Sécurité, températures, énergie, présence et entretien · cliquez pour ouvrir un tableau", '<span class="ev-tag is-live">en direct</span>') +
+      '<div class="ev-board" role="list"><div class="ev-brow is-h" aria-hidden="true"><span>Lieu</span><span>Sécurité</span><span>Intérieur</span><span>Extérieur</span><span>Énergie</span><span>Présence</span><span>Prochain entretien</span><span>Alertes</span><span></span></div>' + rows + "</div>";
+  };
+  function enCell(x, col) {
+    return '<span class="ev-b-en"><span class="ev-bar is-xs"><i style="width:' + clamp(x.soc, 2, 100).toFixed(0) + "%;background:" + col + '"></i></span><b>' + nf(x.soc) + NB + "%</b></span><small>" + (x.live ? "réel · " : "") + fmtW(x.load) + "</small>";
+  }
+  HP.alerts = function () {
+    var al = alertsAll(), list = H.af === "urgent" ? al.filter(function (a) { return a.tone === "err" || a.tone === "warn"; }) : al;
+    var seg = '<div class="ev-seg is-sm" role="group" aria-label="Filtrer les alertes">' + [["all", "Toutes · " + al.length], ["urgent", "À traiter"]].map(function (f) {
+      return '<button type="button" class="' + (H.af === f[0] ? "is-on" : "") + '" aria-pressed="' + (H.af === f[0]) + '" data-a="haf" data-v="' + f[0] + '">' + f[1] + "</button>";
+    }).join("") + "</div>";
+    var ICO = { err: "warn", warn: "bell", water: "snowflake", gold: "info" };
+    return head("bell", "Alertes de tous les lieux", "Retards d’entretien, ouvertures et avis, triés par urgence", seg) +
+      '<ul class="ev-hal">' + (H.alAll ? list : list.slice(0, 6)).map(function (a) {
+        var e = E[a.env];
+        return '<li><button type="button" class="ev-hali t-' + a.tone + '" data-a="hgo" data-v="' + a.env + "|" + esc(a.go) + '"><span class="ev-ri t-' + a.tone + '">' + ic(ICO[a.tone] || "info") + "</span>" +
+          '<span class="ev-hali-b"><b>' + esc(a.title) + "</b><small>" + esc(a.text) + '</small></span><span class="ev-sitec">' + ic(e.icon || "home", "is-sm") + esc(e.name) + "</span>" + ic("right", "ev-chev") + "</button></li>";
+      }).join("") + "</ul>" + (list.length ? "" : '<p class="ev-fine">' + ic("check") + "Aucune alerte à traiter.</p>") +
+      (list.length > 6 ? '<button type="button" class="ev-link ev-more" data-a="halall">' + (H.alAll ? "Afficher moins" : "Afficher les " + list.length + " alertes") + ic(H.alAll ? "up" : "down") + "</button>" : "");
+  };
+  HP.multi = function () {
+    var sel = mmSel(), M0 = D.multi.filter(function (m) { return m.k === H.mm; })[0], n = 0;
+    var modes = '<div class="ev-mm">' + D.multi.map(function (m) {
+      return '<button type="button" class="ev-mm-b' + (m.k === H.mm ? " is-on" : "") + '" aria-pressed="' + (m.k === H.mm) + '" data-a="hmm" data-v="' + m.k + '">' + ic(m.icon) + "<span><b>" + esc(m.label) + "</b><small>" + esc(m.sub) + "</small></span></button>";
+    }).join("") + "</div>";
+    var sites = D.order.map(function (k) {
+      var e = E[k], L = mmLocal(e, H.mm), on = !!(L && sel[k]);
+      if (on) n++;
+      if (!L) return '<li class="is-na"><span class="ev-box"></span>' + ic(e.icon || "home") + "<span><b>" + esc(e.name) + "</b><small>Aucun mode équivalent · non modifié</small></span></li>";
+      var crit = L.fx.filter(function (f) { return /crit/.test(f[4] || ""); }).length, act = (rt(e).mode || findCard(e, "modes").current) === L.k;
+      return '<li><button type="button" class="ev-mm-s' + (on ? " is-on" : "") + '" aria-pressed="' + on + '" data-a="hmms" data-v="' + k + '"><span class="ev-box">' + ic("check") + "</span>" + ic(e.icon || "home") +
+        "<span><b>" + esc(e.name) + "</b><small>Mode " + esc(L.label) + " · " + L.fx.length + " effets" + (crit ? " dont " + crit + " critique" + (crit > 1 ? "s" : "") : "") + "</small></span>" +
+        (act ? '<em class="ev-flag t-ok">Déjà actif</em>' : (e.site || {}).n ? '<em class="ev-flag t-gold">Occupé</em>' : "") + "</button></li>";
+    }).join("");
+    return head("sparkle", "Un mode sur plusieurs lieux", "Chaque lieu reçoit son propre mode · tout est confirmé avant l’envoi", "") + modes +
+      '<ul class="ev-mm-l">' + sites + "</ul>" +
+      '<div class="ev-mapply"><button type="button" class="ev-btn is-primary" data-a="hmmapply"' + (n && !H.run ? "" : " disabled") + ">" + ic("play") + "Examiner et appliquer · " + n + " lieu" + (n > 1 ? "x" : "") + "</button>" +
+      '<span class="ev-fine">' + ic("info") + "Vous confirmez la liste des lieux et leurs effets critiques.</span></div>" + (H.res ? '<div class="ev-mres">' + H.res + "</div>" : "");
+  };
+  function timeline() {
+    var out = [];
+    D.order.forEach(function (k) {
+      var e = E[k], ac = findCard(e, "activity"), ev = findCard(e, "events");
+      rt(e).log.forEach(function (l) { out.push({ m: (NOW() - l.t) / 60000, env: k, who: l.who || "Vous", text: l.what, sub: l.sub, tone: l.tone, cat: l.sec ? "securite" : /^Mode /.test(l.what) ? "modes" : "commandes" }); });
+      if (ev) ev.items.forEach(function (x) { out.push({ m: x[0], env: k, who: "", text: x[1], sub: x[2], tone: x[3] || "ok", cat: "securite" }); });
+      if (ac) ac.rows.forEach(function (x) { out.push({ m: x[0], env: k, who: x[1], text: x[2], sub: "", tone: "gold", cat: /^Mode |mode /i.test(x[2]) ? "modes" : "commandes" }); });
+    });
+    out.sort(function (a, b) { return a.m - b.m; });
+    var seen = {};
+    return out.filter(function (x) { var k = x.env + "|" + x.text.toLowerCase() + "|" + Math.round(x.m / 15); if (seen[k]) return false; seen[k] = 1; return true; });
+  }
+  function stampS(m) { var t = NOW() - m * 60000, d = dayDiff(t); return d === 0 ? hm(t) : (d === -1 ? "Hier " : cap(dateShort(t)) + " ") + hm(t); }
+  HP.tl = function () {
+    var all = timeline(), list = H.tl === "all" ? all : all.filter(function (x) { return x.cat === H.tl; }), shown = H.tlAll ? list : list.slice(0, 7);
+    var seg = '<div class="ev-seg is-sm" role="group" aria-label="Filtrer le journal">' + [["all", "Tout"], ["securite", "Sécurité"], ["modes", "Modes"], ["commandes", "Commandes"]].map(function (f) {
+      return '<button type="button" class="' + (H.tl === f[0] ? "is-on" : "") + '" aria-pressed="' + (H.tl === f[0]) + '" data-a="htl" data-v="' + f[0] + '">' + f[1] + "</button>";
+    }).join("") + "</div>";
+    return head("clock", "Journal de tous les lieux", "Une seule chronologie : sécurité, modes et commandes", "") + seg +
+      '<ol class="ev-htl">' + shown.map(function (x) {
+        var e = E[x.env];
+        return '<li class="t-' + x.tone + '"><time>' + stampS(x.m) + '</time><span class="ev-sitec">' + ic(e.icon || "home", "is-sm") + esc(e.name) + "</span><span><b>" + esc(x.text) + "</b>" +
+          ((x.who || x.sub) ? "<small>" + esc([x.who, x.sub].filter(Boolean).join(" · ")) + "</small>" : "") + "</span></li>";
+      }).join("") + "</ol>" +
+      (list.length > 7 ? '<button type="button" class="ev-link" data-a="htlall">' + (H.tlAll ? "Afficher moins" : "Afficher tout · " + list.length + " événements") + ic(H.tlAll ? "up" : "down") + "</button>" : "");
+  };
+  var CMP = [["load", "Énergie", "Puissance appelée maintenant"], ["soc", "Batteries", "Charge des batteries"], ["in", "Intérieur", "Température intérieure"], ["out", "Extérieur", "Température extérieure"], ["al", "Alertes", "Alertes à traiter"]];
+  HP.cmp = function () {
+    var m = CMP.filter(function (x) { return x[0] === H.cmp; })[0];
+    var vals = D.order.map(function (k) {
+      var x = siteOf(E[k]), v = m[0] === "load" ? x.load : m[0] === "soc" ? x.soc : m[0] === "in" ? x.site.inside : m[0] === "out" ? x.wx.t : x.alerts.filter(function (a) { return a.tone === "err" || a.tone === "warn"; }).length;
+      return { k: k, v: v, x: x };
+    }).sort(function (a, b) { return b.v - a.v; });
+    var lo = Math.min(0, Math.min.apply(null, vals.map(function (v) { return v.v; }))), hi = Math.max.apply(null, vals.map(function (v) { return v.v; })), rg = Math.max(1e-6, hi - lo);
+    function fv(v) { return m[0] === "load" ? fmtW(v) : m[0] === "soc" ? nf(v) + NB + "%" : m[0] === "al" ? String(v) : deg(v, v % 1 ? 1 : 0); }
+    function colr(o) { return m[0] === "soc" ? batColor(o.v) : m[0] === "in" || m[0] === "out" ? tcol(o.v) : m[0] === "al" ? (o.v ? "var(--e-warn)" : "var(--e-ok)") : "var(--mode-action)"; }
+    var seg = '<div class="ev-seg is-sm" role="group" aria-label="Comparer selon">' + CMP.map(function (c) {
+      return '<button type="button" class="' + (H.cmp === c[0] ? "is-on" : "") + '" aria-pressed="' + (H.cmp === c[0]) + '" data-a="hcmp" data-v="' + c[0] + '">' + c[1] + "</button>";
+    }).join("") + "</div>";
+    return head("chart", "Comparer vos lieux", esc(m[2]) + " · du plus élevé au plus bas", "") + seg + '<div class="ev-cmp">' + vals.map(function (o, i) {
+      var e = E[o.k], z = (0 - lo) / rg * 100, a = (Math.min(0, o.v) - lo) / rg * 100, w = Math.abs(o.v) / rg * 100;
+      return '<button type="button" class="ev-cmpr' + (i === 0 ? " is-top" : "") + '" data-a="env" data-v="' + o.k + '" style="--i:' + i + '">' + ic(e.icon || "home") + "<span>" + esc(e.name) + "</span>" +
+        '<span class="ev-cmpb">' + (lo < 0 ? '<i class="ev-cmpz" style="left:' + z.toFixed(1) + '%"></i>' : "") + '<i style="left:' + a.toFixed(1) + "%;width:" + Math.max(1.5, w).toFixed(1) + "%;background:" + colr(o) + '"></i></span><b>' + fv(o.v) + "</b></button>";
+    }).join("") + "</div>";
+  };
+  function homeCards() {
+    return D.order.map(function (k) {
+      var e = E[k], x = siteOf(e), urgent = x.alerts.filter(function (a) { return a.tone === "err" || a.tone === "warn"; }).length;
       return '<button type="button" class="ev-pick' + (k === S.env ? " is-cur" : "") + '" data-a="env" data-v="' + k + '">' + banner(e, "is-pick") +
+        (urgent ? '<span class="ev-pick-al">' + ic("bell", "is-sm") + urgent + " alerte" + (urgent > 1 ? "s" : "") + "</span>" : "") +
         '<span class="ev-pick-b"><span class="ev-pick-k">' + ic(e.icon || "home") + esc(e.kind) + "</span><b>" + esc(e.name) + "</b><small>" + ic("pin", "is-sm") + esc(e.place) + "</small>" +
         '<span class="ev-pick-s"' + (k === "boulance" ? ' data-live-pick="boulance"' : "") + ">" + pickStatus(e) + "</span>" +
-        '<span class="ev-pick-go">Ouvrir' + ic("right") + "</span></span></button>";
-    }).join("");
-    return '<div class="ev-pickv"><div class="ev-bar0"><div><p class="ev-env">JARVIS · Environnements intelligents</p><h4 class="ev-h">Vos environnements</h4>' +
-      '<p class="ev-sub">Le même modèle pour chaque lieu. Uniquement vos données, lorsqu’elles seront reliées.</p></div>' +
-      '<span class="ev-badge">' + ic("info") + "Données d’exemple</span></div>" +
-      '<div class="ev-picks">' + cards + '<button type="button" class="ev-pick is-add" data-a="admin">' + ic("plus") + "<b>Ajouter un environnement</b><small>" + ic("lock", "is-sm") + "Réservé à l’administrateur</small></button></div></div>";
+        '<span class="ev-pick-f"><span class="ev-b-arm' + (x.armed ? " is-on" : "") + '">' + ic(x.armed ? "shield" : "unlock") + (x.armed ? "Armé" : "Désarmé") + "</span>" +
+        '<span class="ev-pick-go">Ouvrir le tableau' + ic("right") + "</span></span></span></button>";
+    }).join("") + '<button type="button" class="ev-pick is-add" data-a="admin">' + ic("plus") + "<b>Ajouter un environnement</b><small>" + ic("lock", "is-sm") + "Réservé à l’administrateur</small></button>";
+  }
+  function home() {
+    var now = NOW(), anim = H.anim;
+    H.anim = false;
+    function part(name, cls) { return '<section class="ev-card ' + cls + (anim ? " is-new" : "") + '" data-h="' + name + '">' + HP[name]() + "</section>"; }
+    return '<div class="ev-home"><div class="ev-bar0"><div><p class="ev-env">JARVIS · Environnements intelligents</p><h4 class="ev-h">Vos environnements</h4>' +
+      '<p class="ev-sub">' + greet() + ", James. " + cap(dateLong(now)) + " · " + hm(now) + ". Tous vos lieux sur un seul écran.</p></div>" +
+      '<span class="ev-badge">' + ic("info") + "Données d’exemple · batteries de BouLance réelles</span>" +
+      '<p class="ev-pop" data-ev-pop role="status" hidden>' + ic("lock") + "Réservé à l’administrateur de votre système.</p></div>" +
+      '<div class="ev-hsum' + (anim ? " is-new" : "") + '" data-h="sum">' + HP.sum() + "</div>" +
+      '<div class="ev-grid ev-hgrid">' + part("board", "w12 ev-t-board") + part("alerts", "w7 ev-t-halerts") + part("multi", "w5 ev-t-multi") +
+      part("cmp", "w5 ev-t-cmp") + part("tl", "w7 ev-t-tl") + "</div>" +
+      '<div class="ev-hsec"><h5>Ouvrir un tableau</h5><p>Le même modèle pour chaque lieu · seules les données changent.</p></div>' +
+      '<div class="ev-picks">' + homeCards() + "</div></div>";
+  }
+  function homeRefresh(names) {
+    (names || ["sum", "board", "alerts", "multi", "cmp", "tl"]).forEach(function (n) { var el = app.querySelector('[data-h="' + n + '"]'); if (el) el.innerHTML = HP[n](); });
+  }
+  /* Bande des lieux, dans chaque tableau : passer d'un lieu à l'autre sans revenir à l'accueil */
+  function siteStrip() {
+    return '<nav class="ev-sites" aria-label="Changer de lieu">' + D.order.map(function (k) {
+      var e = E[k], x = siteOf(e), urgent = x.alerts.filter(function (a) { return a.tone === "err" || a.tone === "warn"; });
+      return '<button type="button" class="ev-site' + (k === S.env ? " is-on" : "") + '" data-a="env" data-v="' + k + '"' + (k === S.env ? ' aria-current="page"' : "") + ">" + ic(e.icon || "home") + "<span>" + esc(e.name) + "</span>" +
+        (urgent.length ? '<i class="ev-site-d t-' + (urgent.some(function (a) { return a.tone === "err"; }) ? "err" : "warn") + '" title="' + urgent.length + ' alerte(s)"></i>' : "") + "</button>";
+    }).join("") + "</nav>";
+  }
+  function heroChips(e) {
+    var x = siteOf(e), urgent = x.alerts.filter(function (a) { return a.tone === "err" || a.tone === "warn"; }).length;
+    return '<p class="ev-hero-s"><span>' + wxi(x.wx.code, x.wx.night) + "<b>" + deg(x.wx.t) + "</b>" + esc(x.wx.cond) + "</span>" +
+      '<span class="' + (x.armed ? "t-ok" : "t-gold") + '">' + ic(x.armed ? "shield" : "unlock", "is-sm") + (x.armed ? "Armé" : "Désarmé") + "</span>" +
+      "<span>" + ic(x.n ? "users2" : "home", "is-sm") + esc((x.site.who || "").split(" · ")[0]) + "</span>" +
+      (urgent ? '<span class="t-warn">' + ic("bell", "is-sm") + urgent + " alerte" + (urgent > 1 ? "s" : "") + "</span>" : '<span class="t-ok">' + ic("check", "is-sm") + "Aucune alerte</span>") + "</p>";
   }
   function envView() {
     var e = cur();
@@ -1421,13 +1765,13 @@
       return '<button type="button" class="ev-nav-i' + (s[0] === S.sec ? " is-on" : "") + '" data-a="sec" data-v="' + s[0] + '"' + (s[0] === S.sec ? ' aria-current="page"' : "") + ">" + ic(s[0] === "voyage" && e.voyageIcon ? e.voyageIcon : s[2]) +
         "<span>" + esc(secTitle(e, s[0])) + "</span>" + (s[0] === "eclairage" ? '<em class="ev-lcount" data-lcount></em>' : "") + "</button>";
     }).join("");
-    return '<div class="ev-bar0"><button type="button" class="ev-back" data-a="pick">' + ic("back") + "<span>Environnements</span></button>" +
+    return '<div class="ev-bar0"><button type="button" class="ev-back" data-a="pick">' + ic("back") + "<span>Tous les lieux</span></button>" +
       '<span class="ev-badge">' + ic("info") + "Données d’exemple" + (e.energy && e.energy.live ? " · batteries réelles" : "") + "</span>" +
       '<span class="ev-adms"><button type="button" class="ev-adm is-cfg" data-a="admin" aria-label="Configurer · réservé à l’administrateur">' + ic("edit") + "<span>Configurer</span>" + ic("lock", "ev-lk") + "</button>" +
       '<button type="button" class="ev-adm" data-a="admin" aria-label="Accès et publication · réservé à l’administrateur">' + ic("shield") + "<span>Accès et publication</span>" + ic("lock", "ev-lk") + "</button></span>" +
-      '<p class="ev-pop" data-ev-pop role="status" hidden>' + ic("lock") + "Réservé à l’administrateur de votre système.</p></div>" +
+      '<p class="ev-pop" data-ev-pop role="status" hidden>' + ic("lock") + "Réservé à l’administrateur de votre système.</p></div>" + siteStrip() +
       '<header class="ev-hero"><div class="ev-hero-t"><p class="ev-env">' + esc(e.name) + '</p><h4 class="ev-h" data-ev-h>' + esc(secTitle(e, S.sec)) + "</h4>" +
-      '<p class="ev-sub" data-ev-sub>' + esc(secSub(e, S.sec)) + '</p><p class="ev-meta">' + ic(e.icon || "home", "is-sm") + esc(e.kind) + " · " + esc(e.place) + "</p></div>" + banner(e) + "</header>" +
+      '<p class="ev-sub" data-ev-sub>' + esc(secSub(e, S.sec)) + '</p><p class="ev-meta">' + ic(e.icon || "home", "is-sm") + esc(e.kind) + " · " + esc(e.place) + "</p>" + heroChips(e) + "</div>" + banner(e) + "</header>" +
       '<div class="ev-main"><nav class="ev-nav" aria-label="Sections de ' + esc(e.name) + '"><p class="ev-nav-h">' + esc(e.name) + '</p><div class="ev-nav-l">' + nav + "</div></nav>" +
       '<div class="ev-sec" data-ev-sec></div></div>' +
       '<p class="ev-foot">JARVIS / ' + esc(e.name.toUpperCase()) + " / DONNÉES D’EXEMPLE" + (e.energy && e.energy.live ? " · BATTERIES RÉELLES" : "") + "</p>";
@@ -1472,7 +1816,7 @@
   }
   function render() {
     teardownSection();
-    if (S.view === "picker") { app.innerHTML = picker(); liveLoop(); stopTimers(); return; }
+    if (S.view === "home") { app.innerHTML = home(); liveLoop(); stopTimers(); return; }
     app.innerHTML = envView();
     renderSection(true);
     lightCount();
@@ -1493,6 +1837,23 @@
 
   /* ---------- Après affichage : éclairage, horloges ---------- */
   var HOOK = {};
+  /* Les chiffres des indicateurs montent jusqu'à leur valeur (seulement sous html.fx, jamais en mouvement réduit) */
+  HOOK.kpi = function (el) {
+    if (!el || !el.classList.contains("is-new") || reduce() || !document.documentElement.classList.contains("fx")) return;
+    var b = el.querySelector(".ev-kn"), tn = b && b.firstChild;
+    if (!tn || tn.nodeType !== 3) return;
+    var m = /^(−?)(\d+)(,(\d+))?(.*)$/.exec(tn.nodeValue);
+    if (!m) return;
+    var neg = m[1] ? -1 : 1, dec = m[4] ? m[4].length : 0, to = neg * parseFloat(m[2] + "." + (m[4] || "0")), rest = m[5], t0 = null;
+    function step(ts) {
+      if (!tn.parentNode) return;
+      t0 = t0 || ts;
+      var k = clamp((ts - t0) / 900, 0, 1), ease = 1 - Math.pow(1 - k, 3);
+      tn.nodeValue = nf(to * ease, dec) + rest;
+      if (k < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  };
   HOOK.lumieres = function (el, c, e) { var box = el && el.querySelector("[data-lum-mini]"); if (box) mountLights(box, e, true); };
   var mounted = [];
   function lumApi(e) {
@@ -1527,7 +1888,6 @@
     if (!d.env || !E[d.env]) return;
     rt(E[d.env]).lights = { on: d.on, total: d.total };
     lightCount();
-    if (S.view === "picker") app.querySelectorAll(".ev-pick").forEach(function () {});
   });
   function lightCount() {
     var l = rt(cur()).lights, el = app.querySelector("[data-lcount]");
@@ -1635,12 +1995,36 @@
     if (!b || !app.contains(b) || b.disabled) return;
     var a = b.getAttribute("data-a"), v = b.getAttribute("data-v") || "", e = cur(), r = rt(e), i, x;
     switch (a) {
-      case "pick": S.view = "picker"; render(); intoView(); break;
+      case "pick": S.view = "home"; H.anim = true; render(); intoView(); break;
       case "env": S.view = "env"; S.env = v; S.sec = "apercu"; render(); intoView(); break;
       case "sec": goSec(v); break;
       case "go": goSec(v); break;
       case "tab": S.tab[S.env + S.sec] = v; renderSection(true); break;
       case "admin": admin(b); break;
+      case "hjump": { var tg = app.querySelector('[data-h="' + v + '"]'); if (tg) { tg.scrollIntoView({ behavior: reduce() ? "auto" : "smooth", block: "center" }); tg.classList.remove("is-flash"); void tg.offsetWidth; tg.classList.add("is-flash"); } break; }
+      case "haf": H.af = v; H.alAll = false; homeRefresh(["alerts"]); break;
+      case "halall": H.alAll = !H.alAll; homeRefresh(["alerts"]); break;
+      case "htl": H.tl = v; H.tlAll = false; homeRefresh(["tl"]); break;
+      case "htlall": H.tlAll = !H.tlAll; homeRefresh(["tl"]); break;
+      case "hcmp": H.cmp = v; homeRefresh(["cmp"]); break;
+      case "hmm": H.mm = v; H.sel = null; H.res = ""; homeRefresh(["multi"]); break;
+      case "hmms": mmSel()[v] = !mmSel()[v]; homeRefresh(["multi"]); break;
+      case "hmmapply": multiApply(); break;
+      case "hgo": { x = v.split("|"); var g2 = (x[1] || "apercu").split(":"); S.view = "env"; S.env = x[0]; S.sec = g2[0]; if (g2[1]) S.tab[x[0] + g2[0]] = g2[1]; render(); intoView(); break; }
+      case "oplock": opLock(e, +b.closest("[data-c]").getAttribute("data-c"), [+v]); break;
+      case "oplockall": {
+        var ci7 = +b.closest("[data-c]").getAttribute("data-c"), c7 = CUR[ci7], o7 = opsOf(e, c7), js = [];
+        c7.points.forEach(function (o, j) { if (o.lock && !o7[j].locked) js.push(j); });
+        opLock(e, ci7, js);
+        break;
+      }
+      case "arm": {
+        var on = armedOf(e);
+        var doArm = function () { r.armed = !on; log(e, r.armed ? "Système armé" : "Système désarmé", "Par vous · confirmé", r.armed ? "ok" : "warn", true); rerender(+b.closest("[data-c]").getAttribute("data-c")); toast(r.armed ? e.name + " : système armé." : e.name + " : système désarmé. Fumée et CO restent surveillés."); };
+        if (on) ask({ title: "Désarmer " + e.name + "?", text: "Les alertes d’intrusion seront en pause. La fumée, le monoxyde de carbone et les fuites restent surveillés.", ok: "Désarmer", icon: "unlock", danger: true }).then(function (ok) { if (ok) doArm(); });
+        else doArm();
+        break;
+      }
       case "toast": toast(v); break;
       case "chk": {
         x = v.split(":"); var idx = +x.pop(), id = x.join(":");
@@ -1649,13 +2033,9 @@
         break;
       }
       case "step": {
-        x = v.split(":"); var key = x[0], c = CUR[+b.closest("[data-c]").getAttribute("data-c")];
-        var base = r.vals[key] != null ? r.vals[key] : c.set, nv = clamp(base + (+x[1]) * (c.step || (key === "hot" ? 1 : 0.5)), c.min, c.max);
-        r.vals[key] = nv; r.pend[key] = "send";
-        var ci = +b.closest("[data-c]").getAttribute("data-c");
-        rerender(ci);
-        clearTimeout(r["t" + key]);
-        r["t" + key] = setTimeout(function () { r.pend[key] = "ok"; if (S.env === e.key) rerender(ci); log(e, (key === "hot" ? "Consigne d’eau chaude" : "Consigne de chauffage") + " : " + nf(nv, nv % 1 ? 1 : 0) + NB + "°C", "Confirmée par l’appareil"); }, 900);
+        x = v.split(":"); var ci = +b.closest("[data-c]").getAttribute("data-c"), c = CUR[ci], key = x[0];
+        var base = r.vals[key] != null ? r.vals[key] : c.set;
+        setDial(e, ci, x[0], base + (+x[1]) * dialStep(c, key));
         break;
       }
       case "vent": {
@@ -1762,6 +2142,140 @@
         if (S.env === e.key && CUR[i] === c) rerender(i);
       });
     });
+  }
+
+  /* Consigne d'un cadran : envoyée, puis confirmée par l'appareil */
+  function dialStep(c, key) { return c.step || (key === "hot" ? 1 : 0.5); }
+  function setDial(e, ci, key, nv, quiet) {
+    var r = rt(e), c = CUR[ci];
+    nv = clamp(Math.round(nv / dialStep(c, key)) * dialStep(c, key), c.min, c.max);
+    r.vals[key] = nv; r.pend[key] = "send";
+    if (!quiet) rerender(ci);
+    clearTimeout(r["t" + key]);
+    r["t" + key] = setTimeout(function () { r.pend[key] = "ok"; if (S.env === e.key && CUR[ci] === c) rerender(ci); log(e, (key === "hot" ? "Consigne d’eau chaude" : "Consigne de " + c.title.toLowerCase()) + " : " + nf(nv, nv % 1 ? 1 : 0) + NB + "°C", "Confirmée par l’appareil"); }, 900);
+  }
+  /* Glisser sur le cadran : la valeur suit le doigt; l'envoi part au relâchement */
+  var drag = null;
+  function dialAt(ev, g, c) {
+    var rc = g.getBoundingClientRect(), dx = ev.clientX - (rc.left + rc.width / 2), dy = ev.clientY - (rc.top + rc.height / 2);
+    var a = Math.atan2(dx, -dy) / RAD;
+    if (a > 135 || a < -135) a = a > 0 ? 135 : -135;
+    return c.min + (a + 135) / 270 * (c.max - c.min);
+  }
+  function dialPaint(g, c, key, v) {
+    var sv = g.querySelector("svg"), md = dialMode(c, v, key);
+    if (sv) sv.outerHTML = dialSVG(c, v, key);
+    var dv = g.querySelector("[data-dv]"), dm = g.querySelector("[data-dm]");
+    if (dv) dv.innerHTML = nf(v, v % 1 ? 1 : 0) + "<sup>°C</sup>";
+    if (dm) { dm.className = "ev-dial-m is-" + md[0]; dm.innerHTML = ic(md[1]) + md[2]; }
+    g.setAttribute("aria-valuenow", v);
+  }
+  app.addEventListener("pointerdown", function (ev) {
+    var g = ev.target.closest("[data-dial]");
+    if (!g || S.view !== "env") return;
+    var ci = +g.closest("[data-c]").getAttribute("data-c"), c = CUR[ci], key = g.getAttribute("data-dial");
+    drag = { g: g, ci: ci, c: c, key: key, v: null };
+    try { g.setPointerCapture(ev.pointerId); } catch (err) {}
+    g.classList.add("is-drag");
+    ev.preventDefault();
+    var v0 = clamp(Math.round(dialAt(ev, g, c) / dialStep(c, key)) * dialStep(c, key), c.min, c.max);
+    drag.v = v0; dialPaint(g, c, key, v0);
+  });
+  app.addEventListener("pointermove", function (ev) {
+    if (!drag) return;
+    var v1 = clamp(Math.round(dialAt(ev, drag.g, drag.c) / dialStep(drag.c, drag.key)) * dialStep(drag.c, drag.key), drag.c.min, drag.c.max);
+    if (v1 !== drag.v) { drag.v = v1; dialPaint(drag.g, drag.c, drag.key, v1); }
+  });
+  function dialEnd() { if (!drag) return; var d = drag; drag = null; d.g.classList.remove("is-drag"); setDial(cur(), d.ci, d.key, d.v); }
+  app.addEventListener("pointerup", dialEnd);
+  app.addEventListener("pointercancel", dialEnd);
+  app.addEventListener("keydown", function (ev) {
+    var g = ev.target.closest && ev.target.closest("[data-dial]");
+    if (!g) return;
+    var d = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1 }[ev.key];
+    if (!d) return;
+    ev.preventDefault();
+    var ci = +g.closest("[data-c]").getAttribute("data-c"), c = CUR[ci], key = g.getAttribute("data-dial"), r = rt(cur());
+    setDial(cur(), ci, key, (r.vals[key] != null ? r.vals[key] : c.set) + d * dialStep(c, key));
+    var ng = app.querySelector('[data-c="' + ci + '"] [data-dial]');
+    if (ng) ng.focus();
+  });
+
+  /* Verrous des ouvertures : verrouiller est direct; déverrouiller demande toujours confirmation */
+  function opLock(e, ci, js) {
+    var c = CUR[ci], ops = opsOf(e, c);
+    if (!js.length) return;
+    var unlock = js.length === 1 && ops[js[0]].locked;
+    var go = function () {
+      js.forEach(function (j) { ops[j].busy = true; });
+      rerender(ci);
+      wait(900).then(function () {
+        js.forEach(function (j) {
+          var o = ops[j];
+          o.busy = false; o.locked = !unlock; o.state = unlock ? "Déverrouillée" : "Verrouillée"; o.tone = unlock ? "gold" : "ok";
+          if (unlock) { o.ago = 0; o.who = "Vous"; }
+          log(e, c.points[j].label + (unlock ? " déverrouillée" : " verrouillée"), "Confirmé par la serrure", unlock ? "warn" : "ok", true);
+        });
+        if (S.env === e.key && CUR[ci] === c) rerender(ci);
+        toast(js.length > 1 ? js.length + " serrures verrouillées · confirmées." : c.points[js[0]].label + (unlock ? " déverrouillée." : " verrouillée · confirmée par la serrure."));
+      });
+    };
+    if (unlock) ask({ title: "Déverrouiller « " + c.points[js[0]].label + " »?", text: "La porte restera déverrouillée jusqu’à votre prochaine commande ou au mode Nuit.", ok: "Déverrouiller", icon: "unlock", danger: true }).then(function (ok) { if (ok) go(); });
+    else if (js.length > 1) ask({ title: "Verrouiller " + js.length + " accès?", text: js.map(function (j) { return c.points[j].label; }).join(", ") + ".", ok: "Tout verrouiller", icon: "lock" }).then(function (ok) { if (ok) go(); });
+    else go();
+  }
+
+  /* Mode sur plusieurs lieux : une confirmation pour la liste, puis chaque lieu et chaque effet confirmés */
+  function multiApply() {
+    var M0 = D.multi.filter(function (m) { return m.k === H.mm; })[0], sel = mmSel(), keys = D.order.filter(function (k) { return sel[k] && mmLocal(E[k], H.mm); });
+    if (!keys.length || H.run) return;
+    var items = keys.map(function (k) {
+      var e = E[k], L = mmLocal(e, H.mm), crit = L.fx.filter(function (f) { return /crit/.test(f[4] || ""); });
+      return { icon: e.icon || "home", label: e.name, sub: "Mode " + L.label + " · " + L.fx.map(function (f) { return f[1].toLowerCase(); }).join(", "), value: L.label, crit: crit.length > 0 };
+    });
+    ask({ title: "Appliquer « " + M0.label + " » à " + keys.length + " lieu" + (keys.length > 1 ? "x" : "") + "?", text: "Chaque lieu reçoit son propre mode. Décochez un lieu pour l’exclure. Chaque effet est envoyé, puis confirmé séparément.", items: items, ok: "Appliquer", icon: M0.icon })
+      .then(function (ok) {
+        if (!ok) return;
+        var todo = keys.filter(function (k, i) { return ok[i]; });
+        if (!todo.length) return;
+        H.run = true;
+        var lines = {}, seq = Promise.resolve();
+        function paint(done) {
+          H.res = '<p class="ev-k">' + (done ? "Résultat" : "Application en cours…") + "</p>" + todo.map(function (k) { return lines[k] || '<div class="ev-mline">' + ic("clock") + "<span>" + esc(E[k].name) + "</span><em>En attente</em></div>"; }).join("");
+          if (S.view === "home") homeRefresh(["multi"]);
+        }
+        paint(false);
+        todo.forEach(function (k) {
+          seq = seq.then(function () {
+            var e = E[k], L = mmLocal(e, H.mm), okN = 0, p2 = Promise.resolve();
+            lines[k] = '<div class="ev-mline is-wait">' + ic("refresh", "is-spin") + "<span>" + esc(e.name) + " · " + esc(L.label) + "</span><em>Envoi…</em></div>";
+            paint(false);
+            L.fx.forEach(function (f) {
+              p2 = p2.then(function () {
+                if (/light/.test(f[4] || "") && f[5]) {
+                  var LM = window.JarvisLumieres;
+                  return LM && typeof LM.applyAmbiance === "function" ? Promise.resolve(LM.applyAmbiance(k, f[5])).then(function (res) { if (!(res && res.failed)) okN++; }, function () {}) : wait(250);
+                }
+                return wait(260).then(function () { if (!/fail/.test(f[4] || "")) okN++; });
+              });
+            });
+            return p2.then(function () {
+              var all = okN === L.fx.length;
+              rt(e).mode = L.k;
+              if (H.mm !== "froid") rt(e).armed = true;
+              log(e, "Mode " + L.label + " appliqué depuis l’accueil", okN + " / " + L.fx.length + " effets confirmés", all ? "ok" : "warn", false);
+              lines[k] = '<div class="ev-mline ' + (all ? "is-ok" : "is-warn") + '">' + ic(all ? "check" : "warn") + "<span>" + esc(e.name) + " · " + esc(L.label) + "</span><em>" + okN + " / " + L.fx.length + " confirmés" + (all ? "" : " · à vérifier") + "</em></div>";
+              paint(false);
+            });
+          });
+        });
+        seq.then(function () {
+          H.run = false; H.sel = null;
+          paint(true);
+          if (S.view === "home") homeRefresh(["sum", "board", "alerts", "tl", "multi"]);
+          toast("« " + M0.label + " » appliqué à " + todo.length + " lieu" + (todo.length > 1 ? "x" : "") + ". Le détail est au journal.");
+        });
+      });
   }
 
   function applyMode(e, k, ci) {

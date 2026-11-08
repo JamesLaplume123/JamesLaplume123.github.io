@@ -1,6 +1,6 @@
 # Solution 06 — Diagnostic & continuité.
 
-from demos.diagnostic import HTML as DEMO
+from demos.diagnostic import HTML as DEMO, EXTRA, DIAGS
 from pages._solution import solution_page
 
 DATA = {
@@ -14,9 +14,11 @@ DATA = {
     "demo_title": "Du symptôme à la remise en service, <em>avec des preuves.</em>",
     "demo_copy": (
         "Une enquête guidée en cinq étapes : JARVIS lit les mesures, élimine les fausses pistes, "
-        "prépare le dossier du technicien et vérifie le retour à la normale. Deux cas simulés."
+        "prépare le dossier du technicien et vérifie le retour à la normale. Plus bas : "
+        f"{len(DIAGS)} diagnostics mesurables, trois boucles complètes et la santé de chaque équipement."
     ),
     "demo_html": DEMO,
+    "extra": EXTRA,
     "assets": ["diagnostic"],
     "compat": ["Capteurs", "Journaux", "OBD véhicule", "Énergie", "Réseau", "Procédures", "Historique"],
     "deploy_title": "Le dossier reste avec le lieu et ses responsables.",

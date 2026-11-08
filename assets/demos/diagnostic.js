@@ -556,3 +556,327 @@
   } else { visible = true; sync(); }
   document.addEventListener("visibilitychange", sync);
 })();
+
+/* ==========================================================================
+   Sous la démo : bibliothèque de diagnostics, boucle complète (trois cas
+   vedettes) et tableau de santé des équipements. Données d'exemple produites
+   par src/demos/diagnostic.py (bloc .dgx-data). Sans JavaScript, tout se lit
+   en clair : chaque fiche, chaque étape, le tableau.
+   ========================================================================== */
+(function () {
+  "use strict";
+  var X = document.querySelector("[data-dgx]");
+  if (!X || !window.SVGElement) return;
+  var DATA;
+  try { DATA = JSON.parse(X.querySelector(".dgx-data").textContent); } catch (e) { return; }
+  var NS = "http://www.w3.org/2000/svg";
+  var reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  function fx() { return !reduce && document.documentElement.classList.contains("fx"); }
+  function $(s, r) { return (r || X).querySelector(s); }
+  function $$(s, r) { return [].slice.call((r || X).querySelectorAll(s)); }
+  function el(tag, a, p) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) if (a[k] !== undefined && a[k] !== null) e.setAttribute(k, a[k]);
+    if (p) p.appendChild(e);
+    return e;
+  }
+  function fr(v, d) { return (+v).toFixed(d).replace(".", ",").replace("-", "−"); }
+  function ease(k) { return k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; }
+  X.classList.add("is-live");
+
+  /* ---------- Courbe générique : plage normale, seuil, référence, signature ---------- */
+  /* o.upto : dernier point montré (décimal, pour le tracé progressif); o.at / o.stage : repères de la boucle */
+  function draw(svg, c, o) {
+    o = o || {};
+    var W = Math.max(260, Math.round(svg.parentNode.clientWidth)), small = W < 520;
+    var H = o.h ? (small ? o.h[0] : o.h[1]) : (small ? 190 : 230);
+    var L = small ? 34 : 42, R = small ? 10 : 14, T = o.at ? 44 : 26, B = 24, n = c.p.length;
+    var pw = W - L - R, ph = H - T - B;
+    var bars = c.k === "bars", slot = pw / n;
+    var x = function (i) { return bars ? L + slot * (i + .5) : L + pw * i / (n - 1); };
+    var y = function (v) { return T + ph * (1 - (v - c.y[0]) / (c.y[1] - c.y[0])); };
+    var yc = function (v) { return Math.max(T, Math.min(T + ph, y(v))); };
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("height", H);
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var up = o.upto === undefined ? n - 1 : Math.max(0, Math.min(n - 1, o.upto));
+    var at = o.at, st = o.stage === undefined ? 9 : o.stage, fixI = at ? at.fix : n + 1;
+
+    // Grille et graduations
+    var g = el("g", { class: "dgx-grid" }, svg), span = c.y[1] - c.y[0];
+    // Graduations « rondes » : pas de 1, 2, 2,5 ou 5 (×10ⁿ), cinq lignes au plus
+    var raw = span / 4, pw10 = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10)), stp = pw10 * 10;
+    [1, 2, 2.5, 5, 10].some(function (m) { if (span / (m * pw10) <= 5.01) { stp = m * pw10; return true; } return false; });
+    var dec = stp >= 1 ? (stp % 1 ? 1 : 0) : (Math.round(stp * 10) === stp * 10 ? 1 : 2);
+    for (var v = Math.ceil(c.y[0] / stp - 1e-9) * stp; v <= c.y[1] + 1e-9; v += stp) {
+      var yy = y(v);
+      el("line", { x1: L, x2: W - R, y1: yy, y2: yy }, g);
+      el("text", { x: L - 6, y: yy + 3.5, "text-anchor": "end" }, g).textContent = fr(v, dec);
+    }
+    el("text", { class: "dgx-unit", x: L - 6, y: T - 12, "text-anchor": "end" }, g).textContent = c.u;
+    el("text", { x: L, y: H - 6 }, g).textContent = c.x[0];
+    el("text", { x: W - R, y: H - 6, "text-anchor": "end" }, g).textContent = c.x[1];
+
+    // Fenêtre de la signature (jusqu'à l'intervention dans la boucle)
+    if (c.a !== null && up >= c.a && st >= 1) {
+      var a0 = bars ? L + slot * c.a : x(c.a - .5), a1 = Math.min(x(Math.min(up, fixI - .5)) + (bars ? slot / 2 : 0), W - R);
+      if (a1 > a0) el("rect", { class: "dgx-anom", x: a0, y: T, width: a1 - a0, height: ph, rx: 3 }, svg);
+    }
+    if (c.band) el("rect", { class: "dgx-band", x: L, width: pw, y: yc(c.band[1]), height: Math.max(1.5, yc(c.band[0]) - yc(c.band[1])) }, svg);
+    if (c.thr !== null && c.thr !== undefined) {
+      el("line", { class: "dgx-thr", x1: L, x2: W - R, y1: y(c.thr), y2: y(c.thr) }, svg);
+    }
+    // Repères de la boucle : test, intervention, retour à la normale
+    if (at) {
+      if (st >= 2) mark(at.test, "Test automatique", "test");
+      if (st >= 5) mark(at.fix + .5, "Intervention", "fix");
+      if (st >= 6) {
+        var b0 = x(at.fix + 1) - (bars ? slot / 2 : 0), b1 = x(Math.min(up, n - 1)) + (bars ? slot / 2 : 0);
+        if (b1 > b0) el("rect", { class: "dgx-okz", x: b0, y: T, width: b1 - b0, height: ph, rx: 3 }, svg);
+      }
+    }
+    function mark(i, lab, cls) {
+      var mx = x(i);
+      el("line", { class: "dgx-mk dgx-mk-" + cls, x1: mx, x2: mx, y1: T - 4, y2: T + ph }, svg);
+      var t = el("text", { class: "dgx-mkt dgx-mkt-" + cls + " halo", x: mx, y: cls === "fix" ? 28 : 13, "text-anchor": "middle" }, svg);
+      t.textContent = lab;
+      if (mx < L + 30) t.setAttribute("text-anchor", "start");
+      if (mx > W - R - 40) t.setAttribute("text-anchor", "end");
+    }
+    // Courbe de référence (consigne, jumeau, voisines)
+    if (c.ref) {
+      var rd = "";
+      for (var i = 0; i <= Math.ceil(up) && i < n; i++) rd += (i ? "L" : "M") + x(i).toFixed(1) + " " + yc(c.ref[i]).toFixed(1);
+      el("path", { class: "dgx-ref", d: rd }, svg);
+
+    }
+    // Série principale
+    function cls(i) { return i >= fixI + 1 ? "is-ok" : (c.a !== null && i >= c.a && st >= 1 ? "is-bad" : ""); }
+    var main = el("g", { class: "dgx-main" + (o.anim ? " is-draw" : "") }, svg), last = 0;
+    if (bars) {
+      var bw = Math.max(3, Math.min(22, slot * .62)), base = y(Math.max(c.y[0], 0));
+      for (var b = 0; b <= Math.floor(up); b++) {
+        var vv = c.p[b], top = yc(vv);
+        el("rect", { class: "dgx-bar " + cls(b), x: x(b) - bw / 2, y: Math.min(top, base), width: bw, height: Math.max(1.5, Math.abs(base - top)), rx: Math.min(3, bw / 3),
+          style: o.anim ? "animation-delay:" + (b * 28) + "ms" : null }, main);
+        last = b;
+      }
+    } else {
+      var segs = [], cur = null, fl = Math.floor(up);
+      for (var j = 0; j <= fl; j++) {
+        var cj = cls(j);
+        if (!cur || cur.c !== cj) { if (cur) cur.d += "L" + x(j).toFixed(1) + " " + yc(c.p[j]).toFixed(1); cur = { c: cj, d: "M" + x(j).toFixed(1) + " " + yc(c.p[j]).toFixed(1) }; segs.push(cur); }
+        else cur.d += "L" + x(j).toFixed(1) + " " + yc(c.p[j]).toFixed(1);
+      }
+      if (up > fl && fl + 1 < n) {
+        var f = up - fl, vx = x(fl) + (x(fl + 1) - x(fl)) * f, vy = yc(c.p[fl] + (c.p[fl + 1] - c.p[fl]) * f);
+        cur.d += "L" + vx.toFixed(1) + " " + vy.toFixed(1);
+      }
+      var area = segs.length ? segs.map(function (s) { return s.d; }).join("").replace(/M/g, "L").replace(/^L/, "M") : "";
+      if (area) el("path", { class: "dgx-area", d: area + "L" + (up > fl && fl + 1 < n ? vx : x(fl)).toFixed(1) + " " + (T + ph) + "L" + x(0).toFixed(1) + " " + (T + ph) + "Z" }, main);
+      segs.forEach(function (s) { el("path", { class: "dgx-line " + s.c, d: s.d, pathLength: o.anim ? 1 : null }, main); });
+      last = up;
+    }
+    // Libellés par-dessus la série (seuil à gauche, référence au début de sa courbe)
+    if (c.ref) {
+      var rl = el("text", { class: "dgx-refl halo", x: L + 4, y: yc(c.ref[0]) - 7 }, svg);
+      rl.textContent = c.rl;
+    }
+    if (c.thr !== null && c.thr !== undefined) {
+      var tt = el("text", { class: "dgx-thrt halo", x: L + 4, y: y(c.thr) - 5 }, svg);
+      tt.textContent = c.tl;
+      if (c.ref && Math.abs(yc(c.ref[0]) - y(c.thr)) < 14) { tt.setAttribute("x", W - R - 2); tt.setAttribute("text-anchor", "end"); }
+    }
+    // Dernière valeur
+    var li = Math.floor(last), lv = c.p[li], lx = x(li), ly = yc(lv);
+    if (!bars && up > li && li + 1 < n) { lx = x(li) + (x(li + 1) - x(li)) * (up - li); lv = c.p[li] + (c.p[li + 1] - c.p[li]) * (up - li); ly = yc(lv); }
+    var dot = el("g", { class: "dgx-dot " + cls(li) + (o.anim ? " is-late" : ""), transform: "translate(" + lx.toFixed(1) + " " + (bars ? Math.min(ly, y(Math.max(c.y[0], 0))) : ly).toFixed(1) + ")" }, svg);
+    el("circle", { class: "h", r: 8 }, dot); el("circle", { class: "c", r: 3.4 }, dot);
+    var vt = el("text", { class: "halo", y: -12, "text-anchor": lx > W - R - 40 ? "end" : "middle", x: lx > W - R - 40 ? 4 : 0 }, dot);
+    vt.textContent = fr(lv, c.d) + (c.u ? " " + c.u : "");
+  }
+
+  /* ---------- Horloge commune (en pause hors écran) ---------- */
+  var tasks = [], running = false, raf = 0, lastT = 0;
+  function tick(now) {
+    raf = 0;
+    var dt = Math.min(.05, Math.max(0, (now - lastT) / 1000)); lastT = now;
+    tasks.forEach(function (t) { if (t.on) t.fn(dt); });
+    if (running) raf = requestAnimationFrame(tick);
+  }
+  function sync() {
+    var want = tasks.some(function (t) { return t.on; }) && !document.hidden;
+    if (want && !running) { running = true; lastT = performance.now(); raf = requestAnimationFrame(tick); }
+    else if (!want && running) { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
+  }
+  document.addEventListener("visibilitychange", sync);
+  function watch(node, task) {
+    tasks.push(task);
+    if (!("IntersectionObserver" in window)) { task.on = true; sync(); return; }
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { task.on = e.isIntersecting; if (e.isIntersecting && task.enter) task.enter(); });
+      sync();
+    }, { threshold: .15 }).observe(node);
+  }
+
+  /* ---------- 1. Bibliothèque ---------- */
+  (function () {
+    var lib = $(".dgl");
+    if (!lib) return;
+    var cur = null, seen = false;
+    function show(id, anim) {
+      cur = id;
+      $$(".dgl-list button", lib).forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-diag") === id ? "true" : "false"); });
+      $$(".dgl-card", lib).forEach(function (cd) {
+        var on = cd.getAttribute("data-diag") === id;
+        if (on) cd.removeAttribute("data-off"); else cd.setAttribute("data-off", "");
+        cd.classList.toggle("is-in", on && anim && fx());
+        if (on) draw($(".dgx-svg", cd), DATA.lib[id], { anim: anim && fx() });
+      });
+    }
+    lib.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest("button");
+      if (!b || !lib.contains(b)) return;
+      if (b.hasAttribute("data-diag")) { show(b.getAttribute("data-diag"), true); return; }
+      if (b.hasAttribute("data-env")) {
+        var env = b.getAttribute("data-env"), first = null, keep = false;
+        $$(".dgl-filters button", lib).forEach(function (f) { f.setAttribute("aria-pressed", f === b ? "true" : "false"); });
+        $$(".dgl-list li", lib).forEach(function (li) {
+          var on = env === "all" || li.getAttribute("data-env") === env;
+          li.hidden = !on;
+          var id = $("button", li).getAttribute("data-diag");
+          if (on && !first) first = id;
+          if (on && id === cur) keep = true;
+        });
+        var list = $(".dgl-list", lib); list.scrollLeft = 0; list.scrollTop = 0;
+        if (!keep && first) show(first, true);
+      }
+    });
+    lib.addEventListener("keydown", function (e) {
+      if (!e.target.closest || !e.target.closest(".dgl-list")) return;
+      if (["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].indexOf(e.key) < 0) return;
+      var vis = $$(".dgl-list li:not([hidden]) button", lib), i = vis.indexOf(e.target);
+      if (i < 0) return;
+      e.preventDefault();
+      var nx = vis[Math.max(0, Math.min(vis.length - 1, i + (e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : -1)))];
+      nx.focus(); show(nx.getAttribute("data-diag"), true);
+    });
+    show($(".dgl-list button", lib).getAttribute("data-diag"), false);
+    watch(lib, { fn: function () {}, enter: function () { if (!seen) { seen = true; show(cur, true); } } });
+    var lw = 0, rt = 0;
+    if (window.ResizeObserver) new ResizeObserver(function () {
+      var w = $(".dgl-cards", lib).clientWidth; if (Math.abs(w - lw) < 2) return; lw = w;
+      clearTimeout(rt); rt = setTimeout(function () { show(cur, false); }, 120);
+    }).observe($(".dgl-cards", lib));
+  })();
+
+  /* ---------- 2. La boucle complète ---------- */
+  (function () {
+    var lp = $(".dgo");
+    if (!lp) return;
+    var DUR = [5, 5.5, 6, 6.5, 7, 5.5, 6, 9];
+    var S = { cas: $(".dgo-tabs button", lp).getAttribute("data-loop"), st: 0, t: 0, play: !reduce, hover: false, upto: 0, goal: 0 };
+    var rail = $(".dgo-rail", lp), lis = $$(".dgo-rail li", lp), playB = $('[data-lp="play"]', lp);
+    function box() { return $('.dgo-case[data-loop="' + S.cas + '"]', lp); }
+    function C() { return DATA.loop[S.cas]; }
+    function goalOf(st) {
+      var at = C().at, n = C().p.length - 1;
+      return [at.meas, at.dev, at.test, at.test, at.test + .6, at.fix + .8, n, n][st];
+    }
+    function render() { var b = box(); draw($(".dgx-svg", b), C(), { upto: S.upto, at: C().at, stage: S.st, h: [210, 270] }); }
+    function count(node, dur) {
+      var to = +node.getAttribute("data-n"), money = /\$/.test(node.textContent);
+      if (!fx()) return;
+      var t0 = performance.now();
+      (function step(now) {
+        var k = Math.min(1, (now - t0) / (dur * 1000)), v = Math.round(to * ease(k));
+        node.textContent = money ? v.toLocaleString("fr-CA").replace(/\s/g, "\u00a0") + "\u00a0$" : String(v);
+        if (k < 1 && document.contains(node)) requestAnimationFrame(step);
+      })(t0);
+    }
+    function go(st) {
+      S.st = Math.max(0, Math.min(7, st)); S.t = 0; S.goal = goalOf(S.st);
+      if (!fx()) S.upto = S.goal;
+      var b = box();
+      $$(".dgo-pane", b).forEach(function (p) {
+        var on = +p.getAttribute("data-i") === S.st;
+        if (on) p.removeAttribute("data-off"); else p.setAttribute("data-off", "");
+        p.classList.remove("is-on");
+        if (on) { void p.offsetWidth; p.classList.add("is-on"); $$("[data-n]", p).forEach(function (n) { count(n, n.closest(".dgo-tot") ? 1.6 : 1.2); }); }
+      });
+      lis.forEach(function (li, i) {
+        li.classList.toggle("is-on", i === S.st); li.classList.toggle("is-done", i < S.st);
+        var bt = $("button", li); bt.style.setProperty("--p", "0");
+        if (i === S.st) bt.setAttribute("aria-current", "step"); else bt.removeAttribute("aria-current");
+      });
+      rail.style.setProperty("--done", (S.st / 7).toFixed(3));
+      render();
+    }
+    function setCase(id) {
+      S.cas = id; S.upto = 0;
+      $$(".dgo-tabs button", lp).forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-loop") === id ? "true" : "false"); });
+      $$(".dgo-case", lp).forEach(function (c) { c.hidden = c.getAttribute("data-loop") !== id; });
+      go(0);
+    }
+    function syncPlay() { playB.setAttribute("aria-pressed", S.play ? "true" : "false"); }
+    lp.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest("button");
+      if (!b || !lp.contains(b)) return;
+      if (b.hasAttribute("data-loop")) { setCase(b.getAttribute("data-loop")); return; }
+      if (b.hasAttribute("data-st")) { S.play = false; syncPlay(); var s = +b.getAttribute("data-st"); if (s < S.st) S.upto = Math.min(S.upto, goalOf(s)); go(s); return; }
+      var a = b.getAttribute("data-lp");
+      if (a === "play") { S.play = !S.play; syncPlay(); }
+      else if (a === "replay") { S.play = !reduce; syncPlay(); S.upto = 0; go(0); }
+    });
+    var cases = $$(".dgo-case", lp);
+    cases.forEach(function (c) {
+      c.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") S.hover = true; });
+      c.addEventListener("pointerleave", function () { S.hover = false; });
+    });
+    watch(lp, { fn: function (dt) {
+      if (Math.abs(S.upto - S.goal) > .01) {
+        var sp = Math.max(4, Math.abs(S.goal - S.upto) * 1.6);
+        S.upto = S.goal > S.upto ? Math.min(S.goal, S.upto + sp * dt) : S.goal;
+        render();
+      }
+      if (S.play && !S.hover) {
+        S.t += dt;
+        var d = DUR[S.st], on = lis[S.st];
+        $("button", on).style.setProperty("--p", Math.min(1, S.t / d).toFixed(3));
+        if (S.t >= d) {
+          if (S.st < 7) go(S.st + 1);
+          else {
+            var tabs = $$(".dgo-tabs button", lp), i = tabs.map(function (t) { return t.getAttribute("data-loop"); }).indexOf(S.cas);
+            setCase(tabs[(i + 1) % tabs.length].getAttribute("data-loop"));
+          }
+        }
+      }
+    }, enter: function () {} });
+    syncPlay();
+    go(0);
+    var lw = 0, rt = 0;
+    if (window.ResizeObserver) new ResizeObserver(function () {
+      var w = lp.clientWidth; if (Math.abs(w - lw) < 2) return; lw = w;
+      clearTimeout(rt); rt = setTimeout(render, 120);
+    }).observe(lp);
+  })();
+
+  /* ---------- 3. Santé des équipements : tri ---------- */
+  (function () {
+    var h = $(".dgh");
+    if (!h) return;
+    var body = $(".dgh-t tbody", h);
+    h.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest("[data-sort]");
+      if (!b) return;
+      var k = b.getAttribute("data-sort");
+      $$("[data-sort]", h).forEach(function (s) { s.setAttribute("aria-pressed", s === b ? "true" : "false"); });
+      var rows = $$("tr", body);
+      rows.sort(function (a, c) {
+        return k === "score" ? (+a.getAttribute("data-score") - +c.getAttribute("data-score"))
+          : $("th b", a).textContent.localeCompare($("th b", c).textContent, "fr");
+      });
+      rows.forEach(function (r) { body.appendChild(r); });
+    });
+  })();
+})();

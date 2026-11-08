@@ -190,7 +190,7 @@ class _ExtIcons(dict):
 EXT_ICON = _ExtIcons({"environnements-intelligents": "home", "ia-privee-connaissances": "spark", "securite-intelligente": "shield",
                       "automatisation-operations": "flow", "reseau-resilience": "net", "diagnostic-care": "pulse",
                       "mobilite": "route", "mobilite-voyage": "route"})
-EXT_OFF = {"diagnostic-care", "mobilite"}  # offertes sur demande; toute autre extension est activée
+EXT_OFF = {"diagnostic-care"}  # offertes sur demande; toute autre extension est activée
 EXT_ON = {c["slug"] for c in CAPABILITIES if c["slug"] not in EXT_OFF}
 
 

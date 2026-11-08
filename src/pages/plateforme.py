@@ -91,48 +91,6 @@ PAGE = {
   </ul>
 </section>
 
-<section class="sect" id="parcours">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Le produit complet</p>
-      <h2>Une seule expérience.<br><em>Du geste au système réel.</em></h2>
-    </div>
-    <p data-rev>L’App est ce que vous utilisez. Core comprend la demande. Le Hub garde
-    l’intelligence près du site. Les équipements et logiciels existants exécutent le résultat.</p>
-  </div>
-  <div class="rows">
-    <div class="row" data-rev>
-      <i>Étape 01</i>
-      <div><h3>Vous voyez et décidez — JARVIS App</h3>
-      <p>Une interface cohérente sur ordinateur, tablette, téléphone et écrans intégrés :
-      comprendre, demander, approuver et consulter les preuves.</p></div>
-    </div>
-    <div class="row" data-rev>
-      <i>Étape 02</i>
-      <div><h3>Le système comprend — JARVIS Core</h3>
-      <p>Il rapproche les sources autorisées, applique les règles et prépare une action
-      explicable : demande → contexte → permissions → plan prêt.</p></div>
-    </div>
-    <div class="row" data-rev>
-      <i>Étape 03</i>
-      <div><h3>Le site reste autonome — JARVIS Hub</h3>
-      <p>L’infrastructure locale exécute Core et maintient les fonctions essentielles près du
-      lieu. Local, privé, autonome.</p></div>
-    </div>
-    <div class="row" data-rev>
-      <i>Étape 04</i>
-      <div><h3>Le réel répond — vos systèmes</h3>
-      <p>JARVIS relie les espaces, informations, logiciels et équipements qui font déjà le
-      vrai travail : maison, entreprise ou véhicule.</p></div>
-    </div>
-  </div>
-  <div class="chiprow" data-rev>
-    <span class="chip chip-sim">Une identité</span>
-    <span class="chip">Des permissions</span>
-    <span class="chip">Sept extensions</span>
-    <span class="chip">Une trace complète</span>
-  </div>
-</section>
 
 <section class="sect rust-sect" id="rust" data-toc="Rust" aria-labelledby="rust-titre">
   <div class="head shead" data-rev>
@@ -252,38 +210,6 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Le contrôle reste visible</p>
-      <h2>Puissant ne veut pas dire <em>opaque.</em></h2>
-    </div>
-    <p data-rev>JARVIS montre qui accède à quoi, ce qui peut être exécuté et quand une décision
-    humaine est obligatoire.</p>
-  </div>
-  <div class="cards two">
-    <article class="card" data-rev>
-      <small>Local d’abord</small>
-      <h3>Les fonctions essentielles restent près du site.</h3>
-      <p>Le cloud est utilisé seulement lorsqu’il apporte une valeur comprise et autorisée.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Sources choisies</small>
-      <h3>Chaque connexion est identifiable et révocable.</h3>
-      <p>Une capacité ne reçoit jamais un accès général à tout votre environnement.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Rôles précis</small>
-      <h3>Chaque personne agit selon ses responsabilités.</h3>
-      <p>Consulter, proposer, approuver et exécuter peuvent demander des droits différents.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Trace complète</small>
-      <h3>Les décisions importantes restent explicables.</h3>
-      <p>Demandes, sources, approbations et résultats peuvent être conservés selon le mandat.</p>
-    </article>
-  </div>
-</section>
 
 <section class="sect alt hb-sect" id="offre" data-toc="L’offre" aria-labelledby="offre-titre">
   <div class="sect-head">

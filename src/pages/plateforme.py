@@ -2,6 +2,7 @@
 # l’App, le noyau en Rust et l’offre (Hub + extensions + services).
 
 from demos import app, hub, rust
+import galerie
 
 PAGE = {
     "url": "/plateforme/",
@@ -12,7 +13,7 @@ PAGE = {
         "travaillent ensemble : un système privé, local et contrôlé."
     ),
     "og_image": "/media/product/user/accueil-og.jpg",
-    "assets": ["app", "rust", "hub"],
+    "assets": ["app", "rust", "hub", "galerie"],
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="" fetchpriority="high"></div>
@@ -210,6 +211,8 @@ PAGE = {
   </div>
 </section>
 
+
+""" + galerie.plateforme_lieux() + """
 
 <section class="sect alt hb-sect" id="offre" data-toc="L’offre" aria-labelledby="offre-titre">
   <div class="sect-head">

@@ -1,5 +1,7 @@
 # Confiance — les règles communes de gouvernance. Version wow.
 
+import galerie
+
 PRINCIPLES = [
     ("Minimisation", "Utiliser seulement ce qui est nécessaire.",
      "Une mission reçoit les sources, outils et durées utiles à son objectif, pas un accès général par défaut."),
@@ -29,6 +31,7 @@ RULES_HTML = "".join(
 
 PAGE = {
     "url": "/confiance/",
+    "assets": ["galerie"],
     "v2": True,
     "title": "Confiance et gouvernance | JARVIS",
     "description": (
@@ -66,6 +69,8 @@ PAGE = {
     {RULES_HTML}
   </div>
 </section>
+
+{galerie.confiance_visuels()}
 
 <section class="cta">
   <h2 data-rev>Un projet sensible commence par définir<br><span>les responsabilités.</span></h2>

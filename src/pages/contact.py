@@ -5,12 +5,14 @@
 # Sans JavaScript, le formulaire reste un envoi classique vers FormSubmit.
 
 from config import SITE
+import galerie
 
 API = SITE.get("api", "").rstrip("/")
 ENDPOINT = f"{API}/contact" if API else ""
 
 PAGE = {
     "url": "/contact/",
+    "assets": ["galerie"],
     "v2": True,
     "title": "Contact | Réserver une démonstration JARVIS",
     "description": (
@@ -113,5 +115,6 @@ PAGE = {
     </form>
   </div>
 </section>
+{galerie.contact_visuels()}
 """,
 }

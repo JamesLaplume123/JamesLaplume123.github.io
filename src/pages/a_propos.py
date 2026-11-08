@@ -1,7 +1,10 @@
 # À propos — James, sa démarche et les collaborations recherchées. Version wow.
 
+import galerie
+
 PAGE = {
     "url": "/a-propos/",
+    "assets": ["galerie"],
     "v2": True,
     "title": "À propos | James Laplume et JARVIS",
     "description": (
@@ -37,7 +40,9 @@ PAGE = {
   protéger les lieux et les personnes, en expliquant toujours ce qui se passe.</p>
 </section>
 
-<section class="sect alt">
+""" + galerie.a_propos_terrain() + """
+
+<section class="sect">
   <div class="cards">
     <article class="card" data-rev>
       <small>01 · Liberté</small>

@@ -1,6 +1,7 @@
 # Laboratoire mobile — où les idées sont testées dans le monde réel. Version wow.
 
 from demos import ambiances, boulance, carte
+import galerie
 
 PAGE = {
     "url": "/laboratoire-mobile/",
@@ -11,7 +12,7 @@ PAGE = {
         "le réseau, la sécurité, le diagnostic et l’automatisation."
     ),
     "og_image": "/media/ambulance/ambulance-garage-lab-v1.webp",
-    "assets": ["boulance", "carte", "ambiances"],
+    "assets": ["boulance", "carte", "ambiances", "galerie"],
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="" fetchpriority="high"></div>
@@ -41,6 +42,8 @@ PAGE = {
   l’énergie, l’eau, le confort, le véhicule, le réseau, la sécurité et le diagnostic devront
   fonctionner ensemble dans des conditions réelles.</p>
 </section>
+
+""" + galerie.laboratoire_visuels() + """
 
 <section class="sect" id="direct">
   <div class="sect-head">

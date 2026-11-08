@@ -388,7 +388,7 @@ def map_overlays(big=True):
             out.append(f'<span class="ap-shield{" is-a" if len(num) <= 2 else ""}" data-x="{x}" data-y="{y}" data-maxw="{SHIELD_W.get(num, 700)}" '
                        f'data-layer="routes" aria-hidden="true">{num}</span>')
     for name, la, lo, mx, imp in CITIES:
-        if imp < 0 or (not big and (imp == 0 or mx)):
+        if imp < 0 or (not big and imp < 2):
             continue
         mx_attr = f' data-maxw="{mx}"' if mx else ""
         out.append(f'<span class="ap-city c{imp}" {_xy(la, lo)}{mx_attr} data-layer="villes"><i></i><b>{name}</b></span>')
@@ -521,7 +521,7 @@ def v_accueil():
 <div class="ap-home-b">
   <article class="ap-card ap-minimap" data-r>
     {_card_h("map", "Mes lieux", '<button type="button" class="ap-link" data-go="carte">Ouvrir' + icon("right") + '</button>')}
-    <button type="button" class="ap-map ap-map-mini" data-map data-go="carte" data-cam="{cam[0]:.1f},{cam[1]:.1f},{cam[2]:.1f},{cam[3]:.1f}" aria-label="Ouvrir la carte de vos lieux">
+    <button type="button" class="ap-map ap-map-mini" data-map data-go="carte" data-cam="{cam[0]:.1f},{cam[1]:.1f},{cam[2]:.1f},{cam[3]:.1f}" data-box="{",".join(str(v) for v in BOX)}" aria-label="Ouvrir la carte de vos lieux">
       {map_svg(_GEO["uid"], cam)}
       <span class="ap-ov">{map_overlays(big=False)}</span>
     </button>

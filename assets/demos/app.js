@@ -274,7 +274,7 @@
         sun: '<circle cx="12" cy="12" r="3.75"/><path d="M12 2.75v2M12 19.25v2M2.75 12h2M19.25 12h2M5.45 5.45l1.4 1.4M17.15 17.15l1.4 1.4M5.45 18.55l1.4-1.4M17.15 6.85l1.4-1.4"/>' };
       var I = function (n) { return '<svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true">' + P[n] + "</svg>"; };
       q("grid").innerHTML =
-        tileH(I("wind"), "Vent", ws !== null ? ws + NB + "km/h" : "—", (wd ? "Du " + wd.replace(/^O/, "O") : "") + (wg ? " · rafales " + wg : ""),
+        tileH(I("wind"), "Vent", ws !== null ? ws + NB + "km/h" : "—", (wd ? (function (w) { return (/^[ns]/.test(w) ? "Du " : "D’") + w; })(wd.split("").map(function (c) { return { N: "nord", S: "sud", E: "est", O: "ouest", W: "ouest" }[c] || c; }).join("-")) : "") + (wg ? " · rafales " + wg : ""),
           wb !== null ? '<i class="ap-wxp-comp" style="--b:' + wb + 'deg" aria-hidden="true"></i>' : "") +
         tileH(I("drop"), "Humidité", hum !== null ? hum + NB + "%" : "—", dew !== null ? "Point de rosée " + num(Math.round(dew)) + "°" : "") +
         tileH(I("gauge"), "Pression", pr !== null ? pr.toFixed(1).replace(".", ",") + NB + "kPa" : "—", txt((cc.pressure || {}).tendency) || "") +
@@ -490,8 +490,11 @@
       if (scrim) scrim.hidden = false;
       $$('[data-pop-open="' + name + '"]').forEach(function (b) { b.setAttribute("aria-expanded", "true"); });
       if (name === "cmd") { cmdReset(); var q = $("[data-cmd-q]"); if (q) q.focus({ preventScroll: true }); }
-      else if (name === "wx") { wxStart(); if (wxLast) wxPanel(wxLast); var x = $("[data-pop-close]", p); if (x) x.focus({ preventScroll: true }); }
-      else { var f = $("button", p); if (f) f.focus({ preventScroll: true }); }
+      else {
+        if (name === "wx") { wxStart(); if (wxLast) wxPanel(wxLast); }
+        p.setAttribute("tabindex", "-1");
+        p.focus({ preventScroll: true });
+      }
     }
     if (scrim) scrim.addEventListener("click", function () { closePops(); });
     root.addEventListener("keydown", function (e) {
@@ -810,10 +813,16 @@
         $$("[data-co-t]", ov).forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
         setKind(kd);
         ov.hidden = false;
+        // Sur un écran plus haut que la fenêtre (cellulaire), l'appel occupe la partie visible.
+        var scr = ov.parentNode, r = scr.getBoundingClientRect(), z = r.height / scr.offsetHeight || 1;
+        if (scr.offsetHeight * z > innerHeight + 4) {
+          var hh = Math.min(scr.offsetHeight, innerHeight / z), top = Math.max(0, Math.min(scr.offsetHeight - hh, -r.top / z));
+          ov.style.top = top + "px"; ov.style.height = hh + "px"; ov.style.bottom = "auto";
+        } else { ov.style.top = ""; ov.style.height = ""; ov.style.bottom = ""; }
         root.classList.add("has-call");
         requestAnimationFrame(function () { ov.classList.add("is-on"); });
-        var end = $("[data-co-end]", ov);
-        if (end) end.focus({ preventScroll: true });
+        ov.setAttribute("tabindex", "-1");
+        ov.focus({ preventScroll: true });
         timer = setTimeout(function () {
           ov.classList.add("is-live");
           q("state").textContent = kd === "video" ? "Visio en cours" : "Appel en cours";
@@ -1209,7 +1218,7 @@
       function paintSoc(soc, real) {
         $$("[data-live-soc]", root).forEach(function (el) {
           var b = $("b", el), col = soc >= 60 ? "#34d399" : soc >= 30 ? "#fbbf24" : "#f87171";
-          b.textContent = Math.round(soc) + NB + "%" + (real ? "" : " · exemple");
+          b.textContent = Math.round(soc) + NB + "%";
           el.style.setProperty("--soc", col);
           el.classList.add("is-soc");
           el.classList.toggle("is-real", !!real);

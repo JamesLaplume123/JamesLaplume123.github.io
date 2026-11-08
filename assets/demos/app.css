@@ -1183,8 +1183,13 @@
 [data-demo="app"] .ap-mode.is-on { border-color: var(--a-accent); color: var(--a-text); box-shadow: 0 0 0 1px var(--a-accent), 0 0 18px color-mix(in srgb, var(--mode-glow) 22%, transparent); }
 [data-demo="app"] .ap-mode.is-on::after {
   content: ""; position: absolute; top: 6px; right: 6px; width: 16px; height: 16px; border-radius: 50%;
-  background: var(--mode-action) center / 10px no-repeat; box-shadow: 0 0 0 2px #000a;
+  background: var(--mode-action); box-shadow: 0 0 0 2px #000a;
 }
+[data-demo="app"] .ap-mode.is-on::before {
+  content: ""; position: absolute; z-index: 1; top: 10px; right: 11.5px; width: 3.5px; height: 7px;
+  border: solid var(--mode-on-action); border-width: 0 1.8px 1.8px 0; transform: rotate(45deg);
+}
+[data-demo="app"] :is(.ap-pop, .ap-callov):focus { outline: none; }
 
 /* Météo : le ciel du moment, heure par heure, jours, vent, soleil */
 [data-demo="app"] .ap-wxp { top: 70px; right: 18px; width: min(600px, calc(100% - 36px)); max-height: calc(100% - 92px); display: flex; flex-direction: column; }
@@ -1253,12 +1258,12 @@
 }
 [data-demo="app"] .ap-wxp-arc { display: block; width: 100%; height: auto; overflow: visible; }
 [data-demo="app"] .ap-wxp-arc .arc { fill: none; stroke: #ffffff22; stroke-width: 1.4; stroke-dasharray: 2 3; vector-effect: non-scaling-stroke; }
-[data-demo="app"] .ap-wxp-arc .arc-on { fill: none; stroke: var(--a-accent); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+[data-demo="app"] .ap-wxp-arc .arc-on { fill: none; stroke: var(--a-accent); stroke-width: 1.6; stroke-linecap: round; }
 [data-demo="app"] .ap-wxp-arc .hz { stroke: #ffffff26; stroke-width: 1; vector-effect: non-scaling-stroke; }
 [data-demo="app"] .ap-wxp-arc .sun { fill: #ffd27a; filter: drop-shadow(0 0 4px #ffc95a); }
-[data-demo="app"] .ap-wxp-sun p { display: flex; justify-content: space-between; gap: 8px; margin: 8px 0 0; }
-[data-demo="app"] .ap-wxp-sun p b { display: block; font-size: 14px; font-variant-numeric: tabular-nums; }
-[data-demo="app"] .ap-wxp-sun p small { font-size: 11px; }
+[data-demo="app"] .ap-wxp-sun div p { display: flex; justify-content: space-between; gap: 8px; margin: 8px 0 0; }
+[data-demo="app"] .ap-wxp-sun div p b { display: block; font-size: 14px; font-variant-numeric: tabular-nums; }
+[data-demo="app"] .ap-wxp-sun div p small { font-size: 11px; }
 [data-demo="app"] .ap-wxp-src { display: flex; align-items: flex-start; gap: 8px; margin: 0; font: 500 11.5px/1.45 var(--a-font); color: var(--a-faint); }
 [data-demo="app"] .ap-wxp-src .ap-i { width: 14px; height: 14px; flex: none; margin-top: 1px; }
 
@@ -1266,7 +1271,7 @@
    Accueil : la bande « Vos extensions » accepte autant d'extensions que le catalogue (N)
    ========================================================================== */
 [data-demo="app"] .ap-xh-g {
-  grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(150px, 1fr);
+  grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(124px, 1fr);
   overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; padding-bottom: 2px;
 }
 [data-demo="app"] .ap-xh-g::-webkit-scrollbar { display: none; }
@@ -1676,6 +1681,7 @@
 [data-demo="app"] .ap-chip.is-soc .ap-i, [data-demo="app"] .ap-chip.is-soc b { color: var(--soc); }
 [data-demo="app"] .ap-chip.is-real { border-color: color-mix(in srgb, var(--soc) 45%, transparent); }
 [data-demo="app"] .ap-chip.is-real small::after { content: " · réel"; color: var(--a-ok); font-weight: 700; }
+[data-demo="app"] .ap-chip.is-soc:not(.is-real) small::after { content: " · exemple"; }
 [data-demo="app"] .ap-envc-r { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 7px; }
 [data-demo="app"] .ap-envc-r li { display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; line-height: 1.4; color: #dcd6cb; }
 [data-demo="app"] .ap-envc-r .ap-i { width: 15px; height: 15px; flex: none; margin-top: 1px; color: var(--a-muted); }
@@ -1695,7 +1701,7 @@
   border-radius: 11px; background: #0b0b0ce6; border: 1px solid #ffffff1a; font: 600 12px/1.2 var(--a-font); color: var(--a-muted); box-shadow: 0 10px 26px #000a;
 }
 [data-demo="app"] .ap-nopos { left: 14px; }
-[data-demo="app"] .ap-map.has-card .ap-nopos { left: 320px; }
+[data-demo="app"] .ap-map.has-card .ap-nopos { display: none; }
 [data-demo="app"] .ap-nopos .ap-i { width: 15px; height: 15px; color: var(--a-ok); }
 [data-demo="app"] .ap-toast { left: 50%; top: 14px; bottom: auto; color: var(--a-text); transform: translate(-50%, -8px); opacity: 0; pointer-events: none; white-space: nowrap; transition: opacity .35s var(--ease), transform .45s var(--ease); }
 [data-demo="app"] .ap-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
@@ -1824,4 +1830,16 @@
 @container ap (max-width: 1179px) {
   [data-demo="app"] .ap-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   [data-demo="app"] .ap-tile-call { grid-column: auto; }
+}
+[data-demo="app"] .ap-co-b:focus-visible { outline: none; }
+[data-demo="app"] .ap-co-b:focus-visible > .ap-i { outline: 2px solid var(--a-accent); outline-offset: 3px; }
+@container ap (max-width: 679px) {
+  [data-demo="app"] .ap-exts { grid-template-columns: 1fr; }
+  [data-demo="app"] .ap-ext { min-height: 0; }
+  [data-demo="app"] .ap-tiles { grid-template-columns: 1fr 1fr; grid-auto-rows: minmax(96px, auto); }
+  [data-demo="app"] .ap-tile { grid-template-columns: 1fr; align-content: end; gap: 8px; }
+  [data-demo="app"] .ap-tile-call { grid-column: 1 / -1; grid-template-columns: auto minmax(0, 1fr); }
+}
+@container ap (max-width: 679px) {
+  [data-demo="app"] .ap-ext-f { flex: 1 1 100%; justify-content: flex-end; }
 }

@@ -1,7 +1,7 @@
 # Solution 07 — Mobilité (extension « Mobilité » de JARVIS App).
 # Règle convenue avec James : Environnements = le lieu où l'on vit ou travaille (la cellule du VR :
 # lumières, eau, énergie); Mobilité = le mouvement : le trajet, le voyage, le véhicule. Un VR a donc
-# les deux; une voiture électrique ou une sportive va dans Mobilité.
+# les deux; une voiture familiale, une voiture de collection ou un vélo électrique va dans Mobilité.
 # Page sur mesure (comme Environnements) : la numérotation « 07 / 07 » et les sections propres au
 # voyage ne rentrent pas dans le gabarit commun. Démo : src/demos/mobilite.py.
 
@@ -29,8 +29,8 @@ CLAIR = {
                  "proposés selon la distance et l’ouverture, avec le détour exact."),
                 ("Un journal automatique", "Photos et points géolocalisés en roulant. Touchez un voyage passé : "
                  "le tracé, les photos et les statistiques reviennent."),
-                ("Un garage connecté", "VR, voiture électrique, sportive ou vélo électrique : ce que le véhicule "
-                 "offre, et un boîtier JARVIS de base pour les autres.")],
+                ("Un garage connecté", "Du VR et de la voiture familiale à la collection (Huracán, 296 GTB, G63, "
+                 "Escalade) : ce que le véhicule offre, et un boîtier JARVIS de base pour les autres.")],
 }
 
 PAGE = {
@@ -39,7 +39,7 @@ PAGE = {
     "title": "Copilote de voyage, VR et voiture connectés | JARVIS Mobilité",
     "description": "Un copilote de route qui propose repas, eau, propane, entretien et sites à voir selon la "
                    "distance, les heures d’ouverture et le soleil, un journal de voyage sur la carte et un garage "
-                   "connecté pour VR, voitures et vélos électriques. Québec.",
+                   "connecté pour VR, voitures familiales, voitures de collection et vélos électriques. Québec.",
     "og_image": HERO,
     "assets": ["coquille", "mobilite"],
     "content": f"""
@@ -54,7 +54,7 @@ PAGE = {
       <a class="pill" href="/contact/">Réserver une démo</a>
       <a class="pill ghost" href="#jarvis">Prendre la route</a>
     </div>
-    <p class="for-line" data-rev><span>Pour</span> VR · voitures électriques · sportives · vélos électriques</p>
+    <p class="for-line" data-rev><span>Pour</span> VR · voitures familiales · voitures de collection · vélos électriques</p>
   </div>
 </section>
 
@@ -92,7 +92,7 @@ PAGE = {
       <small>Mobilité</small>
       <h3>La route, le voyage, le véhicule.</h3>
       <p>Copilote de route, modes de voyage, journal sur la carte, état mécanique et commandes du véhicule,
-      du VR à la sportive.</p>
+      du VR à la voiture de collection.</p>
     </article>
     <article class="card" data-rev>
       <small>Ensemble</small>
@@ -134,7 +134,7 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Garage connecté</p>
-      <h2>Chaque véhicule, selon ce qu’il offre. <em>Les autres aussi.</em></h2>
+      <h2>De la familiale à la collection. <em>Chaque véhicule, selon ce qu’il offre.</em></h2>
     </div>
     <p data-rev>Un véhicule qui a une connexion officielle du constructeur se contrôle par elle : préchauffage,
     recharge, verrouillage, surveillance. Une voiture sans application reçoit le boîtier JARVIS de base, branché
@@ -144,7 +144,7 @@ PAGE = {
     <article class="card" data-rev><small>Connexion du constructeur</small><h3>Rien d’inventé.</h3>
       <p>JARVIS utilise seulement ce que le constructeur autorise. Si une commande n’existe pas, elle n’apparaît pas.</p></article>
     <article class="card" data-rev><small>Boîtier JARVIS de base</small><h3>OBD-II + GPS + batterie.</h3>
-      <p>Pour toute voiture depuis 1996 : il se branche sous le tableau de bord et reste discret.</p></article>
+      <p>Pour toute voiture depuis 1996, de la familiale à la supercar sans application : il se branche sous le tableau de bord et reste discret.</p></article>
     <article class="card" data-rev><small>Confirmation</small><h3>Vous gardez la main.</h3>
       <p>Déverrouiller, chauffer, désarmer un antivol : chaque commande demande votre accord, puis l’état est relu.</p></article>
   </div>

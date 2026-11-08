@@ -147,6 +147,21 @@ CAPABILITIES = [
             ("Une réparation prouvée", "JARVIS suit les mesures après l’intervention et confirme le retour à la normale."),
         ],
     },
+    {
+        "slug": "mobilite",
+        "num": "07",
+        "title": "Mobilité",
+        "label": "Mobilité",
+        "short": "Un copilote de route qui conseille selon la distance, les heures d’ouverture, le soleil et l’état du véhicule, et garde chaque voyage sur la carte.",
+        "image": "/media/vr/exterieur.webp",
+        "pour": "VR, voitures, véhicules électriques et vélos électriques",
+        "line": "Vous roulez; JARVIS regarde la route, le véhicule et l’heure, et vous propose le bon arrêt au bon moment.",
+        "points": [
+            ("Un copilote qui pense à tout", "Repas, eau, propane, entretien, soleil et sites à voir, selon la distance et les heures d’ouverture."),
+            ("Chaque voyage sur la carte", "Les photos et les arrêts s’enregistrent seuls; touchez un voyage pour le revivre."),
+            ("Tous vos véhicules", "Connexion du constructeur ou boîtier JARVIS de base : chaque commande demande votre confirmation."),
+        ],
+    },
 ]
 
 # Anciennes URL → nouvelles destinations. Le générateur produit un petit

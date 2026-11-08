@@ -30,6 +30,7 @@ PAGE_MODULES = [
     "solution_automatisation_operations",
     "solution_reseau_resilience",
     "solution_diagnostic_care",
+    "solution_mobilite",
     "plateforme",
     "laboratoire_mobile",
     "vision_roadmap",

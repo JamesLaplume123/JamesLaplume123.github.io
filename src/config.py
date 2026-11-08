@@ -13,7 +13,7 @@ SITE = {
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
-    "asset_version": "20261107c",
+    "asset_version": "20261107d",
     # Adresse du service du site (formulaire → Resend → JARVIS, compteur). Vide tant
     # que le Worker Cloudflare n'est pas déployé : le formulaire passe alors par FormSubmit.
     "api": "https://jarvis-site-api.laplumejames.workers.dev",
@@ -107,10 +107,10 @@ CAPABILITIES = [
         "num": "04",
         "title": "Automatisation d’entreprise",
         "label": "Entreprise",
-        "short": "Faire circuler demandes, documents et approbations entre les outils que l’entreprise utilise déjà.",
+        "short": "Répondre au téléphone de l’entreprise et faire circuler demandes, documents et approbations, étape par étape.",
         "image": "/media/solutions/jarvis-enterprise-operations-v1.webp",
         "pour": "PME, entreprises de services et équipes terrain",
-        "line": "JARVIS relie les outils de l’entreprise, prépare les actions, demande une validation et conserve une trace.",
+        "line": "JARVIS répond à la réception, relie les outils de l’entreprise, demande une validation et conserve une trace.",
         "points": [
             ("Moins de ressaisie", "Les informations passent d’un outil à l’autre, sans copier-coller."),
             ("Vos règles, appliquées", "Seuils, approbations, exceptions : écrits une fois, respectés chaque fois."),

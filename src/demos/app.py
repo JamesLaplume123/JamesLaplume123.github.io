@@ -1,8 +1,9 @@
 # Démo « JARVIS App » : l'application rendue en vrai HTML/CSS, nette à toutes les tailles.
 # Fidèle au dossier User révision 25 : menu Accueil, Mon espace, Carte, Mes outils, Administration;
-# bannière du lac au coucher du soleil; barre latérale dorée vitreuse. Sept écrans (Accueil, Assistant,
-# Mon espace, Ma journée, Mes partages, Carte, Mes outils), pilotés par la barre latérale
-# (barre d'onglets en bas sur cellulaire). Styles et script : assets/demos/app.css et app.js.
+# bannière du lac au coucher du soleil; barre latérale dorée vitreuse. Huit écrans (Accueil, Assistant,
+# Mon espace, Ma journée, Mes partages, Mes appels, Carte, Mes outils), pilotés par la barre latérale
+# (barre d'onglets en bas sur cellulaire). Un sélecteur Personnel | Professionnel (Mon espace et
+# Mes appels) bascule le contenu des deux espaces. Styles et script : assets/demos/app.css et app.js.
 # Données fictives, sauf l'heure locale et la météo réelle de Saint-Hyacinthe.
 
 import math
@@ -58,6 +59,9 @@ ICONS = {
     "minus": '<path d="M5 12h14"/>',
     "locate": '<circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.6"/><path d="M12 2.75v3M12 18.25v3M2.75 12h3M18.25 12h3"/>',
     "phone": '<rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 17.75h2"/>',
+    "call": '<path d="M5.1 4.25h2.8a1 1 0 0 1 .95.68l.97 2.84a1 1 0 0 1-.33 1.1L7.75 10.3a12.4 12.4 0 0 0 5.95 5.95l1.43-1.74a1 1 0 0 1 1.1-.33l2.84.97a1 1 0 0 1 .68.95v2.8a1.15 1.15 0 0 1-1.25 1.15C11 19.4 4.6 13 3.95 5.5A1.15 1.15 0 0 1 5.1 4.25Z"/>',
+    "arrin": '<path d="M18.5 5.5 11 13M11 7.75V13h5.25"/>',
+    "arrout": '<path d="M11 13l7.5-7.5M12.75 5.5H18.5v5.75"/>',
     "camera": '<rect x="3.5" y="7" width="12.5" height="10" rx="2.25"/><path d="m16 10.5 4.5-2.5v8L16 13.5"/>',
     "folder": '<path d="M3.5 7.5a2 2 0 0 1 2-2h3.8l2 2.25h7.2a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>',
     "key": '<circle cx="8" cy="15" r="3.75"/><path d="m10.7 12.3 8.3-8.3M16 7l2.5 2.5M14 9l1.75 1.75"/>',
@@ -116,22 +120,24 @@ NAV = [
 ]
 ADMIN_NOTE = "Administration : comptes, droits et extensions. Réservée à l’administrateur de votre système."
 TITLE = {"accueil": "Accueil", "assistant": "Assistant JARVIS", "espace": "Mon espace", "journee": "Ma journée",
-         "partage": "Mes partages", "carte": "Carte", "outils": "Mes outils"}
+         "partage": "Mes partages", "appels": "Mes appels", "carte": "Carte", "outils": "Mes outils"}
 # Chapitres de la séquence de l'accueil (un appareil par écran)
-SEQUENCE = ["accueil", "assistant", "espace", "journee", "partage", "carte", "outils"]
+SEQUENCE = ["accueil", "assistant", "espace", "journee", "partage", "appels", "carte", "outils"]
 
 # Les écrans, dans l'ordre de la visite : clé, entrée du menu, durée (ms), légende
 SCREENS = [
-    ("accueil", "accueil", 7000, "Votre journée, sur un seul écran.",
-     "Messages, agenda, lieux et assistant réunis, à votre image."),
+    ("accueil", "accueil", 7500, "Votre journée, sur un seul écran.",
+     "Agenda, messages, appels et votre équipe d’extensions au rapport : chacune travaille pour vous et vous dit où elle en est."),
     ("assistant", "accueil", 13000, "Il propose. Vous décidez.",
      "Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord."),
     ("espace", "espace", 7500, "Votre quotidien, à votre image.",
-     "Agenda, documents, appareils, connexions et partages : chaque chose à sa place."),
+     "Agenda, documents, appareils, partages et appels : chaque chose à sa place, en personnel comme en professionnel."),
     ("journee", "espace", 8000, "Tous vos agendas, enfin ensemble.",
      "Calendriers et tâches de toutes vos sources. Ce qui est en lecture seule le reste."),
     ("partage", "espace", 8500, "Vous choisissez ce que vous partagez.",
      "Avec qui, pour combien de temps, et sous votre contrôle. Un accès retiré disparaît partout."),
+    ("appels", "espace", 8500, "JARVIS répond quand vous ne pouvez pas.",
+     "Appels et visioconférences, en personnel comme en professionnel. Un numéro inconnu est filtré d’abord par JARVIS, et vous gardez le dernier mot."),
     ("carte", "carte", 8000, "Vos lieux, sans surveillance.",
      "La carte n’affiche que ce que vous êtes autorisé à voir. Aucune position inventée."),
     ("outils", "outils", 7000, "Toutes vos extensions, au même endroit.",
@@ -324,6 +330,28 @@ def _card_h(ic, title, more=""):
     return f'<header class="ap-card-h">{icon(ic)}<h4>{title}</h4>{more}</header>'
 
 
+def _pp():
+    """Sélecteur Personnel | Professionnel (un même état pour tout l'appareil, tenu par app.js)."""
+    return f"""<div class="ap-seg ap-pp" role="group" aria-label="Espace affiché">
+  <button type="button" class="is-on" data-pp="perso" aria-pressed="true">{icon("user")}Personnel</button>
+  <button type="button" data-pp="pro" aria-pressed="false">{icon("brief")}Professionnel</button>
+</div>"""
+
+
+def _px(perso, pro):
+    """Deux textes, un seul affiché selon l'espace choisi (Personnel ou Professionnel)."""
+    return f'<span data-pp-only="perso">{perso}</span><span data-pp-only="pro">{pro}</span>'
+
+
+# Votre équipe : une ligne par extension active (EXT_ON), comme un membre d'équipe au rapport.
+TEAM = [
+    ("environnements-intelligents", "home", "Domotique", "Chauffage réduit, retour pour 17 h"),
+    ("securite-intelligente", "shield", "Sécurité", "Nuit calme · 2 véhicules reconnus"),
+    ("ia-privee-connaissances", "spark", "IA locale", "3 documents classés, résumé prêt"),
+    ("reseau-resilience", "net", "Continuité", "Sauvegarde de 3 h réussie"),
+]
+
+
 def v_accueil():
     notifs = f"""<div class="ap-card ap-notifs" data-r>
   <div class="ap-nt"><span class="ap-ring">{icon("bell")}</span><span><b>Notifications</b>
@@ -345,6 +373,23 @@ def v_accueil():
       <li class="is-done"><span class="ap-box">{icon("check")}</span><span><b>Réserver le souper</b><small>Fait · Personnel</small></span></li>
       <li class="is-ro"><span class="ap-box">{icon("lock")}</span><span><b>Valider la soumission</b><small>Travail · lecture seule</small></span></li>
     </ul>"""
+    rows = "".join(
+        f"""<li><button type="button" data-go="outils">
+      <span class="ap-ring">{icon(ic)}</span>
+      <span><b>{role}</b><small>{report}</small></span>{icon("right", "ap-chev")}
+    </button></li>"""
+        for slug, ic, role, report in TEAM if slug in EXT_ON
+    )
+    rows += f"""<li><button type="button" data-go="appels">
+      <span class="ap-ring">{icon("call")}</span>
+      <span><b>Réception</b><small>{_px("1 appel répondu par JARVIS ce matin",
+                                       "2 appels d’affaires répondus ce matin")}</small></span>{icon("right", "ap-chev")}
+    </button></li>"""
+    team = f"""<article class="ap-card ap-team" data-r>
+    {_card_h("users", "Votre équipe", '<button type="button" class="ap-link" data-go="outils">Mes outils' + icon("right") + '</button>')}
+    <ul class="ap-rows">{rows}</ul>
+    <p class="ap-team-f">{icon("info")}<span>Chaque extension travaille chez vous et rend des comptes ici.</span></p>
+  </article>"""
     return f"""{_head("", '<span data-ap="greet">Bonsoir</span> <em>Alex</em>', "Votre journée, simplement.",
                       '<div class="ap-today"><span data-ap="date">Aujourd’hui</span><b><span data-ap="clock">19 h 42</span></b></div>')}
 {notifs}
@@ -354,6 +399,7 @@ def v_accueil():
     <div class="ap-seg" role="group" aria-label="Afficher"><button type="button" class="is-on" data-seg="agenda" aria-pressed="true">Agenda</button><button type="button" data-seg="taches" aria-pressed="false">Tâches</button></div>
     {agenda}
   </article>
+  {team}
   <div class="ap-col">
     <article class="ap-card ap-asst" data-r>
       <div class="ap-asst-h"><span class="ap-orb" aria-hidden="true"></span><span><b>Assistant JARVIS</b><small>Comment puis-je vous aider ?</small></span></div>
@@ -470,10 +516,16 @@ def v_espace():
         f'<li class="{c}">{av}<span><b>{t}</b><small>{d}</small><em>{tag}</em></span><time>{when}</time></li>'
         for c, av, t, d, tag, when in notes
     )
-    return f"""{_head("", "Mon <em>espace</em>", "Votre quotidien, à votre image.")}
+    appels_tile = f"""<button type="button" class="ap-card ap-tile ap-tile-call" data-go="appels" data-r>
+      <span class="ap-tile-i">{icon("call")}</span>
+      <span class="ap-tile-t"><b>Mes appels</b><small>{_px("Appels et visioconférences · 1 appel répondu par JARVIS ce matin",
+                                                           "Appels d’affaires et visioconférences · 2 réponses de JARVIS ce matin")}</small></span>
+      <i class="ap-tile-go">{icon("right")}</i>
+    </button>"""
+    return f"""{_head("", "Mon <em>espace</em>", "Votre quotidien, à votre image.", _pp())}
 <div class="ap-es">
   <div class="ap-es-main">
-    <div class="ap-tiles">{grid}</div>
+    <div class="ap-tiles">{grid}{appels_tile}</div>
     <button type="button" class="ap-card ap-explore" data-go="carte" data-r>
       <img src="{BANNER}" alt="" loading="lazy" decoding="async">
       <span class="ap-tile-i">{icon("image")}</span>
@@ -487,6 +539,90 @@ def v_espace():
     <ul class="ap-nl">{nl}</ul>
     <button type="button" class="ap-btn ap-markread" data-ap="markread">{icon("check")}<span>Tout marquer comme lu</span></button>
   </aside>
+</div>"""
+
+
+def v_appels():
+    jv = '<em class="ap-jvb">JARVIS a répondu</em>'
+    rappel = ('<button type="button" class="ap-btn" data-toast="Démo : aucun appel réel n’est lancé. '
+              'En vrai, JARVIS composerait le numéro pour vous.">' + icon("call") + "Rappeler</button>")
+
+    def quote(txt):
+        return f'<p class="ap-call-q">{icon("doc")}<span>« {txt} »</span></p>'
+
+    calls = f"""
+<li class="ap-call" data-pp-only="perso">
+  <div class="ap-call-r">{face(AV_CAMILLE)}<span class="ap-call-t"><b>Camille</b><small>{icon("arrin", "i-in")}Entrant · accepté</small></span><time>Ce midi · 7 min</time></div>
+</li>
+<li class="ap-call is-jv" data-pp-only="perso">
+  <button type="button" class="ap-call-r" data-call aria-expanded="false">
+    <span class="ap-orb sm" aria-hidden="true"></span>
+    <span class="ap-call-t"><b>Numéro inconnu</b><small>{jv} · message pris</small></span>
+    <time>9 h 05</time>{icon("down", "ap-call-ch")}
+  </button>
+  <div class="ap-call-d">
+    {quote("JARVIS a pris le message, proposé jeudi 14 h, noté au calendrier.")}
+    <div class="ap-call-a">{rappel}<span class="ap-state is-ok"><i aria-hidden="true"></i><span>Noté au calendrier</span></span></div>
+  </div>
+</li>
+<li class="ap-call" data-pp-only="perso">
+  <div class="ap-call-r">{mono("MA", "teal")}<span class="ap-call-t"><b>Marc</b><small>{icon("arrout", "i-out")}Sortant</small></span><time>Hier · 12 min</time></div>
+</li>
+<li class="ap-call is-more" data-pp-only="perso">
+  <div class="ap-call-r">{mono("M", "violet")}<span class="ap-call-t"><b>Maman</b><small>{icon("arrin", "i-in")}Entrant · accepté</small></span><time>Hier · 18 min</time></div>
+</li>
+<li class="ap-call is-jv" data-pp-only="pro">
+  <button type="button" class="ap-call-r" data-call aria-expanded="false">
+    <span class="ap-orb sm" aria-hidden="true"></span>
+    <span class="ap-call-t"><b>Atelier Fortin</b><small>{jv} · client</small></span>
+    <time>10 h 20</time>{icon("down", "ap-call-ch")}
+  </button>
+  <div class="ap-call-d">
+    {quote("Commande prête jeudi. JARVIS a proposé une livraison à 14 h et noté le suivi au calendrier.")}
+    <div class="ap-call-a">{rappel}<span class="ap-state is-ok"><i aria-hidden="true"></i><span>Suivi noté</span></span></div>
+  </div>
+</li>
+<li class="ap-call" data-pp-only="pro">
+  <div class="ap-call-r">{mono("MT", "violet")}<span class="ap-call-t"><b>Mme Tremblay</b><small>{icon("arrin", "i-in")}Entrant · accepté</small></span><time>Ce matin · 4 min</time></div>
+</li>
+<li class="ap-call" data-pp-only="pro">
+  <div class="ap-call-r">{mono("FB", "stone")}<span class="ap-call-t"><b>Fournisseur Bélanger</b><small>{icon("arrout", "i-out")}Sortant</small></span><time>Hier · 9 min</time></div>
+</li>
+<li class="ap-call is-more" data-pp-only="pro">
+  <div class="ap-call-r">{mono("NG", "gold")}<span class="ap-call-t"><b>Notaire Girard</b><small>{icon("arrout", "i-out")}Sortant</small></span><time>Lundi · 8 min</time></div>
+</li>"""
+    rejoindre = ('<button type="button" class="ap-btn is-primary" data-toast="Simulation : rien n’est lancé ici. '
+                 'En vrai, la visioconférence s’ouvrirait par votre Hub.">' + icon("camera") + "Rejoindre</button>")
+    visio = f"""<article class="ap-card ap-visio" data-r>
+  {_card_h("camera", "Visioconférence")}
+  <div class="ap-vnext" data-pp-only="perso">
+    <small>Ce soir · 20 h</small><b>Appel vidéo — Camille</b>
+    <div class="ap-vrow"><span class="ap-faces">{face(AV_ALEX)}{face(AV_CAMILLE)}</span>{rejoindre}</div>
+    <p class="ap-vok">{icon("check")}<span>Téléviseur du salon prêt · caméra et micro vérifiés</span></p>
+  </div>
+  <div class="ap-vnext" data-pp-only="pro">
+    <small>Demain · 9 h 30 – 10 h 15</small><b>Revue de chantier — Atelier</b>
+    <div class="ap-vrow"><span class="ap-faces">{face(AV_ALEX)}{face(AV_CAMILLE)}{face(AV_EQUIPE)}<i>+2</i></span>{rejoindre}</div>
+    <p class="ap-vok">{icon("check")}<span>Salle de réunion prête · caméra et micro vérifiés</span></p>
+  </div>
+  <div class="ap-vpast">
+    <span><small>Hier · 15 h</small><b>{_px("Appel avec les parents", "Point d’équipe")}</b></span>
+    <button type="button" class="ap-vsum" data-toast="Le résumé serait affiché ici : préparé par votre JARVIS, chez vous.">{icon("doc")}Résumé par JARVIS disponible</button>
+  </div>
+</article>"""
+    priv = f"""<div class="ap-card ap-priv" data-r>
+  <span class="ap-ring">{icon("lock")}</span>
+  <p>Vos appels restent chez vous : la téléphonie passe par votre JARVIS Hub.</p>
+</div>"""
+    return f"""{_head('Mon espace <span>/</span> <b>Mes appels</b>', 'Mes <em>appels</em>',
+                      "Appels et visioconférences, répondus avec vous — ou pour vous.", _pp())}
+<div class="ap-ap">
+  <div class="ap-card ap-callc" data-r>
+    {_card_h("call", "Appels récents")}
+    <ul class="ap-calls">{calls}</ul>
+    <p class="ap-fine">{icon("info")}<span>Un numéro inconnu est filtré d’abord par JARVIS : il répond, prend le message, vous décidez.</span></p>
+  </div>
+  <div class="ap-col">{visio}{priv}</div>
 </div>"""
 
 
@@ -686,7 +822,7 @@ def v_partage():
 
 
 VIEWS = {"accueil": v_accueil, "assistant": v_assistant, "espace": v_espace, "journee": v_journee,
-         "partage": v_partage, "carte": v_carte, "outils": v_outils}
+         "partage": v_partage, "appels": v_appels, "carte": v_carte, "outils": v_outils}
 
 
 def _stagger(html):
@@ -754,7 +890,7 @@ def _device(only=None):
           <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
           <b>JARVIS · Ma vie</b>
           <span class="ap-win-sep" aria-hidden="true">/</span>
-          <span class="ap-win-name" data-ap="winname">Accueil</span>
+          <span class="ap-win-name" data-ap="winname">{TITLE[only] if single else "Accueil"}</span>
           <span class="tag tag-sim">Démo · données fictives</span>
         </div>
         <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="{label}">
@@ -774,6 +910,7 @@ def _device(only=None):
                 <span class="ap-wx-i" aria-hidden="true">{WX}</span>
                 <span><b><span data-ap="temp">—</span><span class="ap-unit">{NB}°C</span></b><small>Saint-Hyacinthe<span class="ap-live"> · en direct</span></small></span>
               </span>
+              <button type="button" class="ap-top-call" data-go="appels" aria-label="Mes appels" title="Mes appels">{icon("call")}</button>
               <span class="ap-pin" title="Emplacement du Hub">{icon("pin")}</span>
               <span class="ap-me">{face(AV_ALEX)}<b>Alex</b>{icon("down")}</span>
             </header>

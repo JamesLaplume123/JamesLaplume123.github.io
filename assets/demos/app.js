@@ -1,6 +1,7 @@
-/* Démo « JARVIS App » (dossier User v25) : sept écrans, quatre entrées de menu, pilotés par la barre latérale
-   (ou les onglets du bas). Un écran appartient à une entrée du menu (data-nav) : Ma journée et Mes partages
-   sont dans Mon espace, l'Assistant part de l'Accueil.
+/* Démo « JARVIS App » (dossier User v25) : huit écrans, quatre entrées de menu, pilotés par la barre latérale
+   (ou les onglets du bas). Un écran appartient à une entrée du menu (data-nav) : Ma journée, Mes partages et
+   Mes appels sont dans Mon espace, l'Assistant part de l'Accueil. Un sélecteur Personnel | Professionnel
+   (data-pp) bascule le contenu des deux espaces, d'un seul état pour tout l'appareil.
    Vraies données : l'heure locale et la météo de Saint-Hyacinthe (Environnement Canada).
    Tout le reste est fictif : aucun rappel, partage ou appareil réel n'est touché. */
 (function () {
@@ -392,6 +393,59 @@
           mark.disabled = false; mark.classList.remove("is-done"); mark.lastChild.textContent = LABEL;
           list.classList.remove("only-unread");
           $$("[data-nf]", v).forEach(function (x, k) { x.classList.toggle("is-on", !k); x.setAttribute("aria-pressed", k ? "false" : "true"); });
+        }
+      };
+    })();
+
+    /* ---------------------------------------------------------------- Personnel | Professionnel */
+    var pps = $$("[data-pp]");
+    pps.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var mode = b.getAttribute("data-pp");
+        root.classList.toggle("is-pro", mode === "pro");
+        pps.forEach(function (x) {
+          var on = x.getAttribute("data-pp") === mode;
+          x.classList.toggle("is-on", on);
+          x.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+      });
+    });
+
+    /* ---------------------------------------------------------------- Mes appels */
+    (function () {
+      var v = $(".ap-v-appels");
+      if (!v) return;
+      var openT = null;
+      function close(row) {
+        row.classList.remove("is-open");
+        var b = $("[data-call]", row);
+        if (b) b.setAttribute("aria-expanded", "false");
+      }
+      function open(row) {
+        $$(".ap-call.is-open", v).forEach(close);
+        row.classList.add("is-open");
+        var b = $("[data-call]", row);
+        if (b) b.setAttribute("aria-expanded", "true");
+      }
+      $$("[data-call]", v).forEach(function (b) {
+        b.addEventListener("click", function () {
+          var row = b.closest(".ap-call");
+          if (row.classList.contains("is-open")) close(row); else open(row);
+        });
+      });
+      hooks.appels = {
+        // La visite montre l'appel répondu par JARVIS : la ligne clé s'ouvre d'elle-même.
+        enter: function () {
+          clearTimeout(openT);
+          var sel = root.classList.contains("is-pro") ? '[data-pp-only="pro"]' : '[data-pp-only="perso"]';
+          var row = $(".ap-call.is-jv" + sel, v);
+          if (!row) return;
+          if (!fx) { open(row); return; }
+          openT = setTimeout(function () { open(row); }, 1600);
+        },
+        leave: function () {
+          clearTimeout(openT);
+          $$(".ap-call.is-open", v).forEach(close);
         }
       };
     })();

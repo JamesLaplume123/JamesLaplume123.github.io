@@ -74,10 +74,10 @@ PAGE = {
       <h2 style="margin-top:1rem">Un audit autorisé, <em>piloté par l’IA.</em></h2>
     </div>
     <div class="side" data-rev>
-      <p>Sur votre propre infrastructure et avec votre autorisation écrite seulement, JARVIS
-      orchestre les outils de Kali Linux — la trousse de référence des auditeurs — par MCP,
-      un appel à la fois. Le Core vérifie chaque appel contre le mandat; la correction attend
-      votre accord; un retest la prouve.</p>
+      <p>Avec votre autorisation écrite seulement, JARVIS commence par cartographier votre
+      surface publique à partir de sources ouvertes (OSINT), puis orchestre les outils d’audit
+      sur votre propre infrastructure, par MCP, un appel à la fois. Le Core vérifie chaque appel
+      contre le mandat; la correction attend votre accord; un retest la prouve.</p>
       <span class="chip chip-sim">Vision · données fictives</span>
     </div>
   </div>

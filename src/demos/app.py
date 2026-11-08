@@ -127,7 +127,7 @@ SEQUENCE = ["accueil", "assistant", "espace", "journee", "partage", "appels", "c
 # Les écrans, dans l'ordre de la visite : clé, entrée du menu, durée (ms), légende
 SCREENS = [
     ("accueil", "accueil", 7500, "Votre journée, sur un seul écran.",
-     "Agenda, messages, appels et votre équipe d’extensions au rapport : chacune travaille pour vous et vous dit où elle en est."),
+     "Agenda, messages, appels et vos extensions, avec leur état du moment : chacune travaille pour vous et vous dit où elle en est."),
     ("assistant", "accueil", 13000, "Il propose. Vous décidez.",
      "Demandez en mots simples. JARVIS prépare l’action, montre ses sources et attend votre accord."),
     ("espace", "espace", 7500, "Votre quotidien, à votre image.",
@@ -147,7 +147,7 @@ SCREENS = [
 # Mes outils : les extensions sont les six solutions du site (config.py); chacune ouvre sa page.
 EXT_ICON = {"environnements-intelligents": "home", "ia-privee-connaissances": "spark", "securite-intelligente": "shield",
             "automatisation-operations": "flow", "reseau-resilience": "net", "diagnostic-care": "pulse"}
-EXT_ON = {"environnements-intelligents", "ia-privee-connaissances", "securite-intelligente", "reseau-resilience"}
+EXT_ON = {"environnements-intelligents", "ia-privee-connaissances", "securite-intelligente", "automatisation-operations", "reseau-resilience"}
 
 # Bannière et visages repris du dossier User v25 (texte incrusté retiré); photos d'ambiance du site.
 BANNER = "/media/app/banniere-lac.webp"
@@ -343,12 +343,14 @@ def _px(perso, pro):
     return f'<span data-pp-only="perso">{perso}</span><span data-pp-only="pro">{pro}</span>'
 
 
-# Votre équipe : une ligne par extension active (EXT_ON), comme un membre d'équipe au rapport.
-TEAM = [
-    ("environnements-intelligents", "home", "Domotique", "Chauffage réduit, retour pour 17 h"),
-    ("securite-intelligente", "shield", "Sécurité", "Nuit calme · 2 véhicules reconnus"),
-    ("ia-privee-connaissances", "spark", "IA locale", "3 documents classés, résumé prêt"),
-    ("reseau-resilience", "net", "Continuité", "Sauvegarde de 3 h réussie"),
+# Accueil : les extensions d'Alex, avec leur photo et leur état du moment.
+# (slug, état perso, état pro ou None, écran data-go ou None → Mes outils)
+HOME_EXT = [
+    ("environnements-intelligents", "21 °C · chauffage réduit, retour pour 17 h", None, None),
+    ("securite-intelligente", "Nuit calme · système armé · 2 véhicules reconnus", None, None),
+    ("automatisation-operations", "1 appel répondu par JARVIS ce matin", "2 appels d’affaires répondus ce matin", "appels"),
+    ("ia-privee-connaissances", "3 documents classés · résumé prêt", None, None),
+    ("reseau-resilience", "Tout fonctionne · sauvegarde de 3 h réussie", None, None),
 ]
 
 
@@ -373,33 +375,33 @@ def v_accueil():
       <li class="is-done"><span class="ap-box">{icon("check")}</span><span><b>Réserver le souper</b><small>Fait · Personnel</small></span></li>
       <li class="is-ro"><span class="ap-box">{icon("lock")}</span><span><b>Valider la soumission</b><small>Travail · lecture seule</small></span></li>
     </ul>"""
-    rows = "".join(
-        f"""<li><button type="button" data-go="outils">
-      <span class="ap-ring">{icon(ic)}</span>
-      <span><b>{role}</b><small>{report}</small></span>{icon("right", "ap-chev")}
-    </button></li>"""
-        for slug, ic, role, report in TEAM if slug in EXT_ON
+    byslug = {c["slug"]: c for c in CAPABILITIES}
+    xcards = "".join(
+        f"""<button type="button" class="ap-xc" data-go="{go or 'outils'}">
+      <img src="{byslug[slug]['image']}" alt="" loading="lazy" decoding="async">
+      <span class="ap-xc-i">{icon(EXT_ICON[slug])}</span>
+      <span class="ap-xc-t"><b>{byslug[slug]['label']}</b>
+        <small>{_px(perso, pro) if pro else perso}</small></span>
+      <span class="ap-xc-dot" aria-hidden="true"></span>
+    </button>"""
+        for slug, perso, pro, go in HOME_EXT
     )
-    rows += f"""<li><button type="button" data-go="appels">
-      <span class="ap-ring">{icon("call")}</span>
-      <span><b>Réception</b><small>{_px("1 appel répondu par JARVIS ce matin",
-                                       "2 appels d’affaires répondus ce matin")}</small></span>{icon("right", "ap-chev")}
-    </button></li>"""
-    team = f"""<article class="ap-card ap-team" data-r>
-    {_card_h("users", "Votre équipe", '<button type="button" class="ap-link" data-go="outils">Mes outils' + icon("right") + '</button>')}
-    <ul class="ap-rows">{rows}</ul>
-    <p class="ap-team-f">{icon("info")}<span>Chaque extension travaille chez vous et rend des comptes ici.</span></p>
-  </article>"""
+    exts = f"""<section class="ap-xh" data-r aria-label="Vos extensions">
+    <header class="ap-xh-h"><span class="ap-ring">{icon("grid")}</span><b>Vos extensions</b>
+      <small><i class="ap-dot is-ok" aria-hidden="true"></i>Tout fonctionne</small>
+      <button type="button" class="ap-link" data-go="outils">Tout voir{icon("right")}</button></header>
+    <div class="ap-xh-g">{xcards}</div>
+  </section>"""
     return f"""{_head("", '<span data-ap="greet">Bonsoir</span> <em>Alex</em>', "Votre journée, simplement.",
                       '<div class="ap-today"><span data-ap="date">Aujourd’hui</span><b><span data-ap="clock">19 h 42</span></b></div>')}
 {notifs}
+{exts}
 <div class="ap-home-a">
   <article class="ap-card ap-day" data-r>
     {_card_h("calendar", "Ma journée", '<button type="button" class="ap-link" data-go="journee">Voir tout' + icon("right") + '</button>')}
     <div class="ap-seg" role="group" aria-label="Afficher"><button type="button" class="is-on" data-seg="agenda" aria-pressed="true">Agenda</button><button type="button" data-seg="taches" aria-pressed="false">Tâches</button></div>
     {agenda}
   </article>
-  {team}
   <div class="ap-col">
     <article class="ap-card ap-asst" data-r>
       <div class="ap-asst-h"><span class="ap-orb" aria-hidden="true"></span><span><b>Assistant JARVIS</b><small>Comment puis-je vous aider ?</small></span></div>

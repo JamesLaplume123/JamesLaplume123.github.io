@@ -1,12 +1,12 @@
-/* Démo « Automatisation d'entreprise » : une demande traverse cinq étapes
+/* Démo « Automatisation d'entreprise ». Scénario vedette : la réception
+   téléphonique IA — JARVIS répond sur la ligne IP, la transcription se tape en
+   direct, la procédure de l'équipe se valide étape par étape, le remboursement
+   attend votre accord, et « Je veux parler à quelqu'un » transfère l'appel avec
+   tout le contexte. Trois autres scénarios : une demande traverse cinq étapes
    (reçue → lue → règle → votre approbation → exécutée), avec narration,
-   journal horodaté et compteur avant / après. JARVIS s'arrête à l'étape 4 :
-   rien ne part sans votre clic. Sous html.fx, le travail se voit : le message
-   arrive, un paquet voyage sur chaque liaison, JARVIS surligne ce qu'il lit et
-   les valeurs volent jusqu'aux champs, la règle compte, le bouton s'enfonce, le
-   document s'imprime et se signe. Démarre à l'entrée dans la fenêtre, se met
-   en pause hors écran. Sans JavaScript, l'état statique (demande d'achat
-   approuvée) reste lisible. */
+   journal horodaté et compteur avant / après. Sous html.fx, le travail se
+   voit; démarre à l'entrée dans la fenêtre, se met en pause hors écran. Sans
+   JavaScript, l'état statique (l'appel terminé) reste lisible. */
 (function () {
   "use strict";
   var root = document.querySelector('[data-demo="automatisation"]');
@@ -56,7 +56,8 @@
   var stage = $("[data-stage]"), lead = $("[data-lead]"), say = $("[data-say]");
   var stepEl = $("[data-step]"), sayText = $("[data-say-text]"), journal = $("[data-journal]");
   var statsEl = $("[data-stats]"), tabs = $$(".au-tab"), tpls = $$("template[data-au-sc]");
-  var cur = 0, started = false, pending = null;
+  var telTpl = $("template[data-au-tel]");
+  var cur = "tel", started = false, pending = null, telState = null;
   var DECIDED_ICON = $(".au-role svg") ? $(".au-role svg").outerHTML : "";
 
   function pad(n) { return ("0" + n).slice(-2); }
@@ -117,17 +118,19 @@
   }
 
   function narrate(step, total, text) {
-    stepEl.textContent = step ? "Étape " + step + " sur " + total : (total ? "Terminé" : "Scénario");
+    stepEl.textContent = typeof step === "string" ? step
+      : (step ? "Étape " + step + " sur " + total : (total ? "Terminé" : "Scénario"));
     sayText.textContent = text;
     say.classList.remove("is-new");
     void say.offsetWidth;
     say.classList.add("is-new");
   }
 
-  function setTab(i) {
-    tabs.forEach(function (t, k) {
-      t.classList.toggle("is-on", k === i);
-      t.setAttribute("aria-pressed", k === i ? "true" : "false");
+  function setTab(key) {
+    tabs.forEach(function (t) {
+      var on = t.getAttribute("data-sc") === String(key);
+      t.classList.toggle("is-on", on);
+      t.setAttribute("aria-pressed", on ? "true" : "false");
     });
   }
 
@@ -347,23 +350,31 @@
     b.parentNode.classList.add("is-chosen");
   }
 
-  /* ---------- Un scénario complet ---------- */
-  function play(i) {
+  /* ---------- Montage d'un scénario depuis son gabarit ---------- */
+  function mount(key, tpl) {
     run++;
     timers = []; tweens = [];
     fx = !reduce && document.documentElement.classList.contains("fx");
-    cur = i; started = true; pending = null;
-    setTab(i);
-    var tpl = tpls[i];
-    if (!tpl) return;
+    cur = key; started = true; pending = null; telState = null;
+    setTab(key);
     var frag = tpl.content.cloneNode(true);
     lead.textContent = frag.querySelector('[data-part="lead"]').textContent;
     stage.innerHTML = "";
-    stage.appendChild(frag.querySelector('[data-part="pipe"] .au-pipe'));
+    stage.appendChild(frag.querySelector('[data-part="pipe"]').firstElementChild);
     var statsPart = frag.querySelector('[data-part="stats"]');
     statsEl.innerHTML = "";
     while (statsPart.firstChild) statsEl.appendChild(statsPart.firstChild);
     journal.innerHTML = "";
+  }
+  function start(key) {
+    if (key === "tel") playTel(); else play(+key);
+  }
+
+  /* ---------- Un scénario « pipeline » complet ---------- */
+  function play(i) {
+    var tpl = tpls[i];
+    if (!tpl) return;
+    mount(i, tpl);
     log("Démonstration lancée · données simulées");
     var sts = $$(".au-st", stage), n = sts.length;
     narrate(0, 0, "La demande arrive. Regardez-la circuler.");
@@ -400,10 +411,210 @@
     });
   }
 
+  /* ==========================================================================
+     Scénario vedette : réception téléphonique IA. L'appel sonne, JARVIS répond,
+     la transcription se tape en direct (l'onde suit la voix active), et la
+     procédure de l'équipe se valide à droite, une étape à la fois. Le
+     remboursement attend votre accord; « Je veux parler à quelqu'un »
+     transfère l'appel avec tout le contexte.
+     ========================================================================== */
+  function telVoice(s, who) {
+    if (!s.wave) return;
+    s.wave.setAttribute("data-voice", who || "");
+    s.wave.classList.toggle("is-live", !!who);
+  }
+  function telStatus(s, text, cls) {
+    s.stat.textContent = text;
+    s.stat.className = "au-cstat" + (cls ? " " + cls : "");
+  }
+  function telScroll(s) { s.script.scrollTop = s.script.scrollHeight; }
+  function telTick(s) {
+    wait(1000).then(function () {
+      if (s.rid !== run || !s.callOn) return;
+      s.sec += 1;
+      s.ctimer.textContent = Math.floor(s.sec / 60) + ":" + pad(s.sec % 60);
+      telTick(s);
+    });
+  }
+  function telStepsDo(s, ids, done) {
+    (ids || "").split(",").forEach(function (id) {
+      var li = id && s.steps[id];
+      if (!li) return;
+      if (!done) { li.classList.add("is-act"); return; }
+      li.classList.remove("is-act");
+      li.classList.add("is-done");
+      $(".au-ps-d", li).textContent = li.getAttribute("data-d");
+      if (li.getAttribute("data-log")) log(li.getAttribute("data-log"));
+    });
+  }
+  /* Une réplique : l'onde suit la voix, le texte se tape, la procédure avance */
+  function telLine(s, li) {
+    li.hidden = false;
+    li.classList.add("on");
+    var p = $("p", li), who = li.getAttribute("data-who");
+    var text = li.hasAttribute("data-variant") ? li.getAttribute(s.choice === "no" ? "data-no-text" : "data-ok-text") : p.textContent;
+    var say = li.getAttribute("data-say");
+    if (say) narrate("Appel en direct", 0, say);
+    telStepsDo(s, li.getAttribute("data-act"));
+    telVoice(s, who);
+    p.textContent = "";
+    s.typing = { el: p, text: text };
+    telScroll(s);
+    return write(p, text, 500 + text.length * (fx ? 16 : 0)).then(function () {
+      s.typing = null;
+      telVoice(s, "");
+      telScroll(s);
+      telStepsDo(s, li.getAttribute("data-done"), true);
+      return wait(fx ? 520 : 300);
+    });
+  }
+  /* L'accord humain : notification au gérant, la cliente patiente en ligne */
+  function telAsk(s, li) {
+    var step = s.steps[li.getAttribute("data-ask")];
+    if (!step) return Promise.resolve();
+    step.classList.add("is-act");
+    var notif = $("[data-notif]", step), timer = $("[data-timer]", notif), t0 = Date.now();
+    notif.hidden = false;
+    notif.classList.add("on");
+    telStatus(s, "Validation humaine demandée", "is-hold");
+    narrate("Validation humaine", 0, "Un remboursement ? La procédure exige un humain. Rien ne part sans votre accord.");
+    var answer = new Promise(function (res) { pending = { st: notif, res: res, line: null }; });
+    pending.line = log("Remboursement de 45 $ · en attente de votre accord", "is-wait");
+    (function tick() {
+      wait(1000).then(function () {
+        if (!pending || pending.st !== notif) return;
+        var sec = Math.round((Date.now() - t0) / 1000);
+        timer.textContent = Math.floor(sec / 60) + ":" + pad(sec % 60);
+        tick();
+      });
+    })();
+    return answer.then(function (what) {
+      var btns = $(".au-btns", notif), dec = $(".au-decided", notif);
+      var textLog = btns.getAttribute(what === "ok" ? "data-ok-log" : "data-no-log");
+      if (pending && pending.line) pending.line.classList.remove("is-wait");
+      pending = null;
+      s.choice = what;
+      return wait(fx ? 760 : 0).then(function () {
+        notif.classList.add("is-decided");
+        dec.className = "au-decided is-" + what;
+        dec.innerHTML = DECIDED_ICON;
+        dec.appendChild(document.createTextNode(textLog));
+        step.classList.remove("is-act");
+        step.classList.add(what === "ok" ? "is-done" : "is-no");
+        $(".au-ps-d", step).textContent = step.getAttribute(what === "ok" ? "data-d" : "data-dn");
+        log(textLog, what === "ok" ? "is-ok" : "");
+        telStatus(s, "En ligne", "is-live");
+        return wait(400);
+      });
+    });
+  }
+  function telEnd(s, kind) {
+    var end = $("[data-telend]", s.tel);
+    s.callOn = false;
+    s.ended = true;
+    telVoice(s, "");
+    $("[data-esc]", s.tel).disabled = true;
+    end.hidden = false;
+    end.classList.add("on", kind === "esc" ? "is-esc" : "is-ok");
+    $("[data-telend-t]", end).textContent = end.getAttribute("data-" + kind + "-t");
+    $("[data-telend-s]", end).textContent = end.getAttribute("data-" + kind + "-s");
+    s.tel.classList.add("is-done");
+    statsEl.classList.add("is-win");
+  }
+  function playTel() {
+    if (!telTpl) return;
+    mount("tel", telTpl);
+    var tel = $("[data-tel]", stage);
+    var s = telState = {
+      rid: run, tel: tel, wave: $("[data-wave]", tel), stat: $("[data-cstat]", tel),
+      ctimer: $("[data-ctimer]", tel), script: $("[data-script]", tel),
+      steps: {}, sec: 0, callOn: false, ended: false, choice: "ok", typing: null
+    };
+    $$(".au-ps", tel).forEach(function (li) { s.steps[li.getAttribute("data-ps")] = li; });
+    var lines = $$(".au-line:not([data-esc-line])", tel);
+    lines.forEach(function (li) { li.classList.remove("on"); li.hidden = true; });
+    narrate("Appel entrant", 0, "Le téléphone de l’entreprise sonne. Regardez JARVIS prendre l’appel.");
+    log("Démonstration lancée · données simulées");
+    countUp();
+    telStatus(s, "Appel entrant", "is-ring");
+    if (fx) s.wave.classList.add("is-ring");
+    return wait(600).then(function () {
+      log("Appel entrant · ligne principale");
+      return wait(fx ? 1400 : 500);
+    }).then(function () {
+      s.wave.classList.remove("is-ring");
+      telStatus(s, "En ligne", "is-live");
+      s.callOn = true;
+      log("JARVIS a répondu avant la deuxième sonnerie", "is-ok");
+      telTick(s);
+      var chain = wait(350);
+      lines.forEach(function (li) {
+        chain = chain.then(function () {
+          return telLine(s, li).then(function () {
+            return li.hasAttribute("data-ask") ? telAsk(s, li) : undefined;
+          });
+        });
+      });
+      return chain;
+    }).then(function () {
+      telStatus(s, "Terminé · appel consigné", "is-end");
+      log("Appel terminé · consigné avec transcription (AP-3121)");
+      telEnd(s, s.choice === "no" ? "no" : "ok");
+      narrate(0, 1, s.choice === "no"
+        ? "Rendez-vous déplacé. Le remboursement attend un responsable : votre refus est consigné."
+        : "Client satisfait · rendez-vous déplacé · personne n’a été interrompu.");
+    });
+  }
+  /* « Je veux parler à quelqu'un » : l'appel passe à l'employé, contexte complet */
+  function escalate() {
+    var s = telState;
+    if (!s || s.rid !== run || s.ended) return;
+    run++;
+    s.rid = run;
+    timers = []; tweens = [];
+    if (s.typing) { s.typing.el.textContent = s.typing.text; s.typing.el.classList.remove("is-typing"); s.typing = null; }
+    if (pending) {
+      if (pending.line) pending.line.classList.remove("is-wait");
+      var notif = pending.st;
+      pending = null;
+      notif.classList.add("is-decided");
+    }
+    telTick(s);
+    var esc = $$("[data-esc-line]", s.tel), hand = $("[data-hand]", s.tel);
+    $("[data-esc]", s.tel).disabled = true;
+    telStatus(s, "Transfert en cours", "is-hold");
+    narrate("Transfert", 0, "« Je veux parler à quelqu’un » : transfert immédiat, avec tout le contexte.");
+    log("La cliente demande une personne · transfert préparé");
+    return telLine(s, esc[0]).then(function () {
+      return telLine(s, esc[1]);
+    }).then(function () {
+      var doneN = $$(".au-ps.is-done", s.tel).length;
+      $$(".au-ps:not(.is-done):not(.is-no)", s.tel).forEach(function (li) {
+        li.classList.remove("is-act");
+        li.classList.add("is-esc");
+        $(".au-ps-d", li).textContent = "Transmis à l’employé";
+      });
+      $("[data-hand-at]", hand).textContent = doneN
+        ? doneN + (doneN > 1 ? " étapes validées" : " étape validée") + " sur 9 · le reste passe à l’employé, appel compris"
+        : "Début de l’appel · tout passe à l’employé, transcription comprise";
+      hand.hidden = false;
+      hand.classList.add("on");
+      telScroll(s);
+      return wait(fx ? 900 : 300);
+    }).then(function () {
+      telStatus(s, "Transféré · l’employé a l’appel", "is-end");
+      log("Transfert réussi · contexte complet à l’écran de l’employé", "is-ok");
+      log("Appel consigné avec transcription (AP-3121)");
+      telEnd(s, "esc");
+      narrate(0, 1, "Transfert réussi : l’employé a tout le contexte, la cliente n’a rien répété.");
+    });
+  }
+
   root.addEventListener("click", function (e) {
     var tab = e.target.closest(".au-tab");
-    if (tab) { play(+tab.getAttribute("data-sc")); return; }
-    if (e.target.closest("[data-replay]")) { play(cur); return; }
+    if (tab) { start(tab.getAttribute("data-sc")); return; }
+    if (e.target.closest("[data-replay]")) { start(cur); return; }
+    if (e.target.closest("[data-esc]")) { escalate(); return; }
     var b = e.target.closest("[data-do]");
     if (b && pending && pending.st.contains(b) && !pending.lock) {
       var p = pending;
@@ -428,7 +639,7 @@
         if (visible && !started && e.intersectionRatio >= 0.2) {
           started = true;
           var rid = run;
-          wait(400).then(function () { if (rid === run) play(0); });
+          wait(400).then(function () { if (rid === run) start(cur); });
         }
       });
     }, { threshold: [0, 0.2] }).observe(root);

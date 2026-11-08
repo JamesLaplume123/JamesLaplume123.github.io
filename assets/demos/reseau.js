@@ -1,542 +1,565 @@
-/* Démo « Réseau et cybersécurité » : carte vivante du réseau (données simulées).
-   Les paquets circulent en continu; trois situations se jouent sur demande.
-   Rien n'est appliqué sans « Approuver » : envoyé, état relu, puis confirmé.
-   Sans JavaScript, le HTML montre l'état normal (voir src/demos/reseau.py). */
+/* Démo « Réseau et cybersécurité » : console réseau de JARVIS, douze modules (données d'exemple).
+   La lumière qui circule sur la carte est en CSS (sous html.fx); ce script tient l'horloge,
+   les chiffres en direct, les situations (rien n'est appliqué sans « Approuver »), la carte de
+   chaleur Wi-Fi, le graphique du trafic, la carte des menaces et les petites commandes.
+   Tout s'arrête quand la démo sort de l'écran. Sans JavaScript, la topologie reste lisible
+   (voir src/demos/reseau.py). */
 (function () {
   "use strict";
   var root = document.querySelector('[data-demo="reseau"]');
-  if (!root || !window.SVGElement || !root.querySelector(".rz-svg")) return;
+  if (!root) return;
   var NS = "http://www.w3.org/2000/svg";
-  var svg = root.querySelector(".rz-svg");
   var reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
-  var tallMQ = window.matchMedia ? matchMedia("(max-width: 640px)") : null;
   function $(s, r) { return (r || root).querySelector(s); }
   function $$(s, r) { return [].slice.call((r || root).querySelectorAll(s)); }
-  function reflow(el) { return el.getBoundingClientRect(); }
-  function restart(el, cls) { el.classList.remove(cls); reflow(el); el.classList.add(cls); }
+  function svgEl(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function fr(n, d) { return n.toFixed(d || 0).replace(".", ","); }
+  function thousands(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function setAll(key, txt) { $$('[data-live="' + key + '"]').forEach(function (e) { e.textContent = txt; }); }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function hms(d) { return pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds()); }
+  /* Heure de la démo : 17 h 52 au chargement, puis le temps réel s'écoule (cohérent avec le journal). */
+  var T0 = Date.now(), D0 = new Date(); D0.setHours(17, 52, 4, 0);
+  function now() { return new Date(D0.getTime() + (Date.now() - T0)); }
   root.classList.add("is-live");
 
-  var layer = $(".rz-pk", svg), trace = $(".rz-trace", svg), call = $(".rz-call", svg),
-      cut = $(".rz-cut", svg), blocked = $(".rz-blocked", svg), tip = $(".rz-tip"), wrap = $(".rz-wrap"),
-      card = $(".rz-card"), jump = $(".rz-jump"), replay = $(".rz-replay");
+  /* ---------- Visibilité : tout s'arrête hors écran ---------- */
+  var visible = true;
+  if ("IntersectionObserver" in window) {
+    visible = false;
+    new IntersectionObserver(function (es) {
+      visible = es[0].isIntersecting;
+      root.classList.toggle("is-vis", visible);
+    }, { rootMargin: "80px" }).observe(root);
+  } else root.classList.add("is-vis");
 
-  /* ---------- Inventaire tiré du HTML ---------- */
-  var nodes = {}, firstState = {}, devs = {}, devIds = [];
-  $$(".rz-n", svg).forEach(function (n) {
-    var id = n.getAttribute("data-id");
-    nodes[id] = n; firstState[id] = n.getAttribute("data-state");
-    if (n.classList.contains("rz-dev")) {
-      devs[id] = { id: id, zone: n.getAttribute("data-zone"), kind: n.getAttribute("data-kind"),
-                   w: +n.getAttribute("data-w8"), acc: Math.random() };
-      devIds.push(id);
-    }
+  /* ---------- État partagé ---------- */
+  var S = { down: 312, up: 41, blocked: 1284, wan: "fibre", alerts: 0, t: 0 };
+  var WAN = { fibre: "Fibre · 9 ms", g5: "5G · 31 ms" };
+
+  /* ---------- Accord avant d'agir (générique) ---------- */
+  var timers = [];
+  function later(fn, ms) { var t = setTimeout(fn, reduce ? Math.min(ms, 250) : ms); timers.push(t); return t; }
+  function runFlow(list, onDone, step) {
+    list.forEach(function (li) { li.classList.remove("is-run", "is-done"); });
+    var i = 0;
+    (function next() {
+      if (i > 0) { list[i - 1].classList.remove("is-run"); list[i - 1].classList.add("is-done"); }
+      if (i >= list.length) { if (onDone) onDone(); return; }
+      list[i].classList.add("is-run");
+      i++;
+      later(next, step || 950);
+    })();
+  }
+  function resetProp(p) {
+    p.classList.remove("is-ok", "is-no");
+    $$(".rs-flowl li", p).forEach(function (li) { li.classList.remove("is-run", "is-done"); });
+  }
+  var propDone = {};
+  root.addEventListener("click", function (e) {
+    var b = e.target.closest(".rs-prop [data-act]");
+    if (!b) return;
+    var p = b.closest(".rs-prop");
+    if (b.getAttribute("data-act") === "no") { p.classList.add("is-no"); return; }
+    p.classList.add("is-ok");
+    runFlow($$(".rs-flowl li", p), function () {
+      var host = p.closest("[data-scn], [data-new], .rs-crit");
+      var fn = host && propDone[host.getAttribute("data-scn") || (host.hasAttribute("data-new") ? "new" : "crit")];
+      if (fn) fn(p);
+    });
   });
-  var linkEls = {};
-  $$("[data-link]", svg).forEach(function (p) { linkEls[p.getAttribute("data-link")] = p; });
-  var visLinks = $$(".rz-link", svg), buses = $$(".rz-bus", svg);
-  var gates = {}, zones = {};
-  $$(".rz-gate", svg).forEach(function (g) { gates[g.getAttribute("data-zone")] = g; });
-  $$(".rz-zone", svg).forEach(function (g) { zones[g.getAttribute("data-zone")] = g; });
-  var arts = {};
-  $$(".rz-scn").forEach(function (a) { arts[a.getAttribute("data-scn")] = a; });
-  var btns = $$(".rz-bar button");
 
-  /* ---------- Géométrie : disposition large (w) ou haute (t) ---------- */
-  var layout = "", geo = {}, routes = {};
-  function setGeo(el, v) {
-    var tag = el.tagName.toLowerCase();
-    if (tag === "path") { el.setAttribute("d", v); return; }
-    var p = v.split(",");
-    if (tag === "rect") {
-      el.setAttribute("x", p[0]); el.setAttribute("y", p[1]);
-      el.setAttribute("width", p[2]); el.setAttribute("height", p[3]);
-      return;
-    }
-    el.setAttribute("transform", "translate(" + p[0] + " " + p[1] + ")");
-    if (p[2]) el.style.textAnchor = p[2];
-  }
-  function sample(path) {
-    var len = path.getTotalLength(), n = Math.max(2, Math.ceil(len / 5)), pts = [], cum = [0], i, q;
-    for (i = 0; i <= n; i++) { q = path.getPointAtLength(len * i / n); pts.push(q.x, q.y); }
-    for (i = 1; i <= n; i++) cum.push(cum[i - 1] + Math.hypot(pts[2 * i] - pts[2 * i - 2], pts[2 * i + 1] - pts[2 * i - 1]));
-    return { pts: pts, cum: cum, len: cum[n] };
-  }
-  function seg(id, rev) {
-    var pts = geo[id].pts;
-    if (!rev) return pts.slice();
-    var r = [];
-    for (var i = pts.length - 2; i >= 0; i -= 2) r.push(pts[i], pts[i + 1]);
-    return r;
-  }
-  function build(list) {
-    var pts = [];
-    list.forEach(function (s) { var p = seg(s[0], s[1]); pts = pts.concat(pts.length ? p.slice(2) : p); });
-    var cum = [0];
-    for (var i = 2; i < pts.length; i += 2) cum.push(cum[cum.length - 1] + Math.hypot(pts[i] - pts[i - 2], pts[i + 1] - pts[i - 1]));
-    return { pts: pts, cum: cum, len: cum[cum.length - 1] };
-  }
-  function routeFor(d, up) {
-    var key = d.id + (up ? "^" : "v") + state.wan;
-    if (routes[key]) return routes[key];
-    var list = d.kind === "net"
-      ? [["internet>" + state.wan, false], [state.wan + ">routeur", false], ["routeur>switch", false],
-         ["switch>gate:" + d.zone, false], ["gate:" + d.zone + ">" + d.id, false]]
-      : [["switch>jarvis", true], ["switch>gate:" + d.zone, false], ["gate:" + d.zone + ">" + d.id, false]];
-    if (up) list = list.slice().reverse().map(function (s) { return [s[0], !s[1]]; });
-    return (routes[key] = build(list));
-  }
-  function applyLayout() {
-    var key = tallMQ && tallMQ.matches ? "t" : "w";
-    if (key === layout) return;
-    layout = key;
-    svg.setAttribute("viewBox", svg.getAttribute("data-v" + key));
-    svg.classList.toggle("is-tall", key === "t");
-    $$("[data-gw]", svg).forEach(function (el) { setGeo(el, el.getAttribute("data-g" + key)); });
-    geo = {}; routes = {};
-    Object.keys(linkEls).forEach(function (id) { geo[id] = sample(linkEls[id]); });
-    var g = geo["internet>fibre"], m = Math.floor(g.pts.length / 4) * 2;
-    cut.setAttribute("transform", "translate(" + g.pts[m].toFixed(1) + " " + g.pts[m + 1].toFixed(1) + ")");
-    clearPackets();
-    hideTip();
-    if (!state) return;
-    if (traceSegs) drawTrace(traceSegs, false);
-    prefill();
-    if (state.inflight) { state.inflight = false; attempt(arts.iot, false); }
-  }
+  /* ---------- Horloge ---------- */
+  var clock = $("[data-clock]");
+  function tickClock() { if (clock) clock.textContent = hms(now()); }
+  tickClock();
 
-  /* ---------- Paquets lumineux ---------- */
-  var packets = [], pool = [];
-  function pkEl(cls) {
-    var g = pool.pop();
-    if (!g) {
-      g = document.createElementNS(NS, "g");
-      var h = document.createElementNS(NS, "circle"), c = document.createElementNS(NS, "circle");
-      h.setAttribute("class", "h"); c.setAttribute("class", "c");
-      g.appendChild(h); g.appendChild(c); layer.appendChild(g);
+  /* ---------- Modules ---------- */
+  var tabs = $$(".rs-tab"), panels = {}, inited = {}, current = "topo";
+  $$(".rs-mod").forEach(function (p) { panels[p.getAttribute("data-panel")] = p; });
+  var INIT = {}, SHOW = {};
+  function openMod(k) {
+    if (!panels[k]) return;
+    current = k;
+    tabs.forEach(function (t) { t.setAttribute("aria-pressed", t.getAttribute("data-mod") === k ? "true" : "false"); });
+    for (var m in panels) {
+      var on = m === k;
+      panels[m].hidden = !on;
+      panels[m].classList.toggle("is-in", on);
     }
-    g.firstChild.setAttribute("r", "7.5"); g.lastChild.setAttribute("r", "2.4");
-    g.setAttribute("class", cls); g.style.display = ""; g.style.opacity = "0";
-    return g;
+    if (!inited[k] && INIT[k]) { inited[k] = true; INIT[k](); }
+    if (SHOW[k]) SHOW[k]();
   }
-  function launch(r, cls, v, opts) {
-    var p = { r: r, s: 0, i: 0, v: v, el: pkEl(cls), fade: 1, dying: false };
-    if (opts) for (var k in opts) p[k] = opts[k];
-    if (p.big) { p.el.firstChild.setAttribute("r", "11"); p.el.lastChild.setAttribute("r", "3.8"); }
-    packets.push(p);
-    place(p);
-    return p;
-  }
-  function recycle(p) { p.el.style.display = "none"; pool.push(p.el); }
-  function clearPackets() { packets.forEach(recycle); packets = []; }
-  function kill(test) { packets.forEach(function (p) { if (test(p)) p.dying = true; }); }
-  function place(p) {
-    var cum = p.r.cum, pts = p.r.pts, last = cum.length - 1;
-    while (p.i < last - 1 && cum[p.i + 1] < p.s) p.i++;
-    var a = cum[p.i], b = cum[Math.min(p.i + 1, last)], k = b > a ? Math.min(1, (p.s - a) / (b - a)) : 0, j = 2 * p.i;
-    var x = pts[j] + ((pts[j + 2] !== undefined ? pts[j + 2] : pts[j]) - pts[j]) * k;
-    var y = pts[j + 1] + ((pts[j + 3] !== undefined ? pts[j + 3] : pts[j + 1]) - pts[j + 1]) * k;
-    p.el.setAttribute("transform", "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ")");
-    var o = Math.min(1, p.s / 14, p.noEndFade ? 1 : (p.r.len - p.s) / 14);
-    p.el.style.opacity = (Math.max(0, o) * p.fade).toFixed(2);
-  }
-  function move(dt) {
-    var keep = [];
-    for (var n = 0; n < packets.length; n++) {
-      var p = packets[n];
-      if (p.dying) { p.fade -= dt * 3; if (p.fade <= 0) { recycle(p); continue; } }
-      else p.s += p.v * dt;
-      if (p.s >= p.r.len) {
-        p.s = p.r.len; place(p);
-        var cb = p.onEnd; p.onEnd = null;
-        if (cb) cb(p);
-        recycle(p); continue;
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () {
+      openMod(t.getAttribute("data-mod"));
+      if (t.scrollIntoView && t.parentNode.scrollWidth > t.parentNode.clientWidth) {
+        var bar = t.parentNode;
+        bar.scrollTo({ left: t.offsetLeft - (bar.clientWidth - t.offsetWidth) / 2, behavior: reduce ? "auto" : "smooth" });
       }
-      place(p); keep.push(p);
-    }
-    packets = keep;
-  }
-  function canSpawn(d) {
-    if (state.down[d.id]) return false;
-    if (d.kind === "net" && !state.wan) return false;
-    return true;
-  }
-  function spawnTick(dt) {
-    for (var n = 0; n < devIds.length; n++) {
-      var d = devs[devIds[n]];
-      if (!canSpawn(d)) continue;
-      d.acc += d.w * 1.35 * dt;
-      while (d.acc >= 1) {
-        d.acc -= 1;
-        var up = d.zone === "cameras" ? Math.random() < .85 : d.kind === "net" ? Math.random() < .3 : Math.random() < .5;
-        launch(routeFor(d, up), "z-" + d.zone, 115 + Math.random() * 75, { dev: d.id, net: d.kind === "net" });
-      }
-    }
-  }
-  function prefill() {
-    if (reduce) return;
-    for (var k = 0; k < 36; k++) { spawnTick(.1); move(.1); }
-  }
-
-  /* Épaisseur des liens : proportionnelle au trafic qui y passe */
-  function widths() {
-    var load = {};
-    function add(id, w) { load[id] = (load[id] || 0) + w; }
-    devIds.forEach(function (id) {
-      var d = devs[id];
-      if (!canSpawn(d)) return;
-      add("switch>gate:" + d.zone, d.w);
-      if (d.kind === "net") {
-        add("routeur>switch", d.w); add(state.wan + ">routeur", d.w); add("internet>" + state.wan, d.w);
-      } else add("switch>jarvis", d.w);
     });
-    function px(v) { return (1.5 + 4.4 * Math.sqrt(v / 4)).toFixed(2); }
-    visLinks.forEach(function (el) { el.style.strokeWidth = px(load[el.getAttribute("data-link")] || 0); });
-    buses.forEach(function (el) {
-      var v = 0;
-      el.getAttribute("data-devs").split(" ").forEach(function (id) { if (canSpawn(devs[id])) v += devs[id].w; });
-      el.style.strokeWidth = px(v);
-    });
+  });
+  function setState(k, txt, warn) {
+    var e = $('[data-mstate="' + k + '"]');
+    if (e) e.textContent = txt;
+    var t = $('.rs-tab[data-mod="' + k + '"]');
+    if (t && warn !== undefined) t.classList.toggle("is-warn", !!warn);
   }
 
-  /* ---------- Horloge commune (s'arrête hors écran) ---------- */
-  var clock = 0, events = [], running = false, raf = 0, last = 0, visible = false;
-  function later(sec, fn) { events.push({ t: clock + sec, fn: fn }); }
-  function tick(now) {
-    raf = 0;
-    var dt = Math.min(.05, Math.max(0, (now - last) / 1000));
-    last = now; clock += dt;
-    if (events.length) {
-      var due = [], rest = [];
-      events.forEach(function (e) { (e.t <= clock ? due : rest).push(e); });
-      if (due.length) {
-        events = rest;
-        due.sort(function (a, b) { return a.t - b.t; }).forEach(function (e) { e.fn(); });
-      }
+  /* ---------- Topologie : situations ---------- */
+  var wrap = $(".rs-topo-wrap"), scns = {}, sbtn = $$(".rs-sbar button");
+  $$(".rs-scn").forEach(function (a) { scns[a.getAttribute("data-scn")] = a; });
+  function meta(id, txt) { var e = $('[data-meta="' + id + '"]'); if (e) e.textContent = txt; }
+  function setWan(w) {
+    S.wan = w;
+    setAll("wan", WAN[w]);
+    meta("g5", w === "g5" ? "Actif · 31\u00a0ms" : "En veille · 31\u00a0ms");
+    setState("continuite", w === "fibre" ? "Fibre · 9 ms" : "5G · secours", w !== "fibre");
+  }
+  function situation(k) {
+    timers.forEach(clearTimeout); timers = [];
+    sbtn.forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-scn") === k ? "true" : "false"); });
+    for (var s in scns) {
+      var on = s === k;
+      scns[s].hidden = !on;
+      scns[s].classList.toggle("is-on", on);
+      $$(".rs-prop", scns[s]).forEach(resetProp);
     }
-    if (!reduce) { spawnTick(dt); move(dt); }
-    if (running) raf = requestAnimationFrame(tick);
+    wrap.setAttribute("data-s", k);
+    wrap.classList.remove("is-fixed", "is-back");
+    meta("poe", "6 caméras alimentées");
+    var c = $('[data-count="cameras"]'); if (c) c.textContent = "6 appareils";
+    if (S.wan !== "fibre" && !failing) setWan("fibre");
+    S.alerts = k === "normal" ? 0 : 1;
+    if (k === "camera") { meta("poe", "Port 7 coupé · 186 W demandés"); if (c) c.textContent = "5 / 6 en ligne"; }
+    if (k === "panne") setWan("g5");
+    setAll("alerts", String(S.alerts));
   }
-  function sync() {
-    var go = visible && !document.hidden;
-    if (go && !running) { running = true; last = performance.now(); raf = requestAnimationFrame(tick); }
-    else if (!go && running) { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
-  }
+  sbtn.forEach(function (b) { b.addEventListener("click", function () { situation(b.getAttribute("data-scn")); }); });
+  propDone.camera = function () {
+    wrap.classList.add("is-fixed"); meta("poe", "6 caméras · réserve de 12 W");
+    var c = $('[data-count="cameras"]'); if (c) c.textContent = "6 appareils";
+    setAll("alerts", "0");
+  };
+  propDone.iot = function () { wrap.classList.add("is-fixed"); setAll("alerts", "0"); };
+  propDone.panne = function () { setAll("alerts", "0"); };
 
-  /* ---------- États visibles ---------- */
-  var NODE_CLS = ["is-down", "is-boot", "is-back", "is-warn", "is-iso", "is-hit", "is-standby", "is-active", "is-local"];
-  var tipFor = null, tipTimer = 0;
-  function setNode(id, cls, label) {
-    var n = nodes[id];
-    NODE_CLS.forEach(function (c) { n.classList.remove(c); });
-    if (cls) cls.split(" ").forEach(function (c) { n.classList.add(c); });
-    if (label) n.setAttribute("data-state", label);
-    var dev = n.classList.contains("rz-dev");
-    n.setAttribute("aria-label", n.getAttribute("data-name") + ", " +
-      (dev ? "zone " + n.getAttribute("data-zname") + ", " : "") + n.getAttribute("data-state").toLowerCase());
-    if (tipFor === n) fillTip(n);
+  /* ---------- Chiffres en direct (une fois par seconde) ---------- */
+  var VB = {};
+  $$("[data-band]").forEach(function (b) {
+    var n = $(".rs-b-n", b); VB[b.getAttribute("data-band")] = { el: n, base: parseFloat(n.textContent) };
+  });
+  var cpu = 18;
+  function liveTick() {
+    S.t++;
+    S.down = Math.max(180, Math.min(520, S.down + rnd(-26, 26) + (312 - S.down) * .12));
+    S.up = Math.max(18, Math.min(90, S.up + rnd(-5, 5) + (41 - S.up) * .15));
+    if (Math.random() < .35) S.blocked += Math.random() < .7 ? 1 : 2;
+    cpu = Math.max(9, Math.min(31, cpu + rnd(-2, 2)));
+    setAll("down", String(Math.round(S.down)));
+    setAll("up", String(Math.round(S.up)));
+    setAll("blocked", thousands(S.blocked));
+    setAll("pct", String(Math.round(S.down / 10)));
+    setAll("lat", S.wan === "fibre" ? String(Math.round(rnd(8, 11))) : String(Math.round(rnd(28, 36))));
+    setAll("wan-fibre", S.wan === "fibre" ? "↓ " + Math.round(S.down) + " · ↑ " + Math.round(S.up) + " Mb/s" : "Aucune réponse");
+    setAll("wan-g5", S.wan === "g5" ? "↓ " + Math.round(S.down * .8) + " · ↑ " + Math.round(S.up) + " Mb/s" : "−84 dBm · 4 barres");
+    setAll("gw", "CPU " + Math.round(cpu) + " % · " + thousands(S.blocked) + " blocages");
+    setState("trafic", Math.round(S.down) + " Mb/s");
+    setState("menaces", thousands(S.blocked) + " bloquées");
+    for (var k in VB) VB[k].el.textContent = fr(VB[k].base * rnd(.82, 1.18) * (S.down / 312), VB[k].base < 30 ? 1 : 0) + " Mb/s";
+    if (SHOW_TICK[current]) SHOW_TICK[current]();
   }
-  function setSub(id, text) { var s = $(".rz-sub", nodes[id]); if (s) s.textContent = text; }
-  var hud = { net: $('[data-hud="net"]'), dev: $('[data-hud="dev"]'), alert: $('[data-hud="alert"]') };
-  function setHud(key, text, cls) {
-    var el = hud[key], span = $("dd span", el);
-    if (span.textContent !== text) { span.textContent = text; restart(span, "is-flash"); }
-    el.classList.remove("is-bad", "is-warn");
-    if (cls) el.classList.add(cls);
-  }
-  function refreshHud() {
-    var down = Object.keys(state.down).length;
-    setHud("dev", (devIds.length - down) + " / " + devIds.length, down ? "is-bad" : "");
-    setHud("alert", String(state.alerts), state.alerts ? "is-bad" : "");
-    if (state.wan === "fibre") setHud("net", "Fibre · 9 ms", "");
-    else if (state.wan === "starlink") setHud("net", "Starlink · 38 ms", "is-warn");
-    else setHud("net", "Coupure", "is-bad");
-  }
-  function callText(ok) {
-    var k = $(".rz-call-k", call), v = $(".rz-call-v", call);
-    if (!call.hasAttribute("data-k1")) { call.setAttribute("data-k1", k.textContent); call.setAttribute("data-v1", v.textContent); }
-    k.textContent = call.getAttribute(ok ? "data-k2" : "data-k1");
-    v.textContent = call.getAttribute(ok ? "data-v2" : "data-v1");
-    call.classList.toggle("is-ok", ok);
-  }
+  var SHOW_TICK = {};
 
-  /* Tracé du chemin de dépendance (de l'appareil vers sa cause) */
-  var traceSegs = null;
-  function drawTrace(segs, animate) {
-    traceSegs = segs;
-    var r = build(segs), d = "M" + r.pts[0].toFixed(1) + " " + r.pts[1].toFixed(1);
-    for (var i = 2; i < r.pts.length; i += 2) d += "L" + r.pts[i].toFixed(1) + " " + r.pts[i + 1].toFixed(1);
-    trace.setAttribute("d", d);
-    trace.classList.remove("is-off"); trace.classList.add("is-on");
-    trace.style.transition = "none";
-    trace.style.strokeDasharray = r.len.toFixed(1);
-    if (animate && !reduce) {
-      trace.style.strokeDashoffset = r.len.toFixed(1);
-      reflow(trace);
-      trace.style.transition = "stroke-dashoffset 1.4s linear";
-      trace.style.strokeDashoffset = "0";
-      launch(r, "is-head", r.len / 1.4, { scripted: true, big: true, noEndFade: true });
-    } else trace.style.strokeDashoffset = "0";
-  }
-  function hideTrace() { traceSegs = null; trace.style.transition = "none"; trace.classList.remove("is-on", "is-off"); }
-  function fadeTrace() { traceSegs = null; trace.style.transition = "opacity 1.2s"; trace.classList.remove("is-on"); trace.classList.add("is-off"); }
-
-  /* ---------- Panneau de JARVIS ---------- */
-  function stepCls(a, i, cls) { var li = $$(".rz-steps li", a)[i]; if (li) li.className = cls; }
-  function flow(prop, k, cls) { var li = $('.rz-flow li[data-k="' + k + '"]', prop); if (li) li.className = cls; }
-  var cardIn = $(".rz-card-in");
-  function toEnd() {
-    if (cardIn.scrollHeight > cardIn.clientHeight + 4 && getComputedStyle(cardIn).overflowY === "auto") {
-      cardIn.scrollTo({ top: cardIn.scrollHeight, behavior: reduce ? "auto" : "smooth" });
-    }
-  }
-  function ask(a) { a.classList.add("is-ask"); $(".rz-prop", a).classList.add("is-wait"); jumpCheck(); toEnd(); }
-  function resetArt(a) {
-    a.classList.remove("is-cause", "is-ask", "is-starlink", "is-fibre");
-    $$(".rz-steps li", a).forEach(function (li) { li.className = ""; });
-    var p = $(".rz-prop", a);
-    if (p) { p.className = "rz-prop"; $$(".rz-flow li", p).forEach(function (li) { li.className = ""; }); }
-  }
-
-  /* ---------- Situations ---------- */
-  var state = null;
-  function baseline() {
-    events = [];
-    state = { scn: "normal", wan: "fibre", down: {}, alerts: 0, iso: false, inflight: false };
-    Object.keys(nodes).forEach(function (id) { setNode(id, "", firstState[id]); });
-    setNode("starlink", "is-standby", firstState.starlink);
-    setSub("starlink", "secours"); setSub("fibre", "9 ms");
-    ["internet>fibre", "fibre>routeur"].forEach(function (id) { linkEls[id].classList.remove("is-down"); });
-    ["internet>starlink", "starlink>routeur"].forEach(function (id) { linkEls[id].classList.add("is-standby"); });
-    cut.classList.remove("is-on"); call.classList.remove("is-on"); blocked.classList.remove("is-on");
-    callText(false);
-    svg.classList.remove("is-offline");
-    Object.keys(gates).forEach(function (z) { gates[z].classList.remove("is-block"); });
-    Object.keys(zones).forEach(function (z) { zones[z].classList.remove("is-hit"); });
-    hideTrace();
-    kill(function (p) { return p.scripted; });
-  }
-
-  function scnCamera(a) {
-    state.down.camg = true; state.alerts = 1;
-    setNode("camg", "is-down", "Hors ligne depuis 17 h 42");
-    kill(function (p) { return p.dev === "camg"; });
-    stepCls(a, 0, "is-run");
-    later(.9, function () {
-      stepCls(a, 0, "is-done"); stepCls(a, 1, "is-run");
-      drawTrace([["gate:cameras>camg", true], ["switch>gate:cameras", true]], true);
-    });
-    later(1.25, function () { restart(gates.cameras, "is-block"); });
-    later(2.3, function () {
-      stepCls(a, 1, "is-done"); stepCls(a, 2, "is-run");
-      setNode("switch", "is-hit"); call.classList.add("is-on");
-    });
-    later(3.1, function () { stepCls(a, 2, "is-done is-cause"); a.classList.add("is-cause"); });
-    later(3.7, function () { ask(a); });
-  }
-
-  function scnIot(a) {
-    setNode("bulb", "is-warn", "Comportement inhabituel");
-    attempt(a, true);
-  }
-  function attempt(a, first) {
-    if (state.scn !== "iot" || state.iso) return;
-    var hit = function () { state.inflight = false; blockHit(a, first); };
-    if (reduce) { later(1.2, hit); return; }
-    state.inflight = true;
-    var r = build([["gate:objets>bulb", true], ["switch>gate:objets", true], ["switch>gate:famille", false]]);
-    launch(r, "is-bad", first ? 190 : 210, { scripted: true, big: true, noEndFade: true, onEnd: hit });
-  }
-  function blockHit(a, first) {
-    if (state.scn !== "iot") return;
-    gates.famille.classList.remove("is-block"); reflow(gates.famille); gates.famille.classList.add("is-block");
-    restart(zones.famille, "is-hit");
-    blocked.classList.add("is-on");
-    sparks(gates.famille);
-    later(1.8, function () { blocked.classList.remove("is-on"); });
-    if (first) {
-      state.alerts = 1; refreshHud();
-      later(.4, function () { a.classList.add("is-cause"); });
-      later(1.3, function () { ask(a); });
-    }
-    later(3.6, function () { attempt(a, false); });
-  }
-
-  /* Éclats du paquet arrêté par le mur */
-  function sparks(g) {
-    if (reduce) return;
-    var m = /translate\(([-\d.]+)[ ,]([-\d.]+)/.exec(g.getAttribute("transform") || "");
-    if (!m) return;
-    var x = +m[1], y = +m[2];
-    for (var k = 0; k < 7; k++) {
-      var ang = Math.PI * (.55 + k / 6 * .9) + (Math.random() - .5) * .3, d = 22 + Math.random() * 14;
-      var x2 = x + Math.cos(ang) * d, y2 = y + Math.sin(ang) * d;
-      var p = launch({ pts: [x, y, x2, y2], cum: [0, d], len: d }, "is-spark", d / (.45 + Math.random() * .25), { scripted: true });
-      p.el.firstChild.setAttribute("r", "4"); p.el.lastChild.setAttribute("r", "1.5");
-    }
-  }
-
-  function scnInternet(a) {
-    state.wan = ""; state.alerts = 1;
-    ["internet>fibre", "fibre>routeur"].forEach(function (id) { linkEls[id].classList.add("is-down"); });
-    cut.classList.add("is-on");
-    setNode("fibre", "is-down", "Coupée depuis 18 h 03"); setSub("fibre", "coupée");
-    svg.classList.add("is-offline");
-    setNode("jarvis", "is-local", "Actif · la maison continue en local");
-    kill(function (p) { return p.net; });
-    stepCls(a, 0, "is-run");
-    later(.5, function () { stepCls(a, 0, "is-done"); stepCls(a, 1, "is-run"); });
-    later(1.5, function () { stepCls(a, 1, "is-done"); stepCls(a, 2, "is-run"); });
-    later(3, function () {
-      state.wan = "starlink";
-      ["internet>starlink", "starlink>routeur"].forEach(function (id) {
-        linkEls[id].classList.remove("is-standby"); restart(linkEls[id], "is-wake");
-      });
-      setNode("starlink", "is-active", "Active · 38 ms"); setSub("starlink", "38 ms");
-      svg.classList.remove("is-offline");
-      setNode("jarvis", "", firstState.jarvis);
-      stepCls(a, 2, "is-done"); a.classList.add("is-starlink");
-      refreshHud(); widths();
-    });
-    later(3.7, function () { ask(a); });
-  }
-  function fibreBack(a) {
-    if (state.scn !== "internet" || state.wan !== "starlink") return;
-    state.wan = "fibre"; state.alerts = 0;
-    ["internet>fibre", "fibre>routeur"].forEach(function (id) {
-      linkEls[id].classList.remove("is-down"); restart(linkEls[id], "is-wake");
-    });
-    ["internet>starlink", "starlink>routeur"].forEach(function (id) { linkEls[id].classList.add("is-standby"); });
-    cut.classList.remove("is-on");
-    setNode("fibre", "is-back", firstState.fibre); setSub("fibre", "9 ms");
-    setNode("starlink", "is-standby", firstState.starlink); setSub("starlink", "secours");
-    a.classList.add("is-fibre");
-    refreshHud(); widths();
-  }
-
-  /* Accord donné : envoyé, relecture de l'état, puis confirmé */
-  var approvals = {
-    camera: function (a, prop) {
-      setNode("camg", "is-boot", "Redémarrage du port 7…");
-      later(2.4, function () {
-        flow(prop, "read", "is-on is-done"); flow(prop, "ok", "is-on is-done"); prop.classList.add("is-done"); toEnd();
-        delete state.down.camg; state.alerts = 0;
-        setNode("camg", "is-back", "En ligne · image reçue à 17 h 46");
-        setNode("switch", "", firstState["switch"]);
-        callText(true); fadeTrace(); refreshHud(); widths();
-        later(3, function () { call.classList.remove("is-on"); });
-      });
-    },
-    iot: function (a, prop) {
-      later(1.8, function () {
-        flow(prop, "read", "is-on is-done"); flow(prop, "ok", "is-on is-done"); prop.classList.add("is-done"); toEnd();
-        state.iso = true; state.alerts = 0;
-        setNode("bulb", "is-iso", "Isolées · répondent seulement à JARVIS");
-        refreshHud();
-      });
-    },
-    internet: function (a, prop) {
-      later(1.6, function () {
-        flow(prop, "read", "is-on is-done"); flow(prop, "ok", "is-on is-done"); prop.classList.add("is-done"); toEnd();
+  /* ---------- Appareils ---------- */
+  INIT.appareils = function () {
+    var rows = $$(".rs-inv tbody tr"), chips = $$(".rs-chip"), q = $("[data-dev-q]"), vf = "all";
+    function apply() {
+      var t = (q.value || "").trim().toLowerCase();
+      rows.forEach(function (r) {
+        r.hidden = !((vf === "all" || r.getAttribute("data-vlan") === vf) && (!t || r.getAttribute("data-q").indexOf(t) >= 0));
       });
     }
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        vf = c.getAttribute("data-vf");
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        apply();
+      });
+    });
+    q.addEventListener("input", apply);
+    propDone["new"] = function () {
+      var box = $("[data-new]");
+      box.classList.add("is-done");
+      $(".rs-kick", box).innerHTML = '<i class="rs-dot is-ok"></i>Appareil accepté · rangé dans le VLAN 30';
+      var tb = $(".rs-inv tbody"), tr = document.createElement("tr");
+      tr.setAttribute("data-vlan", "objets");
+      tr.setAttribute("data-q", "prise connectée 10.0.30.88");
+      tr.className = "is-added";
+      tr.innerHTML = '<td><span class="rs-dv"><svg class="rs-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.6 1.8v3M10.4 1.8v3M3.6 4.8h8.8v2.6a4.4 4.4 0 0 1-8.8 0z"/><path d="M8 11.8v2.4"/></svg><span><b>Prise connectée · terrasse</b><small>Prise intelligente · nouvelle</small></span></span></td>' +
+        '<td><span class="rs-conf" style="--v:91%"><i></i>91 %</span></td><td><span class="rs-vtag z-objets">VLAN 30</span></td>' +
+        '<td class="rs-mono">10.0.30.88</td><td class="rs-dim">Wi-Fi 2,4 GHz · Extérieur</td><td class="rs-mono rs-r">&lt; 0,1</td>' +
+        '<td><span class="rs-pill is-ok">En ligne</span></td>';
+      tb.insertBefore(tr, tb.firstChild);
+      rows.unshift(tr);
+      setState("appareils", "45 · à jour", false);
+    };
+  };
+  SHOW_TICK.appareils = function () {
+    $$("[data-dev-mbps]").forEach(function (td) {
+      var b = parseFloat(td.getAttribute("data-dev-mbps"));
+      if (b < .1) return;
+      td.textContent = fr(b * rnd(.75, 1.25), 1);
+    });
   };
 
-  function play(name) {
-    baseline();
-    state.scn = name;
-    btns.forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-scn") === name ? "true" : "false"); });
-    Object.keys(arts).forEach(function (k) {
-      var a = arts[k];
-      resetArt(a);
-      a.hidden = k !== name;
-      a.classList.remove("is-on");
+  /* ---------- Wi-Fi : carte de chaleur ---------- */
+  INIT.wifi = function () {
+    var plan = $(".rs-plan"), cv = $(".rs-heat", plan);
+    var D = JSON.parse(plan.getAttribute("data-wifi"));
+    var M = 20 / 640; // mètres par unité
+    function roomOf(x, y) {
+      for (var i = 0; i < D.rooms.length; i++) {
+        var r = D.rooms[i];
+        if (x >= r[1] && x < r[1] + r[3] && y >= r[2] && y < r[2] + r[4]) return i;
+      }
+      return -1;
+    }
+    function walls(ax, ay, bx, by) {
+      var n = 0;
+      D.rooms.forEach(function (r) {
+        var ia = ax >= r[1] && ax < r[1] + r[3] && ay >= r[2] && ay < r[2] + r[4];
+        var ib = bx >= r[1] && bx < r[1] + r[3] && by >= r[2] && by < r[2] + r[4];
+        if (ia !== ib) n++;
+      });
+      return Math.ceil(n / 2);
+    }
+    function raw(x, y) {
+      var best = -120;
+      D.aps.forEach(function (a) {
+        var d = Math.max(1, Math.hypot(x - a[0], y - a[1]) * M);
+        best = Math.max(best, -36 - 20 * Math.log10(d) - 6 * walls(a[0], a[1], x, y));
+      });
+      return best;
+    }
+    var off = D.rooms.map(function (r) { return r[5] - raw(r[1] + r[3] / 2, r[2] + r[4] / 2); });
+    function rssi(x, y) { var i = roomOf(x, y); return i < 0 ? null : raw(x, y) + off[i]; }
+    var STOPS = [[-44, [45, 226, 160]], [-52, [120, 230, 150]], [-60, [236, 224, 92]], [-67, [255, 170, 60]], [-75, [255, 96, 96]]];
+    function col(v) {
+      if (v >= STOPS[0][0]) return STOPS[0][1];
+      for (var i = 1; i < STOPS.length; i++) {
+        if (v >= STOPS[i][0]) {
+          var t = (STOPS[i - 1][0] - v) / (STOPS[i - 1][0] - STOPS[i][0]), a = STOPS[i - 1][1], b = STOPS[i][1];
+          return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+        }
+      }
+      return STOPS[STOPS.length - 1][1];
+    }
+    var gw = 160, gh = 90, small = document.createElement("canvas");
+    small.width = gw; small.height = gh;
+    var sc = small.getContext("2d"), img = sc.createImageData(gw, gh);
+    for (var j = 0; j < gh; j++) {
+      for (var i = 0; i < gw; i++) {
+        var x = (i + .5) * 4, y = (j + .5) * 4, v = rssi(x, y), k = (j * gw + i) * 4;
+        if (v === null) { img.data[k + 3] = 0; continue; }
+        var c = col(v);
+        img.data[k] = c[0]; img.data[k + 1] = c[1]; img.data[k + 2] = c[2];
+        img.data[k + 3] = Math.round(255 * (.66 + Math.max(0, Math.min(1, (v + 80) / 40)) * .18));
+      }
+    }
+    sc.putImageData(img, 0, 0);
+    var ctx = cv.getContext("2d");
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(small, 0, 0, 640, 360);
+    D.rooms.forEach(function (r) {
+      var t = $('[data-room="' + r[0] + '"]', plan);
+      if (t) t.textContent = r[5] + " dBm";
     });
-    reflow(arts[name]);
-    arts[name].classList.add("is-on");
-    replay.hidden = name === "normal";
-    cardIn.scrollTop = 0;
-    if (name === "camera") scnCamera(arts[name]);
-    else if (name === "iot") scnIot(arts[name]);
-    else if (name === "internet") scnInternet(arts[name]);
-    refreshHud(); widths(); jumpCheck();
+  };
+
+  /* ---------- Trafic : graphique en direct ---------- */
+  var hist = { d: [], u: [] };
+  for (var h = 0; h < 60; h++) { hist.d.push(312 + Math.sin(h / 5) * 40 + rnd(-30, 30)); hist.u.push(41 + rnd(-8, 8)); }
+  var tc, tctx, tW = 0, tH = 0, gold = "#e7c888";
+  function sizeChart() {
+    if (!tc) return;
+    var r = tc.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
+    tW = r.width; tH = r.height;
+    tc.width = Math.round(tW * dpr); tc.height = Math.round(tH * dpr);
+    tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    gold = getComputedStyle(root).getPropertyValue("--gold-soft").trim() || gold;
+  }
+  function drawChart() {
+    if (!tc || !tW) return;
+    var c = tctx, max = 600, padL = 34, padB = 4, w = tW - padL, hgt = tH - padB;
+    c.clearRect(0, 0, tW, tH);
+    c.font = "500 10px " + (getComputedStyle(root).getPropertyValue("--mono") || "monospace");
+    c.textAlign = "right";
+    [0, 200, 400, 600].forEach(function (v) {
+      var y = hgt - v / max * (hgt - 14);
+      c.strokeStyle = "rgba(255,255,255,.06)"; c.lineWidth = 1;
+      c.beginPath(); c.moveTo(padL, y + .5); c.lineTo(tW, y + .5); c.stroke();
+      c.fillStyle = "rgba(255,255,255,.38)"; c.fillText(String(v), padL - 6, y + 3);
+    });
+    function line(arr, stroke, fill) {
+      var n = arr.length, step = w / (n - 1);
+      c.beginPath();
+      arr.forEach(function (v, i) {
+        var x = padL + i * step, y = hgt - v / max * (hgt - 14);
+        if (!i) c.moveTo(x, y); else c.lineTo(x, y);
+      });
+      if (fill) {
+        c.save(); c.lineTo(padL + w, hgt); c.lineTo(padL, hgt); c.closePath();
+        var g = c.createLinearGradient(0, 0, 0, hgt);
+        g.addColorStop(0, fill); g.addColorStop(1, "rgba(0,0,0,0)");
+        c.fillStyle = g; c.globalAlpha = .38; c.fill(); c.restore();
+        c.beginPath();
+        arr.forEach(function (v, i) { var x = padL + i * step, y = hgt - v / max * (hgt - 14); if (!i) c.moveTo(x, y); else c.lineTo(x, y); });
+      }
+      c.strokeStyle = stroke; c.lineWidth = 1.6; c.lineJoin = "round"; c.stroke();
+      var lx = padL + w, ly = hgt - arr[n - 1] / max * (hgt - 14);
+      c.beginPath(); c.arc(lx - 1, ly, 3, 0, 7); c.fillStyle = stroke; c.fill();
+    }
+    line(hist.d, gold, gold);
+    line(hist.u, "rgba(255,255,255,.85)", null);
+  }
+  var tdev, tapp;
+  INIT.trafic = function () {
+    tc = $(".rs-tc"); tctx = tc.getContext("2d");
+    tdev = $$("[data-tdev]").map(function (li) { var v = $("[data-v]", li); return { li: li, v: v, base: parseFloat(v.textContent.replace(",", ".")) }; });
+    tapp = $$("[data-tapp]").map(function (li) { var v = $("[data-v]", li); return { li: li, v: v, base: parseFloat(v.textContent) }; });
+    window.addEventListener("resize", function () { if (current === "trafic") { sizeChart(); drawChart(); } });
+  };
+  function bars(list, dec) {
+    var vals = list.map(function (o) { return o.base * rnd(.78, 1.22) * (S.down / 312); });
+    var mx = Math.max.apply(null, vals);
+    list.forEach(function (o, i) {
+      o.v.textContent = fr(vals[i], dec);
+      $(".rs-bar i", o.li).style.setProperty("--v", (vals[i] / mx * 100).toFixed(1) + "%");
+    });
+  }
+  SHOW.trafic = function () { sizeChart(); drawChart(); bars(tdev, 1); bars(tapp, 0); };
+  SHOW_TICK.trafic = function () { drawChart(); bars(tdev, 1); bars(tapp, 0); };
+  function pushHist() {
+    hist.d.push(S.down); hist.u.push(S.up);
+    if (hist.d.length > 60) { hist.d.shift(); hist.u.shift(); }
   }
 
-  root.addEventListener("click", function (e) {
-    var b = e.target.closest ? e.target.closest("[data-act], .rz-bar button") : null;
-    if (!b || !root.contains(b)) return;
-    if (b.hasAttribute("data-scn")) { root.classList.remove("is-invite"); play(b.getAttribute("data-scn")); return; }
-    var act = b.getAttribute("data-act"), a = b.closest(".rz-scn"), prop = b.closest(".rz-prop");
-    if (act === "ok" && prop && !prop.classList.contains("is-sent")) {
-      prop.classList.remove("is-wait"); prop.classList.add("is-sent");
-      flow(prop, "sent", "is-on is-done"); flow(prop, "read", "is-on is-run");
-      approvals[state.scn](a, prop);
-      toEnd();
-    } else if (act === "no" && prop) {
-      prop.classList.remove("is-wait"); prop.classList.add("is-later");
-    } else if (act === "fibre") fibreBack(a);
-    else if (act === "replay") play(state.scn);
-    else if (act === "jump") card.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  /* ---------- Menaces : carte du monde et arcs ---------- */
+  var G, gArcs, gHome, home, evI = 6, feed;
+  function proj(lat, lon) {
+    var l = ((lon - G.lon0) % 360 + 360) % 360;
+    return [l / G.step * G.u + G.u / 2, (G.lat0 - lat) / G.step * G.u + G.u / 2];
+  }
+  function arcPath(a, b) {
+    var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, d = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    return "M" + a[0].toFixed(1) + " " + a[1].toFixed(1) + "Q" + mx.toFixed(1) + " " + (my - d * .32).toFixed(1) + " " + b[0].toFixed(1) + " " + b[1].toFixed(1);
+  }
+  INIT.menaces = function () {
+    var box = $(".rs-geo");
+    G = JSON.parse(box.getAttribute("data-geo"));
+    var d = [], rows = G.rows.split(",");
+    rows.forEach(function (r, j) {
+      for (var c = 0; c < r.length; c++) {
+        var v = parseInt(r[c], 16);
+        for (var b = 0; b < 4; b++) if (v & (8 >> b)) {
+          var i = c * 4 + b;
+          if (i < G.cols) d.push("M" + (i * G.u + G.u / 2) + " " + (j * G.u + G.u / 2) + "h0");
+        }
+      }
+    });
+    $(".rs-geo-dots").setAttribute("d", d.join(""));
+    gArcs = $(".rs-geo-arcs"); gHome = $(".rs-geo-home"); feed = $(".rs-feed");
+    home = proj(G.home[0], G.home[1]);
+    // Historique discret : chaque source des dernières heures
+    G.ev.forEach(function (e) {
+      var s = proj(e[5], e[6]);
+      svgEl("path", { "class": "rs-arc is-" + e[7], d: arcPath(s, home), opacity: ".16" }, gArcs);
+      svgEl("circle", { "class": "rs-arc-dot is-" + e[7], cx: s[0], cy: s[1], r: 2, opacity: ".5" }, gArcs);
+    });
+    svgEl("circle", { "class": "rs-home-s", cx: home[0], cy: home[1], r: 6 }, gHome);
+    svgEl("circle", { "class": "rs-home-r", cx: home[0], cy: home[1], r: 7 }, gHome);
+    svgEl("circle", { "class": "rs-home-c", cx: home[0], cy: home[1], r: 3.2 }, gHome);
+    var t = svgEl("text", { "class": "rs-home-l", x: home[0] + 10, y: home[1] - 8 }, gHome);
+    t.textContent = "MAISON · SAINT-HYACINTHE";
+  };
+  function strike() {
+    if (!G) return;
+    var e = G.ev[evI++ % G.ev.length], s = proj(e[5], e[6]), tone = e[7];
+    var p = svgEl("path", { "class": "rs-arc is-" + tone, d: arcPath(s, home) }, gArcs);
+    var src = svgEl("circle", { "class": "rs-arc-src is-" + tone, cx: s[0], cy: s[1], r: 3 }, gArcs);
+    var lab = svgEl("text", { "class": "rs-arc-lab", x: s[0] + 7, y: s[1] - 6 }, gArcs);
+    lab.textContent = e[4].toUpperCase();
+    var len = p.getTotalLength();
+    if (p.animate && !reduce) {
+      p.animate([{ strokeDasharray: "0 " + len }, { strokeDasharray: len + " " + len, offset: .55 }, { strokeDasharray: len + " " + len, opacity: 0 }],
+        { duration: 2600, easing: "cubic-bezier(.3,.6,.3,1)", fill: "forwards" });
+      src.animate([{ r: 2, opacity: 1 }, { r: 14, opacity: 0 }], { duration: 1400, easing: "ease-out", fill: "forwards" });
+      lab.animate([{ opacity: 0 }, { opacity: 1, offset: .15 }, { opacity: 1, offset: .7 }, { opacity: 0 }], { duration: 2600, fill: "forwards" });
+      var ring = $(".rs-home-s", gHome);
+      setTimeout(function () {
+        if (ring.animate) ring.animate([{ r: 6, opacity: .9 }, { r: 26, opacity: 0 }], { duration: 1100, easing: "ease-out" });
+      }, 1300);
+    }
+    setTimeout(function () { [p, src, lab].forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); }, 2800);
+    // Journal
+    var li = document.createElement("li");
+    li.className = "is-" + tone + " is-new";
+    li.innerHTML = "<time>" + hms(now()) + "</time><span><b></b><small></small><em></em></span><span class=\"rs-pill is-ok\">Bloqué</span>";
+    li.querySelector("b").textContent = e[1];
+    li.querySelector("small").textContent = e[2];
+    li.querySelector("em").textContent = e[3] + " · " + e[4];
+    feed.insertBefore(li, feed.firstChild);
+    while (feed.children.length > 6) feed.removeChild(feed.lastChild);
+    S.blocked += 1;
+  }
+  SHOW.menaces = function () { strike(); };
+  var strikeEvery = 0;
+  SHOW_TICK.menaces = function () { if (++strikeEvery % 3 === 0) strike(); };
+
+  /* ---------- VPN : durées des sessions ---------- */
+  var since = $$("[data-since]").map(function (e) { return { e: e, s: +e.getAttribute("data-since") }; });
+  function dur(s) { var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return h ? h + " h " + pad(m) : m + " min " + pad(s % 60); }
+  function tickSince() { since.forEach(function (o) { o.s++; o.e.textContent = dur(o.s); }); }
+  tickSince();
+
+  /* ---------- Contrôles ---------- */
+  $$("[data-pause]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var on = b.getAttribute("aria-checked") !== "true";
+      b.setAttribute("aria-checked", on ? "true" : "false");
+      $("span", b).textContent = on ? "Internet en pause" : "Mettre Internet en pause";
+      b.closest(".rs-prof").classList.toggle("is-paused", on);
+    });
+  });
+  var gsw = $("[data-guest]");
+  if (gsw) gsw.addEventListener("click", function () {
+    var on = gsw.getAttribute("aria-checked") !== "true";
+    gsw.setAttribute("aria-checked", on ? "true" : "false");
+    $(".rs-guest").classList.toggle("is-off", !on);
+    $("[data-gcount]").textContent = on ? "3 appareils" : "Réseau coupé";
+    $$("[data-gk]").forEach(function (e) { e.textContent = on ? "3" : "0"; });
+  });
+  var WORDS = ["soleil", "érable", "rivière", "aurore", "galet", "boréal", "cèdre", "orage", "lynx", "nordet"];
+  var gnew = $("[data-gnew]");
+  if (gnew) gnew.addEventListener("click", function () {
+    var a = WORDS[Math.floor(Math.random() * WORDS.length)], b = WORDS[Math.floor(Math.random() * WORDS.length)];
+    if (a === b) b = "lac";
+    $("[data-gpass]").textContent = a + "-" + b + "-" + Math.floor(rnd(10, 99));
   });
 
-  /* ---------- Infobulle des appareils ---------- */
-  function fillTip(n) {
-    $("b", tip).textContent = n.getAttribute("data-name");
-    $(".rz-tz", tip).textContent = n.classList.contains("rz-dev") ? "Zone " + n.getAttribute("data-zname") : "Infrastructure";
-    var st = $(".rz-ts", tip);
-    st.textContent = n.getAttribute("data-state");
-    st.className = "rz-ts" + (n.classList.contains("is-down") ? " is-bad"
-      : (n.classList.contains("is-boot") || n.classList.contains("is-warn") || n.classList.contains("is-standby") || n.classList.contains("is-iso")) ? " is-warn" : "");
-    $(".rz-ti", tip).textContent = n.getAttribute("data-info");
+  /* ---------- Continuité ---------- */
+  var spark = {};
+  $$("[data-wan]").forEach(function (w) {
+    var k = w.getAttribute("data-wan"), base = k === "fibre" ? 9 : k === "g5" ? 31 : 38, arr = [];
+    for (var i = 0; i < 40; i++) arr.push(base + rnd(-1.5, 1.5) * (base / 9));
+    spark[k] = { el: w, base: base, arr: arr, l: $(".rs-spark-l", w), a: $(".rs-spark-a", w), t: $("[data-lat]", w) };
+  });
+  function drawSpark(o) {
+    var mx = 60, n = o.arr.length, pts = o.arr.map(function (v, i) {
+      return (i / (n - 1) * 200).toFixed(1) + " " + (38 - Math.min(v, mx) / mx * 34).toFixed(1);
+    });
+    o.l.setAttribute("d", "M" + pts.join("L"));
+    o.a.setAttribute("d", "M" + pts.join("L") + "L200 40L0 40Z");
   }
-  function showTip(n) {
-    tipFor = n; fillTip(n); tip.hidden = false;
-    var r = $(".rz-disc", n).getBoundingClientRect(), w = wrap.getBoundingClientRect();
-    var tw = tip.offsetWidth, th = tip.offsetHeight;
-    var x = r.left + r.width / 2 - w.left - tw / 2, y = r.top - w.top - th - 10;
-    if (y < -40) y = r.bottom - w.top + 10;
-    x = Math.max(4, Math.min(w.width - tw - 4, x));
-    tip.style.transform = "translate(" + Math.round(x) + "px," + Math.round(y) + "px)";
-    tip.classList.add("is-on");
+  function tickSpark() {
+    for (var k in spark) {
+      var o = spark[k], down = o.el.classList.contains("is-down");
+      o.arr.push(down ? 60 : o.base + rnd(-1.5, 1.5) * (o.base / 9));
+      o.arr.shift();
+      o.t.textContent = down ? "—" : Math.round(o.arr[o.arr.length - 1]) + " ms";
+      drawSpark(o);
+    }
   }
-  function hideTip() { tipFor = null; tip.classList.remove("is-on"); }
-  Object.keys(nodes).forEach(function (id) {
-    var n = nodes[id];
-    n.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") showTip(n); });
-    n.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse") hideTip(); });
-    n.addEventListener("focus", function () { showTip(n); });
-    n.addEventListener("blur", hideTip);
-    n.addEventListener("click", function () {
-      showTip(n); clearTimeout(tipTimer); tipTimer = setTimeout(function () { if (tipFor === n) hideTip(); }, 3500);
+  for (var sk in spark) drawSpark(spark[sk]);
+  var failing = false, fbtn = $("[data-failover]");
+  function pillTo(w, txt, tone) {
+    var p = $(".rs-wan-h .rs-pill", w);
+    p.className = "rs-pill" + (tone ? " is-" + tone : ""); p.textContent = txt;
+  }
+  if (fbtn) fbtn.addEventListener("click", function () {
+    if (failing) return;
+    failing = true; fbtn.disabled = true;
+    var card = $(".rs-c-tl"), items = $$(".rs-tl li", card), f = spark.fibre.el, g = spark.g5.el;
+    card.classList.add("is-sim");
+    $(".rs-ch h5", card).textContent = "Simulation en cours";
+    items.forEach(function (li) { li.classList.remove("is-done"); });
+    var t0 = now();
+    function stamp(i, ms) { var d = new Date(t0.getTime() + ms); $("time", items[i]).textContent = hms(d) + "." + Math.floor(ms % 1000 / 100); }
+    var seq = [
+      [0, function () { f.classList.add("is-down"); f.classList.remove("is-on"); pillTo(f, "Coupée", "bad"); }],
+      [1400, function () {}],
+      [2100, function () { g.classList.add("is-on"); pillTo(g, "Actif", "ok"); setWan("g5"); }],
+      [3000, function () {}],
+      [9000, function () { f.classList.remove("is-down"); f.classList.add("is-on"); g.classList.remove("is-on"); pillTo(f, "Actif", "ok"); pillTo(g, "En veille", ""); setWan("fibre"); }],
+    ];
+    seq.forEach(function (s, i) {
+      stamp(i, s[0]);
+      setTimeout(function () {
+        s[1](); items[i].classList.add("is-done");
+        if (i === seq.length - 1) {
+          failing = false; fbtn.disabled = false;
+          $(".rs-ch h5", card).textContent = "Simulation · terminée";
+        }
+      }, reduce ? i * 300 : s[0] + 400);
     });
   });
 
-  /* ---------- Raccourci vers le panneau (téléphone) ---------- */
-  var cardSeen = true;
-  function jumpCheck() {
-    if (!jump) return;
-    var single = card.offsetTop > wrap.offsetTop + 40;
-    jump.hidden = !(single && state && state.scn !== "normal" && !cardSeen);
-  }
+  /* ---------- Sauvegardes : test de restauration ---------- */
+  var rbtn = $("[data-restore]");
+  if (rbtn) rbtn.addEventListener("click", function () {
+    var box = rbtn.closest(".rs-restore");
+    box.classList.add("is-run");
+    runFlow($$(".rs-flowl li", box), function () {
+      $(".rs-kick", box).innerHTML = '<i class="rs-dot is-ok"></i>Test de restauration · aujourd’hui ' + hms(now()).slice(0, 5);
+    }, 1100);
+  });
 
-  /* ---------- Démarrage ---------- */
-  applyLayout();
-  baseline();
-  prefill();
-  widths(); refreshHud();
-  if (tallMQ) {
-    var onMQ = function () { applyLayout(); widths(); jumpCheck(); };
-    if (tallMQ.addEventListener) tallMQ.addEventListener("change", onMQ); else if (tallMQ.addListener) tallMQ.addListener(onMQ);
+  /* ---------- Mises à jour ---------- */
+  propDone.crit = function () {
+    var box = $(".rs-crit");
+    box.classList.add("is-done");
+    $(".rs-kick", box).innerHTML = '<i class="rs-dot is-ok"></i>Correctif approuvé · installation cette nuit à 3 h 00';
+    var st = $('.rs-table tr.is-crit [data-pstate]');
+    if (st) st.innerHTML = '<span class="rs-pill is-gold">Approuvée · cette nuit 3 h</span>';
+    $$("[data-crit]").forEach(function (e) { e.textContent = "0"; });
+    setState("maj", "Planifiées · 3 h", false);
+  };
+
+  /* ---------- Segmentation ---------- */
+  var segBtns = $$(".rs-matrix button"), sd = $(".rs-segd");
+  var VLAB = { ok: "Permis", lim: "Limité", vpn: "VPN seulement", no: "Bloqué" };
+  function pickSeg(b) {
+    segBtns.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    $("[data-sd-t]", sd).textContent = b.getAttribute("data-seg");
+    var v = $("[data-sd-v]", sd), k = b.getAttribute("data-v");
+    v.className = "rs-segd-v is-" + k; v.textContent = VLAB[k];
+    $("[data-sd-w]", sd).textContent = b.getAttribute("data-why");
+    var h = +b.getAttribute("data-hits");
+    $("[data-sd-h]", sd).textContent = h ? thousands(h) + " tentatives bloquées · 24 h" : "Aucune tentative refusée · 24 h";
   }
-  if ("IntersectionObserver" in window) {
-    new IntersectionObserver(function (es) {
-      es.forEach(function (e) { visible = e.isIntersecting; });
-      sync();
-      if (visible && !root.classList.contains("was-seen")) { root.classList.add("was-seen", "is-invite"); }
-    }, { threshold: 0.04 }).observe(root);
-    new IntersectionObserver(function (es) {
-      es.forEach(function (e) { cardSeen = e.isIntersecting; });
-      jumpCheck();
-    }, { threshold: 0.25 }).observe(card);
-  } else { visible = true; sync(); }
-  document.addEventListener("visibilitychange", sync);
+  segBtns.forEach(function (b) {
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", function () { pickSeg(b); });
+  });
+  var first = segBtns.filter(function (b) { return b.getAttribute("data-seg").indexOf("Objets → Personnel") === 0; })[0];
+  if (first) pickSeg(first);
+
+  /* ---------- Boucle (une seconde) ---------- */
+  setInterval(function () {
+    if (!visible || document.hidden) return;
+    tickClock();
+    pushHist();
+    liveTick();
+    tickSince();
+    if (current === "continuite") tickSpark();
+  }, 1000);
+
+  situation("normal");
 })();

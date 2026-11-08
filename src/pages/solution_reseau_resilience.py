@@ -11,14 +11,15 @@ DATA = {
     "h1": "Réseau et <em>cybersécurité.</em>",
     "lead": "Une vue claire du réseau et de ses risques, avant que chaque problème devienne une urgence.",
     "for": "Maisons connectées, PME et petits multi-sites qui dépendent de leur réseau",
-    "demo_title": "Votre réseau, <em>comme une carte vivante.</em>",
+    "demo_title": "Tout votre réseau, <em>dans une seule console.</em>",
     "demo_copy": (
-        "Choisissez une situation : JARVIS montre ce qui se passe, explique pourquoi en une "
-        "phrase et attend votre accord avant d’agir. Tout ce que vous voyez est simulé."
+        "Douze modules, de la carte du réseau au score de la semaine : appareils, Wi-Fi, trafic, "
+        "menaces, VPN, contrôles parentaux, continuité, sauvegardes, mises à jour et segmentation. "
+        "JARVIS explique en une phrase et attend votre accord avant d’agir. Données d’exemple."
     ),
     "demo_html": DEMO,
     "assets": ["reseau"],
-    "compat": ["Wi-Fi", "VPN", "LTE", "Starlink", "Pare-feu", "VLAN", "Journaux", "Multi-sites"],
+    "compat": ["Wi-Fi 7", "VLAN", "Pare-feu", "Détection d’intrusion", "VPN", "5G", "Satellite", "PoE", "Sauvegardes 3-2-1", "Multi-sites"],
     "deploy_title": "L’observation reste sur votre infrastructure.",
     "deploy_copy": (
         "Les sondes, journaux et inventaires peuvent demeurer locaux. Les accès distants "
@@ -47,16 +48,18 @@ DATA["clair"] = {
         "Personne ne sait vraiment quels appareils sont branchés au réseau.",
         "Une ampoule connectée peut voir les mêmes ordinateurs que vous.",
         "Une panne Internet arrête aussi les caméras et les lumières.",
+        "On ne sait pas si les sauvegardes marchent ni si un équipement a une faille connue.",
     ],
     "apres": [
         "La carte montre l’appareil touché et le chemin jusqu’à la cause.",
         "Chaque appareil est connu, rangé dans sa zone et suivi.",
         "Des murs séparent la famille, les objets, les caméras et les invités.",
         "Le lien de secours prend le relais et la maison continue en local.",
+        "Les sauvegardes sont testées chaque mois et chaque faille a sa date de correction.",
     ],
     "obtenez": [
-        ("Une carte que tout le monde comprend",
-         "Internet, routeur, zones et appareils, avec ce qui circule en direct. Aucun jargon à décoder."),
+        ("Une console complète, lisible par tous",
+         "Carte du réseau, appareils, Wi-Fi par pièce, trafic, menaces et score de la semaine, avec ce qui circule en direct."),
         ("Des diagnostics en mots simples",
          "La vraie cause, le chemin pour la trouver et une seule action proposée, que vous approuvez."),
         ("Une maison qui tient bon",

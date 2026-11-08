@@ -1,10 +1,11 @@
 # Solution 04 — Automatisation d'entreprise.
 # La vedette : la réception téléphonique IA (JARVIS répond sur la ligne IP et
-# suit la procédure de l'équipe). La page ajoute le catalogue des douze
-# automatisations prises en charge et la bande « La différence » qui situe
-# cette solution face aux Environnements intelligents et à la Sécurité.
+# suit la procédure de l'équipe). Suivent « Votre secteur » (explorateur des
+# vrais problèmes de chaque secteur, avec l'automatisation qui les règle), le
+# socle commun des douze automatisations offertes à toutes les entreprises et
+# la bande « La différence » face aux Environnements intelligents et à la Sécurité.
 
-from demos.automatisation import HTML as DEMO, fr
+from demos.automatisation import HTML as DEMO, SECTEURS, SECTEURS_HTML, fr
 from pages._solution import solution_page
 
 # Icônes fines (trait 1.5) du catalogue.
@@ -75,14 +76,15 @@ def _catalogue():
     )
     return f"""<div class="au-sect au-cat" data-rev>
     <div class="au-cat-head">
-      <p class="eyebrow">Le catalogue</p>
-      <h3>Ce que JARVIS prend en charge</h3>
-      <p>JARVIS et ses extensions, c’est l’équivalent d’une équipe d’une dizaine de personnes déjà en poste —
-      réceptionniste, archiviste, commis, technicien. Douze exemples concrets, parmi d’autres :</p>
+      <p class="eyebrow">Le socle commun · dans tous les secteurs</p>
+      <h3>Ce que JARVIS prend en charge partout</h3>
+      <p>Peu importe le métier, ces douze automatisations servent dans chaque entreprise. JARVIS et ses extensions,
+      c’est l’équivalent d’une équipe d’une dizaine de personnes déjà en poste — réceptionniste, archiviste,
+      commis, technicien.</p>
     </div>
     <ul class="au-cat-grid">{items}</ul>
     <p class="au-cat-foot"><b>Chaque automatisation est construite sur mesure, étape par étape, validée avec vous.</b>
-    {fr("Votre processus n’est pas dans la liste ? Décrivez-le-nous : s’il suit des règles, il s’automatise.")}</p>
+    {fr("Votre processus n’est ni ici ni dans votre secteur ? Décrivez-le-nous : s’il suit des règles, il s’automatise.")}</p>
   </div>"""
 
 
@@ -123,11 +125,12 @@ DATA = {
         "Regardez JARVIS prendre un appel réel : il reconnaît la cliente, déplace son rendez-vous et "
         "s’arrête net quand la procédure exige un humain — vous. Essayez aussi « Je veux parler à "
         "quelqu’un » : l’appel est transféré avec tout le contexte. Trois autres scénarios : une "
-        "demande d’achat, un nouveau client, une facture qui ne concorde pas."
+        "demande d’achat, un nouveau client, une facture qui ne concorde pas. Plus bas : votre "
+        f"secteur, parmi {len(SECTEURS)}, avec ses vrais problèmes et l’automatisation qui règle chacun."
     ),
     "demo_html": DEMO,
     "assets": ["automatisation"],
-    "extra": _catalogue() + _diff(),
+    "extra": SECTEURS_HTML + _catalogue() + _diff(),
     "clair": {
         "quoi": "JARVIS répond, trie et fait circuler le travail. <em>Vous gardez la décision.</em>",
         "exemple": (

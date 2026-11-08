@@ -649,3 +649,189 @@
   }
   document.addEventListener("visibilitychange", sync);
 })();
+
+/* « Votre secteur » : cartes de secteurs, recherche par métier (sans accents),
+   vue du secteur choisi, problèmes en onglets et déroulement animé de chaque
+   automatisation (déclencheur → étapes → validation humaine → résultat).
+   Animé seulement sous html.fx, hors mouvement réduit; l'horloge n'avance que
+   si la section est visible. Lien direct : #secteur-<slug>. Sans JavaScript,
+   le premier secteur reste lisible, déroulement complet. */
+(function () {
+  "use strict";
+  var root = document.querySelector("[data-secteurs]");
+  if (!root || !window.requestAnimationFrame) return;
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function $$(s, r) { return [].slice.call((r || root).querySelectorAll(s)); }
+  function norm(s) {
+    s = (s || "").toLowerCase();
+    if (s.normalize) s = s.normalize("NFD").replace(/[̀-ͯ]/g, "");
+    return s.replace(/[’']/g, "'").trim();
+  }
+  function fx() { return !reduce && document.documentElement.classList.contains("fx"); }
+
+  var cards = $$("[data-sec]"), views = $$("[data-secp]"), input = root.querySelector("[data-se-q]");
+  var countEl = root.querySelector("[data-se-count]"), empty = root.querySelector("[data-se-empty]");
+  var stage = root.querySelector("[data-se-stage]"), sugs = $$("[data-sug]");
+  var baseCount = countEl ? countEl.textContent : "";
+  var cur = cards.length ? cards[0].getAttribute("data-sec") : null;
+
+  /* ---------- Horloge : n'avance que si la section est visible ---------- */
+  var visible = false, clock = 0, last = 0, raf = 0, timers = [], run = 0;
+  function loop(t) {
+    raf = 0;
+    if (!visible || document.hidden) return;
+    clock += Math.min(64, t - last); last = t;
+    var due = timers.filter(function (x) { return x.at <= clock; });
+    timers = timers.filter(function (x) { return x.at > clock; });
+    due.forEach(function (x) { x.fn(); });
+    if (timers.length) raf = requestAnimationFrame(loop);
+  }
+  function kick() { if (visible && !document.hidden && !raf && timers.length) { last = performance.now(); raf = requestAnimationFrame(loop); } }
+  function after(ms, fn) { var rid = run; timers.push({ at: clock + ms, fn: function () { if (rid === run) fn(); } }); kick(); }
+
+  /* ---------- Déroulement d'une automatisation ---------- */
+  function finish(det) {
+    $$(".se-n", det).forEach(function (n) { n.classList.add("is-on"); n.classList.remove("is-act"); });
+    var hs = det.querySelector("[data-hs]");
+    if (hs) { hs.classList.remove("is-wait"); hs.textContent = "Validé"; }
+    var fl = det.querySelector(".se-flow");
+    if (fl) fl.style.setProperty("--se-p", 1);
+    det.classList.add("is-done");
+  }
+  function play(det) {
+    run++; timers = [];
+    if (!det) return;
+    det.classList.remove("is-done");
+    if (!fx()) { det.classList.remove("is-play"); finish(det); return; }
+    var nodes = $$(".se-n", det), fl = det.querySelector(".se-flow"), hs = det.querySelector("[data-hs]");
+    det.classList.add("is-play");
+    nodes.forEach(function (n) { n.classList.remove("is-on", "is-act"); });
+    if (hs) { hs.classList.remove("is-wait"); hs.textContent = "Validé"; }
+    fl.style.setProperty("--se-p", 0);
+    var t = 350, n = nodes.length;
+    nodes.forEach(function (node, i) {
+      var human = node.getAttribute("data-kind") === "hum";
+      after(t, function () {
+        nodes.forEach(function (x) { x.classList.remove("is-act"); });
+        node.classList.add("is-on", "is-act");
+        fl.style.setProperty("--se-p", n > 1 ? i / (n - 1) : 1);
+        if (human && hs) { hs.classList.add("is-wait"); hs.textContent = "En attente d’une personne"; }
+      });
+      if (human && hs) {
+        t += 1500;
+        after(t, function () { hs.classList.remove("is-wait"); hs.textContent = "Validé"; });
+      }
+      t += 720;
+    });
+    after(t + 100, function () { nodes.forEach(function (x) { x.classList.remove("is-act"); }); det.classList.add("is-done"); });
+  }
+
+  function viewOf(slug) { return root.querySelector('[data-secp="' + slug + '"]'); }
+  function showPain(view, i, animate) {
+    $$(".se-pain", view).forEach(function (b) {
+      var on = b.getAttribute("data-pain") === String(i);
+      b.classList.toggle("is-on", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    var shown = null;
+    $$("[data-paind]", view).forEach(function (d) {
+      var on = d.getAttribute("data-paind") === String(i);
+      d.hidden = !on;
+      if (on) shown = d;
+    });
+    if (animate) play(shown); else { run++; timers = []; if (shown) finish(shown); }
+  }
+  function select(slug, opts) {
+    opts = opts || {};
+    var v = viewOf(slug);
+    if (!v) return;
+    cur = slug;
+    cards.forEach(function (c) {
+      var on = c.getAttribute("data-sec") === slug;
+      c.classList.toggle("is-on", on);
+      c.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    views.forEach(function (x) { x.hidden = x !== v; x.classList.remove("is-enter"); });
+    if (fx()) { void v.offsetWidth; v.classList.add("is-enter"); }
+    showPain(v, 0, true);
+    if (opts.hash && history.replaceState) history.replaceState(null, "", "#secteur-" + slug);
+    if (opts.scroll) {
+      var r = stage.getBoundingClientRect();
+      if (r.top > innerHeight * 0.55 || r.top < 0) {
+        window.scrollTo({ top: r.top + scrollY - 84, behavior: fx() ? "smooth" : "auto" });
+      }
+    }
+  }
+
+  cards.forEach(function (c) {
+    c.addEventListener("click", function () { select(c.getAttribute("data-sec"), { hash: true, scroll: true }); });
+  });
+  root.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".se-pain");
+    if (b) { showPain(b.closest("[data-secp]"), b.getAttribute("data-pain"), true); return; }
+    var r = e.target.closest && e.target.closest("[data-se-replay]");
+    if (r) {
+      var v = r.closest("[data-secp]"), d = v && v.querySelector("[data-paind]:not([hidden])");
+      play(d);
+    }
+  });
+  /* Flèches gauche / droite entre les problèmes */
+  root.addEventListener("keydown", function (e) {
+    var b = e.target.closest && e.target.closest(".se-pain");
+    if (!b || (e.key !== "ArrowDown" && e.key !== "ArrowUp" && e.key !== "ArrowRight" && e.key !== "ArrowLeft")) return;
+    var all = $$(".se-pain", b.closest("[data-secp]")), i = all.indexOf(b);
+    var j = (i + (e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : -1) + all.length) % all.length;
+    e.preventDefault(); all[j].focus(); all[j].click();
+  });
+
+  /* ---------- Recherche par métier ---------- */
+  function filter() {
+    var q = norm(input.value), words = q.split(/\s+/).filter(Boolean), shown = [];
+    cards.forEach(function (c) {
+      var k = c.getAttribute("data-k"), ok = words.every(function (w) { return k.indexOf(w) !== -1; });
+      c.parentNode.hidden = !ok;
+      if (ok) shown.push(c);
+    });
+    sugs.forEach(function (s) { s.classList.toggle("is-on", norm(s.getAttribute("data-sug")) === q && !!q); });
+    if (!q) { countEl.textContent = baseCount; empty.hidden = true; return; }
+    countEl.textContent = shown.length ? shown.length + (shown.length > 1 ? " secteurs trouvés" : " secteur trouvé") : "Aucun secteur trouvé";
+    empty.hidden = shown.length > 0;
+    if (shown.length && !shown.some(function (c) { return c.getAttribute("data-sec") === cur; })) {
+      select(shown[0].getAttribute("data-sec"), { hash: true });
+    }
+  }
+  if (input) {
+    input.addEventListener("input", filter);
+    input.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter") return;
+      e.preventDefault();
+      var first = cards.filter(function (c) { return !c.parentNode.hidden; })[0];
+      if (first) select(first.getAttribute("data-sec"), { hash: true, scroll: true });
+    });
+  }
+  sugs.forEach(function (s) {
+    s.addEventListener("click", function () { input.value = s.getAttribute("data-sug"); filter(); });
+  });
+
+  /* ---------- Lien direct #secteur-<slug> ---------- */
+  var m = /^#secteur-([a-z]+)/.exec(location.hash || "");
+  if (m && viewOf(m[1])) select(m[1]);
+
+  /* ---------- Visibilité ---------- */
+  var started = false;
+  function sync() { kick(); }
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        visible = e.isIntersecting;
+        if (visible && !started) {
+          started = true;
+          var v = viewOf(cur);
+          if (v) play(v.querySelector("[data-paind]:not([hidden])"));
+        }
+        sync();
+      });
+    }, { threshold: 0, rootMargin: "-15% 0px -15% 0px" }).observe(stage);
+  } else { visible = true; }
+  document.addEventListener("visibilitychange", sync);
+})();

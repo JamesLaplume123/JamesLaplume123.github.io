@@ -1,27 +1,30 @@
-/* Démo « Personal Intelligence » : la journée d'Alex défile d'un réveil à l'autre.
-   Chaque source a sa propre permission; retirée, son flux est coupé et JARVIS ne
-   relie plus ce qui en dépend. Les liens arrivent avec leur raison; au réveil,
-   un échange d'habitude attend l'accord, puis l'essai de 14 jours s'anime.
-   Démonstration seulement : données fictives, aucun appareil ni compte réel. */
+/* Démo « Personal Intelligence » : treize sources alimentent le modèle d'Alex
+   sur le Hub JARVIS; chaque permission se retire séparément. Les habitudes
+   détectées mènent à deux avenirs projetés (estimations étiquetées), à une
+   automatisation à approuver ou refuser (conséquence honnête dans les deux cas)
+   et au coach de vie (conseils, principes de livres, citations du domaine
+   public, engagements choisis). Données d'exemple, aucun appareil réel. */
 (function () {
   "use strict";
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var NB = " ";
-  var DAY_MS = 22000;   /* durée d'une journée en lecture automatique */
-  var GATE = 5600;      /* sans réponse au réveil, Alex approuve après ce délai (démo) */
-  var START = 6 * 60 + 30;
-  var EASE = "cubic-bezier(.16, 1, .3, 1)";
+  var NB = "\u00a0";
+  var PRIMARY = { ecran: "sommeil", cafe: "sommeil", achats: "argent", course: "objectif", repas: "energie" };
+  var MLABEL = { sommeil: "Sommeil par nuit", energie: "Énergie, sur 100", argent: "Épargne cumulée", objectif: "Progression de l’objectif" };
 
   function fx() { return !reduce && document.documentElement.classList.contains("fx"); }
-  function q(s) { return "«" + NB + s + NB + "»"; }
-  function num(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, NB); }
-  function dur(m) {
-    m = Math.round(m);
-    return m < 60 ? m + NB + "min" : Math.floor(m / 60) + NB + "h" + NB + ("0" + m % 60).slice(-2);
+  function grp(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, NB); }
+
+  function fmt(m, v) {
+    if (m === "sommeil") { var mi = Math.round(v * 60); return Math.floor(mi / 60) + NB + "h" + NB + ("0" + mi % 60).slice(-2); }
+    if (m === "argent") return grp(Math.round(v / 10) * 10) + NB + "$";
+    if (m === "objectif") return Math.round(v) + NB + "%";
+    return String(Math.round(v));
   }
-  function hm(p) {
-    var m = (Math.round(p) + START) % 1440;
-    return Math.floor(m / 60) + NB + "h" + NB + ("0" + m % 60).slice(-2);
+  function delta(m, d) {
+    var s = d >= 0 ? "+" : "−", a = Math.abs(d);
+    if (m === "sommeil") return s + Math.round(a * 60) + NB + "min par nuit";
+    if (m === "argent") return s + grp(Math.round(a / 10) * 10) + NB + "$";
+    return s + Math.round(a) + NB + "points";
   }
 
   document.querySelectorAll('[data-demo="vie"]').forEach(function (root) {
@@ -31,412 +34,315 @@
     var data;
     try { data = JSON.parse(pi("data").textContent); } catch (e) { return; }
     root.classList.add("is-live");
+    var WILL = data.will;
 
-    var DAY = data.day, INS = data.ins;
+    /* ---------- Projections (même formule que vie.py : project) ---------- */
+    function lvl(s, end, tau, t) { return s + (end - s) * (1 - Math.exp(-t / tau)); }
+    function project(sp, k, t) {
+      if (sp.rc !== undefined) {
+        var r = k === "c" ? sp.rc : k === "n" ? sp.rn : sp.rc + WILL * (sp.rn - sp.rc);
+        return sp.s + r * t;
+      }
+      if (k === "c") return lvl(sp.s, sp.c, sp.tc, t);
+      if (k === "n") return lvl(sp.s, sp.n, sp.tn, t);
+      return lvl(sp.s, sp.c + WILL * (sp.n - sp.c), sp.tn * 1.6, t);
+    }
+    function cap(m, v) { return m === "objectif" || m === "energie" ? Math.min(v, 100) : v; }
+    function val(h, m, k, t) { return cap(m, project(h.m[m], k, t)); }
+    function metricGoal(m) { for (var i = 0; i < data.metrics.length; i++) if (data.metrics[i].k === m) return data.metrics[i]; return {}; }
+    function nice(lo, hi, m) {
+      var raw = (hi - lo) / 3, mag = Math.pow(10, Math.floor(Math.log10(raw > 0 ? raw : 1))), step = mag;
+      [1, 2, 2.5, 5, 10].some(function (s) { step = s * mag; return step >= raw; });
+      if (m === "sommeil") step = Math.max(.25, Math.round(step * 4) / 4);
+      return [Math.floor(lo / step) * step, Math.ceil(hi / step) * step, step];
+    }
+
+    /* ---------- État ---------- */
+    var perm = {}, sig = {};
+    data.sources.forEach(function (s) { perm[s.k] = true; sig[s.k] = s; });
+    var H = 0, M = "sommeil", HOR = 90, dec = {}, tone = "doux", visible = false, pingT = 0, signals = 0;
     var el = {
-      clock: pi("clock"), time: pi("time"), date: pi("date"), tl: pi("tl"), sky: pi("sky"), count: pi("count"),
-      play: pi("play"), replay: pi("replay"), links: pi("links"), feed: pi("feed"), empty: $(".pi-feed-empty"),
-      swap: pi("swap"), old: pi("old"), nw: pi("new"), sugg: pi("sugg"), why: pi("why"), uses: pi("uses"), plan: pi("plan"),
-      yes: pi("yes"), no: pi("no"), again: pi("again"), okWho: pi("ok-who"), need: pi("need"),
-      week: pi("week"), delta: pi("delta"), metric: pi("metric"), goal: pi("goal"), axT: pi("ax-t"), axB: pi("ax-b"),
-      base: pi("base"), baseL: pi("base-l"), bars: pi("bars"), avg: pi("avg"), avgL: pi("avg-l"), end: pi("end"), streak: pi("streak"),
-      erase: pi("erase"), erased: pi("erased"), restart: pi("restart"), live: pi("live")
+      count: pi("count"), signals: pi("signals"), fut: pi("fut"), mlabel: pi("mlabel"), yax: pi("yax"), plot: pi("plot"),
+      lc: pi("lc"), ln: pi("ln"), lw: pi("lw"), band: pi("band"), goal: pi("goal"), en: pi("en"), ec: pi("ec"), ew: pi("ew"),
+      cross: pi("cross"), tip: pi("tip"), xmid: pi("xmid"), xend: pi("xend"), nl: pi("nl"), basis: pi("basis"),
+      evidence: pi("evidence"), chips: pi("chips"), auto: pi("auto"), aname: pi("aname"), steps: pi("steps"), touch: pi("touch"),
+      abook: pi("abook"), aauth: pi("aauth"), aprin: pi("aprin"), yesT: pi("yes-t"), noT: pi("no-t"), need: pi("need"),
+      adapt: pi("adapt"), pacts: pi("pacts"), live: pi("live"), core: pi("core")
     };
-    var sun = $(".pi-sun");
-    var rows = {};
-    $$(".pi-row[data-src]").forEach(function (r) {
-      rows[r.getAttribute("data-src")] = { el: r, sw: r.querySelector(".pi-sw"), v: r.querySelector("[data-pi-v]"), last: "" };
-    });
-    var cards = {}, hls = {}, marks = {};
-    $$(".pi-ins").forEach(function (c) { cards[c.getAttribute("data-ins")] = c; });
-    $$(".pi-hl").forEach(function (h) { (hls[h.getAttribute("data-ins")] = hls[h.getAttribute("data-ins")] || []).push(h); });
-    $$(".pi-mark").forEach(function (m) { marks[m.getAttribute("data-ins")] = m; });
-    var habitBtns = $$(".pi-tabs button");
-
-    var perm = { montre: true, tel: true, agenda: true, maison: true };
-    var p = 0, shown = [], lastClock = "";
-    var playing = false, auto = !reduce, visible = false, started = false, raf = 0, prev = 0, gateT = 0;
-    var H = 0, approved = false, declined = false, byDemo = false, erased = false;
-
+    signals = parseInt(el.signals.textContent.replace(/\D/g, ""), 10) || 0;
     function say(t) { el.live.textContent = t; }
-    function restartCls(n, cls) { n.classList.remove(cls); void n.offsetWidth; n.classList.add(cls); }
+    function restart(n, cls) { if (!n) return; n.classList.remove(cls); void n.getBoundingClientRect(); n.classList.add(cls); }
     function habit() { return data.habits[H]; }
+    function missing(srcs) { return srcs.filter(function (k) { return !perm[k]; }); }
+    function names(list) { return list.map(function (k) { return sig[k].name; }).join(", "); }
 
-    /* ---------- Valeurs en direct de chaque source ---------- */
-    function steps(t) {
-      var s = 0;
-      data.steps.forEach(function (v, i) { s += v * Math.max(0, Math.min(1, (t - i * 30) / 30)); });
-      return s;
-    }
-    function screen(t) {
-      var s = 0;
-      data.screen.forEach(function (x) { s += Math.max(0, Math.min(t, x[1]) - x[0]); });
-      return s;
-    }
-    function inRange(list, t) {
-      for (var i = 0; i < list.length; i++) if (t >= list[i][0] && t < list[i][1]) return list[i];
-      return null;
-    }
-    function temp(t) {
-      var T = data.temp;
-      for (var i = 1; i < T.length; i++) {
-        if (t <= T[i][0]) {
-          var k = (t - T[i - 1][0]) / (T[i][0] - T[i - 1][0]);
-          return T[i - 1][1] + (T[i][1] - T[i - 1][1]) * k;
-        }
-      }
-      return T[T.length - 1][1];
-    }
-    function value(k, t) {
-      if (!perm[k]) return "Aucune donnée";
-      if (k === "montre") {
-        if (t >= data.asleep) return "Sommeil · " + dur(t - data.asleep);
-        if (t >= data.inBed) return "Au lit · " + num(steps(t)) + NB + "pas";
-        return num(steps(t)) + NB + "pas";
-      }
-      if (k === "tel") return dur(screen(t)) + " d’écran";
-      if (k === "agenda") { var m = inRange(data.meet, t); return m ? m[2] : "Libre"; }
-      var l = inRange(data.light, t);
-      return temp(t).toFixed(1).replace(".", ",") + NB + "°C · " + (l ? l[2] : "Éteinte");
-    }
-    function paintValues() {
+    /* ---------- Sources ---------- */
+    var rows = {};
+    $$(".pi-src").forEach(function (r) {
+      var k = r.getAttribute("data-src"), s = sig[k];
+      var svg = $(".pi-flows-" + (s.side ? "r" : "l"));
+      rows[k] = { el: r, sw: r.querySelector(".pi-sw"),
+        fl: svg && svg.querySelector('.pi-fl[data-i="' + s.i + '"]'), fd: svg && svg.querySelector('.pi-fd[data-i="' + s.i + '"]') };
+      rows[k].sw.addEventListener("click", function () {
+        perm[k] = !perm[k];
+        say((perm[k] ? "Permission accordée : " : "Permission retirée : ") + s.name + (perm[k] ? "." : ". Ce qui en venait est effacé de la démo."));
+        syncPerm();
+      });
+    });
+    function syncPerm() {
+      var on = 0, perDay = 0;
       Object.keys(rows).forEach(function (k) {
-        var v = erased ? "—" : value(k, p), r = rows[k];
-        if (v !== r.last) { r.last = v; r.v.textContent = v; }
+        var r = rows[k], p = perm[k];
+        if (p) { on++; perDay += sig[k].sig; }
+        r.el.classList.toggle("is-off", !p);
+        r.sw.setAttribute("aria-checked", p ? "true" : "false");
+        if (r.fl) r.fl.classList.toggle("is-off", !p);
+        if (r.fd) r.fd.classList.toggle("is-off", !p);
       });
+      el.count.textContent = on;
+      signals = perDay * 7;
+      el.signals.textContent = grp(signals);
+      $$(".pi-hab").forEach(function (b, i) {
+        var miss = missing(data.habits[i].srcs);
+        b.classList.toggle("is-blocked", miss.length > 0);
+        var n = b.querySelector("[data-pi-need]"); if (n) n.textContent = names(miss);
+      });
+      $$(".pi-chips span[data-src]").forEach(function (c) { c.classList.toggle("is-off", !perm[c.getAttribute("data-src")]); });
+      $$(".pi-adv").forEach(function (a, i) {
+        var miss = missing(data.advice[i].srcs);
+        if (miss.length) { a.setAttribute("data-state", "off"); a.querySelector("[data-pi-need]").textContent = names(miss); }
+        else a.setAttribute("data-state", a.getAttribute("data-done") ? "done" : "ask");
+      });
+      syncAuto();
+      draw(false);
     }
 
-    /* ---------- L'instant présent ---------- */
-    function paintSun() {
-      var rise = data.sun[0], set = data.sun[1], day = p > rise && p < set;
-      var e = day ? Math.sin(Math.PI * (p - rise) / (set - rise)) : 0;
-      sun.classList.toggle("is-night", !day);
-      sun.style.setProperty("--sy", day ? (70 - e * 60).toFixed(2) : "22");
+    /* Pouls des signaux : une source à la fois, seulement visible et sous .fx */
+    function ping() {
+      var ks = Object.keys(perm).filter(function (k) { return perm[k]; });
+      if (!ks.length) return;
+      var k = ks[Math.floor(Math.random() * ks.length)], r = rows[k];
+      r.el.classList.add("is-ping"); if (r.fl) r.fl.classList.add("is-ping"); el.core.classList.add("is-ping");
+      signals += 1 + Math.floor(Math.random() * 3);
+      el.signals.textContent = grp(signals);
+      setTimeout(function () { r.el.classList.remove("is-ping"); if (r.fl) r.fl.classList.remove("is-ping"); el.core.classList.remove("is-ping"); }, 900);
     }
-    function setP(v, quiet) {
-      p = Math.max(0, Math.min(DAY, v));
-      el.tl.style.setProperty("--p", (p / DAY * 100).toFixed(3));
-      paintSun();
-      var c = hm(p), tomorrow = p + START >= 1440;
-      if (c + tomorrow !== lastClock) {
-        lastClock = c + tomorrow;
-        el.time.textContent = c;
-        el.date.textContent = tomorrow ? "Mardi 3" + NB + "novembre" : "Lundi 2" + NB + "novembre";
-        el.clock.textContent = (tomorrow ? "Mardi · " : "Lundi · ") + c;
-        el.sky.setAttribute("aria-valuenow", String(Math.round(p)));
-        el.sky.setAttribute("aria-valuetext", (tomorrow ? "Mardi, " : "Lundi, ") + c);
-        paintValues();
-      }
-      arrivals(quiet);
-      paintSwap();
+    function loop() {
+      clearInterval(pingT); pingT = 0;
+      if (visible && fx()) pingT = setInterval(ping, 1500);
     }
 
-    /* ---------- Les liens de JARVIS ---------- */
-    function insOff(i) { return INS[i].src.some(function (k) { return !perm[k]; }); }
-    function showCard(i, animate) {
-      var c = cards[i], vis = [];
-      if (animate && fx() && c.animate) {
-        Object.keys(cards).forEach(function (k) { if (cards[k].classList.contains("is-in")) vis.push(cards[k]); });
-      }
-      var before = vis.map(function (x) { return x.getBoundingClientRect().top; });
-      c.classList.add("is-in");
-      if (!vis.length && !(animate && fx() && c.animate)) return;
-      vis.forEach(function (x, j) {
-        var d = before[j] - x.getBoundingClientRect().top;
-        if (d) x.animate([{ transform: "translateY(" + d + "px)" }, { transform: "none" }], { duration: 650, easing: EASE });
+    /* ---------- Deux avenirs ---------- */
+    var model = null;
+    function draw(anim) {
+      var h = habit(), blocked = missing(h.srcs).length > 0;
+      if (!h.m[M]) M = PRIMARY[h.k];
+      $$(".pi-kpi").forEach(function (b) {
+        var m = b.getAttribute("data-metric"), ok = !!h.m[m], v = b.querySelector("[data-pi-kv]");
+        b.disabled = !ok;
+        b.setAttribute("aria-pressed", m === M ? "true" : "false");
+        v.textContent = ok ? delta(m, val(h, m, "n", HOR) - val(h, m, "c", HOR)) : "Aucun effet estimé";
       });
-      if (c.animate && animate && fx()) {
-        c.animate([{ opacity: 0, transform: "translateY(-12px) scale(.97)" }, { opacity: 1, transform: "none" }], { duration: 750, easing: EASE });
+      $$("[data-hor]").forEach(function (b) { b.setAttribute("aria-pressed", +b.getAttribute("data-hor") === HOR ? "true" : "false"); });
+      el.mlabel.textContent = MLABEL[M];
+      var N = 60, ts = [], ser = { c: [], n: [], w: [] }, all = [];
+      for (var i = 0; i <= N; i++) {
+        var t = HOR * i / N; ts.push(t);
+        ["c", "n", "w"].forEach(function (k) { var v = val(h, M, k, t); ser[k].push(v); all.push(v); });
       }
+      var lo = Math.min.apply(null, all), hi = Math.max.apply(null, all), g = metricGoal(M);
+      var showGoal = g.goal !== null && g.goal !== undefined && g.goal <= hi * 1.25 && g.goal >= lo;
+      if (showGoal) hi = Math.max(hi, g.goal);
+      var pad = (hi - lo) * .12 || 1, nk = nice(lo - pad, hi + pad, M), a = nk[0], b = nk[1], step = nk[2];
+      if (M === "objectif" || M === "energie") b = Math.min(b, 100);
+      model = { h: h, a: a, b: b, ts: ts };
+      function Y(v) { return 400 - (v - a) / (b - a) * 400; }
+      function pct(v) { return ((v - a) / (b - a) * 100).toFixed(2); }
+      function path(arr) { return "M" + arr.map(function (v, i) { return (ts[i] / HOR * 1000).toFixed(1) + " " + Y(v).toFixed(1); }).join(" L"); }
+      el.lc.setAttribute("d", path(ser.c));
+      el.ln.setAttribute("d", path(ser.n));
+      el.lw.setAttribute("d", path(ser.w));
+      var up = [], dn = [];
+      ts.forEach(function (t, i) { var d = Math.abs(ser.n[i] - ser.c[i]) * .15, x = (t / HOR * 1000).toFixed(1); up.push(x + " " + Y(ser.n[i] + d).toFixed(1)); dn.unshift(x + " " + Y(ser.n[i] - d).toFixed(1)); });
+      el.band.setAttribute("d", "M" + up.concat(dn).join(" L") + " Z");
+      var ticks = "";
+      for (var v = a; v <= b + 1e-9; v += step) ticks += '<span style="--y:' + pct(v) + '">' + fmt(M, v) + "</span>";
+      el.yax.innerHTML = ticks;
+      el.goal.hidden = !showGoal;
+      if (showGoal) { el.goal.style.setProperty("--y", pct(g.goal)); el.goal.firstChild.textContent = g.goalL; el.goal.classList.toggle("is-top", +pct(g.goal) > 86); }
+      /* Étiquettes de fin, écartées si elles se chevauchent */
+      var ends = [["c", el.ec, ser.c[N]], ["n", el.en, ser.n[N]]];
+      if (dec[H] === "no") ends.push(["w", el.ew, ser.w[N]]);
+      el.ew.querySelector("b").textContent = fmt(M, ser.w[N]);
+      ends.forEach(function (x) { x[3] = +pct(x[2]); x[1].querySelector("b").textContent = fmt(M, x[2]); });
+      ends.sort(function (p, q) { return p[3] - q[3]; });
+      for (var j = 1; j < ends.length; j++) if (ends[j][3] - ends[j - 1][3] < 17) ends[j][3] = ends[j - 1][3] + 17;
+      var over = ends[ends.length - 1][3] - 92;
+      if (over > 0) ends.forEach(function (x) { x[3] -= over; });
+      if (ends[0][3] < 8) { var under = 8 - ends[0][3]; ends.forEach(function (x) { x[3] += under; }); }
+      ends.forEach(function (x) { x[1].style.setProperty("--y", x[3].toFixed(2)); });
+      el.xmid.textContent = "Jour " + Math.round(HOR / 2);
+      el.xend.textContent = "Jour " + HOR;
+      el.fut.setAttribute("data-dec", blocked ? "blocked" : (dec[H] || "ask"));
+      el.nl.textContent = dec[H] === "yes" ? "Avec l’automatisation approuvée" : "Si vous changez";
+      el.en.querySelector("span").textContent = dec[H] === "yes" ? "Avec l’automatisation" : "Si vous changez";
+      el.plot.setAttribute("aria-label", "Estimation à " + HOR + " jours, " + MLABEL[M] + " : si vous continuez " + fmt(M, ser.c[N]) +
+        ", si vous changez " + fmt(M, ser.n[N]) + (dec[H] === "no" ? ", par vous-même " + fmt(M, ser.w[N]) : "") + ".");
+      if (anim && fx()) { [el.lc, el.ln, el.lw, el.band].forEach(function (n) { restart(n, "is-draw"); }); }
+      syncTexts();
     }
-    function arrivals(quiet) {
-      var n = 0;
-      INS.forEach(function (ins, i) {
-        var on = !erased && p >= ins.t, was = shown[i];
-        if (on) n++;
-        if (on === was) return;
-        shown[i] = on;
-        if (on) {
-          showCard(i, !quiet);
-          (hls[i] || []).forEach(function (h) {
-            h.classList.add("is-on");
-            if (!quiet) restartCls(h, "is-flash");
+
+    /* Survol : réticule et valeurs du jour */
+    function hover(clientX) {
+      if (!model) return;
+      var r = el.plot.getBoundingClientRect(), f = Math.max(0, Math.min(1, (clientX - r.left) / r.width)), t = f * HOR, h = model.h;
+      var a = model.a, b = model.b;
+      function pct(v) { return ((v - a) / (b - a) * 100).toFixed(2); }
+      var vc = val(h, M, "c", t), vn = val(h, M, "n", t), vw = val(h, M, "w", t);
+      el.plot.style.setProperty("--x", (f * 100).toFixed(2));
+      el.cross.querySelector(".c").style.setProperty("--y", pct(vc));
+      el.cross.querySelector(".n").style.setProperty("--y", pct(vn));
+      el.cross.querySelector(".w").style.setProperty("--y", pct(vw));
+      el.cross.style.setProperty("--x", (f * 100).toFixed(2));
+      el.tip.style.setProperty("--x", (f * 100).toFixed(2));
+      el.tip.style.setProperty("--tx", f > .55 ? "calc(-100% - 12px)" : "12px");
+      el.tip.innerHTML = "<p>Jour " + Math.round(t) + " · estimation</p>" +
+        "<p><span>Si vous continuez</span><b>" + fmt(M, vc) + "</b></p>" +
+        "<p><span>" + (dec[H] === "yes" ? "Avec l’automatisation" : "Si vous changez") + "</span><b>" + fmt(M, vn) + "</b></p>" +
+        (dec[H] === "no" ? "<p><span>Par vous-même</span><b>" + fmt(M, vw) + "</b></p>" : "");
+    }
+    el.plot.addEventListener("pointermove", function (ev) { el.plot.classList.add("is-hover"); hover(ev.clientX); });
+    el.plot.addEventListener("pointerdown", function (ev) { el.plot.classList.add("is-hover"); hover(ev.clientX); });
+    el.plot.addEventListener("pointerleave", function () { el.plot.classList.remove("is-hover"); });
+
+    $$(".pi-kpi").forEach(function (b) {
+      b.addEventListener("click", function () { if (b.disabled) return; M = b.getAttribute("data-metric"); draw(true); say("Projection : " + MLABEL[M] + "."); });
+    });
+    $$("[data-hor]").forEach(function (b) {
+      b.addEventListener("click", function () { HOR = +b.getAttribute("data-hor"); draw(true); say("Horizon : " + HOR + " jours."); });
+    });
+
+    /* ---------- Automatisation et décision ---------- */
+    function fillTpl(tpl) {
+      var h = habit(), m = PRIMARY[h.k];
+      var c = val(h, m, "c", HOR), n = val(h, m, "n", HOR), lost;
+      if (m === "sommeil") {
+        var sum = 0; for (var t = 1; t <= HOR; t++) sum += val(h, m, "n", t) - val(h, m, "c", t);
+        lost = "environ " + Math.round(sum) + NB + "h";
+      } else lost = fmt(m, Math.abs(n - c)).replace(/^\+/, "");
+      var d = m === "sommeil" ? Math.round((n - c) * 60) + NB + "min" : m === "argent" ? grp(Math.round((n - c) / 10) * 10) + NB + "$" : fmt(m, n);
+      return tpl.replace("{d}", d).replace(/\{h\}/g, HOR).replace("{c}", fmt(m, c)).replace("{n}", fmt(m, n)).replace("{lost}", lost);
+    }
+    function syncTexts() {
+      var a = habit().auto;
+      el.yesT.textContent = fillTpl(a.yes);
+      el.noT.textContent = fillTpl(a.no);
+    }
+    function syncAuto() {
+      var h = habit(), miss = missing(h.srcs);
+      el.auto.setAttribute("data-state", miss.length ? "blocked" : (dec[H] || "ask"));
+      el.need.textContent = names(miss);
+    }
+    function renderHabit() {
+      var h = habit(), a = h.auto;
+      el.evidence.textContent = h.evidence;
+      el.chips.innerHTML = h.chips;
+      el.basis.textContent = h.basis;
+      el.aname.textContent = a.name;
+      el.touch.innerHTML = a.touch.map(function (t) { return "<span>" + t + "</span>"; }).join("");
+      el.steps.innerHTML = a.steps.map(function (s, i) { return '<li style="--i:' + i + '"><time>' + s[0] + "</time><span>" + s[1] + "</span></li>"; }).join("");
+      restart(el.steps, "is-in");
+      el.abook.textContent = a.book; el.aauth.textContent = a.author; el.aprin.textContent = a.principle;
+      $$(".pi-hab").forEach(function (b, i) { b.setAttribute("aria-pressed", i === H ? "true" : "false"); });
+      M = PRIMARY[h.k];
+      syncPerm();
+      draw(true);
+    }
+    $$(".pi-hab").forEach(function (b, i) {
+      b.addEventListener("click", function () { H = i; renderHabit(); say("Habitude : " + b.querySelector("b").textContent + "."); });
+    });
+    function decide(v) {
+      dec[H] = v; syncAuto(); draw(v !== undefined);
+      if (v === "yes") say("Approuvé. " + el.yesT.textContent);
+      else if (v === "no") say("Refusé. " + el.noT.textContent);
+      else say("Décision retirée. Rien n’est actif pour cette habitude.");
+    }
+    pi("yes").addEventListener("click", function () { decide("yes"); });
+    pi("no").addEventListener("click", function () { decide("no"); });
+    pi("undo").addEventListener("click", function () { decide(undefined); });
+    pi("undo2").addEventListener("click", function () { decide(undefined); });
+
+    /* ---------- Coach : style, conseils, engagements ---------- */
+    $$("[data-tone]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        tone = b.getAttribute("data-tone");
+        $$("[data-tone]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        $$(".pi-say").forEach(function (p, i) {
+          var txt = data.advice[i].t[tone];
+          if (!fx()) { p.textContent = txt; return; }
+          p.classList.add("is-swap");
+          setTimeout(function () { p.textContent = txt; p.classList.remove("is-swap"); }, 260);
+        });
+        say("Style du coach : " + b.textContent + ".");
+      });
+    });
+    var ADAPT = [
+      "Plan ajusté : dès mardi prochain, course à 6 h 45 les jours de réunion tardive. Réveil à 6 h 20, météo sèche prévue.",
+      "Plan ajusté : chaque soir à 22 h 45, rappel de charger le téléphone dans la cuisine.",
+      "Plan ajusté : panier d’attente de 24 h actif de 21 h à 23 h. L’automatisation « Panier qui dort » est approuvée.",
+      "Plan ajusté : coucher cible à 23 h, à 30 minutes près, sept soirs sur sept."
+    ];
+    $$(".pi-adv").forEach(function (card, i) {
+      card.querySelector("[data-pi-apply]").addEventListener("click", function () {
+        card.setAttribute("data-done", "1"); card.setAttribute("data-state", "done");
+        el.adapt.querySelector("span").textContent = ADAPT[i].replace(/(\d) h (\d)/g, "$1" + NB + "h" + NB + "$2").replace(/ :/g, NB + ":");
+        restart(el.adapt, "is-new");
+        if (i === 0) {
+          data.move.forEach(function (d) {
+            var cell = $('.pi-lane[data-lane="course"] .pi-cell:nth-child(' + (d + 2) + ")");
+            if (cell && !cell.querySelector(".is-move")) {
+              var s = document.createElement("span");
+              s.className = "pi-it is-move"; s.title = "Prochaine fois : 6 h 45";
+              s.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.4V12l3 1.8"/></svg><em>Prochaine : 6' + NB + "h" + NB + "45</em>";
+              cell.appendChild(s);
+            }
           });
-          if (!quiet) say("Lien " + (i + 1) + " : " + cards[i].querySelector(".pi-ins-h b").textContent);
-        } else {
-          cards[i].classList.remove("is-in");
-          (hls[i] || []).forEach(function (h) { h.classList.remove("is-on", "is-flash"); });
         }
-        marks[i].classList.toggle("is-on", on);
+        if (i === 2) {
+          for (var k = 0; k < data.habits.length; k++) if (data.habits[k].k === "achats") dec[k] = "yes";
+          syncAuto(); draw(false);
+        }
+        say(el.adapt.textContent);
       });
-      el.empty.hidden = n > 0;
-      el.links.textContent = n + (n > 1 ? " liens" : " lien");
-      INS.forEach(function (ins, i) { cards[i].classList.toggle("is-old", shown[i] && i < n - 2); });
-    }
-    function paintLinks() {
-      var key = habit().links;
-      INS.forEach(function (ins, i) {
-        var off = insOff(i), isKey = key.indexOf(i) >= 0;
-        cards[i].classList.toggle("is-off", off);
-        cards[i].classList.toggle("is-key", isKey && !off);
-        (hls[i] || []).forEach(function (h) { h.classList.toggle("is-dim", off); h.classList.toggle("is-key", isKey); });
+    });
+    $$(".pi-pact").forEach(function (p) {
+      var sw = p.querySelector(".pi-sw");
+      sw.addEventListener("click", function () {
+        var on = sw.getAttribute("aria-checked") !== "true";
+        sw.setAttribute("aria-checked", on ? "true" : "false");
+        p.classList.toggle("is-on", on);
+        var n = $$(".pi-pact.is-on").length;
+        el.pacts.textContent = n;
+        el.pacts.parentNode.lastChild.textContent = (n > 1 ? " actifs" : " actif") + " sur 4";
+        say((on ? "Engagement choisi : " : "Engagement retiré : ") + p.querySelector("b").textContent + ".");
       });
-    }
-
-    /* Survoler un lien éclaire ses preuves dans la journée */
-    Object.keys(cards).forEach(function (k) {
-      var on = function (v) { return function () { (hls[k] || []).forEach(function (h) { h.classList.toggle("is-hot", v); }); }; };
-      cards[k].addEventListener("mouseenter", on(true));
-      cards[k].addEventListener("mouseleave", on(false));
-      cards[k].addEventListener("focusin", on(true));
-      cards[k].addEventListener("focusout", on(false));
     });
 
-    /* ---------- Permissions ---------- */
-    function setPerm(k, on) {
-      perm[k] = on;
-      var r = rows[k];
-      r.sw.setAttribute("aria-checked", on ? "true" : "false");
-      r.el.classList.toggle("is-off", !on);
-      $$('.pi-chips [data-src="' + k + '"]').forEach(function (s) { s.classList.toggle("is-off", !on); });
-      var n = Object.keys(perm).filter(function (x) { return perm[x]; }).length;
-      el.count.textContent = n + " sur 4";
-      r.last = "";
-      paintValues(); paintLinks(); paintSwap(); paintWeek();
-      say(on ? "Permission rétablie : " + data.names[k] + ". Les données reprennent."
-        : "Permission retirée : " + data.names[k] + ". Plus rien n’est reçu de cette source.");
-    }
-
-    /* ---------- La proposition du matin ---------- */
-    function missing() { return habit().uses.filter(function (k) { return !perm[k]; }); }
-    function swapState() {
-      if (p < DAY) return "wait";
-      if (approved) return "ok";
-      if (declined) return "no";
-      return missing().length ? "blocked" : "ready";
-    }
-    function paintSwap() {
-      var s = swapState();
-      if (el.swap.getAttribute("data-state") !== s) {
-        el.swap.setAttribute("data-state", s);
-        if (s === "ready") say("Proposition du matin : " + habit().old + " remplacé par " + habit().new + ". En attente de votre accord.");
-      }
-      el.need.textContent = missing().map(function (k) { return data.names[k]; }).join(" · ");
-      el.yes.classList.toggle("is-wait", s === "ready" && auto);
-      if (s !== "ready") gateT = 0;
-    }
-    function fillHabit() {
-      var h = habit();
-      el.old.textContent = q(h.old);
-      el.nw.textContent = q(h.new);
-      el.sugg.textContent = h.sugg;
-      el.why.textContent = h.why;
-      el.uses.innerHTML = h.uses.map(function (k) {
-        return '<span data-src="' + k + '"' + (perm[k] ? "" : ' class="is-off"') + ">" + data.names[k] + "</span>";
-      }).join("");
-      $$('[data-pi="plan"] li').forEach(function (li, i) { li.textContent = h.plan[i]; });
-      el.metric.textContent = h.metric;
-      el.goal.textContent = h.goal;
-      el.axT.textContent = h.top;
-      el.axB.textContent = h.bottom;
-      el.base.style.setProperty("--y", h.base);
-      el.bars.style.setProperty("--b", h.base);
-      el.baseL.textContent = h.baseL;
-      $$('[data-pi="bars"] i').forEach(function (b, i) { b.style.setProperty("--v", h.vals[i]); });
-      el.avg.style.setProperty("--y", h.avg);
-      el.avgL.textContent = h.avgL;
-      el.end.textContent = h.end;
-      el.end.style.setProperty("--e", (h.vals[h.vals.length - 1] * 100).toFixed(2));
-      el.delta.textContent = h.delta;
-      $$('[data-pi="streak"] i').forEach(function (d, i) { d.classList.toggle("is-ok", h.streak[i] === "1"); });
-      $$(".pi-kpi").forEach(function (k, i) {
-        var d = h.kpis[i];
-        k.querySelector('[data-pi="kpi-l"]').textContent = d.l;
-        k.querySelector('[data-pi="kpi-u"]').textContent = d.u;
-        k.querySelector('[data-pi="kpi-c"]').textContent = d.c;
-      });
-      paintLinks();
-    }
-
-    /* ---------- La progression ---------- */
-    function countUp(span, txt) {
-      var m = /^([+−-]?)([\d  ]+)$/.exec(txt);
-      if (!m || !fx()) { span.textContent = txt; return; }
-      var sign = m[1], to = parseInt(m[2].replace(/\D/g, ""), 10), t0 = performance.now();
-      (function step(t) {
-        var k = Math.min(1, (t - t0) / 1300), e = 1 - Math.pow(1 - k, 3);
-        span.textContent = sign + num(to * e);
-        if (k < 1) requestAnimationFrame(step); else span.textContent = txt;
-      })(t0);
-    }
-    function paintWeek(anim) {
-      var on = approved && !erased;
-      el.week.setAttribute("data-state", on ? "on" : "ghost");
-      el.week.classList.toggle("is-paused", on && missing().length > 0);
-      $$(".pi-kpi").forEach(function (k, i) {
-        var span = k.querySelector('[data-pi="kpi-v"]');
-        if (!on) { span.textContent = "—"; return; }
-        if (anim) countUp(span, habit().kpis[i].v); else span.textContent = habit().kpis[i].v;
-      });
-      if (anim && on) restartCls(el.week, "is-anim");
-      if (!on) el.week.classList.remove("is-anim");
-    }
-    function approve(demo) {
-      if (swapState() !== "ready") return;
-      approved = true; byDemo = demo;
-      el.okWho.textContent = demo ? "Approuvé par Alex" : "Approuvé par vous";
-      paintSwap();
-      paintWeek(true);
-      say(el.okWho.textContent + ". L’essai de 14 jours commence; révocable en un geste.");
-    }
-
-    function chooseHabit(i) {
-      H = i;
-      habitBtns.forEach(function (b, j) { b.setAttribute("aria-pressed", j === i ? "true" : "false"); });
-      approved = false; declined = false; gateT = 0;
-      fillHabit();
-      restartCls(el.swap, "is-new");
-      paintSwap();
-      paintWeek(false);
-      kick();
-    }
-
-    /* ---------- Lecture : avance seulement quand la démo est visible ---------- */
-    function paintPlay() {
-      root.toggleAttribute("data-paused", !playing);
-      el.play.setAttribute("aria-label", playing ? "Mettre en pause" : "Lire la journée");
-    }
-    function tick(t) {
-      raf = 0;
-      if (!visible || erased) { prev = 0; return; }
-      var dt = prev ? Math.min(100, t - prev) : 0;
-      prev = t;
-      if (playing) {
-        setP(p + dt * DAY / DAY_MS);
-        if (p >= DAY) { playing = false; paintPlay(); }
-      } else if (auto && swapState() === "ready") {
-        gateT += dt;
-        if (gateT >= GATE) approve(true);
-      }
-      if (playing || (auto && swapState() === "ready")) raf = requestAnimationFrame(tick);
-      else prev = 0;
-    }
-    function kick() { if (!raf && visible && !erased && (playing || (auto && swapState() === "ready"))) { prev = 0; raf = requestAnimationFrame(tick); } }
-
-    function resetDay() {
-      approved = false; declined = false; gateT = 0;
-      shown = [];
-      Object.keys(cards).forEach(function (k) { cards[k].classList.remove("is-in"); });
-      Object.keys(hls).forEach(function (k) { hls[k].forEach(function (h) { h.classList.remove("is-on", "is-flash"); }); });
-      setP(0, true);
-      paintWeek(false);
-    }
-    function playFromStart() {
-      auto = !reduce;
-      resetDay();
-      playing = !reduce;
-      if (reduce) setP(DAY, true);
-      paintPlay();
-      kick();
-    }
-
-    /* ---------- Interactions ---------- */
-    Object.keys(rows).forEach(function (k) {
-      rows[k].sw.addEventListener("click", function () { if (!erased) setPerm(k, !perm[k]); });
-    });
-    el.play.addEventListener("click", function () {
-      if (erased) return;
-      if (!playing && p >= DAY) { playFromStart(); return; }
-      playing = !playing;
-      if (!playing) auto = false;
-      paintPlay();
-      kick();
-    });
-    el.replay.addEventListener("click", function () { if (!erased) playFromStart(); });
-    habitBtns.forEach(function (b, i) { b.addEventListener("click", function () { if (!erased) chooseHabit(i); }); });
-    el.yes.addEventListener("click", function () { approve(false); });
-    el.no.addEventListener("click", function () {
-      declined = true; auto = false;
-      paintSwap();
-      say("Proposition refusée. Rien n’a changé.");
-    });
-    el.again.addEventListener("click", function () { declined = false; paintSwap(); });
-
-    /* Glisser la journée : le ciel et chaque voie servent de curseur */
-    var drag = null;
-    function scrubAt(target, x) {
-      var r = target.getBoundingClientRect();
-      setP((x - r.left) / r.width * DAY, true);
-    }
-    function grab(e) {
-      if (erased || e.button > 0) return;
-      var target = e.currentTarget;
-      drag = target;
-      playing = false; auto = false; paintPlay();
-      scrubAt(target, e.clientX);
-      if (target.setPointerCapture) target.setPointerCapture(e.pointerId);
-    }
-    [el.sky].concat($$(".pi-lane")).forEach(function (t) {
-      t.addEventListener("pointerdown", grab);
-      t.addEventListener("pointermove", function (e) { if (drag === t) scrubAt(t, e.clientX); });
-      t.addEventListener("pointerup", function () { drag = null; });
-      t.addEventListener("pointercancel", function () { drag = null; });
-    });
-    el.sky.addEventListener("keydown", function (e) {
-      var steps = { ArrowRight: 30, ArrowUp: 30, ArrowLeft: -30, ArrowDown: -30, PageUp: 180, PageDown: -180 };
-      var v = null;
-      if (e.key in steps) v = p + steps[e.key];
-      else if (e.key === "Home") v = 0;
-      else if (e.key === "End") v = DAY;
-      if (v === null || erased) return;
-      e.preventDefault();
-      playing = false; auto = false; paintPlay();
-      setP(v, true);
-    });
-
-    var confirmTimer = 0;
-    el.erase.addEventListener("click", function () {
-      var label = el.erase.querySelector("span");
-      if (!el.erase.classList.contains("is-confirm")) {
-        el.erase.classList.add("is-confirm");
-        label.textContent = "Confirmer l’effacement";
-        clearTimeout(confirmTimer);
-        confirmTimer = setTimeout(function () { el.erase.classList.remove("is-confirm"); label.textContent = "Effacer les données"; }, 4000);
-        return;
-      }
-      clearTimeout(confirmTimer);
-      el.erase.classList.remove("is-confirm");
-      label.textContent = "Effacer les données";
-      playing = false; auto = false; paintPlay();
-      erased = true;
-      el.erased.hidden = false;
-      paintValues(); paintWeek(false);
-      el.clock.textContent = "Données effacées";
-      el.restart.focus({ preventScroll: true });
-      say("Données de la démo effacées.");
-    });
-    el.restart.addEventListener("click", function () {
-      erased = false;
-      el.erased.hidden = true;
-      Object.keys(perm).forEach(function (k) { if (!perm[k]) setPerm(k, true); });
-      lastClock = "";
-      chooseHabit(0);
-      playFromStart();
-    });
-
-    /* ---------- Départ : seulement quand la démo est à l'écran ---------- */
-    fillHabit();
-    resetDay();
-    if (reduce) setP(DAY, true);
-    paintPlay();
-    function onVisible(v) {
-      visible = v;
-      root.classList.toggle("is-vis", v);
-      if (v && !started) { started = true; playFromStart(); }
-      kick();
-    }
+    /* ---------- Visibilité ---------- */
     if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (es) { es.forEach(function (e) { onVisible(e.isIntersecting); }); }, { threshold: .12 }).observe(root);
-    } else onVisible(true);
+      new IntersectionObserver(function (es) {
+        visible = es[0].isIntersecting;
+        root.classList.toggle("is-vis", visible);
+        if (visible) root.classList.add("is-seen");
+        loop();
+      }, { threshold: 0.05 }).observe(root);
+      var cs = $(".pi-csec");
+      if (cs) new IntersectionObserver(function (es) { if (es[0].isIntersecting) root.classList.add("is-seen-c"); }, { threshold: 0.2 }).observe(cs);
+      var fut = el.fut, drawn = false;
+      new IntersectionObserver(function (es) { if (es[0].isIntersecting && !drawn) { drawn = true; draw(true); } }, { threshold: 0.3 }).observe(fut);
+    } else { visible = true; root.classList.add("is-vis", "is-seen", "is-seen-c"); }
+    document.addEventListener("visibilitychange", function () { if (document.hidden) { clearInterval(pingT); pingT = 0; } else loop(); });
+
+    renderHabit();
   });
 })();

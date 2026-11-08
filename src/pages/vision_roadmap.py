@@ -50,20 +50,23 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">01 · Personal Intelligence · vision</p>
-      <h2 style="margin-top:1rem">Une vie entière, <em>un seul système.</em></h2>
+      <h2 style="margin-top:1rem">Comprendre vos habitudes. <em>Choisir votre avenir.</em></h2>
     </div>
     <div class="side" data-rev>
-      <p>Votre montre, votre téléphone, votre agenda et votre maison savent chacun leur part.
-      JARVIS relie seulement ce que vous autorisez, sur le Hub installé chez vous, pour vous
-      aider à remplacer une habitude qui vous nuit par une meilleure — avec une raison claire
-      et votre accord.</p>
-      <span class="chip chip-sim">Vision · données fictives</span>
+      <p>Votre montre, votre téléphone, votre agenda, votre banque, votre maison et votre voiture
+      savent chacun leur part. JARVIS relie seulement ce que vous autorisez, sur le Hub installé
+      chez vous : il repère ce qui vous nuit, vous montre où mène chaque chemin, propose
+      l’automatisation qui règle le problème et vous coache vers vos objectifs. Vous décidez à
+      chaque étape.</p>
+      <span class="chip chip-sim">Vision · données d’exemple</span>
     </div>
   </div>
   @@VIE@@
   <p class="form-note" data-rev style="max-width:76rem;margin:1.6rem auto 0">Règle centrale :
-  JARVIS relie les outils choisis; il ne remplace ni le médecin, ni le coach, ni l’application
-  d’entraînement. Bien-être seulement, aucun diagnostic. Chaque source possède sa propre
+  JARVIS relie les outils choisis; il ne remplace ni le médecin, ni le conseiller financier, ni
+  l’entraîneur. Bien-être seulement, aucun diagnostic. Les projections sont des estimations
+  avec leur base, jamais des promesses. Les principes cités sont reformulés; seules des
+  citations d’auteurs du domaine public sont reproduites. Chaque source possède sa propre
   permission, révocable séparément.</p>
 </section>
 

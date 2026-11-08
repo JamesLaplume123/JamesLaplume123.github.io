@@ -40,7 +40,7 @@ def _visuel(cle, page, alt, forme, pos="50% 50%", attente="Photo à venir", eage
     src = _src(cle, page, alt, forme)
     if src:
         lazy = "" if eager else ' loading="lazy"'
-        return f'<img src="{src}" alt="{escape(alt)}"{lazy} decoding="async" style="object-position:{pos}">', False
+        return f'<img src="{src}" alt="{escape(alt)}"{lazy} style="object-position:{pos}">', False
     return (
         f'<div class="gl-ph" role="img" aria-label="{escape(alt)}">'
         f'<span class="gl-ph-f" aria-hidden="true"></span>'

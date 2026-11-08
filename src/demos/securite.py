@@ -9,11 +9,63 @@
 #
 # Sans JavaScript, ce balisage montre un état final lisible : les quatre
 # caméras de la résidence et l'événement « Livraison » déjà résumé.
+# Autour du mur vidéo, une barre de neuf modules en fait une plateforme : accès,
+# véhicules, personnes, zones et règles, incidents, carte des sites, rondes et
+# conformité (Loi 25). Ces modules sont construits par securite.js à leur
+# première ouverture (seul leur cadre est ici); leurs photos manquantes passent
+# par PHOTOS (panneau « Photo à venir » tant que le fichier n'existe pas).
+#
 # Les cadrages ci-dessous doivent rester identiques à ceux de SITES.maison
 # dans securite.js (mêmes images, mêmes fenêtres).
 
+import json
+import os
+
 W, H = 1672, 941  # taille des images de caméra (px)
 M = "/media/solutions/"
+_MEDIA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "media", "solutions")
+
+
+def _photo(nom):
+    """Chemin de media/solutions/<nom>.webp s'il existe au moment du build, sinon None :
+    la démo pose alors un panneau noir « Photo à venir » (jamais un dessin). Déposer le
+    fichier puis reconstruire suffit, aucun changement de code."""
+    return M + nom + ".webp" if os.path.exists(os.path.join(_MEDIA, nom + ".webp")) else None
+
+
+# Emplacements de photos des modules de la plateforme (clé utilisée par securite.js).
+PHOTOS = {
+    "hall": _photo("security-enterprise-lobby-v1"),
+    "sas": _photo("security-enterprise-server-room-v1"),
+}
+
+# Modules de la plateforme : clé, nom, état court, icône (trait, 16 × 16).
+MODULES = [
+    ("mur", "Mur vidéo", "En direct", '<rect x="1.8" y="2.5" width="5.6" height="4.6" rx="1"/><rect x="8.6" y="2.5" width="5.6" height="4.6" rx="1"/><rect x="1.8" y="8.9" width="5.6" height="4.6" rx="1"/><rect x="8.6" y="8.9" width="5.6" height="4.6" rx="1"/>'),
+    ("acces", "Accès", "2 talonnages", '<rect x="3" y="2" width="10" height="12" rx="2"/><path d="M6 5.5h4M6.5 11h3"/><circle cx="8" cy="8.2" r="1.2"/>'),
+    ("vehicules", "Véhicules", "1 surveillé", '<path d="M2.5 11V9l1.3-3.3A1.5 1.5 0 0 1 5.2 4.8h5.6a1.5 1.5 0 0 1 1.4.9L13.5 9v2z"/><circle cx="5" cy="11.5" r="1.2"/><circle cx="11" cy="11.5" r="1.2"/>'),
+    ("personnes", "Personnes", "4 non inscrites", '<circle cx="6" cy="5.4" r="2.2"/><path d="M2 13c.5-2.6 2-3.9 4-3.9s3.5 1.3 4 3.9"/><path d="M10.6 3.4a2.1 2.1 0 0 1 0 4M12 9.4c1.1.5 1.8 1.6 2.1 3.4"/>'),
+    ("zones", "Zones", "7 règles", '<path d="M2.5 4.5 7 2.5l6.5 2.5v7L9 13.5l-6.5-2z"/><path d="M6 6.5h4v3H6z" stroke-dasharray="1.6 1.2"/>'),
+    ("incidents", "Incidents", "1 critique", '<path d="M4 2.5h5.5L12.5 5.5V13.5H4Z"/><path d="M9.5 2.5v3h3M6 8.5h4M6 11h2.5"/>'),
+    ("sites", "Sites", "6 sites", '<path d="M8 14s4.5-4.2 4.5-7.7a4.5 4.5 0 0 0-9 0C3.5 9.8 8 14 8 14z"/><circle cx="8" cy="6.3" r="1.6"/>'),
+    ("rondes", "Rondes", "Ronde en cours", '<circle cx="8" cy="8" r="5.6"/><path d="M8 4.6V8l2.4 1.6"/><path d="M8 1.2v1M14.8 8h-1M8 14.8v-1M1.2 8h1"/>'),
+    ("conformite", "Conformité", "Loi 25 à jour", '<path d="M8 1.8 13 3.6v4.1c0 3-2.1 5.4-5 6.5-2.9-1.1-5-3.5-5-6.5V3.6z"/><path d="m5.6 8 1.7 1.7 3.2-3.4"/>'),
+]
+
+
+def _navbtn(i, key, name, state, ico):
+    return (
+        f'<button type="button" class="sx-tab" data-sx-mod="{key}" aria-pressed="{"true" if i == 0 else "false"}">'
+        f'<svg viewBox="0 0 16 16" aria-hidden="true">{ico}</svg>'
+        f'<span><b>{name}</b><small data-sx-state="{key}">{state}</small></span></button>'
+    )
+
+
+def _panel(key, name):
+    return (
+        f'<section class="sx-mod" data-sx-panel="{key}" aria-label="{name}" hidden>'
+        f'<p class="sx-wait"><i aria-hidden="true"></i>Chargement du module</p></section>'
+    )
 
 
 def _stage(v):
@@ -106,7 +158,7 @@ def _thumb(img, view, cap):
 
 
 HTML = f"""
-<div class="demo-shell" data-demo="securite" data-rev>
+<div class="demo-shell" data-demo="securite" data-rev data-sx-ph='{json.dumps(PHOTOS)}'>
   <div class="demo-top">
     <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
     <b>JARVIS · Sécurité</b>
@@ -115,6 +167,10 @@ HTML = f"""
     <span class="tag tag-sim">Démo · données simulées</span>
   </div>
   <div class="demo-body">
+    <nav class="sx-nav" data-sx-nav aria-label="Modules de la plateforme">
+      <div class="sx-tabs">{"".join(_navbtn(i, *m) for i, m in enumerate(MODULES))}</div>
+    </nav>
+    <div class="sx-mod sx-mur" data-sx-panel="mur" aria-label="Mur vidéo">
     <div class="sec-bar">
       <div class="sec-scen" role="group" aria-label="Choisir une situation simulée">
         <button type="button" data-sec-scen="livraison" aria-pressed="true"><small>21 h 42 · Résidence</small><b>Livraison</b></button>
@@ -191,7 +247,9 @@ HTML = f"""
     </div>
     <svg class="sec-wires" data-sec-wires aria-hidden="true"></svg>
     <p class="sec-sr" aria-live="polite" data-sec-live></p>
+    </div>
+    {"".join(_panel(m[0], m[1]) for m in MODULES[1:])}
   </div>
 </div>
-<p class="demo-hint">Choisissez une situation · approuvez les actions proposées · basculez la chronologie en vue « Incidents » · tout est simulé</p>
+<p class="demo-hint">Neuf modules : passez de l’un à l’autre en haut de la fenêtre · tout est simulé, données d’exemple</p>
 """

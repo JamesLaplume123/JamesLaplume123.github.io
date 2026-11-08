@@ -6,6 +6,7 @@
 from demos import coquille
 from demos.ia import HTML as DEMO
 from pages._solution import clair_section
+import galerie
 
 CLAIR = {
     "quoi": "Posez une question à vos propres documents. <em>La réponse arrive avec sa preuve.</em>",
@@ -39,7 +40,7 @@ PAGE = {
     "title": "IA privée et connaissances | Solutions JARVIS",
     "description": "Parler à ses propres informations, retrouver les bonnes preuves et préparer une action avec permission.",
     "og_image": "/media/product/outils/ia.jpg",
-    "assets": ["coquille", "ia"],
+    "assets": ["coquille", "ia", "galerie"],
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/solutions/ia-privee-connaissances.webp" alt="" fetchpriority="high"></div>
@@ -132,6 +133,8 @@ PAGE = {
     </div>
   </div>
 </section>
+
+""" + galerie.terrain("ia-privee-connaissances") + """
 
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>

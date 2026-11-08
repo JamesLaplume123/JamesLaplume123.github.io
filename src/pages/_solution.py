@@ -5,6 +5,7 @@
 
 from config import CAPABILITIES
 from demos import coquille
+import galerie
 
 
 # Image d'aperçu, utilisée tant qu'une solution n'a pas sa démo interactive (DATA["demo_html"]).
@@ -53,7 +54,7 @@ def solution_page(d):
         "title": f"{d['title']} | Solutions JARVIS",
         "description": d["description"],
         "og_image": d["image"],
-        "assets": ["coquille", *d.get("assets", [])],
+        "assets": ["coquille", *d.get("assets", []), "galerie"],
         "content": f"""
 <section class="band top">
   <div class="bg"><img src="{d['image']}" alt="" fetchpriority="high"></div>
@@ -80,7 +81,7 @@ def solution_page(d):
   {coquille.html(d['slug'], d.get('demo_html') or FRAME.format(img=d.get('demo_image', d['image']), title=d['title'], up=d['title'].upper(), cap=d.get('demo_caption', 'Prototype interactif — données simulées.')))}
   {d.get('extra', '')}
 </section>
-
+{galerie.terrain(d['slug']) if d['slug'] in galerie.SOLUTIONS else ''}
 {clair_section(d.get("clair"))}
 
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">

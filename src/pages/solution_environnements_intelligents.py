@@ -7,6 +7,7 @@ import json
 
 from demos import coquille, env
 from pages._solution import clair_section
+import galerie
 
 MOMENTS = {
     "matin": {
@@ -83,7 +84,7 @@ PAGE = {
     "title": "Environnements intelligents | Solutions JARVIS",
     "description": "Faire travailler ensemble les technologies d’un lieu, sans rendre son utilisation compliquée.",
     "og_image": "/media/solutions/environnements-intelligents.webp",
-    "assets": ["coquille", "lumieres", "env"],
+    "assets": ["coquille", "lumieres", "env", "galerie"],
     "content": f"""
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
@@ -211,6 +212,8 @@ PAGE = {
     </figure>
   </div>
 </section>
+
+{galerie.terrain("environnements-intelligents", alt=True)}
 
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>

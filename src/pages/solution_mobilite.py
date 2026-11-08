@@ -7,6 +7,7 @@
 
 from demos import coquille, mobilite
 from pages._solution import clair_section
+import galerie
 
 HERO = mobilite.photo("hero", "/media/vr/exterieur.webp")
 
@@ -41,7 +42,7 @@ PAGE = {
                    "distance, les heures d’ouverture et le soleil, un journal de voyage sur la carte et un garage "
                    "connecté pour VR, voitures familiales, voitures de collection et vélos électriques. Québec.",
     "og_image": HERO,
-    "assets": ["coquille", "mobilite"],
+    "assets": ["coquille", "mobilite", "galerie"],
     "content": f"""
 <section class="band top">
   <div class="bg"><img src="{HERO}" alt="" fetchpriority="high"></div>
@@ -149,6 +150,8 @@ PAGE = {
       <p>Déverrouiller, chauffer, désarmer un antivol : chaque commande demande votre accord, puis l’état est relu.</p></article>
   </div>
 </section>
+
+{galerie.terrain("mobilite")}
 
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>

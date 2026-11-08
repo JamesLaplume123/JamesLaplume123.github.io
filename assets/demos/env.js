@@ -598,7 +598,7 @@
   }
 
   /* ======================================================================================
-     Plans vus du dessus (ouvertures) et illustrations de bannière
+     Plans techniques vus du dessus (cartes « Ouvertures »)
      ====================================================================================== */
   var PLAN = {
     rv: '<svg viewBox="0 0 300 140" class="ev-plan" aria-hidden="true"><path class="p-body" d="M28 30h222c14 0 26 8 30 20v40c-4 12-16 20-30 20H28c-6 0-10-4-10-10V40c0-6 4-10 10-10Z"/>' +
@@ -635,35 +635,6 @@
     plane: '<svg viewBox="0 0 300 180" class="ev-plan" aria-hidden="true"><path class="p-room" d="M10 14h280v152H10z" style="stroke-dasharray:5 5"/><path class="p-door" d="M10 166h280" style="stroke-width:3"/>' +
       '<path class="p-body" d="M150 30c6 0 9 6 9 14v26h112c4 0 6 3 6 7v4c0 4-2 6-6 6H159v34l22 6v8h-62v-8l22-6V87H29c-4 0-6-2-6-6v-4c0-4 2-7 6-7h112V44c0-8 3-14 9-14Z"/>' +
       '<path class="p-line" d="M146 28h8M150 22v6"/><path class="p-glass" d="M144 58h12"/><text class="p-txt" x="18" y="30">HANGAR</text><text class="p-txt" x="112" y="160">PORTE DU HANGAR</text></svg>'
-  };
-  var ART = {
-    ferme: '<svg viewBox="0 0 640 220" preserveAspectRatio="xMaxYMax slice" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<circle cx="272" cy="160" r="30" opacity=".35"/><circle cx="272" cy="160" r="46" opacity=".12"/>' +
-      '<path opacity=".45" d="M0 164c70-6 120-14 190-10s120 8 190 2 150-10 260-4"/><path opacity=".25" d="M0 152c90-10 160-20 240-16s140 12 220 6 120-6 180-2"/>' +
-      '<path opacity=".5" d="M0 220 300 166M90 220l230-54M190 220l150-54M300 220l60-54M420 220l-40-54M540 220 400 166M640 210 420 166"/>' +
-      '<path opacity=".22" d="M0 190h640M0 178h640M0 200h640"/>' +
-      '<path d="M418 166v-48l20-26 52-18 52 18 20 26v48"/><path opacity=".7" d="M438 92h104M418 118h144"/>' +
-      '<path d="M470 166v-38h40v38M470 128l40 38M510 128l-40 38"/><path d="M481 112V96h18v16zM481 104h18"/>' +
-      '<path opacity=".35" d="M430 166v-46M444 166v-58M526 166v-58M540 166v-46M552 166v-46"/>' +
-      '<path d="M574 166V98a16 16 0 0 1 32 0v68M574 120h32M574 142h32"/><path d="M574 98q16-18 32 0M590 80v-6"/>' +
-      '<path d="M392 166v-14M380 152l12-30 12 30zM384 136l8-20 8 20"/><path d="M370 166v-10M362 156l8-22 8 22z"/>' +
-      '<path opacity=".6" d="M320 188h320M320 180h320M330 176v16M370 176v16M410 176v16M450 176v16M490 176v16M530 176v16M570 176v16M610 176v16"/></svg>',
-    bateau: '<svg viewBox="0 0 640 220" preserveAspectRatio="xMaxYMax slice" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<circle cx="300" cy="58" r="15" opacity=".8"/><circle cx="300" cy="58" r="28" opacity=".15"/>' +
-      '<path opacity=".4" d="M0 148c40-8 80-16 130-12s70 8 120 2 90-14 150-10 90 10 140 8 60-4 100-2"/><path opacity=".6" d="M0 152h640"/>' +
-      '<path opacity=".5" d="M288 162h24M280 172h40M292 182h16M284 194h32"/>' +
-      '<path d="M418 150q72 7 150-2l-10 16q-68 7-128 0z"/><path d="M490 152V36"/><path d="M493 44v100h56zM486 48 438 142h48"/>' +
-      '<path opacity=".55" d="M490 36 416 150M490 36l78 112"/><path d="M493 144h60"/><path d="M470 150v-6h34v6"/>' +
-      '<path opacity=".45" d="M430 172q30 3 60 0M450 182q30 3 60 0M440 192q40 3 80 0M490 168v20"/>' +
-      '<path d="M340 178h300M340 184h300M360 178v20M420 178v20M480 178v20M540 178v20M600 178v20"/><path opacity=".5" d="M372 178v-10h10v10M592 178v-10h10v10"/></svg>',
-    avion: '<svg viewBox="0 0 640 220" preserveAspectRatio="xMaxYMax slice" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<path opacity=".35" d="M0 170h640"/><path opacity=".5" d="M0 214 310 172M0 200 300 171M120 220 330 173"/>' +
-      '<g opacity=".8"><circle cx="60" cy="206" r="1.6"/><circle cx="120" cy="198" r="1.4"/><circle cx="180" cy="190" r="1.2"/><circle cx="235" cy="183" r="1"/><circle cx="280" cy="177" r=".9"/></g>' +
-      '<path d="M370 170V98q110-72 230 0v72"/><path opacity=".7" d="M400 170v-62h170v62M400 128h170M428 108v62M456 108v62M484 108v62M512 108v62M540 108v62"/>' +
-      '<path d="M318 140q18-12 64-13l66 1q20 2 36 8l18 6-14 4-100 4q-46 2-70-2z"/><path d="M314 122v36M320 128v24"/>' +
-      '<path d="M356 118h104l-2 6H358z"/><path d="M380 146l14-22M440 146l-10-22"/><path d="M482 142l20-30h10l-6 32"/><path d="M478 142h40"/>' +
-      '<path opacity=".7" d="M348 132h22l6-8M378 130h22"/><circle cx="342" cy="164" r="4.5"/><circle cx="398" cy="164" r="5"/><circle cx="430" cy="164" r="5"/><path d="M342 160v-12M398 159l-4-10M430 159l4-10"/>' +
-      '<path opacity=".55" d="M602 60l18-6M602 60v-26M602 34l22 7-22 7"/></svg>'
   };
 
   /* ======================================================================================
@@ -1413,7 +1384,14 @@
   function banner(e, cls) {
     var b = e.banner || {};
     if (b.img) return '<figure class="ev-ban ' + (cls || "") + '"><img src="' + b.img + '" alt="' + esc(b.alt || e.name) + '" style="object-position:' + (b.pos || "50% 50%") + '" decoding="async"></figure>';
-    return '<figure class="ev-ban is-art ' + (cls || "") + '" role="img" aria-label="' + esc(b.alt || "Illustration") + '">' + (ART[b.art] || "") + '<figcaption>Illustration · photo à venir</figcaption></figure>';
+    /* Panneau d'attente premium : verre noir, filet doré, nom et mesures — jamais de dessin. */
+    var chips = (e.status || []).slice(0, 3).map(function (s) {
+      return '<span class="ev-ph-c">' + ic(s[0], "is-sm") + '<b class="t-' + (s[3] || "gold") + '">' + esc(String(s[2])) + "</b></span>";
+    }).join("");
+    return '<figure class="ev-ban is-ph ' + (cls || "") + '" role="img" aria-label="' + esc(b.alt || e.name) + '">' +
+      '<span class="ev-ph-frame" aria-hidden="true"></span>' +
+      '<span class="ev-ph-b"><span class="ev-ph-n">' + esc(e.name) + '</span><span class="ev-ph-chips">' + chips + "</span></span>" +
+      "<figcaption>Photo à venir</figcaption></figure>";
   }
   function pickStatus(e) {
     return e.status.map(function (s) {

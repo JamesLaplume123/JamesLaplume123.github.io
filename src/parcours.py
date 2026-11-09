@@ -13,13 +13,6 @@ _RACINE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
 # (clé, besoin, phrase, solution, photo de repli, position de l'image)
 BESOINS = [
-    ("proteger", "Protéger ma maison",
-     "Caméras, portes et alarme réunies en un seul fil clair.",
-     "securite-intelligente", "/media/vitrine/accueil/maison-familiale.webp", "50% 60%",
-     ["Caméras qui reconnaissent une personne, un véhicule ou un colis",
-      "Serrures, portes et alarme sur un seul écran",
-      "Alertes claires, sans fausses alarmes à répétition",
-      "Images gardées chez vous, pas dans le nuage"]),
     ("domaine", "Gérer ma maison, mon domaine ou ma ferme",
      "Lumières, chauffage, garage, bâtiments et énergie sur un seul écran.",
      "environnements-intelligents", "/media/vitrine/accueil/panorama-domaine-crepuscule.webp", "50% 55%",
@@ -27,13 +20,6 @@ BESOINS = [
       "Chauffage, éclairage, piscine et énergie automatiques",
       "Ferme : étable, poulaillers, porcherie et écurie surveillés",
       "Une règle pour tous vos lieux : « je pars », « on arrive »"]),
-    ("entreprise", "Automatiser mon entreprise",
-     "Réception, demandes et approbations qui avancent seules.",
-     "automatisation-operations", "/media/vitrine/accueil/commerce-pme.webp", "50% 50%",
-     ["Réceptionniste qui répond au téléphone et prend les rendez-vous",
-      "Demandes, soumissions et approbations qui avancent seules",
-      "Rapports du matin sans rien compiler à la main",
-      "Vos données d’affaires restent dans votre bureau"]),
     ("ia", "Mon IA privée",
      "Posez une question à vos documents; vos données restent chez vous.",
      "ia-privee-connaissances", "/media/solutions/ia-privee-connaissances.webp", "50% 50%",
@@ -41,13 +27,20 @@ BESOINS = [
       "Réponses avec la source, pour vérifier en un clic",
       "Fonctionne sur le Hub, chez vous, même sans Internet",
       "Rien n’est envoyé à une grande entreprise d’IA"]),
-    ("route", "Partir sur la route",
-     "Un copilote pour le VR, la voiture ou le vélo électrique.",
-     "mobilite", "/media/vr/exterieur.webp", "50% 60%",
-     ["Batteries, eau, chauffage et portes du VR à distance",
-      "Itinéraire, arrêts et recharge planifiés pour vous",
-      "Véhicules de tous les jours et de collection au même endroit",
-      "La maison se prépare d’elle-même à votre retour"]),
+    ("proteger", "Protéger ma maison",
+     "Caméras, portes et alarme réunies en un seul fil clair.",
+     "securite-intelligente", "/media/vitrine/accueil/residence-prestige-soir.webp", "50% 55%",
+     ["Caméras qui reconnaissent une personne, un véhicule ou un colis",
+      "Serrures, portes et alarme sur un seul écran",
+      "Alertes claires, sans fausses alarmes à répétition",
+      "Images gardées chez vous, pas dans le nuage"]),
+    ("entreprise", "Automatiser mon entreprise",
+     "Réception, demandes et approbations qui avancent seules.",
+     "automatisation-operations", "/media/vitrine/accueil/commerce-pme.webp", "50% 50%",
+     ["Réceptionniste qui répond au téléphone et prend les rendez-vous",
+      "Demandes, soumissions et approbations qui avancent seules",
+      "Rapports du matin sans rien compiler à la main",
+      "Vos données d’affaires restent dans votre bureau"]),
     ("reseau", "Sécuriser mon réseau et mon Wi-Fi",
      "La carte de votre réseau et de ses risques, en mots simples.",
      "reseau-resilience", "/media/solutions/reseau-resilience.webp", "50% 50%",
@@ -62,9 +55,16 @@ BESOINS = [
       "Usure et signes de panne repérés avant le bris",
       "Un dossier prêt pour le technicien, avec la bonne pièce",
       "Retour à la normale vérifié après la réparation"]),
+    ("route", "Partir sur la route",
+     "Un copilote pour le VR, la voiture ou le vélo électrique.",
+     "mobilite", "/media/vr/exterieur.webp", "50% 60%",
+     ["Batteries, eau, chauffage et portes du VR à distance",
+      "Itinéraire, arrêts et recharge planifiés pour vous",
+      "Véhicules de tous les jours et de collection au même endroit",
+      "La maison se prépare d’elle-même à votre retour"]),
 ]
 
-TITRES = {
+TITRES = {  # dans l'ordre officiel 01 à 07
     "environnements-intelligents": "Environnements intelligents",
     "ia-privee-connaissances": "IA privée et connaissances",
     "securite-intelligente": "Sécurité intelligente",
@@ -84,12 +84,13 @@ def photo(cle, repli):
 
 
 def besoins():
+    order = list(TITRES)
     cartes = "".join(
         f"""<a class="bs-card" href="/solutions/{sol}/" data-rev>
       <span class="bs-ph"><img src="{photo(cle, repli)}" alt="" loading="lazy" decoding="async" style="object-position:{pos}"></span>
       <span class="bs-txt">
-        <small>{TITRES[sol]}</small>
-        <b>{titre}</b>
+        <small>{order.index(sol) + 1:02d} · {titre}</small>
+        <b>{TITRES[sol]}</b>
         <span>{phrase}</span>
         <ul class="bs-inc" aria-label="Ce que vous obtenez">{"".join(f"<li>{x}</li>" for x in inclus)}</ul>
         <em class="bs-start">Pour commencer : le Hub + {TITRES[sol]}<i aria-hidden="true">→</i></em>
@@ -100,8 +101,8 @@ def besoins():
     return f"""<section class="besoins" id="besoins" aria-labelledby="besoins-titre">
   <div class="bs-head" data-rev>
     <p class="eyebrow">Par où commencer</p>
-    <h2 id="besoins-titre">Qu’est-ce qu’il <em>vous faut?</em></h2>
-    <p>Les sept solutions JARVIS, une par besoin. Voici, concrètement, ce que chacune fait pour vous et par où commencer.</p>
+    <h2 id="besoins-titre">Les sept solutions. <em>Laquelle vous faut-il?</em></h2>
+    <p>Chacune répond à un besoin précis. Voici, concrètement, ce qu’elle fait pour vous et par où commencer.</p>
   </div>
   <div class="bs-grid">{cartes}</div>
   <p class="bs-more" data-rev>Pas certain?

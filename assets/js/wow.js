@@ -189,6 +189,18 @@
   var API = doc.getAttribute("data-api");
   var COUNTER = "https://abacus.jasoncameron.dev";
   var COUNTER_KEY = "/jameslaplume-ca/visites";
+  /* Journal des visites (service du site) : la page et le domaine d'origine voyagent avec la visite,
+     sans témoin. James exclut ses appareils avec localStorage « jarvis-moi » = 1 (bouton sur
+     /admin/visites/); les pages /admin/ ne comptent jamais. */
+  var local = store("localStorage");
+  var silent = /^\/admin\//.test(location.pathname);
+  try { silent = silent || (local && local.getItem("jarvis-moi") === "1"); } catch (e) {}
+  var alreadyCounted = !!(session && session.getItem("jarvis-visit-counted"));
+  function visitInfo() { return JSON.stringify({ path: location.pathname, ref: document.referrer || "" }); }
+  if (API && !silent && alreadyCounted) {
+    /* Page suivante de la même session : inscrite au journal, le compteur ne bouge pas */
+    try { navigator.sendBeacon(API + "/visits/view", visitInfo()); } catch (e) {}
+  }
   function loadVisits() {
     var cached = session && session.getItem("jarvis-visits");
     if (cached) {
@@ -197,9 +209,11 @@
         if (Date.now() - c.t < 60000) return Promise.resolve(c.v);
       } catch (e) {}
     }
-    var counted = session && session.getItem("jarvis-visit-counted");
+    var counted = (session && session.getItem("jarvis-visit-counted")) || silent;
+    /* Texte brut (JSON) : requête simple, sans requête préalable CORS */
     var req = API
-      ? fetch(API + (counted ? "/visits" : "/visits/hit"), { method: counted ? "GET" : "POST", cache: "no-store" })
+      ? (counted ? fetch(API + "/visits", { cache: "no-store" })
+        : fetch(API + "/visits/hit", { method: "POST", cache: "no-store", body: visitInfo() }))
       : fetch(COUNTER + (counted ? "/get" : "/hit") + COUNTER_KEY, { cache: "no-store" });
     return req
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })

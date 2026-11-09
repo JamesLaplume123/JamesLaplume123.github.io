@@ -888,7 +888,7 @@
   }
   K.thermostat = function (c, e) {
     return '<div class="ev-thermo">' + '<div>' + dialCard(c, e, "thermo", c.title, c.sub, "thermo", "°C") + "</div>" +
-      '<div class="ev-thermo-r">' + c.rows.map(function (r) { return '<div class="ev-row is-lg"><span class="ev-ri t-gold">' + ic(r[0]) + "</span><span><small>" + esc(r[1]) + "</small><b>" + esc(r[2]) + "</b></span>" + ic("right", "ev-chev") + "</div>"; }).join("") + "</div></div>";
+      '<div class="ev-thermo-r">' + c.rows.map(function (r) { return '<div class="ev-row is-lg"><span class="ev-ri t-gold">' + ic(r[0]) + "</span><span><small>" + esc(r[1]) + "</small><b>" + unitize(r[2]) + "</b></span>" + ic("right", "ev-chev") + "</div>"; }).join("") + "</div></div>";
   };
   K.trends = function (c, e) {
     return '<div class="ev-trends" data-fill>' + c.items.map(function (t) {
@@ -907,14 +907,14 @@
       '<div class="ev-vent"><div class="ev-vent-h"><span>Vitesse</span><b>' + s + " / " + c.max + "</b></div>" +
       '<div class="ev-vdots" style="--p:' + ((s - 1) / (c.max - 1) * 100) + '%">' + dots + "</div>" +
       (st === "send" ? '<span class="ev-sent is-wait">' + ic("refresh") + "Envoi…</span>" : st === "ok" ? '<span class="ev-sent">' + ic("check") + "Confirmée</span>" : "") + "</div>" +
-      c.rows.map(function (r2) { return '<div class="ev-row"><span class="ev-ri t-gold">' + ic(r2[0]) + "</span><span><small>" + esc(r2[1]) + "</small><b>" + esc(r2[2]) + "</b></span>" + ic("right", "ev-chev") + "</div>"; }).join("");
+      c.rows.map(function (r2) { return '<div class="ev-row"><span class="ev-ri t-gold">' + ic(r2[0]) + "</span><span><small>" + esc(r2[1]) + "</small><b>" + unitize(r2[2]) + "</b></span>" + ic("right", "ev-chev") + "</div>"; }).join("");
   };
   K.air = function (c, e) {
     var p = clamp((c.co2 - 400) / 1600 * 100, 0, 100), tone = c.co2 < 800 ? "ok" : c.co2 < 1200 ? "warn" : "err";
     return head("wind", c.title || "Qualité de l’air", c.sub || "Air intérieur", "") +
       '<div class="ev-semi">' + gauge(p, { sweep: 180, grad: ["#34d399", "#a3e07a", "#f3c969", "#e88a82"], cls: "is-semi" }) +
       '<div class="ev-semi-v"><small>CO₂</small><b>' + c.co2 + NB + "ppm</b><span>" + dot(tone) + esc(c.quality) + "</span></div></div>" +
-      '<div class="ev-trio">' + c.rows.map(function (r) { return "<span>" + ic(r[0]) + "<small>" + esc(r[1]) + "</small><b>" + esc(r[2]) + "</b></span>"; }).join("") + "</div>";
+      '<div class="ev-trio">' + c.rows.map(function (r) { return "<span>" + ic(r[0]) + "<small>" + esc(r[1]) + "</small><b>" + unitize(r[2]) + "</b></span>"; }).join("") + "</div>";
   };
   K.outside = function (c, e) {
     var n = wxNow(e), w = e.wx;
@@ -1211,7 +1211,7 @@
       }
       if (r[4]) extra = ic("right", "ev-chev");
       return '<div class="ev-row' + (c.big ? " is-lg" : "") + '">' + (r[0] ? '<span class="ev-ri t-' + (c.tone || "gold") + '">' + ic(r[0]) + "</span>" : "") + "<span><small>" + esc(r[1]) + "</small></span>" +
-        (v !== "" && v != null ? "<b" + (t ? ' class="t-' + t + '"' : "") + ">" + (t && t !== "muted" ? dot(t) : "") + esc(v) + "</b>" : "") + extra + "</div>";
+        (v !== "" && v != null ? "<b" + (t ? ' class="t-' + t + '"' : "") + ">" + (t && t !== "muted" ? dot(t) : "") + unitize(v) + "</b>" : "") + extra + "</div>";
     }).join("");
     return head(c.icon, c.title, c.sub || "", b ? liveTag(b) : "") + rows + (c.note ? '<p class="ev-fine">' + esc(c.note) + "</p>" : "");
   };
@@ -1335,10 +1335,10 @@
     if (!r.ops) r.ops = c.points.map(function (o) { return { state: o.state, tone: o.tone, ago: o.ago, who: o.who, locked: /verrouill|cadenas/i.test(o.state) }; });
     return r.ops;
   }
-  function findCard(e, type) {
+  function findCard(e, type, ok) {
     var out = null;
     Object.keys(e.s).forEach(function (k) {
-      tabsOf(e, k).forEach(function (t) { t[2].forEach(function (c) { if (!out && c.type === type) out = c; }); });
+      tabsOf(e, k).forEach(function (t) { t[2].forEach(function (c) { if (!out && c.type === type && (!ok || ok(c))) out = c; }); });
     });
     return out;
   }
@@ -1408,7 +1408,7 @@
     var segs = "", a = -90;
     for (var i = 0; i < 5; i++) { segs += '<path d="' + arcD(50, 52, 40, a + 2, a + 34) + '" style="stroke:' + cols[i] + '" class="dg-s' + (i === c.level - 1 ? " is-on" : "") + '"/>'; a += 36; }
     var ang = -90 + (c.level - 0.5) * 36, tip = pol(50, 52, 33, ang);
-    var svg = '<svg class="ev-danger" viewBox="0 0 100 60" aria-hidden="true">' + segs + '<line x1="50" y1="52" x2="' + tip[0].toFixed(1) + '" y2="' + tip[1].toFixed(1) + '" class="dg-n"/><circle cx="50" cy="52" r="3.5" class="dg-c"/></svg>';
+    var svg = '<svg class="ev-danger" viewBox="0 0 100 60" aria-hidden="true">' + segs + '<line x1="50" y1="52" x2="' + tip[0].toFixed(1) + '" y2="' + tip[1].toFixed(1) + '" class="dg-n" style="--a0:' + (-90 - ang).toFixed(1) + 'deg"/><circle cx="50" cy="52" r="3.5" class="dg-c"/></svg>';
     return head("fire", c.title, "Scénario d’exemple", "") + '<div class="ev-dgw">' + svg + '<div><small>Niveau de danger</small><b style="color:' + cols[c.level - 1] + '">' + lv[c.level - 1] + "</b>" +
       "<p>" + ic("tree") + esc(c.fires) + "</p>" + (c.note ? "<small>" + esc(c.note) + "</small>" : "") + "</div></div>" +
       '<button type="button" class="ev-btn is-wide" data-a="toast" data-v="Les règles locales (feux à ciel ouvert, restrictions) viendront de la SOPFEU et de la municipalité, avec leur date.">' + ic("link") + "Vérifier les règles locales" + ic("right") + "</button>" +
@@ -1512,7 +1512,7 @@
   };
   K.equip = function (c, e, i) {
     var r = rt(e), st = r.eq[i] || {}, state = st.state || c.state, tone = st.tone || c.tone, busy = st.busy, a = c.act, mv = !!r.moving;
-    var rows = (c.rows || []).map(function (x) { return kv(esc(x[0]), esc(x[1])); }).join("");
+    var rows = (c.rows || []).map(function (x) { return kv(esc(x[0]), unitize(x[1])); }).join("");
     var viz = c.spark ? plot({ n: c.spark.length, min: 0, max: 8, h: 54, y: [0, 4, 8], yf: function (v) { return v + NB + "°"; }, series: [{ v: c.spark, c: "gold" }], cls: "is-spark" }) : "";
     var action = "";
     if (a) {
@@ -1589,7 +1589,7 @@
   /* ---------- Voyage, agenda, listes, entretien ---------- */
   /* À l'arrivée : conditions sur place, heure d'arrivée estimée (d'après le voyage lié) et lumière du jour */
   K.arrival = function (c, e) {
-    var tr = findCard(e, "trip"), sd = sunDay(e), now = NOW(), m = tr && /(\d+)\s*h(?:\s*(\d+))?|(\d+)\s*min/.exec(tr.dur || ""), mins = m ? (m[3] ? +m[3] : +m[1] * 60 + (+m[2] || 0)) : null;
+    var tr = findCard(e, "trip", function (x) { return x.dur; }), sd = sunDay(e), now = NOW(), m = tr && /(\d+)\s*h(?:\s*(\d+))?|(\d+)\s*min/.exec(tr.dur || ""), mins = m ? (m[3] ? +m[3] : +m[1] * 60 + (+m[2] || 0)) : null;
     var eta = mins != null ? now + mins * 60000 : null, rows = [["wind", "Vent", c.wind.replace(/^Vent\s*/, "")]];
     if (eta) rows.unshift(["clock", "Arrivée estimée", hm(eta) + (tr.dist ? " · " + tr.dist : "")]);
     if (sd.set) rows.push([now < sd.set ? "sunset" : "sunrise", now < sd.set ? "Coucher du soleil" : "Lever du soleil", now < sd.set ? hm(sd.set) + (eta && eta > sd.set ? " · arrivée de nuit" : " · arrivée de jour") : hm(sunDay(e, 1).rise)]);

@@ -15,22 +15,46 @@ _RACINE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 BESOINS = [
     ("proteger", "Protéger ma maison",
      "Caméras, portes et alarme réunies en un seul fil clair.",
-     "securite-intelligente", "/media/vitrine/accueil/maison-familiale.webp", "50% 60%"),
+     "securite-intelligente", "/media/vitrine/accueil/maison-familiale.webp", "50% 60%",
+     ["Caméras qui reconnaissent une personne, un véhicule ou un colis",
+      "Serrures, portes et alarme sur un seul écran",
+      "Alertes claires, sans fausses alarmes à répétition",
+      "Images gardées chez vous, pas dans le nuage"]),
     ("domaine", "Gérer mon domaine et mes véhicules",
      "Lumières, chauffage, garage et énergie sur un seul écran.",
-     "environnements-intelligents", "/media/vitrine/accueil/panorama-domaine-crepuscule.webp", "50% 55%"),
+     "environnements-intelligents", "/media/vitrine/accueil/panorama-domaine-crepuscule.webp", "50% 55%",
+     ["Résidence, chalet, garage, yacht et hangar au même endroit",
+      "Chauffage, éclairage, piscine et énergie automatiques",
+      "Voitures de collection surveillées : batterie, humidité, clés",
+      "Une règle pour tout le domaine : « je pars », « on arrive »"]),
     ("entreprise", "Automatiser mon entreprise",
      "Réception, demandes et approbations qui avancent seules.",
-     "automatisation-operations", "/media/vitrine/accueil/commerce-pme.webp", "50% 50%"),
+     "automatisation-operations", "/media/vitrine/accueil/commerce-pme.webp", "50% 50%",
+     ["Réceptionniste qui répond au téléphone et prend les rendez-vous",
+      "Demandes, soumissions et approbations qui avancent seules",
+      "Rapports du matin sans rien compiler à la main",
+      "Vos données d’affaires restent dans votre bureau"]),
     ("ferme", "Gérer ma ferme",
      "Bâtiments, équipements et alarmes surveillés jour et nuit.",
-     "environnements-intelligents", "/media/env/ferme.webp", "50% 55%"),
+     "environnements-intelligents", "/media/env/ferme.webp", "50% 55%",
+     ["Étable, poulaillers, porcherie et écurie sur un seul tableau",
+      "Température, ventilation, eau et moulée surveillées",
+      "Alarme au téléphone si un chauffage ou une pompe lâche",
+      "Silos, génératrice et clôtures électriques suivis"]),
     ("ia", "Mon IA privée",
      "Posez une question à vos documents; vos données restent chez vous.",
-     "ia-privee-connaissances", "/media/solutions/ia-privee-connaissances.webp", "50% 50%"),
+     "ia-privee-connaissances", "/media/solutions/ia-privee-connaissances.webp", "50% 50%",
+     ["Un assistant qui connaît vos documents, contrats et notes",
+      "Réponses avec la source, pour vérifier en un clic",
+      "Fonctionne sur le Hub, chez vous, même sans Internet",
+      "Rien n’est envoyé à une grande entreprise d’IA"]),
     ("route", "Partir sur la route",
      "Un copilote pour le VR, la voiture ou le vélo électrique.",
-     "mobilite", "/media/vr/exterieur.webp", "50% 60%"),
+     "mobilite", "/media/vr/exterieur.webp", "50% 60%",
+     ["Batteries, eau, chauffage et portes du VR à distance",
+      "Itinéraire, arrêts et recharge planifiés pour vous",
+      "Véhicules de tous les jours et de collection au même endroit",
+      "La maison se prépare d’elle-même à votre retour"]),
 ]
 
 TITRES = {
@@ -55,21 +79,22 @@ def photo(cle, repli):
 def besoins():
     cartes = "".join(
         f"""<a class="bs-card" href="/solutions/{sol}/" data-rev>
-      <img src="{photo(cle, repli)}" alt="" loading="lazy" decoding="async" style="object-position:{pos}">
+      <span class="bs-ph"><img src="{photo(cle, repli)}" alt="" loading="lazy" decoding="async" style="object-position:{pos}"></span>
       <span class="bs-txt">
         <small>{TITRES[sol]}</small>
         <b>{titre}</b>
         <span>{phrase}</span>
+        <ul class="bs-inc" aria-label="Ce que vous obtenez">{"".join(f"<li>{x}</li>" for x in inclus)}</ul>
+        <em class="bs-start">Pour commencer : le Hub + {TITRES[sol]}<i aria-hidden="true">→</i></em>
       </span>
-      <i class="bs-go" aria-hidden="true">→</i>
     </a>"""
-        for cle, titre, phrase, sol, repli, pos in BESOINS
+        for cle, titre, phrase, sol, repli, pos, inclus in BESOINS
     )
     return f"""<section class="besoins" id="besoins" aria-labelledby="besoins-titre">
   <div class="bs-head" data-rev>
     <p class="eyebrow">Par où commencer</p>
     <h2 id="besoins-titre">Qu’est-ce qu’il <em>vous faut?</em></h2>
-    <p>Choisissez votre besoin. On vous montre la solution qui y répond.</p>
+    <p>Choisissez votre besoin : voici, concrètement, ce que JARVIS fait pour vous et par où commencer.</p>
   </div>
   <div class="bs-grid">{cartes}</div>
   <p class="bs-more" data-rev>Pas certain?

@@ -19,26 +19,24 @@
 .bs-head p { margin: 1rem 0 0; max-width: 34rem; color: #c6c1b8; font-size: clamp(1rem, 1.25vw, 1.12rem); }
 .bs-grid { max-width: 78rem; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .bs-card {
-  position: relative; display: block; overflow: hidden; isolation: isolate; aspect-ratio: 4 / 3.3;
+  position: relative; display: flex; flex-direction: column; overflow: hidden; isolation: isolate;
   border-radius: 20px; background: #050505; color: var(--ink); text-decoration: none;
   box-shadow: 0 24px 60px #000b;
 }
-.bs-card img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
-.bs-card::after {
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(180deg, #0000 30%, #000000b8 68%, #000000f0 100%);
-}
-.bs-txt { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.5rem 1.6rem 1.5rem; display: grid; gap: .35rem; }
+.bs-ph { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; }
+.bs-ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+.bs-ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #0000 55%, #050505 100%); }
+.bs-txt { display: flex; flex-direction: column; gap: .4rem; padding: .4rem 1.5rem 1.4rem; flex: 1; }
 .bs-txt small { font: 600 .62rem/1.3 var(--mono); letter-spacing: .15em; text-transform: uppercase; color: var(--gold-soft); }
-.bs-txt b { font-size: clamp(1.25rem, 1.8vw, 1.55rem); font-weight: 650; letter-spacing: -.025em; line-height: 1.15; padding-right: 2.6rem; }
-.bs-txt > span { color: #d2cec6; font-size: .92rem; line-height: 1.5; max-width: 26rem; }
-.bs-go {
-  position: absolute; right: 1.3rem; bottom: 1.5rem; display: grid; place-items: center; width: 40px; height: 40px;
-  border-radius: 50%; font-style: normal; font-weight: 600; background: var(--mode-action); color: var(--mode-on-action);
-  box-shadow: var(--mode-action-edge); transition: transform .4s var(--ease);
-}
-.fx .bs-card:hover img { transform: scale(1.05); }
-.bs-card:hover .bs-go { transform: translateX(4px); }
+.bs-txt b { font-size: clamp(1.2rem, 1.6vw, 1.45rem); font-weight: 650; letter-spacing: -.025em; line-height: 1.15; }
+.bs-txt > span { color: #d2cec6; font-size: .92rem; line-height: 1.5; }
+.bs-inc { list-style: none; margin: .5rem 0 .2rem; padding: .75rem 0 0; border-top: 1px solid #ffffff14; display: grid; gap: .45rem; }
+.bs-inc li { position: relative; padding-left: 1.4rem; color: #e6e1d8; font-size: .86rem; line-height: 1.4; }
+.bs-inc li::before { content: ""; position: absolute; left: 0; top: .32em; width: .8rem; height: .45rem; border-left: 2px solid var(--gold-soft); border-bottom: 2px solid var(--gold-soft); transform: rotate(-45deg); }
+.bs-start { margin-top: auto; padding-top: .8rem; font-style: normal; font: 600 .78rem/1.3 var(--mono); letter-spacing: .04em; color: var(--gold-soft); display: flex; justify-content: space-between; gap: .8rem; align-items: center; }
+.bs-start i { font-style: normal; width: 34px; height: 34px; flex: none; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #f3dc9c, #b98b3a); color: #111; font-size: 1rem; transition: transform .3s var(--ease); }
+.fx .bs-card:hover .bs-ph img { transform: scale(1.05); }
+.bs-card:hover .bs-start i { transform: translateX(4px); }
 .bs-card:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 3px; }
 .bs-more { max-width: 78rem; margin: 1.8rem auto 0; color: #a8a8b0; font-size: .95rem; display: flex; flex-wrap: wrap; gap: .4rem .8rem; align-items: center; }
 .bs-more a { color: var(--gold-soft); text-decoration: none; font-weight: 550; }
@@ -47,9 +45,7 @@
 @media (max-width: 600px) {
   .besoins { padding: 4.5rem 1rem 3.5rem; }
   .bs-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-  .bs-card { aspect-ratio: 16 / 10.5; }
-  .bs-txt { padding: 1.2rem 1.2rem 1.25rem; }
-  .bs-go { width: 36px; height: 36px; right: 1rem; bottom: 1.25rem; }
+  .bs-txt { padding: .3rem 1.2rem 1.2rem; }
 }
 
 /* ---------- L'offre en bref ---------- */

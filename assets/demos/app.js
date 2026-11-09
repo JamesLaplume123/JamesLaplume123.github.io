@@ -2,7 +2,7 @@
    (ou les onglets du bas). Un écran appartient à une entrée du menu (data-nav) : Ma journée, Mes partages,
    Mes messages et Mes appels sont dans Mon espace, l'Assistant part de l'Accueil. Un sélecteur Personnel |
    Professionnel (data-pp) bascule le contenu des deux espaces, d'un seul état pour tout l'appareil.
-   Barre du haut : palette de recherche (Ctrl K), panneau météo, Mes appels, Carte, menu du profil (espace,
+   Barre du haut : palette de recherche (Ctrl K), température réelle, Mes appels, Carte, menu du profil (espace,
    mode d'affichage du site). Messages, appels et visio sont simulés. La Carte est vectorielle (caméra en km).
    Vraies données : l'heure locale, la météo de Saint-Hyacinthe (Environnement Canada) et les batteries
    de BouLance (service /live du site). Tout le reste est fictif : rien de réel n'est touché. */
@@ -142,43 +142,16 @@
     setTimeout(function () { tickClock(); setInterval(tickClock, 60000); }, (60 - new Date().getSeconds()) * 1000 + 50);
 
 
-    /* ---------------------------------------------------------------- Météo réelle (puce et panneau) */
-    var wxStarted = false, wxLast = null, uidGeo = root.getAttribute("data-geo");
-    // Codes d'icône d'Environnement Canada → pictogramme
-    function wxKind(code, cond) {
-      var c = (cond || "").toLowerCase();
-      if (code !== null && code !== undefined) {
-        if ([0, 1].indexOf(code) >= 0) return "sun";
-        if ([30, 31].indexOf(code) >= 0) return "moon";
-        if ([2, 3, 4, 5, 22].indexOf(code) >= 0) return "partly";
-        if ([32, 33, 34, 35].indexOf(code) >= 0) return "partlyn";
-        if ([9, 19, 39].indexOf(code) >= 0) return "storm";
-        if ([6, 11, 12, 13, 28, 36].indexOf(code) >= 0) return "rain";
-        if ([7, 8, 14, 15, 16, 17, 18, 25, 26, 27, 37, 38, 40].indexOf(code) >= 0) return "snow";
-        if ([23, 24, 44, 45].indexOf(code) >= 0) return "fog";
-        if (code === 10) return "cloud";
-      }
-      if (/orage/.test(c)) return "storm";
-      if (/neige|flocon|poudrerie|gr[eé]sil/.test(c)) return "snow";
-      if (/pluie|averse|bruine/.test(c)) return "rain";
-      if (/brouillard|brume/.test(c)) return "fog";
-      if (/d[eé]gag|ensoleill|soleil/.test(c)) return "sun";
-      return "cloud";
-    }
-    function art(kind, cls) {
-      return '<svg class="' + (cls || "") + '" viewBox="0 0 64 64" aria-hidden="true"><use href="#' + uidGeo + "-" + kind + '"/></svg>';
-    }
+    /* ---------------------------------------------------------------- Météo réelle (simple indication dans la barre) */
+    var wxStarted = false;
     function wxFail() {
       root.setAttribute("data-wx-state", "off");
       $$('[data-ap="temp"]').forEach(function (el) { el.textContent = "—"; });
-      var c = $('[data-wxp="cond"]');
-      if (c && !wxLast) c.textContent = "Météo indisponible pour l’instant. Réessayez plus tard.";
     }
     function wxPaint(j) {
       var p = j.properties || {}, cc = p.currentConditions || {};
       var t = nval(cc.temperature), cond = txt(cc.condition), code = nval(cc.iconCode);
       if (t === null) { wxFail(); return; }
-      wxLast = j;
       var night = code !== null && code >= 30 && code <= 39;
       var c = (cond || "").toLowerCase(), kind = "cloud";
       if (/neige|flocon|poudrerie|gr[eé]sil/.test(c)) kind = "snow";
@@ -190,107 +163,6 @@
       $$('[data-ap="temp"]').forEach(function (el) { countUp(el, Math.round(t)); });
       var chip = $(".ap-wx");
       if (chip) chip.title = "Saint-Hyacinthe : " + (cond ? cond.toLowerCase() + ", " : "") + num(Math.round(t)) + NB + "°C · Environnement Canada, en direct";
-      if (openPop === "wx") wxPanel(j);
-    }
-    function wxPanel(j) {
-      var pnl = $('[data-pop-panel="wx"]');
-      if (!pnl) return;
-      var p = j.properties || {}, cc = p.currentConditions || {}, fg = (p.forecastGroup || {}).forecasts || [];
-      var hf = ((p.hourlyForecastGroup || {}).hourlyForecasts) || [], rs = p.riseSet || {};
-      var t = nval(cc.temperature), cond = txt(cc.condition), code = nval(cc.iconCode), kind = wxKind(code, cond);
-      var q = function (s) { return $('[data-wxp="' + s + '"]', pnl); };
-      var rise = rs.sunrise ? new Date(txt(rs.sunrise)) : null, set = rs.sunset ? new Date(txt(rs.sunset)) : null, now = new Date();
-      var isNight = rise && set && !isNaN(rise) && !isNaN(set) ? (now < rise || now > set) : (code >= 30 && code <= 39);
-      pnl.setAttribute("data-sky", isNight ? "night" : kind === "sun" || kind === "partly" ? "day" : kind === "snow" ? "snow" : "grey");
-      q("t").textContent = t === null ? "—" : num(Math.round(t));
-      q("cond").textContent = cond || "Conditions actuelles";
-      var use = q("art");
-      if (use) use.setAttribute("href", "#" + uidGeo + "-" + kind);
-      // Maximum et minimum : prévisions du jour et de la nuit
-      var hi = null, lo = null;
-      fg.slice(0, 3).forEach(function (f) {
-        var ts = ((f.temperatures || {}).temperature) || [];
-        (Array.isArray(ts) ? ts : [ts]).forEach(function (x) {
-          var v = nval(x), cl = txt(x["class"]);
-          if (v === null) return;
-          if (cl === "high" && hi === null) hi = v;
-          if (cl === "low" && lo === null) lo = v;
-        });
-      });
-      var feels = nval(cc.windChill) !== null ? nval(cc.windChill) : nval(cc.humidex);
-      q("hl").textContent = (hi !== null ? "Max. " + num(hi) + "°" : "") + (lo !== null ? "  ·  Min. " + num(lo) + "°" : "") +
-        (feels !== null ? "  ·  Ressenti " + num(Math.round(feels)) + "°" : "");
-      // Heure par heure, avec la courbe des températures
-      var hours = hf.slice(0, 12).map(function (h) {
-        var d = new Date(h.timestamp), v = nval(h.temperature), pop = nval(h.lop);
-        return { h: isNaN(d) ? "" : d.getHours() + NB + "h", t: v, k: wxKind(nval(h.iconCode), txt(h.condition)), pop: pop || 0, c: txt(h.condition) };
-      }).filter(function (h) { return h.t !== null; });
-      if (hours.length) {
-        var tmin = Math.min.apply(null, hours.map(function (h) { return h.t; })), tmax = Math.max.apply(null, hours.map(function (h) { return h.t; }));
-        var span = Math.max(4, tmax - tmin), n = hours.length, pts = hours.map(function (h, i) { return [(i + .5) / n * 100, 34 - (h.t - tmin) / span * 26]; });
-        var dPath = "M" + pts.map(function (pt) { return pt[0].toFixed(2) + " " + pt[1].toFixed(2); }).join(" L");
-        var area = dPath + " L" + pts[n - 1][0].toFixed(2) + " 44 L" + pts[0][0].toFixed(2) + " 44 Z";
-        q("hours").innerHTML = '<svg class="ap-wxp-curve" viewBox="0 0 100 44" preserveAspectRatio="none" aria-hidden="true">' +
-          '<defs><linearGradient id="' + uidGeo + '-wxa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="wxa-a"/><stop offset="1" class="wxa-b"/></linearGradient></defs>' +
-          '<path d="' + area + '" fill="url(#' + uidGeo + '-wxa)"/><path class="wxc" d="' + dPath + '"/></svg>' +
-          '<ol style="--n:' + n + '">' + hours.map(function (h, i) {
-            return '<li title="' + h.c + '"><small>' + (i ? h.h : "Maint.") + "</small>" + art(h.k, "ap-wxp-ic") + "<b>" + num(Math.round(h.t)) + "°</b>" +
-              '<em class="' + (h.pop >= 30 ? "is-wet" : "") + '">' + (h.pop ? h.pop + NB + "%" : "") + "</em></li>";
-          }).join("") + "</ol>";
-      }
-      // Jours : on réunit jour et nuit de chaque date
-      var days = [], lastDay = null;
-      fg.forEach(function (f) {
-        var per = f.period || {}, name = txt(per.textForecastName) || txt(per), dayName = txt(per.value) || name;
-        var night = /nuit|soir/i.test(name), ts = ((f.temperatures || {}).temperature) || [], v = null;
-        (Array.isArray(ts) ? ts : [ts]).forEach(function (x) { if (nval(x) !== null) v = nval(x); });
-        var ab = f.abbreviatedForecast || {}, kc = wxKind(nval(ab.icon), txt(ab.textSummary));
-        if (!night || !lastDay) {
-          lastDay = { n: night ? "Ce soir" : cap(name === "Aujourd'hui" || name === "Aujourd’hui" ? "Aujourd’hui" : dayName), hi: night ? null : v, lo: night ? v : null, k: kc, s: txt(ab.textSummary) };
-          days.push(lastDay);
-        } else { lastDay.lo = v; }
-        if (night) lastDay = null;
-      });
-      days = days.slice(0, 6);
-      var all = []; days.forEach(function (d) { if (d.hi !== null) all.push(d.hi); if (d.lo !== null) all.push(d.lo); });
-      var gmin = Math.min.apply(null, all), gmax = Math.max.apply(null, all), gs = Math.max(1, gmax - gmin);
-      q("days").innerHTML = days.map(function (d) {
-        var a = d.lo !== null ? d.lo : d.hi, b = d.hi !== null ? d.hi : d.lo;
-        var l = (a - gmin) / gs * 100, w = Math.max(6, (b - a) / gs * 100);
-        return '<li title="' + d.s + '"><b>' + d.n + "</b>" + art(d.k, "ap-wxp-ic") + '<small class="ap-wxp-s">' + d.s + "</small>" +
-          '<span class="ap-wxp-lo">' + (d.lo !== null ? num(d.lo) + "°" : "") + '</span><span class="ap-wxp-bar"><i style="left:' + l.toFixed(1) + "%;width:" + Math.min(100 - l, w).toFixed(1) + '%"></i></span>' +
-          '<span class="ap-wxp-hi">' + (d.hi !== null ? num(d.hi) + "°" : "") + "</span></li>";
-      }).join("");
-      // Détails
-      var wind = cc.wind || {}, ws = nval(wind.speed), wg = nval(wind.gust), wd = txt(wind.direction), wb = nval(wind.bearing);
-      var hum = nval(cc.relativeHumidity), pr = nval(cc.pressure), dew = nval(cc.dewpoint);
-      var uv = fg[0] && fg[0].uv ? txt(fg[0].uv.index) : "";
-      function tileH(ic, k, v, s, extra) {
-        return '<div class="ap-wxp-tile"><p>' + ic + k + "</p><b>" + v + "</b><small>" + (s || "") + "</small>" + (extra || "") + "</div>";
-      }
-      var P = { wind: '<path d="M3.5 9.5h11a2.75 2.75 0 1 0-2.75-2.75M3.5 14h15a2.75 2.75 0 1 1-2.75 2.75M3.5 11.75h6"/>',
-        drop: '<path d="M12 3.75s-5.75 6.1-5.75 10.1a5.75 5.75 0 0 0 11.5 0c0-4-5.75-10.1-5.75-10.1Z"/>',
-        gauge: '<path d="M4.5 16.5a7.5 7.5 0 1 1 15 0"/><path d="m12 16.5 3.5-4.5M12 16.5v.1"/>',
-        sun: '<circle cx="12" cy="12" r="3.75"/><path d="M12 2.75v2M12 19.25v2M2.75 12h2M19.25 12h2M5.45 5.45l1.4 1.4M17.15 17.15l1.4 1.4M5.45 18.55l1.4-1.4M17.15 6.85l1.4-1.4"/>' };
-      var I = function (n) { return '<svg class="ap-i" viewBox="0 0 24 24" aria-hidden="true">' + P[n] + "</svg>"; };
-      q("grid").innerHTML =
-        tileH(I("wind"), "Vent", ws !== null ? ws + NB + "km/h" : "—", (wd ? (function (w) { return (/^[ns]/.test(w) ? "Du " : "D’") + w; })(wd.split("").map(function (c) { return { N: "nord", S: "sud", E: "est", O: "ouest", W: "ouest" }[c] || c; }).join("-")) : "") + (wg ? " · rafales " + wg : ""),
-          wb !== null ? '<i class="ap-wxp-comp" style="--b:' + wb + 'deg" aria-hidden="true"></i>' : "") +
-        tileH(I("drop"), "Humidité", hum !== null ? hum + NB + "%" : "—", dew !== null ? "Point de rosée " + num(Math.round(dew)) + "°" : "") +
-        tileH(I("gauge"), "Pression", pr !== null ? pr.toFixed(1).replace(".", ",") + NB + "kPa" : "—", txt((cc.pressure || {}).tendency) || "") +
-        tileH(I("sun"), "Indice UV", uv || "—", uv ? (+uv <= 2 ? "Bas" : +uv <= 5 ? "Modéré" : "Élevé") : "");
-      // Soleil : arc du lever au coucher, position réelle du moment
-      if (rise && set && !isNaN(rise) && !isNaN(set)) {
-        var f = Math.max(0, Math.min(1, (now - rise) / (set - rise))), ang = Math.PI * (1 - f);
-        var sx = 50 + 40 * Math.cos(ang), sy = 46 - 36 * Math.sin(ang), up = now > rise && now < set;
-        q("sun").innerHTML = '<svg class="ap-wxp-arc" viewBox="0 0 100 52" aria-hidden="true"><path class="arc" d="M10 46 A40 36 0 0 1 90 46"/>' +
-          '<path class="arc-on" d="M10 46 A40 36 0 0 1 90 46" pathLength="100" style="stroke-dasharray:' + (f * 100).toFixed(1) + ' 100"/>' +
-          '<path class="hz" d="M4 46H96"/>' + (up ? '<circle class="sun" cx="' + sx.toFixed(1) + '" cy="' + sy.toFixed(1) + '" r="4"/>' : "") + "</svg>" +
-          '<p><span><small>Lever</small><b>' + hm(rise) + '</b></span><span><small>Coucher</small><b>' + hm(set) + "</b></span>" +
-          "<span><small>Durée du jour</small><b>" + Math.floor((set - rise) / 3600000) + NB + "h" + NB + pad(Math.round((set - rise) / 60000) % 60) + "</b></span></p>";
-      }
-      var upd = cc.timestamp ? new Date(txt(cc.timestamp)) : null, stn = txt((cc.station || {}).value);
-      q("src").textContent = "Environnement Canada · données réelles" + (upd && !isNaN(upd) ? " · mises à jour à " + hm(upd) : "") + (stn ? " · station : " + stn : "");
     }
     function wxLoad(fresh) { wxFetch(fresh).then(wxPaint).catch(wxFail); }
     function wxStart() {
@@ -465,7 +337,7 @@
     if ("MutationObserver" in window) new MutationObserver(syncModes).observe(document.documentElement, { attributes: true, attributeFilter: ["data-mode"] });
     syncModes();
 
-    /* ---------------------------------------------------------------- Fenêtres de la barre du haut (recherche, météo, profil) */
+    /* ---------------------------------------------------------------- Fenêtres de la barre du haut (recherche, profil) */
     var scrim = $("[data-scrim]"), openPop = null, popFrom = null;
     function closePops(keepFocus) {
       if (!openPop) return;
@@ -491,7 +363,6 @@
       $$('[data-pop-open="' + name + '"]').forEach(function (b) { b.setAttribute("aria-expanded", "true"); });
       if (name === "cmd") { cmdReset(); var q = $("[data-cmd-q]"); if (q) q.focus({ preventScroll: true }); }
       else {
-        if (name === "wx") { wxStart(); if (wxLast) wxPanel(wxLast); }
         p.setAttribute("tabindex", "-1");
         p.focus({ preventScroll: true });
       }

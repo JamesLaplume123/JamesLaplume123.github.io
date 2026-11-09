@@ -3,7 +3,7 @@
 # bannière du lac au coucher du soleil; barre latérale dorée vitreuse. Neuf écrans (Accueil, Assistant,
 # Mon espace, Ma journée, Mes partages, Mes messages, Mes appels, Carte, Mes outils), pilotés par la
 # barre latérale (barre d'onglets en bas sur cellulaire). Toute la barre du haut fonctionne : recherche
-# (palette de commandes), météo réelle (panneau détaillé), Mes appels, Carte et menu du profil (espace,
+# (palette de commandes), température réelle (simple indication), Mes appels, Carte et menu du profil (espace,
 # mode d'affichage du site). Un sélecteur Personnel | Professionnel bascule le contenu des deux espaces.
 # La Carte est une vraie carte vectorielle noire du sud du Québec (demos/app_geo.py, Natural Earth)
 # avec les environnements de James. Styles et script : assets/demos/app.css et app.js.
@@ -1161,7 +1161,7 @@ ON = ' class="is-on"'
 
 
 # ---------------------------------------------------------------------------------------------
-# Barre du haut : palette de recherche, météo détaillée, menu du profil; appel en cours
+# Barre du haut : palette de recherche, menu du profil; appel en cours
 # ---------------------------------------------------------------------------------------------
 def _cmd_item(ic, label, sub, attrs, hint="", keys=""):
     k = f"{label} {sub} {keys}".lower()
@@ -1198,7 +1198,6 @@ def _cmd():
                 for m in ("Signature", "Platinum", "Base"))
         + _cmd_item("brief", "Espace professionnel", "Clients, équipe, appels d’affaires", 'data-pp-set="pro"', "Réglage", "travail pro")
         + _cmd_item("user", "Espace personnel", "Famille, amis, maison", 'data-pp-set="perso"', "Réglage", "perso")
-        + _cmd_item("sun", "Météo de Saint-Hyacinthe", "Prévisions réelles, heure par heure", 'data-pop-open="wx"', "Météo", "temps température pluie neige")
     )
     groups = [("Écrans", g_screens), ("Personnes", g_people), ("Lieux", g_places), ("Extensions", g_ext), ("Réglages", g_set)]
     body = "".join(f'<div class="ap-cmd-grp"><p class="ap-cmd-g">{t}</p>{h}</div>' for t, h in groups)
@@ -1207,60 +1206,6 @@ def _cmd():
   <div class="ap-cmd-r" role="listbox" aria-label="Résultats">{body}
     <p class="ap-cmd-none" hidden>{icon("search")}<span>Aucun résultat pour « <b data-cmd-term></b> ».</span></p></div>
   <footer class="ap-cmd-f"><span><kbd>↑</kbd><kbd>↓</kbd> choisir</span><span><kbd>Entrée</kbd> ouvrir</span><span class="ap-cmd-sim">Données d’exemple</span></footer>
-</div>"""
-
-
-def _wx_defs(uid):
-    """Pictogrammes météo en couleur (dégradés), une fois par appareil, réutilisés par le panneau météo."""
-    cloud = "M19 48h27a10 10 0 0 0 1.6-19.9A14 14 0 0 0 20.6 31 8.6 8.6 0 0 0 19 48Z"
-    cloud_s = "M17 41h25a9 9 0 0 0 1.4-17.9A12.6 12.6 0 0 0 19 26.2 7.7 7.7 0 0 0 17 41Z"
-    rays = "".join(
-        f'<path d="M{32 + 18 * math.cos(a):.1f} {32 + 18 * math.sin(a):.1f}L{32 + 24 * math.cos(a):.1f} {32 + 24 * math.sin(a):.1f}"/>'
-        for a in [i * math.pi / 4 for i in range(8)]
-    )
-    rays_s = "".join(
-        f'<path d="M{24 + 13 * math.cos(a):.1f} {24 + 13 * math.sin(a):.1f}L{24 + 17.5 * math.cos(a):.1f} {24 + 17.5 * math.sin(a):.1f}"/>'
-        for a in [i * math.pi / 4 for i in range(8)]
-    )
-    moon = "M40.5 41.5A15 15 0 0 1 26.5 19a15 15 0 1 0 14 22.5Z"
-    return f"""<svg class="ap-geo-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>
-<radialGradient id="{uid}-gsun" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fff7dc"/><stop offset=".45" stop-color="#ffd27a"/><stop offset="1" stop-color="#e9a23b"/></radialGradient>
-<linearGradient id="{uid}-gcl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfbfc"/><stop offset="1" stop-color="#a7a7b0"/></linearGradient>
-<linearGradient id="{uid}-gcd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9d9de"/><stop offset="1" stop-color="#6e6e78"/></linearGradient>
-<linearGradient id="{uid}-gmo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbf6ea"/><stop offset="1" stop-color="#b8b0a2"/></linearGradient>
-<symbol id="{uid}-sun" viewBox="0 0 64 64"><g stroke="#ffd98a" stroke-width="3.2" stroke-linecap="round">{rays}</g><circle cx="32" cy="32" r="12.5" fill="url(#{uid}-gsun)"/></symbol>
-<symbol id="{uid}-moon" viewBox="0 0 64 64"><path d="{moon}" fill="url(#{uid}-gmo)"/><circle cx="46" cy="18" r="1.4" fill="#f4efe4"/><circle cx="51" cy="28" r="1" fill="#f4efe4" opacity=".7"/></symbol>
-<symbol id="{uid}-cloud" viewBox="0 0 64 64"><path d="{cloud}" fill="url(#{uid}-gcl)"/></symbol>
-<symbol id="{uid}-partly" viewBox="0 0 64 64"><g stroke="#ffd98a" stroke-width="2.6" stroke-linecap="round">{rays_s}</g><circle cx="24" cy="24" r="9.5" fill="url(#{uid}-gsun)"/><path d="{cloud}" fill="url(#{uid}-gcl)" transform="translate(4 4)"/></symbol>
-<symbol id="{uid}-partlyn" viewBox="0 0 64 64"><path d="M30 30A11 11 0 0 1 19.6 13.5a11 11 0 1 0 10.4 16.5Z" fill="url(#{uid}-gmo)"/><path d="{cloud}" fill="url(#{uid}-gcl)" transform="translate(4 4)"/></symbol>
-<symbol id="{uid}-rain" viewBox="0 0 64 64"><path d="{cloud_s}" fill="url(#{uid}-gcd)"/><g stroke="#cfd6df" stroke-width="2.6" stroke-linecap="round"><path d="M22 47l-2.5 6M32 47l-2.5 6M42 47l-2.5 6"/></g></symbol>
-<symbol id="{uid}-snow" viewBox="0 0 64 64"><path d="{cloud_s}" fill="url(#{uid}-gcd)"/><g fill="#f6f7f9"><circle cx="21" cy="49" r="2.2"/><circle cx="31" cy="53" r="2.2"/><circle cx="41" cy="49" r="2.2"/><circle cx="26" cy="58" r="1.8"/><circle cx="36" cy="58" r="1.8"/></g></symbol>
-<symbol id="{uid}-storm" viewBox="0 0 64 64"><path d="{cloud_s}" fill="url(#{uid}-gcd)"/><path d="M33 42l-6 10h5l-3 9 9-12h-5l3-7z" fill="url(#{uid}-gsun)"/></symbol>
-<symbol id="{uid}-fog" viewBox="0 0 64 64"><path d="{cloud_s}" fill="url(#{uid}-gcl)" opacity=".85"/><g stroke="#c9c9cf" stroke-width="3" stroke-linecap="round"><path d="M12 47h40M18 54h30"/></g></symbol>
-</defs></svg>"""
-
-
-def _wxp(uid):
-    return f"""<div class="ap-pop ap-wxp" data-pop-panel="wx" hidden role="dialog" aria-label="Météo de Saint-Hyacinthe">
-  <div class="ap-wxp-hero" data-wxp-sky>
-    <div class="ap-wxp-now"><small>{icon("pin")}Saint-Hyacinthe<span class="ap-live"> · en direct</span></small>
-      <b><span data-wxp="t">—</span><sup>°C</sup></b><span class="ap-wxp-cond" data-wxp="cond">Chargement de la météo…</span>
-      <small class="ap-wxp-hl" data-wxp="hl"></small></div>
-    <svg class="ap-wxp-art" viewBox="0 0 64 64" aria-hidden="true"><use data-wxp="art" href="#{uid}-cloud"/></svg>
-    <button type="button" class="ap-x" data-pop-close aria-label="Fermer la météo">{icon("x")}</button>
-  </div>
-  <div class="ap-wxp-body">
-    <section class="ap-wxp-sec"><p class="ap-wxp-k">{icon("clock")}Les prochaines heures</p>
-      <div class="ap-wxp-hours" data-wxp="hours"></div></section>
-    <div class="ap-wxp-cols">
-      <section class="ap-wxp-sec"><p class="ap-wxp-k">{icon("calendar")}Les prochains jours</p><ol class="ap-wxp-days" data-wxp="days"></ol></section>
-      <div class="ap-wxp-side">
-        <div class="ap-wxp-grid" data-wxp="grid"></div>
-        <section class="ap-wxp-sec ap-wxp-sun"><p class="ap-wxp-k">{icon("sun")}Soleil</p><div data-wxp="sun"></div></section>
-      </div>
-    </div>
-    <p class="ap-wxp-src">{icon("info")}<span data-wxp="src">Environnement Canada · données réelles</span></p>
-  </div>
 </div>"""
 
 
@@ -1380,7 +1325,7 @@ def _device(only=None):
           <span class="tag tag-sim">Démo · données fictives</span>
         </div>
         <div class="ap-screen" role="group" aria-roledescription="démonstration" aria-label="{label}">
-          {geo}{_wx_defs(uid)}
+          {geo}
           <script type="application/json" class="ap-people">{_people_json()}</script>
           <div class="ap-bg" aria-hidden="true"></div>
           <img class="ap-banner" src="{BANNER}" alt="" aria-hidden="true" loading="lazy" decoding="async" width="1990" height="342">
@@ -1394,10 +1339,10 @@ def _device(only=None):
             <header class="ap-top">
               <button type="button" class="ap-search" data-pop-open="cmd" aria-haspopup="dialog" aria-label="Rechercher dans JARVIS">{icon("search")}<span>Que souhaitez-vous faire{NB}?</span><kbd>Ctrl K</kbd></button>
               <span class="ap-status-time" data-ap="clock">19{NB}h{NB}42</span>
-              <button type="button" class="ap-wx" data-pop-open="wx" aria-haspopup="dialog" aria-label="Météo de Saint-Hyacinthe">
+              <span class="ap-wx" role="img" aria-label="Météo de Saint-Hyacinthe, en direct">
                 <span class="ap-wx-i" aria-hidden="true">{WX}</span>
                 <span><b><span data-ap="temp">—</span><span class="ap-unit">{NB}°C</span></b><small>Saint-Hyacinthe<span class="ap-live"> · en direct</span></small></span>
-              </button>
+              </span>
               <button type="button" class="ap-top-call" data-go="appels" aria-label="Mes appels" title="Mes appels">{icon("call")}</button>
               <button type="button" class="ap-top-call ap-pin" data-go="carte" aria-label="Carte de mes lieux" title="Carte de mes lieux">{icon("pin")}</button>
               <button type="button" class="ap-me" data-pop-open="me" aria-haspopup="dialog" aria-label="Profil d’Alex">{face(AV_ALEX)}<b>Alex</b>{icon("down")}</button>
@@ -1405,7 +1350,7 @@ def _device(only=None):
             <div class="ap-views">{views}</div>
           </div>
           <div class="ap-scrim" data-scrim hidden></div>
-          {fr(_cmd())}{_wxp(uid)}{fr(_me_menu())}{fr(_callov())}
+          {fr(_cmd())}{fr(_me_menu())}{fr(_callov())}
           <p class="ap-flash" role="status" aria-live="polite"></p>
         </div>
         <i class="ap-sweep" aria-hidden="true"></i>

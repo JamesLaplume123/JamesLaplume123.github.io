@@ -23,6 +23,8 @@ from partials import document, redirect_document  # noqa: E402
 # Ordre de référence des pages (sert aussi au sitemap).
 PAGE_MODULES = [
     "accueil",
+    "logiciel",
+    "offre",
     "solutions",
     "solution_environnements_intelligents",
     "solution_ia_privee_connaissances",

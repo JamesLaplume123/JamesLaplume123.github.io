@@ -1,61 +1,15 @@
-# Accueil — vendre JARVIS, le logiciel (allègement commercial, novembre 2026).
-# Sept sections, une idée chacune : promesse (héros) → pour qui (galerie) → l'app → les sept
-# extensions → l'offre → FAQ → démo. Les démonstrations « maison » (pièces, météo) vivent sur
-# /solutions/environnements-intelligents/; le laboratoire, sur /laboratoire-mobile/.
+# Accueil — vendre JARVIS, le logiciel (refonte « clarté », novembre 2026).
+# Sept sections, une idée chacune : promesse (héros) → qu'est-ce qu'il vous faut (besoins) →
+# le logiciel en grand (aperçu vivant, démo complète sur /logiciel/) → pour qui (galerie) →
+# l'offre en bref (détail sur /offre/) → FAQ → démo.
+# Les sept extensions en cartes et les compositions d'exemple vivent sur /offre/.
 # Les questions de la FAQ alimentent aussi les données structurées (FAQPage).
 
 import json
 
-from config import CAPABILITIES
 from demos import app
-from partials import ext_icon
 import galerie
-
-
-def apercu_solutions():
-    """Les solutions en un coup d'œil; chacune s'ouvre dans JARVIS, comme une extension."""
-    cartes = []
-    for c in CAPABILITIES:
-        cartes.append(f"""<article class="sol-card" data-rev>
-      <a class="sol-shot" href="/solutions/{c['slug']}/#jarvis" tabindex="-1" aria-hidden="true">
-        <img src="{c['image']}" alt="" loading="lazy" decoding="async">
-        <span class="sol-num">{c['num']}</span>
-      </a>
-      <div class="sol-body">
-        <p class="sol-kick">{c['label']}</p>
-        <h3><a href="/solutions/{c['slug']}/#jarvis">{c['title']}</a></h3>
-        <p class="sol-line">{c['short']}</p>
-        <span class="sol-go" aria-hidden="true">Essayer dans JARVIS <i>↗</i></span>
-      </div>
-    </article>""")
-    return "\n    ".join(cartes)
-
-
-# L'offre : chaque environnement mène directement aux extensions qui le servent.
-OFFRE = [
-    ("Résidence", "Maison · condo · chalet",
-     ["environnements-intelligents", "securite-intelligente", "ia-privee-connaissances"]),
-    ("Entreprise", "Bureau · commerce · atelier",
-     ["automatisation-operations", "securite-intelligente", "reseau-resilience"]),
-    ("Mobilité", "VR · véhicule aménagé · unité spécialisée",
-     ["mobilite", "diagnostic-care", "reseau-resilience"]),
-]
-TITRES = {c["slug"]: c["title"] for c in CAPABILITIES}
-
-
-def offre_plans():
-    cartes = []
-    for i, (k, h, slugs) in enumerate(OFFRE):
-        liens = "".join(
-            f'<li><a href="/solutions/{s}/#jarvis">{ext_icon(s)}<span>{TITRES[s]}</span></a></li>' for s in slugs
-        )
-        cartes.append(f"""<article class="plan{' star' if i == 1 else ''}" data-rev>
-      <small>{k}</small>
-      <h3>{h}</h3>
-      <p class="plan-k">Hub JARVIS, plus par exemple :</p>
-      <ul class="plan-x">{liens}</ul>
-    </article>""")
-    return "\n    ".join(cartes)
+import parcours
 
 
 FAQ = [
@@ -173,7 +127,7 @@ PAGE = {
     "url": "/",
     "v2": True,
     "title": "Domotique privée et sécurité intelligente au Québec | JARVIS",
-    "assets": ["app", "galerie"],
+    "assets": ["app", "galerie", "parcours", "logiciel"],
     "description": (
         "Domotique privée, sécurité intelligente et IA locale, installées chez vous. "
         "JARVIS relie vos appareils sans envoyer vos données au nuage. Saint-Hyacinthe, Québec."
@@ -195,10 +149,10 @@ PAGE = {
       et vos informations. Il s’occupe de ce qui se répète; vous gardez les décisions. Une technologie qui rend libre,
       pas dépendant.</p>
       <div class="acts">
-        <a class="pill" href="#app" data-magnet>Essayer l’app</a>
+        <a class="pill" href="/logiciel/" data-magnet>Essayer le logiciel</a>
         <a class="pill ghost" href="/contact/" data-magnet>Réserver une démo</a>
       </div>
-      <a class="live-pill" href="#app" data-live-pill>
+      <a class="live-pill" href="#logiciel" data-live-pill>
         <i class="dot" aria-hidden="true"></i>
         <span>En direct<span class="lp-place"> · Saint-Hyacinthe</span></span>
         <b data-live="temp-short">—</b>
@@ -230,50 +184,33 @@ PAGE = {
   <i class="cue" aria-hidden="true"></i>
 </section>
 
+<!-- Qu'est-ce qu'il vous faut? Une carte par besoin, chacune mène à sa solution -->
+{parcours.besoins()}
+
+<!-- Le logiciel en grand : l'écran d'accueil vivant, non interactif; la démo complète sur /logiciel/ -->
+<section class="lg-apercu" id="logiciel" aria-labelledby="logiciel-titre">
+  <div class="lga-head" data-rev>
+    <div>
+      <p class="eyebrow">Le logiciel · JARVIS App</p>
+      <h2 id="logiciel-titre">Une seule application.<br><em>Toute votre vie connectée.</em></h2>
+    </div>
+    <div class="lga-side">
+      <p>Voici l’écran d’accueil de JARVIS, en direct : l’heure et la météo sont réelles. Assistant,
+      messages, appels, carte de vos lieux et extensions vous attendent dans la démo complète.</p>
+      <a class="pill" href="/logiciel/" data-magnet>Essayer le logiciel</a>
+    </div>
+  </div>
+  <div class="lga-frame">
+    <div class="lga-dev" inert>{app.apercu()}</div>
+    <a class="lga-hit" href="/logiciel/"><span>Essayer le logiciel <i aria-hidden="true">→</i></span></a>
+  </div>
+</section>
+
 <!-- Pour qui : clients ordinaires et de prestige (src/galerie.py) -->
 {galerie.clients_fr()}
 
-<!-- Vitrine de l'app (dossier User v25) : le logiciel dans une seule fenêtre (assets/demos/app.*) -->
-<section class="vitrine" id="app" aria-label="JARVIS App">
-  <div class="head" data-rev>
-    <p class="eyebrow">JARVIS App · l’interface</p>
-    <h2 data-split>Une seule application.<br><em>Toute votre vie connectée.</em></h2>
-    <p class="vitrine-lead">Le vrai logiciel. Choisissez un écran à gauche&nbsp;: il s’ouvre ici.</p>
-  </div>
-  {app.html()}
-</section>
-
-<!-- Les sept extensions : la suite logique après l'app; chacune s'ouvre dans JARVIS -->
-<section class="bento sols" id="capacites" aria-labelledby="ext-titre">
-  <div class="head" data-rev>
-    <p class="kick">Sept extensions · une équipe</p>
-    <h2 id="ext-titre" data-split>Ajoutez seulement<br><em>ce dont vous avez besoin.</em></h2>
-    <p>Réceptionniste, gardien, archiviste, technicien : chaque extension fait un travail précis, dans
-    la même app. Touchez-en une pour l’essayer.</p>
-  </div>
-  <div class="sol-grid">
-    {apercu_solutions()}
-  </div>
-  <p class="sol-all" data-rev><a class="pill ghost" href="/solutions/">Comparer les sept solutions</a>
-  <a class="pill ghost" href="/plateforme/#ensemble">Comment elles travaillent ensemble</a></p>
-</section>
-
-<!-- L'offre : le Hub, puis les extensions utiles à chaque environnement (détail : /plateforme/#offre) -->
-<section class="offer" id="offre" aria-labelledby="offre-titre">
-  <div class="head" data-rev>
-    <p class="eyebrow">L’offre</p>
-    <h2 id="offre-titre">Le Hub, puis <em>vos extensions.</em></h2>
-    <p>Chaque installation part du Hub. On ajoute les extensions utiles à votre lieu, avec
-    l’installation, l’entretien et le soutien.</p>
-  </div>
-  <div class="plans">
-    {offre_plans()}
-  </div>
-  <p class="sol-all" data-rev><a class="pill" href="/plateforme/#offre">Voir l’offre en détail</a>
-  <a class="pill ghost" href="/contact/">Réserver une démo</a></p>
-  <p class="offer-note" data-rev>JARVIS est en construction : la démo montre honnêtement ce qui
-  fonctionne aujourd’hui.</p>
-</section>
+<!-- L'offre en bref : trois étapes, le détail sur /offre/ -->
+{parcours.offre_bref()}
 
 <!-- Questions fréquentes -->
 <section class="faq" id="questions" aria-labelledby="faq-titre">

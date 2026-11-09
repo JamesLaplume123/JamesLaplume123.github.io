@@ -24,6 +24,8 @@ PAGE = {
     <div class="acts" data-rev>
       <a class="pill" href="/contact/">Book a demo</a>
       <a class="pill ghost" href="/solutions/">Explore the seven solutions</a>
+      <a class="pill ghost" href="/logiciel/" hreflang="fr">Try the software (French)</a>
+      <a class="pill ghost" href="/offre/" hreflang="fr">The offer (French)</a>
     </div>
     <div class="meta" data-rev>
       <span class="chip">Development and real-world lab</span>

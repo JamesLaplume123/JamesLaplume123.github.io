@@ -1,31 +1,34 @@
-# JARVIS (plateforme) — le produit en scène : le Hub et son IA, les extensions qui travaillent ensemble,
-# ce que prévoit l’App (la démo vit sur l’accueil, /#app), le noyau en Rust, les comptes et droits,
-# puis l’offre (Hub + extensions + services).
+# Le Hub et l'IA privée (/plateforme/) — ce qu'il y a sous le capot (refonte « clarté », novembre 2026).
+# Rôle de la page face aux deux autres : /logiciel/ montre l'application; /offre/ dit comment ça se
+# compose et comment commencer; ici, ce qui fait tourner JARVIS : le Hub, son IA, les extensions qui
+# travaillent ensemble, le noyau en Rust, les comptes et les droits. #offre devient un court renvoi.
+# Ce que prévoit l'App (58 vues) vit maintenant sur /logiciel/#prevu.
 
 from demos import hub, rust
+import parcours
 
 PAGE = {
     "url": "/plateforme/",
     "v2": True,
-    "title": "JARVIS | Le Hub, son IA et ses extensions",
+    "title": "Le Hub et l’IA privée | Sous le capot de JARVIS",
     "description": (
         "Le Hub installé chez vous, son IA locale en français et sept extensions qui "
         "travaillent ensemble : un système privé, local et contrôlé."
     ),
     "og_image": "/media/product/user/accueil-og.jpg",
-    "assets": ["rust", "hub"],
+    "assets": ["rust", "hub", "parcours"],
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>JARVIS · App, Core et Hub</p>
+    <p class="eyebrow" data-rev>Sous le capot · le Hub et l’IA privée</p>
     <h1 data-rev>Votre système privé.<br><em>Un seul point d’entrée.</em></h1>
     <p class="lead" data-rev>Parlez à JARVIS App. JARVIS Core comprend le contexte et applique
     vos règles. JARVIS Hub garde l’intelligence près de vos systèmes.</p>
     <div class="acts" data-rev>
       <a class="pill" href="#hub">Découvrir le Hub</a>
-      <a class="pill ghost" href="/#app">Essayer l’app</a>
-      <a class="pill ghost" href="#offre">L’offre</a>
+      <a class="pill ghost" href="/logiciel/">Essayer le logiciel</a>
+      <a class="pill ghost" href="/offre/">L’offre</a>
     </div>
     <div class="meta" data-rev>
       <span class="chip">Interface · JARVIS App</span>
@@ -62,29 +65,6 @@ PAGE = {
   </div>
   """ + hub.ensemble() + """
 </section>
-
-<section class="sect alt" id="experience-user" data-toc="L’app">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Ce que l’app prévoit · 58 vues conçues</p>
-      <h2>Tout votre quotidien. <em>Aucune surprise.</em></h2>
-    </div>
-    <p data-rev>Le parcours complet du compte personnel est dessiné, écran par écran. C’est la direction
-    de conception : chaque fonction sera confirmée seulement une fois construite et prouvée.</p>
-  </div>
-  <ul class="feats">
-    <li data-rev><small>Accès</small><h3>Sur invitation seulement.</h3><p>Aucune inscription publique : chaque compte est créé par l’administrateur du Hub. Clés d’accès prévues — votre biométrie reste sur votre appareil.</p></li>
-    <li data-rev><small>Ma journée</small><h3>Agenda et tâches, enfin ensemble.</h3><p>Tous vos calendriers et vos listes, de toutes vos sources, dans une seule vue. Un calendrier en lecture seule le reste.</p></li>
-    <li data-rev><small>Messages</small><h3>Vos conversations, chez vous.</h3><p>Texte, photos, documents, vocaux et appels sur le Hub. Micro et caméra ne s’activent jamais sans votre permission.</p></li>
-    <li data-rev><small>Assistant</small><h3>Il propose. Vous décidez.</h3><p>En texte ou en voix, il prépare l’action puis attend votre confirmation. Jamais de succès affiché sans résultat réel.</p></li>
-    <li data-rev><small>Recommandations</small><h3>Chaque suggestion montre d’où elle vient.</h3><p>Provenance et raison visibles. Une suggestion n’agit jamais à votre place.</p></li>
-    <li data-rev><small>Partage</small><h3>Je choisis ce que je partage.</h3><p>Avec qui, pour combien de temps, révocable en tout temps. Un accès retiré disparaît partout.</p></li>
-    <li data-rev><small>Carte</small><h3>Voir votre monde, pas celui des autres.</h3><p>Le Hub, vos appareils, et seulement les personnes qui ont choisi de partager. Jamais de fausse position.</p></li>
-    <li data-rev><small>Personnalisation</small><h3>Votre accueil vous ressemble.</h3><p>Affichez, ordonnez et dimensionnez vos cartes. Vos préférences suivent votre compte, sans changer vos droits.</p></li>
-  </ul>
-  <div class="chiprow" data-rev><a class="pill ghost" href="/#app">Essayer JARVIS App</a></div>
-</section>
-
 
 <section class="sect rust-sect" id="rust" data-toc="Rust" aria-labelledby="rust-titre">
   <div class="head shead" data-rev>
@@ -140,17 +120,7 @@ PAGE = {
 
 
 
-<section class="sect hb-sect" id="offre" data-toc="L’offre" aria-labelledby="offre-titre">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">L’offre</p>
-      <h2 id="offre-titre">Le Hub, puis vos extensions.<br><em>Rien de plus que le nécessaire.</em></h2>
-    </div>
-    <p data-rev>Chaque client part du Hub. On ajoute les extensions utiles, maintenant ou plus tard, avec
-    l’installation, l’entretien et le soutien.</p>
-  </div>
-  """ + hub.offre() + """
-</section>
+""" + parcours.offre_bref(classe="ob ob-sect", toc="L’offre") + """
 
 <section class="cta">
   <h2 data-rev>Quel environnement devrait recevoir<br><span>son propre JARVIS?</span></h2>

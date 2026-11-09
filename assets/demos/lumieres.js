@@ -713,7 +713,7 @@
 
   /* ---------------------------------------------------------------- petits composants */
   function sw(on, a, v, label, dis, pend) {
-    return '<span class="lu-swl" aria-hidden="true">' + (on ? "On" : "Off") + '</span><button type="button" class="lu-sw' + (pend ? " is-pend" : "") + '" role="switch" aria-checked="' + !!on +
+    return '<span class="lu-swl" aria-hidden="true">' + (on ? "Allumé" : "Éteint") + '</span><button type="button" class="lu-sw' + (pend ? " is-pend" : "") + '" role="switch" aria-checked="' + !!on +
       '" aria-label="' + esc(label) + '" data-a="' + a + '" data-v="' + esc(v) + '"' + (dis ? " disabled" : "") + "><i></i></button>";
   }
   /* Cadran de luminosité (langage du thermostat des Environnements) : lunette métallique, verre noir,
@@ -1295,7 +1295,7 @@
         '<span class="lu-thumb">' + lightThumb(e, l, d) + "</span>" +
         '<div class="lu-crow-t"><b>' + esc(l.name) + '</b><span class="lu-crow-a" style="color:' + col + '">' + esc(fixed ? l.mode : d.on ? ambName(l, d.amb) : "Éteint") + "</span><small>" + status + (note ? " · " + esc(note) : "") + "</small></div>" +
         '<div class="lu-crow-r">' + (tag ? '<span class="lu-k' + (changed ? " lu-gold" : "") + '">' + tag + "</span>" : sel && !verify ? '<i class="lu-ck">' + ic("check") + "</i>" : "") +
-        '<span class="lu-pct">' + (fixed ? ic("lock") : ring(d.on ? d.lvl : 0, col, d.on ? d.lvl : "Off")) + "</span>" +
+        '<span class="lu-pct">' + (fixed ? ic("lock") : ring(d.on ? d.lvl : 0, col, d.on ? d.lvl : 0)) + "</span>" +
         (!fixed && !verify && sel && !d.on ? '<button type="button" class="lu-link lu-link-sm" data-a="draft-on" data-v="' + l.k + '">Allumer</button>' : "") +
         (!fixed && !verify && sel && d.on && changed && !cur.on ? '<button type="button" class="lu-link lu-link-sm" data-a="draft-offk" data-v="' + l.k + '">Laisser éteinte</button>' : "") + "</div></li>";
     }).join("") + "</ul>";

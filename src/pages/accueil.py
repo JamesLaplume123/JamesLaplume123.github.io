@@ -16,7 +16,7 @@ FAQ = [
     (
         "Qu’est-ce que JARVIS, concrètement?",
         "La domotique privée, la sécurité privée et l’IA privée réunies dans un seul système, "
-        "installé chez vous sur un petit serveur : le JARVIS Hub. Il relie ce que vous avez déjà — "
+        "installé chez vous dans un petit boîtier silencieux, le JARVIS Hub (un par lieu, entretenu par nous). Il relie ce que vous avez déjà — "
         "lumières, caméras, chauffage, batteries, agenda, documents — et vous le présente dans une "
         "seule application. Il propose des actions; vous gardez la décision.",
     ),

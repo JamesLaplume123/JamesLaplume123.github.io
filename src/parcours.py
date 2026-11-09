@@ -20,13 +20,13 @@ BESOINS = [
       "Serrures, portes et alarme sur un seul écran",
       "Alertes claires, sans fausses alarmes à répétition",
       "Images gardées chez vous, pas dans le nuage"]),
-    ("domaine", "Gérer mon domaine et mes véhicules",
-     "Lumières, chauffage, garage et énergie sur un seul écran.",
+    ("domaine", "Gérer ma maison, mon domaine ou ma ferme",
+     "Lumières, chauffage, garage, bâtiments et énergie sur un seul écran.",
      "environnements-intelligents", "/media/vitrine/accueil/panorama-domaine-crepuscule.webp", "50% 55%",
-     ["Résidence, chalet, garage, yacht et hangar au même endroit",
+     ["Maison, chalet, garage, yacht et hangar au même endroit",
       "Chauffage, éclairage, piscine et énergie automatiques",
-      "Voitures de collection surveillées : batterie, humidité, clés",
-      "Une règle pour tout le domaine : « je pars », « on arrive »"]),
+      "Ferme : étable, poulaillers, porcherie et écurie surveillés",
+      "Une règle pour tous vos lieux : « je pars », « on arrive »"]),
     ("entreprise", "Automatiser mon entreprise",
      "Réception, demandes et approbations qui avancent seules.",
      "automatisation-operations", "/media/vitrine/accueil/commerce-pme.webp", "50% 50%",
@@ -34,13 +34,6 @@ BESOINS = [
       "Demandes, soumissions et approbations qui avancent seules",
       "Rapports du matin sans rien compiler à la main",
       "Vos données d’affaires restent dans votre bureau"]),
-    ("ferme", "Gérer ma ferme",
-     "Bâtiments, équipements et alarmes surveillés jour et nuit.",
-     "environnements-intelligents", "/media/env/ferme.webp", "50% 55%",
-     ["Étable, poulaillers, porcherie et écurie sur un seul tableau",
-      "Température, ventilation, eau et moulée surveillées",
-      "Alarme au téléphone si un chauffage ou une pompe lâche",
-      "Silos, génératrice et clôtures électriques suivis"]),
     ("ia", "Mon IA privée",
      "Posez une question à vos documents; vos données restent chez vous.",
      "ia-privee-connaissances", "/media/solutions/ia-privee-connaissances.webp", "50% 50%",
@@ -55,6 +48,20 @@ BESOINS = [
       "Itinéraire, arrêts et recharge planifiés pour vous",
       "Véhicules de tous les jours et de collection au même endroit",
       "La maison se prépare d’elle-même à votre retour"]),
+    ("reseau", "Sécuriser mon réseau et mon Wi-Fi",
+     "La carte de votre réseau et de ses risques, en mots simples.",
+     "reseau-resilience", "/media/solutions/reseau-resilience.webp", "50% 50%",
+     ["Tous vos appareils connectés sur une carte claire",
+      "Appareils inconnus et failles signalés tout de suite",
+      "Zones séparées : invités, caméras, appareils, travail",
+      "L’essentiel continue de marcher même sans Internet"]),
+    ("pannes", "Prévenir et régler les pannes",
+     "Du symptôme à la cause, avec un dossier prêt à transmettre.",
+     "diagnostic-care", "/media/solutions/diagnostic-care.webp", "50% 50%",
+     ["Ce qui a changé, depuis quand et pourquoi, en mots simples",
+      "Usure et signes de panne repérés avant le bris",
+      "Un dossier prêt pour le technicien, avec la bonne pièce",
+      "Retour à la normale vérifié après la réparation"]),
 ]
 
 TITRES = {
@@ -94,7 +101,7 @@ def besoins():
   <div class="bs-head" data-rev>
     <p class="eyebrow">Par où commencer</p>
     <h2 id="besoins-titre">Qu’est-ce qu’il <em>vous faut?</em></h2>
-    <p>Choisissez votre besoin : voici, concrètement, ce que JARVIS fait pour vous et par où commencer.</p>
+    <p>Les sept solutions JARVIS, une par besoin. Voici, concrètement, ce que chacune fait pour vous et par où commencer.</p>
   </div>
   <div class="bs-grid">{cartes}</div>
   <p class="bs-more" data-rev>Pas certain?

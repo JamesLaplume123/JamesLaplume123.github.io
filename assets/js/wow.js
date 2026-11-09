@@ -240,7 +240,7 @@
   }
 
   /* ---------- Météo réelle pour le héros (pastille et panneau) ----------
-     La démo météo (assets/demos/meteo.js) partage le même cache de session « jarvis-ec ». */
+     JARVIS App (assets/demos/app.js) lit la même source; ce cache de session s'appelle « jarvis-ec ». */
   var livePill = $("[data-live-pill]");
   if (livePill || $("[data-hero-panel]")) {
     var EC_URL = "https://api.weather.gc.ca/collections/citypageweather-realtime/items/qc-22?f=json&lang=fr";
@@ -571,18 +571,10 @@
   }, { threshold: .5 });
   $$("[data-n]").forEach(function (el) { cio.observe(el); });
 
-  /* SMIL du schéma : en pause hors écran pour ménager la batterie */
-  $$(".flow-svg").forEach(function (svg) {
-    if (!svg.pauseAnimations) return;
-    new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) svg.unpauseAnimations(); else svg.pauseAnimations(); });
-    }).observe(svg);
-  });
-
   if (!finePointer) return;
 
   /* Halo qui suit le pointeur sur les cartes */
-  $$(".card, .plan, .stat, .steps li").forEach(function (el) {
+  $$(".card, .plan, .stat").forEach(function (el) {
     el.classList.add("spot");
     el.addEventListener("pointermove", function (e) {
       var r = el.getBoundingClientRect();

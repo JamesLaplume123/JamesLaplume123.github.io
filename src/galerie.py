@@ -8,7 +8,8 @@
 # Trois formes :
 #   mosaique()   : grande image vedette + cartes 4:3, clients ordinaires et de prestige;
 #   panorama()   : image cinéma 21:9 pleine largeur, texte en superposition;
-#   avant_apres(): deux images 3:2 côte à côte, « Avant » puis « Avec JARVIS ».
+#   avant_apres(): deux images 3:2 côte à côte, « Avant » puis « Après » (laboratoire mobile);
+#   avant_apres_photos(): la même paire, en tête des colonnes « En clair » des pages de solution.
 
 import os
 from html import escape
@@ -127,9 +128,9 @@ def avant_apres(page, avant, apres, eyebrow, titre, intro, ident="", toc="", alt
 # Clients : du quotidien au prestige (accueil, et repris en anglais sur /en/).
 
 CLIENTS = [
-    {"f": "accueil/residence-prestige-soir", "pos": "50% 60%",
-     "alt": "Résidence de prestige au bord d'un lac, le soir, toutes les lumières en ambiance dorée",
-     "k": "Résidence de prestige", "t": "Le domaine s'éclaire seul au coucher du soleil"},
+    {"f": "accueil/panorama-domaine-crepuscule", "pos": "50% 55%",
+     "alt": "Vue aérienne d'un domaine au bord d'un lac au crépuscule, maison, garage et quai éclairés en doré",
+     "k": "Tout le domaine", "t": "Maison, garage et quai : un seul regard, une seule règle"},
     {"f": "accueil/maison-familiale", "alt": "Maison familiale de banlieue québécoise au crépuscule, entrée éclairée",
      "k": "Maison familiale", "t": "Chauffage, portes et lumières dans une seule app"},
     {"f": "accueil/garage-lamborghini-ferrari", "alt": "Garage de collection avec une Lamborghini et une Ferrari sous un éclairage doré",
@@ -149,7 +150,7 @@ CLIENTS = [
 ]
 
 CLIENTS_EN = [
-    ("Prestige residence", "The estate lights itself at sunset"),
+    ("The whole estate", "House, garage and dock: one glance, one rule"),
     ("Family home", "Heating, doors and lights in one app"),
     ("Collector's garage", "Every car watched, every access logged"),
     ("Private driveway", "The household's vehicles recognized on arrival"),
@@ -309,50 +310,24 @@ SOLUTIONS = {
 
 
 def terrain(slug, alt=False):
-    """« Sur le terrain » + « Avant / avec JARVIS » pour une page de solution."""
+    """« Sur le terrain » : trois scènes, ordinaire et prestige, pour une page de solution."""
     d = SOLUTIONS[slug]
+    return mosaique(f"/solutions/{slug}/", "terrain", "Sur le terrain · ordinaire et prestige", d["titre"], d["intro"],
+                    d["cartes"], toc="Sur le terrain", alt=alt)
+
+
+def avant_apres_photos(slug):
+    """Les deux photos « aujourd'hui » et « avec JARVIS », posées en tête des colonnes du bloc En clair."""
+    d = SOLUTIONS.get(slug)
+    if not d:
+        return "", ""
     page = f"/solutions/{slug}/"
-    return mosaique(page, "terrain", "Sur le terrain · ordinaire et prestige", d["titre"], d["intro"],
-                    d["cartes"], toc="Sur le terrain", alt=alt) + avant_apres(
-        page, d["avant"], d["apres"], "Avant · avec JARVIS",
-        "Le même lieu.<br><em>Une autre façon d’y vivre.</em>",
-        "À gauche, la situation d’aujourd’hui. À droite, la même avec JARVIS.", alt=not alt)
+    return (_figure(dict(d["avant"], k=""), page, "paire", "vs-ph"),
+            _figure(dict(d["apres"], k=""), page, "paire", "vs-ph"))
 
 
 # ---------------------------------------------------------------------------------------------
 # Autres pages.
-
-def accueil_panorama():
-    return panorama(
-        "/", {"f": "accueil/panorama-domaine-crepuscule", "pos": "50% 55%",
-              "alt": "Vue aérienne d'un domaine au bord d'un lac au crépuscule, maison, garage et quai éclairés en doré"},
-        "Le soir tombe · JARVIS veille",
-        "Tout le domaine.<br><em>Un seul regard.</em>",
-        "Maison, garage, quai et chalet : les lumières, les accès et les caméras suivent la même règle, "
-        "décidée par vous.", ident="domaine")
-
-
-def plateforme_lieux():
-    return mosaique(
-        "/plateforme/", "lieux", "Un Hub · tous vos lieux",
-        "Un seul Hub.<br><em>Partout où vous vivez.</em>",
-        "Le même JARVIS dans une armoire technique, un penthouse, un chalet, à bord d’un yacht ou dans "
-        "le hangar d’un jet. Vos règles vous suivent d’un lieu à l’autre.",
-        [
-            {"f": "plateforme/hub-armoire-technique", "alt": "Petit serveur JARVIS Hub noir dans une armoire technique vitrée d'une résidence de prestige, voyants ambrés",
-             "k": "Le Hub, chez vous", "t": "Un petit serveur privé, rangé sous clé"},
-            {"f": "plateforme/penthouse-nuit", "alt": "Salon de penthouse la nuit, mobilier sombre, ville scintillante derrière les baies",
-             "k": "Penthouse", "t": "La ville, les stores et le climat"},
-            {"f": "plateforme/chalet-hiver", "alt": "Chalet de bois et de verre dans la neige, foyer allumé visible à travers la baie",
-             "k": "Chalet", "t": "Prêt avant votre arrivée"},
-            {"f": "plateforme/yacht-salon-bord", "alt": "Salon intérieur d'un yacht en cuir crème et bois sombre, lumières douces, mer calme au crépuscule",
-             "k": "Yacht", "t": "Le bord relié au même Hub"},
-            {"f": "plateforme/jet-cabine", "alt": "Cabine de jet d'affaires en cuir crème, hublots au coucher du soleil, tablette sur l'accoudoir",
-             "k": "Jet d’affaires", "t": "Votre agenda vous suit en vol"},
-            {"f": "plateforme/atelier-pme", "alt": "Atelier de PME moderne et lumineux, établis propres et outils rangés",
-             "k": "PME", "t": "Les mêmes droits pour toute l’équipe"},
-        ], toc="Vos lieux", alt=True)
-
 
 def solutions_clients():
     return mosaique(

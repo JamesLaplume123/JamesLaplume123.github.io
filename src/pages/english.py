@@ -33,17 +33,17 @@ PAGE = {
   </div>
 </section>
 
-<section class="statement">
-  <p class="eyebrow" data-rev>English overview</p>
-  <h2 data-rev style="margin-top:1.2rem">A clear public map of an ambitious research
-  <em>and product vision.</em></h2>
-  <p data-rev>The project is organized into six solution families. The detailed multi-page
-  edition is currently maintained in French.</p>
-</section>
-
 """ + galerie.clients_en() + """
 
 <section class="sect alt">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Seven extensions · one system</p>
+      <h2 style="margin-top:1rem">Add only <em>what you need.</em></h2>
+    </div>
+    <p data-rev>Each extension does one precise job in the same app. The detailed multi-page
+    edition is maintained in French.</p>
+  </div>
   <div class="cards">
     <article class="card" data-rev>
       <small>01</small>
@@ -79,6 +79,12 @@ PAGE = {
       <small>06</small>
       <h3>Diagnostics &amp; continuity</h3>
       <p>Move from a symptom to evidence, verification steps and a documented recovery.</p>
+    </article>
+    <article class="card" data-rev>
+      <small>07</small>
+      <h3>Mobility</h3>
+      <p>A road copilot for RVs and vehicles: the right stop at the right time, energy and
+      weather included.</p>
     </article>
   </div>
   <div class="chiprow" data-rev>

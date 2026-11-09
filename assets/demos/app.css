@@ -1596,6 +1596,7 @@
 [data-demo="app"] .ap-city.c0 i { width: 4px; height: 4px; background: #8e8e93; }
 [data-demo="app"] .ap-city.is-e { align-items: flex-end; transform: translate(calc(-100% + 4px), -4px); }
 [data-demo="app"] .ap-city.is-w { align-items: flex-start; transform: translate(-4px, -4px); }
+[data-demo="app"] .ap-city.is-n { flex-direction: row-reverse; align-items: center; transform: translate(calc(-100% + 4px), -50%); }
 [data-demo="app"] .ap-water { transform: translate(-50%, -50%) rotate(var(--rot, 0deg)); font: italic 500 11.5px/1 var(--a-font); letter-spacing: .16em; color: #6e6e75; white-space: nowrap; text-shadow: 0 0 6px #000; }
 [data-demo="app"] .ap-region { transform: translate(-50%, -50%); font: 650 10.5px/1 var(--a-font); letter-spacing: .32em; color: #4c4c52; white-space: nowrap; }
 [data-demo="app"] .ap-shield {

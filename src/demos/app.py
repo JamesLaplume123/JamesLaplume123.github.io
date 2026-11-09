@@ -398,7 +398,7 @@ def map_overlays(big=True):
         if imp < 0 or (not big and imp < 2):
             continue
         mx_attr = f' data-maxw="{mx}"' if mx else ""
-        out.append(f'<span class="ap-city c{imp}" {_xy(la, lo)}{mx_attr} data-layer="villes"><i></i><b>{name}</b></span>')
+        out.append(f'<span class="ap-city c{imp}{" is-n" if name == "Montréal" else ""}" {_xy(la, lo)}{mx_attr} data-layer="villes"><i></i><b>{name}</b></span>')
     if big:
         out.append(_cluster())
         out += [_env_pin(e) for e in ENVS]

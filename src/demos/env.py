@@ -57,13 +57,16 @@ def C(t, w=12, **kw):
     return {"type": t, "w": w, **kw}
 
 
-def photo_ou_attente(cle, alt, pos="50% 50%"):
+def photo_ou_attente(cle, alt, pos="50% 50%", repli=None, repli_pos=None):
     """Bannière d'un environnement : la photo media/env/<clé>.webp dès qu'elle existe
-    (déposer le fichier puis reconstruire, aucun changement de code); sinon le panneau
-    d'attente premium (verre noir, filet doré, « Photo à venir » — jamais de dessin)."""
-    chemin = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "media", "env", cle + ".webp")
-    if os.path.exists(chemin):
+    (déposer le fichier puis reconstruire, aucun changement de code); sinon une photo existante
+    du site qui montre le même sujet (repli), sinon le panneau d'attente premium (verre noir,
+    filet doré, « Photo à venir » — jamais de dessin)."""
+    racine = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+    if os.path.exists(os.path.join(racine, "media", "env", cle + ".webp")):
         return {"img": "/media/env/" + cle + ".webp", "pos": pos, "alt": alt}
+    if repli and os.path.exists(os.path.join(racine, repli.lstrip("/"))):
+        return {"img": repli, "pos": repli_pos or pos, "alt": alt}
     return {"ph": True, "alt": alt}
 
 
@@ -79,11 +82,14 @@ def _slug(s):
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
 
 
-def _photo(dossier, nom, description):
-    """Emplacement photo : media/env/<dossier>/<nom>.webp s'il existe au build, sinon None (panneau « Photo à venir »)."""
+def _photo(dossier, nom, description, repli=None):
+    """Emplacement photo : media/env/<dossier>/<nom>.webp s'il existe au build, sinon une photo existante
+    du site qui montre le même sujet (repli), sinon None (panneau « Photo à venir »)."""
     PHOTOS_ATTENDUES.append(("media/env/" + dossier + "/" + nom + ".webp", description))
     if os.path.exists(os.path.join(_MEDIA, dossier, nom + ".webp")):
         return "/media/env/" + dossier + "/" + nom + ".webp"
+    if repli and os.path.exists(os.path.join(_MEDIA, "..", "..", repli.lstrip("/"))):
+        return repli
     return None
 
 
@@ -2341,9 +2347,21 @@ AVION_POINTS = [
     {"n": 3, "x": 262, "y": 190, "kind": "eau", "name": "Aérogare", "what": "Eau et services", "dist": "120 m", "info": "Ouverte de 7 h à 19 h (exemple)"},
 ]
 
+# Le hangar privé de CYJN abrite deux appareils : le turbopropulseur et le jet d'affaires. Chacun a son
+# tableau; la bande « Hangar privé » et la carte « Le hangar » (Vue d'ensemble) montrent les deux.
+HANGAR = {
+    "name": "Hangar privé · CYJN", "sub": "Deux appareils · porte de 34 m · chauffé hors-gel", "fleet": ["avion", "jet"],
+    "rows": [["thermo", "Hangar", "6 °C · hors-gel", "ok"], ["drop", "Humidité", "48 %", "ok"], ["hangar", "Porte du hangar", "Fermée", "ok"],
+             ["shield", "Surveillance", "Armée", "ok"]],
+}
+
 AVION = {
-    "key": "avion", "name": "Avion", "kind": "Turbopropulseur d’affaires · 8 places", "place": "Saint-Jean-sur-Richelieu · hangar privé", "icon": "plane", "meIcon": "hangar",
-    "mobile": True, "points": AVION_POINTS,
+    "key": "avion", "name": "Turbopropulseur", "kind": "Turbopropulseur d’affaires · 8 places", "place": "Saint-Jean-sur-Richelieu · hangar privé", "icon": "prop", "meIcon": "hangar",
+    "mobile": True, "points": AVION_POINTS, "hangar": HANGAR,
+    "plane": {"short": "Turbopropulseur", "spot": "Place 1 · côté atelier", "photo": "/media/env/avion.webp", "pos": "50% 55%",
+              "state": ["Au hangar · prêt demain", "ok"],
+              "kpis": [["fuel", "Carburant", "942 L · 62 %"], ["battery", "Batterie", "96 %"], ["engine", "Préchauffage", "Demain 7 h"],
+                       ["route", "Prochain vol", "Sherbrooke · demain 10 h"]]},
     "geo": {"lat": 45.29, "lon": -73.28, "place": "Aéroport de Saint-Jean-sur-Richelieu"},
     "banner": photo_ou_attente("avion", "Le turbopropulseur d’affaires dans son hangar privé éclairé", "50% 55%"),
     "titles": {"voyage": "Vols et entretien", "eau": "Eau et carburant", "confort": "Climat du hangar"}, "voyageIcon": "plane",
@@ -2366,6 +2384,7 @@ AVION = {
                "solar": {"peak": 0, "cloud": 0, "base": 250, "eve": 260, "morn": 0}},
     "s": {
         "apercu": [
+            C("hangar", 12),
             C("kpi", 3, icon="fuel", label="Carburant", value="942 L", sub="Jet A-1 · 62 % · ≈ 3 h de vol", bar=62, tone="gold", go="eau"),
             C("kpi", 3, icon="engine", label="Turbine", value="7 °C", sub="Préchauffage demain 7 h", subicon="clock", tone="water", go="equipements"),
             C("kpi", 3, icon="battery", label="Batterie de bord", value="96 %", sub="Chargeur de maintien", bar=96, tone="bat", go="energie"),
@@ -2471,7 +2490,7 @@ AVION = {
             C("status", 12, moving=True, still="Au hangar · moteur arrêté", ok="Commandes disponibles", lock="Commandes verrouillées moteur en marche", moveLabel="Moteur en marche"),
             C("equip", 4, icon="engine", title="Préchauffage", sub="Turbine, huile et cabine", state="Planifié · demain 7 h", tone="gold", rows=[["Durée", "3 h avant le vol"], ["Huile", "7 °C"]],
               act={"label": "Démarrer maintenant", "icon": "fire", "confirm": "Démarrer le préchauffage de la turbine et de la cabine maintenant? Il fonctionnera 3 heures.", "done": "En marche · 3 h", "back": "Arrêter", "moving": True}),
-            C("equip", 4, icon="hangar", title="Porte du hangar", sub="Porte motorisée · 18 m", state="Fermée", tone="ok",
+            C("equip", 4, icon="hangar", title="Porte du hangar", sub="Porte motorisée · 34 m", state="Fermée", tone="ok",
               act={"label": "Ouvrir", "icon": "up", "confirm": "Ouvrir la porte du hangar? Vérifiez que la zone devant la porte est dégagée.", "done": "Ouverte", "back": "Fermer", "moving": True},
               note="Confirmation requise"),
             C("equip", 4, icon="battery", title="Chargeur de batterie", sub="Maintien 24 V", state="Maintien · 25,4 V", tone="ok", rows=[["Courant", "0,7 A"]]),
@@ -2561,7 +2580,320 @@ AVION = {
     },
 }
 
-ENVS = [BOULANCE, MAISON, CHALET, ENTREPRISE, GARAGE, FERME, BATEAU, AVION]
+# =============================================================================================
+# Jet d'affaires super-intermédiaire (biréacteur, 10 passagers, autonomie transcontinentale),
+# même hangar privé de CYJN que le turbopropulseur. Aucun fabricant ni modèle réel.
+# =============================================================================================
+
+def _ll(lon, lat):
+    """Est de l'Amérique du Nord : longitude et latitude vers le plan 400 × 240 (≈ 0,097 unité par kilomètre)."""
+    return [round((lon + 101) * 8.74, 1), round((47.0 - lat) * 10.8, 1)]
+
+
+def _lls(pts):
+    return [_ll(*p) for p in pts]
+
+
+EST = {
+    "km": 0.0973, "note": "Carte illustrative · route d’exemple",
+    "water": [
+        # Atlantique et golfe du Mexique, d'un seul tenant sous la Floride
+        [[420, -20]] + _lls([(-64.8, 47.4), (-64.6, 46.7), (-63.7, 46.2), (-61.5, 45.7), (-60.0, 46.2), (-59.8, 45.9), (-61.0, 45.2),
+                             (-63.6, 44.6), (-65.7, 43.6), (-66.1, 44.4), (-64.6, 45.3), (-66.0, 45.2), (-67.0, 44.8), (-68.8, 44.3),
+                             (-70.2, 43.6), (-70.8, 42.8), (-70.0, 42.0), (-70.6, 41.5), (-71.8, 41.3), (-72.9, 41.2), (-74.0, 40.6),
+                             (-74.0, 40.0), (-74.9, 38.9), (-75.1, 38.3), (-76.0, 37.0), (-75.5, 35.6), (-75.6, 35.2), (-76.5, 34.7),
+                             (-77.9, 33.9), (-79.2, 33.2), (-80.0, 32.7), (-81.1, 32.0), (-81.4, 30.4), (-80.6, 28.4), (-80.1, 26.7),
+                             (-80.1, 25.8), (-80.4, 25.2), (-81.1, 25.1), (-81.8, 26.1), (-82.6, 27.5), (-82.8, 28.9), (-84.2, 30.0),
+                             (-85.4, 29.7), (-87.2, 30.4), (-88.9, 30.4), (-89.6, 30.2), (-89.4, 29.0), (-90.5, 29.1), (-92.0, 29.6),
+                             (-94.0, 29.7), (-95.0, 29.3), (-97.2, 27.7), (-97.4, 26.0), (-97.7, 24.4)]) + [[31, 260], [420, 260]],
+        _lls([(-79.8, 43.3), (-79.2, 43.2), (-77.6, 43.3), (-76.3, 43.5), (-76.2, 44.2), (-77.0, 44.0), (-78.5, 43.9), (-79.4, 43.6)]),
+        _lls([(-83.4, 41.7), (-82.5, 41.4), (-81.0, 41.9), (-79.0, 42.8), (-79.2, 42.9), (-80.5, 42.6), (-82.5, 42.0), (-83.2, 42.0)]),
+        _lls([(-82.4, 43.0), (-81.7, 43.4), (-81.7, 44.9), (-80.1, 44.6), (-80.6, 45.9), (-82.5, 46.2), (-84.1, 46.2), (-83.6, 45.4),
+              (-83.3, 44.3), (-82.6, 43.6)]),
+        _lls([(-87.5, 41.7), (-86.6, 42.2), (-86.2, 43.5), (-86.4, 44.8), (-85.0, 45.8), (-86.5, 45.9), (-87.6, 45.2), (-87.9, 44.0),
+              (-87.8, 42.5)]),
+        _lls([(-84.5, 46.5), (-85.2, 47.0), (-87.5, 47.2), (-89.0, 46.9), (-90.5, 46.6), (-92.1, 46.7), (-90.0, 47.6), (-86.0, 47.6)]),
+    ],
+    "rivers": [_lls([(-76.4, 44.2), (-75.2, 44.9), (-73.6, 45.5), (-72.5, 46.3), (-71.2, 46.8), (-70.0, 47.4)])],
+    "towns": [_ll(-79.4, 43.7) + ["Toronto", "a"], _ll(-74.0, 40.7) + ["New York", "b"], _ll(-77.0, 38.9) + ["Washington", "b"],
+              _ll(-84.4, 33.7) + ["Atlanta", "a"], _ll(-81.7, 30.3) + ["Jacksonville", "a"], _ll(-80.3, 25.9) + ["Miami", "l"],
+              _ll(-87.6, 41.9) + ["Chicago", "a"]],
+    "labels": [_ll(-66.5, 34.0) + ["Océan Atlantique", "water"], _ll(-90.5, 26.6) + ["Golfe du Mexique", "water"]],
+    "me": _ll(-73.28, 45.29),
+}
+JET_ROUTE = [_ll(-73.28, 45.29), _ll(-75.4, 39.6), _ll(-78.6, 32.4), _ll(-80.28, 25.91)]
+
+JET = {
+    "key": "jet", "name": "Jet d’affaires", "kind": "Jet d’affaires super-intermédiaire · 10 passagers", "place": "Saint-Jean-sur-Richelieu · hangar privé",
+    "icon": "plane", "meIcon": "plane",
+    "mobile": True, "points": AVION_POINTS, "hangar": HANGAR,
+    "plane": {"short": "Jet d’affaires", "spot": "Place 2 · face à la porte", "photo": "/media/vision/lieu-jet.webp", "pos": "62% 46%",
+              "state": ["Préparation · départ demain 9 h", "gold"],
+              "kpis": [["fuel", "Carburant", "4 570 L · 58 %"], ["battery", "Batteries", "94 %"], ["thermo", "Cabine", "9 °C → 21 °C à 7 h"],
+                       ["route", "Prochain vol", "Miami · demain 9 h"]]},
+    "geo": {"lat": 45.29, "lon": -73.28, "place": "Aéroport de Saint-Jean-sur-Richelieu"},
+    "banner": photo_ou_attente("jet", "Le jet d’affaires dans le hangar privé, escalier déployé", "50% 50%",
+                               repli="/media/vitrine/accueil/jet-hangar.webp", repli_pos="62% 52%"),
+    "titles": {"voyage": "Vols et entretien", "eau": "Carburant et eau", "confort": "Cabine et hangar"}, "voyageIcon": "plane",
+    "subs": {"apercu": "Le jet au hangar, en préparation pour Miami.", "confort": "Préchauffage et humidité de la cabine, hangar et météo.",
+             "energie": "Batteries, groupe de parc 28 V et groupe auxiliaire.", "eau": "Jet A-1, purges, eau potable et eaux usées.",
+             "securite": "Portes du jet, hangar et météo aéronautique.", "internet": "Wi-Fi du hangar, connectivité en vol et secours.",
+             "equipements": "Groupe de parc, groupe auxiliaire, préchauffage, remorqueur et chargeurs.",
+             "voyage": "Plan de vol, préparation par l’équipage et entretien.", "modes": "Au hangar, préparation, après vol."},
+    "status": [["fuel", "Carburant", "58 %", "gold"], ["thermo", "Cabine", "Préchauffage à 7 h", "water"], ["plane", "État", "Préparation", "gold"]],
+    "maps": {"aeroport": AEROPORT, "est": EST},
+    "wx": AVION["wx"],
+    "energy": {"unit": "Ah", "cap": 88, "nominal": "24 V", "chem": "Lithium-ion (aviation)", "soc": 94, "v": "26,2 V", "reserve": 60, "load": 310, "battW": 36,
+               "autonomy": "Chargeurs de maintien actifs", "ringTitle": "Batteries du jet", "packsTitle": "Batteries principale et APU",
+               "packs": [{"name": "Batterie principale", "cap": 44, "soc": 95, "v": 26.3, "a": 0.8, "t": 8.5, "cycles": -1, "hi": 0, "lo": 0},
+                         {"name": "Batterie de l’APU", "cap": 44, "soc": 93, "v": 26.1, "a": 0.6, "t": 8.0, "cycles": -1, "hi": 0, "lo": 0}],
+               "sources": [["secteur", "Prise du hangar", "plug", "grid"], ["gpu", "Groupe de parc · 28 V", "plug", 0, "prêt"],
+                           ["apu", "Groupe auxiliaire (APU)", "gen", 0, "arrêté"], ["alt", "Génératrices des moteurs", "alt", 0, "moteurs arrêtés"]],
+               "store": "Batteries du jet", "loads": "Jet et hangar",
+               "solar": {"peak": 0, "cloud": 0, "base": 310, "eve": 320, "morn": 0}},
+    "s": {
+        "apercu": [
+            C("hangar", 12),
+            C("kpi", 3, icon="fuel", label="Carburant", value="4 570 L", sub="Jet A-1 · 58 % · 5 400 L requis pour Miami", bar=58, tone="warn", go="eau"),
+            C("kpi", 3, icon="thermo", label="Cabine", value="9 °C", sub="Préchauffage demain 7 h · 21 °C", subicon="clock", tone="water", go="confort"),
+            C("kpi", 3, icon="battery", label="Batteries", value="94 %", sub="Principale et APU · 26,2 V", bar=94, tone="bat", go="energie"),
+            C("kpi", 3, icon="sun", label="Conditions", value="VFR", dot="ok", sub="Départ IFR · vent 250° · 12 nœuds", subicon="wind", tone="ok", go="securite:alertes"),
+            C("trip", 7, title="Mon prochain vol", name="Vers Miami (KOPF)", next="Départ prévu demain à 9 h · 2 h 55 de vol", go="voyage"),
+            C("checklist", 5, id="prep", title="Préparation par l’équipage", icon="clip",
+              items=[["Plan de vol IFR déposé", True], ["Avitaillement : +830 L demandé", False], ["Déclaration de douane américaine", False],
+                     ["Cabine à 21 °C pour 8 h 30", False], ["Soute à bagages fermée", False]]),
+            C("conditions", 7, title="Conditions au terrain"),
+            C("lumieres", 5),
+            C("upcoming", 7, title="Prochaines 48 heures", icon="warn", note="Avitaillement à confirmer avant 7 h : 830 L de Jet A-1.",
+              text="Remorquage hors du hangar à 8 h · démarrage de l’APU à l’extérieur seulement.", go="eau"),
+            C("list", 5, icon="users", title="Équipage", sub="Préparation de demain",
+              rows=[["plane", "Commandant · Marc-André", "Arrivée 7 h 15", "ok"], ["plane", "Copilote · Élise", "Arrivée 7 h 15", "ok"],
+                    ["users", "Agent de bord · Julien", "Commissariat à 8 h", "muted"], ["users2", "Passagers", "6 sur 10 inscrits", "gold"]]),
+        ],
+        "confort": [
+            ["synthese", "Synthèse", [
+                C("thermostat", 7, title="Cabine du jet", sub="Préchauffage par le groupe de parc · jamais l’APU au hangar", set=21, min=10, max=26, inside=9,
+                  rows=[["plane", "Cabine", "9 °C"], ["clock", "Préchauffage", "Demain 7 h · 1 h 30"], ["drop", "Humidité de la cabine", "38 %"]]),
+                C("trends", 5, items=[
+                    {"icon": "thermo", "title": "Température de la cabine", "value": "9 °C", "state": "Au repos", "tone": "ok", "c": "gold",
+                     "pts": [8.4, 8.6, 8.8, 9.0, 9.1, 9.0, 9.0, 8.9, 9.0, 9.0, 9.1, 9.0], "min": -4, "max": 24},
+                    {"icon": "drop", "title": "Humidité de la cabine", "value": "38 %", "state": "Bonne pour les cuirs et l’avionique", "tone": "ok", "c": "blue",
+                     "pts": [44, 43, 42, 41, 40, 40, 39, 39, 38, 38, 38, 38], "min": 20, "max": 80}]),
+                C("air", 4, title="Air de la cabine", co2=520, quality="Bonne qualité", rows=[["flame", "Vapeurs de carburant", "Aucune"], ["co", "CO", "0 ppm"], ["drop", "Humidité", "38 %"]]),
+                C("outside", 4),
+                C("cold", 4, icon="plane", title="Jet", sub="Températures actuelles",
+                  rows=[["engine", "Huile du moteur gauche", "7 °C"], ["engine", "Huile du moteur droit", "7 °C"], ["battery", "Batteries", "8 °C"], ["drop", "Eau potable", "8 °C"]]),
+            ]],
+            T_meteo(), T_soleil(),
+        ],
+        "energie": [
+            ["synthese", "Synthèse", [
+                C("flow", 8), C("ring", 4), C("history", 7, title="Consommation du jet au hangar"),
+                C("bars", 5, title="Consommateurs", sub="Puissance instantanée · exemple",
+                  rows=[["heater", "Déshumidificateur de cabine", 260], ["battery", "Chargeurs de maintien", 36], ["thermo", "Préchauffage cabine (planifié)", 0],
+                        ["gen", "APU (arrêté)", 0], ["plug", "Groupe de parc (prêt)", 0]]),
+                C("chips", 12, items=[["plug", "Groupe de parc", "Prêt · 28 V", "ok"], ["gen", "APU", "Arrêté · au hangar", "muted"], ["thermo", "Préchauffage", "Planifié · 7 h", "gold"],
+                                      ["battery", "Chargeurs", "Maintien", "ok"]]),
+            ]],
+            ["batterie", "Batteries", [
+                C("packs", 8),
+                C("list", 4, icon="shield", title="Batteries du jet", sub="Entretien et contrôle",
+                  rows=[["check", "Chargeurs de maintien", "Actifs", "ok"], ["clock", "Dernier test de capacité", "Il y a 4 mois", "ok"],
+                        ["sliders", "Seuil de démarrage", "24,5 V", "muted"], ["thermo", "Température minimale", "−10 °C", "muted"], ["bell", "Alarme", "Aucune", "ok"]]),
+            ]],
+        ],
+        "eau": [
+            ["synthese", "Synthèse", [
+                C("tanks", 7, title="Carburant et huile", sub="Niveaux déclarés après le dernier vol",
+                  items=[["Aile gauche", 62, 2950, "fuel"], ["Aile droite", 61, 2950, "fuel"], ["Réservoir central", 47, 2000, "fuel"],
+                         ["Huile · moteur gauche", 90, 12, "oil"], ["Huile · moteur droit", 88, 12, "oil"]]),
+                C("gauge", 5, icon="fuel", title="Carburant total", sub="Jet A-1 · 7 900 L utilisables", pct=58, value="4 570 / 7 900 L",
+                  est="≈ 2 h 50 de vol", estsub="Miami demande 5 400 L avec réserve et dégagement · +830 L à commander"),
+                C("list", 6, icon="drop", title="Eau dans le carburant", sub="Purges avant chaque vol",
+                  rows=[["drop", "Purge de l’aile gauche", "Claire", "ok"], ["drop", "Purge de l’aile droite", "Claire", "ok"],
+                        ["drop", "Purge du réservoir central", "À faire après l’avitaillement", "warn"]]),
+                C("list", 6, icon="tap", title="Eau de bord", sub="Cuisine de bord et toilette",
+                  rows=[["drop", "Eau potable", "Plein · 38 L", "ok"], ["dump", "Eaux usées", "Vidangées", "ok"], ["fridge", "Commissariat", "Livraison demain 8 h", "gold"]]),
+                C("leaks", 12, title="Fuites", text="Aucune fuite détectée",
+                  sensors=[["fuel", "Sous le jet", "Sec"], ["fuel", "Sous le turbopropulseur", "Sec"], ["tap", "Lavabo du hangar", "Sec"]]),
+            ]],
+            ["points", "Services du terrain", [
+                C("levels", 12, items=[["Aile gauche", 62, 2950, "fuel"], ["Aile droite", 61, 2950, "fuel"], ["Réservoir central", 47, 2000, "fuel"]]),
+                C("points", 12, map="aeroport", view=[120, 150, 160, 96], title="Services du terrain", sub="Carburant, entretien et aérogare",
+                  filters=[["tous", "Tous"], ["carburant", "Carburant"], ["service", "Entretien"], ["eau", "Aérogare"]]),
+                C("note", 12, icon="info", text="Source : exemple. Confirmer l’avitaillement en Jet A-1 et les heures de l’aérogare la veille du départ."),
+            ]],
+        ],
+        "securite": [
+            ["synthese", "Synthèse", [
+                C("openings", 12, title="Jet d’affaires", sub="Portes, soute et trappes", env="jet",
+                  points=[O("Porte passagers", "Verrouillée", "ok", "Jet", 1240, "Marc-André", lock=True, icon="door") | {"repli": "/media/vision/jour-prestige-jet.webp"},
+                          O("Soute à bagages", "Ouverte", "warn", "Jet", 190, "Julien · chargement", lock=True, icon="box"),
+                          O("Trappe de l’APU", "Fermée", "ok", "Jet", 4300, "Inspection", lock=False, icon="gen"),
+                          O("Trappe d’avitaillement", "Fermée", "ok", "Jet", 2900, "Dernier plein", lock=False, icon="fuel"),
+                          O("Porte du hangar", "Fermée", "ok", "Hangar", 1300, "James", lock=True, icon="hangar") | {"repli": "/media/vision/lieu-jet.webp"}]),
+                C("list", 4, icon="radar", title="Détection", sub="Capteurs du hangar et du jet",
+                  rows=[["co", "CO · hangar", "0 ppm", "ok"], ["flame", "Vapeurs de carburant", "Aucune", "ok"], ["smoke", "Fumée · cabine", "Normal", "ok"],
+                        ["eye", "Mouvement", "Aucun", "ok"]]),
+                C("cams", 4, items=[], empty="La caméra du hangar n’est pas encore reliée.", emptysub="Elle apparaîtra ici dès son branchement. Aucune image n’est simulée."),
+                C("events", 4, items=[[190, "Soute à bagages ouverte", "Chargement · Julien", "warn"], [1240, "Porte passagers verrouillée", "Par Marc-André", "ok"],
+                                      [1300, "Porte du hangar fermée", "Par James", "ok"]]),
+                C("toggle", 6, icon="shield", key="surv", title="Surveillance du hangar", sub="Portes, soute, mouvement et vapeurs", on=True, critical=True),
+                C("toggle", 6, icon="bell", key="notif", title="Notifications", sub="Sur vos appareils et ceux de l’équipage", on=True),
+                C("note", 12, icon="info", text="Moteurs ou APU en marche, les commandes du hangar sont verrouillées. Toute commande critique demande confirmation."),
+            ]],
+            ["alertes", "Météo aéronautique", [
+                C("metar", 12, station="CYJN · Saint-Jean-sur-Richelieu", sub="Observation d’exemple", cat="VFR",
+                  raw="CYJN 071300Z 25012KT 15SM FEW040 BKN090 03/M04 A3012 RMK SC1AC5 SLP209",
+                  rows=[["wind", "Vent", "250° · 12 nœuds"], ["eye", "Visibilité", "15 milles terrestres"], ["cloud", "Nuages", "Quelques à 4 000 pi · fragmentés à 9 000 pi"],
+                        ["thermo", "Température / point de rosée", "3 °C / −4 °C"], ["gauge", "Altimètre", "30,12 po Hg"], ["plane", "Piste en service", "24"]],
+                  taf="TAF CYJN 071140Z 0712/0800 26012KT P6SM FEW040 BKN090 TEMPO 0718/0800 5SM -SHSN BKN030"),
+                C("list", 6, icon="plane", title="À destination · KOPF", sub="Miami · observation d’exemple",
+                  rows=[["sun", "Conditions", "VFR · quelques nuages à 3 000 pi", "ok"], ["thermo", "Température", "27 °C", "muted"],
+                        ["wind", "Vent", "110° · 9 nœuds", "ok"], ["cloud", "Orages en après-midi", "Possibles après 15 h", "warn"]]),
+                C("list", 6, icon="doc", title="NOTAM · exemple", sub="Consulter les avis officiels",
+                  rows=[["warn", "CYJN · piste 11-29", "Fermée pour travaux", "warn"], ["bulb", "Balisage lumineux", "Normal", "ok"],
+                        ["plane", "KOPF · voie de circulation", "Fermée en partie", "muted"]]),
+            ]],
+        ],
+        "internet": [
+            ["connexions", "Connexions", [
+                C("link", 8, h=2, kind="Wi-Fi du hangar", icon="wifi", dbm=-55, bars=4, down=25, up=6, ping=19, loss="0,2 %"),
+                C("meter", 4, icon="satellite", title="Connectivité en vol", used=18, total=40, unit="Go", note="22 Go disponibles · renouvellement le 1er décembre"),
+                C("list", 4, icon="link", title="Autres connexions", rows=[["antenna", "LTE", "Secours prêt", "ok"], ["satellite", "Satellite en vol", "Au repos · au sol", "muted"]]),
+                C("devices", 7, total=7, groups=[["cpu", 1, "Hub JARVIS"], ["thermo", 3, "capteurs"], ["phone", 2, "tablettes de vol"], ["tv", 1, "écran de cabine"]]),
+                C("prio", 5, items=[["wifi", "Wi-Fi du hangar"], ["antenna", "LTE"], ["satellite", "Satellite en vol"]]),
+            ]],
+            T_diag([["thermo", "Préchauffage cabine", "En ligne", "ok"], ["plane", "Météo aéronautique", "À jour", "ok"], ["doc", "NOTAM", "À jour", "ok"]],
+                   [["plane", "METAR", "Dernière lecture : il y a 12 min", "ok"], ["doc", "NOTAM", "Dernière lecture : il y a 1 h", "ok"],
+                    ["thermo", "Cabine", "Dernière lecture : il y a 20 s", "ok"], ["fuel", "Jaugeurs", "Dernière lecture : après le vol", "muted"]],
+                   cpu=6, mem=(1.1, 4), disk=(12, 64)),
+        ],
+        "equipements": [
+            C("status", 12, moving=True, still="Au hangar · moteurs et APU arrêtés", ok="Commandes disponibles", lock="Commandes verrouillées moteurs en marche", moveLabel="Moteurs en marche"),
+            C("equip", 4, icon="plug", title="Groupe de parc", sub="28 V · cabine, avionique et démarrage", state="Prêt · débranché", tone="ok", rows=[["Câble", "Sur l’enrouleur"], ["Puissance", "28 V · 600 A"]],
+              act={"label": "Brancher et alimenter", "icon": "bolt", "confirm": "Alimenter le jet avec le groupe de parc 28 V? Vérifiez que le câble est branché à la prise extérieure du jet.", "done": "Alimenté · 28 V", "back": "Couper", "moving": True},
+              note="Confirmation requise"),
+            C("equip", 4, icon="gen", title="Groupe auxiliaire", sub="APU · électricité et air de la cabine", state="Arrêté · au hangar", tone="muted", rows=[["Heures", "1 284 h"], ["Règle", "Jamais en marche au hangar"]],
+              act={"label": "Démarrer l’APU", "icon": "power", "confirm": "Démarrer l’APU? Seulement jet remorqué hors du hangar, zone dégagée et extincteur à proximité.", "done": "En marche · à l’extérieur", "back": "Arrêter", "moving": True},
+              note="Confirmation requise · jamais au hangar"),
+            C("equip", 4, icon="thermo", title="Préchauffage cabine", sub="Par le groupe de parc · 21 °C", state="Planifié · demain 7 h", tone="gold", rows=[["Cabine", "9 °C"], ["Durée", "1 h 30"]],
+              act={"label": "Démarrer maintenant", "icon": "fire", "confirm": "Démarrer le préchauffage de la cabine maintenant? Le groupe de parc 28 V doit être branché.", "done": "En marche · 21 °C", "back": "Arrêter", "moving": True},
+              repli="/media/vitrine/plateforme/jet-cabine.webp"),
+            C("equip", 4, icon="truck", title="Remorqueur électrique", sub="Sortie et entrée du jet", state="Chargé · 92 %", tone="ok", rows=[["Barre de remorquage", "Attelée"]],
+              act={"label": "Préparer la sortie", "icon": "right", "confirm": "Préparer la sortie du jet? La porte du hangar s’ouvrira; vérifiez que l’aire devant le hangar est dégagée et que le turbopropulseur est à sa place.", "done": "Prêt à sortir", "back": "Annuler", "moving": True},
+              note="Confirmation requise"),
+            C("equip", 4, icon="heater", title="Déshumidificateur de cabine", sub="Cuirs, boiseries et avionique", state="Actif", tone="ok", toggle={"label": "En marche", "on": "Actif", "off": "Arrêté"},
+              repli="/media/vitrine/plateforme/jet-cabine.webp"),
+            C("equip", 4, icon="battery", title="Chargeurs de batteries", sub="Principale et APU · 24 V", state="Maintien · 26,2 V", tone="ok", rows=[["Courant", "0,8 A et 0,6 A"]]),
+            C("list", 6, icon="clip", title="Housses et caches", sub="À retirer avant le vol",
+              rows=[["plane", "Caches-pitot et sondes", "En place", "warn"], ["engine", "Caches d’entrée d’air des moteurs", "En place", "warn"],
+                    ["box", "Cales de roues", "En place", "warn"], ["gen", "Cache de l’échappement de l’APU", "En place", "warn"]]),
+            C("list", 6, icon="cube", title="Cabine", sub="Prête pour 6 passagers",
+              rows=[["users", "Sièges", "6 sur 10 préparés", "gold"], ["fridge", "Cuisine de bord", "Commissariat demain 8 h", "gold"], ["tv", "Écran de cabine", "À jour", "ok"],
+                    ["drop", "Eau potable", "Plein", "ok"]]),
+            C("inspection", 12, title="Prochaine inspection", sub="Inspection de 12 mois · atelier d’exemple", d=41, go="voyage:entretien"),
+        ],
+        "voyage": [
+            ["vol", "Plan de vol", [
+                C("trip", 8, big=True, title="Vol planifié", name="Vers Miami (KOPF)", next="Départ prévu · demain 9 h · IFR", dist="2 270 km", dur="2 h 55 à 460 nœuds",
+                  map="est", view=[0, 0, 400, 240], route={"next": JET_ROUTE}),
+                C("arrival", 4, place="Miami (KOPF)", temp=27, icon="cloudsun", cond="Quelques nuages · orages possibles après 15 h", wind="Vent 110° · 9 nœuds"),
+                C("list", 6, icon="route", title="Plan de vol IFR · exemple", sub="Déposé hier à 18 h",
+                  rows=[["plane", "Niveau de croisière", "FL410", "muted"], ["clock", "Départ · arrivée", "9 h · 11 h 55", "muted"], ["fuel", "Carburant requis", "5 400 L avec réserve", "warn"],
+                        ["pin", "Dégagement", "Fort Lauderdale (KFLL)", "muted"], ["users", "À bord", "3 d’équipage · 6 passagers", "ok"]]),
+                C("list", 6, icon="clip", title="Avant de partir",
+                  rows=[["doc", "Plan de vol IFR : déposé", "", "", True], ["fuel", "Avitaillement : +830 L à confirmer", "", "", True], ["doc", "Déclaration de douane américaine", "", "", True],
+                        ["users", "Passeports des 6 passagers", "", "", True], ["list", "Liste de vérification prévol", "", "", True]]),
+            ]],
+            ["equipage", "Préparation", [
+                C("lists", 12, title="Préparation par l’équipage", sub="Chacun sa liste · tout se coche ici.", lists=[
+                    {"k": "commandant", "l": "Commandant", "sub": "Marc-André · le vol.", "icon": "plane",
+                     "items": [["Météo, NOTAM et TAF de Miami", "Consultés", True], ["Plan de vol IFR", "Déposé", True], ["Masse et centrage", "6 passagers, 180 kg de bagages", False],
+                               ["Avitaillement", "+830 L · Jet A-1", False], ["Purges", "Après l’avitaillement", False]]},
+                    {"k": "copilote", "l": "Copilote", "sub": "Élise · autour du jet.", "icon": "list",
+                     "items": [["Tour de l’avion", "", False], ["Caches et cales retirés", "Pitot, moteurs, APU", False], ["Base de navigation", "Cycle en vigueur", True],
+                               ["Niveaux d’huile des moteurs", "Selon le manuel", True]]},
+                    {"k": "cabine", "l": "Cabine", "sub": "Julien · le confort.", "icon": "users",
+                     "items": [["Cabine à 21 °C", "Préchauffage à 7 h", False], ["Commissariat", "Livraison 8 h", False], ["Eau potable", "Plein", True],
+                               ["Soute à bagages", "Fermée et verrouillée", False], ["Écran de cabine", "Route vers Miami", True]]},
+                    {"k": "douane", "l": "Douane", "sub": "Avant de quitter le Canada.", "icon": "doc",
+                     "items": [["Manifeste des passagers", "Transmis 1 h avant", False], ["Passeports", "6 sur 6", False], ["Arrivée à Miami", "Agents avisés", False]]},
+                ]),
+            ]],
+            ["agenda", "Agenda", [
+                C("agenda", 12, l1="Vols", l2="Entretien (inspections, rappels)",
+                  events=[[-3, "13:00", "16:10", "Retour de Toronto", "flight"], [1, "07:00", "08:30", "Préchauffage cabine", "maint"], [1, "08:00", "08:45", "Remorquage et commissariat", "maint"],
+                          [1, "09:00", "11:55", "Vol vers Miami", "flight"], [4, "14:00", "17:00", "Retour vers CYJN", "flight"], [41, "09:00", "17:00", "Inspection de 12 mois", "maint"]]),
+                C("next", 4, icon="plane", kick="Prochain vol", title="Vers Miami", d=1, h="09:00", countdown=True),
+                C("next", 4, icon="thermo", kick="Préchauffage cabine", title="1 h 30 avant · 21 °C", d=1, h="07:00"),
+                C("next", 4, icon="wrench", kick="Inspection de 12 mois", title="Atelier d’exemple", d=41, h="09:00"),
+            ]],
+            ["listes", "Listes", [
+                C("lists", 12, title="Listes de vérification", sub="Les mêmes gestes, chaque fois.", lists=[
+                    {"k": "prevol", "l": "Prévol", "sub": "Autour du jet.", "icon": "plane",
+                     "items": [["Météo et NOTAM", "Consultés", True], ["Purges de carburant", "Ailes et réservoir central", False], ["Niveaux d’huile", "Deux moteurs", True],
+                               ["Caches retirés", "Pitot, moteurs, APU", False], ["Cales retirées", "", False], ["Portes et soute", "Fermées et verrouillées", False]]},
+                    {"k": "apres", "l": "Après vol", "sub": "Rentrer le jet.", "icon": "hangar",
+                     "items": [["Caches des moteurs et de l’APU", "", True], ["Caches-pitot", "", True], ["Chargeurs branchés", "", True], ["Eaux usées vidangées", "", True],
+                               ["Carnet de route", "2 h 50", True]]},
+                    {"k": "hangar", "l": "Hangar", "sub": "Fermeture.", "icon": "lock",
+                     "items": [["Porte fermée", "", True], ["Chauffage hors-gel", "5 °C", True], ["Déshumidificateur de cabine", "Actif", True], ["Éclairage éteint", "", True]]},
+                ]),
+            ]],
+            ["entretien", "Entretien", [
+                C("maint", 8, h=2, rows=[
+                    M("wrench", "Inspection de 12 mois", "Atelier d’exemple",
+                      fab("Programme d’entretien du fabricant", "aux 12 mois", 365, -324)),
+                    M("engine", "Inspection des moteurs", "Endoscopie des deux moteurs",
+                      compteur("Compteur d’heures des moteurs", "aux 400 heures", 352, 400, 1.1, "h")),
+                    M("gen", "Groupe auxiliaire (APU)", "Inspection périodique",
+                      compteur("Compteur d’heures de l’APU", "aux 500 heures", 431, 500, 0.9, "h")),
+                    M("doc", "Base de données de navigation", "Mise à jour du cycle de 28 jours",
+                      src_fixe("regle", "Cycle aéronautique de 28 jours", 9)),
+                    M("fire", "Extincteurs de cabine", "Pesée annuelle",
+                      fab("Manuel des extincteurs", "aux 12 mois", 365, -351)),
+                    M("doc", "Certificat de navigabilité", "À jour",
+                      src_fixe("regle", "Règlement de l’aviation canadien", 230)),
+                ]),
+                C("next", 4, icon="doc", kick="Navigation", title="Nouveau cycle de 28 jours", d=9, h="00:00"),
+                C("next", 4, icon="fire", kick="Bientôt", title="Pesée des extincteurs", d=14, h="10:00"),
+            ]],
+        ],
+        "modes": [
+            ["modes", "Modes", [
+                C("modes", 12, current="hangar", items=[
+                    {"k": "hangar", "icon": "hangar", "label": "Au hangar", "sub": "Surveillance et maintien",
+                     "fx": [["thermo", "Hangar", "Hors-gel", "5 °C"], ["battery", "Batteries", "Chargeurs de maintien", "Actifs"], ["heater", "Cabine", "Déshumidificateur", "Actif"],
+                            ["shield", "Surveillance", "Portes, soute et mouvement", "Activée", "crit"]],
+                     "autos": [["drop", "Humidité de la cabine au-dessus de 55 %", "Déshumidificateur et alerte"]]},
+                    {"k": "prep", "icon": "list", "label": "Préparation", "sub": "Préparer le départ",
+                     "fx": [["plug", "Groupe de parc", "Branchement · 28 V", "Alimenté", "crit"], ["thermo", "Cabine", "Préchauffage 21 °C", "En marche"],
+                            ["bulb", "Éclairage", "Cabine et hangar", "Lecture", "light", "lecture"], ["heater", "Déshumidificateur", "Arrêt", "Arrêté", "fail"]],
+                     "autos": [["calendar", "Vol inscrit à l’agenda", "Lance le préchauffage de la cabine 2 h avant"]]},
+                    {"k": "apres", "icon": "check", "label": "Après vol", "sub": "Rentrer et protéger",
+                     "fx": [["hangar", "Porte du hangar", "Fermeture", "Fermée", "crit"], ["battery", "Chargeurs", "Branchement", "Maintien"],
+                            ["heater", "Déshumidificateur", "Remise en marche", "Actif"], ["bulb", "Éclairage", "Extinction", "Éteint"]],
+                     "autos": [["doc", "Fin du vol", "Ouvre le carnet de route"]]},
+                ], scenarios=[["Départ international", "Préchauffage, groupe de parc, douane"], ["Retour de nuit", "Balisage du hangar"], ["Grand froid", "Préchauffage prolongé de la cabine"]]),
+            ]],
+            ["autos", "Automatisations", [
+                C("autos", 12, rows=[["thermo", "Préchauffage de la cabine", "2 h avant chaque vol planifié", "Agenda des vols", True],
+                                     ["drop", "Humidité de la cabine", "Déshumidificateur au-dessus de 55 %", "Humidité", True],
+                                     ["box", "Soute restée ouverte", "Alerte après 2 h", "Contact de la soute", True],
+                                     ["gen", "APU au hangar", "Refus de la commande, porte fermée", "Contact de la porte", True],
+                                     ["fuel", "Carburant insuffisant", "Alerte la veille si le plan de vol demande plus", "Jaugeurs et plan de vol", True],
+                                     ["battery", "Batteries faibles", "Alerte sous 24,5 V", "Tension", True]]),
+            ]],
+            ["activite", "Activité", [
+                C("activity", 12, rows=[[190, "Julien", "Soute à bagages ouverte pour le chargement"], [1080, "Marc-André", "Plan de vol IFR vers Miami déposé"],
+                                        [1240, "Marc-André", "Porte passagers verrouillée"], [4310, "Système", "Vol de Toronto enregistré · 1 h 10"]]),
+            ]],
+        ],
+    },
+}
+
+ENVS = [BOULANCE, MAISON, CHALET, ENTREPRISE, GARAGE, FERME, BATEAU, AVION, JET]
 
 # =============================================================================================
 # Multisite : l'état de chaque lieu vu de l'accueil (présence, sécurité, alertes) et la
@@ -2594,6 +2926,9 @@ SITES = {
     "avion": {"who": "Personne · au hangar", "n": 0, "armed": True, "arm": "Armé · hangar fermé", "inside": 6,
               "alerts": [["gold", "Piste 11-29 fermée pour travaux", "Décollage prévu sur la piste 24", "securite:alertes"]],
               "multi": {"absence": "hangar", "nuit": "hangar", "froid": "hangar"}},
+    "jet": {"who": "Personne · équipage demain 7 h", "n": 0, "armed": True, "arm": "Armé · hangar fermé", "inside": 9,
+            "alerts": [["warn", "Carburant à compléter pour Miami", "4 570 L à bord · 5 400 L requis · +830 L à commander", "eau"]],
+            "multi": {"absence": "hangar", "nuit": "hangar", "froid": "hangar"}},
 }
 
 MULTI_MODES = [
@@ -2638,7 +2973,7 @@ def _prepare(e):
                 L["items"] = [[it[0], it[1], it[2], _src(it[3]) if len(it) > 3 else _source_devinee(it[0], it[1], L["k"])] for it in L["items"]]
         elif c["type"] == "equip":
             nom = e["key"] + "-" + _slug(c["title"])
-            c["photo"] = _photo("equip", nom, c["title"] + " · " + c.get("sub", "") + " (" + e["name"] + ")")
+            c["photo"] = _photo("equip", nom, c["title"] + " · " + c.get("sub", "") + " (" + e["name"] + ")", c.get("repli"))
         elif c["type"] == "batiments":
             for b in c["items"]:
                 b["photo"] = _photo("ferme", b["k"] + "-exterieur", "Extérieur · " + b["name"] + " (" + e["name"] + ")")
@@ -2648,7 +2983,7 @@ def _prepare(e):
         elif c["type"] == "openings":
             for o in c["points"]:
                 nom = e["key"] + "-" + _slug(o["label"])
-                o["photo"] = _photo("ouvertures", nom, o["label"] + " (" + e["name"] + ")")
+                o["photo"] = _photo("ouvertures", nom, o["label"] + " (" + e["name"] + ")", o.get("repli"))
     return e
 
 

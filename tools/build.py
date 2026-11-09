@@ -42,6 +42,7 @@ PAGE_MODULES = [
     "confidentialite",
     "english",
     "page_404",
+    "admin_visites",  # privée : noindex, hors sitemap et hors menu
 ]
 
 

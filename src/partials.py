@@ -18,7 +18,7 @@ def head(page):
         if og_path == SITE["og_image"] else ""
     )
     v = SITE["asset_version"]
-    robots = '<meta name="robots" content="noindex">' if page.get("noindex") else ""
+    robots = f'<meta name="robots" content="{page.get("robots", "noindex")}">' if page.get("noindex") else ""
     assets = (
         '<link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>\n'
         f'<link rel="stylesheet" href="/assets/css/wow.css?v={v}">'

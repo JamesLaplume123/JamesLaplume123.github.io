@@ -174,7 +174,7 @@ SCREENS = [
     ("appels", "espace", 8500, "JARVIS répond quand vous ne pouvez pas.",
      "Appels et visioconférences, en personnel comme en professionnel. Un numéro inconnu est filtré d’abord par JARVIS, et vous gardez le dernier mot."),
     ("carte", "carte", 9500, "Tous vos lieux, d’un coup d’œil.",
-     "BouLance au Lac-Saint-Jean, la résidence, le chalet, le bureau, le garage de collection et la ferme : chaque environnement en direct, à sa vraie place."),
+     "BouLance au Lac-Saint-Jean, la résidence, le chalet, le bureau, le garage de collection, la ferme et le hangar : chaque environnement en direct, à sa vraie place."),
     ("outils", "outils", 7000, "Toutes vos extensions, au même endroit.",
      "Domotique, IA, caméras, entreprise, réseau, diagnostic, mobilité : chacune s’ouvre d’un seul clic, directement dans JARVIS."),
 ]
@@ -656,7 +656,7 @@ def v_espace():
     <button type="button" class="ap-card ap-explore" data-go="carte" data-r>
       <img src="{BANNER}" alt="" loading="lazy" decoding="async">
       <span class="ap-tile-i">{icon("map")}</span>
-      <span class="ap-tile-t"><b>Explorer la carte</b><small>BouLance, la résidence, le chalet, le bureau, le garage de collection et la ferme, en direct.</small></span>
+      <span class="ap-tile-t"><b>Explorer la carte</b><small>BouLance, la résidence, le chalet, le bureau, le garage de collection, la ferme et le hangar, en direct.</small></span>
       <span class="ap-btn">Ouvrir la carte{icon("right")}</span>
     </button>
   </div>

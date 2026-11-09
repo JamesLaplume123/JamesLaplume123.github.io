@@ -552,24 +552,34 @@
     return '<div class="ev-plot' + (o.cls ? " " + o.cls : "") + (o.y && o.y.length ? " has-y" : "") + '" style="--h:' + (o.h || 140) + 'px"><div class="ev-pa">' +
       '<svg viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><defs>' + defs + '</defs><g class="ev-grid">' + grid + "</g>" + now + paths + "</svg>" + html + "</div></div>";
   }
-  /* Jauge en arc : balayage 270° (cadran) ou 180° (demi-cercle) */
+  /* Graduations fines autour d'un arc (mêmes règles que le cadran) : majeures tous les 10 pas, allumées jusqu'à la valeur */
+  function ticks(a0, a1, n, p, r0, r1, r2) {
+    var out = "", on = a0 + (a1 - a0) * p / 100;
+    for (var i = 0; i <= n - (a1 - a0 >= 360 ? 1 : 0); i++) {
+      var a = a0 + (a1 - a0) * i / n, maj = i % 10 === 0, q0 = pol(50, 50, maj ? r0 : r1, a), q1 = pol(50, 50, r2, a);
+      out += '<line class="g-tk' + (maj ? " is-maj" : "") + (p > 0 && a <= on + 0.01 ? " is-on" : "") + '" x1="' + q0[0].toFixed(2) + '" y1="' + q0[1].toFixed(2) + '" x2="' + q1[0].toFixed(2) + '" y2="' + q1[1].toFixed(2) + '"/>';
+    }
+    return '<g class="g-tks">' + out + "</g>";
+  }
+  /* Jauge en arc : balayage 270° (cadran : verre noir au centre) ou 180° (demi-cercle) */
   function gauge(pct, o) {
     o = o || {};
-    var sw2 = o.sweep || 270, a0 = -sw2 / 2, a1 = sw2 / 2, r = 42, id = uid();
+    var sw2 = o.sweep || 270, a0 = -sw2 / 2, a1 = sw2 / 2, r = 40, id = uid();
     var track = arcD(50, 50, r, a0, a1), p = clamp(pct, 0, 100);
-    var knob = o.knob ? pol(50, 50, r, a0 + (a1 - a0) * p / 100) : null;
-    var grad = o.grad ? '<defs><linearGradient id="' + id + '" x1="0" y1="1" x2="1" y2="0">' + o.grad.map(function (g, i) {
+    var grad = o.grad ? '<defs><linearGradient id="' + id + '" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="100" y2="0">' + o.grad.map(function (g, i) {
       return '<stop offset="' + (i / (o.grad.length - 1)) + '" style="stop-color:' + g + '"/>';
     }).join("") + "</linearGradient></defs>" : "";
-    var stroke = o.grad ? "url(#" + id + ")" : (o.color || "var(--e-acc)");
-    return '<svg class="ev-gauge' + (o.cls ? " " + o.cls : "") + '" viewBox="0 0 100 ' + (sw2 <= 180 ? 58 : 100) + '" aria-hidden="true">' + grad +
-      '<path class="g-track" d="' + track + '"/><path class="g-val" d="' + track + '" pathLength="100" style="stroke:' + stroke + ";stroke-dasharray:" + p.toFixed(1) + ' 100"/>' +
-      (knob ? '<circle class="g-knob" cx="' + knob[0].toFixed(1) + '" cy="' + knob[1].toFixed(1) + '" r="4.6"/>' : "") + "</svg>";
+    var stroke = o.grad ? "url(#" + id + ")" : (o.color || "var(--e-acc)"), glow = o.grad ? o.grad[o.grad.length - 1] : (o.color || "var(--e-acc)");
+    var face = sw2 > 180 ? '<circle class="g-face" cx="50" cy="50" r="33" fill="url(#evd-face)"/>' : "";
+    return '<svg class="ev-gauge' + (o.cls ? " " + o.cls : "") + '" viewBox="0 0 100 ' + (sw2 <= 180 ? 58 : 100) + '" style="--gs:' + stroke + ";--gc:" + glow + '" aria-hidden="true">' + grad + face +
+      ticks(a0, a1, sw2 <= 180 ? 36 : 60, p, 45.5, 46.8, 49.5) +
+      '<path class="g-track" d="' + track + '"/><path class="g-val" d="' + track + '" pathLength="100" style="stroke-dasharray:' + p.toFixed(1) + ' 100"/></svg>';
   }
+  /* Anneau : même finition que le cadran (graduations sur 360°, verre noir au centre) */
   function ring(pct, color) {
     var p = clamp(pct, 0, 100);
-    return '<svg class="ev-ring" viewBox="0 0 100 100" aria-hidden="true"><circle class="g-track" cx="50" cy="50" r="43"/>' +
-      '<circle class="g-val" cx="50" cy="50" r="43" pathLength="100" transform="rotate(-90 50 50)" style="stroke:' + color + ";stroke-dasharray:" + p.toFixed(1) + ' 100"/></svg>';
+    return '<svg class="ev-ring" viewBox="0 0 100 100" style="--gs:' + color + ";--gc:" + color + '" aria-hidden="true"><circle class="g-face" cx="50" cy="50" r="34" fill="url(#evd-face)"/>' + ticks(0, 360, 60, p, 45.5, 46.8, 49.5) +
+      '<circle class="g-track" cx="50" cy="50" r="40.5"/><circle class="g-val" cx="50" cy="50" r="40.5" pathLength="100" transform="rotate(-90 50 50)" style="stroke-dasharray:' + p.toFixed(1) + ' 100"/></svg>';
   }
   function kv(label, value, cls) { return '<div class="ev-kv' + (cls ? " " + cls : "") + '"><span>' + label + "</span><b>" + value + "</b></div>"; }
 
@@ -634,7 +644,7 @@
     var inner = '<span class="ev-ki t-' + (c.tone || "gold") + '"' + (color ? ' style="--tc:' + color + '"' : "") + ">" + ic(c.icon) + "</span>" +
       '<span class="ev-kb"><span class="ev-kl">' + esc(c.label) + tag + "</span>" +
       '<b class="ev-kn">' + v + (c.dot ? dot(c.dot) : "") + "</b>" +
-      (pct != null ? bar(pct, "t-" + (c.tone || "gold"), color ? ";background:" + color : "") : "") +
+      (pct != null ? bar(pct, "t-" + (c.tone || "gold"), color ? ";--bc:" + color : "") : "") +
       (sub ? '<span class="ev-ks">' + (c.subicon ? ic(c.subicon) : "") + sub + "</span>" : "") + "</span>" +
       (c.go ? '<span class="ev-kgo">' + ic("right") + "</span>" : "");
     return c.go ? '<button type="button" class="ev-kpi" data-a="go" data-v="' + c.go + '">' + inner + "</button>" : '<div class="ev-kpi">' + inner + "</div>";
@@ -1120,7 +1130,7 @@
     return '<div class="ev-levels">' + c.items.map(function (t) {
       var col = TANK[t[3]] || TANK.clean;
       return '<div class="ev-level"><span class="ev-ri" style="--tc:' + col[0] + '">' + ic("drop") + "</span><div><p><b>" + esc(t[0]) + "</b><span>" + nf(t[1] / 100 * t[2]) + " / " + t[2] + NB + (t[4] || "L") + "</span></p>" +
-        "<strong>" + t[1] + NB + "%</strong>" + bar(t[1], "", ";background:" + col[0]) + "</div></div>";
+        "<strong>" + t[1] + NB + "%</strong>" + bar(t[1], "", ";--bc:" + col[0]) + "</div></div>";
     }).join("") + "</div>";
   };
   K.hotwater = function (c, e) {

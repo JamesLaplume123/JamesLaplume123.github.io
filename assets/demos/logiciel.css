@@ -13,12 +13,16 @@
 
 /* ---------- Visite : guide + appareil ---------- */
 .lg-tour { padding: 1rem 1.4rem 5rem; }
-.lg-tour-in { max-width: 112rem; margin: 0 auto; display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 24px; align-items: start; }
+.lg-tour-in { max-width: 112rem; margin: 0 auto; display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 24px; align-items: stretch; }
 .lg-guide {
-  position: sticky; top: calc(var(--bar-h) + 14px); z-index: 2; padding: 1.2rem 1rem 1rem; border-radius: 20px;
+  position: relative; z-index: 2; padding: 1.2rem 1rem 1rem; border-radius: 20px;
   background: var(--mode-panel-solid), #050505; box-shadow: 0 24px 60px #000c, var(--mode-spec);
-  max-height: calc(100vh - var(--bar-h) - 28px); overflow-y: auto; scrollbar-width: thin;
+  display: flex; flex-direction: column; overflow: hidden;
 }
+@media (min-width: 1101px) { .lg-guide .lg-steps { flex: 1; display: flex; flex-direction: column; justify-content: space-between; } }
+/* Aucune barre de défilement grise dans la visite ni dans le logiciel */
+.lg-guide, .lg-guide *, .lg-app [data-demo="app"] * { scrollbar-width: none; }
+.lg-guide ::-webkit-scrollbar, .lg-guide::-webkit-scrollbar, .lg-app [data-demo="app"] ::-webkit-scrollbar { display: none; }
 .lg-guide::before {
   content: ""; position: absolute; inset: -1px; z-index: 3; pointer-events: none; border-radius: inherit;
   border: 18px solid transparent; border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch; filter: var(--mode-rim-filter);

@@ -701,6 +701,9 @@ def defs_svg():
     <pattern id="mb-dots" width="3.2" height="3.2" patternUnits="userSpaceOnUse"><circle cx="1.6" cy="1.6" r=".32" fill="#fff" fill-opacity=".07"/></pattern>
     <mask id="mb-land" maskUnits="userSpaceOnUse" x="0" y="0" width="{W}" height="{H}"><rect width="{W}" height="{H}" fill="#fff"/><path d="{WATER_D}{LAKE_D}" fill="#000"/><path d="{FJORD_D}" stroke="#000" stroke-width="3" fill="none"/><path d="{ISLES_D}" fill="#fff"/></mask>
     <linearGradient id="mb-route" gradientUnits="userSpaceOnUse" x1="{ROUTE_PTS[0][0]:.0f}" y1="{ROUTE_PTS[0][1]:.0f}" x2="{ROUTE_PTS[-1][0]:.0f}" y2="{ROUTE_PTS[-1][1]:.0f}"><stop offset="0" class="mb-g0"/><stop offset=".55" class="mb-g1"/><stop offset="1" class="mb-g0"/></linearGradient>
+    <linearGradient id="mb-dz-bezel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a4a4a"/><stop offset=".22" stop-color="#1b1b1b"/><stop offset=".55" stop-color="#0a0a0a"/><stop offset=".8" stop-color="#2b2b2b"/><stop offset="1" stop-color="#101010"/></linearGradient>
+    <radialGradient id="mb-dz-face" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#1a1918"/><stop offset=".7" stop-color="#070707"/><stop offset="1" stop-color="#000"/></radialGradient>
+    <linearGradient id="mb-dz-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".14"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>
     <g id="mb-base">
       <rect width="{W}" height="{H}" fill="url(#mb-glow)"/>
       <g mask="url(#mb-land)"><rect width="{W}" height="{H}" fill="url(#mb-dots)"/><path class="mb-relief" d="{RELIEF_D}"/></g>
@@ -758,9 +761,44 @@ def _modes():
         for i, (k, lab, desc, ic, _w) in enumerate(MODES))
 
 
+def _pol(r, a):
+    """Point du cadran (centre 50, 50) : angle en degrés, 0 en haut, sens horaire."""
+    t = math.radians(a)
+    return 50 + r * math.sin(t), 50 - r * math.cos(t)
+
+
+def _arc_d(r, a0=-135, a1=135):
+    (x0, y0), (x1, y1) = _pol(r, a0), _pol(r, a1)
+    return f"M{x0:.2f} {y0:.2f}A{r} {r} 0 {1 if a1 - a0 > 180 else 0} 1 {x1:.2f} {y1:.2f}"
+
+
+def _dial_ticks():
+    mi, ma = [], []
+    for i in range(41):
+        a = -135 + i * 6.75
+        (x0, y0), (x1, y1) = _pol(36.5 if i % 10 == 0 else 38, a), _pol(41, a)
+        (ma if i % 10 == 0 else mi).append(f"M{x0:.2f} {y0:.2f}L{x1:.2f} {y1:.2f}")
+    return f'<path class="mb-dz-tk" d="{"".join(mi)}"/><path class="mb-dz-tk is-maj" d="{"".join(ma)}"/>'
+
+
+DIAL_TICKS = _dial_ticks()
+DIAL_ARC = _arc_d(31)
+
+
+def _dial(n, inner="", attrs=""):
+    """Cadran d'instrument (langage du thermostat) : lunette métallique, verre noir, graduations fines,
+    arc de valeur lumineux. La valeur est la variable --v (0 à 100), que le script peut changer."""
+    return (f'<span class="mb-dz l-{_lvl_cls(n)}" style="--v:{n}"{attrs}><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">'
+            '<circle class="mb-dz-bz" cx="50" cy="50" r="49" fill="url(#mb-dz-bezel)"/><circle class="mb-dz-in" cx="50" cy="50" r="45"/>'
+            f'<circle cx="50" cy="50" r="44" fill="url(#mb-dz-face)"/>{DIAL_TICKS}'
+            f'<path class="mb-dz-tr" d="{DIAL_ARC}"/><path class="mb-dz-v" d="{DIAL_ARC}" pathLength="100"/>'
+            '<ellipse cx="50" cy="29" rx="33" ry="20" fill="url(#mb-dz-glass)"/></svg>'
+            f'<span class="mb-dz-c">{inner}</span></span>')
+
+
 def _gauge(key, label, val, icn):
-    return (f'<li class="mb-gauge" data-g="{key}">{ico(icn)}<span class="mb-g-t"><small>{label}</small>'
-            f'<b><span data-gv="{key}">{val}</span>{NB}%</b></span><span class="mb-bar"><i data-gb="{key}" style="width:{val}%"></i></span></li>')
+    return (f'<li class="mb-gauge" data-g="{key}">{_dial(val, f"<b><span data-gv={chr(34)}{key}{chr(34)}>{val}</span><i>%</i></b>", f" data-gb={chr(34)}{key}{chr(34)}")}'
+            f'<small>{ico(icn)}{label}</small></li>')
 
 
 def _copilote():
@@ -804,7 +842,7 @@ def _copilote():
       </div>
       <ul class="mb-gauges" aria-label="État du VR BouLance">
         {_gauge("eau", "Eau propre", 22, "eau")}{_gauge("propane", "Propane", 31, "propane")}{_gauge("carb", "Carburant", 54, "bolt")}{_gauge("batt", "Batteries", 78, "bolt")}
-        <li class="mb-gauge mb-gauge-w">{ico("webasto")}<span class="mb-g-t"><small>Webasto</small><b data-mb-webasto>Dû · 450 h</b></span></li>
+        <li class="mb-gauge mb-gauge-w"><span class="mb-dz-disc">{ico("webasto")}<b data-mb-webasto>Dû · 450 h</b></span><small>Webasto</small></li>
       </ul>
     </div>
     <aside class="mb-feed" aria-label="Suggestions du copilote">
@@ -878,7 +916,8 @@ def _lvl_cls(v):
 
 def _vehicle_panel(v, first):
     stats = "".join(
-        f'<li><small>{lab}</small><b>{txt}</b><span class="mb-bar"><i class="l-{_lvl_cls(n)}" style="width:{n}%"></i></span></li>'
+        f'<li>{_dial(n, f"<b>{txt.split(chr(183))[0].strip()}</b>")}<span><small>{lab}</small>'
+        f'<em>{txt.split(chr(183), 1)[1].strip() if chr(183) in txt else ""}</em></span></li>'
         for lab, txt, n in v["stats"])
     info = "".join(f"<li><small>{a}</small><b>{b}</b></li>" for a, b in v["info"])
     tires = ""
@@ -906,7 +945,7 @@ def _vehicle_panel(v, first):
       </figure>
       <div class="mb-veh-body">
         <p class="mb-conn {conn_cls}">{ico('obd' if v['connk'] != 'c' else 'shield')}<span><small>Connexion</small><b>{v['conn']}</b></span></p>
-        <ul class="mb-vstats">{stats}</ul>
+        <ul class="mb-vstats" data-cnt="{len(v['stats'])}">{stats}</ul>
         {tires}
         <ul class="mb-vinfo">{info}</ul>
         <div class="mb-cmds"><p class="mb-k">Commandes · confirmation demandée</p>{cmds}
@@ -916,10 +955,12 @@ def _vehicle_panel(v, first):
           </div>
           <p class="mb-cres" data-mb-cres role="status" aria-live="polite"></p>
         </div>
-        {link}
       </div>
-      <div class="mb-caps"><p class="mb-k">Ce que JARVIS peut faire avec ce véhicule</p><ul>{_cap_rows(v)}</ul>
-        <p class="mb-vnote">{v['note']}</p></div>
+      <div class="mb-veh-side">
+        {link}
+        <div class="mb-caps"><p class="mb-k">Ce que JARVIS peut faire avec ce véhicule</p><ul>{_cap_rows(v)}</ul>
+          <p class="mb-vnote">{v['note']}</p></div>
+      </div>
     </article>"""
 
 

@@ -330,11 +330,12 @@
       lastGauge = g;
       ["eau", "propane", "carb", "batt"].forEach(function (k) {
         var v = Math.round(lv[k]), li = $('[data-g="' + k + '"]');
-        $('[data-gv="' + k + '"]').textContent = v; $('[data-gb="' + k + '"]').style.width = v + "%";
+        var dz = $('[data-gb="' + k + '"]');
+        $('[data-gv="' + k + '"]').textContent = v; dz.style.setProperty("--v", v); dz.className = "mb-dz l-" + (v < 25 ? "low" : v < 50 ? "mid" : "ok");
         li.classList.toggle("is-low", v < 25); li.classList.toggle("is-mid", v >= 25 && v < 50);
       });
       hud.webasto.textContent = lv.webasto ? "À jour" : "Dû · 450" + NB + "h";
-      hud.webasto.parentNode.parentNode.classList.toggle("is-ok", lv.webasto);
+      hud.webasto.closest(".mb-gauge").classList.toggle("is-ok", lv.webasto);
     }
   }
 
@@ -468,7 +469,7 @@
     var photos = es.filter(function (e) { return e.src; }).length;
     var kmDone = t.live ? Math.round(S.km) + NB + "/" + NB + t.km : t.km;
     $("[data-mb-jstats]").innerHTML =
-      "<div><dt>Kilomètres</dt><dd>" + kmDone + "</dd></div><div><dt>Jours</dt><dd>" + t.jours + "</dd></div>" +
+      "<div><dt>Kilomètres</dt><dd>" + kmDone + "</dd>" + (t.live ? '<i class="mb-jbar"><i style="width:' + Math.min(100, S.km / t.km * 100).toFixed(1) + '%"></i></i>' : "") + "</div><div><dt>Jours</dt><dd>" + t.jours + "</dd></div>" +
       "<div><dt>Souvenirs</dt><dd>" + es.length + "</dd></div><div><dt>Photos</dt><dd>" + photos + "</dd></div>";
     var sel = keepSel ? es.length - 1 : Math.max(0, es.map(function (e) { return !!e.src; }).lastIndexOf(true));
     select(sel);

@@ -59,11 +59,10 @@ MODE_SCRIPT = (
 )
 
 NAV_EN_LABELS = {
+    "/logiciel/": "The software",
     "/solutions/": "Solutions",
-    "/plateforme/": "JARVIS",
-    "/plateforme/#offre": "Offer",
-    "/laboratoire-mobile/": "Mobile lab",
-    "/vision-roadmap/": "Vision",
+    "/offre/": "The offer",
+    "/a-propos/": "About",
 }
 
 
@@ -82,13 +81,33 @@ def ext_links(cls):
 
 
 def mega_menu(en):
-    tous = "All seven solutions" if en else "Comparer les sept solutions"
-    ens = "How they work together" if en else "Comment elles travaillent ensemble"
+    """Les sept solutions, une phrase chacune. Rien d'autre."""
     return f"""<div class="mega" data-mega-panel>
-      <p class="mega-k">{'Seven extensions · one system' if en else 'Sept extensions · un seul système'}</p>
-      <div class="mega-grid">{ext_links("mega-a")}<a class="mega-a mega-offre" href="/plateforme/#offre"><svg class="mm-i" viewBox="0 0 24 24" aria-hidden="true">{ICONS["plus"]}</svg><span><b>{'The offer' if en else 'L’offre'}</b><small>{'The Hub, then only the extensions you need.' if en else 'Le Hub, puis seulement les extensions utiles.'}</small></span></a></div>
-      <p class="mega-foot"><a href="/solutions/">{tous} <i aria-hidden="true">→</i></a><a href="/plateforme/#ensemble">{ens} <i aria-hidden="true">→</i></a></p>
+      <p class="mega-k">{'Seven solutions · one system' if en else 'Sept solutions · un seul système'}</p>
+      <div class="mega-grid">{ext_links("mega-a")}</div>
     </div>"""
+
+
+SUB_EN = {
+    "/logiciel/": ("The software, live", "The app, screen by screen (in French)."),
+    "/plateforme/": ("The Hub and private AI", "Under the hood: Hub, AI, core, accounts."),
+    "/a-propos/": ("Who is behind JARVIS", "James, his approach and the field."),
+    "/vision-roadmap/": ("Our vision", "Where JARVIS is going, and where it truly stands."),
+    "/laboratoire-mobile/": ("Mobile lab", "The converted ambulance, live batteries."),
+    "/confiance/": ("Trust and security", "How your data and access are protected."),
+    "/recherche/": ("Research", "The method behind every proof."),
+}
+
+
+def sub_links(item, cls, en):
+    """Sous-menu d'une entrée (Le logiciel, À propos) : icône, titre et une ligne."""
+    out = []
+    for url, lab, desc, ic in item["sub"]:
+        if en and url in SUB_EN:
+            lab, desc = SUB_EN[url]
+        out.append(f'<a class="{cls}" href="{url}"><svg class="mm-i" viewBox="0 0 24 24" aria-hidden="true">{ICONS[ic]}</svg>'
+                   f'<span><b>{lab}</b><small>{desc}</small></span></a>')
+    return "".join(out)
 
 
 def header_v2(page):
@@ -99,23 +118,36 @@ def header_v2(page):
         return NAV_EN_LABELS.get(item["url"], item["label"]) if en else item["label"]
 
     def current(item):
-        return "#" not in item["url"] and page["url"].startswith(item["url"])
+        urls = [item["url"]] + [u for u, *_ in item.get("sub", [])]
+        return any("#" not in u and page["url"].startswith(u) for u in urls)
 
     bar_links = []
     for item in NAV:
         cur = ' aria-current="page"' if current(item) else ""
-        if item.get("menu"):
+        if item.get("menu") or item.get("sub"):
+            panel = mega_menu(en) if item.get("menu") else (
+                f'<div class="mega mega-s" data-mega-panel><div class="mega-grid">{sub_links(item, "mega-a", en)}</div></div>')
+            what = label(item)
             bar_links.append(
-                f'<div class="bar-dd" data-mega><a href="{item["url"]}"{cur}>{label(item)}</a>'
+                f'<div class="bar-dd" data-mega><a href="{item["url"]}"{cur}>{what}</a>'
                 f'<button class="bar-dd-t" type="button" aria-expanded="false" '
-                f'aria-label="{"Show the seven extensions" if en else "Afficher les sept extensions"}" data-mega-t>'
+                f'aria-label="{"Show the menu " + what if en else "Afficher le menu " + what}" data-mega-t>'
                 f'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></button>'
-                f'{mega_menu(en)}</div>'
+                f'{panel}</div>'
             )
         else:
             bar_links.append(f'<a href="{item["url"]}"{cur}>{label(item)}</a>')
+
+    def sheet_sub(item):
+        if item.get("menu"):
+            return f'<div class="sheet-exts">{ext_links("sheet-x")}</div>'
+        if item.get("sub"):
+            return f'<div class="sheet-exts">{sub_links(item, "sheet-x", en)}</div>'
+        return ""
+
     sheet_links = "".join(
         f'<a class="sheet-main" href="{item["url"]}"{" aria-current=" + chr(34) + "page" + chr(34) if current(item) else ""}>{label(item)}</a>'
+        + sheet_sub(item)
         for item in NAV
     )
     cta_label = "Book a demo" if en else CTA_V2["label"]
@@ -145,8 +177,6 @@ def header_v2(page):
 <nav class="sheet" aria-label="Menu">
   <div class="sheet-in">
     {sheet_links}
-    <p class="sheet-k">{'The seven extensions' if en else 'Les sept extensions'}</p>
-    <div class="sheet-exts">{ext_links("sheet-x")}</div>
     <a class="sheet-cta" href="{CTA_V2['url']}">{cta_label}</a>
     {lang_link}
   </div>

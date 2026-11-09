@@ -20,13 +20,23 @@ SITE = {
     "copyright": "© 2026 JARVIS Private Systems · Québec, Canada",
 }
 
-# Navigation principale (architecture d'information approuvée, docs/SITE_INFORMATION_ARCHITECTURE.md)
+# Navigation principale : quatre entrées et un bouton (refonte « clarté », novembre 2026).
+# Le logiciel → ce qu'on vend; Solutions → quelle extension pour moi; L'offre → comment ça se
+# compose et comment commencer; À propos → qui est derrière. Le reste vit dans le pied de page.
 NAV = [
+    {"url": "/logiciel/", "label": "Le logiciel", "sub": [
+        ("/logiciel/", "Le logiciel en démonstration", "L’application en grand, écran par écran.", "grid"),
+        ("/plateforme/", "Le Hub et l’IA privée", "Ce qu’il y a sous le capot : Hub, IA, noyau, comptes.", "devices"),
+    ]},
     {"url": "/solutions/", "label": "Solutions", "menu": True},
-    {"url": "/plateforme/", "label": "JARVIS"},
-    {"url": "/plateforme/#offre", "label": "L’offre"},
-    {"url": "/laboratoire-mobile/", "label": "Laboratoire mobile"},
-    {"url": "/vision-roadmap/", "label": "Vision"},
+    {"url": "/offre/", "label": "L’offre"},
+    {"url": "/a-propos/", "label": "À propos", "sub": [
+        ("/a-propos/", "Qui est derrière JARVIS", "James, sa démarche et le terrain.", "user"),
+        ("/vision-roadmap/", "Notre vision", "Où va JARVIS, et où il en est vraiment.", "spark"),
+        ("/laboratoire-mobile/", "Laboratoire mobile", "L’ambulance convertie, batteries en direct.", "route"),
+        ("/confiance/", "Confiance et sécurité", "Comment vos données et vos accès sont protégés.", "shield"),
+        ("/recherche/", "Recherche", "La méthode derrière chaque preuve.", "search"),
+    ]},
 ]
 
 # Appel à l'action principal (chantier wow — vente du logiciel)
@@ -36,19 +46,20 @@ FOOTER_COLUMNS = [
     {
         "title": "Explorer",
         "links": [
+            {"url": "/logiciel/", "label": "Le logiciel"},
             {"url": "/solutions/", "label": "Solutions"},
-            {"url": "/plateforme/", "label": "JARVIS"},
-            {"url": "/plateforme/#offre", "label": "L’offre"},
-            {"url": "/laboratoire-mobile/", "label": "Laboratoire mobile"},
+            {"url": "/offre/", "label": "L’offre"},
+            {"url": "/plateforme/", "label": "Le Hub et l’IA privée"},
             {"url": "/recherche/", "label": "Recherche"},
         ],
     },
     {
         "title": "Projet",
         "links": [
-            {"url": "/vision-roadmap/", "label": "Vision et feuille de route"},
-            {"url": "/confiance/", "label": "Confiance"},
             {"url": "/a-propos/", "label": "À propos"},
+            {"url": "/vision-roadmap/", "label": "Vision et feuille de route"},
+            {"url": "/laboratoire-mobile/", "label": "Laboratoire mobile"},
+            {"url": "/confiance/", "label": "Confiance"},
             {"url": "/confidentialite/", "label": "Confidentialité"},
             {"url": "/contact/", "label": "Contact"},
         ],
@@ -238,10 +249,20 @@ SEO = {
         "Passer d’un symptôme à des preuves : événements, capteurs et documentation pour "
         "réparer plus vite et remettre en service proprement.",
     ),
+    "/logiciel/": (
+        "Le logiciel JARVIS en démonstration | Domotique et IA privées",
+        "Essayez JARVIS App en plein écran : accueil, assistant, messages, appels, carte de vos "
+        "lieux et extensions. Une visite guidée, écran par écran.",
+    ),
+    "/offre/": (
+        "L’offre JARVIS : le Hub, vos extensions, l’installation | Québec",
+        "Comment se compose une installation JARVIS : le Hub, les extensions choisies, puis "
+        "l’installation, la formation et le soutien. Soumission gratuite après une visite.",
+    ),
     "/plateforme/": (
-        "Logiciel JARVIS : App, Core et Hub installés chez vous",
-        "JARVIS App, JARVIS Core et JARVIS Hub forment un système privé et local : comptes sur "
-        "invitation, droits précis, journal et IA locale.",
+        "Le Hub JARVIS et son IA privée : sous le capot",
+        "Le Hub installé chez vous, son IA locale en français, le noyau en Rust, les comptes "
+        "sur invitation et les extensions qui travaillent ensemble.",
     ),
     "/laboratoire-mobile/": (
         "Ambulance convertie en VR connecté | Laboratoire JARVIS",

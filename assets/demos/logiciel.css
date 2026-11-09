@@ -1,0 +1,146 @@
+/* Le logiciel (/logiciel/) : JARVIS App en grand avec visite guidée, plein écran et aperçu téléphone.
+   Aussi l'aperçu vivant de l'accueil (.lg-apercu). Verre noir et or; l'app garde ses propres styles (app.css). */
+
+/* ---------- Icônes de l'app hors de l'app ---------- */
+.lg-guide .ap-i, .lg-exit .ap-i { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- En-tête de page ---------- */
+.lg-hero { padding: calc(var(--bar-h) + 4.2rem) 1.4rem 2.2rem; }
+.lg-hero-in { max-width: 78rem; margin: 0 auto; }
+.lg-hero h1 { margin: 1rem 0 0; font-weight: 650; font-size: clamp(2.3rem, 5vw, 4.3rem); letter-spacing: -.045em; line-height: 1.02; }
+.lg-hero h1 em, .lga-head h2 em { font-style: normal; background: var(--mode-display); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lg-hero .lead { margin: 1.2rem 0 0; max-width: 40rem; color: #c6c1b8; font-size: clamp(1rem, 1.3vw, 1.18rem); line-height: 1.6; }
+
+/* ---------- Visite : guide + appareil ---------- */
+.lg-tour { padding: 1rem 1.4rem 5rem; }
+.lg-tour-in { max-width: 112rem; margin: 0 auto; display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 24px; align-items: start; }
+.lg-guide {
+  position: sticky; top: calc(var(--bar-h) + 14px); z-index: 2; padding: 1.2rem 1rem 1rem; border-radius: 20px;
+  background: var(--mode-panel-solid), #050505; box-shadow: 0 24px 60px #000c, var(--mode-spec);
+  max-height: calc(100vh - var(--bar-h) - 28px); overflow-y: auto; scrollbar-width: thin;
+}
+.lg-guide::before {
+  content: ""; position: absolute; inset: -1px; z-index: 3; pointer-events: none; border-radius: inherit;
+  border: 18px solid transparent; border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch; filter: var(--mode-rim-filter);
+}
+:root[data-mode="base"] .lg-guide::before { display: none; }
+:root[data-mode="base"] .lg-guide { box-shadow: inset 0 0 0 1px var(--mode-line); }
+.lg-guide-k { display: flex; justify-content: space-between; align-items: baseline; margin: 0 .4rem .8rem; font: 600 .66rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft); }
+.lg-guide-k span { color: #8e8e96; letter-spacing: .1em; }
+.lg-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.lg-step {
+  width: 100%; display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: center; gap: 0 .6rem;
+  padding: .62rem .6rem; border: 0; border-radius: 12px; background: none; color: #d6d6da; text-align: left; cursor: pointer;
+  font: 550 .93rem/1.3 var(--sans); transition: background .25s, color .25s;
+}
+.lg-step:hover { background: #ffffff0a; color: #fff; }
+.lg-step:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 1px; }
+.lg-step i { font: 600 .7rem/1 var(--mono); font-style: normal; letter-spacing: .08em; color: #8e8e96; }
+.lg-step-d { grid-column: 2; display: none; }
+.lg-step.is-on { background: color-mix(in srgb, var(--mode-glow) 10%, #0b0b0b); color: #fff; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold-soft) 32%, transparent); }
+.lg-step.is-on i { color: var(--gold-soft); }
+.lg-step.is-on .lg-step-n { font-weight: 650; }
+.lg-step.is-on .lg-step-d { display: grid; gap: .35rem; margin-top: .55rem; }
+.lg-step-d b, .lg-now b { font-size: .92rem; font-weight: 650; color: var(--gold-soft); line-height: 1.3; }
+.lg-step-d > span, .lg-now > span { font: 400 .84rem/1.5 var(--sans); color: #b9b9c2; }
+.lg-step-d em, .lg-now em { display: flex; gap: .45rem; font: 550 .84rem/1.45 var(--sans); font-style: normal; color: #f1ede4; padding-top: .45rem; border-top: 1px solid #ffffff14; }
+.lg-step-d em .ap-i, .lg-now em .ap-i { width: 16px; height: 16px; margin-top: .1rem; color: var(--gold-soft); }
+.lg-now { display: none; }
+.lg-tools { display: grid; grid-template-columns: 1fr; gap: 6px; margin: 1rem 0 0; }
+.lg-tool {
+  display: flex; align-items: center; justify-content: center; gap: .45rem; padding: .7rem .6rem; border-radius: 999px; cursor: pointer;
+  border: 0; background: #ffffff0d; color: #eee; font: 600 .8rem/1 var(--sans); box-shadow: inset 0 0 0 1px var(--mode-line); transition: box-shadow .25s, background .25s;
+}
+.lg-tool:hover { box-shadow: inset 0 0 0 1px var(--gold-soft); }
+.lg-tool[aria-pressed="true"] { background: var(--mode-action); color: var(--mode-on-action); box-shadow: var(--mode-action-edge); }
+.lg-tool:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 2px; }
+.lg-guide-n { margin: .9rem .4rem 0; font: 500 .62rem/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #8e8e96; text-align: center; }
+
+/* L'appareil : app.js garde sa logique; ici, seulement la mise à l'échelle et le cadre de page */
+.lg-stage { position: relative; min-width: 0; }
+.lg-host { width: 100%; }
+.lg-app { margin: 0 auto; }
+.lg-app [data-demo="app"] .ap-tilt { width: 100%; }
+.lg-app [data-demo="app"] .ap-screen { min-height: calc((100cqw - 18px) / 1.6); }
+.lg-app [data-demo="app"] .ap-cap-txt { display: none; } /* le guide affiche la même légende */
+.lg-app [data-demo="app"] .ap-caps { margin-top: 1.4rem; }
+.lg-stage.is-phone .lg-app { width: 400px !important; max-width: 100%; zoom: 1 !important; }
+.lg-exit { display: none; }
+
+/* Plein écran (API du navigateur, ou repli en position fixe) */
+.lg-stage.is-full {
+  position: fixed; inset: 0; z-index: 200; overflow: auto; padding: 3.6rem 2rem 2rem;
+  background: radial-gradient(1200px 600px at 50% 0, color-mix(in srgb, var(--mode-glow) 10%, transparent), transparent 65%), #000;
+}
+.lg-stage.is-full .lg-host { max-width: 1600px; margin: 0 auto; }
+.lg-stage.is-full .lg-exit {
+  display: inline-flex; align-items: center; gap: .45rem; position: absolute; top: .9rem; right: 1.2rem; z-index: 5;
+  padding: .55rem 1rem; border: 0; border-radius: 999px; cursor: pointer; font: 600 .8rem/1 var(--sans);
+  background: #ffffff14; color: #fff; box-shadow: inset 0 0 0 1px var(--mode-line);
+}
+.lg-stage.is-full .lg-exit:hover { box-shadow: inset 0 0 0 1px var(--gold-soft); }
+body.lg-full-open { overflow: hidden; }
+
+/* Tablette et téléphone : le guide passe au-dessus, en rangée d'étapes */
+@media (max-width: 1100px) {
+  .lg-tour { padding: .5rem 1rem 4rem; }
+  .lg-tour-in { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .lg-guide { position: relative; top: 0; max-height: none; overflow: visible; padding: 1rem .9rem .9rem; }
+  .lg-steps { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px; margin: 0 -.2rem; scroll-snap-type: x proximity; }
+  .lg-steps::-webkit-scrollbar { display: none; }
+  .lg-steps li { flex: none; scroll-snap-align: start; }
+  .lg-step { width: auto; grid-template-columns: auto auto; padding: .55rem .85rem; border-radius: 999px; white-space: nowrap; background: #ffffff08; }
+  .lg-step.is-on .lg-step-d { display: none; }
+  .lg-now { display: grid; gap: .35rem; margin: .9rem .3rem 0; min-height: 5.6rem; }
+  .lg-tools { grid-template-columns: auto auto; justify-content: start; }
+  .lg-tool { padding: .6rem 1rem; }
+  .lg-guide-n { text-align: left; }
+}
+@media (max-width: 700px) {
+  .lg-hero { padding: calc(var(--bar-h) + 2.6rem) 1.1rem 1.4rem; }
+  .lg-tools [data-lg="phone"] { display: none; } /* déjà un téléphone */
+  .lg-tools { grid-template-columns: 1fr; }
+}
+
+/* Ce que vous voyez est vrai */
+.lg-vs { max-width: 76rem; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.lg-v { padding: 1.7rem 1.6rem 1.8rem; border-radius: var(--radius); background: var(--mode-panel); box-shadow: inset 0 0 0 1px var(--mode-line), 0 18px 44px #0006; }
+.lg-v-k { display: flex; align-items: center; gap: .55rem; margin: 0 0 1rem; font: 600 .66rem/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: #fff; }
+.lg-v-k i { width: 9px; height: 9px; border-radius: 50%; background: #34d399; box-shadow: 0 0 12px #34d39988; }
+.lg-v-construit .lg-v-k i { background: #fbbf24; box-shadow: 0 0 12px #fbbf2488; }
+.lg-v-avenir .lg-v-k i { background: transparent; box-shadow: inset 0 0 0 1.5px #a8a8b0; }
+.lg-v ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .8rem; }
+.lg-v li { position: relative; padding-left: 1.1rem; color: #c0c0c8; font-size: .92rem; line-height: 1.55; }
+.lg-v li::before { content: "—"; position: absolute; left: 0; color: #6e6e73; }
+.lg-under { max-width: 76rem; margin: 2rem auto 0; color: #a8a8b0; }
+.lg-under a { color: var(--gold-soft); text-decoration: none; font-weight: 600; }
+.lg-under a:hover { color: #fff; }
+.lg-under i { font-style: normal; }
+@media (max-width: 880px) { .lg-vs { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Accueil : aperçu vivant du logiciel ---------- */
+.lg-apercu { padding: 6rem 1.4rem 5.5rem; }
+.lga-head { max-width: 77.5rem; margin: 0 auto 2.6rem; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 1.4rem 4rem; align-items: end; }
+.lga-head h2 { margin: 1rem 0 0; font-weight: 650; font-size: clamp(2rem, 3.6vw, 3.1rem); letter-spacing: -.035em; line-height: 1.08; }
+.lga-side { display: grid; gap: 1.3rem; justify-items: start; }
+.lga-side p { margin: 0; color: #c6c1b8; line-height: 1.6; }
+.lga-frame { position: relative; max-width: 1260px; margin: 0 auto; }
+.lga-dev { pointer-events: none; user-select: none; }
+.lga-hit { position: absolute; inset: 0; z-index: 20; display: grid; place-items: end center; padding-bottom: 7%; border-radius: 28px; text-decoration: none; }
+.lga-hit span {
+  display: inline-flex; gap: .5rem; align-items: center; padding: .95rem 1.6rem; border-radius: 999px;
+  font: 650 .98rem/1 var(--sans); background: var(--mode-action); color: var(--mode-on-action);
+  box-shadow: var(--mode-action-edge), 0 18px 50px #000c; transform: translateY(6px); opacity: .94; transition: transform .35s var(--ease), opacity .35s;
+}
+.lga-hit:hover span, .lga-hit:focus-visible span { transform: none; opacity: 1; }
+.lga-hit i { font-style: normal; }
+.lga-hit:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 4px; }
+@media (max-width: 880px) {
+  .lg-apercu { padding: 4.5rem .8rem 4rem; }
+  .lga-head { grid-template-columns: minmax(0, 1fr); padding: 0 .3rem; }
+}
+@media (max-width: 700px) {
+  /* Le téléphone est haut : on en montre le haut, avec un fondu, et le bouton par-dessus */
+  .lga-dev { max-height: 620px; overflow: hidden; -webkit-mask: linear-gradient(180deg, #000 70%, #0000); mask: linear-gradient(180deg, #000 70%, #0000); }
+  .lga-hit { padding-bottom: 2.2rem; }
+}

@@ -259,7 +259,14 @@
       root.style.setProperty("--dur", left + "ms");
       restartProg();
       arm();
+      // Annonce l'écran ouvert (la visite guidée de /logiciel/ suit le même écran).
+      root.dispatchEvent(new CustomEvent("ap:screen", { detail: { key: keys[i], index: i, user: !!user } }));
     }
+    // Ouvrir un écran depuis l'extérieur de l'app : root.dispatchEvent(new CustomEvent("ap:go", { detail: "carte" }))
+    root.addEventListener("ap:go", function (e) {
+      var j = keys.indexOf(e.detail);
+      if (j >= 0) go(j, true);
+    });
 
     function viewOf(t) { return Math.max(0, keys.indexOf(navs[t])); }
     tabs.forEach(function (t, k) {
@@ -1239,7 +1246,7 @@
       shown = true;
       root.classList.add("in");
       wxStart();
-      setTimeout(function () { enter(views[0], 0); restartProg(); arm(); }, fx ? 380 : 0);
+      setTimeout(function () { enter(views[cur], cur); restartProg(); arm(); }, fx ? 380 : 0);
     }
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (es) {

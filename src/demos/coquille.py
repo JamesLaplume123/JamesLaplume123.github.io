@@ -12,7 +12,7 @@ def html(slug, inner):
     cap = next(c for c in CAPABILITIES if c["slug"] == slug)
     on = slug in EXT_ON
     menu = "".join(
-        f'<a class="xs-nav-i{" is-on" if k == "outils" else ""}" href="/#ecran-{k}">{icon(ic)}<span>{lab}</span></a>'
+        f'<a class="xs-nav-i{" is-on" if k == "outils" else ""}" href="/logiciel/#ecran-{k}">{icon(ic)}<span>{lab}</span></a>'
         for (k, lab, _short, ic) in NAV
     )
     exts = "".join(
@@ -42,7 +42,7 @@ def html(slug, inner):
           <span class="xs-me">{face(AV_ALEX)}<b>Alex</b>{icon("down")}</span>
         </header>
         <div class="xs-head">
-          <p class="xs-crumb"><a href="/#ecran-outils">Mes outils</a><span>/</span><b>{cap["title"]}</b></p>
+          <p class="xs-crumb"><a href="/logiciel/#ecran-outils">Mes outils</a><span>/</span><b>{cap["title"]}</b></p>
           <div class="xs-title">
             <span class="xs-title-i">{icon(EXT_ICON[slug])}</span>
             <h3>{cap["title"]}</h3>

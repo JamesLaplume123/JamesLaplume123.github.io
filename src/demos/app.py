@@ -1389,3 +1389,9 @@ def sequence():
   </nav>
   {chapters}
 </div>"""
+
+
+def apercu():
+    """Aperçu de l'accueil (page d'accueil du site) : l'écran d'accueil seul, vivant (heure et météo
+    réelles) mais non interactif; la démo complète vit sur /logiciel/."""
+    return _device("accueil").replace('href="#ecran-', 'href="/logiciel/#ecran-')

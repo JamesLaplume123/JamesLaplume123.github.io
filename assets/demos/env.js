@@ -894,7 +894,7 @@
     return '<div class="ev-trends" data-fill>' + c.items.map(function (t) {
       var xs = [[0, "−3 h"], [4, "−2 h"], [8, "−1 h"], [11, "maint.", 1]];
       var unit = String(t.value).replace(/^[−\d,\s ]+/, "");
-      return '<div class="ev-trend" data-fill>' + head(t.icon, t.title, "", "") + '<p class="ev-big">' + unitize(t.value) + ' <span class="ev-state">' + dot(t.tone) + esc(t.state) + "</span></p>" +
+      return '<div class="ev-trend" data-fill>' + head(t.icon, t.title, "", "") + '<p class="ev-big"><span>' + unitize(t.value) + '</span> <span class="ev-state">' + dot(t.tone) + esc(t.state) + "</span></p>" +
         plot({ n: t.pts.length, min: t.min, max: t.max, h: 96, y: [t.min, (t.min + t.max) / 2, t.max], series: [{ v: t.pts, c: t.c, area: true }], x: xs, dots: [[t.pts.length - 1, t.pts[t.pts.length - 1], "", t.c]],
           tip: { l: function (k) { var m = Math.round((t.pts.length - 1 - k) * 180 / (t.pts.length - 1)); return m ? "Il y a " + (m >= 60 ? Math.floor(m / 60) + NB + "h" + (m % 60 ? NB + pad(m % 60) : "") : m + NB + "min") : "Maintenant"; }, f: function (v) { return nf(v, 1) + (unit ? NB + unit.trim() : ""); }, names: [t.title] } }) + "</div>";
     }).join("") + "</div>";
@@ -1101,7 +1101,7 @@
     var net = M.live ? (M.bw > 0 ? "+" : "") + fmtW(M.bw) : fmtW(M.prod);
     var foot = M.live ? [["battery", "Batteries", (M.bw > 0 ? "+" : "") + fmtW(M.bw)], ["radar", "Sources et charges", "Capteurs à relier"]]
       : [["sun", "Production", fmtW(M.prod)], ["home", "Consommation", fmtW(M.load)], [M.bw >= 0 ? "battery" : "battery", M.bw > 5 ? "Stockage" : M.bw < -5 ? "Puisé des batteries" : "Batteries", (M.bw > 5 ? "+" : "") + fmtW(M.bw)]];
-    if (!M.live && M.load > 0) foot.push(["leaf", "Autonomie du moment", nf(clamp(M.prod / M.load * 100, 0, 100)) + NB + "%"]);
+    if (!M.live && M.load > 0) foot.push(["leaf", "Part solaire", nf(clamp(M.prod / M.load * 100, 0, 100)) + NB + "%"]);
     return head("bolt", "Flux d’énergie", M.live ? "Batteries mesurées · sources et charges à relier" : "Production, stockage et consommation en ce moment", liveTag(M.b)) +
       '<div class="ev-flow' + (M.live ? " is-live" : "") + (img ? " has-bg" : "") + '" data-flow style="--nt:' + top.length + '">' +
       (img ? '<span class="ev-flow-bg" aria-hidden="true"><img src="' + img + '" alt="" loading="lazy" decoding="async" style="object-position:' + ((e.banner || {}).pos || "50% 50%") + '"></span>' : "") +
@@ -1152,7 +1152,7 @@
     var mx = Math.max.apply(null, prod.concat(cons)), top = Math.ceil(mx / 100) * 100 || 100;
     var sumP = prod.reduce(function (x, y) { return x + y; }, 0) / 1000, sumC = cons.reduce(function (x, y) { return x + y; }, 0) / 1000;
     var leg = [["gold", "Production solaire", nf(sumP, sumP < 10 ? 1 : 0) + NB + "kWh"], ["blue", "Consommation", nf(sumC, sumC < 10 ? 1 : 0) + NB + "kWh"]];
-    if (sumC > 0) leg.push(["green", "Couverte par le solaire", nf(clamp(prod.reduce(function (x, y, k4) { return x + Math.min(y, cons[k4]); }, 0) / 1000 / sumC * 100, 0, 100)) + NB + "%"]);
+    if (sumC > 0) leg.push(["green", "Part solaire", nf(clamp(prod.reduce(function (x, y, k4) { return x + Math.min(y, cons[k4]); }, 0) / 1000 / sumC * 100, 0, 100)) + NB + "%"]);
     return head("chart", "Historique · veille", "Production et consommation, heure par heure · exemple", "") + legend(leg) +
       plot({ n: 24, min: 0, max: top * 1.08, h: 150, y: [0, top / 2, top], yf: function (v) { return fmtW(v).replace(NB + "W", "").replace(NB + "kW", NB + "k"); },
         series: [{ v: cons, c: "blue", area: true, op: 0.22 }, { v: prod, c: "gold", area: true }], x: [[0, "0 h"], [6, "6 h"], [12, "12 h"], [18, "18 h"], [23, "23 h"]], vgrid: [6, 12, 18],

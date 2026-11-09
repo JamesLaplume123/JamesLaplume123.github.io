@@ -1,8 +1,8 @@
 # JARVIS (plateforme) — le produit en scène : le Hub et son IA, les extensions qui travaillent ensemble,
-# l’App, le noyau en Rust et l’offre (Hub + extensions + services).
+# ce que prévoit l’App (la démo vit sur l’accueil, /#app), le noyau en Rust, les comptes et droits,
+# puis l’offre (Hub + extensions + services).
 
-from demos import app, hub, rust
-import galerie
+from demos import hub, rust
 
 PAGE = {
     "url": "/plateforme/",
@@ -13,7 +13,7 @@ PAGE = {
         "travaillent ensemble : un système privé, local et contrôlé."
     ),
     "og_image": "/media/product/user/accueil-og.jpg",
-    "assets": ["app", "rust", "hub", "galerie"],
+    "assets": ["rust", "hub"],
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="" fetchpriority="high"></div>
@@ -24,7 +24,7 @@ PAGE = {
     vos règles. JARVIS Hub garde l’intelligence près de vos systèmes.</p>
     <div class="acts" data-rev>
       <a class="pill" href="#hub">Découvrir le Hub</a>
-      <a class="pill ghost" href="#app">Voir l’interface</a>
+      <a class="pill ghost" href="/#app">Essayer l’app</a>
       <a class="pill ghost" href="#offre">L’offre</a>
     </div>
     <div class="meta" data-rev>
@@ -63,15 +63,7 @@ PAGE = {
   """ + hub.ensemble() + """
 </section>
 
-<section class="vitrine" id="app" data-toc="L’app" aria-label="JARVIS App">
-  <div class="head" data-rev>
-    <p class="eyebrow">JARVIS App · essayez-la</p>
-    <h2>Votre espace. <em>À votre image.</em></h2>
-  </div>
-  """ + app.html() + """
-</section>
-
-<section class="sect" id="experience-user">
+<section class="sect alt" id="experience-user" data-toc="L’app">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Ce que l’app prévoit · 58 vues conçues</p>
@@ -90,6 +82,7 @@ PAGE = {
     <li data-rev><small>Carte</small><h3>Voir votre monde, pas celui des autres.</h3><p>Le Hub, vos appareils, et seulement les personnes qui ont choisi de partager. Jamais de fausse position.</p></li>
     <li data-rev><small>Personnalisation</small><h3>Votre accueil vous ressemble.</h3><p>Affichez, ordonnez et dimensionnez vos cartes. Vos préférences suivent votre compte, sans changer vos droits.</p></li>
   </ul>
+  <div class="chiprow" data-rev><a class="pill ghost" href="/#app">Essayer JARVIS App</a></div>
 </section>
 
 
@@ -106,13 +99,14 @@ PAGE = {
 <section class="sect alt" id="experience" data-toc="Comptes et droits">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">JARVIS App · expérience de base</p>
+      <p class="eyebrow">Comptes, droits et services</p>
       <h2>Votre identité. Vos règles.<br><em>Votre point d’entrée.</em></h2>
     </div>
     <p data-rev>Avant toute solution, JARVIS connaît seulement les personnes, les rôles et les
-    limites que vous avez définis. Rien d’autre n’est relié par défaut.</p>
+    limites que vous avez définis. Rien d’autre n’est relié par défaut, et les utilisateurs n’ont
+    jamais de serveur à gérer.</p>
   </div>
-  <div class="cards">
+  <div class="cards two">
     <article class="card" data-rev>
       <small>Identités configurées</small>
       <h3>Une seule interface, des responsabilités différentes.</h3>
@@ -127,39 +121,13 @@ PAGE = {
       <small>Contrôle des actions</small>
       <h3>Voir, proposer, approuver et exécuter ne sont pas le même pouvoir.</h3>
       <p>Chaque capacité déclare ses sources, ses actions possibles et la personne qui doit
-      approuver.</p>
+      approuver. Activer une capacité ne donne pas accès aux autres.</p>
     </article>
-    <article class="card" data-rev>
-      <small>Capacités</small>
-      <h3>JARVIS se construit autour du besoin, une capacité à la fois.</h3>
-      <p>Activer une capacité ne donne pas accès aux autres. Chaque connexion reste visible
-      et révocable.</p>
-    </article>
-  </div>
-</section>
-
-<section class="sect">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Pour l’administrateur</p>
-      <h2>Services et hébergement :<br><em>une seule entrée.</em></h2>
-    </div>
-    <p data-rev>L’administrateur voit où chaque logiciel fonctionne — sur le Hub, sur une
-    machine qu’il contrôle ou chez un fournisseur — et ce que chaque connexion autorise.
-    Les utilisateurs, eux, n’ont jamais de serveur à gérer.</p>
-  </div>
-  <div class="cards">
     <article class="card" data-rev>
       <small>Où tout fonctionne</small>
       <h3>Hub, vos machines, fournisseurs — affichés séparément.</h3>
-      <p>Le logiciel, sa connexion à JARVIS et vos droits sont trois choses distinctes.
-      L’emplacement d’un serveur ne donne pas le droit de le gérer.</p>
-    </article>
-    <article class="card" data-rev>
-      <small>Ajouter sans tout autoriser</small>
-      <h3>Identifier, tester, puis accorder le nécessaire.</h3>
-      <p>On identifie le serveur, on teste la connexion, puis on accorde seulement les
-      capacités utiles — jamais un accès général.</p>
+      <p>L’administrateur voit où chaque logiciel fonctionne et ce que chaque connexion autorise.
+      On teste la connexion, puis on accorde seulement le nécessaire.</p>
     </article>
     <article class="card" data-rev>
       <small>Réparer sans perdre</small>
@@ -170,51 +138,9 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect alt">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Déjà dessinées, en validation</p>
-      <h2>Les extensions <em>qui s’en viennent.</em></h2>
-    </div>
-    <p data-rev>Chaque extension a son dossier de conception complet — écrans, droits,
-    règles et limites — avant la première ligne de code. Rien n’est annoncé sans dossier.</p>
-  </div>
-  <div class="rows">
-    <div class="row" data-rev>
-      <i>Communications</i>
-      <div><h3>Une voix. Une équipe. Un système qui vous ressemble.</h3>
-      <p>Appels internes et publics, accueil intelligent, distribution des appels et
-      alertes — la téléphonie IP pensée pour la maison comme pour l’entreprise, avec des
-      droits précis pour appeler, écouter et administrer.</p></div>
-    </div>
-    <div class="row" data-rev>
-      <i>IA et connaissances</i>
-      <div><h3>Vos documents restent à leur place. L’IA vous aide à les comprendre.</h3>
-      <p>Guide complet des deux parcours — utilisateur et administration.
-      <a href="/solutions/ia-privee-connaissances/" style="color:#fff">Voir la solution.</a></p></div>
-    </div>
-    <div class="row" data-rev>
-      <i>Environnements</i>
-      <div><h3>Éclairage, confort, énergie — module par module.</h3>
-      <p>Les ambiances, les configurations protégées et la règle « jamais de faux
-      succès ». <a href="/solutions/environnements-intelligents/" style="color:#fff">Voir la solution.</a></p></div>
-    </div>
-    <div class="row" data-rev>
-      <i>Mobilité et voyage</i>
-      <div><h3>Le trajet, les arrêts et le véhicule, dans le même contexte.</h3>
-      <p>Développée sur le laboratoire mobile.
-      <a href="/laboratoire-mobile/" style="color:#fff">Voir le laboratoire.</a></p></div>
-    </div>
-  </div>
-  <div class="chiprow" data-rev>
-    <span class="chip chip-sim">Dossiers de conception complets · en validation</span>
-  </div>
-</section>
 
 
-""" + galerie.plateforme_lieux() + """
-
-<section class="sect alt hb-sect" id="offre" data-toc="L’offre" aria-labelledby="offre-titre">
+<section class="sect hb-sect" id="offre" data-toc="L’offre" aria-labelledby="offre-titre">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">L’offre</p>

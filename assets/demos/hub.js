@@ -1,5 +1,5 @@
 /* Démo « Hub + extensions » (page JARVIS). Données d'exemple.
-   Trois blocs [data-demo="hub"] : cœur (événements sur le bus), IA (une conversation qui
+   Trois blocs [data-demo="hub"] : cœur (le boîtier et ses fils de lumière; un Hub par lieu), IA (une conversation qui
    comprend, vérifie, propose, demande, explique), ensemble (trois chaînes de bout en bout);
    (l'offre vit sur /offre/). Le mouvement vit seulement sous html.fx et s'arrête hors écran.
    Sans JavaScript, le HTML montre déjà un état complet (voir src/demos/hub.py). */
@@ -34,86 +34,105 @@
   }
 
   /* ======================================================================
-     1. Le Hub, cœur de JARVIS
+     1. Le Hub, cœur de JARVIS : la lumière part du boîtier vers les choses
+        de la vie; puis un Hub par lieu, relié à une seule application.
      ====================================================================== */
   (function () {
     var root = $('[data-hb="coeur"]');
-    if (!root || !window.SVGElement) return;
+    if (!root) return;
     var D = data(root); if (!D) return;
-    var svg = $(".hb-svg", root), layer = $(".hb-pk", svg), ticker = $(".hb-tk-txt", root);
-    var nodes = {}, spokes = {}, segs = {}, hosts = {};
-    $$(".hb-node", svg).forEach(function (n) { nodes[n.getAttribute("data-node")] = n; });
-    $$(".hb-spoke", svg).forEach(function (p) {
-      var a = p.getAttribute("data-a").split(",").map(Number), b = p.getAttribute("data-b").split(",").map(Number);
-      spokes[p.getAttribute("data-spoke")] = { el: p, a: a, b: b, c: getComputedStyle(p).getPropertyValue("--x").trim() };
-    });
-    $$(".hb-seg", svg).forEach(function (g) { segs[g.getAttribute("data-seg")] = g; });
-    $$(".hb-hosted li", root).forEach(function (li) { hosts[li.getAttribute("data-host")] = li; });
-    var pulse = $(".hb-core-pulse", svg);
+    var scene = $(".hb-scene", root);
 
-    function hotHost(k, on) { if (segs[k]) segs[k].classList.toggle("is-hot", on); if (hosts[k]) hosts[k].classList.toggle("is-hot", on); }
-    Object.keys(hosts).forEach(function (k) {
-      hosts[k].addEventListener("mouseenter", function () { hotHost(k, true); });
-      hosts[k].addEventListener("mouseleave", function () { hotHost(k, false); });
-      if (segs[k]) {
-        segs[k].addEventListener("mouseenter", function () { hotHost(k, true); });
-        segs[k].addEventListener("mouseleave", function () { hotHost(k, false); });
-      }
-    });
-
-    /* Internet optionnel */
-    var btn = $(".hb-net-btn", root), net = $("[data-net]", svg), off = $(".hb-offline", root);
+    /* Internet optionnel : rien ne change sur place. */
+    var btn = $(".hb-net-btn", root), off = $(".hb-offline", root);
     btn.hidden = false;
     btn.addEventListener("click", function () {
       var cut = btn.getAttribute("aria-pressed") !== "true";
       btn.setAttribute("aria-pressed", cut ? "true" : "false");
       $("span", btn).textContent = cut ? "Rétablir Internet" : "Couper Internet";
-      net.classList.toggle("is-off", cut);
       off.hidden = !cut;
     });
 
-    if (!fx) return;
-    var clock = Clock(root);
+    /* Les fils de lumière et les phrases qui changent doucement */
+    var vies = $$(".hb-vie", scene).map(function (li) {
+      var k = li.getAttribute("data-vie");
+      return { k: k, li: li, b: $(".hb-vie-tx b", li), fil: $('[data-fil="' + k + '"]', scene), ph: D.vie[k] || [], n: 0 };
+    });
+    function swap(v) {
+      if (v.ph.length < 2) return;
+      v.n = (v.n + 1) % v.ph.length;
+      v.b.classList.add("is-out");
+      setTimeout(function () { v.b.textContent = v.ph[v.n]; v.b.classList.remove("is-out"); }, 360);
+    }
+    if (fx) {
+      var clock = Clock(scene), i = 0;
+      (function beat() {
+        var v = vies[i % vies.length]; i++;
+        if (v.fil) restart(v.fil, "is-go");
+        clock.later(function () {
+          v.li.classList.add("is-lit"); if (v.fil) v.fil.classList.add("is-lit");
+          swap(v);
+        }, 1500);
+        clock.later(function () {
+          v.li.classList.remove("is-lit"); if (v.fil) v.fil.classList.remove("is-lit", "is-go");
+        }, 4600);
+        clock.later(beat, 2300);
+      })();
+    }
 
-    function travel(from, to, color, ms, done) {
-      var c = document.createElementNS(NS, "circle");
-      c.setAttribute("r", "4.6"); c.setAttribute("fill", color);
-      layer.appendChild(c);
-      var t0 = performance.now();
-      (function step(now) {
-        var k = Math.min(1, (now - t0) / ms), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
-        c.setAttribute("cx", from[0] + (to[0] - from[0]) * e);
-        c.setAttribute("cy", from[1] + (to[1] - from[1]) * e);
-        if (k < 1) requestAnimationFrame(step); else { c.remove(); if (done) done(); }
-      })(t0);
-    }
-    function nm(k) { return "<b>" + D.names[k] + "</b>"; }
-    var i = 0;
-    function play() {
-      var ev = D.events[i % D.events.length]; i++;
-      var s = spokes[ev.src];
-      nodes[ev.src].classList.add("is-hot"); s.el.classList.add("is-hot");
-      ticker.innerHTML = nm(ev.src) + " publie « " + ev.txt + " »…";
-      restart(ticker, "is-in");
-      travel(s.b, s.a, s.c, 950, function () {
-        hotHost("bus", true); restart(pulse, "is-ping");
-        setTimeout(function () { hotHost("comptes", true); if (ev.ia) hotHost("iacore", true); }, 260);
-        setTimeout(function () { hotHost("journal", true); }, 520);
-        setTimeout(function () {
-          ev.to.forEach(function (k) {
-            var t = spokes[k]; t.el.classList.add("is-hot");
-            travel(t.a, t.b, t.c, 950, function () { nodes[k].classList.add("is-hot"); });
-          });
-          ticker.innerHTML = nm(ev.src) + " publie « " + ev.txt + " » · droits vérifiés" +
-            (ev.ia ? " · l’IA en tient compte" : "") + " · consigné au journal · reçu par " + ev.to.map(nm).join(" et ");
-        }, 700);
+    /* Un Hub par lieu : fils entre chaque petit Hub et sa ligne dans l'application */
+    var box = $(".hb-lieux", root);
+    if (!box || !window.SVGElement) return;
+    var body = $(".hb-lx-body", box), svg = $(".hb-lx-fils", box), tel = $(".hb-lx-tel", box);
+    var tiles = $$(".hb-lx-t", box), rows = {};
+    $$("[data-rang]", box).forEach(function (r) { rows[r.getAttribute("data-rang")] = r; });
+    var wide = window.matchMedia ? matchMedia("(min-width: 901px)") : { matches: true };
+    var wires = {};
+    function draw() {
+      svg.textContent = ""; wires = {};
+      if (!wide.matches) return;
+      var o = body.getBoundingClientRect(), t = tel.getBoundingClientRect();
+      tiles.forEach(function (tile) {
+        var k = tile.getAttribute("data-lieu"), led = $(".hb-lx-hub i", tile), row = rows[k];
+        if (!led || !row) return;
+        var a = led.getBoundingClientRect(), r = row.getBoundingClientRect();
+        var left = tile.classList.contains("is-g");
+        var x0 = a.left + a.width / 2 - o.left, y0 = a.top + a.height / 2 - o.top;
+        var x1 = (left ? t.left + 3 : t.right - 3) - o.left, y1 = r.top + r.height / 2 - o.top;
+        var dx = x1 - x0;
+        var d = "M" + x0.toFixed(1) + " " + y0.toFixed(1) + "C" + (x0 + dx * .55).toFixed(1) + " " + y0.toFixed(1) + " " +
+          (x1 - dx * .45).toFixed(1) + " " + y1.toFixed(1) + " " + x1.toFixed(1) + " " + y1.toFixed(1);
+        var g = document.createElementNS(NS, "g");
+        g.setAttribute("class", "hb-fil");
+        ["hb-fil-base", "hb-fil-halo", "hb-fil-lum"].forEach(function (c) {
+          var p = document.createElementNS(NS, "path");
+          p.setAttribute("class", c); p.setAttribute("d", d);
+          if (c !== "hb-fil-base") p.setAttribute("pathLength", "1000");
+          g.appendChild(p);
+        });
+        svg.appendChild(g); wires[k] = g;
       });
-      clock.later(function () {
-        $$(".is-hot", root).forEach(function (el) { el.classList.remove("is-hot"); });
-      }, 3500);
-      clock.later(play, 4300);
     }
-    clock.later(play, 900);
+    draw();
+    if ("ResizeObserver" in window) new ResizeObserver(draw).observe(body);
+    else addEventListener("resize", draw);
+    if (wide.addEventListener) wide.addEventListener("change", draw);
+    $$("img", box).forEach(function (im) { if (!im.complete) im.addEventListener("load", draw); });
+
+    if (!fx) return;
+    var lc = Clock(box), j = 0;
+    (function beat() {
+      var tile = tiles[j % tiles.length]; j++;
+      var k = tile.getAttribute("data-lieu"), w = wires[k], row = rows[k];
+      tile.classList.add("is-lit");
+      if (w) restart(w, "is-go");
+      lc.later(function () { if (row) row.classList.add("is-lit"); if (w) w.classList.add("is-lit"); }, w ? 1500 : 500);
+      lc.later(function () {
+        tile.classList.remove("is-lit"); if (row) row.classList.remove("is-lit");
+        if (w) w.classList.remove("is-lit", "is-go");
+      }, 4200);
+      lc.later(beat, 2100);
+    })();
   })();
 
   /* ======================================================================

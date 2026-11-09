@@ -1,6 +1,7 @@
 # Démo « Hub + extensions » de la page JARVIS (/plateforme/).
 # Quatre blocs, chacun autonome :
-#   coeur()    Le Hub, cœur de JARVIS : ce qu'il héberge et les sept extensions branchées (SVG animé).
+#   coeur()    Le Hub, cœur de JARVIS : le boîtier en photo, sa lumière et ce qu'il fait marcher; un Hub
+#              par lieu, une seule app; en petit, ce qu'il héberge et les extensions branchées.
 #   ia()       L'IA au cœur : une conversation qui comprend, vérifie, propose, demande, explique.
 #   ensemble() Comment les extensions travaillent ensemble : rôles, règle du bus, trois chaînes de bout en bout.
 # Données de l'offre (HUB_INCLUS, SERVICES) : source unique, affichées sur /offre/ (src/pages/offre.py).
@@ -8,7 +9,7 @@
 # Toutes les situations sont des données d'exemple.
 
 import json
-import math
+import os
 from html import escape
 
 
@@ -49,6 +50,11 @@ ICONS = {
     "soutien": '<path d="M4.5 13v-1.5a7.5 7.5 0 0 1 15 0V13"/><rect x="3.5" y="13" width="4" height="6" rx="1.5"/><rect x="16.5" y="13" width="4" height="6" rx="1.5"/><path d="M18.5 19c0 1.2-1.6 2-4 2h-1.5"/>',
     "install": '<path d="M12 3.5v11"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4.5 16.5v2.5c0 .8.7 1.5 1.5 1.5h12c.8 0 1.5-.7 1.5-1.5v-2.5"/>',
     "mesure": '<path d="M4 20V4"/><path d="M4 20h16"/><path d="M7 15l3.5-4 3 2.5L19 7"/>',
+    "lampe": '<path d="M9 18.5h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2v.5h5V16c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/>',
+    "camera": '<rect x="3" y="7" width="13" height="10" rx="2.2"/><path d="M16 10.5l5-2.8v8.6l-5-2.8"/><circle cx="9.5" cy="12" r="2.2"/>',
+    "porte": '<path d="M6 21V4.5c0-.6.5-1 1-1h10c.6 0 1 .4 1 1V21"/><path d="M3.5 21h17"/><circle cx="14.6" cy="12.5" r=".9"/>',
+    "thermo": '<path d="M10 14.2V5a2 2 0 0 1 4 0v9.2a4 4 0 1 1-4 0z"/><path d="M12 9v7.5"/>',
+    "phone": '<rect x="6.5" y="2.8" width="11" height="18.4" rx="2.6"/><path d="M10.5 18h3"/>',
     "mic": '<rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5"/>',
 }
 
@@ -131,6 +137,173 @@ def _chip_ext(k, extra=""):
 # ---------------------------------------------------------------------------
 # 1. Le Hub, cœur de JARVIS
 # ---------------------------------------------------------------------------
+# Le Hub montré comme un bel objet : la vraie photo du boîtier, une lumière or qui respire, et des fils
+# de lumière doux vers les choses de la vie, avec des phrases humaines. Puis « Un Hub par lieu, une seule
+# app » (photos des lieux du site, chacun avec son petit Hub, reliés au téléphone), quatre réponses
+# courtes, les deux formats du Hub, et, en petit, ce qu'il y a dedans pour les curieux.
+
+# Photo du boîtier : les positions (en % de l'image 16:9) de la lumière avant et du boîtier servent aux
+# fils de lumière et au halo. Changer de photo demande de revoir HUB_LED et HUB_HALO.
+HUB_PHOTO = "/media/product/jarvis-hub-v1.webp"
+HUB_LED = (44.0, 56.0)
+HUB_HALO = (34.0, 55.0)
+
+# Les choses de la vie : clé, icône, chose, phrases (la première est affichée sans JavaScript),
+# position de la carte sur la photo (gauche %, haut %), côté d'attache du fil.
+VIE = [
+    ("lumieres", "lampe", "Les lumières", ["Les lumières du soir s’allument", "Ambiance Soirée, douce et chaude", "Tout s’éteint quand vous dormez"],
+     (3, 7), "bas"),
+    ("cameras", "camera", "Les caméras", ["Les caméras veillent", "Un colis déposé à 14 h 12, photo gardée", "Personne autour de la maison"],
+     (3, 24), "droite"),
+    ("porte", "porte", "La porte d’entrée", ["La porte est verrouillée", "Verrouillée à 22 h 04, comme chaque soir", "Ouverte pour la gardienne à 15 h 30"],
+     (75.5, 6), "gauche"),
+    ("chalet", "thermo", "Le chalet", ["Le chalet est chauffé pour vendredi", "21 °C à votre arrivée, vendredi 18 h", "L’eau est coupée en votre absence"],
+     (75.5, 24.5), "gauche"),
+    ("voiture", "mob", "La voiture", ["La voiture est chargée à 80 %", "Prête pour demain, 7 h 30", "Le garage se ferme derrière vous"],
+     (75.5, 43), "gauche"),
+    ("app", "phone", "Votre téléphone", ["Tout est dans votre application", "Une touche : « Je pars »", "Même à l’autre bout du monde"],
+     (75.5, 61.5), "gauche"),
+]
+VIE_W, VIE_H = 21.5, 4.9  # largeur d'une carte et demi-hauteur, en % de la scène
+
+
+def _insec(t):
+    """Espaces insécables devant %, °C et h (« 80 % » ne se coupe pas)."""
+    return t.replace(" %", "\u00a0%").replace(" °C", "\u00a0°C").replace(" h ", "\u00a0h\u00a0")
+
+
+def _fil(left, top, cote):
+    """Courbe douce (viewBox 1600 × 900) de la lumière du Hub vers l'attache d'une carte."""
+    x0, y0 = HUB_LED[0] * 16, HUB_LED[1] * 9
+    if cote == "gauche":
+        x1, y1 = (left + 1.2) * 16, (top + VIE_H) * 9
+    elif cote == "droite":
+        x1, y1 = (left + VIE_W - 1.2) * 16, (top + VIE_H) * 9
+    else:
+        x1, y1 = (left + VIE_W * .6) * 16, (top + VIE_H * 2 - .6) * 9
+    if cote == "bas":
+        c1, c2 = (x0 - 160, y0 - 40), (x1 + 20, y1 + 170)
+    else:
+        dx = x1 - x0
+        c1, c2 = (x0 + dx * .42, y0 - 30), (x1 - dx * .38, y1)
+    return f"M{x0:.0f} {y0:.0f}C{c1[0]:.0f} {c1[1]:.0f} {c2[0]:.0f} {c2[1]:.0f} {x1:.0f} {y1:.0f}"
+
+
+def _scene():
+    fils = "".join(
+        f'<g class="hb-fil" data-fil="{k}"><path class="hb-fil-base" d="{_fil(*pos, cote)}"/>'
+        f'<path class="hb-fil-halo" pathLength="1000" d="{_fil(*pos, cote)}"/>'
+        f'<path class="hb-fil-lum" pathLength="1000" d="{_fil(*pos, cote)}"/></g>'
+        for k, _, _, _, pos, cote in VIE)
+    cartes = "".join(
+        f'<li class="hb-vie" data-vie="{k}" style="--l:{pos[0]}%;--t:{pos[1]}%">'
+        f'<span class="hb-vie-ic">{icon(ic)}</span><span class="hb-vie-tx"><small>{escape(chose)}</small>'
+        f'<b>{escape(_insec(ph[0]))}</b></span><i class="hb-vie-ok" aria-hidden="true"></i></li>'
+        for k, ic, chose, ph, pos, _ in VIE)
+    return f"""
+  <div class="hb-scene hb-frame" data-rev style="--led-x:{HUB_LED[0]}%;--led-y:{HUB_LED[1]}%;--halo-x:{HUB_HALO[0]}%;--halo-y:{HUB_HALO[1]}%">
+    <div class="hb-sc-photo">
+      <img src="{HUB_PHOTO}" width="1672" height="941" loading="lazy" decoding="async"
+           alt="Le boîtier JARVIS Hub, posé sur un meuble dans un salon, sa petite lumière avant allumée">
+      <span class="hb-sc-veil" aria-hidden="true"></span>
+      <span class="hb-sc-halo" aria-hidden="true"></span>
+      <span class="hb-sc-led" aria-hidden="true"></span>
+      <svg class="hb-fils" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">{fils}</svg>
+      <p class="hb-sc-cap"><small>JARVIS Hub</small><b>En marche, en silence.</b><span>Installé et entretenu par nous.</span></p>
+    </div>
+    <ul class="hb-vies" aria-label="Ce que le Hub fait marcher (données d’exemple)">{cartes}</ul>
+    <div class="hb-sc-bar">
+      <span class="hb-live"><i></i>Données d’exemple</span>
+      <p class="hb-offline" aria-live="polite" hidden>{icon("check")}<span><b>Internet est coupé.</b> Rien ne change chez vous : le Hub continue tout seul.</span></p>
+      <button type="button" class="hb-net-btn" aria-pressed="false" hidden>{icon("cloud")}<span>Couper Internet</span></button>
+    </div>
+  </div>"""
+
+
+# Un Hub par lieu, une seule app : clé, photo, lieu, sorte de Hub, état (données d'exemple).
+LIEUX = [
+    ("maison", "/media/vitrine/plateforme/penthouse-nuit.webp", "La maison", "Hub principal", "Tout est calme · 21 °C"),
+    ("chalet", "/media/vitrine/plateforme/chalet-hiver.webp", "Le chalet", "Hub", "Chauffé pour vendredi"),
+    ("garage", "/media/env/garage.webp", "Le garage de collection", "Hub", "Fermé, sous surveillance"),
+    ("ferme", "/media/env/ferme.webp", "La ferme", "Hub", "Étables ventilées"),
+    ("yacht", "/media/env/bateau.webp", "Le yacht", "Hub", "À quai, amarres surveillées"),
+    ("vr", "/media/env/boulance.webp", "Le VR", "Hub compact · mobile", "En route vers le chalet"),
+]
+
+REPONSES = [
+    ("Faut-il un ordinateur?", "Non.", "Le Hub est un petit boîtier silencieux, sans écran. Rien à gérer, aucune mise à jour à faire."),
+    ("Et si Internet coupe?", "Tout continue.", "Chaque Hub fait marcher son lieu tout seul : portes, chauffage, lumières et règles restent en marche."),
+    ("Combien de Hubs?", "Un par lieu.", "La maison a le Hub principal. Le chalet, le garage ou la ferme ont le leur; le VR, un Hub compact."),
+    ("Qui s’en occupe?", "Nous.", "On l’installe, on l’entretient et on le met à jour pour vous. Vous gardez seulement l’application."),
+]
+
+# Les deux formats du Hub : photo du site, ou media/vitrine/plateforme/<nom>.webp quand James la fournit
+# (sinon un panneau noir « Photo à venir », jamais un dessin).
+_RACINE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+FORMATS = [
+    ("hub-principal", HUB_PHOTO, "Hub principal", "Pour la maison, un domaine ou une entreprise. Il garde le système complet."),
+    ("hub-compact", None, "Hub compact · mobile", "Pour le VR, un véhicule ou un bateau. Le même cœur, en plus petit."),
+]
+
+
+def _photo_format(nom, repli):
+    fichier = f"/media/vitrine/plateforme/{nom}.webp"
+    if os.path.exists(os.path.join(_RACINE, fichier.lstrip("/"))):
+        return fichier
+    return repli
+
+
+def _lieux():
+    def tuile(i, k, img, nom, sorte, etat):
+        cote = "g" if i < 3 else "d"
+        return (f'<li class="hb-lx-t is-{cote}" data-lieu="{k}">'
+                f'<img src="{img}" alt="" loading="lazy" decoding="async">'
+                f'<span class="hb-lx-hub"><i></i>{escape(sorte)}</span>'
+                f'<span class="hb-lx-tx"><b>{escape(nom)}</b><small>{escape(etat)}</small></span></li>')
+    gauche = "".join(tuile(i, *l) for i, l in enumerate(LIEUX[:3]))
+    droite = "".join(tuile(i + 3, *l) for i, l in enumerate(LIEUX[3:]))
+    rangs = "".join(
+        f'<li data-rang="{k}"><img src="{img}" alt="" loading="lazy" decoding="async">'
+        f'<span><b>{escape(nom)}</b><small>{escape(etat)}</small></span><i></i></li>'
+        for k, img, nom, _, etat in LIEUX)
+    reponses = "".join(
+        f'<li data-rev><small>{escape(q)}</small><b>{escape(r)}</b><span>{escape(d)}</span></li>'
+        for q, r, d in REPONSES)
+    formats = []
+    for nom, repli, titre, texte in FORMATS:
+        src = _photo_format(nom, repli)
+        vis = (f'<img src="{src}" alt="{escape(titre)}" loading="lazy" decoding="async">' if src else
+               f'<span class="hb-fm-wait">{icon("hub")}<b>Photo à venir</b><small>{nom}.webp</small></span>')
+        formats.append(f'<figure class="hb-fm{"" if src else " is-wait"}">{vis}'
+                       f'<figcaption><b>{escape(titre)}</b><span>{escape(texte)}</span></figcaption></figure>')
+    return f"""
+  <div class="hb-lieux-head" data-rev>
+    <p class="eyebrow">Plusieurs lieux?</p>
+    <h3>Un Hub par lieu.<br><em>Une seule application.</em></h3>
+    <p>Chaque lieu a son petit Hub, qui le fait marcher tout seul, même sans Internet. Vos Hubs se parlent
+    par un lien privé et chiffré. Vous, vous ouvrez une seule application, avec tous vos lieux dedans.</p>
+  </div>
+  <div class="hb-lieux hb-frame" data-rev>
+    <div class="hb-lx-body">
+      <svg class="hb-lx-fils" aria-hidden="true"></svg>
+      <ul class="hb-lx-col is-g">{gauche}</ul>
+      <div class="hb-lx-tel" aria-label="L’application JARVIS : tous vos lieux (données d’exemple)">
+        <div class="hb-tel-ecran">
+          <p class="hb-tel-top"><b>Mes lieux</b><small>6 lieux · tout va bien</small></p>
+          <ul class="hb-tel-rangs">{rangs}</ul>
+          <p class="hb-tel-pied">{icon("lock")}Lien privé et chiffré</p>
+        </div>
+      </div>
+      <ul class="hb-lx-col is-d">{droite}</ul>
+    </div>
+    <p class="hb-lx-note"><span class="hb-live"><i></i>Données d’exemple</span>
+    <span>Bureau, hangar ou entrepôt : même principe, un Hub par lieu.</span></p>
+  </div>
+  <ul class="hb-reps">{reponses}</ul>
+  <div class="hb-fms" data-rev>{"".join(formats)}</div>"""
+
+
+# Pour les curieux : ce que le Hub héberge (en petit, plus bas).
 HOSTED = [
     ("regles", "Règles", "Vos règles écrites une fois : seuils, horaires, qui approuve quoi."),
     ("comptes", "Comptes et droits", "Chaque personne et chaque extension n’a que les droits accordés."),
@@ -140,149 +313,43 @@ HOSTED = [
     ("sauve", "Sauvegardes", "Chiffrées, vérifiées, prêtes à restaurer."),
 ]
 
-# Événements joués par le diagramme : source, abonnés, texte, l'IA y participe ?
-HUB_EVENTS = [
-    ("env", ["secu"], "Fenêtre du sous-sol ouverte pendant l’absence", True),
-    ("diag", ["auto"], "Test du ventilateur 3 échoué", True),
-    ("secu", ["env"], "Arrivée badgée à la porte nord", False),
-    ("mob", ["env"], "Arrivée au chalet dans 30 minutes", True),
-    ("res", ["diag", "secu"], "Caméra du garage hors ligne", False),
-    ("auto", ["ia"], "Bon de travail fermé, rapport joint", False),
-    ("ia", ["diag"], "Manuel du ventilateur retrouvé", True),
-]
-
-C = 380  # centre du diagramme (viewBox 760)
-R_EXT = 286
-R_RING_IN, R_RING_OUT = 122, 156
-
-
-def _pol(r, deg):
-    a = math.radians(deg)
-    return C + r * math.cos(a), C + r * math.sin(a)
-
-
-def _arc(r, a0, a1):
-    x0, y0 = _pol(r, a0)
-    x1, y1 = _pol(r, a1)
-    large = 1 if abs(a1 - a0) > 180 else 0
-    sweep = 1 if a1 > a0 else 0
-    return f"M{x0:.1f} {y0:.1f}A{r} {r} 0 {large} {sweep} {x1:.1f} {y1:.1f}"
-
-
-def _hub_svg():
-    out = ['<svg class="hb-svg" viewBox="0 0 760 760" role="img" '
-           'aria-label="Le Hub au centre, ce qu’il héberge en anneau, et les sept extensions branchées autour">']
-    out.append('<defs>'
-               '<radialGradient id="hbCore" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#2a2620"/>'
-               '<stop offset=".55" stop-color="#121110"/><stop offset="1" stop-color="#050505"/></radialGradient>'
-               '<radialGradient id="hbHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="var(--mode-glow)" stop-opacity=".30"/>'
-               '<stop offset=".45" stop-color="var(--mode-glow)" stop-opacity=".08"/><stop offset="1" stop-color="var(--mode-glow)" stop-opacity="0"/></radialGradient>'
-               '<linearGradient id="hbRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6dd"/>'
-               '<stop offset=".5" stop-color="var(--gold-soft)"/><stop offset="1" stop-color="#7a6236"/></linearGradient>'
-               '<filter id="hbGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" result="b"/>'
-               '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
-               '</defs>')
-    out.append(f'<circle class="hb-halo" cx="{C}" cy="{C}" r="330" fill="url(#hbHalo)"/>')
-    # anneaux décoratifs
-    out.append(f'<circle class="hb-orbit" cx="{C}" cy="{C}" r="{R_EXT}"/>')
-    out.append(f'<circle class="hb-orbit hb-orbit-dash hb-spin" cx="{C}" cy="{C}" r="218"/>')
-    out.append(f'<circle class="hb-orbit hb-orbit-fine hb-spin-r" cx="{C}" cy="{C}" r="352"/>')
-    # Internet (optionnel)
-    ix, iy = 84, 676
-    ex, ey = _pol(R_RING_OUT + 6, 135)
-    sx0, sy0 = ix + 24, iy - 20
-    out.append(f'<g class="hb-net" data-net>'
-               f'<path class="hb-net-line" d="M{sx0} {sy0}L{ex:.1f} {ey:.1f}"/>'
-               f'<g class="hb-net-cut" transform="translate({(sx0 + ex) / 2:.1f} {(sy0 + ey) / 2:.1f})"><circle r="13"/><path d="M-5-5L5 5M5-5L-5 5"/></g>'
-               f'<g transform="translate({ix - 20} {iy - 20})"><rect class="hb-net-box" width="44" height="44" rx="13"/>'
-               f'<g transform="translate(10 10)" class="hb-net-ic">{ICONS["cloud"]}</g></g>'
-               f'<text class="hb-t hb-t-net" x="{ix + 2}" y="{iy + 46}" text-anchor="middle">Internet</text>'
-               f'<text class="hb-t hb-t-sub hb-t-net2" x="{ix + 2}" y="{iy + 61}" text-anchor="middle">optionnel</text></g>')
-    # rayons et nœuds des extensions
-    spokes, nodes = [], []
-    n = len(EXT)
-    for i, e in enumerate(EXT):
-        k = e[0]
-        deg = -90 + i * 360 / n
-        x, y = _pol(R_EXT, deg)
-        sx, sy = _pol(R_RING_OUT + 4, deg)
-        spokes.append(f'<path class="hb-spoke" data-spoke="{k}" style="--x:{e[4]}" d="M{sx:.1f} {sy:.1f}L{x:.1f} {y:.1f}" '
-                      f'data-a="{sx:.1f},{sy:.1f}" data-b="{x:.1f},{y:.1f}"/>')
-        above = math.sin(math.radians(deg)) < -0.4
-        ly = y - 46 if above else y + 52
-        nodes.append(f'<g class="hb-node" data-node="{k}" style="--x:{e[4]}" transform="translate({x:.1f} {y:.1f})">'
-                     f'<circle class="hb-node-glow" r="44"/><circle class="hb-node-bg" r="31"/>'
-                     f'<g transform="translate(-12 -12)" class="hb-node-ic">{ICONS[k]}</g></g>'
-                     f'<text class="hb-t hb-t-ext" x="{x:.1f}" y="{ly:.1f}" text-anchor="middle">{e[2]}</text>')
-    out.append('<g class="hb-spokes">' + "".join(spokes) + '</g>')
-    # anneau de ce que le Hub héberge : six segments
-    segs = []
-    step = 60
-    for i, (ik, name, _) in enumerate(HOSTED):
-        a0 = -150 + i * step + 2.2
-        a1 = a0 + step - 4.4
-        mid = (a0 + a1) / 2
-        path = _arc((R_RING_IN + R_RING_OUT) / 2, a0, a1)
-        bottom = 10 < (mid % 360) < 170
-        rm = (R_RING_IN + R_RING_OUT) / 2
-        tp = _arc(rm, a1, a0) if bottom else _arc(rm, a0, a1)
-        segs.append(f'<g class="hb-seg" data-seg="{ik}"><path class="hb-seg-band" d="{path}"/>'
-                    f'<path id="hbTp{i}" class="hb-seg-tp" d="{tp}"/>'
-                    f'<text class="hb-t hb-t-seg" dy="3.4"><textPath href="#hbTp{i}" startOffset="50%" text-anchor="middle">{escape(name.upper())}</textPath></text></g>')
-    out.append('<g class="hb-ring">' + "".join(segs) + '</g>')
-    # le cœur
-    out.append(f'<g class="hb-core" transform="translate({C} {C})">'
-               f'<circle class="hb-core-ring hb-spin" r="108"/>'
-               f'<circle class="hb-core-bg" r="96" fill="url(#hbCore)"/>'
-               f'<circle class="hb-core-rim" r="96" stroke="url(#hbRim)"/>'
-               f'<circle class="hb-core-pulse" r="96"/>'
-               f'<g class="hb-core-ic" transform="translate(-15 -62) scale(1.25)">{ICONS["hub"]}</g>'
-               f'<text class="hb-core-t" y="10" text-anchor="middle">JARVIS</text>'
-               f'<text class="hb-core-s" y="34" text-anchor="middle">HUB · SUR PLACE</text>'
-               f'<g class="hb-core-live" transform="translate(-34 52)"><circle cx="6" cy="0" r="3.4"/>'
-               f'<text x="15" y="4">EN MARCHE</text></g></g>')
-    out.append('<g class="hb-nodes">' + "".join(nodes) + '</g>')
-    out.append('<g class="hb-pk"></g></svg>')
-    return "".join(out)
-
 
 def coeur():
     hosted = "".join(
-        f'<li data-host="{k}">{icon(k)}<div><b>{n}</b><span>{d}</span></div></li>' for k, n, d in HOSTED)
+        f'<li>{icon(k)}<div><b>{n}</b><span>{d}</span></div></li>' for k, n, d in HOSTED)
     legend = "".join(_chip_ext(e[0]) for e in EXT)
-    data = [{"src": s, "to": t, "txt": x, "ia": a} for s, t, x, a in HUB_EVENTS]
-    names = {e[0]: e[2] for e in EXT}
+    phrases = {k: [_insec(p) for p in ph] for k, _, _, ph, _, _ in VIE}
     return f"""
 <div class="hb-coeur" data-demo="hub" data-hb="coeur">
-  <div class="hb-stage hb-frame" data-rev>
-    <div class="hb-stage-top">
-      <span class="hb-live"><i></i>Hub en marche · données d’exemple</span>
-      <button type="button" class="hb-net-btn" aria-pressed="false" hidden>{icon("cloud")}<span>Couper Internet</span></button>
-    </div>
-    {_hub_svg()}
-    <div class="hb-legend">{legend}</div>
-    <p class="hb-ticker" aria-live="polite"><span class="hb-tk-ic">{icon("bus")}</span><span class="hb-tk-txt"><b>Environnements</b> publie « Fenêtre du sous-sol ouverte pendant l’absence » · droits vérifiés · consigné au journal · reçu par <b>Sécurité</b></span></p>
-    <p class="hb-offline" hidden>{icon("check")}<span><b>Internet est coupé.</b> Les règles, l’IA, le journal et les sept extensions continuent sur place.</span></p>
-  </div>
-  <div class="hb-coeur-copy">
+  <div class="hb-coeur-head">
     <p class="eyebrow" data-rev>Le Hub · cœur de JARVIS</p>
-    <h2 data-rev>Un boîtier chez vous.<br><em>Tout le système dedans.</em></h2>
-    <p class="hb-lead" data-rev>Le Hub est installé sur place, dans la maison, l’entreprise, la ferme ou le véhicule.
-    Il fait tourner JARVIS au complet, sans dépendre du nuage : Internet sert seulement quand vous l’autorisez.</p>
-    <ul class="hb-hosted" data-rev>{hosted}</ul>
-    <div class="hb-coeur-facts" data-rev>
-      <span>{icon("lock")}Fonctionne sans Internet</span>
-      <span>{icon("check")}Mises à jour signées</span>
-      <span>{icon("plus")}Sept extensions s’y branchent</span>
-    </div>
+    <h2 data-rev>Un petit boîtier, en silence.<br><em>Et toute la maison suit.</em></h2>
+    <p class="hb-lead" data-rev>Le Hub est installé chez vous et entretenu par nous. Pas d’écran, rien à gérer :
+    il fait marcher les portes, le chauffage, les lumières et les caméras, même quand Internet tombe.
+    Vous, vous gardez seulement l’application.</p>
   </div>
-  <figure class="hb-photo" data-rev>
-    <img src="/media/product/jarvis-hub-v1.webp" width="1672" height="941" loading="lazy"
-         alt="JARVIS Hub intégré dans une résidence haut de gamme">
-    <figcaption><small>Le boîtier sur place</small><b>Dimensionné selon le lieu, installé par nous.</b>
-    <span>Une maison, une étable ou un VR : le même cœur, à la taille du besoin.</span></figcaption>
-  </figure>
-  <script type="application/json" class="hb-data">{_js({"events": data, "names": names})}</script>
+  {_scene()}
+  <div class="hb-coeur-facts" data-rev>
+    <span>{icon("hub")}Silencieux, sans écran</span>
+    <span>{icon("lock")}Fonctionne sans Internet</span>
+    <span>{icon("tool")}Installé et entretenu par nous</span>
+    <span>{icon("plus")}Sept extensions s’y branchent</span>
+  </div>
+  {_lieux()}
+  <details class="hb-curieux" data-rev>
+    <summary><span>Pour les curieux</span><b>Ce qu’il y a dans le Hub</b><i aria-hidden="true"></i></summary>
+    <div class="hb-cu-b">
+      <ul class="hb-hosted">{hosted}</ul>
+      <div class="hb-cu-side">
+        <p><b>Les sept extensions s’y branchent</b></p>
+        <div class="hb-legend">{legend}</div>
+        <p><b>Les appareils</b>Zigbee, Z-Wave, Matter, MQTT, Wi-Fi et réseau filaire : des marques différentes, un seul système.</p>
+        <p><b>Les mises à jour</b>Signées, appliquées par nous, avec retour en arrière possible.</p>
+        <p><b>Entre vos Hubs</b>Un réseau privé chiffré; rien n’est ouvert sur Internet.</p>
+      </div>
+    </div>
+  </details>
+  <script type="application/json" class="hb-data">{_js({"vie": phrases})}</script>
 </div>"""
 
 
@@ -633,7 +700,7 @@ def ensemble():
 # 4. L'offre : ce que comprend le Hub et les services (affichés sur /offre/)
 # ---------------------------------------------------------------------------
 HUB_INCLUS = [
-    ("hub", "Le boîtier JARVIS Hub", "Dimensionné pour le lieu, installé et configuré sur place."),
+    ("hub", "Le boîtier JARVIS Hub", "Un par lieu, installé et configuré sur place. Tous vos lieux dans la même application."),
     ("regles", "JARVIS Core", "Règles, comptes et droits, journal et bus d’événements."),
     ("iacore", "L’IA de JARVIS", "L’assistant local, en français, sur le Hub."),
     ("comptes", "JARVIS App pour chaque compte", "Ordinateur, tablette et téléphone, selon les droits de chacun."),

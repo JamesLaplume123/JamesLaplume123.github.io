@@ -1,7 +1,7 @@
 /* Démo « Hub + extensions » (page JARVIS). Données d'exemple.
-   Quatre blocs [data-demo="hub"] : cœur (événements sur le bus), IA (une conversation qui
-   comprend, vérifie, propose, demande, explique), ensemble (trois chaînes de bout en bout)
-   et offre (Hub + extensions). Le mouvement vit seulement sous html.fx et s'arrête hors écran.
+   Trois blocs [data-demo="hub"] : cœur (événements sur le bus), IA (une conversation qui
+   comprend, vérifie, propose, demande, explique), ensemble (trois chaînes de bout en bout);
+   (l'offre vit sur /offre/). Le mouvement vit seulement sous html.fx et s'arrête hors écran.
    Sans JavaScript, le HTML montre déjà un état complet (voir src/demos/hub.py). */
 (function () {
   "use strict";
@@ -278,48 +278,5 @@
     addEventListener("resize", place);
     setPlay(playing);
     load(0);
-  })();
-
-  /* ======================================================================
-     4. L'offre : Hub + extensions
-     ====================================================================== */
-  (function () {
-    var root = $('[data-hb="offre"]');
-    if (!root) return;
-    var D = data(root); if (!D) return;
-    var tabsBox = $(".hb-of-tabs", root), tabs = $$("[data-ex]", root), xs = $$(".hb-of-x", root);
-    var media = $(".hb-of-media", root), h = $(".hb-of-st h4", root), p = $(".hb-of-p", root),
-        chips = $(".hb-of-chips", root), count = $(".hb-of-count", root), kick = $(".hb-of-k", root);
-    var keys = Object.keys(D.chips), sel = {};
-    root.classList.add("is-live"); tabsBox.hidden = false;
-
-    function render() {
-      xs.forEach(function (b) {
-        var on = !!sel[b.getAttribute("data-x")];
-        b.classList.toggle("is-on", on); b.setAttribute("aria-pressed", on ? "true" : "false");
-      });
-      var on = keys.filter(function (k) { return sel[k]; });
-      chips.innerHTML = on.map(function (k) { return D.chips[k]; }).join("");
-      count.innerHTML = on.length
-        ? "<b>" + on.length + "</b> extension" + (on.length > 1 ? "s" : "") + " · installation, entretien et soutien"
-        : "Le Hub seul, prêt pour vos extensions · installation, entretien et soutien";
-    }
-    function pick(id, keepSel) {
-      tabs.forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-ex") === id ? "true" : "false"); });
-      var e = D.ex[id];
-      media.innerHTML = e.ph; h.textContent = e.h; p.textContent = e.p; kick.textContent = e.k;
-      if (!keepSel) { sel = {}; e.x.forEach(function (k) { sel[k] = true; }); }
-      render();
-    }
-    tabs.forEach(function (b) { b.addEventListener("click", function () { pick(b.getAttribute("data-ex")); }); });
-    xs.forEach(function (b) {
-      b.addEventListener("click", function () {
-        var k = b.getAttribute("data-x");
-        sel[k] = !sel[k];
-        var curTab = tabs.filter(function (t) { return t.getAttribute("aria-selected") === "true"; })[0];
-        if (!curTab || curTab.getAttribute("data-ex") !== "mesure") pick("mesure", true); else render();
-      });
-    });
-    pick("maison");
   })();
 })();

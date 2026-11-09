@@ -3,32 +3,19 @@
 #   coeur()    Le Hub, cœur de JARVIS : ce qu'il héberge et les sept extensions branchées (SVG animé).
 #   ia()       L'IA au cœur : une conversation qui comprend, vérifie, propose, demande, explique.
 #   ensemble() Comment les extensions travaillent ensemble : rôles, règle du bus, trois chaînes de bout en bout.
-#   offre()    L'offre : le Hub, base de chaque client, plus les extensions et les services, sans prix.
+# Données de l'offre (HUB_INCLUS, SERVICES) : source unique, affichées sur /offre/ (src/pages/offre.py).
 # Sans JavaScript, chaque bloc montre un état complet et lisible; assets/demos/hub.js anime le reste.
 # Toutes les situations sont des données d'exemple.
 
 import json
 import math
-import os
 from html import escape
 
-_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
-PHOTOS_ATTENDUES = []  # (fichier, description) : photos que James peut fournir plus tard
 
 
 def _js(obj):
     """JSON prêt à glisser dans <script type="application/json"> (aucune fin de balise possible)."""
     return json.dumps(obj, ensure_ascii=False).replace("</", "<\\/")
-
-
-def _photo(nom, description, repli=None):
-    """media/offre/<nom>.webp s'il existe au build, sinon la photo de repli (réelle), sinon None."""
-    PHOTOS_ATTENDUES.append(("media/offre/" + nom + ".webp", description))
-    if os.path.exists(os.path.join(_ROOT, "media", "offre", nom + ".webp")):
-        return "/media/offre/" + nom + ".webp"
-    if repli and os.path.exists(os.path.join(_ROOT, repli.lstrip("/"))):
-        return repli
-    return None
 
 
 # ---------------------------------------------------------------------------
@@ -643,7 +630,7 @@ def ensemble():
 
 
 # ---------------------------------------------------------------------------
-# 4. L'offre : Hub + extensions + services
+# 4. L'offre : ce que comprend le Hub et les services (affichés sur /offre/)
 # ---------------------------------------------------------------------------
 HUB_INCLUS = [
     ("hub", "Le boîtier JARVIS Hub", "Dimensionné pour le lieu, installé et configuré sur place."),
@@ -674,103 +661,3 @@ SERVICES = [
         "Chaque intervention consignée au journal",
     ]),
 ]
-
-EXEMPLES = [
-    {"id": "maison", "tab": "Maison", "sub": "Résidence ou chalet",
-     "x": ["env", "secu", "res"],
-     "h": "Une maison qui se gère et se protège.",
-     "p": "Le confort et l’énergie, la sécurité et un réseau solide. L’IA privée s’ajoute si la famille veut retrouver "
-          "ses documents.",
-     "img": ("maison", "Résidence québécoise moderne au crépuscule, intérieur chaleureux éclairé",
-             "/media/solutions/environnements-intelligents.webp")},
-    {"id": "ferme", "tab": "Entreprise ou ferme", "sub": "Bâtiments et équipes",
-     "x": ["env", "diag", "auto", "secu", "res", "ia"],
-     "h": "Des bâtiments surveillés, des équipes qui suivent.",
-     "p": "Les capteurs des bâtiments, le diagnostic des équipements, les bons de travail et la garde, "
-          "les accès et la mémoire documentaire de l’entreprise.",
-     "img": ("ferme", "Intérieur d’une étable laitière moderne, propre et bien éclairée, la nuit", None)},
-    {"id": "vr", "tab": "VR", "sub": "Véhicule récréatif",
-     "x": ["env", "mob", "diag", "res"],
-     "h": "Un VR autonome, qui pense à la route.",
-     "p": "Les batteries, l’eau et le confort à bord, le copilote de route, le diagnostic et la connexion en voyage.",
-     "img": ("vr", "Véhicule récréatif stationné en nature au coucher du soleil", "/media/vr/exterieur.webp")},
-    {"id": "mesure", "tab": "Sur mesure", "sub": "Votre composition",
-     "x": [],
-     "h": "Votre lieu ne ressemble à aucun exemple?",
-     "p": "Choisissez les extensions qui vous ressemblent. Nous partons de votre lieu et de votre premier problème, "
-          "puis nous composons ensemble.",
-     "img": None},
-]
-
-
-def _ph(src, alt, cls="hb-of-ph"):
-    if src:
-        return f'<span class="{cls}"><img loading="lazy" decoding="async" src="{src}" alt="{escape(alt)}"></span>'
-    return f'<span class="{cls} is-none" role="img" aria-label="{escape(alt)}">{icon("hub")}<small>Photo à venir</small></span>'
-
-
-def offre():
-    inclus = "".join(f'<li>{icon(k)}<div><b>{n}</b><span>{d}</span></div></li>' for k, n, d in HUB_INCLUS)
-    ex0 = EXEMPLES[0]
-    exts = "".join(
-        f'<li><button type="button" class="hb-of-x{" is-on" if e[0] in ex0["x"] else ""}" data-x="{e[0]}" '
-        f'aria-pressed="{"true" if e[0] in ex0["x"] else "false"}" style="--x:{e[4]}">'
-        f'<span class="hb-of-xh">{icon(e[0])}<b>{e[3]}</b><i class="hb-of-tog">{icon("check")}</i></span>'
-        f'<span class="hb-of-xr">{e[5]}</span>'
-        f'<ul>{"".join(f"<li>{escape(p)}</li>" for p in e[8])}</ul></button></li>'
-        for e in EXT)
-    tabs = "".join(
-        f'<button type="button" role="tab" data-ex="{x["id"]}" aria-selected="{"true" if i == 0 else "false"}">'
-        f'<b>{x["tab"]}</b><small>{x["sub"]}</small></button>' for i, x in enumerate(EXEMPLES))
-    ex_data = {}
-    for x in EXEMPLES:
-        img = _photo(*x["img"]) if x["img"] else None
-        alt = x["img"][1] if x["img"] else "Votre lieu"
-        ex_data[x["id"]] = {"x": x["x"], "h": x["h"], "p": x["p"],
-                            "k": "Votre composition" if x["id"] == "mesure" else "Exemple de composition",
-                            "ph": _ph(img, alt) if x["img"] else
-                            f'<span class="hb-of-ph is-mesure">{icon("plus")}<small>Votre composition</small></span>'}
-    services = "".join(
-        f'<article class="hb-sv">{icon(k)}<h3>{n}</h3><ul>{"".join(f"<li>{escape(i)}</li>" for i in items)}</ul></article>'
-        for k, n, items in SERVICES)
-    names = {e[0]: e[2] for e in EXT}
-    first_chips = "".join(_chip_ext(k) for k in ex0["x"])
-    return f"""
-<div class="hb-offre" data-demo="hub" data-hb="offre">
-  <div class="hb-of-base hb-frame" data-rev>
-    <div class="hb-of-bh">
-      <p class="hb-of-tag">{icon("hub")}La base de chaque client</p>
-      <h3>Le Hub</h3>
-      <p>Chaque installation JARVIS commence par lui. Il contient tout ce qu’il faut pour que le système
-      fonctionne, chez vous, avant même la première extension.</p>
-    </div>
-    <ul class="hb-of-inc">{inclus}</ul>
-  </div>
-
-  <div class="hb-of-plus" aria-hidden="true"><i>{icon("plus")}</i><span>Des extensions, ajoutées au besoin</span></div>
-
-  <div class="hb-of-comp" data-rev>
-    <div class="hb-of-tabs" role="tablist" aria-label="Exemples de compositions" hidden>{tabs}</div>
-    <div class="hb-of-grid">
-      <aside class="hb-of-sum hb-frame">
-        <div class="hb-of-media">{ex_data[ex0["id"]]["ph"]}</div>
-        <div class="hb-of-st">
-          <p class="hb-of-k">Exemple de composition</p>
-          <h4>{escape(ex0["h"])}</h4>
-          <p class="hb-of-p">{escape(ex0["p"])}</p>
-          <p class="hb-of-formula"><span class="hb-of-hub">{icon("hub")}<b>Hub</b></span><span class="hb-of-chips">{first_chips}</span></p>
-          <p class="hb-of-count"><b data-count>{len(ex0["x"])}</b> extensions · installation, entretien et soutien</p>
-          <a class="pill" href="/contact/">Parler de mon projet</a>
-        </div>
-      </aside>
-      <ul class="hb-of-exts">{exts}</ul>
-    </div>
-  </div>
-
-  <div class="hb-of-sv-head" data-rev><p class="eyebrow">Les services, avec chaque installation</p></div>
-  <div class="hb-of-sv" data-rev>{services}</div>
-
-  <p class="hb-of-note" data-rev>Aucun prix affiché : chaque composition est chiffrée après la visite du lieu, par écrit,
-  avec ce qui est inclus ligne par ligne.</p>
-  <script type="application/json" class="hb-data">{_js({"ex": ex_data, "names": names, "chips": {e[0]: _chip_ext(e[0]) for e in EXT}})}</script>
-</div>"""

@@ -481,8 +481,8 @@ def stats(sc):
         return "".join(
             f'<span class="au-num"><b data-count="{n}">{n}</b><small>{fr(u)}</small></span>' for n, u in items
         )
-    return f"""<div class="au-vs-col is-before"><p class="au-k">Avant</p><div class="au-nums">{group(sc['before'])}<i class="au-strike" aria-hidden="true"></i></div></div>
-<span class="au-vs-arrow" aria-hidden="true"></span>
+    return f"""<div class="au-vs-col is-before"><p class="au-k">Avant</p><div class="au-nums">{group(sc['before'])}</div></div>
+<span class="au-vs-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
 <div class="au-vs-col is-after"><p class="au-k">Avec JARVIS</p><div class="au-nums">{group(sc['after'])}</div></div>"""
 
 

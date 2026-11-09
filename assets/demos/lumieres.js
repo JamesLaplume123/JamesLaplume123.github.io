@@ -450,7 +450,10 @@
     d.innerHTML = [["lu-b1", 2], ["lu-b2", 7], ["lu-b3", 16], ["lu-b4", 30], ["lu-b5", 56]].map(function (f) {
       return '<filter id="' + f[0] + '" filterUnits="userSpaceOnUse" x="-400" y="-400" width="2800" height="2200" color-interpolation-filters="sRGB">' +
         '<feGaussianBlur stdDeviation="' + f[1] + '"/></filter>';
-    }).join("");
+    }).join("") +
+      '<linearGradient id="lu-dz-bezel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a4a4a"/><stop offset=".22" stop-color="#1b1b1b"/><stop offset=".55" stop-color="#0a0a0a"/><stop offset=".8" stop-color="#2b2b2b"/><stop offset="1" stop-color="#101010"/></linearGradient>' +
+      '<radialGradient id="lu-dz-face" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#1a1918"/><stop offset=".7" stop-color="#070707"/><stop offset="1" stop-color="#000"/></radialGradient>' +
+      '<linearGradient id="lu-dz-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/></linearGradient>';
     document.body.appendChild(d);
   }
   function blurFor(r) { return r > 110 ? "lu-b5" : r > 60 ? "lu-b4" : r > 30 ? "lu-b3" : "lu-b2"; }
@@ -713,6 +716,30 @@
     return '<span class="lu-swl" aria-hidden="true">' + (on ? "On" : "Off") + '</span><button type="button" class="lu-sw' + (pend ? " is-pend" : "") + '" role="switch" aria-checked="' + !!on +
       '" aria-label="' + esc(label) + '" data-a="' + a + '" data-v="' + esc(v) + '"' + (dis ? " disabled" : "") + "><i></i></button>";
   }
+  /* Cadran de luminosité (langage du thermostat des Environnements) : lunette métallique, verre noir,
+     graduations fines, arc lumineux dans la couleur de l'ambiance. La valeur suit --v (0 à 100). */
+  var DIAL_TK = (function () {
+    var mi = "", ma = "";
+    for (var i = 0; i <= 60; i++) {
+      var a = (-135 + i * 4.5) * Math.PI / 180, r0 = i % 10 ? 73 : 70, sn = Math.sin(a), cs = Math.cos(a);
+      var d = "M" + (100 + r0 * sn).toFixed(1) + " " + (100 - r0 * cs).toFixed(1) + "L" + (100 + 79 * sn).toFixed(1) + " " + (100 - 79 * cs).toFixed(1);
+      if (i % 10) mi += d; else ma += d;
+    }
+    return '<path class="lu-dz-tk" d="' + mi + '"/><path class="lu-dz-tk is-maj" d="' + ma + '"/>';
+  })();
+  var DIAL_ARC = "M" + (100 - 62 * Math.SQRT1_2).toFixed(2) + " " + (100 + 62 * Math.SQRT1_2).toFixed(2) + "A62 62 0 1 1 " + (100 + 62 * Math.SQRT1_2).toFixed(2) + " " + (100 + 62 * Math.SQRT1_2).toFixed(2);
+  function dial(v, on, c, c2) {
+    return '<div class="lu-dz' + (on ? "" : " is-off") + '" data-dial style="--v:' + (on ? v : 0) + ";--c:" + c + ";--c2:" + (c2 || c) + '"><svg viewBox="0 0 200 200" aria-hidden="true" focusable="false">' +
+      '<circle cx="100" cy="100" r="98" fill="url(#lu-dz-bezel)" class="lu-dz-bz"/><circle cx="100" cy="100" r="90" class="lu-dz-in"/><circle cx="100" cy="100" r="88" fill="url(#lu-dz-face)"/>' +
+      DIAL_TK + '<path class="lu-dz-tr" d="' + DIAL_ARC + '"/><path class="lu-dz-v" d="' + DIAL_ARC + '" pathLength="100"/>' +
+      '<ellipse cx="100" cy="58" rx="66" ry="40" fill="url(#lu-dz-glass)"/></svg>' +
+      '<div class="lu-dz-c">' + ic("sun") + '<b data-out="zlvl">' + (on ? v + PC : "Éteint") + "</b><small>Luminosité</small></div></div>";
+  }
+  /* Anneau de niveau : piste fine, arc dans la couleur de la lumière, chiffre net au centre */
+  function ring(v, c, t) {
+    return '<span class="lu-ring' + (v ? "" : " is-off") + '" style="--v:' + v + ";--c:" + c + '"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><circle class="lu-ring-t" cx="20" cy="20" r="16"/>' +
+      '<circle class="lu-ring-v" cx="20" cy="20" r="16" pathLength="100"/></svg><b>' + t + "</b></span>";
+  }
   function heart(a) {
     var on = !!favs()[a];
     return '<button type="button" class="lu-heart' + (on ? " is-on" : "") + '" data-a="fav" data-v="' + a + '" aria-pressed="' + on + '" aria-label="' + (on ? "Retirer des favoris" : "Ajouter aux favoris") + " : " + esc(AMB[a].name) + '">' + ic("heart") + "</button>";
@@ -870,6 +897,7 @@
       var f = OUT[o.getAttribute("data-out")];
       if (f) o.textContent = f(I, o.getAttribute("data-v"));
     });
+    [].forEach.call(p.querySelectorAll("[data-dial]"), function (o) { o.style.setProperty("--v", parseInt(OUT.zlvl(I), 10) || 0); });
   }
   var OUT = {
     zlvl: function (I) { var z = I.e.Z[I.scr.z]; return zoneLvl(I.e, z, V(I, "cur")) + PC; },
@@ -1063,7 +1091,8 @@
     } else if (ctrl.length) {
       var lvl = zoneLvl(e, z, cur) || Math.round(ctrl.reduce(function (t, l) { return t + (s.lights[l.k].last || 60); }, 0) / ctrl.length);
       var capL = ctrl.filter(function (l) { return l.cap; })[0];
-      h += '<div class="lu-now-row"><div class="lu-now-l">' + ic("sun") + '<b>Luminosité</b><span class="lu-val" data-out="zlvl">' + (on ? lvl + PC : "Éteint") + "</span></div>" + slider(lvl, "zone", z.k, "Luminosité : " + z.name, capL && capL.cap[0]) +
+      var A0 = AMB[I.scr.pa || zoneMainAmb(I, z)];
+      h += '<div class="lu-now-row lu-now-dial">' + dial(lvl, on, A0 ? A0.c : "#ffffff", A0 && A0.c2) + slider(lvl, "zone", z.k, "Luminosité : " + z.name, capL && capL.cap[0]) +
         (capL ? '<p class="lu-note">' + ic("lock") + esc(capL.cap[1]) + "</p>" : "") + "</div>";
       if (ctrl.length > 1) {
         var lv0 = ctrl.map(function (l) { return s.lights[l.k]; });
@@ -1266,7 +1295,7 @@
         '<span class="lu-thumb">' + lightThumb(e, l, d) + "</span>" +
         '<div class="lu-crow-t"><b>' + esc(l.name) + '</b><span class="lu-crow-a" style="color:' + col + '">' + esc(fixed ? l.mode : d.on ? ambName(l, d.amb) : "Éteint") + "</span><small>" + status + (note ? " · " + esc(note) : "") + "</small></div>" +
         '<div class="lu-crow-r">' + (tag ? '<span class="lu-k' + (changed ? " lu-gold" : "") + '">' + tag + "</span>" : sel && !verify ? '<i class="lu-ck">' + ic("check") + "</i>" : "") +
-        '<span class="lu-pct">' + (fixed ? ic("lock") : d.on ? d.lvl + PC : "Off") + "</span>" +
+        '<span class="lu-pct">' + (fixed ? ic("lock") : ring(d.on ? d.lvl : 0, col, d.on ? d.lvl : "Off")) + "</span>" +
         (!fixed && !verify && sel && !d.on ? '<button type="button" class="lu-link lu-link-sm" data-a="draft-on" data-v="' + l.k + '">Allumer</button>' : "") +
         (!fixed && !verify && sel && d.on && changed && !cur.on ? '<button type="button" class="lu-link lu-link-sm" data-a="draft-offk" data-v="' + l.k + '">Laisser éteinte</button>' : "") + "</div></li>";
     }).join("") + "</ul>";

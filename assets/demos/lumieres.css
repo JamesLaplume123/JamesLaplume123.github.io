@@ -434,6 +434,29 @@ button.lu-tag:hover { border-color: var(--lu-accent); }
 .lu-now-grp .lu-note { margin-left: 34px !important; }
 .lu-now-grp .lu-link { display: flex; margin: 8px 0 0 auto; }
 .lu-fixed .lu-now-l > .lu-i { color: var(--lu-muted); }
+/* Cadran de luminosité : même langage que le thermostat (lunette, verre noir, graduations, arc lumineux) */
+.lu-now-dial { display: grid; justify-items: center; gap: 4px; }
+.lu-now-dial input[type="range"] { width: 100%; }
+.lu-now-dial .lu-range-l { width: 100%; }
+.lu-dz { position: relative; width: min(190px, 100%); aspect-ratio: 1; margin: 2px 0 12px; filter: drop-shadow(0 18px 26px #000) drop-shadow(0 0 22px color-mix(in srgb, var(--mode-glow, #c9a35c) 10%, transparent)); }
+.lu-dz svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.lu-dz-bz { stroke: #ffffff2e; stroke-width: .8; }
+.lu-dz-in { fill: none; stroke: #000; stroke-width: 2.5; }
+.lu-dz-tk { fill: none; stroke: rgb(255 255 255 / .16); stroke-width: 1.2; stroke-linecap: round; }
+.lu-dz-tk.is-maj { stroke: rgb(255 255 255 / .34); stroke-width: 1.6; }
+.lu-dz-tr { fill: none; stroke: #ffffff14; stroke-width: 5; stroke-linecap: round; }
+.lu-dz-v { fill: none; stroke: var(--c); stroke-width: 5; stroke-linecap: round; stroke-dasharray: calc(var(--v) * 1) 200; filter: drop-shadow(0 0 5px var(--c)); }
+.fx .lu-dz-v { transition: stroke-dasharray .5s var(--lu-ease), stroke .4s; }
+.lu-dz.is-off .lu-dz-v { opacity: 0; }
+.lu-dz-c { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 3px; text-align: center; pointer-events: none; }
+.lu-dz-c .lu-i { width: 18px; height: 18px; color: var(--c2); filter: drop-shadow(0 0 6px var(--c2)); }
+.lu-dz-c b { font: 300 44px/1 var(--lu-font); letter-spacing: -.04em; color: #fff; font-variant-numeric: tabular-nums; text-shadow: 0 0 22px #ffffff26; }
+.lu-dz.is-off .lu-dz-c b { font-size: 24px; color: var(--lu-muted); text-shadow: none; }
+.lu-dz.is-off .lu-dz-c .lu-i { color: var(--lu-faint); filter: none; }
+.lu-dz-c small { font: 600 10px/1 var(--lu-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--lu-faint); }
+:root[data-mode="base"] .lu-dz { filter: none; }
+:root[data-mode="base"] .lu-dz-v, :root[data-mode="base"] .lu-dz-c .lu-i { filter: none; }
+:root[data-mode="base"] .lu-dz ellipse { display: none; }
 .lu-now-amb { display: flex; align-items: center; gap: 14px; padding-top: 18px; }
 .lu-now-amb > div { flex: 1; min-width: 0; }
 .lu-now-amb b { display: block; font: 500 17px/1.2 var(--lu-font); }
@@ -513,23 +536,35 @@ button.lu-tag:hover { border-color: var(--lu-accent); }
 .lu-cgrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.85fr); gap: 26px; align-items: start; }
 .lu-csel, .lu-crep { display: grid; gap: 16px; min-width: 0; }
 .lu-crep-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.lu-crow-list { display: grid; gap: 12px; }
+.lu-crow-list { display: grid; gap: 10px; }
 .lu-crow {
-  position: relative; display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 12px 14px;
+  position: relative; display: grid; grid-template-columns: 76px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 10px 14px 10px 10px;
   border-radius: 16px;
 }
+/* La répartition accompagne la liste pendant le défilement : pas de colonne vide à côté des dix lumières */
+@container lu (min-width: 761px) { .lu-crep { position: sticky; top: 92px; } }
 .lu .lu-crow.is-sel { --lu-card: var(--lu-card-hi); box-shadow: var(--lu-depth), 0 0 0 1px color-mix(in srgb, var(--lu-accent) 30%, transparent), 0 0 30px color-mix(in srgb, var(--mode-glow, #c9a35c) 14%, transparent); }
 .lu-crow.is-chg { border-color: rgb(143 211 232 / .5); }
-.lu-thumb { position: relative; display: block; width: 92px; height: 88px; border-radius: 10px; overflow: hidden; background: #060606; flex: none; }
+.lu-thumb { position: relative; display: block; width: 76px; height: 76px; border-radius: 10px; overflow: hidden; background: #060606; flex: none; }
 .lu-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .lu-thumb img.is-off { opacity: .35; }
 .lu-crow-t { min-width: 0; display: grid; gap: 4px; }
-.lu-crow-t b { font: 500 17px/1.2 var(--lu-font); }
-.lu-crow-a { font: 500 19px/1.2 var(--lu-font); }
+.lu-crow-t { gap: 2px; }
+.lu-crow-t b { font: 600 10.5px/1.3 var(--lu-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--lu-muted); }
+.lu-crow-a { font: 500 18px/1.2 var(--lu-font); }
 .lu-crow-t small { display: flex; align-items: center; gap: 6px 10px; flex-wrap: wrap; font-size: 12.5px; color: var(--lu-muted); }
 .lu-crow-t small .lu-i { width: 14px; height: 14px; color: #8fd3e8; }
 .lu-crow-r { position: relative; z-index: 3; display: grid; justify-items: end; gap: 6px; align-self: stretch; align-content: space-between; }
-.lu-pct { font: 500 13.5px/1 var(--lu-font); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lu-pct { font: 500 13px/1 var(--lu-font); color: var(--lu-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lu-ring { position: relative; display: grid; place-items: center; width: 40px; height: 40px; }
+.lu-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.lu-ring-t { fill: none; stroke: #ffffff14; stroke-width: 2.6; }
+.lu-ring-v { fill: none; stroke: var(--c); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: calc(var(--v) * 1) 200; filter: drop-shadow(0 0 3px var(--c)); }
+.fx .lu-ring-v { transition: stroke-dasharray .5s var(--lu-ease); }
+:root[data-mode="base"] .lu-ring-v { filter: none; }
+.lu-ring.is-off .lu-ring-v { opacity: 0; }
+.lu-ring.is-off b { font-size: 11px; color: var(--lu-muted); }
+.lu-ring b { font: 500 12.5px/1 var(--lu-font); color: var(--lu-text); font-variant-numeric: tabular-nums; }
 .lu-crow-r .lu-k { text-transform: none; letter-spacing: 0; font: 500 11.5px/1.2 var(--lu-font); color: var(--lu-muted); white-space: nowrap; }
 .lu-crow-r .lu-k.lu-gold { color: #8fd3e8; }
 .lu-crow-t small span { white-space: nowrap; }
@@ -623,8 +658,8 @@ button.lu-tag:hover { border-color: var(--lu-accent); }
   .lu-cfgpic { height: 108px; }
   .lu-libgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .lu-cgrid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr); gap: 20px; }
-  .lu-crow { grid-template-columns: 70px minmax(0, 1fr) auto; gap: 12px; }
-  .lu-thumb { width: 70px; height: 70px; }
+  .lu-crow { grid-template-columns: 64px minmax(0, 1fr) auto; gap: 12px; }
+  .lu-thumb { width: 64px; height: 64px; }
   .lu-hero-t { font-size: 30px; }
   .lu-out { grid-template-columns: 96px minmax(0, 1fr); gap: 14px; }
   .lu-out-pic { height: 68px; }
@@ -698,7 +733,6 @@ button.lu-tag:hover { border-color: var(--lu-accent); }
   .lu-same .lu-btn { min-width: 0; }
   .lu-crow { grid-template-columns: 56px minmax(0, 1fr) auto; padding: 10px; }
   .lu-thumb { width: 56px; height: 56px; }
-  .lu-crow-t b { font-size: 15px; }
   .lu-crow-a { font-size: 16px; }
   .lu-pl li { grid-template-columns: 56px minmax(0, 1fr); gap: 12px; }
   .lu-pl .lu-thumb { height: 52px; }

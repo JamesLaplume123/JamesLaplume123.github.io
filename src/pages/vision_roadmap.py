@@ -1,7 +1,8 @@
 # Vision et feuille de route — le manifeste de JARVIS : rendre les gens libres.
-# Manifeste → horizons (maintenant, 12 mois, 3 ans, 10 ans) → une journée avec JARVIS
-# (famille et résidence de prestige) → Personal Intelligence → firme de sécurité privée →
-# tous vos lieux → recherche et partenariats → principes → feuille de route réelle.
+# Manifeste → horizons (maintenant, 12 mois, 3 ans, 10 ans) → Personal Intelligence →
+# firme de sécurité privée → partenariats → principes → feuille de route réelle.
+# La journée type et « tous vos lieux » se montrent sur /solutions/environnements-intelligents/;
+# Rust sur /plateforme/#rust; la méthode de recherche sur /recherche/.
 # Les sections de vision sont des démonstrations à données d'exemple; la feuille de route
 # est réelle (src/demos/feuille.py).
 
@@ -36,8 +37,8 @@ PAGE = {
     "title": "Vision JARVIS : rendre les gens libres | Feuille de route",
     "description": (
         "Le manifeste de JARVIS : un système privé installé chez vous qui rend du temps, garde "
-        "vos données et vous laisse décider. Horizons à 12 mois, 3 ans et 10 ans, une journée "
-        "avec JARVIS, la firme de sécurité privée, la recherche et l’état réel du projet."
+        "vos données et vous laisse décider. Horizons à 12 mois, 3 ans et 10 ans, Personal "
+        "Intelligence, la firme de sécurité privée et l’état réel du projet."
     ),
     "og_image": "/media/concept/jarvis-future-ecosystem-v1.webp",
     "assets": ["vision", "vie", "pentest", "feuille"],
@@ -52,7 +53,6 @@ PAGE = {
     en est vraiment.</p>
     <div class="acts" data-rev>
       <a class="pill" href="#horizons">Voir les horizons</a>
-      <a class="pill ghost" href="#journee">Une journée avec JARVIS</a>
       <a class="pill ghost" href="#feuille-de-route">Où en est JARVIS</a>
     </div>
     <div class="vn-hero-n" data-rev>
@@ -76,16 +76,8 @@ PAGE = {
   @@HORIZONS@@
 </section>
 
-<section class="sect" id="journee" data-toc="Une journée">
-  """ + _head("02", "Une journée avec JARVIS", "Une famille. Une résidence de prestige. <em>La même liberté.</em>",
-              "Du réveil à la nuit, ce que JARVIS fait seul et ce qu’il vous laisse décider. Choisissez "
-              "un client, puis touchez un moment de la journée.",
-              "Vision · données d’exemple") + """
-  @@JOURNEE@@
-</section>
-
-<section class="sect alt" id="vie" data-toc="Personal Intelligence">
-  """ + _head("03", "Personal Intelligence · vision", "Comprendre vos habitudes. <em>Choisir votre avenir.</em>",
+<section class="sect" id="vie" data-toc="Personal Intelligence">
+  """ + _head("02", "Personal Intelligence · vision", "Comprendre vos habitudes. <em>Choisir votre avenir.</em>",
               "Montre, téléphone, agenda, banque, maison et voiture savent chacun leur part. JARVIS relie "
               "seulement ce que vous autorisez, repère ce qui vous nuit et vous aide à atteindre vos "
               "objectifs. Vous décidez à chaque étape.",
@@ -99,8 +91,8 @@ PAGE = {
   permission, révocable séparément.</p>
 </section>
 
-<section class="sect" id="securite-pro" data-toc="La firme de sécurité">
-  """ + _head("04", "Security Pro · vision", "Une vraie firme de sécurité privée, <em>augmentée par l’IA.</em>",
+<section class="sect alt" id="securite-pro" data-toc="La firme de sécurité">
+  """ + _head("03", "Security Pro · vision", "Une vraie firme de sécurité privée, <em>augmentée par l’IA.</em>",
               "Six lignes de service, une même rigueur. Chaque mission part d’un mandat écrit; l’IA "
               "accélère, un professionnel valide, chaque accès est journalisé et chaque preuve est hachée.",
               "Vision · données fictives") + """
@@ -114,36 +106,21 @@ PAGE = {
   vérification des antécédents de chaque analyste.</p>
 </section>
 
-<section class="sect alt" id="multi-site" data-toc="Tous vos lieux">
-  """ + _head("05", "JARVIS Multi-Site · vision à long terme", "Une décision. <em>Tous vos lieux qui se coordonnent.</em>",
-              "Chaque lieu garde son Hub, ses fonctions locales et ses propres règles. Seul le petit "
-              "événement utile et autorisé circule entre eux.",
-              "Vision à long terme") + """
-  @@LIEUX@@
-</section>
-
-<section class="sect" id="recherche" data-toc="Recherche">
-  """ + _head("06", "Recherche", "IA locale, matériel et Rust. <em>Les fondations de demain.</em>",
-              "Ce qui rend JARVIS possible sans nuage : une IA qui tourne chez vous, un Hub conçu pour "
-              "durer et un noyau écrit pour être sûr.") + """
-  @@RECHERCHE@@
-</section>
-
-<section class="sect alt" id="partenariats" data-toc="Partenariats">
-  """ + _head("07", "Partenariats", "Seul, on va vite. <em>Ensemble, on va loin.</em>",
+<section class="sect" id="partenariats" data-toc="Partenariats">
+  """ + _head("04", "Partenariats", "Seul, on va vite. <em>Ensemble, on va loin.</em>",
               "JARVIS coordonne; les métiers restent aux experts. Les partenaires cherchés aujourd’hui, "
               "pour installer, entretenir et protéger.") + """
   @@PARTENAIRES@@
 </section>
 
-<section class="sect" id="principes" data-toc="Principes">
-  """ + _head("08", "Principes", "Ce qui ne changera jamais.",
+<section class="sect alt" id="principes" data-toc="Principes">
+  """ + _head("05", "Principes", "Ce qui ne changera jamais.",
               "Six engagements qui passent avant toute fonction, toute vente et toute croissance.") + """
   @@PRINCIPES@@
 </section>
 
-<section class="sect alt" id="feuille-de-route" data-toc="Où en est JARVIS">
-  """ + _head("09", "État réel du projet", "Ce qui existe. Ce qui se construit. <em>Ce qui viendra après.</em>",
+<section class="sect" id="feuille-de-route" data-toc="Où en est JARVIS">
+  """ + _head("06", "État réel du projet", "Ce qui existe. Ce qui se construit. <em>Ce qui viendra après.</em>",
               "Tout ce qui précède est une vision. Voici le travail réel, jalon par jalon : filtrez par "
               "solution ou par état.") + """
   @@FEUILLE@@
@@ -158,12 +135,9 @@ PAGE = {
 """)
     .replace("@@MANIFESTE@@", vision.manifeste())
     .replace("@@HORIZONS@@", vision.horizons())
-    .replace("@@JOURNEE@@", vision.journee())
     .replace("@@VIE@@", vie.html())
     .replace("@@FIRME@@", vision.firme())
     .replace("@@PENTEST@@", pentest.html())
-    .replace("@@LIEUX@@", vision.lieux())
-    .replace("@@RECHERCHE@@", vision.recherche())
     .replace("@@PARTENAIRES@@", vision.partenaires())
     .replace("@@PRINCIPES@@", vision.principes())
     .replace("@@FEUILLE@@", feuille.html()),

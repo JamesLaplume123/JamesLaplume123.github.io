@@ -107,7 +107,7 @@
 .vn-mani-tag i { width: 8px; height: 8px; border-radius: 50%; background: var(--gold-soft); box-shadow: 0 0 10px var(--mode-glow); flex: none; }
 .vn-libs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; margin-top: 3.4rem; }
 .vn-lib { padding: 2rem 1.9rem 2.1rem; }
-.vn-lib-i, .vn-pr-i, .vn-pa-i, .vn-fi-i, .vn-lieu-i {
+.vn-lib-i, .vn-pr-i, .vn-pa-i, .vn-fi-i {
   display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; color: var(--gold-soft);
   background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--mode-glow) 22%, transparent), #0b0b0b 70%);
   border: 1px solid color-mix(in srgb, var(--gold-soft) 30%, transparent);
@@ -155,51 +155,7 @@
 @keyframes vnUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
 /* ==========================================================================
-   3. Une journée avec JARVIS
-   ========================================================================== */
-.vn-jr { padding: 1.6rem; }
-.vn-jr-top { position: relative; z-index: 4; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-.vn-seg { display: inline-grid; grid-auto-flow: column; gap: .3rem; padding: .3rem; border-radius: 16px; background: #000000b0; border: 1px solid var(--vn-line); min-width: 0; }
-.vn-seg-b { display: grid; gap: .2rem; justify-items: start; padding: .7rem 1.1rem; border: 0; border-radius: 12px; background: transparent; cursor: pointer; font: inherit; text-align: left; color: var(--vn-dim); transition: background .3s, color .3s; }
-.vn-seg-b b { font-size: 1rem; font-weight: 650; color: #e8e8ec; }
-.vn-seg-b span { font-size: .76rem; }
-.vn-seg-b.is-on { background: var(--mode-action); color: color-mix(in srgb, var(--mode-on-action) 75%, transparent); box-shadow: var(--mode-action-edge); }
-.vn-seg-b.is-on b { color: var(--mode-on-action); }
-.vn-jr-nav { display: flex; gap: .5rem; flex: none; }
-.vn-btn { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--mode-line); background: #000000b0; color: #e8e8ec; cursor: pointer; transition: border-color .3s, color .3s; }
-.vn-btn:hover { border-color: color-mix(in srgb, var(--gold-soft) 60%, transparent); color: var(--gold-soft); }
-.vn-day { position: relative; z-index: 4; }
-.vn-day[hidden] { display: none; }
-.vn-tl { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; margin-top: 1.4rem; }
-.vn-tl-line { position: absolute; left: 1.6rem; right: 1.6rem; bottom: 0; height: 2px; background: #ffffff14; }
-.vn-tl-line i { position: absolute; inset: 0; background: var(--gold-soft); transform-origin: left; transform: scaleX(var(--p, 0)); transition: transform .6s var(--ease); }
-.vn-tl-b { display: grid; justify-items: start; gap: .25rem; padding: .8rem .9rem 1rem; border: 0; border-radius: 12px 12px 0 0; background: transparent; cursor: pointer; font: inherit; color: var(--vn-dim); text-align: left; transition: background .3s, color .3s; }
-.vn-tl-b .vn-i { width: 20px; height: 20px; color: var(--vn-dim); margin-bottom: .2rem; }
-.vn-tl-b b { font: 600 1.05rem/1 var(--sans); color: #e8e8ec; font-variant-numeric: tabular-nums; }
-.vn-tl-b span { font-size: .8rem; }
-.vn-tl-b:hover { background: #ffffff07; }
-.vn-tl-b.is-on { background: linear-gradient(0deg, color-mix(in srgb, var(--mode-glow) 14%, transparent), transparent); color: #e8e8ec; }
-.vn-tl-b.is-on .vn-i { color: var(--gold-soft); }
-.vn-tl-b.is-on b { color: var(--gold-soft); }
-.vn-mos { margin-top: 1.4rem; }
-.vn-mo { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 2.2rem; align-items: center; }
-.vn-mo[hidden] { display: none; }
-[data-demo="vision"] .vn-mo-ph { aspect-ratio: 3 / 2; border-radius: 18px; border: 1px solid var(--vn-line); }
-.vn-mo-h { display: flex; align-items: baseline; gap: .8rem; margin: 0; }
-.vn-mo-h b { font-size: 2.6rem; font-weight: 650; letter-spacing: -.03em; line-height: 1; background: var(--mode-display); -webkit-background-clip: text; background-clip: text; color: transparent; font-variant-numeric: tabular-nums; }
-.vn-mo-h span { font: 500 .72rem/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--vn-dim); }
-.vn-mo-txt h3 { margin: 1rem 0 .7rem; font-size: clamp(1.4rem, 2.3vw, 1.9rem); line-height: 1.15; font-weight: 650; letter-spacing: -.025em; }
-.vn-mo-txt > p { margin: 0; color: var(--vn-txt); line-height: 1.7; }
-.vn-mo-x { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1.3rem; }
-.vn-mo-d { display: flex; gap: .8rem; align-items: center; margin: 1.3rem 0 0; padding: .9rem 1rem; border-radius: 14px; background: #000000a8; border: 1px solid color-mix(in srgb, var(--gold-soft) 26%, transparent); }
-.vn-mo-d .vn-i { width: 22px; height: 22px; color: var(--gold-soft); }
-.vn-mo-d span { display: grid; gap: .2rem; font-size: .92rem; color: #f2f2f4; }
-.vn-mo-d b { font: 500 .66rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft); }
-.fx .vn-mo.is-on { animation: vnFade .55s var(--ease) both; }
-@keyframes vnFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-
-/* ==========================================================================
-   4. Firme de sécurité privée
+   3. Firme de sécurité privée
    ========================================================================== */
 .vn-fi { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 2.4rem; align-items: center; }
 .vn-fi-ph { overflow: hidden; }
@@ -222,41 +178,8 @@
 .vn-fi-l p { margin: .25rem 0 0; font-size: .88rem; line-height: 1.55; color: var(--vn-txt); }
 
 /* ==========================================================================
-   5. Tous vos lieux
+   4. Partenariats
    ========================================================================== */
-.vn-lieux { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.vn-lieu { position: relative; margin: 0; border-radius: 20px; overflow: hidden; border: 1px solid #ffffff14; box-shadow: 0 24px 60px #000c; }
-[data-demo="vision"] .vn-lieu-ph { aspect-ratio: 4 / 3; }
-.vn-lieu .vn-ph:not(.is-wait)::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #000000d8, #0000 55%); }
-.vn-lieu .vn-ph.is-wait .vn-ph-b { padding-bottom: 4.6rem; }
-.vn-lieu .vn-ph-b em { display: none; }
-.vn-lieu figcaption { position: absolute; left: 1rem; right: 1rem; bottom: 1rem; z-index: 2; display: grid; grid-template-columns: auto 1fr; column-gap: .8rem; align-items: center; }
-.vn-lieu .vn-lieu-i { grid-row: span 2; width: 40px; height: 40px; border-radius: 12px; }
-.vn-lieu b { font-size: 1.1rem; font-weight: 650; }
-.vn-lieu small { font: 500 .66rem/1.3 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: #cfcfd6; }
-.vn-flow { margin-top: 1.4rem; padding: 2rem 2.2rem; }
-.vn-flow > * { position: relative; z-index: 4; }
-.vn-flow-k { margin: 0; font: 500 .72rem/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--gold-soft); }
-.vn-flow ol { list-style: none; margin: 1.3rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; counter-reset: f; }
-.vn-flow li { display: grid; gap: .4rem; padding: 1rem 1.1rem; border-radius: 14px; background: #000000a0; border: 1px solid var(--vn-line); }
-.vn-flow li b { font-size: 1rem; color: #fff; }
-.vn-flow li span { font-size: .86rem; color: var(--vn-txt); }
-.vn-flow-n { margin: 1.2rem 0 0; font-size: .9rem; color: var(--vn-dim); }
-
-/* ==========================================================================
-   6. Recherche et partenariats
-   ========================================================================== */
-.vn-rcs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
-.vn-rc { overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
-[data-demo="vision"] .vn-rc-ph { aspect-ratio: 3 / 2; border-radius: 20px 20px 0 0; }
-.vn-rc .vn-ph-b em { display: none; }
-.vn-rc-b { padding: 1.5rem 1.6rem 1.8rem; }
-.vn-rc-k { display: flex; align-items: center; gap: .6rem; margin: 0 0 .8rem; font-size: 1.4rem; font-weight: 650; letter-spacing: -.02em; }
-.vn-rc-k .vn-i { width: 24px; height: 24px; color: var(--gold-soft); }
-.vn-rc-b > p:not(.vn-rc-k) { margin: 0; color: var(--vn-txt); line-height: 1.65; font-size: .95rem; }
-.vn-rc-b ul { list-style: none; margin: 1.1rem 0 0; padding: 0; display: grid; gap: .5rem; }
-.vn-rc-b li { display: flex; gap: .55rem; align-items: flex-start; font-size: .88rem; color: #e4e4e8; }
-.vn-rc-b li .vn-i { width: 16px; height: 16px; margin-top: .15rem; color: #34d399; }
 .vn-pa { padding: 1.4rem; }
 .vn-pa-l { position: relative; z-index: 4; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--vn-line); border-radius: 16px; overflow: hidden; }
 .vn-pa-l li { display: grid; align-content: start; gap: .7rem; padding: 1.6rem 1.5rem; background: #070707; transition: background .3s; }
@@ -267,7 +190,7 @@
 .vn-pa-n .vn-i { color: var(--gold-soft); }
 
 /* ==========================================================================
-   7. Principes
+   5. Principes
    ========================================================================== */
 .vn-prs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
 .vn-pr { padding: 1.9rem 1.8rem 2rem; overflow: hidden; }
@@ -285,31 +208,19 @@
   .vn-hz-j { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 960px) {
-  .vn-mani, .vn-hz-top, .vn-mo, .vn-fi { grid-template-columns: minmax(0, 1fr); }
+  .vn-mani, .vn-hz-top, .vn-fi { grid-template-columns: minmax(0, 1fr); }
   .vn-mani-ph .vn-ph { aspect-ratio: 16 / 11; }
-  .vn-libs, .vn-rcs, .vn-prs, .vn-flow ol { grid-template-columns: minmax(0, 1fr); }
-  .vn-lieux, .vn-pa-l { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .vn-jr-top { flex-direction: column; align-items: stretch; }
-  .vn-jr-nav { justify-content: flex-end; }
+  .vn-libs, .vn-prs { grid-template-columns: minmax(0, 1fr); }
+  .vn-pa-l { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
-  .vn-hz, .vn-jr { padding: 1rem; }
+  .vn-hz { padding: 1rem; }
   .vn-hz-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .vn-hz-line { display: none; }
-  .vn-hz-j, .vn-lieux, .vn-pa-l, .vn-pils { grid-template-columns: minmax(0, 1fr); }
-  .vn-seg { grid-auto-flow: row; }
-  .vn-tl { display: flex; overflow-x: auto; scrollbar-width: none; }
-  .vn-tl-b { flex: none; }
-  .vn-tl-b b, .vn-tl-b span { white-space: nowrap; }
-  .vn-tl::-webkit-scrollbar { display: none; }
-  .vn-tl-b { padding: .6rem .5rem .8rem; }
-  .vn-tl-b span { font-size: .7rem; }
-  .vn-tl-line { left: 0; right: 0; }
-  .vn-flow { padding: 1.4rem 1.2rem; }
-  .vn-mo-h b { font-size: 2rem; }
+  .vn-hz-j, .vn-pa-l, .vn-pils { grid-template-columns: minmax(0, 1fr); }
   .vn-hero .vn-hero-n span { flex: 1 1 calc(50% - .7rem); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .vn-hz-line i, .vn-tl-line i { transition: none; }
-  .fx .vn-hz-panel.is-on .vn-hz-j li, .fx .vn-mo.is-on { animation: none; }
+  .vn-hz-line i { transition: none; }
+  .fx .vn-hz-panel.is-on .vn-hz-j li { animation: none; }
 }

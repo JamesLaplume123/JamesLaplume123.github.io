@@ -1,18 +1,18 @@
 # Page Vision — le manifeste de JARVIS (assets/demos/vision.css et .js).
-# Sept blocs : manifeste, horizons, une journée avec JARVIS, firme de sécurité privée,
-# tous vos lieux, recherche et partenariats, principes. Les horizons et les journées sont
-# une vision montrée avec des données d'exemple; l'état réel vit dans feuille.py.
+# Cinq blocs : manifeste, horizons, firme de sécurité privée, partenariats, principes.
+# Les horizons sont une vision montrée avec des données d'exemple; l'état réel vit dans
+# feuille.py. La journée type et « tous vos lieux » vivent sur la page Environnements
+# intelligents; Rust et la recherche, sur /plateforme/#rust et /recherche/.
 #
 # Photos : chaque emplacement prend media/vision/<nom>.webp dès que le fichier existe au
 # build (déposer le fichier, reconstruire, aucun changement de code); sinon un panneau noir
 # « Photo à venir ». Liste complète : PHOTOS_ATTENDUES (nom, description, priorité, format).
 
-import json
 import os
 import re
 from html import escape
 
-from demos.hub import EXT, EXT_BY, ICONS as _HUB_ICONS
+from demos.hub import EXT, ICONS as _HUB_ICONS
 
 _ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 NBSP = " "
@@ -25,10 +25,6 @@ def fr(s):
     s = re.sub(r"(\d) (h|min|km|ans|mois|%|\$)", rf"\1{NBSP}\2", s)
     s = re.sub(r"\s+([:;?!»])", rf"{NBSP}\1", s)
     return s.replace("« ", "«" + NBSP)
-
-
-def _js(obj):
-    return json.dumps(obj, ensure_ascii=False).replace("</", "<\\/")
 
 
 # ---------------------------------------------------------------------------
@@ -262,141 +258,7 @@ def horizons():
 
 
 # ---------------------------------------------------------------------------
-# 3. Une journée avec JARVIS
-# ---------------------------------------------------------------------------
-JOURNEES = [
-    {
-        "k": "ordinaire", "t": "Une famille", "s": "Maison de banlieue · deux enfants · une voiture électrique",
-        "m": [
-            ("6 h 30", "Réveil", "sun", ("jour-famille-matin", "Cuisine familiale au lever du jour",
-             "Cuisine familiale d’une maison de banlieue québécoise à 6 h 30, lumière douce qui s’allume, café qui coule, tablette murale avec la journée affichée, ambiance chaleureuse et réaliste", 2),
-             "La maison s’éveille en douceur.",
-             "Lumière progressive, chauffage remonté dans la cuisine, café lancé. JARVIS résume la journée : "
-             "deux rendez-vous, pluie à 16 h, la voiture est chargée à 92 %.",
-             ["env", "ia"], "Aucune décision à prendre."),
-            ("8 h 10", "Départ", "car", ("jour-famille-route", "Voiture électrique familiale sur la route du matin",
-             "Voiture électrique familiale sur une route du Québec un matin d’automne, couleurs chaudes, enfants à l’arrière vus de l’extérieur, aucune marque visible",
-             3),
-             "La maison se ferme derrière vous.",
-             "Tout le monde est parti : portes vérifiées, chauffage en mode absent, caméras en surveillance. "
-             "Une fenêtre du sous-sol est restée ouverte : JARVIS vous le dit avant de quitter la rue.",
-             ["secu", "env", "mob"], "Vous touchez « Compris, je la laisse ».") ,
-            ("13 h 20", "Imprévu", "diag", ("jour-famille-eau", "Capteur d’eau sous l’évier",
-             "Petit capteur de fuite d’eau discret sous un évier de cuisine moderne, quelques gouttes sur le sol, éclairage net, photo de produit réaliste",
-             4),
-             "Une petite fuite, attrapée tôt.",
-             "Le capteur sous l’évier détecte de l’eau. JARVIS ferme la valve principale, prend une photo, "
-             "prépare un dossier pour le plombier et vous propose trois plages horaires.",
-             ["diag", "env", "auto"], "Vous approuvez la plage de 17 h."),
-            ("18 h 45", "Soirée", "people", ("jour-famille-soir", "Salon familial en soirée",
-             "Salon familial en soirée, lumière tamisée chaude, famille sur le canapé devant un film, stores baissés, ambiance cinéma douce, réaliste et chaleureux",
-             3),
-             "Le temps rendu à la famille.",
-             "Le plombier est passé, la valve est rouverte et JARVIS confirme le retour à la normale. "
-             "Ambiance Cinéma : lumières basses, stores fermés, notifications en sourdine.",
-             ["env", "diag"], "Une touche : « Cinéma »."),
-            ("23 h 05", "Nuit", "moon", ("jour-famille-nuit", "Entrée de maison verrouillée la nuit",
-             "Entrée d’une maison de banlieue la nuit, porte verrouillée, éclairage extérieur doux, neige au sol, calme total",
-             4),
-             "Tout est fermé. Vous dormez.",
-             "Portes verrouillées, alarme armée, réseau des invités coupé, sauvegarde du Hub faite. "
-             "Si un bruit survient, JARVIS montre l’image avant de vous réveiller.",
-             ["secu", "res", "hub"], "Rien à faire."),
-        ],
-    },
-    {
-        "k": "prestige", "t": "Une résidence de prestige", "s": "Domaine au bord de l’eau · collection automobile · yacht · jet",
-        "m": [
-            ("6 h 00", "Réveil", "sun", ("jour-prestige-suite", "Suite principale d’une résidence de prestige au lever du soleil",
-             "Suite principale d’une résidence de prestige au lever du soleil, grands stores motorisés qui s’ouvrent sur un lac, draps blancs, bois et pierre, lumière dorée, luxe discret",
-             2),
-             "Le domaine est prêt avant vous.",
-             "Stores ouverts sur le lac, spa à 38 °C, café servi par le personnel prévenu. JARVIS résume la nuit : "
-             "deux passages de chevreuils, aucun événement à vérifier, la marina annonce un vent calme.",
-             ["env", "secu", "ia"], "Aucune décision à prendre."),
-            ("9 h 30", "Garage de collection", "car", ("jour-prestige-garage", "Garage de collection : Lamborghini, Ferrari, Nissan GT-R et Mercedes G63",
-             "Garage de collection impeccable, plancher époxy noir, éclairage linéaire chaud : une Lamborghini, une Ferrari, une Nissan GT-R et un Mercedes G63 alignés, chargeurs de batterie discrets, ambiance musée",
-             1, "/media/solutions/camera-garage-supercars-v1.webp"),
-             "La bonne voiture, prête à partir.",
-             "Vous choisissez la Ferrari pour la route du lac. JARVIS a vérifié la batterie d’entretien, la "
-             "pression des pneus et la météo. Le G63 reste prêt pour l’après-midi. La porte s’ouvre sur votre confirmation.",
-             ["mob", "diag", "secu"], "Vous touchez « Ouvrir la porte 2 »."),
-            ("13 h 00", "Yacht", "anchor", ("jour-prestige-yacht", "Yacht amarré à la marina, prêt à appareiller",
-             "Yacht de luxe amarré à une marina privée en plein jour, eau calme, pont en teck, équipage au loin, aucune marque visible, ambiance éditoriale",
-             2),
-             "Le bateau vous attend, plein fait.",
-             "Le yacht est climatisé, les réservoirs sont pleins et l’équipage a reçu l’heure d’arrivée. "
-             "JARVIS partage seulement ce qui est utile : l’heure, le nombre d’invités, les préférences.",
-             ["mob", "auto", "res"], "Vous approuvez la liste des invités."),
-            ("17 h 40", "Jet", "plane", ("jour-prestige-jet", "Jet d’affaires sur le tarmac d’un aéroport privé",
-             "Jet d’affaires blanc sur le tarmac d’un aéroport privé au coucher du soleil, escalier déployé, voiture noire qui approche, aucune marque visible, ambiance cinématographique",
-             2),
-             "Départ pour Miami, sans friction.",
-             "Le vol de 19 h est confirmé, la voiture arrive au tarmac, la résidence passe en mode absent "
-             "prolongé et la villa de Floride se prépare : climatisation, piscine, réfrigérateur.",
-             ["mob", "env", "hub"], "Vous confirmez le départ."),
-            ("23 h 30", "Nuit", "moon", ("jour-prestige-nuit", "Terrasse et piscine du domaine la nuit, sous surveillance",
-             "Terrasse et piscine d’une résidence de prestige la nuit, éclairage subtil, caméras discrètes, eau turquoise, calme absolu",
-             3, "/media/solutions/camera-pool-spa-v1.webp"),
-             "Deux maisons, un seul œil sur tout.",
-             "Le domaine du Québec est sous la garde de la firme : rondes planifiées, collection protégée, "
-             "accès temporaires expirés. En Floride, vous dormez; JARVIS veille aux deux endroits.",
-             ["secu", "res", "hub"], "Rien à faire."),
-        ],
-    },
-]
-
-
-def _moment(m, j, i):
-    heure, tag, ic, ph, titre, texte, sols, decision = m
-    nom, alt, desc, prio = ph[:4]
-    repli = ph[4] if len(ph) > 4 else None
-    chips = "".join(chip(k) for k in sols)
-    return f"""<article class="vn-mo{' is-on' if i == 0 else ''}" data-mo="{i}"{'' if i == 0 else ' hidden'}>
-      {photo(nom, alt, desc, prio, "3:2", repli, cls="vn-mo-ph")}
-      <div class="vn-mo-txt">
-        <p class="vn-mo-h"><b>{fr(heure)}</b><span>{tag}</span></p>
-        <h3>{fr(titre)}</h3>
-        <p>{fr(texte)}</p>
-        <div class="vn-mo-x">{chips}</div>
-        <p class="vn-mo-d">{icon("hand")}<span><b>Votre part</b>{fr(decision)}</span></p>
-      </div>
-    </article>"""
-
-
-def journee():
-    seg = "".join(
-        f'<button type="button" class="vn-seg-b{" is-on" if i == 0 else ""}" aria-pressed="{"true" if i == 0 else "false"}" data-jr="{i}">'
-        f'<b>{j["t"]}</b><span>{fr(j["s"])}</span></button>'
-        for i, j in enumerate(JOURNEES)
-    )
-    days = []
-    for d, j in enumerate(JOURNEES):
-        steps = "".join(
-            f'<button type="button" class="vn-tl-b{" is-on" if i == 0 else ""}" aria-pressed="{"true" if i == 0 else "false"}" data-mo="{i}">'
-            f'{icon(m[2])}<b>{fr(m[0])}</b><span>{m[1]}</span></button>'
-            for i, m in enumerate(j["m"])
-        )
-        mos = "".join(_moment(m, j, i) for i, m in enumerate(j["m"]))
-        days.append(f"""<div class="vn-day{' is-on' if d == 0 else ''}" data-day="{d}"{'' if d == 0 else ' hidden'}>
-    <div class="vn-tl" role="group" aria-label="Moments de la journée">{steps}<span class="vn-tl-line" aria-hidden="true"><i></i></span></div>
-    <div class="vn-mos">{mos}</div>
-  </div>""")
-    return f"""<div class="vn vn-jr vn-framed" data-demo="vision" data-vn="journee" data-rev>
-  <div class="vn-jr-top">
-    <div class="vn-seg" role="group" aria-label="Choisir le client">{seg}</div>
-    <div class="vn-jr-nav">
-      <button type="button" class="vn-btn" data-step="-1" aria-label="Moment précédent">{icon("prev")}</button>
-      <button type="button" class="vn-btn" data-step="1" aria-label="Moment suivant">{icon("next")}</button>
-    </div>
-  </div>
-  {''.join(days)}
-  <p class="vn-note">Scénarios de vision · données d’exemple. Chaque action sensible attend votre confirmation.</p>
-</div>"""
-
-
-# ---------------------------------------------------------------------------
-# 4. Firme de sécurité privée (introduction, avant la démonstration Security Pro)
+# 3. Firme de sécurité privée (introduction, avant la démonstration Security Pro)
 # ---------------------------------------------------------------------------
 FIRME = [
     ("Tests d’intrusion", "key", "Attaquer vos systèmes avant les autres, sous mandat écrit, et prouver chaque faille."),
@@ -425,74 +287,8 @@ def firme():
 
 
 # ---------------------------------------------------------------------------
-# 5. Tous vos lieux
+# 4. Partenariats
 # ---------------------------------------------------------------------------
-LIEUX = [
-    ("Résidence", "home", "Son Hub · ses règles", ("lieu-residence", "Résidence reliée à JARVIS",
-     "Façade d’une grande résidence moderne en soirée, lumières intérieures chaudes, aménagement paysager éclairé", 3,
-     "/media/solutions/environnements-intelligents.webp")),
-    ("Garage de collection", "car", "Ses voitures · ses accès", ("lieu-garage", "Garage de collection relié à JARVIS",
-     "Garage de collection vu de l’entrée, voitures sportives alignées sous un éclairage linéaire, plancher noir brillant", 3,
-     "/media/solutions/camera-garage-supercars-v1.webp")),
-    ("Yacht", "anchor", "Son réseau · son équipage", ("lieu-yacht", "Yacht relié à JARVIS",
-     "Yacht de luxe en mer au coucher du soleil, vu de trois quarts arrière, sillage doré, aucune marque", 2, None)),
-    ("Jet", "plane", "Ses vols · ses préparatifs", ("lieu-jet", "Jet d’affaires relié à JARVIS",
-     "Jet d’affaires dans un hangar privé immaculé, éclairage chaud, porte ouverte, aucune marque", 2, None)),
-    ("Entreprise", "build", "Ses équipes · ses permissions", ("lieu-entreprise", "Entreprise reliée à JARVIS",
-     "Bureaux modernes d’une PME, aire ouverte lumineuse, écrans sombres, équipe au travail", 4,
-     "/media/solutions/jarvis-enterprise-operations-v1.webp")),
-    ("Véhicule", "mob", "Son énergie · ses données", ("lieu-vehicule", "Laboratoire mobile relié à JARVIS",
-     "Ambulance convertie en VR stationnée au bord d’un lac, lumière de fin de journée", 4,
-     "/media/ambulance/ambulance-garage-lab-v1.webp")),
-]
-
-
-def lieux():
-    cards = "".join(
-        f"""<figure class="vn-lieu" data-rev>
-      {photo(ph[0], ph[1], ph[2], ph[3], "4:3", ph[4], cls="vn-lieu-ph")}
-      <figcaption><span class="vn-lieu-i">{icon(i)}</span><b>{t}</b><small>{s}</small></figcaption>
-    </figure>"""
-        for t, i, s, ph in LIEUX
-    )
-    return f"""<div class="vn vn-lx" data-demo="vision">
-  <div class="vn-lieux">{cards}</div>
-  <div class="vn-flow vn-framed" data-rev>
-    <p class="vn-flow-k">Ce qui circule entre les lieux</p>
-    <ol>
-      <li><b>« Arrivée prévue dans 32 minutes »</b><span>Le domaine prépare l’entrée et l’éclairage.</span></li>
-      <li><b>« Départ confirmé, 19 h »</b><span>Le jet, la voiture et la villa se synchronisent.</span></li>
-      <li><b>« Alerte à vérifier »</b><span>La firme reçoit l’événement, jamais toute la vidéo.</span></li>
-    </ol>
-    <p class="vn-flow-n">Vidéos, dossiers, positions détaillées et secrets restent dans chaque lieu. Si la liaison
-    tombe, chaque lieu continue de fonctionner seul.</p>
-  </div>
-</div>"""
-
-
-# ---------------------------------------------------------------------------
-# 6. Recherche et partenariats
-# ---------------------------------------------------------------------------
-RECHERCHE = [
-    ("IA locale", "iacore", ("recherche-ia-locale", "Modèle d’IA qui tourne sur le Hub, sans nuage",
-     "Petit serveur noir silencieux sur une étagère de bureau à domicile, voyants discrets, écran à côté montrant une conversation en français, lumière chaude", 3),
-     "Une IA qui comprend le français du Québec et qui tourne entièrement sur le Hub. Les modèles "
-     "sont choisis pour leur sobriété : rapides, explicables, sans appel au nuage par défaut.",
-     ["Modèles compacts choisis et mesurés sur le Hub", "Réponses toujours appuyées par une source", "Fonctionne même sans Internet"]),
-    ("Matériel", "chip", ("recherche-materiel", "Prototype du Hub JARVIS sur un banc d’essai",
-     "Carte électronique de prototype et boîtier Hub noir et doré ouvert sur un banc d’essai propre, multimètre et outils de précision, éclairage studio",
-     3),
-     "Un Hub conçu pour durer : silencieux, sobre en énergie, réparable, avec un démarrage vérifié et "
-     "des mises à jour signées. Le laboratoire mobile sert de banc d’essai sur la route.",
-     ["Démarrage vérifié et mises à jour signées", "Sauvegardes chiffrées, restauration prouvée", "Essais sur la route, en 12 V"]),
-    ("Rust", "code", ("recherche-rust", "Le noyau JARVIS écrit en Rust",
-     "Écran d’ordinateur sombre affichant du code Rust avec coloration or et blanc, bureau minimaliste la nuit, reflets doux",
-     4),
-     "Le noyau, gardien des comptes et des droits, est écrit en Rust : un langage qui empêche des "
-     "familles entières d’erreurs de sécurité avant même que le logiciel démarre.",
-     ["Erreurs de mémoire impossibles par conception", "Chaque changement vérifié automatiquement", "Contrats écrits entre les modules"]),
-]
-
 PARTENAIRES = [
     ("Installateurs et électriciens", "tool", "Poser le Hub, les capteurs et le câblage selon les règles de l’art."),
     ("Intégrateurs audio-vidéo", "eye", "Salles de cinéma, éclairage architectural et résidences de prestige."),
@@ -501,21 +297,6 @@ PARTENAIRES = [
     ("Assureurs", "secu", "Moins de dégâts d’eau, moins de vols, et la preuve que la protection fonctionne."),
     ("Universités et chercheurs", "iacore", "IA locale, sécurité et vie privée : recherche ouverte et publiée."),
 ]
-
-
-def recherche():
-    cards = "".join(
-        f"""<article class="vn-card vn-rc" data-rev>
-      {photo(ph[0], ph[1], ph[2], ph[3], "3:2", cls="vn-rc-ph")}
-      <div class="vn-rc-b">
-        <p class="vn-rc-k">{icon(i)}{t}</p>
-        <p>{fr(p)}</p>
-        <ul>{''.join(f'<li>{icon("check")}{fr(x)}</li>' for x in pts)}</ul>
-      </div>
-    </article>"""
-        for t, i, ph, p, pts in RECHERCHE
-    )
-    return f'<div class="vn vn-rcs" data-demo="vision">{cards}</div>'
 
 
 def partenaires():
@@ -530,7 +311,7 @@ def partenaires():
 
 
 # ---------------------------------------------------------------------------
-# 7. Principes
+# 5. Principes
 # ---------------------------------------------------------------------------
 PRINCIPES = [
     ("01", "nosell", "Aucune donnée vendue", "Jamais. Ni vendue, ni louée, ni échangée, ni utilisée pour de la publicité."),

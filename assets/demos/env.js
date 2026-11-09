@@ -494,7 +494,7 @@
   function paintLive() {
     app.querySelectorAll("[data-live]").forEach(function (el) {
       var i = +el.getAttribute("data-c"), c = CUR[i];
-      if (c && K[c.type]) { el.innerHTML = K[c.type](c, cur(), i, true); el.classList.remove("is-new"); }
+      if (c && K[c.type]) { el.innerHTML = K[c.type](c, cur(), i, true); el.classList.remove("is-new"); if (HOOK[c.type]) HOOK[c.type](el, c, cur(), i); }
     });
     app.querySelectorAll("[data-live-pick]").forEach(function (el) { el.innerHTML = pickStatus(E[el.getAttribute("data-live-pick")]); });
     app.querySelectorAll("[data-live-cell]").forEach(function (el) { var x = siteOf(E[el.getAttribute("data-live-cell")]); el.innerHTML = enCell(x, batColor(x.soc)); });
@@ -520,7 +520,9 @@
     return '<span class="ev-bar ' + (cls || "") + '"><i style="width:' + clamp(pct, 0, 100).toFixed(1) + "%" + (style || "") + '"></i></span>';
   }
   var COL = { gold: "var(--e-acc)", blue: "var(--e-water)", white: "var(--e-text)", green: "var(--e-ok)", warn: "var(--e-warn)" };
-  /* Courbe : tracé en SVG étiré, étiquettes en HTML (nettes à toutes les tailles) */
+  /* Courbe : tracé en SVG étiré, étiquettes en HTML (nettes à toutes les tailles). Grille fine, aire en dégradé,
+     trait doublé d'un halo statique. o.tip = { l: libellé de chaque index, f: format d'une valeur, names: [...] }
+     ajoute un curseur au survol avec infobulle (données préparées ici, aucune requête). */
   function plot(o) {
     var n = o.n, lo = o.min, hi = o.max, H = 300;
     function X(i) { return i / (n - 1) * 1000; }
@@ -532,25 +534,57 @@
       var line = s.straight ? "M" + pts.map(f2).join(" L") : sp(pts, false, 0.85), col = COL[s.c] || COL.gold;
       if (s.area) {
         var id = uid();
-        defs += '<linearGradient id="' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:' + col + ';stop-opacity:' + (s.op || 0.32) + '"/><stop offset="1" style="stop-color:' + col + ';stop-opacity:0"/></linearGradient>';
+        defs += '<linearGradient id="' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:' + col + ';stop-opacity:' + (s.op || 0.3) + '"/><stop offset=".7" style="stop-color:' + col + ';stop-opacity:' + ((s.op || 0.3) * 0.22).toFixed(3) + '"/><stop offset="1" style="stop-color:' + col + ';stop-opacity:0"/></linearGradient>';
         paths += '<path class="ev-pa-fill" d="' + line + " L" + f2([pts[pts.length - 1][0], H]) + " L" + f2([pts[0][0], H]) + ' Z" fill="url(#' + id + ')"/>';
       }
+      if (!s.dash) paths += '<path class="ev-pa-glow" d="' + line + '" style="stroke:' + col + '" vector-effect="non-scaling-stroke"/>';
       paths += '<path class="ev-pa-line' + (s.dash ? " is-dash" : "") + '" d="' + line + '" style="stroke:' + col + '" pathLength="1000" vector-effect="non-scaling-stroke"/>';
     });
+    var bg = {};
     (o.bars || []).forEach(function (b) {
-      var bw = 1000 / n * 0.62, x = X(b[0]) - bw / 2, y = Y(b[1]);
-      paths += '<rect class="ev-pa-bar" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + (H - H * 0.05 - y).toFixed(1) + '" rx="0" style="fill:' + (COL[b[2]] || COL.blue) + '"/>';
+      var col = COL[b[2]] || COL.blue;
+      if (!bg[col]) { bg[col] = uid(); defs += '<linearGradient id="' + bg[col] + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:' + col + ';stop-opacity:.95"/><stop offset="1" style="stop-color:' + col + ';stop-opacity:.16"/></linearGradient>'; }
+      var bw = 1000 / n * 0.42, x = X(b[0]) - bw / 2, y = Y(b[1]);
+      paths += '<rect class="ev-pa-bar" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + Math.max(0, H - H * 0.05 - y).toFixed(1) + '" fill="url(#' + bg[col] + ')"/>';
     });
     var grid = (o.y || []).map(function (v) { return '<line x1="0" x2="1000" y1="' + Y(v).toFixed(1) + '" y2="' + Y(v).toFixed(1) + '" vector-effect="non-scaling-stroke"/>'; }).join("");
-    if (o.vgrid) grid += o.vgrid.map(function (i) { return '<line y1="0" y2="300" x1="' + X(i).toFixed(1) + '" x2="' + X(i).toFixed(1) + '" vector-effect="non-scaling-stroke"/>'; }).join("");
+    if (o.vgrid) grid += o.vgrid.map(function (i) { return '<line class="is-v" y1="0" y2="300" x1="' + X(i).toFixed(1) + '" x2="' + X(i).toFixed(1) + '" vector-effect="non-scaling-stroke"/>'; }).join("");
     var now = o.now != null ? '<line class="ev-pa-now" y1="0" y2="300" x1="' + X(o.now).toFixed(1) + '" x2="' + X(o.now).toFixed(1) + '" vector-effect="non-scaling-stroke"/>' : "";
     var html = (o.y || []).map(function (v) { return '<span class="ev-yl" style="top:' + (Y(v) / 3).toFixed(2) + '%">' + (o.yf ? o.yf(v) : nf(v)) + "</span>"; }).join("");
     html += (o.x || []).map(function (x) { return '<span class="ev-xl' + (x[2] ? " is-b" : X(x[0]) >= 985 ? " is-end" : "") + '" style="left:' + (X(x[0]) / 10).toFixed(2) + '%">' + x[1] + "</span>"; }).join("");
     html += (o.dots || []).map(function (d) {
       return '<span class="ev-pd' + (d[3] ? " c-" + d[3] : "") + '" style="left:' + (X(d[0]) / 10).toFixed(2) + "%;top:" + (Y(d[1]) / 3).toFixed(2) + '%">' + (d[2] ? "<b>" + d[2] + "</b>" : "") + "</span>";
     }).join("");
-    return '<div class="ev-plot' + (o.cls ? " " + o.cls : "") + (o.y && o.y.length ? " has-y" : "") + '" style="--h:' + (o.h || 140) + 'px"><div class="ev-pa">' +
+    var tip = "";
+    if (o.tip) {
+      var rows = [];
+      for (var i = 0; i < n; i++) {
+        var r = [o.tip.l(i), []];
+        (o.series || []).forEach(function (s, k) {
+          var j = i - (s.from || 0);
+          if (j >= 0 && j < s.v.length && (!o.tip.skip || !o.tip.skip(k, j))) r[1].push([s.c || "gold", (o.tip.names || [])[k] || "", o.tip.f(s.v[j]), +(Y(s.v[j]) / 3).toFixed(1)]);
+        });
+        (o.bars || []).forEach(function (b) { if (b[0] === i) r[1].push([b[2] || "blue", (o.tip.names || [])[0] || "", o.tip.f(b[1]), +(Y(b[1]) / 3).toFixed(1)]); });
+        rows.push(r);
+      }
+      tip = " data-tip='" + JSON.stringify(rows).replace(/'/g, "&#39;") + "'";
+    }
+    return '<div class="ev-plot' + (o.cls ? " " + o.cls : "") + (o.y && o.y.length ? " has-y" : "") + '" style="--h:' + (o.h || 140) + 'px"><div class="ev-pa"' + tip + ">" +
       '<svg viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><defs>' + defs + '</defs><g class="ev-grid">' + grid + "</g>" + now + paths + "</svg>" + html + "</div></div>";
+  }
+  /* Curseur des courbes : ligne verticale, points sur chaque série et infobulle (au survol ou au toucher) */
+  function plotTip(pa, ev) {
+    var rows = pa.__tip || (pa.__tip = JSON.parse(pa.getAttribute("data-tip"))), r = pa.getBoundingClientRect();
+    var i = clamp(Math.round((ev.clientX - r.left) / r.width * (rows.length - 1)), 0, rows.length - 1), row = rows[i], x = i / (rows.length - 1) * 100;
+    var cur = pa.querySelector(".ev-pc");
+    if (!cur) { pa.insertAdjacentHTML("beforeend", '<span class="ev-pc" aria-hidden="true"><i class="ev-pc-l"></i><span class="ev-pc-d"></span><span class="ev-pc-t"></span></span>'); cur = pa.querySelector(".ev-pc"); }
+    if (!row[1].length) { cur.hidden = true; return; }
+    cur.hidden = false;
+    cur.style.left = x + "%";
+    cur.querySelector(".ev-pc-d").innerHTML = row[1].map(function (s) { return '<i class="c-' + s[0] + '" style="top:' + s[3] + '%"></i>'; }).join("");
+    var t = cur.querySelector(".ev-pc-t");
+    t.innerHTML = "<small>" + row[0] + "</small>" + row[1].map(function (s) { return '<span><i class="c-' + s[0] + '"></i>' + (s[1] ? "<em>" + s[1] + "</em>" : "") + "<b>" + s[2] + "</b></span>"; }).join("");
+    t.classList.toggle("is-l", x > 60);
   }
   /* Graduations fines autour d'un arc (mêmes règles que le cadran) : majeures tous les 10 pas, allumées jusqu'à la valeur */
   function ticks(a0, a1, n, p, r0, r1, r2) {
@@ -580,6 +614,30 @@
     var p = clamp(pct, 0, 100);
     return '<svg class="ev-ring" viewBox="0 0 100 100" style="--gs:' + color + ";--gc:" + color + '" aria-hidden="true"><circle class="g-face" cx="50" cy="50" r="34" fill="url(#evd-face)"/>' + ticks(0, 360, 60, p, 45.5, 46.8, 49.5) +
       '<circle class="g-track" cx="50" cy="50" r="40.5"/><circle class="g-val" cx="50" cy="50" r="40.5" pathLength="100" transform="rotate(-90 50 50)" style="stroke-dasharray:' + p.toFixed(1) + ' 100"/></svg>';
+  }
+  /* Valeur typographiée : chiffres tabulaires légers, unité plus petite et atténuée. Le nombre « monte » jusqu'à
+     sa valeur au premier affichage (countUp, seulement sous html.fx et hors mouvement réduit). */
+  function unitize(s) {
+    s = String(s);
+    var m = /^([+−-]?)(\d+(?:,\d+)?)([  ]?)([^\d]*)$/.exec(s);
+    if (!m) return esc(s);
+    var neg = m[1] === "−" || m[1] === "-", dec = (m[2].split(",")[1] || "").length;
+    return '<span class="ev-num" data-n="' + (neg ? "-" : "") + m[2].replace(",", ".") + '" data-d="' + dec + '"' + (m[1] === "+" ? ' data-p="+"' : "") + ">" + esc(m[1] + m[2]) + "</span>" +
+      (m[4] ? '<small class="ev-u">' + esc(m[4]) + "</small>" : "");
+  }
+  function countUp(scope) {
+    if (reduce() || !document.documentElement.classList.contains("fx")) return;
+    var items = [].map.call(scope.querySelectorAll(".ev-card.is-new [data-n]"), function (el) {
+      return { el: el, to: +el.getAttribute("data-n"), d: +el.getAttribute("data-d") || 0, p: el.getAttribute("data-p") || "" };
+    }), t0 = null;
+    if (!items.length) return;
+    function step(ts) {
+      t0 = t0 || ts;
+      var k = clamp((ts - t0) / 1100, 0, 1), ea = 1 - Math.pow(1 - k, 3);
+      items.forEach(function (it) { if (it.el.isConnected) it.el.textContent = it.p + nf(it.to * ea, it.d); });
+      if (k < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   }
   function kv(label, value, cls) { return '<div class="ev-kv' + (cls ? " " + cls : "") + '"><span>' + label + "</span><b>" + value + "</b></div>"; }
 
@@ -643,7 +701,7 @@
     if (v === "solar:today" || v === "solar:sofar") { var so = solarDay(e); v = so ? nf((v === "solar:today" ? so.total : so.sofar) / 1000, 1) + NB + "kWh" : "—"; }
     var inner = '<span class="ev-ki t-' + (c.tone || "gold") + '"' + (color ? ' style="--tc:' + color + '"' : "") + ">" + ic(c.icon) + "</span>" +
       '<span class="ev-kb"><span class="ev-kl">' + esc(c.label) + tag + "</span>" +
-      '<b class="ev-kn">' + v + (c.dot ? dot(c.dot) : "") + "</b>" +
+      '<b class="ev-kn">' + (/[<]/.test(v) ? v : "<span>" + unitize(v) + "</span>") + (c.dot ? dot(c.dot) : "") + "</b>" +
       (pct != null ? bar(pct, "t-" + (c.tone || "gold"), color ? ";--bc:" + color : "") : "") +
       (sub ? '<span class="ev-ks">' + (c.subicon ? ic(c.subicon) : "") + sub + "</span>" : "") + "</span>" +
       (c.go ? '<span class="ev-kgo">' + ic("right") + "</span>" : "");
@@ -666,14 +724,21 @@
       '<div class="ev-cond-i">' + ic("sunset") + "<div><small>Coucher du soleil</small><b>" + (sd.set ? hm(sd.set) : "—") + "</b></div></div>" +
       '<div class="ev-cond-i">' + ic("sunrise") + "<div><small>Lever du soleil</small><b>" + (sd.rise ? hm(sd.rise + (sd.rise < now ? 864e5 : 0)) : "—") + "</b>" + (sd.rise < now ? "<small>demain</small>" : "") + "</div></div>" +
       '<div class="ev-cond-chips"><span>' + ic("sun") + "UV <b>" + w.uv + '</b></span><span title="Cote air santé">' + ic("leaf") + "CAS <b>" + w.cas + "</b></span></div></div>" +
-      plot({ n: temps.length, min: lo, max: hi, h: 112, series: [{ v: temps, c: "gold", area: true }], x: xs, dots: dots, cls: "is-cond" });
+      plot({ n: temps.length, min: lo, max: hi, h: 112, series: [{ v: temps, c: "gold", area: true }], x: xs, dots: dots, cls: "is-cond",
+        tip: { l: function (k) { return k ? hh((h0 + k) % 24) : "Maintenant"; }, f: function (v) { return deg(v); }, names: ["Température"] } });
   };
 
   K.lumieres = function (c, e) {
     var st = rt(e).lights, cnt = st ? '<span class="ev-count"><b>' + st.on + "</b> / " + st.total + " allumées</span>" : "";
     return head("bulb", "Éclairage", "", cnt + '<button type="button" class="ev-link" data-a="go" data-v="eclairage">Ouvrir' + ic("right") + "</button>") +
-      '<div class="ev-lum-mini" data-lum-mini></div>';
+      '<div class="ev-lum-mini" data-lum-mini></div>' + lumFoot(e);
   };
+  /* Pied de la carte Éclairage : prochaine bascule de l'éclairage extérieur, calculée selon le vrai soleil */
+  function lumFoot(e) {
+    var sd = sunDay(e), now = NOW(), on = sd.set && now < sd.set, t = on ? sd.set : sunDay(e, 1).rise;
+    return '<div class="ev-lumf"><span class="ev-ri">' + ic(on ? "sunset" : "sunrise") + "</span><span><small>Éclairage extérieur</small><b>" + (on ? "S’allume au coucher du soleil" : "S’éteint au lever du soleil") + "</b></span>" +
+      '<b class="ev-lumf-t">' + (t ? hm(t) : "—") + "</b></div>";
+  }
 
   function pointsOf(e) { return e.points || []; }
   K.around = function (c, e) {
@@ -819,10 +884,12 @@
       '<div class="ev-thermo-r">' + c.rows.map(function (r) { return '<div class="ev-row is-lg"><span class="ev-ri t-gold">' + ic(r[0]) + "</span><span><small>" + esc(r[1]) + "</small><b>" + esc(r[2]) + "</b></span>" + ic("right", "ev-chev") + "</div>"; }).join("") + "</div></div>";
   };
   K.trends = function (c, e) {
-    return '<div class="ev-trends">' + c.items.map(function (t) {
+    return '<div class="ev-trends" data-fill>' + c.items.map(function (t) {
       var xs = [[0, "−3 h"], [4, "−2 h"], [8, "−1 h"], [11, "maint.", 1]];
-      return '<div class="ev-trend">' + head(t.icon, t.title, "", "") + '<p class="ev-big">' + esc(t.value) + ' <span class="ev-state">' + dot(t.tone) + esc(t.state) + "</span></p>" +
-        plot({ n: t.pts.length, min: t.min, max: t.max, h: 96, y: [t.min, (t.min + t.max) / 2, t.max], series: [{ v: t.pts, c: t.c, area: true }], x: xs, dots: [[t.pts.length - 1, t.pts[t.pts.length - 1], "", t.c]] }) + "</div>";
+      var unit = String(t.value).replace(/^[−\d,\s ]+/, "");
+      return '<div class="ev-trend" data-fill>' + head(t.icon, t.title, "", "") + '<p class="ev-big">' + unitize(t.value) + ' <span class="ev-state">' + dot(t.tone) + esc(t.state) + "</span></p>" +
+        plot({ n: t.pts.length, min: t.min, max: t.max, h: 96, y: [t.min, (t.min + t.max) / 2, t.max], series: [{ v: t.pts, c: t.c, area: true }], x: xs, dots: [[t.pts.length - 1, t.pts[t.pts.length - 1], "", t.c]],
+          tip: { l: function (k) { var m = Math.round((t.pts.length - 1 - k) * 180 / (t.pts.length - 1)); return m ? "Il y a " + (m >= 60 ? Math.floor(m / 60) + NB + "h" + (m % 60 ? NB + pad(m % 60) : "") : m + NB + "min") : "Maintenant"; }, f: function (v) { return nf(v, 1) + (unit ? NB + unit.trim() : ""); }, names: [t.title] } }) + "</div>";
     }).join("") + "</div>";
   };
   K.ventilation = function (c, e) {
@@ -849,10 +916,14 @@
       '<div class="ev-row">' + '<span class="ev-ri t-gold">' + ic("wind") + "</span><span><small>Vent</small><b>" + w.wind + NB + "km/h</b></span><em>" + esc(w.dir) + "</em></div>" +
       '<div class="ev-row"><span class="ev-ri t-gold">' + ic("thermo") + "</span><span><small>Ressenti</small><b>" + deg(n.feels) + "</b></span></div>";
   };
+  /* Températures : une rangée par point, valeur et réglette de température (froid bleu → chaud orangé) */
+  function tnum(v) { var m = /(−|-)?(\d+(?:,\d+)?)/.exec(String(v)); return m ? (m[1] ? -1 : 1) * parseFloat(m[2].replace(",", ".")) : null; }
   K.cold = function (c, e) {
-    return head(c.icon || "fridge", c.title, c.sub, "") + c.rows.map(function (r) {
-      return '<div class="ev-row is-lg"><span class="ev-ri t-water">' + ic(r[0]) + "</span><span><small>" + esc(r[1]) + "</small><b>" + esc(r[2]) + "</b></span>" + ic("right", "ev-chev") + "</div>";
-    }).join("");
+    return head(c.icon || "fridge", c.title, c.sub, "") + '<div class="ev-temps">' + c.rows.map(function (r) {
+      var T = tnum(r[2]), x = T == null ? null : clamp((T + 30) / 90 * 100, 0, 100);
+      return '<div class="ev-temp"><span class="ev-ri t-water"' + (T != null ? ' style="--tc:' + tcol(T) + '"' : "") + ">" + ic(r[0]) + "</span><span><small>" + esc(r[1]) + "</small><b>" + unitize(r[2]) + "</b></span>" +
+        (x != null ? '<span class="ev-tscale" aria-hidden="true"><i style="left:' + x.toFixed(1) + "%;--tc:" + tcol(T) + '"></i></span>' : "") + "</div>";
+    }).join("") + "</div>";
   };
   var DIRS = { "Nord": 0, "Nord-est": 45, "Est": 90, "Sud-est": 135, "Sud": 180, "Sud-ouest": 225, "Ouest": 270, "Nord-ouest": 315 };
   /* Couleur d'une température (froid bleu → doux vert → chaud orangé), pour les plages des prévisions */
@@ -944,7 +1015,8 @@
     var marker = isDay ? '<span class="ev-sundot" style="left:' + (sp2[0] / 10) + "%;top:" + (sp2[1] / 2.6) + '%"><b>' + hm(now) + "</b></span>" : "";
     return head("sun", "Cycle du soleil", cap(dateLong(now)) + " · " + esc(e.geo.place) + " · calculé", '<span class="ev-sunnext"><small>' + next[0] + "</small><b>" + dur(next[1] - now) + "</b></span>") +
       '<div class="ev-sunwrap">' + svg + marker + "</div>" +
-      '<div class="ev-sunfoot"><span><b>' + (sd.rise ? hm(sd.rise) : "—") + "</b><small>Lever</small></span><span class=\"is-mid\"><b>" + dur(len) + "</b><small>Durée du jour</small></span><span><b>" + (sd.set ? hm(sd.set) : "—") + "</b><small>Coucher</small></span></div>";
+      '<div class="ev-sunfoot"><span><b>' + (sd.rise ? hm(sd.rise) : "—") + "</b><small>Lever</small></span><span class=\"is-mid\"><b>" + dur(len) + "</b><small>Durée du jour</small></span><span><b>" + (sd.set ? hm(sd.set) : "—") + "</b><small>Coucher</small></span></div>" +
+      (day ? '<div class="ev-sunbar"><small>' + (isDay ? "Jour écoulé" : now < sd.rise ? "Avant le lever" : "Jour terminé") + "</small>" + bar(clamp(p, 0, 1) * 100, "t-gold") + "<b>" + unitize(nf(clamp(p, 0, 1) * 100) + NB + "%") + "</b></div>" : "");
   };
   K.moments = function (c, e) {
     var sd = sunDay(e);
@@ -979,31 +1051,60 @@
   };
 
   /* ---------- Énergie ---------- */
-  K.flow = function (c, e, i, isLive) {
-    var b = bat(e), ex = exampleFlow(e), live = b.live, srcs = ex.srcs, en = e.energy;
-    var bw = live ? b.w : ex.batt, inF = live ? b.flow === "in" : ex.batt > 5, outF = live ? (b.flow === "out" || b.flow === "idle") : true;
-    var srcHTML = srcs.map(function (s, k) {
-      var on = !live && s.w > 1;
-      return '<div class="ev-fn is-src' + (on ? " is-on" : "") + '" style="--k:' + k + '">' + '<span class="ev-ri t-gold">' + ic(s.icon) + "</span><span><small>" + esc(s.label) + "</small><b>" +
-        (live ? "à relier" : fmtW(s.w)) + "</b>" + (live ? "<em>capteur non relié</em>" : s.note ? "<em>" + esc(s.note) + "</em>" : "") + "</span></div>";
-    }).join("");
-    var n = srcs.length, paths = "";
-    srcs.forEach(function (s, k) {
-      /* Départs des traits répartis selon le nombre de sources (1 : centre, 2 : 30 et 70 %, 3 et plus : de 17 à 83 %) */
-      var on = live ? inF : s.w > 1, y = (n === 1 ? 50 : n === 2 ? 30 + 40 * k : 17 + 66 * k / (n - 1)) * 3;
-      paths += '<path class="ev-fl' + (on ? " is-on" : "") + '" d="M300 ' + y + " C340 " + y + " 340 150 380 150" + '" style="--sp:' + (on ? clamp(2.6 - (live ? Math.abs(bw) : s.w) / 600, 0.7, 2.6) : 2) + 's"/>';
+  /* Flux d'énergie : scène en croix (production en haut, réseau à gauche, consommation à droite, stockage en bas)
+     autour d'un nœud central. Les conduits sont tracés après affichage (HOOK.flow) à partir de la position réelle
+     des nœuds; leur épaisseur suit la puissance et des particules lumineuses coulent dans le sens réel. */
+  function flowModel(e) {
+    var b = bat(e), en = e.energy, live = b.live, nodes = [], ex = exampleFlow(e), gridN = null, maxW = 1;
+    ex.srcs.forEach(function (s, k) {
+      var isGrid = en.sources[k][3] === "grid";
+      var n = { k: s.k, label: s.label, icon: s.icon, w: live ? null : s.w, pos: isGrid ? "left" : "top", tone: isGrid ? "grid" : "prod" };
+      if (live) { n.dir = "none"; n.state = "Capteur à relier"; }
+      else if (isGrid) { gridN = n; }
+      else { n.dir = s.w > 1 ? "in" : "none"; n.state = s.w > 1 ? "Production" : (s.note ? cap(s.note) : "En veille"); }
+      nodes.push(n);
     });
-    var loadsOn = live ? b.flow === "out" : ex.load > 0;
-    paths += '<path class="ev-fl' + (loadsOn ? " is-on" : "") + '" d="M620 150 C660 150 660 72 700 72"/><path class="ev-fl is-sum' + (Math.abs(bw) > 5 ? " is-on" : "") + (bw < 0 ? " is-rev" : "") + '" d="M620 150 C660 150 660 228 700 228"/>';
-    var color = batColor(b.soc);
-    var loadsW = live ? (b.flow === "out" ? fmtW(Math.abs(b.w)) : "—") : fmtW(ex.load);
-    return head("bolt", "Flux d’énergie", live ? "Batteries mesurées · sources et charges à relier" : "Production, stockage et consommation actuels", liveTag(b)) +
-      '<div class="ev-flow' + (live ? " is-live" : "") + '"><svg class="ev-flsvg" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">' + paths + "</svg>" +
-      '<div class="ev-fsrc" style="--n:' + n + '">' + srcHTML + "</div>" +
-      '<div class="ev-fbat" style="--bc:' + color + '"><span class="ev-cell"><i style="width:' + clamp(b.soc, 3, 100) + '%"></i></span><b>' + nf(b.soc) + NB + "%</b><small>" + esc(en.store || "Batterie") + "</small></div>" +
-      '<div class="ev-fout"><div class="ev-fn"><span class="ev-ri t-gold">' + ic("home") + "</span><span><small>" + esc(en.loads || "Charges") + "</small><b>" + loadsW + "</b>" + (live && b.flow !== "out" ? "<em>à relier</em>" : "") + "</span></div>" +
-      '<div class="ev-fn"><span class="ev-ri t-' + (bw >= 0 ? "ok" : "warn") + '">' + ic("chart") + "</span><span><small>Bilan " + (live ? "des batteries" : "") + "</small><b class=\"" + (bw > 5 ? "t-ok" : bw < -5 ? "t-warn" : "") + '">' + (bw > 0 ? "+" : "") + fmtW(bw) + "</b>" +
-      "<em>" + (bw > 5 ? "en charge" : bw < -5 ? "en décharge" : "au repos") + "</em></span></div></div></div>";
+    var known = ex.srcs.reduce(function (a, s, k) { return a + (en.sources[k][3] === "grid" ? 0 : s.w); }, 0);
+    var bw = live ? b.w : ex.batt, load = live ? (b.flow === "out" ? Math.abs(b.w) : null) : ex.load;
+    if (gridN && !live) {
+      var exp = Math.max(0, known - ex.load - Math.max(0, bw));
+      if (gridN.w > 1) { gridN.dir = "in"; gridN.state = "Importation"; }
+      else if (exp > 1) { gridN.w = exp; gridN.dir = "out"; gridN.state = "Exportation"; }
+      else { gridN.dir = "none"; gridN.state = "Au repos"; }
+    }
+    nodes.push({ k: "load", label: en.loads || "Charges", icon: e.icon === "rv" || !e.icon ? "home" : e.icon, w: load, pos: "right", tone: "load",
+      dir: load == null ? "none" : load > 1 ? "out" : "none", state: load == null ? "Mesure à relier" : "Consommation" });
+    var inB = live ? b.flow === "in" : bw > 5, outB = live ? b.flow === "out" : bw < -5;
+    nodes.push({ k: "bat", label: en.store || "Batterie", icon: "battery", w: Math.abs(bw), pos: "bottom", tone: "bat", soc: b.soc,
+      dir: inB ? "out" : outB ? "in" : "none", state: inB ? "En charge" : outB ? "En décharge" : "Au repos" });
+    nodes.forEach(function (n) { if (n.w != null && n.dir !== "none") maxW = Math.max(maxW, n.w); });
+    return { b: b, live: live, nodes: nodes, maxW: maxW, prod: known, load: load, bw: bw };
+  }
+  function flowNode(n, maxW) {
+    var val = n.w == null ? '<b class="ev-fn-v is-na">—</b>' : '<b class="ev-fn-v">' + unitize(fmtW(n.w)) + "</b>";
+    var disc = n.tone === "bat"
+      ? '<span class="ev-fn-ic is-bat" style="--bc:' + batColor(n.soc) + '">' + ring(n.soc, batColor(n.soc)) + '<span class="ev-fn-soc">' + unitize(nf(n.soc) + NB + "%") + "</span></span>"
+      : '<span class="ev-fn-ic">' + ic(n.icon) + "</span>";
+    return '<div class="ev-fn is-' + n.pos + " t-" + n.tone + (n.dir !== "none" ? " is-on" : "") + '" data-fn="' + n.pos + '" data-dir="' + n.dir + '" data-tone="' + n.tone + '" data-pw="' + (n.w == null || n.dir === "none" ? 0 : (n.w / maxW).toFixed(3)) + '">' +
+      disc + '<span class="ev-fn-t"><small>' + esc(n.label) + "</small>" + val + '<em class="ev-fn-s">' + (n.dir !== "none" ? dot(n.tone === "bat" ? (n.dir === "out" ? "ok" : "warn") : n.tone === "grid" && n.dir === "out" ? "ok" : "gold") : "") + esc(n.state) + "</em></span></div>";
+  }
+  K.flow = function (c, e) {
+    var M = flowModel(e), en = e.energy, img = (e.banner || {}).img;
+    var top = M.nodes.filter(function (n) { return n.pos === "top"; }), side = function (p) { return M.nodes.filter(function (n) { return n.pos === p; }).map(function (n) { return flowNode(n, M.maxW); }).join(""); };
+    var net = M.live ? (M.bw > 0 ? "+" : "") + fmtW(M.bw) : fmtW(M.prod);
+    var foot = M.live ? [["battery", "Batteries", (M.bw > 0 ? "+" : "") + fmtW(M.bw)], ["radar", "Sources et charges", "Capteurs à relier"]]
+      : [["sun", "Production", fmtW(M.prod)], ["home", "Consommation", fmtW(M.load)], [M.bw >= 0 ? "battery" : "battery", M.bw > 5 ? "Stockage" : M.bw < -5 ? "Puisé des batteries" : "Batteries", (M.bw > 5 ? "+" : "") + fmtW(M.bw)]];
+    if (!M.live && M.load > 0) foot.push(["leaf", "Autonomie du moment", nf(clamp(M.prod / M.load * 100, 0, 100)) + NB + "%"]);
+    return head("bolt", "Flux d’énergie", M.live ? "Batteries mesurées · sources et charges à relier" : "Production, stockage et consommation en ce moment", liveTag(M.b)) +
+      '<div class="ev-flow' + (M.live ? " is-live" : "") + (img ? " has-bg" : "") + '" data-flow style="--nt:' + top.length + '">' +
+      (img ? '<span class="ev-flow-bg" aria-hidden="true"><img src="' + img + '" alt="" loading="lazy" decoding="async" style="object-position:' + ((e.banner || {}).pos || "50% 50%") + '"></span>' : "") +
+      '<svg class="ev-flow-svg" data-flow-svg aria-hidden="true"></svg>' +
+      '<div class="ev-flow-top">' + top.map(function (n) { return flowNode(n, M.maxW); }).join("") + "</div>" +
+      '<div class="ev-flow-l">' + side("left") + "</div>" +
+      '<div class="ev-flow-core" data-fn-core><span>' + ic("bolt") + "</span></div>" +
+      '<div class="ev-flow-r">' + side("right") + "</div>" +
+      '<div class="ev-flow-b">' + side("bottom") + "</div></div>" +
+      '<div class="ev-flow-f">' + foot.map(function (f) { return "<span>" + ic(f[0], "is-sm") + "<small>" + f[1] + "</small><b>" + unitize(f[2]) + "</b></span>"; }).join("") + "</div>";
   };
   K.ring = function (c, e) {
     var b = bat(e), en = e.energy, color = batColor(b.soc), unit = en.unit, capT = en.cap;
@@ -1015,6 +1116,12 @@
       '<div class="ev-ringr">' + rows + '<div class="ev-auton"><small>' + (b.flow === "in" ? "État" : "Autonomie") + "</small><b>" + esc(b.autonomy.replace("Autonomie estimée : ", "≈ ")) + "</b>" +
       (!b.live && b.flow === "out" ? "<small>à " + fmtW(exampleFlow(e).load) + " en ce moment</small>" : "") + "</div></div></div>";
   };
+  /* Légende de courbe : pastille, nom et valeur repère (sous l'en-tête, jamais tassée à côté du titre) */
+  function legend(items) {
+    return '<div class="ev-lg">' + items.map(function (it) {
+      return '<span class="ev-lg-i"><i class="c-' + it[0] + (it[3] ? " is-dash" : "") + '"></i><span><small>' + it[1] + "</small>" + (it[2] ? "<b>" + it[2] + "</b>" : "") + "</span></span>";
+    }).join("") + "</div>";
+  }
   K.history = function (c, e) {
     var b = bat(e);
     if (b.live && LIVE.hist) {
@@ -1027,23 +1134,33 @@
         res.push(a[1] + (bb[1] - a[1]) * f);
       }
       var xs = [0, 16, 32, 47].map(function (k2) { return [k2, hh(lp((t0 + (t1 - t0) * k2 / (n - 1)) * 1000).h)]; });
+      var d24 = LIVE.d && LIVE.d.total && LIVE.d.total.delta24 != null ? (LIVE.d.total.delta24 >= 0 ? "+" : "") + nf(LIVE.d.total.delta24, 2) + NB + "kWh" : "—";
       return head("chart", "Énergie stockée · 24 h", "Mesures des batteries, en kWh", liveTag(b)) +
-        plot({ n: n, min: lo - pad2, max: hi + pad2, h: 150, y: [lo, (lo + hi) / 2, hi], yf: function (v) { return nf(v, 1); }, series: [{ v: res, c: "green", area: true }], x: xs, dots: [[n - 1, res[n - 1], nf(res[n - 1], 2) + NB + "kWh", "green"]] }) +
-        '<p class="ev-fine">' + (e.energy.histNote || "Variation sur 24 h : ") + (LIVE.d && LIVE.d.total && LIVE.d.total.delta24 != null ? (LIVE.d.total.delta24 >= 0 ? "+" : "") + nf(LIVE.d.total.delta24, 2) + NB + "kWh" : "—") + "</p>";
+        legend([["green", "Maintenant", nf(res[n - 1], 2) + NB + "kWh"], ["green", "Plus haut", nf(hi, 2) + NB + "kWh"], ["green", "Plus bas", nf(lo, 2) + NB + "kWh"], ["gold", "Variation sur 24 h", d24]]) +
+        plot({ n: n, min: lo - pad2, max: hi + pad2, h: 150, y: [lo, (lo + hi) / 2, hi], yf: function (v) { return nf(v, 1); }, series: [{ v: res, c: "green", area: true }], x: xs, vgrid: [16, 32],
+          dots: [[n - 1, res[n - 1], "", "green"]], tip: { l: function (k3) { return hm((t0 + (t1 - t0) * k3 / (n - 1)) * 1000); }, f: function (v) { return nf(v, 2) + NB + "kWh"; }, names: ["Stockée"] } });
     }
     var so = solarDay(e), cons = loadCurve(e), prod = [];
     for (var h = 0; h < 24; h++) { var s4 = so ? (so.m[h * 4] + so.m[h * 4 + 1] + so.m[h * 4 + 2] + so.m[h * 4 + 3]) / 4 : 0; prod.push(s4); }
     var mx = Math.max.apply(null, prod.concat(cons)), top = Math.ceil(mx / 100) * 100 || 100;
-    return head("chart", "Historique · veille", "Production et consommation sur 24 h · exemple",
-      '<span class="ev-legend"><i class="c-gold"></i>Production solaire<i class="c-blue"></i>Consommation</span>') +
+    var sumP = prod.reduce(function (x, y) { return x + y; }, 0) / 1000, sumC = cons.reduce(function (x, y) { return x + y; }, 0) / 1000;
+    var leg = [["gold", "Production solaire", nf(sumP, sumP < 10 ? 1 : 0) + NB + "kWh"], ["blue", "Consommation", nf(sumC, sumC < 10 ? 1 : 0) + NB + "kWh"]];
+    if (sumC > 0) leg.push(["green", "Couverte par le solaire", nf(clamp(prod.reduce(function (x, y, k4) { return x + Math.min(y, cons[k4]); }, 0) / 1000 / sumC * 100, 0, 100)) + NB + "%"]);
+    return head("chart", "Historique · veille", "Production et consommation, heure par heure · exemple", "") + legend(leg) +
       plot({ n: 24, min: 0, max: top * 1.08, h: 150, y: [0, top / 2, top], yf: function (v) { return fmtW(v).replace(NB + "W", "").replace(NB + "kW", NB + "k"); },
-        series: [{ v: cons, c: "blue", area: true, op: 0.22 }, { v: prod, c: "gold", area: true }], x: [[0, "0 h"], [6, "6 h"], [12, "12 h"], [18, "18 h"], [23, "23 h"]], vgrid: [6, 12, 18] });
+        series: [{ v: cons, c: "blue", area: true, op: 0.22 }, { v: prod, c: "gold", area: true }], x: [[0, "0 h"], [6, "6 h"], [12, "12 h"], [18, "18 h"], [23, "23 h"]], vgrid: [6, 12, 18],
+        tip: { l: function (k5) { return hh(k5) + " – " + hh(k5 + 1); }, f: fmtW, names: ["Consommation", "Production"] } });
   };
+  /* Consommateurs : pastille par appareil, part du total, barre fine graduée (or vers blanc), valeur à droite */
   K.bars = function (c, e) {
-    var mx = Math.max.apply(null, c.rows.map(function (r) { return r[2]; }));
-    return head("home", c.title, c.sub, "") + c.rows.map(function (r) {
-      return '<div class="ev-hbar"><span class="ev-ri t-water">' + ic(r[0]) + "</span><span>" + esc(r[1]) + "</span>" + bar(r[2] / mx * 100, "t-water") + "<b>" + fmtW(r[2]) + "</b></div>";
-    }).join("");
+    var mx = Math.max.apply(null, c.rows.map(function (r) { return r[2]; })) || 1, tot = c.rows.reduce(function (a, r) { return a + r[2]; }, 0) || 1;
+    return head(c.icon || "home", c.title, c.sub, '<span class="ev-tot"><small>Total</small><b>' + unitize(fmtW(tot)) + "</b></span>") +
+      '<div class="ev-cons">' + c.rows.map(function (r) {
+        var off = r[2] <= 0;
+        return '<div class="ev-con' + (off ? " is-off" : "") + '"><span class="ev-ri' + (off ? " t-muted" : "") + '">' + ic(r[0]) + "</span>" +
+          '<span class="ev-con-n"><b>' + esc(r[1]) + "</b><small>" + (off ? "À l’arrêt" : nf(r[2] / tot * 100) + NB + "% du total") + "</small></span>" +
+          '<b class="ev-con-v">' + unitize(fmtW(r[2])) + "</b>" + bar(r[2] / mx * 100, "t-gold") + "</div>";
+      }).join("") + "</div>";
   };
   K.chips = function (c, e) {
     var b = bat(e);
@@ -1057,16 +1174,19 @@
       return '<div class="ev-chip"><span class="ev-ri t-gold">' + ic(it[0]) + "</span><span><small>" + esc(it[1]) + "</small><b>" + dot(t) + esc(v) + "</b></span></div>";
     }).join("") + "</div>";
   };
+  /* Batteries : anneau gradué par batterie (vert, ambre, corail selon la charge), état, puis mesures en grille */
   K.packs = function (c, e) {
-    var b = bat(e);
+    var b = bat(e), u = e.energy.unit;
     return head("battery", e.energy.packsTitle || "Batteries", b.live ? "Mesures reçues " + ago((NOW() / 1000 - b.seen) / 60) : "Valeurs d’exemple", liveTag(b)) +
       '<div class="ev-packs">' + b.packs.map(function (p) {
         var col = batColor(p.soc), flag = p.online === false ? ["warn", "Hors ligne"] : p.problem ? ["warn", "Alerte BMS"] : p.a > 0.4 || p.charging ? ["ok", "En charge"] : p.a < -0.4 ? ["gold", "En utilisation"] : ["ok", p.soc >= 97 ? "Pleine · au repos" : "Au repos"];
-        return '<div class="ev-pack" style="--bc:' + col + '"><div class="ev-pcell"><i style="height:' + clamp(p.soc, 2, 100) + '%"></i><b>' + nf(p.soc) + "<small>%</small></b></div>" +
-          '<div class="ev-pinfo"><h6>' + esc(p.name) + ' <span class="ev-flag t-' + flag[0] + '">' + flag[1] + "</span></h6>" +
-          kv("Tension", nf(p.v, 2) + NB + "V") + kv("Courant", (p.a > 0 ? "+" : "") + nf(p.a, 1) + NB + "A") + kv("Température", p.t > -90 ? deg(p.t, 1) : "—") +
-          kv("Écart des cellules", p.hi > 0 ? nf((p.hi - p.lo) * 1000) + NB + "mV" : "—") + kv("Cycles", p.cycles >= 0 ? p.cycles : "—") +
-          kv("Capacité", p.cap ? nf(p.cap, p.cap % 1 ? 1 : 0) + NB + e.energy.unit : "—") + "</div></div>";
+        var spread = p.hi > 0 ? (p.hi - p.lo) * 1000 : null;
+        var stats = [["Tension", nf(p.v, 2) + NB + "V"], ["Courant", (p.a > 0 ? "+" : "") + nf(p.a, 1) + NB + "A"], ["Température", p.t > -90 ? deg(p.t, 1) : "—"],
+          ["Écart des cellules", spread != null ? nf(spread) + NB + "mV" : "—"], ["Cycles", p.cycles >= 0 ? String(p.cycles) : "—"], ["Capacité", p.cap ? nf(p.cap, p.cap % 1 ? 1 : 0) + NB + u : "—"]];
+        return '<div class="ev-pack" style="--bc:' + col + '"><div class="ev-pack-h"><div class="ev-pack-g">' + ring(p.soc, col) + '<b class="ev-pack-v"><span>' + unitize(nf(p.soc) + NB + "%") + "</span></b></div>" +
+          '<div class="ev-pack-t"><h6>' + esc(p.name) + '</h6><span class="ev-flag t-' + flag[0] + '">' + dot(flag[0]) + flag[1] + "</span>" +
+          (spread != null ? '<small class="ev-pack-c">Cellules ' + nf(p.lo, 3) + " – " + nf(p.hi, 3) + NB + "V</small>" : "") + "</div></div>" +
+          '<div class="ev-pack-s">' + stats.map(function (x) { return "<span><small>" + x[0] + "</small><b>" + unitize(x[1]) + "</b></span>"; }).join("") + "</div></div>";
       }).join("") + "</div>";
   };
   K.list = function (c, e) {
@@ -1103,16 +1223,15 @@
     return head("sun", "Production solaire · aujourd’hui", "Mesure d’exemple jusqu’à maintenant, puis prévision",
       '<span class="ev-legend"><i class="c-gold"></i>Mesure<i class="c-gold is-dash"></i>Prévision</span>') +
       plot({ n: n, min: 0, max: top * 1.05, h: 190, y: [0, top / 2, top], yf: function (v) { return fmtW(v); }, series: ser, x: xs, now: nowI,
+        tip: { l: function (k) { var q = first + k; return hh(Math.floor(q / 4)).replace(NB + "h", NB + "h" + NB + pad(q % 4 * 15)); }, f: fmtW, names: ["Mesure", "Prévision"], skip: function (si, j) { return ser.length > 1 && si === 1 && j === 0; } },
         dots: nowI != null ? [[nowI, so.m[so.q], nf(so.sofar / 1000, 2) + NB + "kWh à " + hm(NOW()), "gold"]] : [] }) +
       '<p class="ev-fine">' + ic("info") + "Lever " + hm(sd.rise) + " · coucher " + hm(sd.set) + " · courbe calculée selon la vraie hauteur du soleil. Une prévision n’est pas une mesure.</p>";
   };
   K.fwx = function (c, e) {
-    var segs = "";
-    for (var i = 1; i <= 4; i++) segs += "<i" + (i <= c.quality + 1 ? ' class="is-on"' : "") + "></i>";
     return head("cloudsun", "Météo prévue", "Conditions d’ensoleillement pour aujourd’hui", "") +
       '<div class="ev-fwx"><div>' + wxi("p", false, "is-md") + "<span><small>Conditions</small><b>" + esc(c.cond) + "</b></span></div>" +
       "<div><small>Couverture nuageuse</small><b>" + c.cloud + NB + "%</b>" + bar(c.cloud, "t-gold") + "</div>" +
-      '<div><small>Qualité de la prévision</small><b>' + ["Faible", "Moyenne", "Bonne", "Très bonne"][c.quality - 1] + '</b><span class="ev-segs">' + segs + "</span></div>" +
+      '<div><small>Qualité de la prévision</small><b>' + ["Faible", "Moyenne", "Bonne", "Très bonne"][c.quality - 1] + '</b>' + bar(c.quality / 4 * 100, "t-gold") + "</div>" +
       "<div>" + ic("doc") + "<span><small>Source</small><b>" + esc(c.src) + "</b><small>" + cap(dateShort(NOW())) + "</small></span></div></div>";
   };
 
@@ -1124,7 +1243,7 @@
       '<div class="ev-tanks">' + c.items.map(function (t) {
         var col = TANK[t[3]] || TANK.clean;
         return '<div class="ev-tank"><p>' + ic(t[3] === "clean" ? "waves" : t[3] === "fuel" ? "fuel" : "waves") + esc(t[0]) + "</p>" +
-          '<div class="ev-gw">' + gauge(t[1], { grad: [col[0], col[1]] }) + "<b>" + t[1] + NB + "%</b></div><small>" + nf(t[1] / 100 * t[2]) + " / " + t[2] + NB + (t[4] || "L") + "</small></div>";
+          '<div class="ev-gw">' + gauge(t[1], { grad: [col[0], col[1]] }) + "<b><span>" + unitize(t[1] + NB + "%") + "</span></b></div><small>" + nf(t[1] / 100 * t[2]) + " / " + t[2] + NB + (t[4] || "L") + "</small>" + bar(t[1], "", ";--bc:" + col[0]) + "</div>";
       }).join("") + "</div>";
   };
   K.levels = function (c, e) {
@@ -1139,8 +1258,10 @@
       '<div class="ev-row is-lg"><span class="ev-ri t-ok">' + ic("leaf") + "</span><span><small>Mode</small><b>" + esc(c.mode) + "</b></span>" + ic("right", "ev-chev") + "</div></div>";
   };
   K.pump = function (c, e) {
-    return head(c.icon || "pump", c.title || "Pompe à eau", c.sub || "État et pression", "") + '<p class="ev-state is-lg">' + dot(c.tone || "ok") + esc(c.state) + "</p>" +
-      '<div class="ev-duo"><span>' + ic("wind") + "<small>" + esc(c.l1 || "Débit actuel") + "</small><b>" + esc(c.flow) + "</b></span><span>" + ic("gauge") + "<small>" + esc(c.l2 || "Pression") + "</small><b>" + esc(c.pressure) + "</b></span></div>";
+    return head(c.icon || "pump", c.title || "Pompe à eau", c.sub || "État et pression", '<span class="ev-flag t-' + (c.tone || "ok") + '">' + dot(c.tone || "ok") + esc(c.state) + "</span>") +
+      '<div class="ev-inst">' + [["wind", c.l1 || "Débit actuel", c.flow], ["gauge", c.l2 || "Pression", c.pressure]].map(function (x) {
+        return '<span class="ev-inst-i"><span class="ev-ri">' + ic(x[0]) + "</span><small>" + esc(x[1]) + "</small><b>" + unitize(x[2]) + "</b></span>";
+      }).join("") + "</div>";
   };
   K.leaks = function (c, e) {
     return head("shield", c.title || "Prévention des fuites", "Surveillance en temps réel", "") +
@@ -1165,8 +1286,9 @@
     var k = c.total / sum, bars2 = vals.map(function (v, i) { mx = Math.max(mx, v * k); return [i, v * k, "blue"]; });
     var top = Math.ceil(mx);
     return head("chart", c.title || "Eau utilisée · 24 dernières heures", "Consommation totale · exemple", "") +
-      '<div class="ev-usage"><p class="ev-big">' + nf(c.total) + NB + c.unit + "</p>" +
-      plot({ n: 24, min: 0, max: top * 1.05, h: 96, y: [0, top], yf: function (v) { return nf(v) + NB + c.unit; }, bars: bars2, x: xs }) + "</div>";
+      '<div class="ev-usage" data-fill>' + legend([["blue", "Total · 24 h", nf(c.total) + NB + c.unit], ["blue", "Heure la plus forte", nf(mx, mx < 10 ? 1 : 0) + NB + c.unit]]) +
+      plot({ n: 24, min: 0, max: top * 1.05, h: 96, y: [0, top / 2, top], yf: function (v) { return nf(v) + NB + c.unit; }, bars: bars2, x: xs,
+        tip: { l: function (k) { return hh((h0 + 1 + k) % 24); }, f: function (v) { return nf(v, v < 10 ? 1 : 0) + NB + c.unit; }, names: ["Eau"] } }) + "</div>";
   };
   K.fill = function (c, e) {
     var p = pointsOf(e).filter(function (x) { return x.n === c.point; })[0];
@@ -1308,26 +1430,36 @@
     }
     return NET[k];
   }
+  /* Courbes du réseau et du processeur : mêmes réglages au premier affichage et à chaque actualisation */
+  function minAgo(k) { return k === 29 ? "Maintenant" : "Il y a " + Math.round((29 - k) / 2) + NB + "min"; }
+  function netPlot(s) {
+    var top = Math.max(1, Math.ceil(Math.max.apply(null, s.dn) * 1.15 / 5) * 5);
+    return plot({ n: 30, min: 0, max: top, h: 110, y: [0, top / 2, top], yf: function (v) { return nf(v); }, series: [{ v: s.dn, c: "gold", area: true }, { v: s.up, c: "white" }],
+      x: [[0, "15 min"], [10, "10 min"], [20, "5 min"], [29, "maint."]], cls: "is-net", tip: { l: minAgo, f: function (x) { return nf(x, x < 10 ? 1 : 0) + NB + "Mbit/s"; }, names: ["Téléchargement", "Téléversement"] } });
+  }
+  function sysPlot(c, v) {
+    return plot({ n: 30, min: 0, max: 100, h: 70, y: [0, 50, 100], yf: function (x) { return x + NB + "%"; }, series: [{ v: v, c: "gold", area: true }], x: [[0, "15 min"], [29, "maint."]], cls: "is-sys",
+      tip: { l: minAgo, f: function (x) { return nf(x) + NB + "%"; }, names: [c.title] } });
+  }
   K.link = function (c, e) {
     var s = netSeries(e, c), dn = s.dn[s.dn.length - 1], up = s.up[s.up.length - 1], r = rt(e), test = r.vals.speed;
-    var mx = Math.max.apply(null, s.dn) * 1.15, top = Math.max(1, Math.ceil(mx / 5) * 5);
     var bars2 = "";
     for (var i = 1; i <= 4; i++) bars2 += "<i" + (i <= c.bars ? ' class="is-on"' : "") + ' style="height:' + (i * 25) + '%"></i>';
-    var big = top >= 100;
     var res = test === "run" ? '<span class="ev-sent is-wait">' + ic("refresh") + "Test en cours…</span>" : test ? '<span class="ev-sent">' + ic("check") + "Test d’exemple : " + nf(test[0], 1) + NB + "Mbit/s ↓ · " + nf(test[1], 1) + NB + "Mbit/s ↑ · " + test[2] + NB + "ms</span>" : "";
     return head(c.icon || "antenna", "Connexion active", esc(c.kind) + " · " + dot("ok") + '<span class="t-ok">Connecté</span>', '<span class="ev-sig"><small>Signal<br>' + (c.dbm ? nf(c.dbm) + NB + "dBm" : esc(c.sig || "")) + '</small><span class="ev-sigb">' + bars2 + "</span></span>") +
       '<div class="ev-thr"><div><small>Débit utilisé maintenant</small><p><span class="t-gold">' + ic("arrdown") + '<b data-net="dn">' + nf(dn, dn < 10 ? 1 : 0) + "</b>" + NB + "Mbit/s</span>" +
       '<span>' + ic("arrup") + '<b data-net="up">' + nf(up, up < 10 ? 1 : 0) + "</b>" + NB + "Mbit/s</span></p></div>" +
       '<button type="button" class="ev-btn is-primary" data-a="speed"' + (test === "run" ? " disabled" : "") + ">" + ic("gauge") + "Tester la vitesse</button></div>" + res +
-      '<div data-net="plot">' + plot({ n: 30, min: 0, max: top, h: 110, y: [0, top / 2, top], yf: function (v) { return nf(v); }, series: [{ v: s.dn, c: "gold", area: true }, { v: s.up, c: "white" }],
-        x: [[0, "15 min"], [10, "10 min"], [20, "5 min"], [29, "maint."]], cls: "is-net" }) + "</div>" +
+      '<div data-net="plot" data-fill>' + netPlot(s) + "</div>" +
       '<span class="ev-legend is-below"><i class="c-gold"></i>Téléchargement<i class="c-white"></i>Téléversement</span>' +
       '<div class="ev-duo is-foot"><span>' + ic("clock") + "<small>Latence · 15 dernières minutes</small><b>" + c.ping + NB + "ms</b></span><span>" + ic("percent") + "<small>Pertes · 15 dernières minutes</small><b>" + esc(c.loss) + "</b></span></div>";
   };
+  /* Compteur : jauge d'instrument (270°) à gauche, valeur utilisée sur le total à droite */
   K.meter = function (c, e) {
-    var pct = c.used / c.total * 100;
-    return head(c.icon, c.title, "", '<span class="ev-pct">' + nf(pct) + NB + "%</span>") + '<p class="ev-big">' + nf(c.used, c.used % 1 ? 1 : 0) + ' <span class="ev-of">/ ' + nf(c.total) + NB + c.unit + "</span></p>" +
-      bar(pct, "t-gold is-lg") + (c.note ? '<p class="ev-fine">' + esc(c.note) + "</p>" : "");
+    var pct = c.used / c.total * 100, tone = pct >= 90 ? "#ef8d85" : pct >= 75 ? "#f3c969" : null;
+    return head(c.icon, c.title, "", "") + '<div class="ev-meter"><div class="ev-meter-g">' + gauge(pct, tone ? { color: tone } : {}) + '<b class="ev-meter-p"><span>' + unitize(nf(pct) + NB + "%") + "</span></b></div>" +
+      '<div class="ev-meter-v"><small>Utilisé</small><p class="ev-big">' + unitize(nf(c.used, c.used % 1 ? 1 : 0) + NB + c.unit) + '</p><small>sur ' + nf(c.total) + NB + c.unit + "</small></div></div>" +
+      (c.note ? '<p class="ev-fine">' + esc(c.note) + "</p>" : "");
   };
   K.devices = function (c, e) {
     var n = c.groups.length;
@@ -1354,7 +1486,7 @@
     if (!SYS[k]) { var R = rng(hash(k)), a = []; for (var i = 0; i < 30; i++) a.push(clamp(c.value + (R() - 0.5) * 18 + Math.sin(i / 3) * 6, 3, 96)); SYS[k] = { v: a, R: R }; }
     var v = SYS[k].v;
     return head(c.icon, c.title, "", "") + '<p class="ev-big"><b data-sys="v">' + nf(v[v.length - 1]) + "</b>" + NB + '%</p><p class="ev-fine">' + esc(c.sub) + "</p>" +
-      '<div data-sys="plot">' + plot({ n: 30, min: 0, max: 100, h: 70, y: [0, 50, 100], yf: function (x) { return x + NB + "%"; }, series: [{ v: v, c: "gold", area: true }], x: [[0, "15 min"], [29, "maint."]], cls: "is-sys" }) + "</div>";
+      '<div data-sys="plot" data-fill>' + sysPlot(c, v) + "</div>";
   };
   K.actions = function (c, e) {
     var r = rt(e), st = r.vals.diag;
@@ -1448,10 +1580,16 @@
   };
 
   /* ---------- Voyage, agenda, listes, entretien ---------- */
+  /* À l'arrivée : conditions sur place, heure d'arrivée estimée (d'après le voyage lié) et lumière du jour */
   K.arrival = function (c, e) {
+    var tr = findCard(e, "trip"), sd = sunDay(e), now = NOW(), m = tr && /(\d+)\s*h(?:\s*(\d+))?|(\d+)\s*min/.exec(tr.dur || ""), mins = m ? (m[3] ? +m[3] : +m[1] * 60 + (+m[2] || 0)) : null;
+    var eta = mins != null ? now + mins * 60000 : null, rows = [["wind", "Vent", c.wind.replace(/^Vent\s*/, "")]];
+    if (eta) rows.unshift(["clock", "Arrivée estimée", hm(eta) + (tr.dist ? " · " + tr.dist : "")]);
+    if (sd.set) rows.push([now < sd.set ? "sunset" : "sunrise", now < sd.set ? "Coucher du soleil" : "Lever du soleil", now < sd.set ? hm(sd.set) + (eta && eta > sd.set ? " · arrivée de nuit" : " · arrivée de jour") : hm(sunDay(e, 1).rise)]);
     return head("pin", "À l’arrivée", esc(c.place), '<span class="ev-tag">exemple</span>') +
-      '<div class="ev-out is-arr">' + wxi(ICON2CODE[c.icon] || "c", false, "is-md") + "<div><b>" + deg(c.temp) + "</b><span>" + esc(c.cond) + "</span></div></div>" +
-      '<div class="ev-row"><span class="ev-ri t-gold">' + ic("wind") + "</span><span><small>" + esc(c.wind) + "</small></span></div>" + '<p class="ev-fine">Conditions d’exemple.</p>';
+      '<div class="ev-arr"><div class="ev-out is-arr">' + wxi(ICON2CODE[c.icon] || "c", false, "is-lg") + "<div><b>" + unitize(deg(c.temp)) + "</b><span>" + esc(c.cond) + "</span></div></div>" +
+      rows.map(function (r) { return '<div class="ev-row"><span class="ev-ri t-gold">' + ic(r[0]) + "</span><span><small>" + r[1] + "</small><b>" + esc(r[2]) + "</b></span></div>"; }).join("") + "</div>" +
+      '<p class="ev-fine">' + ic("info") + "Conditions d’exemple · heure estimée selon le voyage lié.</p>";
   };
   K.agenda = function (c, e) {
     var r = rt(e), wk = r.vals.week || 0, today = midnight(NOW()), dow = (wd(NOW()) + 6) % 7;
@@ -1876,15 +2014,41 @@
         return '<button type="button" role="tab" class="ev-tab' + (t[0] === T[0] ? " is-on" : "") + '" aria-selected="' + (t[0] === T[0]) + '" data-a="tab" data-v="' + t[0] + '">' + esc(t[1]) + "</button>";
       }).join("") + "</div>" : "";
       CUR = T[2];
-      host.innerHTML = bar2 + '<div class="ev-grid" role="' + (tabs.length > 1 ? "tabpanel" : "region") + '">' + CUR.map(function (c, i) { return cardHTML(c, e, i, anim); }).join("") + "</div>";
+      host.innerHTML = bar2 + '<div class="ev-grid" role="' + (tabs.length > 1 ? "tabpanel" : "region") + '">' + layout(CUR).map(function (x) { return cardHTML(CUR[x.i], e, x.i, anim, x.w); }).join("") + "</div>";
       CUR.forEach(function (c, i) { if (HOOK[c.type]) HOOK[c.type](host.querySelector('[data-c="' + i + '"]'), c, e, i); });
+      if (anim) countUp(host);
     }
     liveLoop();
     startTimers();
   }
-  function cardHTML(c, e, i, anim) {
+  /* Mise en page d'un onglet : chaque rangée se remplit sans vide. Une note partage rarement bien une rangée :
+     elle passe sous ses voisines, qui se partagent la largeur. Des cartes « prochain événement » placées à côté
+     d'une grande carte (entretien) passent au-dessus d'elle, côte à côte. Les données ne changent pas. */
+  function layout(cards) {
+    var items = cards.map(function (c, i) { return { i: i, w: c.w || 12, t: c.type }; }), out = [], k = 0;
+    while (k < items.length) {
+      var lead = items[k], side = [];
+      for (var j = k + 1; j < items.length && items[j].t === "next" && items[j].w === 12 - lead.w; j++) side.push(items[j]);
+      if (lead.w < 12 && lead.t !== "next" && side.length >= 2 && 12 % side.length === 0) {
+        side.forEach(function (x) { out.push({ i: x.i, w: 12 / side.length }); });
+        out.push({ i: lead.i, w: 12 });
+        k = j; continue;
+      }
+      var row = [], sum = 0;
+      while (k < items.length && sum + items[k].w <= 12) { row.push(items[k]); sum += items[k].w; k++; }
+      if (!row.length) { row.push(items[k]); k++; }
+      var notes = row.filter(function (x) { return x.t === "note"; }), rest = row.filter(function (x) { return x.t !== "note"; });
+      if (notes.length && rest.length && sum === 12) {
+        var W = rest.reduce(function (a, x) { return a + x.w; }, 0), acc = 0;
+        rest.forEach(function (x, n) { var w = n === rest.length - 1 ? 12 - acc : Math.round(x.w * 12 / W); acc += w; out.push({ i: x.i, w: w }); });
+        notes.forEach(function (x) { out.push({ i: x.i, w: 12 }); });
+      } else row.forEach(function (x) { out.push({ i: x.i, w: x.w }); });
+    }
+    return out;
+  }
+  function cardHTML(c, e, i, anim, w) {
     var liveCard = e.energy && e.energy.live && (c.live || c.type === "flow" || c.type === "ring" || c.type === "packs" || c.type === "history" || c.type === "chips" || (c.type === "list" && c.rows && c.rows.some(function (r) { return String(r[2]).indexOf("live:") === 0; })));
-    return '<section class="ev-card ev-t-' + c.type + " w" + (c.w || 12) + (c.h ? " h" + c.h : "") + (anim ? " is-new" : "") + '" data-c="' + i + '"' + (liveCard ? " data-live" : "") + ' style="--i:' + i + '">' + K[c.type](c, e, i) + "</section>";
+    return '<section class="ev-card ev-t-' + c.type + " w" + (w || c.w || 12) + (c.h ? " h" + c.h : "") + (anim ? " is-new" : "") + '" data-c="' + i + '"' + (liveCard ? " data-live" : "") + ' style="--i:' + i + '">' + K[c.type](c, e, i) + "</section>";
   }
   function rerender(i) {
     var el = app.querySelector('[data-c="' + i + '"]');
@@ -1916,22 +2080,37 @@
 
   /* ---------- Après affichage : éclairage, horloges ---------- */
   var HOOK = {};
-  /* Les chiffres des indicateurs montent jusqu'à leur valeur (seulement sous html.fx, jamais en mouvement réduit) */
-  HOOK.kpi = function (el) {
-    if (!el || !el.classList.contains("is-new") || reduce() || !document.documentElement.classList.contains("fx")) return;
-    var b = el.querySelector(".ev-kn"), tn = b && b.firstChild;
-    if (!tn || tn.nodeType !== 3) return;
-    var m = /^(−?)(\d+)(,(\d+))?(.*)$/.exec(tn.nodeValue);
-    if (!m) return;
-    var neg = m[1] ? -1 : 1, dec = m[4] ? m[4].length : 0, to = neg * parseFloat(m[2] + "." + (m[4] || "0")), rest = m[5], t0 = null;
-    function step(ts) {
-      if (!tn.parentNode) return;
-      t0 = t0 || ts;
-      var k = clamp((ts - t0) / 900, 0, 1), ease = 1 - Math.pow(1 - k, 3);
-      tn.nodeValue = nf(to * ease, dec) + rest;
-      if (k < 1) requestAnimationFrame(step);
+  /* Conduits : du nœud vers le centre (ou l'inverse), courbes douces, particules selon la puissance */
+  var FLOWC = { prod: "var(--e-acc)", grid: "#e9edf3", load: "#f6efe2", bat: "#34d399" };
+  HOOK.flow = function (el) {
+    var box = el && el.querySelector("[data-flow]"), svg = box && box.querySelector("[data-flow-svg]"), core = box && box.querySelector("[data-fn-core]");
+    if (!svg || !core) return;
+    function draw() {
+      if (!svg.isConnected) { if (box.__ro) box.__ro.disconnect(); return; }
+      var B = box.getBoundingClientRect(), C = core.getBoundingClientRect(), cx = C.left - B.left + C.width / 2, cy = C.top - B.top + C.height / 2, cr = C.width / 2;
+      if (!B.width) return;
+      var out = "";
+      box.querySelectorAll("[data-fn]").forEach(function (n) {
+        var d = n.querySelector(".ev-fn-ic").getBoundingClientRect(), x = d.left - B.left + d.width / 2, y = d.top - B.top + d.height / 2, r = d.width / 2;
+        var pos = n.getAttribute("data-fn"), dir = n.getAttribute("data-dir"), tone = n.getAttribute("data-tone"), pw = +n.getAttribute("data-pw") || 0, p;
+        if (pos === "top") p = [x, y + r + 4, x, (y + cy) / 2, cx + (x - cx) * 0.18, (y + cy) / 2, cx + (x - cx) * 0.12, cy - cr - 2];
+        else if (pos === "bottom") p = [x, y - r - 4, x, (y + cy) / 2, cx, (y + cy) / 2, cx, cy + cr + 2];
+        else { var sx = pos === "left" ? 1 : -1; p = [x + sx * (r + 4), y, (x + cx) / 2, y, (x + cx) / 2, cy, cx - sx * (cr + 2), cy]; }
+        if (dir === "out") p = [p[6], p[7], p[4], p[5], p[2], p[3], p[0], p[1]];
+        var dd = "M" + p[0].toFixed(1) + " " + p[1].toFixed(1) + " C" + p.slice(2).map(function (v) { return v.toFixed(1); }).join(" ");
+        var col = tone === "grid" && dir === "out" ? FLOWC.prod : FLOWC[tone] || FLOWC.prod, on = dir !== "none";
+        out += '<path class="ev-fc" d="' + dd + '"/>';
+        if (on) {
+          var wdt = (2.5 + 7 * Math.sqrt(pw)).toFixed(1), sp = clamp(2.8 - pw * 1.8, 0.9, 2.8).toFixed(2);
+          out += '<path class="ev-fg" d="' + dd + '" style="stroke:' + col + ";stroke-width:" + wdt + '"/><path class="ev-fl" d="' + dd + '" style="stroke:' + col + '"/>' +
+            '<path class="ev-fp" d="' + dd + '" style="stroke:' + col + ";--sp:" + sp + 's"/>';
+        }
+      });
+      svg.setAttribute("viewBox", "0 0 " + B.width.toFixed(0) + " " + B.height.toFixed(0));
+      svg.innerHTML = out;
     }
-    requestAnimationFrame(step);
+    draw();
+    if ("ResizeObserver" in window) { if (box.__ro) box.__ro.disconnect(); box.__ro = new ResizeObserver(function () { requestAnimationFrame(draw); }); box.__ro.observe(box); }
   };
   HOOK.lumieres = function (el, c, e) { var box = el && el.querySelector("[data-lum-mini]"); if (box) mountLights(box, e, true); };
   var mounted = [];
@@ -1997,10 +2176,7 @@
           var last = s.dn[s.dn.length - 1];
           s.dn.push(clamp(last + (R2() - 0.5) * c.down * 0.5 + (c.down - last) * 0.25, c.down * 0.25, c.down * 1.9));
           s.up.push(c.up * (0.6 + R2() * 0.8));
-          var keep = el.querySelector('[data-net="plot"]');
-          var mx = Math.max.apply(null, s.dn) * 1.15, top = Math.max(1, Math.ceil(mx / 5) * 5);
-          keep.innerHTML = plot({ n: 30, min: 0, max: top, h: 110, y: [0, top / 2, top], yf: function (v) { return nf(v); }, series: [{ v: s.dn, c: "gold", area: true }, { v: s.up, c: "white" }],
-            x: [[0, "15 min"], [10, "10 min"], [20, "5 min"], [29, "maint."]], cls: "is-net" });
+          el.querySelector('[data-net="plot"]').innerHTML = netPlot(s);
           var dn = s.dn[29], up = s.up[29];
           el.querySelector('[data-net="dn"]').textContent = nf(dn, dn < 10 ? 1 : 0);
           el.querySelector('[data-net="up"]').textContent = nf(up, up < 10 ? 1 : 0);
@@ -2008,7 +2184,7 @@
         if (c.type === "sys") {
           var k = e.key + c.icon, v = SYS[k].v;
           v.shift(); v.push(clamp(v[v.length - 1] + (SYS[k].R() - 0.5) * 14 + (c.value - v[v.length - 1]) * 0.3, 3, 96));
-          el.querySelector('[data-sys="plot"]').innerHTML = plot({ n: 30, min: 0, max: 100, h: 70, y: [0, 50, 100], yf: function (x) { return x + NB + "%"; }, series: [{ v: v, c: "gold", area: true }], x: [[0, "15 min"], [29, "maint."]], cls: "is-sys" });
+          el.querySelector('[data-sys="plot"]').innerHTML = sysPlot(c, v);
           el.querySelector('[data-sys="v"]').textContent = nf(v[29]);
         }
       });
@@ -2260,6 +2436,14 @@
     ev.preventDefault();
     var v0 = clamp(Math.round(dialAt(ev, g, c) / dialStep(c, key)) * dialStep(c, key), c.min, c.max);
     drag.v = v0; dialPaint(g, c, key, v0);
+  });
+  app.addEventListener("pointermove", function (ev) {
+    var pa = ev.target.closest && ev.target.closest(".ev-pa[data-tip]");
+    if (pa) plotTip(pa, ev);
+  });
+  app.addEventListener("pointerout", function (ev) {
+    var pa = ev.target.closest && ev.target.closest(".ev-pa[data-tip]");
+    if (pa && !pa.contains(ev.relatedTarget)) { var c = pa.querySelector(".ev-pc"); if (c) c.hidden = true; }
   });
   app.addEventListener("pointermove", function (ev) {
     if (!drag) return;

@@ -771,11 +771,14 @@
   }
   K.checklist = function (c, e) {
     var st = checks(e, c.id, c.items), done = st.filter(Boolean).length, pct = done / st.length * 100;
-    return head(c.icon || "clip", c.title, "Chaque élément indique d’où il vient", '<span class="ev-count"><b>' + done + "</b> / " + st.length + " terminées</span>" + bar(pct, "t-ok is-sm")) +
+    var nextI = st.indexOf(false);
+    return head(c.icon || "clip", c.title, "Chaque élément indique d’où il vient", "") +
       '<ul class="ev-checks">' + c.items.map(function (it, i) {
         return '<li><button type="button" class="ev-check' + (st[i] ? " is-on" : "") + '" data-a="chk" data-v="' + c.id + ":" + i + '" aria-pressed="' + st[i] + '"><span class="ev-box">' + ic("check") + "</span>" +
           '<span class="ev-chk-t"><span>' + esc(it[0]) + "</span>" + srcChip(it[2], true) + "</span></button></li>";
-      }).join("") + "</ul>";
+      }).join("") + "</ul>" +
+      '<div class="ev-chk-s"><span class="ev-chk-g">' + ring(pct, pct >= 100 ? "var(--e-ok)" : "var(--e-acc)") + "<b>" + done + "<small>/" + st.length + "</small></b></span>" +
+      "<span><small>" + (nextI < 0 ? "Tout est prêt" : "Prochaine étape") + "</small><b>" + (nextI < 0 ? "Toutes les vérifications sont faites" : esc(c.items[nextI][0])) + "</b></span></div>";
   };
 
   /* Prochaines 48 heures : ce qui compte bientôt, réuni d'une seule lecture (rappel du lieu, soleil, agenda, entretien) */
@@ -830,8 +833,12 @@
         '<div class="ev-stg-f"><span>' + ic("check") + "<small>Parcouru</small><b>" + esc(c.done) + "</b></span><span>" + ic("route") + "<small>" + esc(c.next) + "</small><b>" + esc(c.left) + " restants</b></span><span>" + ic("clock") + "<small>Prochain départ</small><b>" + esc(c.eta) + "</b></span></div>";
     }
     if (!c.big) {
-      return head("route", c.title, "", "") + '<div class="ev-trip-s"><span><b>' + esc(c.name) + "</b><small>" + esc(c.next) + "</small></span>" +
-        '<button type="button" class="ev-btn" data-a="go" data-v="' + c.go + '">' + ic("map") + "Ouvrir le voyage" + ic("right") + "</button></div>";
+      /* Trajet en un regard : départ → arrivée, conditions à l'arrivée (carte « À l'arrivée » du même lieu) */
+      var ar = findCard(e, "arrival"), dest = ar ? ar.place : c.name.replace(/^Vers\s+/, "");
+      return head("route", c.title, "", '<button type="button" class="ev-btn is-sm" data-a="go" data-v="' + c.go + '">' + ic("map") + "Ouvrir le voyage" + ic("right") + "</button>") +
+        '<div class="ev-trip-s"><div class="ev-trip-r"><span><small>Départ</small><b>' + esc(e.place.split(" · ")[0]) + '</b></span><span class="ev-trip-l" aria-hidden="true"><i></i>' + ic(e.meIcon || "route") + '<i></i></span><span><small>Arrivée</small><b>' + esc(dest) + "</b></span></div>" +
+        '<p class="ev-trip-n">' + esc(c.name) + "</p><p class=\"ev-trip-x\">" + esc(c.next) + "</p>" +
+        (ar ? '<div class="ev-trip-w">' + wxi(ICON2CODE[ar.icon] || "c", false, "is-md") + "<span><small>À l’arrivée</small><b>" + unitize(deg(ar.temp)) + "</b></span><span><small>" + esc(ar.cond) + "</small><b>" + esc(ar.wind) + "</b></span></div>" : "") + "</div>";
     }
     return '<div class="ev-trip"><div class="ev-trip-t">' + head("map", c.title, "", "") + '<p class="ev-trip-n">' + esc(c.name) + "</p><p class=\"ev-trip-x\">" + esc(c.next) + "</p>" +
       '<p class="ev-trip-d">' + ic(e.meIcon || "rv") + "<b>" + esc(c.dist) + "</b> · durée estimée : " + esc(c.dur) + "</p>" +
@@ -1271,8 +1278,8 @@
   K.gauge = function (c, e) {
     var col = c.pct >= 40 ? ["#34d399", "#7ee2b0"] : c.pct >= 20 ? ["#f3c969", "#f3c969"] : ["#e88a82", "#f0a59f"];
     return head(c.icon, c.title, c.sub, "") + '<div class="ev-gaugew"><div class="ev-semi">' + gauge(c.pct, { sweep: 180, grad: col, cls: "is-semi" }) +
-      '<div class="ev-semi-v"><b>' + c.pct + NB + "%</b><small>" + esc(c.value) + "</small></div></div>" +
-      '<div class="ev-est"><small>Estimation</small><b>' + esc(c.est) + "</b><small>" + esc(c.estsub || "") + "</small></div></div>";
+      '<div class="ev-semi-v"><b>' + unitize(c.pct + NB + "%") + "</b></div></div>" +
+      '<div class="ev-est"><small>Contenu</small><b>' + unitize(c.value) + '</b><small>Estimation</small><b>' + esc(c.est) + "</b><small>" + esc(c.estsub || "") + "</small></div></div>";
   };
   K.usage = function (c, e) {
     var R = rng(hash(e.key + "use" + (c.seed || 0))), h0 = lp(NOW()).h, vals = [], mx = 0, sum = 0, xs = [];
@@ -1618,10 +1625,24 @@
       '<div class="ev-ag"><div class="ev-ag-d">' + days + '</div><div class="ev-ag-b"><div class="ev-ag-h">' + hrs + '</div><div class="ev-ag-c">' + cols + evs + "</div></div></div>" +
       '<p class="ev-legend is-below"><i class="c-gold"></i>' + esc(c.l1 || "Réservations (campings, étapes)") + '<i class="c-blue"></i>' + esc(c.l2 || "Entretien (rendez-vous, inspections)") + "</p>";
   };
+  /* Prochain événement : titre et date, puis chronologie des 7 prochains jours (aujourd'hui → événement) et compte à rebours */
   K.next = function (c, e) {
-    var t = c.d != null ? dayAt(c.d, c.h) : null;
+    var t = c.d != null ? dayAt(c.d, c.h) : null, now = NOW(), tl = "";
+    if (t) {
+      var span = 7 * 864e5, p = clamp((t - now) / span, 0, 1), ticks = "";
+      for (var k = 0; k <= 7; k++) ticks += '<i style="left:' + (k / 7 * 100).toFixed(2) + '%"><small>' + (k === 0 ? "Auj." : JC[wd(now + k * 864e5)]) + "</small></i>";
+      tl = '<div class="ev-nx"><div class="ev-nx-h"><small>' + (t > now ? "Dans" : "Depuis") + '</small><b>' + esc(dur(Math.abs(t - now))) + "</b></div>" +
+        '<div class="ev-nx-t" style="--p:' + (p * 100).toFixed(2) + '%"><span class="ev-nx-f"></span>' + ticks + '<em aria-hidden="true">' + ic(c.icon, "is-sm") + "</em></div></div>";
+    }
+    /* Ensuite à l'agenda : les autres rendez-vous des 7 prochains jours (visibles quand la carte a de la place) */
+    var ag = CUR.some(function (x) { return x.type === "agenda"; }) ? null : findCard(e, "agenda"), then = ag ? ag.events.map(function (ev) { return [dayAt(ev[0], ev[1]), ev]; }).filter(function (x) {
+      return x[0] > now && x[0] < now + 7 * 864e5 && x[1][3] !== c.title && x[1][4] !== "stay";
+    }).sort(function (a, b) { return a[0] - b[0]; }).slice(0, 4) : [];
+    var list = then.length ? '<div class="ev-nx-l"><p class="ev-k">Ensuite à l’agenda</p>' + then.map(function (x) {
+      return '<div class="ev-row"><span class="ev-ri">' + ic(x[1][4] === "maint" ? "wrench" : x[1][4] === "peak" ? "bolt" : x[1][4] === "flight" ? "plane" : "calendar") + "</span><span><b>" + esc(x[1][3]) + "</b><small>" + cap(rel(x[0])) + " · " + hm(x[0]) + "</small></span></div>";
+    }).join("") + "</div>" : "";
     return '<div class="ev-next"><span class="ev-ci">' + ic(c.icon) + "</span><div><small>" + esc(c.kick) + "</small><b>" + esc(c.title) + "</b>" +
-      (t ? "<p>" + cap(dateLong(t)) + " · " + hm(t) + "</p>" : "") + (c.countdown && t ? '<strong>Dans ' + dur(t - NOW()) + "</strong>" : "") + (c.text ? "<p>" + esc(c.text) + "</p>" : "") + "</div></div>";
+      (t ? "<p>" + cap(dateLong(t)) + " · " + hm(t) + "</p>" : "") + (c.text ? "<p>" + esc(c.text) + "</p>" : "") + "</div></div>" + list + tl;
   };
   K.lists = function (c, e) {
     var r = rt(e), cur2 = r.vals.list || c.lists[0].k, L = c.lists.filter(function (l) { return l.k === cur2; })[0] || c.lists[0];

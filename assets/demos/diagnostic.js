@@ -356,7 +356,7 @@
     if (S.step === 1) {
       var h = $('.dg-hero[data-case="' + S.cas + '"]'), b = $(".dg-big b", h), gauge = $(".dg-gauge", h);
       var to = +b.getAttribute("data-to"), per = parseFloat(gauge.style.getPropertyValue("--v")) / to, txt = fr(v);
-      gauge.style.setProperty("--vk", (v * per).toFixed(2) + "%");
+      gauge.style.setProperty("--vk", (v * per).toFixed(2));
       if (b.textContent !== txt) {
         b.textContent = txt;
         if (b.animate) b.animate([{ opacity: .5, transform: "translateY(4px)" }, { opacity: 1, transform: "none" }], { duration: 420, easing: "cubic-bezier(.16,1,.3,1)" });
@@ -405,7 +405,7 @@
       tween(1.6, function (k) {
         var e = ease(k);
         b.textContent = fr(from + (to - from) * e);
-        gauge.style.setProperty("--vk", (v0 + (v1 - v0) * e).toFixed(2) + "%");
+        gauge.style.setProperty("--vk", (v0 + (v1 - v0) * e).toFixed(2));
       });
     },
     2: function () {

@@ -289,16 +289,47 @@ DATA = {"froid": series(F, "froid"), "vr": series(V, "vr")}
 # ---------------------------------------------------------------------------
 # HTML
 # ---------------------------------------------------------------------------
+def _pol(r, a):
+    t = math.radians(a)
+    return 100 + r * math.sin(t), 100 - r * math.cos(t)
+
+
+def _dial_ticks():
+    mi, ma = [], []
+    for i in range(51):
+        a = -135 + i * 5.4
+        (x0, y0), (x1, y1) = _pol(70 if i % 5 == 0 else 73, a), _pol(79, a)
+        (ma if i % 5 == 0 else mi).append(f"M{x0:.1f} {y0:.1f}L{x1:.1f} {y1:.1f}")
+    return f'<path class="dz-tk" d="{"".join(mi)}"/><path class="dz-tk is-maj" d="{"".join(ma)}"/>'
+
+
+_A0, _A1 = _pol(62, -135), _pol(62, 135)
+DIAL_ARC = f"M{_A0[0]:.2f} {_A0[1]:.2f}A62 62 0 1 1 {_A1[0]:.2f} {_A1[1]:.2f}"
+DIAL_TICKS = _dial_ticks()
+_B0, _B1 = _pol(53, -135), _pol(53, 135)
+BAND_ARC = f"M{_B0[0]:.2f} {_B0[1]:.2f}A53 53 0 1 1 {_B1[0]:.2f} {_B1[1]:.2f}"
+
+
 def hero(case, c):
+    """La mesure qui pose problème, dans un cadran d'instrument (langage du thermostat des Environnements) :
+    lunette métallique, verre noir, graduations fines, plage normale en vert, valeur en corail. --vk : 0 à 100."""
     h = c["hero"]
-    pct = lambda v: f"{100 * v / h['max']:.1f}%"
+    pc = lambda v: f"{100 * v / h['max']:.1f}"
     return f"""<div class="dg-hero" data-case="{case}"{'' if case == 'froid' else ' hidden'}>
       <p class="dg-hk"><i aria-hidden="true"></i>{h['k']}</p>
-      <p class="dg-big"><b data-to="{h['v']}" data-from="{h['start']}">{fr(h['v'])}</b><span>°C</span></p>
-      <div class="dg-gauge" style="--lo:{pct(h['lo'])};--hi:{pct(h['hi'])};--v:{pct(h['v'])};--v0:{pct(h['start'])}" aria-hidden="true">
-        <i class="dg-gband"></i><i class="dg-gmark"></i>
+      <div class="dg-gauge" style="--v:{pc(h['v'])};--v0:{pc(h['start'])};--vk:{pc(h['v'])}">
+        <svg class="dg-dial" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+          <circle cx="100" cy="100" r="98" fill="url(#dg-dz-bezel)" class="dz-bz"/><circle cx="100" cy="100" r="90" class="dz-in"/>
+          <circle cx="100" cy="100" r="88" fill="url(#dg-dz-face)"/>{DIAL_TICKS}
+          <path class="dz-tr" d="{DIAL_ARC}"/>
+          <path class="dz-band" d="{BAND_ARC}" pathLength="100" style="stroke-dasharray:0 {pc(h['lo'])} {float(pc(h['hi'])) - float(pc(h['lo'])):.1f} 200"/>
+          <path class="dz-v" d="{DIAL_ARC}" pathLength="100"/>
+          <g class="dz-knob"><circle cx="100" cy="38" r="6.5"/></g>
+          <ellipse cx="100" cy="58" rx="66" ry="40" fill="url(#dg-dz-glass)"/>
+        </svg>
+        <p class="dg-big"><b data-to="{h['v']}" data-from="{h['start']}">{fr(h['v'])}</b><span>°C</span></p>
+        <span class="dg-gscale" aria-hidden="true"><span>0{NB}°C</span><span>{h['max']}{NB}°C</span></span>
       </div>
-      <div class="dg-gscale" aria-hidden="true"><span>0{NB}°C</span><span>{h['max']}{NB}°C</span></div>
       <p class="dg-hs">{h['s']}</p>
       <p class="dg-since">{h['since']}</p>
     </div>"""
@@ -357,7 +388,10 @@ RAIL_HTML = "".join(
     for i, t in enumerate(RAIL)
 )
 PANELS = "".join(step_html(k, i + 1, s) for k, c in CASES.items() for i, s in enumerate(c["steps"]))
-HEROES = "".join(hero(k, c) for k, c in CASES.items())
+DIAL_DEFS = ('<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>'
+             '<linearGradient id="dg-dz-bezel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a4a4a"/><stop offset=".22" stop-color="#1b1b1b"/><stop offset=".55" stop-color="#0a0a0a"/><stop offset=".8" stop-color="#2b2b2b"/><stop offset="1" stop-color="#101010"/></linearGradient><radialGradient id="dg-dz-face" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#1a1918"/><stop offset=".7" stop-color="#070707"/><stop offset="1" stop-color="#000"/></radialGradient><linearGradient id="dg-dz-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+             "</defs></svg>")
+HEROES = DIAL_DEFS + "".join(hero(k, c) for k, c in CASES.items())
 LEGENDS = "".join(legend(k, c) for k, c in CASES.items())
 JSON = json.dumps(DATA, ensure_ascii=False, separators=(",", ":"))
 

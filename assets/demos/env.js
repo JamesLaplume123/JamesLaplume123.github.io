@@ -987,9 +987,10 @@
       return '<div class="ev-fn is-src' + (on ? " is-on" : "") + '" style="--k:' + k + '">' + '<span class="ev-ri t-gold">' + ic(s.icon) + "</span><span><small>" + esc(s.label) + "</small><b>" +
         (live ? "à relier" : fmtW(s.w)) + "</b>" + (live ? "<em>capteur non relié</em>" : s.note ? "<em>" + esc(s.note) + "</em>" : "") + "</span></div>";
     }).join("");
-    var n = srcs.length, paths = "", ys = n === 1 ? [50] : n === 2 ? [30, 70] : [17, 50, 83];
+    var n = srcs.length, paths = "";
     srcs.forEach(function (s, k) {
-      var on = live ? inF : s.w > 1, y = ys[k] * 3;
+      /* Départs des traits répartis selon le nombre de sources (1 : centre, 2 : 30 et 70 %, 3 et plus : de 17 à 83 %) */
+      var on = live ? inF : s.w > 1, y = (n === 1 ? 50 : n === 2 ? 30 + 40 * k : 17 + 66 * k / (n - 1)) * 3;
       paths += '<path class="ev-fl' + (on ? " is-on" : "") + '" d="M300 ' + y + " C340 " + y + " 340 150 380 150" + '" style="--sp:' + (on ? clamp(2.6 - (live ? Math.abs(bw) : s.w) / 600, 0.7, 2.6) : 2) + 's"/>';
     });
     var loadsOn = live ? b.flow === "out" : ex.load > 0;

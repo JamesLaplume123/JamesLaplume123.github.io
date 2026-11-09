@@ -122,6 +122,7 @@ def _profils():
 
 VARIE = [
     ("La taille du lieu", "Une pièce, une maison, un domaine ou plusieurs bâtiments."),
+    ("Le nombre de lieux", "Un Hub par lieu : la maison, puis un chalet, un garage ou un VR, chacun avec le sien."),
     ("Le nombre d’extensions", "Vous commencez par une seule; les autres s’ajoutent plus tard."),
     ("Ce qui est déjà en place", "On réutilise vos appareils quand c’est possible. Il en coûte moins."),
     ("Les appareils à ajouter", "Caméras, capteurs, serrures ou boîtier de véhicule, s’il en faut."),
@@ -198,8 +199,9 @@ PAGE = {
       {_etape(1)}
       <h2 id="hub-titre">Le Hub JARVIS.<br><em>Votre système, chez vous.</em></h2>
     </div>
-    <p data-rev>Un petit serveur dimensionné pour votre lieu. Il garde vos données, fait tourner l’IA et
-    applique vos règles, même quand Internet tombe.</p>
+    <p data-rev>Un petit boîtier silencieux, installé et entretenu par nous : rien à gérer. Il garde vos
+    données, fait tourner l’IA et applique vos règles, même quand Internet tombe. Un lieu, un Hub;
+    tous vos lieux dans une seule application.</p>
   </div>
   {_hub()}
 </section>

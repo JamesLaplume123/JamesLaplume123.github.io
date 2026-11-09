@@ -111,7 +111,7 @@ def besoins():
 
 
 ETAPES = [
-    ("1", "Le Hub", "Un petit serveur installé chez vous. Il fait tourner JARVIS, même sans Internet."),
+    ("1", "Le Hub", "Un petit boîtier silencieux, installé et entretenu par nous. Un par lieu, une seule application, même sans Internet."),
     ("2", "Vos extensions", "Vous ajoutez seulement ce qui vous sert : sécurité, domotique, IA, entreprise, route."),
     ("3", "Installation et soutien", "On installe, on vous forme, puis on reste là pour l’entretien et le soutien."),
 ]

@@ -86,7 +86,7 @@ PAGE = {
     "title": "Solutions | JARVIS Private Systems",
     "description": (
         "Sept familles de solutions pour les environnements intelligents, l’IA privée, "
-        "la sécurité, les opérations, le réseau et le diagnostic."
+        "la sécurité, les opérations, le réseau, le diagnostic et la mobilité."
     ),
     "og_image": "/media/solutions/environnements-intelligents.webp",
     "content": f"""
@@ -97,6 +97,10 @@ PAGE = {
     <h1 data-rev>Sept solutions.<br><em>Une architecture commune.</em></h1>
     <p class="lead" data-rev>Commencez par un problème concret. Chaque solution peut fonctionner
     seule; JARVIS permet ensuite de les relier sans tout reconstruire.</p>
+    <div class="acts" data-rev>
+      <a class="pill" href="/contact/">Réserver une démo</a>
+      <a class="pill ghost" href="/plateforme/#ensemble">Comment elles travaillent ensemble</a>
+    </div>
     <div class="meta" data-rev>
       <span class="chip">Un besoin réel</span>
       <span class="chip">Local, privé ou hybride</span>
@@ -130,16 +134,6 @@ PAGE = {
   {STORIES_HTML}
 </section>
 {galerie.solutions_clients()}
-
-<section class="statement">
-  <p class="eyebrow" data-rev>Une fondation commune</p>
-  <h2 data-rev style="margin-top:1.2rem">Une plateforme,<br><em>pas six systèmes isolés.</em></h2>
-  <p data-rev>Les six capacités partagent la même identité, les mêmes permissions et la
-  même trace. Elles s’activent selon le besoin.</p>
-  <div class="acts" data-rev style="justify-content:center">
-    <a class="pill ghost" href="/plateforme/">Comprendre la plateforme</a>
-  </div>
-</section>
 
 <section class="cta">
   <h2 data-rev>Quel problème mérite<br><span>une première preuve?</span></h2>

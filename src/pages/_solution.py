@@ -1,7 +1,7 @@
 # Gabarit commun des pages de solution.
 # Chaque module fournit un dict DATA ; solution_page() le transforme en page :
-# bande immersive → démonstration interactive (le cœur) → « En clair »
-# (avant / avec JARVIS, ce que vous obtenez) → déploiement responsable → démo.
+# bande immersive → démonstration interactive (le cœur) → sur le terrain (photos) → « En clair »
+# (avant / avec JARVIS en photos et en mots, ce que vous obtenez) → déploiement responsable → démo.
 
 from config import CAPABILITIES
 from demos import coquille
@@ -18,10 +18,11 @@ FRAME = """<figure class="frame" data-rev>
   </figure>"""
 
 
-def clair_section(c):
-    """Bloc « En clair » : la solution expliquée simplement, avant / avec JARVIS."""
+def clair_section(c, slug=""):
+    """Bloc « En clair » : la solution expliquée simplement, avant / avec JARVIS (avec leurs photos)."""
     if not c:
         return ""
+    ph_avant, ph_apres = galerie.avant_apres_photos(slug)
     avant = "".join(f"<li>{x}</li>" for x in c["avant"])
     apres = "".join(f"<li>{x}</li>" for x in c["apres"])
     obtenez = "".join(
@@ -36,9 +37,9 @@ def clair_section(c):
     <p class="clair-ex"><b>Exemple concret.</b> {c['exemple']}</p>
   </div>
   <div class="vs" data-rev>
-    <div class="vs-col vs-before"><p class="vs-k">Aujourd’hui, sans JARVIS</p><ul>{avant}</ul></div>
+    <div class="vs-col vs-before">{ph_avant}<p class="vs-k">Aujourd’hui, sans JARVIS</p><ul>{avant}</ul></div>
     <div class="vs-arrow" aria-hidden="true"><span></span></div>
-    <div class="vs-col vs-after"><p class="vs-k">Avec JARVIS</p><ul>{apres}</ul></div>
+    <div class="vs-col vs-after">{ph_apres}<p class="vs-k">Avec JARVIS</p><ul>{apres}</ul></div>
   </div>
   <p class="eyebrow clair-k" data-rev>Ce que vous obtenez</p>
   <div class="cards">{obtenez}</div>
@@ -82,7 +83,7 @@ def solution_page(d):
   {d.get('extra', '')}
 </section>
 {galerie.terrain(d['slug']) if d['slug'] in galerie.SOLUTIONS else ''}
-{clair_section(d.get("clair"))}
+{clair_section(d.get('clair'), d['slug'])}
 
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>

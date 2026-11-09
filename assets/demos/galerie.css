@@ -96,6 +96,12 @@
   border-top: 2px solid var(--gold-soft); border-right: 2px solid var(--gold-soft);
 }
 
+/* ---------- Photos en tête des colonnes « En clair » (pages de solution) ---------- */
+.vs-col .gl-fig.vs-ph { aspect-ratio: 3 / 2; margin: 0 0 1.4rem; border-radius: 14px; }
+.vs-col .gl-fig.vs-ph::after { border-radius: 16px; }
+.vs-col .gl-fig.vs-ph figcaption { padding: 2.6rem 1.1rem 1rem; }
+.vs-col .gl-fig.vs-ph figcaption b { font-size: .95rem; }
+
 /* ---------- Panorama cinéma ---------- */
 .gl-pano { padding: 2.5rem 1.4rem; }
 .gl-wide { max-width: 90rem; margin: 0 auto; aspect-ratio: 21 / 9; }

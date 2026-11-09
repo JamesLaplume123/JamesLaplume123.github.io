@@ -104,7 +104,7 @@ PAGE = {
   </div>
 </section>
 
-{clair_section(CLAIR)}
+{clair_section(CLAIR, "mobilite")}
 
 <section class="sect" id="modes-voyage" data-toc="Six façons de voyager">
   <div class="sect-head">

@@ -148,7 +148,7 @@ PAGE = {
   </div>
 </section>
 
-{clair_section(CLAIR)}
+{clair_section(CLAIR, "environnements-intelligents")}
 
 <section class="sect alt" id="journee" data-toc="Une journée">
   <div class="sect-head">
@@ -189,32 +189,7 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect" id="cameras" data-toc="Caméras">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Caméras de la propriété · données simulées</p>
-      <h2>Toute la propriété. <em>Une seule expérience.</em></h2>
-    </div>
-    <p data-rev>Les caméras rejoignent le même écran que les lumières et le chauffage.
-    Chaque commande reste visible, compréhensible et réversible.</p>
-  </div>
-  <div class="shots" data-rev style="margin-top:14px">
-    <figure>
-      <img src="/media/solutions/camera-front-entry-v1.webp" alt="Caméra de l’entrée avant de la résidence" loading="lazy">
-      <figcaption><b>Entrée avant</b><span>Aucun événement à vérifier</span></figcaption>
-    </figure>
-    <figure>
-      <img src="/media/solutions/camera-driveway-garage-v1.webp" alt="Caméra de l’allée et des portes de garage" loading="lazy">
-      <figcaption><b>Allée et garage</b><span>Portes fermées</span></figcaption>
-    </figure>
-    <figure>
-      <img src="/media/solutions/camera-rear-terrace-v1.webp" alt="Caméra de la terrasse arrière et du foyer" loading="lazy">
-      <figcaption><b>Terrasse arrière</b><span>Accès fermé · foyer actif</span></figcaption>
-    </figure>
-  </div>
-</section>
-
-{galerie.terrain("environnements-intelligents", alt=True)}
+{galerie.terrain("environnements-intelligents")}
 
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>

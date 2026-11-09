@@ -70,7 +70,7 @@ PAGE = {
   """ + coquille.html("ia-privee-connaissances", DEMO) + """
 </section>
 
-""" + clair_section(CLAIR) + """
+""" + clair_section(CLAIR, "ia-privee-connaissances") + """
 
 <section class="sect alt" id="controle" data-toc="Le contrôle">
   <div class="sect-head">

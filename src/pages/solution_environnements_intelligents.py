@@ -1,6 +1,6 @@
 # Solution 01 — Environnements intelligents. PAGE VEDETTE (sur mesure).
 # Seule page de solution hors gabarit : la démo « Environnements » (un seul modèle de logiciel
-# pour BouLance, résidence, chalet, entreprise, garage de collection, ferme, yacht et avion, dans JARVIS App),
+# pour BouLance, résidence, chalet, entreprise, garage de collection, ferme, yacht et hangar privé avec turbopropulseur et jet d’affaires, dans JARVIS App),
 # journée interactive et caméras. Données de la démo : src/demos/env.py.
 
 import json
@@ -110,7 +110,8 @@ PAGE = {
     <p data-rev>L’accueil réunit tous vos lieux : alertes, sécurité, énergie, présence et entretien
     d’un seul regard, un mode appliqué à plusieurs lieux et un journal commun. Puis chaque tableau
     (BouLance, résidence de prestige, chalet d’architecte, bureau, garage de collection, ferme
-    multi-élevage, yacht, avion d’affaires) garde les mêmes gestes.
+    multi-élevage, yacht, puis le hangar privé et ses deux appareils, un turbopropulseur et un
+    jet d’affaires) garde les mêmes gestes.
     Chaque commande est envoyée, puis confirmée. Les batteries de BouLance sont réelles.</p>
   </div>
   {coquille.html("environnements-intelligents", env.html())}

@@ -2351,7 +2351,7 @@ AVION_POINTS = [
 # tableau; la bande « Hangar privé » et la carte « Le hangar » (Vue d'ensemble) montrent les deux.
 HANGAR = {
     "name": "Hangar privé · CYJN", "sub": "Deux appareils · porte de 34 m · chauffé hors-gel", "fleet": ["avion", "jet"],
-    "rows": [["thermo", "Hangar", "6 °C · hors-gel", "ok"], ["drop", "Humidité", "48 %", "ok"], ["hangar", "Porte du hangar", "Fermée", "ok"],
+    "rows": [["thermo", "Hangar · hors-gel", "6 °C", "ok"], ["drop", "Humidité", "48 %", "ok"], ["hangar", "Porte du hangar", "Fermée", "ok"],
              ["shield", "Surveillance", "Armée", "ok"]],
 }
 
@@ -2361,7 +2361,7 @@ AVION = {
     "plane": {"short": "Turbopropulseur", "spot": "Place 1 · côté atelier", "photo": "/media/env/avion.webp", "pos": "50% 55%",
               "state": ["Au hangar · prêt demain", "ok"],
               "kpis": [["fuel", "Carburant", "942 L · 62 %"], ["battery", "Batterie", "96 %"], ["engine", "Préchauffage", "Demain 7 h"],
-                       ["route", "Prochain vol", "Sherbrooke · demain 10 h"]]},
+                       ["route", "Demain 10 h", "Sherbrooke"]]},
     "geo": {"lat": 45.29, "lon": -73.28, "place": "Aéroport de Saint-Jean-sur-Richelieu"},
     "banner": photo_ou_attente("avion", "Le turbopropulseur d’affaires dans son hangar privé éclairé", "50% 55%"),
     "titles": {"voyage": "Vols et entretien", "eau": "Eau et carburant", "confort": "Climat du hangar"}, "voyageIcon": "plane",
@@ -2598,14 +2598,14 @@ EST = {
     "km": 0.0973, "note": "Carte illustrative · route d’exemple",
     "water": [
         # Atlantique et golfe du Mexique, d'un seul tenant sous la Floride
-        [[420, -20]] + _lls([(-64.8, 47.4), (-64.6, 46.7), (-63.7, 46.2), (-61.5, 45.7), (-60.0, 46.2), (-59.8, 45.9), (-61.0, 45.2),
+        [[480, -40]] + _lls([(-64.8, 47.4), (-64.6, 46.7), (-63.7, 46.2), (-61.5, 45.7), (-60.0, 46.2), (-59.8, 45.9), (-61.0, 45.2),
                              (-63.6, 44.6), (-65.7, 43.6), (-66.1, 44.4), (-64.6, 45.3), (-66.0, 45.2), (-67.0, 44.8), (-68.8, 44.3),
                              (-70.2, 43.6), (-70.8, 42.8), (-70.0, 42.0), (-70.6, 41.5), (-71.8, 41.3), (-72.9, 41.2), (-74.0, 40.6),
                              (-74.0, 40.0), (-74.9, 38.9), (-75.1, 38.3), (-76.0, 37.0), (-75.5, 35.6), (-75.6, 35.2), (-76.5, 34.7),
                              (-77.9, 33.9), (-79.2, 33.2), (-80.0, 32.7), (-81.1, 32.0), (-81.4, 30.4), (-80.6, 28.4), (-80.1, 26.7),
                              (-80.1, 25.8), (-80.4, 25.2), (-81.1, 25.1), (-81.8, 26.1), (-82.6, 27.5), (-82.8, 28.9), (-84.2, 30.0),
                              (-85.4, 29.7), (-87.2, 30.4), (-88.9, 30.4), (-89.6, 30.2), (-89.4, 29.0), (-90.5, 29.1), (-92.0, 29.6),
-                             (-94.0, 29.7), (-95.0, 29.3), (-97.2, 27.7), (-97.4, 26.0), (-97.7, 24.4)]) + [[31, 260], [420, 260]],
+                             (-94.0, 29.7), (-95.0, 29.3), (-97.2, 27.7), (-97.4, 26.0), (-97.7, 24.4), (-98.2, 21.0)]) + [[480, 300]],
         _lls([(-79.8, 43.3), (-79.2, 43.2), (-77.6, 43.3), (-76.3, 43.5), (-76.2, 44.2), (-77.0, 44.0), (-78.5, 43.9), (-79.4, 43.6)]),
         _lls([(-83.4, 41.7), (-82.5, 41.4), (-81.0, 41.9), (-79.0, 42.8), (-79.2, 42.9), (-80.5, 42.6), (-82.5, 42.0), (-83.2, 42.0)]),
         _lls([(-82.4, 43.0), (-81.7, 43.4), (-81.7, 44.9), (-80.1, 44.6), (-80.6, 45.9), (-82.5, 46.2), (-84.1, 46.2), (-83.6, 45.4),
@@ -2615,10 +2615,9 @@ EST = {
         _lls([(-84.5, 46.5), (-85.2, 47.0), (-87.5, 47.2), (-89.0, 46.9), (-90.5, 46.6), (-92.1, 46.7), (-90.0, 47.6), (-86.0, 47.6)]),
     ],
     "rivers": [_lls([(-76.4, 44.2), (-75.2, 44.9), (-73.6, 45.5), (-72.5, 46.3), (-71.2, 46.8), (-70.0, 47.4)])],
-    "towns": [_ll(-79.4, 43.7) + ["Toronto", "a"], _ll(-74.0, 40.7) + ["New York", "b"], _ll(-77.0, 38.9) + ["Washington", "b"],
-              _ll(-84.4, 33.7) + ["Atlanta", "a"], _ll(-81.7, 30.3) + ["Jacksonville", "a"], _ll(-80.3, 25.9) + ["Miami", "l"],
-              _ll(-87.6, 41.9) + ["Chicago", "a"]],
-    "labels": [_ll(-66.5, 34.0) + ["Océan Atlantique", "water"], _ll(-90.5, 26.6) + ["Golfe du Mexique", "water"]],
+    "towns": [_ll(-79.4, 43.7) + ["Toronto", "a"], _ll(-74.0, 40.7) + ["New York", "b"], _ll(-81.7, 30.3) + ["Jacksonville", "a"],
+              _ll(-80.3, 25.9) + ["Miami", "a"]],
+    "labels": [_ll(-66.5, 34.0) + ["Océan Atlantique", "water"], _ll(-89.0, 27.9) + ["Golfe du Mexique", "water"]],
     "me": _ll(-73.28, 45.29),
 }
 JET_ROUTE = [_ll(-73.28, 45.29), _ll(-75.4, 39.6), _ll(-78.6, 32.4), _ll(-80.28, 25.91)]
@@ -2629,8 +2628,8 @@ JET = {
     "mobile": True, "points": AVION_POINTS, "hangar": HANGAR,
     "plane": {"short": "Jet d’affaires", "spot": "Place 2 · face à la porte", "photo": "/media/vision/lieu-jet.webp", "pos": "62% 46%",
               "state": ["Préparation · départ demain 9 h", "gold"],
-              "kpis": [["fuel", "Carburant", "4 570 L · 58 %"], ["battery", "Batteries", "94 %"], ["thermo", "Cabine", "9 °C → 21 °C à 7 h"],
-                       ["route", "Prochain vol", "Miami · demain 9 h"]]},
+              "kpis": [["fuel", "Carburant", "4 570 L · 58 %"], ["battery", "Batteries", "94 %"], ["thermo", "Cabine · 21 °C à 7 h", "9 °C"],
+                       ["route", "Demain 9 h", "Miami"]]},
     "geo": {"lat": 45.29, "lon": -73.28, "place": "Aéroport de Saint-Jean-sur-Richelieu"},
     "banner": photo_ou_attente("jet", "Le jet d’affaires dans le hangar privé, escalier déployé", "50% 50%",
                                repli="/media/vitrine/accueil/jet-hangar.webp", repli_pos="62% 52%"),
@@ -2648,7 +2647,7 @@ JET = {
                "packs": [{"name": "Batterie principale", "cap": 44, "soc": 95, "v": 26.3, "a": 0.8, "t": 8.5, "cycles": -1, "hi": 0, "lo": 0},
                          {"name": "Batterie de l’APU", "cap": 44, "soc": 93, "v": 26.1, "a": 0.6, "t": 8.0, "cycles": -1, "hi": 0, "lo": 0}],
                "sources": [["secteur", "Prise du hangar", "plug", "grid"], ["gpu", "Groupe de parc · 28 V", "plug", 0, "prêt"],
-                           ["apu", "Groupe auxiliaire (APU)", "gen", 0, "arrêté"], ["alt", "Génératrices des moteurs", "alt", 0, "moteurs arrêtés"]],
+                           ["apu", "APU et génératrices", "gen", 0, "arrêtés au hangar"]],
                "store": "Batteries du jet", "loads": "Jet et hangar",
                "solar": {"peak": 0, "cloud": 0, "base": 310, "eve": 320, "morn": 0}},
     "s": {
@@ -2658,17 +2657,17 @@ JET = {
             C("kpi", 3, icon="thermo", label="Cabine", value="9 °C", sub="Préchauffage demain 7 h · 21 °C", subicon="clock", tone="water", go="confort"),
             C("kpi", 3, icon="battery", label="Batteries", value="94 %", sub="Principale et APU · 26,2 V", bar=94, tone="bat", go="energie"),
             C("kpi", 3, icon="sun", label="Conditions", value="VFR", dot="ok", sub="Départ IFR · vent 250° · 12 nœuds", subicon="wind", tone="ok", go="securite:alertes"),
-            C("trip", 7, title="Mon prochain vol", name="Vers Miami (KOPF)", next="Départ prévu demain à 9 h · 2 h 55 de vol", go="voyage"),
-            C("checklist", 5, id="prep", title="Préparation par l’équipage", icon="clip",
-              items=[["Plan de vol IFR déposé", True], ["Avitaillement : +830 L demandé", False], ["Déclaration de douane américaine", False],
-                     ["Cabine à 21 °C pour 8 h 30", False], ["Soute à bagages fermée", False]]),
             C("conditions", 7, title="Conditions au terrain"),
             C("lumieres", 5),
-            C("upcoming", 7, title="Prochaines 48 heures", icon="warn", note="Avitaillement à confirmer avant 7 h : 830 L de Jet A-1.",
-              text="Remorquage hors du hangar à 8 h · démarrage de l’APU à l’extérieur seulement.", go="eau"),
+            C("trip", 7, title="Mon prochain vol", name="Vers Miami (KOPF)", next="Départ prévu demain à 9 h · 2 h 55 de vol", go="voyage"),
             C("list", 5, icon="users", title="Équipage", sub="Préparation de demain",
               rows=[["plane", "Commandant · Marc-André", "Arrivée 7 h 15", "ok"], ["plane", "Copilote · Élise", "Arrivée 7 h 15", "ok"],
                     ["users", "Agent de bord · Julien", "Commissariat à 8 h", "muted"], ["users2", "Passagers", "6 sur 10 inscrits", "gold"]]),
+            C("upcoming", 7, title="Prochaines 48 heures", icon="warn", note="Avitaillement à confirmer avant 7 h : 830 L de Jet A-1.",
+              text="Remorquage hors du hangar à 8 h · démarrage de l’APU à l’extérieur seulement.", go="eau"),
+            C("checklist", 5, id="prep", title="Préparation par l’équipage", icon="clip",
+              items=[["Plan de vol IFR déposé", True], ["Avitaillement : +830 L demandé", False], ["Déclaration de douane américaine", False],
+                     ["Cabine à 21 °C pour 8 h 30", False], ["Soute à bagages fermée", False]]),
         ],
         "confort": [
             ["synthese", "Synthèse", [
@@ -2797,7 +2796,7 @@ JET = {
         "voyage": [
             ["vol", "Plan de vol", [
                 C("trip", 8, big=True, title="Vol planifié", name="Vers Miami (KOPF)", next="Départ prévu · demain 9 h · IFR", dist="2 270 km", dur="2 h 55 à 460 nœuds",
-                  map="est", view=[0, 0, 400, 240], route={"next": JET_ROUTE}),
+                  map="est", view=[-45, -6, 500, 300], route={"next": JET_ROUTE}),
                 C("arrival", 4, place="Miami (KOPF)", temp=27, icon="cloudsun", cond="Quelques nuages · orages possibles après 15 h", wind="Vent 110° · 9 nœuds"),
                 C("list", 6, icon="route", title="Plan de vol IFR · exemple", sub="Déposé hier à 18 h",
                   rows=[["plane", "Niveau de croisière", "FL410", "muted"], ["clock", "Départ · arrivée", "9 h · 11 h 55", "muted"], ["fuel", "Carburant requis", "5 400 L avec réserve", "warn"],

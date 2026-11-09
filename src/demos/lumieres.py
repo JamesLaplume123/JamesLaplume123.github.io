@@ -1,5 +1,5 @@
 # Module « Éclairage » des Environnements intelligents (dossier « JARVIS accueil lumières », 13 pages).
-# Une seule source de vérité pour les huit environnements : zones, lumières, plans, ambiances et
+# Une seule source de vérité pour les neuf environnements : zones, lumières, plans, ambiances et
 # configurations, transmises au script (assets/demos/lumieres.js) par un bloc JSON unique.
 #
 # Coordonnées : en pixels du plan de chaque environnement (photo ou dessin SVG).
@@ -304,7 +304,36 @@ def _plan_avion():
     b += _walls((40, 40, 960, 40), (40, 40, 40, 560), (960, 40, 960, 560), (40, 560, 90, 560), (910, 560, 960, 560))
     b += _l(90, 562, 910, 562, "fu2 dash")
     b += _t(60, 548, "HANGAR 2 · PORTES 34 M") + _t(470, 84, "BÂBORD", "middle") + _t(470, 528, "TRIBORD", "middle")
-    return _frame(b, "HANGAR")
+    return _frame(b, "HANGAR · PLACE 1")
+
+
+def _plan_jet():
+    """Même hangar, place 2 : le jet d’affaires biréacteur, nez vers la droite, porte passagers à bâbord."""
+    b = ""
+    b += _r(40, 40, 920, 520, "fl")
+    b += _l(100, 300, 960, 300, "fu3 dash") + _c(880, 300, 56, "fu3 dash")
+    b += "".join(_r(x, 52, 70, 26, "fu", 3) for x in (90, 180, 270)) + _r(820, 470, 80, 46, "fu", 6) + _r(90, 480, 110, 40, "fu2", 4)
+    # Ailes en flèche et ailettes
+    b += _p("M560,281 L446,86 L414,82 L452,281 Z", "fu") + _p("M560,319 L446,514 L414,518 L452,319 Z", "fu")
+    b += _p("M446,86 L436,70 L424,72 L414,82 Z", "fu2") + _p("M446,514 L436,530 L424,528 L414,518 Z", "fu2")
+    # Empennage en T
+    b += _p("M236,293 L176,196 L156,196 L190,293 Z", "fu") + _p("M236,307 L176,404 L156,404 L190,307 Z", "fu")
+    # Fuselage
+    fus = ("M168,286 L800,280 C858,282 892,290 912,300 C892,310 858,318 800,320 L168,314 "
+           "C152,310 146,305 144,300 C146,295 152,290 168,286 Z")
+    b += _p(fus, "fl2") + _p(fus, "w2")
+    # Réacteurs à l’arrière du fuselage
+    b += _r(236, 246, 92, 30, "fu", 15) + _r(236, 324, 92, 30, "fu", 15)
+    b += _l(318, 249, 318, 273, "fu2") + _l(318, 327, 318, 351, "fu2")
+    # Hublots, cloisons, cuisine de bord, poste de pilotage et porte passagers
+    b += "".join(_r(x, 284, 16, 8, "fu2", 4) + _r(x, 308, 16, 8, "fu2", 4) for x in range(480, 760, 40))
+    b += _l(470, 282, 470, 318, "fu2") + _l(760, 281, 760, 319, "fu2") + _l(822, 282, 822, 318, "fu2") + _l(420, 283, 420, 317, "fu2")
+    b += _r(770, 290, 40, 20, "fu2", 3) + _r(836, 291, 24, 7, "fu2", 2) + _r(836, 302, 24, 7, "fu2", 2)
+    b += _r(788, 268, 26, 10, "fu", 2)
+    b += _walls((40, 40, 960, 40), (40, 40, 40, 560), (960, 40, 960, 560), (40, 560, 90, 560), (910, 560, 960, 560))
+    b += _l(90, 562, 910, 562, "fu2 dash")
+    b += _t(60, 548, "HANGAR 2 · PORTES 34 M") + _t(470, 60, "BÂBORD", "middle") + _t(470, 552, "TRIBORD", "middle")
+    return _frame(b, "HANGAR · PLACE 2")
 
 
 # ---------------------------------------------------------------------------------------------
@@ -640,7 +669,7 @@ BATEAU = _env(
 AVION_STATE = {"cabine": [1, "heure-doree", 60], "cockpit": [1, "lecture", 40], "hangar": [1, "lecture", 80],
                "anticol": [1, "anticollision", 100]}
 AVION = _env(
-    "L’avion", "Avion", "l’avion", "cabine", _plan_avion(),
+    "Le turbopropulseur", "Turbopropulseur", "le turbopropulseur", "cabine", _plan_avion(),
     [
         {"k": "cabine", "name": "Cabine", "ic": "plane", "lab": [580, 252], "poly": _box(330, 276, 780, 324),
          "tag": "Le voyage, en douceur"},
@@ -672,9 +701,51 @@ AVION = _env(
     ],
 )
 
+JET_STATE = {"cabine": [1, "heure-doree", 60], "cuisine": [1, "lecture", 70], "cockpit": [0, "lecture", 40], "soute": [1, "lecture", 100],
+             "hangar": [1, "lecture", 80], "anticol": [1, "anticollision", 100]}
+JET = _env(
+    "Le jet d’affaires", "Jet", "le jet", "cabine", _plan_jet(),
+    [
+        {"k": "cabine", "name": "Cabine", "ic": "plane", "lab": [600, 250], "poly": _box(470, 280, 760, 320),
+         "tag": "Club de quatre et divan"},
+        {"k": "cuisine", "name": "Cuisine de bord", "short": "Cuisine", "ic": "meet", "lab": [790, 352], "poly": _box(760, 280, 822, 320),
+         "tag": "Le service, à l’avant"},
+        {"k": "cockpit", "name": "Poste de pilotage", "short": "Pilotage", "ic": "wheel", "lab": [880, 252],
+         "poly": [(822, 281), (912, 300), (822, 319)], "tag": "Des instruments lisibles"},
+        {"k": "soute", "name": "Soute à bagages", "short": "Soute", "ic": "box", "lab": [372, 352], "poly": _box(330, 283, 420, 317),
+         "tag": "Accessible en vol"},
+        {"k": "hangar", "name": "Hangar", "ic": "box", "lab": [200, 150], "poly": _box(40, 40, 960, 560),
+         "tag": "Préparer le départ"},
+        {"k": "feux", "name": "Feux anticollision", "ic": "nav", "lab": [600, 540], "poly": _box(150, 70, 620, 530),
+         "tag": "Réglementaires · non modifiables", "out": True},
+    ],
+    [
+        {"k": "cabine", "name": "Cabine", "zone": "cabine", "kind": "rgb",
+         "st": [[478, 287, 756, 284], [478, 313, 756, 316]], "fx": [[615, 300, 72]]},
+        {"k": "cuisine", "name": "Cuisine de bord", "short": "Cuisine", "zone": "cuisine", "kind": "blanc", "fx": [[791, 300, 34]]},
+        {"k": "cockpit", "name": "Poste de pilotage", "short": "Pilotage", "zone": "cockpit", "kind": "blanc",
+         "fx": [[856, 300, 40]], "cap": [50, "Limité à 50 % : aucun éblouissement aux commandes."]},
+        {"k": "soute", "name": "Soute à bagages", "short": "Soute", "zone": "soute", "kind": "fixe", "kv": 4000, "fx": [[375, 300, 34]]},
+        {"k": "hangar", "name": "Hangar", "zone": "hangar", "kind": "fixe", "kv": 5000,
+         "fx": [[200, 140, 100], [500, 140, 100], [800, 140, 100], [200, 460, 100], [500, 460, 100], [800, 460, 100]]},
+        {"k": "anticol", "name": "Feux anticollision", "zone": "feux", "kind": "regl", "strobe": True,
+         "fx": [[432, 76, 44, "#ff3b3b"], [432, 524, 44, "#2fe07a"], [150, 300, 36, "#ffffff"], [520, 300, 30, "#ff3b3b"]],
+         "mode": "Anticollision",
+         "fixed": "Réglementaires : seul l’interrupteur du poste de pilotage les commande. Une ambiance ne les touche jamais."},
+    ],
+    JET_STATE,
+    [
+        {"k": "embarquement", "name": "Embarquement", "fav": True,
+         "lights": {**JET_STATE, "cabine": [1, "lecture", 85], "cuisine": [1, "lecture", 90], "hangar": [1, "lecture", 100]}},
+        {"k": "vol-de-nuit", "name": "Vol de nuit", "fav": False,
+         "lights": {**JET_STATE, "cabine": [1, "nuit-douce", 15], "cuisine": [1, "nuit-douce", 20], "cockpit": [1, "cinema", 20],
+                    "hangar": [0, "lecture", 80]}},
+    ],
+)
+
 ENVS = {
     "boulance": BOULANCE, "maison": _maison(), "chalet": CHALET, "entreprise": ENTREPRISE, "garage": GARAGE,
-    "ferme": FERME, "bateau": BATEAU, "avion": AVION,
+    "ferme": FERME, "bateau": BATEAU, "avion": AVION, "jet": JET,
 }
 
 
@@ -682,7 +753,8 @@ ENVS = {
 # article, préposition et genre (m, f, mp, fp) de chaque zone, puis des lumières qui ne portent pas
 # le nom de leur zone.
 ALL = {"boulance": "tout le VR", "maison": "toute la maison", "chalet": "tout le chalet", "entreprise": "toute l’entreprise",
-       "garage": "tout le garage", "ferme": "toute la ferme", "bateau": "tout le bateau", "avion": "tout l’avion"}
+       "garage": "tout le garage", "ferme": "toute la ferme", "bateau": "tout le bateau", "avion": "tout le turbopropulseur",
+       "jet": "tout le jet"}
 ZTXT = {
     "boulance": {"couloir": ("le couloir", "dans le couloir", "m"), "cuisine": ("la cuisine", "en cuisine", "f"),
                  "chambre": ("la chambre", "dans la chambre", "f"), "exterieur": ("l’extérieur", "à l’extérieur", "m")},
@@ -708,6 +780,9 @@ ZTXT = {
                "feux": ("les feux de navigation", "aux feux de navigation", "mp")},
     "avion": {"cabine": ("la cabine", "en cabine", "f"), "cockpit": ("le poste de pilotage", "au poste de pilotage", "m"),
               "hangar": ("le hangar", "dans le hangar", "m"), "feux": ("les feux anticollision", "aux feux anticollision", "mp")},
+    "jet": {"cabine": ("la cabine", "en cabine", "f"), "cuisine": ("la cuisine de bord", "à la cuisine de bord", "f"),
+            "cockpit": ("le poste de pilotage", "au poste de pilotage", "m"), "soute": ("la soute à bagages", "dans la soute à bagages", "f"),
+            "hangar": ("le hangar", "dans le hangar", "m"), "feux": ("les feux anticollision", "aux feux anticollision", "mp")},
 }
 LTXT = {
     "boulance": {"couloir-g": ("la bande gauche", "f"), "couloir-d": ("la bande droite", "f")},
@@ -716,6 +791,7 @@ LTXT = {
     "entreprise": {"bureaux-n": ("la rangée nord", "f"), "bureaux-s": ("la rangée sud", "f"),
                    "issues": ("les issues de secours", "fp"), "parking": ("le stationnement", "m")},
     "avion": {"anticol": ("les feux anticollision", "mp")},
+    "jet": {"anticol": ("les feux anticollision", "mp")},
 }
 
 

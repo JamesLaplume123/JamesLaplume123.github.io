@@ -1,5 +1,5 @@
 /* Environnements intelligents : un seul modèle de logiciel pour tous les lieux (BouLance, maison, chalet,
-   entreprise, atelier, ferme, bateau, avion). Les données viennent de src/demos/env.py (bloc JSON #env-data);
+   entreprise, atelier, ferme, bateau, hangar avec turbopropulseur et jet). Les données viennent de src/demos/env.py (bloc JSON #env-data);
    chaque section est dessinée seulement quand elle s'ouvre. Batteries de BouLance réelles (service /live du
    site, toutes les 10 s, seulement quand la démo est visible); soleil et lune calculés pour la vraie date.
    Le module Éclairage est fourni par window.JarvisLumieres (assets/demos/lumieres.js), s'il est présent. */
@@ -611,7 +611,7 @@
     if (M.me && inside(M.me)) html += '<span class="m-me" style="' + at(M.me) + '">' + ic(o.meIcon || e.meIcon || "rv") + "</span>";
     if (R && R.next && R.next.length > 1) html += '<span class="m-dest" style="' + at(R.next[R.next.length - 1]) + '">' + ic("pin") + "</span>";
     // Échelle : longueur ronde proche de 22 % de la largeur
-    var kmW = v[2] / M.km, target = kmW * 0.22, steps = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50], L = steps.filter(function (s) { return s <= target; }).pop() || steps[0];
+    var kmW = v[2] / M.km, target = kmW * 0.22, steps = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500], L = steps.filter(function (s) { return s <= target; }).pop() || steps[0];
     html += '<span class="m-scale" style="--w:' + (L / kmW * 100).toFixed(2) + '%"><i></i>' + nf(L, L < 1 ? 1 : 0) + NB + "km</span>";
     if (o.ring) html += '<span class="m-ringl" style="' + at([M.me[0], M.me[1] + o.ring * M.km * 0.98]) + '">' + o.ring + NB + "km</span>";
     return '<div class="ev-map' + (o.cls ? " " + o.cls : "") + '"><svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + svg + '</svg><span class="m-vig" aria-hidden="true"></span>' + html +
@@ -1378,6 +1378,29 @@
     return head(c.icon, c.title, c.sub, "") + '<div class="ev-eq"><figure class="ev-eq-ph' + (c.photo ? " has-img" : "") + '">' + ph + "</figure><div class=\"ev-eq-s\"><small>État</small><b class=\"t-" + tone + '">' + dot(tone) + esc(state) + "</b>" + rows + "</div></div>" + viz +
       action + (c.note ? '<p class="ev-fine is-c">' + ic("info") + esc(c.note) + "</p>" : "");
   };
+  /* ---------- Hangar à plusieurs appareils : l'abri commun et chaque appareil d'un regard ---------- */
+  function fleetOf(e) { return e.hangar ? e.hangar.fleet.filter(function (k) { return E[k]; }) : [e.key]; }
+  function urgentOf(k) { return siteOf(E[k]).alerts.filter(function (a) { return a.tone === "err" || a.tone === "warn"; }); }
+  K.hangar = function (c, e) {
+    var H0 = e.hangar, ks = fleetOf(e);
+    var rows = '<div class="ev-hg-r">' + H0.rows.map(function (r) {
+      return "<span>" + ic(r[0]) + "<small>" + esc(r[1]) + "</small><b>" + dot(r[3] || "ok") + esc(r[2]) + "</b></span>";
+    }).join("") + "</div>";
+    var planes = ks.map(function (k) {
+      var p = E[k], P0 = p.plane || {}, me = k === e.key, u = urgentOf(k).length, st = P0.state || ["", "ok"];
+      var inner = '<figure class="ev-hg-ph' + (P0.photo ? " has-img" : "") + '">' + bph(P0.photo, p.name, p.icon) +
+        '<span class="ev-hg-spot">' + esc(P0.spot || "") + "</span>" +
+        (u ? '<span class="ev-hg-al">' + ic("bell", "is-sm") + u + " alerte" + (u > 1 ? "s" : "") + "</span>" : "") + "</figure>" +
+        '<span class="ev-hg-b"><span class="ev-hg-k">' + ic(p.icon) + esc(p.kind) + "</span><b class=\"ev-hg-n\">" + esc(p.name) + "</b>" +
+        '<span class="ev-hg-st t-' + st[1] + '">' + dot(st[1]) + esc(st[0]) + "</span>" +
+        '<span class="ev-hg-kp">' + (P0.kpis || []).map(function (x) { return "<span>" + ic(x[0], "is-sm") + "<small>" + esc(x[1]) + "</small><b>" + esc(x[2]) + "</b></span>"; }).join("") + "</span>" +
+        '<span class="ev-hg-go">' + (me ? ic("check", "is-sm") + "Tableau ouvert" : "Ouvrir ce tableau" + ic("right", "is-sm")) + "</span></span>";
+      return me ? '<div class="ev-hg-p is-cur" aria-current="true">' + inner + "</div>"
+        : '<button type="button" class="ev-hg-p" data-a="plane" data-v="' + k + '">' + inner + "</button>";
+    }).join("");
+    return head("hangar", "Le hangar · " + ks.length + " appareils", esc(H0.name) + " · " + esc(H0.sub), '<span class="ev-tag">exemple</span>') + rows + '<div class="ev-hg">' + planes + "</div>";
+  };
+
   /* ---------- Ferme : vue d'ensemble des bâtiments et en-tête du détail d'un bâtiment ---------- */
   function bph(src, alt, icon, label) {
     return src ? '<img src="' + src + '" alt="' + esc(alt) + '" loading="lazy" decoding="async">'
@@ -1625,6 +1648,7 @@
   }
 
   var HP = {};
+  function nPlaces() { return D.order.filter(function (k) { return fleetOf(E[k])[0] === k; }).length; }
   HP.sum = function () {
     var S2 = D.order.map(function (k) { return siteOf(E[k]); }), al = alertsAll(), urgent = al.filter(function (a) { return a.tone === "err" || a.tone === "warn"; });
     var armed = S2.filter(function (x) { return x.armed; }).length, off = D.order.filter(function (k, i) { return !S2[i].armed; }).map(function (k) { return E[k].name; });
@@ -1632,7 +1656,7 @@
     var nx = null;
     D.order.forEach(function (k, i) { var n = S2[i].next; if (n && (!nx || n.due < nx.due)) nx = { due: n.due, title: n.title, env: E[k] }; });
     var t = [
-      ["grid", "Lieux", D.order.length + " / " + D.order.length, "en ligne · synchronisés il y a 12 s", "ok", ""],
+      ["grid", "Lieux", nPlaces() + " / " + nPlaces(), "en ligne · " + D.order.length + " tableaux · synchronisés il y a 12 s", "ok", ""],
       ["bell", "Alertes", String(urgent.length), urgent.length ? al.filter(function (a) { return a.tone === "err"; }).length + " en retard · " + al.filter(function (a) { return a.tone === "warn"; }).length + " à vérifier" : "Rien à signaler", urgent.length ? "warn" : "ok", "alerts"],
       ["shield", "Sécurité", armed + " / " + D.order.length + " armés", off.length ? "Désarmés : " + off.join(", ") : "Tous les lieux sont armés", armed === D.order.length ? "ok" : "gold", ""],
       ["users", "Présence", ppl + " personne" + (ppl > 1 ? "s" : ""), occ + " lieu" + (occ > 1 ? "x" : "") + " occupé" + (occ > 1 ? "s" : "") + " · " + (D.order.length - occ) + " vides", "gold", ""],
@@ -1774,10 +1798,26 @@
   /* Bande des lieux, dans chaque tableau : passer d'un lieu à l'autre sans revenir à l'accueil */
   function siteStrip() {
     return '<nav class="ev-sites" aria-label="Changer de lieu">' + D.order.map(function (k) {
-      var e = E[k], x = siteOf(e), urgent = x.alerts.filter(function (a) { return a.tone === "err" || a.tone === "warn"; });
-      return '<button type="button" class="ev-site' + (k === S.env ? " is-on" : "") + '" data-a="env" data-v="' + k + '"' + (k === S.env ? ' aria-current="page"' : "") + ">" + ic(e.icon || "home") + "<span>" + esc(e.name) + "</span>" +
+      var e = E[k], fl = fleetOf(e);
+      if (fl[0] !== k) return "";  /* un hangar à plusieurs appareils compte pour un seul lieu */
+      var here = fl.indexOf(S.env) >= 0, urgent = [];
+      fl.forEach(function (f) { urgent = urgent.concat(urgentOf(f)); });
+      return '<button type="button" class="ev-site' + (here ? " is-on" : "") + '" data-a="env" data-v="' + (here ? S.env : k) + '"' + (here ? ' aria-current="page"' : "") + ">" + ic(e.hangar ? "hangar" : e.icon || "home") + "<span>" + esc(e.hangar ? "Hangar" : e.name) + "</span>" +
         (urgent.length ? '<i class="ev-site-d t-' + (urgent.some(function (a) { return a.tone === "err"; }) ? "err" : "warn") + '" title="' + urgent.length + ' alerte(s)"></i>' : "") + "</button>";
     }).join("") + "</nav>";
+  }
+  /* Choix de l'appareil dans un hangar à plusieurs appareils : on garde la section ouverte */
+  function fleetBar(e) {
+    if (!e.hangar) return "";
+    var ks = fleetOf(e);
+    return '<nav class="ev-fleet" aria-label="Appareils du hangar"><span class="ev-fleet-h">' + ic("hangar") + "<span><b>" + esc(e.hangar.name) + "</b><small>" + ks.length + " appareils · choisissez un tableau</small></span></span>" +
+      '<span class="ev-fleet-l">' + ks.map(function (k) {
+        var p = E[k], P0 = p.plane || {}, on = k === S.env, u = urgentOf(k).length, st = P0.state || ["", "ok"];
+        return '<button type="button" class="ev-fleet-b' + (on ? " is-on" : "") + '" data-a="plane" data-v="' + k + '" aria-pressed="' + on + '">' +
+          '<span class="ev-fleet-ph">' + (P0.photo ? '<img src="' + P0.photo + '" alt="" loading="lazy" decoding="async" style="object-position:' + (P0.pos || "50% 50%") + '">' : ic(p.icon)) + "</span>" +
+          "<span class=\"ev-fleet-t\"><b>" + esc(p.name) + "</b><small class=\"t-" + st[1] + '">' + dot(st[1]) + esc(st[0]) + "</small></span>" +
+          (u ? '<i class="ev-site-d t-warn" title="' + u + ' alerte(s)"></i>' : "") + "</button>";
+      }).join("") + "</span></nav>";
   }
   function heroChips(e) {
     var x = siteOf(e), urgent = x.alerts.filter(function (a) { return a.tone === "err" || a.tone === "warn"; }).length;
@@ -1797,7 +1837,7 @@
       '<span class="ev-badge">' + ic("info") + "Données d’exemple" + (e.energy && e.energy.live ? " · batteries réelles" : "") + "</span>" +
       '<span class="ev-adms"><button type="button" class="ev-adm is-cfg" data-a="admin" aria-label="Configurer · réservé à l’administrateur">' + ic("edit") + "<span>Configurer</span>" + ic("lock", "ev-lk") + "</button>" +
       '<button type="button" class="ev-adm" data-a="admin" aria-label="Accès et publication · réservé à l’administrateur">' + ic("shield") + "<span>Accès et publication</span>" + ic("lock", "ev-lk") + "</button></span>" +
-      '<p class="ev-pop" data-ev-pop role="status" hidden>' + ic("lock") + "Réservé à l’administrateur de votre système.</p></div>" + siteStrip() +
+      '<p class="ev-pop" data-ev-pop role="status" hidden>' + ic("lock") + "Réservé à l’administrateur de votre système.</p></div>" + siteStrip() + fleetBar(e) +
       '<header class="ev-hero"><div class="ev-hero-t"><p class="ev-env">' + esc(e.name) + '</p><h4 class="ev-h" data-ev-h>' + esc(secTitle(e, S.sec)) + "</h4>" +
       '<p class="ev-sub" data-ev-sub>' + esc(secSub(e, S.sec)) + '</p><p class="ev-meta">' + ic(e.icon || "home", "is-sm") + esc(e.kind) + " · " + esc(e.place) + "</p>" + heroChips(e) + "</div>" + banner(e) + "</header>" +
       '<div class="ev-main"><nav class="ev-nav" aria-label="Sections de ' + esc(e.name) + '"><p class="ev-nav-h">' + esc(e.name) + '</p><div class="ev-nav-l">' + nav + "</div></nav>" +
@@ -2025,6 +2065,7 @@
     switch (a) {
       case "pick": S.view = "home"; H.anim = true; render(); intoView(); break;
       case "env": S.view = "env"; S.env = v; S.sec = "apercu"; render(); intoView(); break;
+      case "plane": if (v === S.env) break; S.env = v; if (!E[v].s[S.sec] && S.sec !== "eclairage") S.sec = "apercu"; render(); break;
       case "sec": goSec(v); break;
       case "go": goSec(v); break;
       case "tab": S.tab[S.env + S.sec] = v; renderSection(true); break;

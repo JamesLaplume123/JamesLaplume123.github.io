@@ -1,5 +1,5 @@
 /* Module « Éclairage » des Environnements intelligents — dossier « JARVIS accueil lumières » (13 pages).
-   Huit environnements (VR, maison, chalet, entreprise, garage, ferme, bateau, avion), un seul moteur.
+   Neuf environnements (VR, maison, chalet, entreprise, garage, ferme, bateau, turbopropulseur, jet), un seul moteur.
    Le contrat « Conserver sans perdre » (page 13) est appliqué ici, et le site sert de cahier des charges :
      01 un style n'est pas une configuration;          05 chaque lumière confirme son propre résultat;
      02 un aperçu ou un brouillon n'envoie rien;       06 le retour se fait dans le bon périmètre, avec avertissement;

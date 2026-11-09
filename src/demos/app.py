@@ -118,6 +118,7 @@ ICONS = {
     "barn": '<path d="M3.5 21V10L12 4l8.5 6v11z"/><path d="M8.5 21v-6.5h7V21M8.5 14.5l7 6.5M15.5 14.5 8.5 21M10 9.5h4"/>',
     "garage": '<path d="M3 21V9l9-5 9 5v12"/><path d="M6.5 21v-9h11v9M6.5 15h11M6.5 18h11"/>',
     "tree": '<path d="M12 3 6.5 10.5h3l-4 6h13l-4-6h3zM12 16.5V21"/>',
+    "plane": '<path d="M12 3c.9 0 1.5.9 1.5 2v4.5l7 4v2l-7-2v4l2 1.5v1.5l-3.5-1-3.5 1V19.5l2-1.5v-4l-7 2v-2l7-4V5c0-1.1.6-2 1.5-2Z"/>',
     "battery": '<rect x="3" y="7" width="16" height="10" rx="2.25"/><path d="M21.25 10.5v3"/><path d="M6.5 10.25v3.5M9.5 10.25v3.5M12.5 10.25v3.5"/>',
     "logout": '<path d="M14.5 4.5h3a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-3M10 16.5 5.5 12 10 7.5M5.5 12h10"/>',
     "palette": '<path d="M12 3.5a8.5 8.5 0 0 0 0 17c1.4 0 2-.9 2-1.9 0-1.4-1.2-1.6-1.2-2.8 0-1 .8-1.8 1.8-1.8h2.2a3.7 3.7 0 0 0 3.7-3.7C20.5 6.6 16.7 3.5 12 3.5Z"/><circle cx="7.75" cy="11.5" r="1"/><circle cx="10.5" cy="7.75" r="1"/><circle cx="15" cy="7.75" r="1"/>',
@@ -258,6 +259,12 @@ ENVS = [
      "w": 22, "grp": "sth", "short": "Traite de 17 h terminée", "state": "ok",
      "chips": [("thermo", "Étable", "8 °C", ""), ("drop", "Abreuvoirs", "Normaux", ""), ("shield", "Bâtiments", "Fermés", "")],
      "rows": [("clock", "Prochaine traite à 5 h · robot prêt"), ("check", "Ventilation automatique · 62 % d’humidité"),
+              ("info", "Données d’exemple")]},
+    {"key": "hangar", "name": "Hangar", "kind": "Hangar privé · turbopropulseur et jet", "place": "Saint-Jean-sur-Richelieu · aéroport",
+     "lat": 45.295, "lon": -73.281, "icon": "plane", "img": media("/media/vision/lieu-jet.webp"), "pos": "62% 46%", "w": 40,
+     "short": "2 appareils · jet en préparation", "state": "ok",
+     "chips": [("plane", "Appareils", "2 au hangar", ""), ("shield", "Hangar", "Armé", ""), ("thermo", "Cabine du jet", "9 °C", "")],
+     "rows": [("calendar", "Jet vers Miami demain, 9 h · préchauffage de la cabine à 7 h"), ("check", "Turbopropulseur prêt · vol vers Sherbrooke demain, 10 h"),
               ("info", "Données d’exemple")]},
 ]
 GROUP_STH = "sth"

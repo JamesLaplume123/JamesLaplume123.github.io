@@ -25,7 +25,6 @@
 <link rel="stylesheet" href="/assets/css/wow.css?v=20261109a">
 <link rel="stylesheet" href="/assets/demos/boulance.css?v=20261109a">
 <link rel="stylesheet" href="/assets/demos/carte.css?v=20261109a">
-<link rel="stylesheet" href="/assets/demos/ambiances.css?v=20261109a">
 <link rel="stylesheet" href="/assets/demos/galerie.css?v=20261109a">
 </head>
 <body class="">
@@ -65,7 +64,8 @@
     habitable et en banc d’essai mobile. Le projet physique est en cours; les interfaces
     montrent la direction complète visée.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="#commande">Voir le centre de commande</a>
+      <a class="pill" href="#direct">Voir les batteries en direct</a>
+      <a class="pill ghost" href="/solutions/environnements-intelligents/#essayer">Piloter BouLance dans JARVIS</a>
     </div>
     <div class="specs" data-rev>
       <div><b><span data-n="560">560</span><i>Ah</i></b><small>Énergie LiFePO₄</small></div>
@@ -290,49 +290,15 @@
       autorisé.</p>
     </article>
   </div>
-</section>
-
-<section class="sect" id="commande">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Centre de commande · données simulées</p>
-      <h2>Le véhicule complet, visible et contrôlable <em>au même
-      endroit.</em></h2>
-    </div>
-    <p data-rev>Énergie, eau, confort, mécanique, réseau et sécurité gardent chacun leur
-    contexte. Chaque équipement conserve aussi sa commande manuelle.</p>
-  </div>
-<div class="demo-shell am" data-demo="ambiances" data-rev>
-  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · Studio lumière</b>
-    <span class="tag tag-sim">Démo · photos du module Éclairage</span></div>
-  <div class="demo-body">
-    <div class="am-stage">
-      <img class="am-img is-on" data-k="heure-doree" src="/media/ambiances/heure-doree.webp" alt="Ambiance Heure dorée : la même pièce éclairée autrement" width="1586" height="992" loading="eager" decoding="async"><img class="am-img" data-k="aurore" src="/media/ambiances/aurore.webp" alt="Ambiance Aurore : la même pièce éclairée autrement" width="1586" height="992" loading="lazy" decoding="async"><img class="am-img" data-k="lecture" src="/media/ambiances/lecture.webp" alt="Ambiance Lecture : la même pièce éclairée autrement" width="1586" height="992" loading="lazy" decoding="async"><img class="am-img" data-k="ocean" src="/media/ambiances/ocean.webp" alt="Ambiance Océan : la même pièce éclairée autrement" width="1586" height="992" loading="lazy" decoding="async"><img class="am-img" data-k="cinema" src="/media/ambiances/cinema.webp" alt="Ambiance Cinéma : la même pièce éclairée autrement" width="1586" height="992" loading="lazy" decoding="async"><img class="am-img" data-k="nuit-douce" src="/media/ambiances/nuit-douce.webp" alt="Ambiance Nuit douce : la même pièce éclairée autrement" width="1586" height="992" loading="lazy" decoding="async">
-      <i class="am-veil" aria-hidden="true"></i>
-      <div class="am-card">
-        <p class="am-k">Couloir · ambiance</p>
-        <h3 data-am="name">Heure dorée</h3>
-        <p class="am-state" data-am="state"><i class="dot" aria-hidden="true"></i><span>Appliquée</span></p>
-        <div class="am-acts">
-          <button type="button" class="am-apply" data-am="apply" disabled>Appliquer</button>
-          <button type="button" class="am-back" data-am="back" hidden>Revenir</button>
-        </div>
-        <label class="am-dim"><span>Intensité</span><input type="range" min="40" max="115" value="100" data-am="dim" aria-label="Intensité"></label>
-      </div>
-      <p class="am-auto" data-am="auto"><i class="dot" aria-hidden="true"></i>Démonstration automatique · touchez une ambiance</p>
-    </div>
-    <div class="am-chips" role="group" aria-label="Choisir une ambiance"><button type="button" data-k="heure-doree" data-name="Heure dorée" style="--sw:linear-gradient(135deg,#ffd18a,#c77a2b)" class="is-on is-applied"><i aria-hidden="true"></i>Heure dorée</button><button type="button" data-k="aurore" data-name="Aurore" style="--sw:linear-gradient(135deg,#3ee0c8,#8a5cff 60%,#ff5fa8)"><i aria-hidden="true"></i>Aurore</button><button type="button" data-k="lecture" data-name="Lecture" style="--sw:linear-gradient(135deg,#fff3dc,#e8c99a)"><i aria-hidden="true"></i>Lecture</button><button type="button" data-k="ocean" data-name="Océan" style="--sw:linear-gradient(135deg,#4fc3ff,#1f4fd8)"><i aria-hidden="true"></i>Océan</button><button type="button" data-k="cinema" data-name="Cinéma" style="--sw:linear-gradient(135deg,#b07cff,#4b1fa8)"><i aria-hidden="true"></i>Cinéma</button><button type="button" data-k="nuit-douce" data-name="Nuit douce" style="--sw:linear-gradient(135deg,#8a6a3a,#2a1f12)"><i aria-hidden="true"></i>Nuit douce</button></div>
-  </div>
-</div>
-<p class="demo-hint">Un aperçu n’envoie rien · « Appliquer » envoie, puis JARVIS confirme · démonstration, aucun appareil réel</p>
   <figure class="frame" data-rev style="margin-top:16px">
     <img decoding="async" src="/media/ambulance/ambulance-cutaway-control-v1.webp"
          alt="Vue en coupe du laboratoire mobile et de ses espaces contrôlables" loading="lazy">
     <figcaption><span>Vue en coupe · mode camp</span><strong>Chaque espace du véhicule, contrôlable au même endroit.</strong></figcaption>
   </figure>
+  <p class="sol-all" data-rev><a class="pill ghost" href="/solutions/environnements-intelligents/#essayer">Essayer le tableau de BouLance dans JARVIS</a></p>
 </section>
 
-<section class="sect alt">
+<section class="sect">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Automatisations envisagées</p>
@@ -421,7 +387,6 @@
 <script src="/assets/js/wow.js?v=20261109a" defer></script>
 <script src="/assets/demos/boulance.js?v=20261109a" defer></script>
 <script src="/assets/demos/carte.js?v=20261109a" defer></script>
-<script src="/assets/demos/ambiances.js?v=20261109a" defer></script>
 <script src="/assets/demos/galerie.js?v=20261109a" defer></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 # Laboratoire mobile — où les idées sont testées dans le monde réel. Version wow.
 
-from demos import ambiances, boulance, carte
+from demos import boulance, carte
 import galerie
 
 PAGE = {
@@ -12,7 +12,7 @@ PAGE = {
         "le réseau, la sécurité, le diagnostic et l’automatisation."
     ),
     "og_image": "/media/ambulance/ambulance-garage-lab-v1.webp",
-    "assets": ["boulance", "carte", "ambiances", "galerie"],
+    "assets": ["boulance", "carte", "galerie"],
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="" fetchpriority="high"></div>
@@ -23,7 +23,8 @@ PAGE = {
     habitable et en banc d’essai mobile. Le projet physique est en cours; les interfaces
     montrent la direction complète visée.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="#commande">Voir le centre de commande</a>
+      <a class="pill" href="#direct">Voir les batteries en direct</a>
+      <a class="pill ghost" href="/solutions/environnements-intelligents/#essayer">Piloter BouLance dans JARVIS</a>
     </div>
     <div class="specs" data-rev>
       <div><b><span data-n="560">560</span><i>Ah</i></b><small>Énergie LiFePO₄</small></div>
@@ -107,27 +108,15 @@ PAGE = {
       autorisé.</p>
     </article>
   </div>
-</section>
-
-<section class="sect" id="commande">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Centre de commande · données simulées</p>
-      <h2>Le véhicule complet, visible et contrôlable <em>au même
-      endroit.</em></h2>
-    </div>
-    <p data-rev>Énergie, eau, confort, mécanique, réseau et sécurité gardent chacun leur
-    contexte. Chaque équipement conserve aussi sa commande manuelle.</p>
-  </div>
-""" + ambiances.html("Couloir") + """
   <figure class="frame" data-rev style="margin-top:16px">
     <img src="/media/ambulance/ambulance-cutaway-control-v1.webp"
          alt="Vue en coupe du laboratoire mobile et de ses espaces contrôlables" loading="lazy">
     <figcaption><span>Vue en coupe · mode camp</span><strong>Chaque espace du véhicule, contrôlable au même endroit.</strong></figcaption>
   </figure>
+  <p class="sol-all" data-rev><a class="pill ghost" href="/solutions/environnements-intelligents/#essayer">Essayer le tableau de BouLance dans JARVIS</a></p>
 </section>
 
-<section class="sect alt">
+<section class="sect">
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Automatisations envisagées</p>

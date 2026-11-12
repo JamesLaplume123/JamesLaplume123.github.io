@@ -112,7 +112,9 @@
   .lx-modes button { flex: 1; }
 }
 @media (max-width: 520px) {
-  .lx-dirs a span { max-width: 9ch; overflow: hidden; text-overflow: ellipsis; }
+  .lx-dirs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lx-dirs a { min-width: 0; padding-right: 6px; }
+  .lx-dirs a span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .lx-dirs a { font-size: 12.5px; }
 }
 
@@ -219,10 +221,10 @@ html.fx .lx-card.is-in { opacity: 1; translate: 0 0; }
 .ha-crown .lx-i { position: relative; width: 16px; height: 16px; }
 .ha-crown:hover { transform: rotate(30deg); }
 .ha-crown:active { transform: rotate(60deg) scale(.95); }
-.ha-status { text-align: center; font: 400 13px/1.4 var(--sans); color: var(--mu); }
+.ha-status { text-wrap: balance; text-align: center; font: 400 13px/1.4 var(--sans); color: var(--mu); }
 
 /* Flux : le rouage */
-.ha-movement { position: relative; border-radius: 20px; overflow: hidden; box-shadow: inset 0 0 0 1px #000, inset 0 0 0 2px #ffffff0c, inset 0 10px 30px #000a; background: #0a0a0a; }
+.ha-movement { flex: 1 0 auto; display: grid; align-content: center; position: relative; border-radius: 20px; overflow: hidden; box-shadow: inset 0 0 0 1px #000, inset 0 0 0 2px #ffffff0c, inset 0 10px 30px #000a; background: #0a0a0a; }
 .ha-perlage { position: absolute; inset: 0;
   background:
     radial-gradient(circle, #ffffff0c 0 5px, #ffffff04 6px, #0000 9px) 0 0 / 16px 16px,
@@ -496,7 +498,7 @@ html.fx .lx-card:not(.is-in) :is(.ck-val, .ck-val-glow) { stroke-dasharray: 0 10
 
 /* Flux */
 .ck-flow { position: relative; aspect-ratio: 640 / 340; flex: 1; min-height: 260px; }
-.ck-floor { position: absolute; left: -10%; right: -10%; bottom: -8%; height: 70%; pointer-events: none;
+.ck-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 70%; pointer-events: none;
   background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--acc) 18%, transparent) 0 1px, #0000 1px 40px), repeating-linear-gradient(0deg, color-mix(in srgb, var(--acc) 14%, transparent) 0 1px, #0000 1px 40px);
   transform: perspective(420px) rotateX(62deg); transform-origin: 50% 100%;
   -webkit-mask: linear-gradient(0deg, #000a, #0000 85%); mask: linear-gradient(0deg, #000a, #0000 85%); opacity: calc(.25 + var(--glow) * .35); }
@@ -693,6 +695,7 @@ html.fx .lx-card:not(.is-in) .ck-vbar-t i { width: 0; }
 .ck-carc.is-alert .ck-door { color: var(--coral); }
 @container ck (max-width: 420px) {
   .ck-car { min-height: 440px; }
+  .ck-co[data-co="hum"] { top: 36% !important; left: 54% !important; }
   .ck-car-bot { flex-wrap: wrap; }
   .ck-door { width: 100%; justify-content: center; }
   .ck-co > span { padding: 6px 9px; top: -40px; }
@@ -705,7 +708,8 @@ html.fx .lx-card:not(.is-in) .ck-vbar-t i { width: 0; }
 :root[data-mode="base"] .ck-sweep, :root[data-mode="base"] .ck-floor, :root[data-mode="base"] .ck-val-glow, :root[data-mode="base"] .ck-line-p-glow { display: none; }
 :root[data-mode="base"] .ck-plate { background: #0b0b0b; }
 :root[data-mode="base"] .ck-edge { background: #2c2c2c; }
-:root[data-mode="base"] .ck-seg { -webkit-mask: none; mask: none; background: none; color: var(--tx); }
+:root[data-mode="base"] .lx .ck-seg { -webkit-mask: none; mask: none; background: none !important; color: var(--tx); }
+:root[data-mode="base"] .lx .ck-big.is-ok .ck-seg { color: var(--ok); }
 :root[data-mode="base"] .ck-hub::before, :root[data-mode="base"] .ck-co > i::after { display: none; }
 
 /* ================================================================ C · Architecture et lumière */
@@ -771,11 +775,12 @@ html.fx .lx-card:not(.is-in) .ck-vbar-t i { width: 0; }
 .al-btn:active { transform: scale(.9); }
 .al-facts { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; }
 .al-facts dt { font: 400 11.5px/1.2 var(--sans); color: #ffffffa6; }
-.al-facts dd { margin: 3px 0 0; font: 500 24px/1.1 "Labo Bodoni", serif; font-optical-sizing: none; font-variation-settings: "opsz" 14; color: #fff; font-variant-numeric: lining-nums tabular-nums; }
+.al-facts dd { white-space: nowrap; margin: 3px 0 0; font: 500 24px/1.1 "Labo Bodoni", serif; font-optical-sizing: none; font-variation-settings: "opsz" 14; color: #fff; font-variant-numeric: lining-nums tabular-nums; }
 .al-facts dd.is-ok { color: color-mix(in srgb, var(--ok) 70%, #fff); }
 .al-facts.is-3 { text-align: left; gap: 14px; margin: 16px 0 18px; padding: 14px 0; border-top: 1px solid #ffffff26; border-bottom: 1px solid #ffffff26; }
 
 /* Flux */
+.al-hero .al-big { line-height: 1; padding-bottom: .04em; }
 .al-flux-in { max-width: 60%; justify-content: flex-start; }
 .al-flux-in .al-big { margin-top: 10px; }
 .al-flux-in .al-lede { margin-top: 10px; }
@@ -840,6 +845,8 @@ html.fx .lx-card:not(.is-in) .al-col i { height: 0; }
 .al-cams.is-alert .al-big { color: color-mix(in srgb, var(--coral) 65%, #fff); }
 @container al (max-width: 640px) {
   .al-cam-foot { grid-template-columns: 1fr; }
+  .al-cams .al-veil { background: linear-gradient(180deg, #000000b8 0%, #0000 22%, #0000 28%, #000000e6 58%, #000 100%); }
+  .al-facts dd { font-size: 21px; }
   .al-ths { grid-template-columns: repeat(3, 1fr); }
 }
 

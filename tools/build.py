@@ -44,6 +44,7 @@ PAGE_MODULES = [
     "confidentialite",
     "english",
     "page_404",
+    "labo_cartes",  # page privée : noindex, hors sitemap et menus
 ]
 
 

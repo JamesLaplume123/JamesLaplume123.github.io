@@ -1,4 +1,5 @@
 User-Agent: *
 Allow: /
+Disallow: /labo-cartes/
 
 Sitemap: https://jameslaplume.ca/sitemap.xml

@@ -54,7 +54,7 @@
 .px-top { padding: clamp(48px, 7vw, 92px) 0 30px; max-width: 860px; }
 .px-k { font: 500 13px/1.4 var(--app); color: var(--acc); }
 .px-top h1 {
-  margin-top: 14px; font: 300 clamp(42px, 6.4vw, 84px)/1 var(--app); letter-spacing: -.045em;
+  margin-top: 14px; padding-bottom: .1em; font: 300 clamp(42px, 6.4vw, 84px)/1 var(--app); letter-spacing: -.045em;
   background: var(--mode-display); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .px-intro { margin-top: 20px; font: 400 18px/1.6 var(--app); color: var(--mu); max-width: 62ch; }
@@ -401,3 +401,5 @@ html.fx .px-card.is-in .px-state i { animation: pxDot 2.6s ease-in-out infinite;
 @media (prefers-reduced-motion: reduce) {
   .px-card, .px-card * { animation: none !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
 }
+/* Cadran plus petit : les bornes laissent la place à la température actuelle */
+@container dial (max-width: 250px) { .px-end { display: none; } }

@@ -1,405 +1,151 @@
-/* Laboratoire des cartes (page privée /labo-cartes/) : « Édition prestige ».
-   L'ADN exact du cadran de thermostat des Environnements (cadran rond, lunette métallique, verre noir,
-   graduations fines, arc or, gros chiffres nets, rangées à pastille or), poussé au maximum :
-   lunette usinée en deux étages dont le reflet suit la souris, cadran guilloché soleil, verre bombé avec
-   un reflet qui glisse lentement, graduations qui s'allument jusqu'à la consigne, halo or vivant,
-   curseur à traînée lumineuse, chiffres qui roulent, légère profondeur 3D au survol.
-   Modes : Signature (or), Platinum (argent), Base (sobre : mêmes formes, sans lueur ni reflet animé).
-   Mouvement seulement sous html.fx; prefers-reduced-motion respecté (voir labo.js). Préfixe px-.
-   Le thermostat actuel (comparaison) garde ses propres classes ev-* et les styles de env.css. */
-
+/* Laboratoire des cartes « Matière » (page privée /labo-cartes/). Préfixe mt-.
+   Les dalles sont rendues en WebGL2 par assets/demos/labo.js (classe .mt-gl-on sur la racine).
+   Sans WebGL2, ce fichier donne le repli : les vraies images de matière et le cadre de cristal. */
 @font-face { font-family: "Jarvis Manrope"; src: url("/assets/fonts/manrope/manrope-latin.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
 
-@property --ang { syntax: "<angle>"; inherits: false; initial-value: -88deg; }
-@property --cang { syntax: "<angle>"; inherits: false; initial-value: -88deg; }
-@property --ka { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
+body.mt-page::before {
+  background: linear-gradient(180deg, #00000080, #00000059 38%, #000000a6 78%, #000000d9), var(--mode-scene) center / cover no-repeat;
+}
+.mt {
+  --mt-font: "Jarvis Manrope", "Geist", system-ui, sans-serif;
+  --mt-ink: #f6f3ee;
+  --mt-dim: #b9b4ab;
+  --mt-ok: #34d399;
+  --mt-matter: url("/media/modes/signature.webp");
+  font-family: var(--mt-font); color: var(--mt-ink);
+  padding: calc(var(--bar-h) + 44px) clamp(18px, 3.2vw, 44px) 70px; overflow-x: clip;
+}
+:root[data-mode="platinum"] .mt { --mt-ink: #f4f8ff; --mt-dim: #b3bdcc; --mt-matter: url("/media/modes/scene-platinum.webp"); }
+:root[data-mode="base"] .mt { --mt-ink: #f2f2f2; --mt-dim: #a9a9ab; --mt-matter: url("/media/modes/base.webp"); }
 
-/* ---------------------------------------------------------------- Jetons de mode */
-.px {
-  --acc: #e6c584; --acc-hi: #fbecc9; --acc-lo: #9b7537;
-  /* métal de la lunette : sombre, reflets dorés */
-  --m0: #0c0b09; --m1: #27231c; --m2: #4f473a; --mh: #f6e3b6; --mh2: #b8955a;
-  --tick: rgb(255 255 255 / .17); --tick-maj: rgb(255 255 255 / .38);
-  --tx: #faf6ed; --mu: #bdb6aa; --fa: #8f897f;
-  --ok: #34d399; --ok-hi: #a7f3d0; --ok-lo: #0e8a5e; --warn: #fbbf24; --err: #f87171; --heat: #f6b56a;
-  --sep: rgb(255 255 255 / .065);
-  --glass: linear-gradient(180deg, #111110, #070707 46%, #030303);
-  --app: "Jarvis Manrope", "Geist", system-ui, sans-serif;
-  --ease: cubic-bezier(.16, 1, .3, 1);
-  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .045 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
-  color: var(--tx); font-family: var(--app);
-}
-:root[data-mode="platinum"] .px {
-  --acc: #d9e3f0; --acc-hi: #ffffff; --acc-lo: #7f90a8;
-  --m0: #0a0b0d; --m1: #24282e; --m2: #4d5560; --mh: #f7faff; --mh2: #9fb0c6;
-  --tx: #f6f8fb; --mu: #b7c0cd; --fa: #8b94a2; --heat: #f3b67a;
-  --glass: linear-gradient(180deg, #111317, #070809 46%, #030304);
-}
-:root[data-mode="base"] .px {
-  --acc: #d4d4d4; --acc-hi: #f0f0f0; --acc-lo: #8a8a8a;
-  --m0: #141414; --m1: #141414; --m2: #141414; --mh: #141414; --mh2: #141414;
-  --tx: #f2f2f2; --mu: #b6b6b6; --fa: #8a8a8a; --heat: #f0b878;
-  --glass: linear-gradient(180deg, #121212, #0a0a0a);
-}
-.px [hidden] { display: none !important; }
-.px button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.px :is(h1, h2, h3, p, figure) { margin: 0; }
-.px :is(button, [tabindex]):focus-visible { outline: 2px solid var(--acc-hi); outline-offset: 3px; }
-.px .px-i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: none; }
-.px-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-
-/* ---------------------------------------------------------------- Page */
-.px-page main { padding-top: var(--bar-h); }
-.px { max-width: 1400px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px) 96px; }
-.px-top { padding: clamp(48px, 7vw, 92px) 0 30px; max-width: 860px; }
-.px-k { font: 500 13px/1.4 var(--app); color: var(--acc); }
-.px-top h1 {
-  margin-top: 14px; padding-bottom: .1em; font: 300 clamp(42px, 6.4vw, 84px)/1 var(--app); letter-spacing: -.045em;
+/* ---------- En-tête et choix de la matière ---------- */
+.mt-top { max-width: 1380px; margin: 0 auto 46px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 40px; align-items: end; }
+.mt-top h1 {
+  margin: 0; font: 300 clamp(34px, 4.4vw, 62px)/1.04 var(--mt-font); letter-spacing: -.035em;
   background: var(--mode-display); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.px-intro { margin-top: 20px; font: 400 18px/1.6 var(--app); color: var(--mu); max-width: 62ch; }
-.px-note { margin-top: 14px; font: 400 13px/1.5 var(--app); color: var(--fa); }
-.px-bar {
-  position: sticky; top: var(--bar-h); z-index: 30; margin: 0 calc(-1 * clamp(16px, 3vw, 40px));
-  padding: 12px clamp(16px, 3vw, 40px);
-  background: linear-gradient(180deg, #000000e8, #000000c8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--mode-line);
+.mt-intro { grid-column: 1; margin: 0; max-width: 62ch; font-size: 16px; line-height: 1.6; color: var(--mt-ink); opacity: .82; text-shadow: 0 1px 12px #000; }
+.mt-modes { grid-column: 2; grid-row: 1 / span 2; display: flex; gap: 8px; padding: 6px; border-radius: 20px; background: #0000008c; border: 1px solid var(--mode-line); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.mt-modes button {
+  display: grid; gap: 1px; min-width: 132px; padding: 10px 18px; border: 0; border-radius: 14px; background: none; color: var(--mt-dim);
+  font-family: var(--mt-font); text-align: left; cursor: pointer; transition: background .3s, color .3s;
 }
-.px-bar-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.px-bar-t { font: 500 14px/1.3 var(--app); color: var(--mu); }
-.px-modes { display: flex; padding: 4px; border-radius: 99px; background: #ffffff0a; box-shadow: inset 0 0 0 1px #ffffff14; flex: none; }
-.px-modes button { border: 0; background: none; padding: 9px 18px; border-radius: 99px; font: 600 13.5px/1 var(--app); color: var(--mu); transition: color .3s, background .3s; }
-.px-modes button:hover { color: var(--tx); }
-.px-modes button.is-on { background: var(--mode-action); color: var(--mode-on-action); box-shadow: var(--mode-action-edge); }
-.px-sec { padding-top: clamp(40px, 5vw, 64px); }
-.px-h2 { font: 500 clamp(22px, 2.4vw, 30px)/1.15 var(--app); letter-spacing: -.02em; color: var(--tx); margin-bottom: 26px; }
+.mt-modes b { font-size: 15px; font-weight: 650; color: var(--mt-ink); }
+.mt-modes small { font-size: 12px; }
+.mt-modes button:hover { background: #ffffff12; }
+.mt-modes button.is-on { background: var(--mode-action); box-shadow: var(--mode-action-edge); color: var(--mode-on-action); }
+.mt-modes button.is-on b { color: var(--mode-on-action); }
+.mt-modes button:focus-visible, .mt-round:focus-visible, .mt-btn:focus-visible, .mt-dial:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 3px; }
 
-.px-grid { container: pg / inline-size; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(16px, 1.7vw, 24px); align-items: stretch; }
-.px-grid > [data-span="5"] { grid-column: span 5; }
-.px-grid > [data-span="7"] { grid-column: span 7; }
-.px-grid > [data-span="12"] { grid-column: 1 / -1; }
-@media (max-width: 1120px) { .px-grid > [data-span] { grid-column: 1 / -1; } }
-@media (max-width: 640px) {
-  .px-bar-in { flex-direction: column; align-items: stretch; gap: 8px; }
-  .px-bar-t { display: none; }
-  .px-modes button { flex: 1; padding: 9px 8px; }
-}
+/* ---------- La scène : quatre dalles debout sur le sol poli ---------- */
+.mt-stage { max-width: 1380px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.12fr; gap: 30px; --mt-refl: 190px; --mt-pad: 28px; padding-bottom: var(--mt-refl); }
+.mt-card { position: relative; min-height: 588px; border-radius: 26px; isolation: isolate; }
+.mt-gl { position: absolute; left: calc(-1 * var(--mt-pad)); top: calc(-1 * var(--mt-pad)); width: calc(100% + 2 * var(--mt-pad)); height: calc(100% + 1.5 * var(--mt-pad) + var(--mt-refl)); pointer-events: none; z-index: -1; opacity: 0; transition: opacity .9s; }
+.mt-gl-on .mt-gl { opacity: 1; }
+.mt-in { position: relative; height: 100%; display: flex; flex-direction: column; padding: 30px 30px 28px; }
+.mt-gl-on .mt-in { -webkit-box-reflect: below 14px linear-gradient(transparent 62%, #0000002e); }
 
-/* Thermostat actuel : la carte de la démo, telle quelle */
-.px-ref { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-.px-ref-k, .px-tag { font: 500 12.5px/1.3 var(--app); color: var(--fa); }
-.px-ref-ev { flex: 1; display: flex; }
-.px-ref-ev .ev-defs { position: absolute; }
-.px-ref-card { flex: 1; }
-.px-ref .ev-round { cursor: default; }
+/* Repli sans WebGL2 : la vraie image de matière sous un voile noir, cadre de cristal */
+.mt-card { background: linear-gradient(160deg, #060606d4, #030303f0), var(--mt-matter) 70% 60% / 260% auto; box-shadow: 0 30px 60px -30px #000; }
+.mt-card::before { content: ""; position: absolute; inset: -5px; z-index: -1; pointer-events: none; border: 18px solid transparent; border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch; filter: var(--mode-rim-filter); }
+.mt-gl-on .mt-card { background: none; box-shadow: none; }
+.mt-gl-on .mt-card::before { content: none; }
 
-/* ---------------------------------------------------------------- Carte prestige : verre noir dans sa lunette */
-.px-card {
-  --mx: .3; --my: .15; --rx: 0deg; --ry: 0deg;
-  position: relative; min-width: 0; container: pc / inline-size; display: flex; flex-direction: column;
-  padding: 22px; border-radius: 22px; border: 1px solid transparent;
-  background:
-    var(--grain) padding-box,
-    repeating-radial-gradient(circle at 24% 52%, rgb(255 255 255 / .016) 0 1px, transparent 1px 5px) padding-box,
-    radial-gradient(130% 55% at 50% -12%, rgb(255 255 255 / .07), transparent 64%) padding-box,
-    var(--glass) padding-box,
-    conic-gradient(from var(--cang), color-mix(in srgb, var(--acc) 22%, transparent), var(--acc-hi) 4%, color-mix(in srgb, var(--acc) 55%, transparent) 9%,
-      rgb(255 255 255 / .05) 22%, rgb(255 255 255 / .04) 40%, color-mix(in srgb, var(--acc) 30%, transparent) 52%, color-mix(in srgb, var(--acc) 50%, transparent) 56%,
-      rgb(255 255 255 / .05) 70%, rgb(255 255 255 / .04) 88%, color-mix(in srgb, var(--acc) 22%, transparent)) border-box;
-  box-shadow: 0 34px 70px -22px #000, 0 2px 0 #0009, inset 0 1px 0 rgb(255 255 255 / .1), inset 0 0 0 1px #000c,
-    0 0 70px -30px color-mix(in srgb, var(--acc) 40%, transparent);
-  transform: perspective(1600px) rotateX(var(--rx)) rotateY(var(--ry));
-  transition: transform .7s var(--ease), --cang .9s var(--ease);
-}
-.px-card > * { position: relative; }
-/* Lumière qui suit la main sur le verre */
-.px-rim { position: absolute !important; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .5s;
-  background: radial-gradient(520px circle at calc(var(--mx) * 100%) calc(var(--my) * 100%), color-mix(in srgb, var(--acc) 9%, transparent), transparent 62%); }
-.px-card.is-hover .px-rim { opacity: 1; }
+.mt-head h2 { margin: 0; font: 650 17px/1.25 var(--mt-font); letter-spacing: -.01em; color: var(--mt-ink); }
+.mt-head p { margin: 3px 0 0; font-size: 13px; line-height: 1.4; color: var(--mt-dim); }
+.mt-i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.mt-big { display: inline-flex; align-items: flex-start; font: 500 78px/1 var(--mt-font); letter-spacing: -.045em; font-variant-numeric: tabular-nums; color: #fff; text-shadow: 0 2px 18px #000c; }
+.mt-big sup { margin: 9px 0 0 5px; font-size: 22px; font-weight: 500; letter-spacing: 0; color: var(--gold-soft); }
+.mt-foot { margin: auto 0 0; padding-top: 18px; font-size: 13.5px; color: var(--mt-dim); }
+.mt-foot b { color: var(--mt-ink); font-weight: 650; }
 
-.px-ch { display: flex; align-items: center; gap: 12px 14px; margin-bottom: 16px; min-width: 0; flex-wrap: wrap; }
-.px-ct { flex: 1 1 180px; min-width: 0; }
-.px-ct h3 { font: 650 17px/1.2 var(--app); letter-spacing: -.01em; color: #fff; }
-.px-ct p { margin-top: 3px; font-size: 13px; color: var(--mu); }
-.px-tag { padding: 6px 11px; border-radius: 99px; border: 1px solid color-mix(in srgb, var(--acc) 26%, transparent); color: var(--acc); background: color-mix(in srgb, var(--acc) 6%, transparent); white-space: nowrap; }
+/* ---------- 1. Thermostat ---------- */
+.mt-dial { position: relative; width: min(100%, 318px); aspect-ratio: 1; margin: auto; border-radius: 50%; touch-action: none; cursor: grab; -webkit-user-select: none; user-select: none; }
+.mt-dial.is-drag { cursor: grabbing; }
+.mt-dial-c { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 2px; text-align: center; pointer-events: none; }
+.mt-dial-k { font-size: 13px; color: var(--mt-dim); }
+.mt-dial-now { font-size: 14px; font-weight: 550; color: var(--mt-ink); opacity: .86; }
+.mt-dial-fb { position: absolute; inset: 0; }
+.mt-dial-fb path { fill: none; stroke-linecap: round; stroke-width: 9; }
+.mt-fb-track { stroke: #ffffff1c; }
+.mt-fb-val { stroke: var(--gold-soft); }
+.mt-gl-on .mt-dial-fb { display: none; }
+.mt-steps { padding-top: 14px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; }
+.mt-state { margin: 0; text-align: center; font-size: 14px; color: var(--mt-dim); }
+.mt-round, .mt-btn {
+  border: 1px solid var(--mode-line); color: var(--mt-ink); font-family: var(--mt-font); cursor: pointer;
+  background: linear-gradient(180deg, #ffffff1f, #ffffff08); box-shadow: inset 0 1px 0 #ffffff38, 0 8px 18px -10px #000;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background .25s, transform .15s;
+}
+.mt-round { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; }
+.mt-round:hover, .mt-btn:hover { background: linear-gradient(180deg, #ffffff33, #ffffff12); }
+.mt-round:active, .mt-btn:active { transform: scale(.96); }
 
-/* Pastille : disque de métal, anneau usiné teinté du ton, petit éclat */
-.px-pas {
-  --tn: var(--acc); width: 42px; height: 42px; flex: none; display: grid; place-items: center; border-radius: 50%; color: var(--tn);
-  border: 1px solid transparent;
-  background: radial-gradient(circle at 50% 22%, #2b2a28, #0c0c0c 64%, #050505) padding-box,
-    conic-gradient(from var(--cang), color-mix(in srgb, var(--tn) 90%, #fff 10%), color-mix(in srgb, var(--tn) 18%, transparent) 25%, color-mix(in srgb, var(--tn) 55%, transparent) 50%, color-mix(in srgb, var(--tn) 15%, transparent) 75%, color-mix(in srgb, var(--tn) 90%, #fff 10%)) border-box;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .12), inset 0 0 0 2px #000a, 0 6px 14px #000a, 0 0 18px -6px color-mix(in srgb, var(--tn) 50%, transparent);
-}
-.px-pas.is-sm { width: 38px; height: 38px; }
-.px-pas.t-ok { --tn: var(--ok); }
-.px-pas .px-i { width: 19px; height: 19px; }
+/* ---------- 2. Flux d'énergie ---------- */
+.mt-flow { position: relative; margin: auto 0; padding-top: 24px; display: grid; grid-template-columns: repeat(3, 1fr); row-gap: 30px; }
+.mt-node { position: relative; display: grid; justify-items: center; gap: 8px; }
+.mt-n-sol { grid-column: 2; grid-row: 1; } .mt-n-bat { grid-column: 1; grid-row: 2; } .mt-n-res { grid-column: 3; grid-row: 2; } .mt-n-mai { grid-column: 2; grid-row: 3; }
+.mt-bead { width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; color: #fff; border: 1px solid var(--mode-line); background: #000000b3; }
+.mt-gl-on .mt-bead { border-color: transparent; background: none; }
+.mt-node-t { display: grid; justify-items: center; text-align: center; line-height: 1.25; }
+.mt-node-t b { font-size: 21px; font-weight: 600; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: #fff; }
+.mt-node-t b small { font-size: 12px; font-weight: 500; color: var(--mt-dim); }
+.mt-node-t em { font-style: normal; font-size: 13.5px; font-weight: 600; color: var(--mt-ink); }
+.mt-node-t > small { font-size: 12px; color: var(--mt-dim); }
+.mt-n-sol .mt-node-t, .mt-n-mai .mt-node-t { position: absolute; left: calc(100% + 2px); top: 4px; justify-items: start; text-align: left; white-space: nowrap; }
+.mt-flow-fb { position: absolute; inset: 0; width: 100%; height: 100%; }
+.mt-flow-fb path { fill: none; stroke: var(--gold-soft); stroke-width: 2; vector-effect: non-scaling-stroke; opacity: .55; }
+.mt-gl-on .mt-flow-fb { display: none; }
 
-/* Rangées : pastille, libellé au-dessus de la valeur, chevron atténué */
-.px-row, .px-frow, .px-pack { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--sep); min-width: 0; }
-.px-rows > .px-row:first-child, .px-flux-l > .px-frow:first-child, .px-batt-l > .px-pack:first-child { border-top: 0; }
-.px-rt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.px-rt > small { font-size: 13px; color: var(--mu); }
-.px-rt > b { font: 650 19px/1.25 var(--app); letter-spacing: -.01em; color: #fff; font-variant-numeric: tabular-nums; }
-.px-rt > b small { font-size: .74em; font-weight: 500; color: var(--mu); }
-.px-rt > em { font-style: normal; font-size: 12.5px; color: var(--fa); }
-.px-rt > em.is-warn { color: var(--warn); }
-.px-chev { width: 16px !important; height: 16px !important; color: var(--fa); opacity: .8; }
+/* ---------- 3. Batteries ---------- */
+.mt-soc { margin-top: 26px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.mt-big.is-ok sup { color: var(--mt-ok); }
+.mt-soc p { margin: 0; display: grid; gap: 3px; font-size: 13px; color: var(--mt-dim); white-space: nowrap; }
+.mt-ok { color: var(--mt-ok); font-weight: 600; }
+.mt-packs { margin-top: 30px; display: grid; gap: 26px; }
+.mt-pack-h { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; color: var(--mt-ink); }
+.mt-pack-h b { font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums; color: #fff; }
+.mt-tube { position: relative; height: 34px; margin-top: 9px; border-radius: 17px; background: #ffffff14; overflow: hidden; }
+.mt-tube i { position: absolute; inset: 4px auto 4px 4px; width: calc(var(--lv) - 8px); border-radius: 13px; background: linear-gradient(180deg, #6ee7b7, #34d399 45%, #0f9d6c); }
+.mt-gl-on .mt-tube { background: none; } .mt-gl-on .mt-tube i { display: none; }
+.mt-pack-d { margin: 8px 0 0; display: flex; gap: 14px; font-size: 13px; color: var(--mt-dim); font-variant-numeric: tabular-nums; }
 
-/* ---------------------------------------------------------------- Le cadran prestige */
-.px-dial {
-  --tn: var(--acc); --tn-hi: var(--acc-hi); --tn-lo: var(--acc-lo);
-  --gx: 0; --gy: 0;
-  position: relative; flex: none; aspect-ratio: 1; border-radius: 50%; container: dial / inline-size; user-select: none; -webkit-user-select: none;
-}
-.px-dial.t-ok { --tn: var(--ok); --tn-hi: var(--ok-hi); --tn-lo: var(--ok-lo); }
-.px-dial.is-xl { width: min(372px, calc(100cqw - 128px)); }
-.px-dial.is-lg { width: min(262px, 100%); }
-.px-dial.is-md { width: 116px; }
-.px-dial.is-sm { width: 66px; }
-.px-dial.is-live { cursor: grab; touch-action: none; }
-.px-dial.is-drag { cursor: grabbing; }
-.px-dial.is-live:focus-visible { outline-offset: 6px; border-radius: 50%; }
-.px-dial > span, .px-dsvg, .px-dv { position: absolute; border-radius: 50%; }
-/* Ombre portée et lueur sous le cadran */
-.px-shadow { inset: 3%; box-shadow: 0 30px 46px -12px #000, 0 12px 18px -6px #000d, 0 0 90px -6px color-mix(in srgb, var(--tn) 32%, transparent); }
-/* Lunette usinée : reflet anisotrope (conique) orienté vers la main, brossage circulaire fin */
-.px-bz {
-  inset: 0;
-  background:
-    repeating-conic-gradient(from 0deg, rgb(255 255 255 / .07) 0 .3deg, transparent .3deg 1.1deg),
-    conic-gradient(from var(--ang), var(--m0), var(--m2) 7%, var(--mh) 12%, var(--mh2) 15%, var(--m1) 24%, var(--m0) 34%, var(--m1) 46%,
-      var(--m2) 56%, var(--mh2) 61%, var(--m2) 66%, var(--m0) 78%, var(--m1) 90%, var(--m0));
-  box-shadow: inset 0 1.5px 1px rgb(255 255 255 / .38), inset 0 -2px 3px #000, 0 0 0 1px #000;
-  transition: --ang .9s var(--ease);
-}
-/* Biseau intérieur : la même lumière, inversée, comme un chanfrein taillé */
-.px-bz-cut {
-  inset: 3.6%;
-  background: conic-gradient(from calc(var(--ang) + 180deg), var(--m0), var(--m2) 7%, var(--mh2) 12%, var(--m1) 20%, var(--m0) 34%, var(--m1) 50%, var(--m2) 60%, var(--mh) 63%, var(--m1) 70%, var(--m0) 84%, var(--m0));
-  box-shadow: 0 0 0 1px #000c, inset 0 0 0 .5px rgb(255 255 255 / .12);
-  transition: --ang .9s var(--ease);
-}
-/* Cadran : verre noir guilloché « soleil », plus clair en haut, ombre de la lunette */
-.px-face {
-  inset: 6.6%;
-  background:
-    radial-gradient(circle at 50% 50%, transparent 48%, rgb(0 0 0 / .65) 100%),
-    repeating-conic-gradient(from 0deg, rgb(255 255 255 / .045) 0 .5deg, transparent .5deg 1.5deg),
-    radial-gradient(75% 75% at 50% 32%, #1e1d1b, #080808 68%, #000);
-  box-shadow: inset 0 4px 8px #000, inset 0 0 0 1.5px #000, inset 0 -1px 0 rgb(255 255 255 / .1), 0 0 0 1px rgb(255 255 255 / .05);
-}
-.px-dsvg { inset: 0; width: 100%; height: 100%; overflow: visible; }
-.px-dsvg .s0 { stop-color: var(--tn-lo); } .px-dsvg .s1 { stop-color: var(--tn); } .px-dsvg .s2 { stop-color: var(--tn-hi); }
-.px-dsvg .k1 { stop-color: var(--tn-hi); } .px-dsvg .k2 { stop-color: var(--tn-lo); }
-.px-dsvg :is(.t, .t-mid, .t-maj) { stroke: var(--tick); stroke-width: .9; stroke-linecap: round; transition: stroke .35s; }
-.px-dsvg .t-mid { stroke-width: 1.2; }
-.px-dsvg .t-maj { stroke: var(--tick-maj); stroke-width: 1.7; }
-.px-dsvg .is-on { stroke: color-mix(in srgb, var(--tn) 85%, #fff 15%); stroke-width: 1.1; }
-.px-dsvg .t-maj.is-on { stroke: var(--tn-hi); }
-.px-track { fill: none; stroke: rgb(255 255 255 / .075); stroke-width: 6; stroke-linecap: round; }
-.px-val { fill: none; stroke-width: 7; stroke-linecap: round; filter: drop-shadow(0 0 3px color-mix(in srgb, var(--tn) 70%, transparent)); }
-.px-halo { fill: none; stroke: var(--tn); stroke-width: 20; stroke-linecap: round; opacity: .42; filter: blur(9px); }
-.px-glint { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 3 400; stroke-dashoffset: 3; opacity: 0; mix-blend-mode: screen; }
-.px-now { stroke: #fff; stroke-width: 2.6; stroke-linecap: round; opacity: .9; }
-.px-mark { stroke-width: 2.4; stroke-linecap: round; }
-.px-mark.is-warn { stroke: var(--warn); }
-.px-end { fill: var(--fa); font: 600 11px var(--app); text-anchor: middle; }
-.px-knob-o { fill: rgb(0 0 0 / .7); stroke: color-mix(in srgb, var(--tn) 45%, transparent); stroke-width: .8; }
-.px-knob-i { filter: drop-shadow(0 0 5px var(--tn)); }
-/* Traînée lumineuse derrière le curseur */
-.px-trail {
-  inset: 14.2%; pointer-events: none; mix-blend-mode: screen; filter: blur(1.5px);
-  background: conic-gradient(from calc(var(--ka) - 62deg), transparent 0deg, color-mix(in srgb, var(--tn-hi) 85%, transparent) 62deg, transparent 62.3deg);
-  -webkit-mask: radial-gradient(closest-side, transparent 85%, #000 87.5%, #000 98%, transparent 100%);
-  mask: radial-gradient(closest-side, transparent 85%, #000 87.5%, #000 98%, transparent 100%);
-}
-/* Lumière de l'arc qui baigne le cadran, jusqu'au curseur */
-.px-spill {
-  inset: 6.6%; pointer-events: none; mix-blend-mode: screen;
-  background: conic-gradient(from -135deg, color-mix(in srgb, var(--tn) 5%, transparent) 0deg, color-mix(in srgb, var(--tn) 26%, transparent) calc(var(--ka) + 135deg), transparent calc(var(--ka) + 136deg));
-  -webkit-mask: radial-gradient(closest-side, transparent 58%, #000 80%, #000 84%, transparent 97%);
-  mask: radial-gradient(closest-side, transparent 58%, #000 80%, #000 84%, transparent 97%);
-}
-/* Arête polie de la lunette : un filet lumineux fin */
-.px-bz::after { content: ""; position: absolute; inset: 0; border-radius: 50%; padding: 1px; pointer-events: none;
-  background: conic-gradient(from var(--ang), transparent, var(--mh) 12%, transparent 26%, transparent 52%, var(--mh2) 62%, transparent 74%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
-/* Verre bombé : reflet de dôme, lumière de bord, et une bande qui glisse lentement */
-.px-glass {
-  inset: 6.6%; overflow: hidden; pointer-events: none;
-  background:
-    radial-gradient(110% 70% at 50% -8%, rgb(255 255 255 / .17), rgb(255 255 255 / .04) 42%, transparent 60%),
-    radial-gradient(80% 32% at 50% 104%, color-mix(in srgb, var(--tn) 12%, transparent), transparent 70%);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .05), inset 0 -10px 24px -14px rgb(255 255 255 / .12);
-  transform: translate(calc(var(--gx) * 3px), calc(var(--gy) * 3px));
-  transition: transform .5s var(--ease);
-}
-.px-glass i { position: absolute; inset: -30%; background: linear-gradient(112deg, transparent 40%, rgb(255 255 255 / .1) 47%, rgb(255 255 255 / .025) 52%, transparent 58%); transform: translateX(-80%); }
-.px-dv { inset: 0; display: grid; place-content: center; justify-items: center; text-align: center; gap: 2px; pointer-events: none; }
-.px-mode { display: inline-flex; align-items: center; gap: 5px; font: 650 11px/1 var(--app); letter-spacing: .09em; text-transform: uppercase; margin-bottom: 4px; color: var(--tn); }
-.px-mode .px-i { width: 14px; height: 14px; }
-.px-mode.is-heat { color: var(--heat); } .px-mode.is-cool { color: #7cc4ff; } .px-mode.is-ok { color: var(--ok); } .px-mode.is-sun { color: var(--acc); }
-.px-big { display: inline-flex; align-items: flex-start; font: 200 clamp(36px, 22cqw, 74px)/1 var(--app); letter-spacing: -.05em; color: #fff; text-shadow: 0 0 26px rgb(255 255 255 / .16); font-variant-numeric: tabular-nums; }
-.px-big.is-md { font-size: clamp(34px, 21cqw, 60px); }
-.px-big sup { font-size: .25em; font-weight: 500; letter-spacing: 0; margin: .3em 0 0 .18em; color: var(--mu); }
-.px-now-l { font-size: 12.5px; color: var(--mu); }
-.px-mid { font: 300 25px/1 var(--app); letter-spacing: -.04em; color: #fff; display: inline-flex; align-items: baseline; }
-.px-mid small { font-size: 12px; font-weight: 500; color: var(--mu); margin-left: 1px; letter-spacing: 0; }
-.px-mini-i { width: 22px !important; height: 22px !important; color: var(--tn); }
+/* ---------- 4. Véhicule de collection ---------- */
+.mt-auto .mt-in { padding-top: 22px; }
+.mt-photo { margin: 0 -8px 20px; aspect-ratio: 16 / 10.4; border-radius: 12px; overflow: hidden; }
+.mt-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; }
+.mt-gl-on .mt-photo img { opacity: 0; }
+.mt-ms { margin-top: 22px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mt-m { display: grid; gap: 2px; padding-left: 12px; border-left: 1px solid var(--mode-line); }
+.mt-m span { font-size: 12.5px; color: var(--mt-dim); }
+.mt-m b { font-size: 26px; font-weight: 550; letter-spacing: -.03em; font-variant-numeric: tabular-nums; color: #fff; white-space: nowrap; }
+.mt-m b small { font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--gold-soft); }
+.mt-m em { font-style: normal; font-size: 11.5px; line-height: 1.3; color: var(--mt-dim); }
+.mt-door { margin-top: auto; padding-top: 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mt-door p { margin: 0; display: grid; font-size: 12.5px; color: var(--mt-dim); }
+.mt-door p b { font-size: 15px; font-weight: 600; color: var(--mt-ink); }
+.mt-btn { display: inline-flex; align-items: center; gap: 9px; padding: 12px 18px; border-radius: 26px; font-size: 14px; font-weight: 600; }
+.mt-btn .mt-i { width: 19px; height: 19px; }
+.mt-btn[aria-pressed="true"] { background: var(--mode-action); color: var(--mode-on-action); }
 
-/* Chiffres qui roulent */
-.px-n { display: inline-flex; position: relative; }
-.px-roll { display: inline-flex; align-items: baseline; }
-.px-dg { display: inline-block; height: 1em; line-height: 1; overflow: hidden; vertical-align: top; }
-.px-dg > span { display: flex; flex-direction: column; transform: translateY(calc(var(--d) * -1em)); transition: transform 1.1s var(--ease); }
-.px-dg i { display: block; height: 1em; font-style: normal; text-align: center; }
-.px-dec { display: inline-flex; }
-.px-big .px-dec { font-size: .5em; margin-left: -.06em; align-self: flex-end; margin-bottom: .1em; color: rgb(255 255 255 / .82); }
-.px-n.is-quick .px-dg > span { transition-duration: .45s; }
-.px-n.is-set .px-dg > span { transition: none; }
+.mt-note { max-width: 1380px; margin: 26px auto 0; font-size: 13px; color: var(--mt-dim); }
 
-/* Commandes en métal usiné */
-.px-round {
-  width: 50px; height: 50px; flex: none; display: grid; place-items: center; border-radius: 50%; color: var(--tx); border: 1px solid transparent;
-  background: repeating-conic-gradient(from 0deg, rgb(255 255 255 / .035) 0 .4deg, transparent .4deg 1.4deg) padding-box,
-    radial-gradient(circle at 50% 25%, #2c2b29, #0d0d0d 62%, #070707) padding-box,
-    linear-gradient(160deg, color-mix(in srgb, var(--acc) 70%, #fff 10%), color-mix(in srgb, var(--acc) 12%, transparent) 45%, color-mix(in srgb, var(--acc) 45%, transparent)) border-box;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .14), inset 0 -1px 0 #000, 0 8px 18px #000b;
-  transition: color .25s, box-shadow .25s, transform .2s;
+/* ---------- Écrans plus étroits ---------- */
+@media (max-width: 1240px) {
+  .mt-stage { grid-template-columns: 1fr 1fr; --mt-refl: 110px; row-gap: calc(var(--mt-refl) + 34px); max-width: 860px; }
+  .mt-top { max-width: 860px; }
 }
-.px-round:hover { color: var(--acc-hi); box-shadow: inset 0 1px 0 rgb(255 255 255 / .14), inset 0 -1px 0 #000, 0 8px 18px #000b, 0 0 22px -4px color-mix(in srgb, var(--acc) 55%, transparent); }
-.px-round:active { transform: scale(.93); }
-.px-btn {
-  display: inline-flex; align-items: center; gap: 9px; height: 44px; padding: 0 20px; border-radius: 12px; border: 1px solid transparent; font: 600 14px/1 var(--app); color: var(--tx); white-space: nowrap;
-  background: linear-gradient(165deg, #262626, #0c0c0c 52%, #171717) padding-box, linear-gradient(160deg, color-mix(in srgb, var(--acc) 70%, #fff 8%), color-mix(in srgb, var(--acc) 14%, transparent) 50%, color-mix(in srgb, var(--acc) 45%, transparent)) border-box;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .11), 0 6px 16px #000a; transition: color .25s, box-shadow .25s;
+@media (max-width: 720px) {
+  .mt { padding-left: 16px; padding-right: 16px; }
+  .mt-top { grid-template-columns: 1fr; margin-bottom: 36px; }
+  .mt-modes { grid-column: 1; grid-row: auto; }
+  .mt-modes button { min-width: 0; flex: 1; padding: 9px 10px; }
+  .mt-modes small { display: none; }
+  .mt-stage { grid-template-columns: 1fr; --mt-refl: 64px; --mt-pad: 16px; row-gap: calc(var(--mt-refl) + 30px); }
+  .mt-card { min-height: 0; }
+  .mt-in { padding: 24px 22px 24px; }
+  .mt-gl-on .mt-in { -webkit-box-reflect: none; }
+  .mt-big { font-size: 68px; }
+  .mt-steps, .mt-foot, .mt-door { margin-top: 22px; }
+  .mt-note { margin-top: 44px; }
 }
-.px-btn:hover { color: var(--acc-hi); box-shadow: inset 0 1px 0 rgb(255 255 255 / .11), 0 6px 16px #000a, 0 0 20px -4px color-mix(in srgb, var(--acc) 50%, transparent); }
-.px-btn[aria-pressed="true"] { color: var(--acc); }
-.px-sent { display: inline-flex; align-items: center; gap: 7px; margin-top: 14px; font-size: 12.5px; color: var(--ok); }
-.px-sent .px-i { width: 15px; height: 15px; }
-.px-sent.is-idle { color: var(--mu); }
-.px-sent.is-wait { color: var(--acc); }
-
-/* ---------------------------------------------------------------- 1. Thermostat */
-.px-thermo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; flex: 1; align-items: center; }
-.px-dialw { display: flex; flex-direction: column; align-items: center; container: dialw / inline-size; min-width: 0; }
-.px-dialrow { display: flex; align-items: center; gap: 14px; }
-.px-rows { min-width: 0; }
-@container pc (min-width: 660px) {
-  .px-thermo { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 22px; }
-  .px-rows { border-left: 1px solid var(--sep); padding-left: 24px; }
-}
-@container dialw (max-width: 340px) { .px-dialrow { gap: 8px; } .px-round { width: 42px; height: 42px; } .px-dial.is-xl { width: min(372px, calc(100cqw - 100px)); } }
-
-/* ---------------------------------------------------------------- 2. Flux d'énergie */
-.px-flux { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; justify-items: center; flex: 1; align-content: center; }
-.px-flux-l { width: 100%; }
-.px-wires { display: none; }
-.px-frow { gap: 16px; }
-.px-frow .px-rt > b { font-size: 21px; }
-@container pc (min-width: 620px) {
-  .px-flux { grid-template-columns: minmax(0, 262px) 74px minmax(0, 1fr); gap: 0; align-items: center; justify-items: stretch; }
-  .px-wires { display: block; width: 74px; height: 240px; overflow: visible; }
-  .px-frow { height: 80px; padding: 0 0 0 4px; }
-}
-.px-wire { fill: none; stroke: color-mix(in srgb, var(--acc) 34%, transparent); stroke-width: 1.4; vector-effect: non-scaling-stroke; stroke-linecap: round; }
-.px-wire.t-ok { stroke: color-mix(in srgb, var(--ok) 40%, transparent); }
-.px-foot { display: flex; align-items: center; gap: 9px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--sep); font-size: 13px; color: var(--mu); }
-.px-foot .px-i { width: 16px; height: 16px; color: var(--ok); }
-.px-foot b { color: #fff; font-weight: 650; }
-
-/* ---------------------------------------------------------------- 3. Batteries */
-.px-batt { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; justify-items: center; flex: 1; align-content: center; }
-.px-batt-l { width: 100%; min-width: 0; }
-.px-batt-d, .px-flux-src { width: 100%; display: grid; place-items: center; }
-@container pc (min-width: 470px) {
-  .px-batt { grid-template-columns: minmax(0, 210px) minmax(0, 1fr); gap: 22px; align-items: center; }
-}
-.px-seg { display: grid; grid-template-columns: repeat(20, minmax(0, 1fr)); gap: 2px; margin: 6px 0 4px; height: 7px; }
-.px-seg i { border-radius: 1.5px; background: rgb(255 255 255 / .08); transition: background .4s, box-shadow .4s; transition-delay: calc(var(--k) * 35ms + .5s); }
-.px-seg i.is-on { background: linear-gradient(180deg, var(--ok-hi), var(--ok)); box-shadow: 0 0 6px color-mix(in srgb, var(--ok) 55%, transparent); }
-.px-batt-eta { display: flex; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid var(--sep); font-size: 13px; color: var(--mu); }
-.px-batt-eta .px-i { width: 16px; height: 16px; color: var(--ok); }
-.px-batt-eta b { color: #fff; font-weight: 650; }
-.px-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 14px; font-size: 12px; color: var(--fa); }
-.px-legend span { display: inline-flex; align-items: center; gap: 6px; }
-.px-legend i { width: 8px; height: 8px; border-radius: 50%; }
-.px-legend .is-ok { background: var(--ok); } .px-legend .is-warn { background: var(--warn); } .px-legend .is-err { background: var(--err); }
-
-/* ---------------------------------------------------------------- 4. Véhicule de collection */
-.px-c-car { padding: 0; overflow: hidden; }
-.px-photo { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 21px 21px 0 0; }
-.px-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 55%; display: block; }
-/* superposition seulement (la photo n'est jamais recolorée) */
-.px-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, #030303 100%); }
-.px-car-in { padding: 4px 22px 22px; display: flex; flex-direction: column; gap: 4px; }
-.px-state { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 99px; font: 600 12.5px/1 var(--app); border: 1px solid; white-space: nowrap; }
-.px-state i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
-.px-state.is-ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 35%, transparent); background: color-mix(in srgb, var(--ok) 8%, transparent); }
-.px-state.is-warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, transparent); background: color-mix(in srgb, var(--warn) 8%, transparent); }
-.px-gauges { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 6px 0 14px; }
-.px-gauge { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; min-width: 0; }
-.px-gl { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.px-gl small { font: 600 13px/1.2 var(--app); color: var(--tx); }
-.px-gl em { font-style: normal; font-size: 12px; color: var(--fa); }
-.px-car-acts { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; border-top: 1px solid var(--sep); }
-.px-car-acts .px-row { border: 0; flex: 1 1 200px; }
-@container pc (max-width: 420px) { .px-dial.is-md { width: 92px; } .px-mid { font-size: 20px; } .px-gauges { gap: 4px; } .px-gl em { font-size: 11px; } }
-@container pg (min-width: 900px) {
-  .px-c-car { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
-  .px-photo { aspect-ratio: auto; min-height: 440px; border-radius: 21px 0 0 21px; }
-  .px-photo::after { background: linear-gradient(90deg, transparent 42%, rgb(5 5 5 / .55) 78%, #050505 100%), linear-gradient(180deg, transparent 70%, rgb(0 0 0 / .45)); }
-  .px-c-car .px-dial.is-md { width: 138px; }
-  .px-c-car .px-mid { font-size: 29px; }
-  .px-car-in { padding: 26px 28px 24px 12px; justify-content: center; gap: 10px; }
-}
-
-/* ---------------------------------------------------------------- Mode Base : mêmes formes, sobres */
-:root[data-mode="base"] .px-card { background: var(--glass) padding-box, linear-gradient(#ffffff26, #ffffff26) border-box; box-shadow: 0 12px 28px #0009; transform: none; }
-:root[data-mode="base"] .px :is(.px-rim, .px-halo, .px-glint, .px-trail, .px-spill) { display: none; }
-:root[data-mode="base"] .px .px-bz::after { display: none; }
-:root[data-mode="base"] .px-val { filter: none; }
-:root[data-mode="base"] .px-bz { background: #1a1a1a; box-shadow: inset 0 0 0 1px #ffffff1f, 0 0 0 1px #000; }
-:root[data-mode="base"] .px-bz-cut { background: #101010; box-shadow: inset 0 0 0 1px #ffffff12; }
-:root[data-mode="base"] .px-face { background: radial-gradient(75% 75% at 50% 32%, #141414, #080808 70%, #000); box-shadow: inset 0 0 0 1px #000; }
-:root[data-mode="base"] .px-glass { background: none; box-shadow: none; }
-:root[data-mode="base"] .px-shadow { box-shadow: 0 14px 24px -10px #000; }
-:root[data-mode="base"] .px :is(.px-knob-i, .px-big) { filter: none; text-shadow: none; }
-:root[data-mode="base"] .px :is(.px-pas, .px-round, .px-btn) { background: #141414; border-color: #ffffff26; box-shadow: none; }
-:root[data-mode="base"] .px-seg i.is-on { box-shadow: none; }
-:root[data-mode="base"] .px-tag { background: none; }
-
-/* ---------------------------------------------------------------- Mouvement (seulement sous html.fx) */
-/* Apparition orchestrée : la carte monte, la lunette tourne en place, le cadran s'allume, puis l'aiguille balaie (labo.js). */
-html.fx :is(.px-card, .px-ref) { opacity: 0; translate: 0 28px; transition: opacity 1s var(--ease), translate 1.2s var(--ease), transform .7s var(--ease), --cang .9s var(--ease); transition-delay: calc(var(--i, 0) * 110ms); }
-html.fx :is(.px-card, .px-ref).is-in { opacity: 1; translate: 0 0; }
-html.fx .px-card .px-bz, html.fx .px-card .px-bz-cut { transition: --ang .9s var(--ease), rotate 1.6s var(--ease), opacity 1s var(--ease); }
-html.fx .px-card:not(.is-in) :is(.px-bz, .px-bz-cut) { rotate: -50deg; opacity: 0; }
-html.fx .px-card .px-face { transition: opacity 1.2s ease .25s; }
-html.fx .px-card:not(.is-in) .px-face { opacity: 0; }
-html.fx .px-card:not(.is-in) .px-seg i.is-on { background: rgb(255 255 255 / .08); box-shadow: none; }
-html.fx .px-card :is(.px-row, .px-frow, .px-pack) { transition: opacity .8s var(--ease), translate .9s var(--ease); transition-delay: calc(var(--i, 0) * 110ms + 500ms); }
-html.fx .px-card:not(.is-in) :is(.px-row, .px-frow, .px-pack) { opacity: 0; translate: -10px 0; }
-html.fx .px-card .px-wire { stroke-dasharray: 1.5 9; animation: pxFlow var(--sp, 2s) linear infinite; stroke: color-mix(in srgb, var(--acc) 70%, transparent); }
-html.fx .px-card .px-wire.t-ok { stroke: color-mix(in srgb, var(--ok) 80%, transparent); }
-@keyframes pxFlow { to { stroke-dashoffset: -10.5; } }
-/* Halo or vivant : respire lentement; un éclat parcourt l'arc de temps en temps */
-html.fx .px-card.is-in .px-halo { animation: pxBreath 4.8s ease-in-out infinite 2s; }
-@keyframes pxBreath { 50% { opacity: .7; } }
-html.fx .px-card.is-in .px-glint { animation: pxGlint 6s cubic-bezier(.45, 0, .2, 1) infinite 2.4s; }
-@keyframes pxGlint { 0% { stroke-dashoffset: 3; opacity: 0; } 6% { opacity: .9; } 50% { stroke-dashoffset: -100; opacity: .9; } 54%, 100% { stroke-dashoffset: -100; opacity: 0; } }
-/* Le reflet du verre glisse lentement */
-html.fx .px-card.is-in .px-glass i { animation: pxStreak 11s cubic-bezier(.45, 0, .25, 1) infinite 1.6s; }
-@keyframes pxStreak { 0% { transform: translateX(-80%); } 38%, 100% { transform: translateX(80%); } }
-html.fx .px-card.is-in .px-state i { animation: pxDot 2.6s ease-in-out infinite; }
-@keyframes pxDot { 50% { opacity: .45; } }
-/* Pause hors écran */
-.px-card.is-off, .px-card.is-off * { animation-play-state: paused !important; }
-:root[data-mode="base"] .px-card .px-wire { animation: none; stroke-dasharray: none; }
-@media (prefers-reduced-motion: reduce) {
-  .px-card, .px-card * { animation: none !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
-}
-/* Cadran plus petit : les bornes laissent la place à la température actuelle */
-@container dial (max-width: 250px) { .px-end { display: none; } }

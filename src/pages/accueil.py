@@ -151,6 +151,7 @@ PAGE = {
       <div class="acts">
         <a class="pill" href="/logiciel/" data-magnet>Essayer le logiciel</a>
         <a class="pill ghost" href="/contact/" data-magnet>Réserver une démo</a>
+        <a class="pill ghost" href="/contact/" data-jarvis data-magnet>Parler à JARVIS</a>
       </div>
       <a class="live-pill" href="#logiciel" data-live-pill>
         <i class="dot" aria-hidden="true"></i>

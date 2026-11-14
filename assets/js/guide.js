@@ -138,23 +138,46 @@
     var wait = bubble("assistant", T.think, "jg-t");
     var ctl = window.AbortController ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 130000);
+    var txt = "", live = null;
+    /* Affiche la réponse mot par mot dès qu'elle arrive. */
+    function ajoute(morceau) {
+      txt += morceau;
+      if (!live) { wait.remove(); live = bubble("assistant", ""); }
+      live.innerHTML = rich(txt);
+      log.scrollTop = log.scrollHeight;
+    }
     fetch(URL_GUIDE + "/chat", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: msgs.slice(-10) }), signal: ctl ? ctl.signal : undefined
-    }).then(function (r) { return r.json().catch(function () { return {}; }); })
-      .then(function (d) {
-        var txt = (d && d.reply) || "";
-        if (!txt) throw new Error("vide");
-        wait.remove();
-        msgs.push({ role: "assistant", content: txt }); save();
-        bubble("assistant", txt);
-      })
-      .catch(function () {
-        wait.remove();
-        bubble("assistant", T.err + " " + location.origin + T.contact);
-        msgs.pop(); save();
-      })
-      .then(function () { clearTimeout(timer); busy = false; send.disabled = false; input.focus(); });
+      body: JSON.stringify({ messages: msgs.slice(-10), stream: true, lang: EN ? "en" : "fr" }),
+      signal: ctl ? ctl.signal : undefined
+    }).then(function (r) {
+      var type = r.headers.get("Content-Type") || "";
+      if (type.indexOf("text/event-stream") === -1 || !r.body || !r.body.getReader) {
+        return r.json().catch(function () { return {}; }).then(function (d) { if (d && d.reply) ajoute(d.reply); });
+      }
+      var lecteur = r.body.getReader(), dec = new TextDecoder(), tampon = "";
+      function lis() {
+        return lecteur.read().then(function (res) {
+          if (res.done) return;
+          tampon += dec.decode(res.value, { stream: true });
+          var blocs = tampon.split("\n\n"); tampon = blocs.pop();
+          blocs.forEach(function (b) {
+            if (b.indexOf("data: ") !== 0) return;
+            try { var j = JSON.parse(b.slice(6)); if (j.d) ajoute(j.d); } catch (e) {}
+          });
+          return lis();
+        });
+      }
+      return lis();
+    }).then(function () {
+      if (!txt.trim()) throw new Error("vide");
+      msgs.push({ role: "assistant", content: txt.trim() }); save();
+    }).catch(function () {
+      if (txt.trim()) { msgs.push({ role: "assistant", content: txt.trim() }); save(); return; }
+      wait.remove();
+      bubble("assistant", T.err + " " + location.origin + T.contact);
+      msgs.pop(); save();
+    }).then(function () { clearTimeout(timer); busy = false; send.disabled = false; input.focus(); });
   }
 
   function open(on) {

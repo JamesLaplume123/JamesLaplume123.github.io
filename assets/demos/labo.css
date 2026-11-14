@@ -168,7 +168,7 @@ html.fx .vv-pop:not([hidden]) { animation: vvGrow calc(var(--t) * .42s) var(--ea
 .vv-sum li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 2px; border-bottom: 1px solid var(--line-2); font-size: 13px; color: var(--dim); }
 .vv-sum b { font-weight: 500; color: var(--ink); }
 
-.vv-th { position: absolute; z-index: 4; width: 244px; height: 244px; right: calc(430px + 44px + 96px - 122px); bottom: calc(96px - 122px - var(--th-b, 0px)); border-radius: 50%; }
+.vv-th { position: absolute; z-index: 4; width: 244px; height: 244px; right: -26px; bottom: -26px; border-radius: 50%; }
 .vv-dial { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 50% 30%, #17161599, #050505f2 70%); border: 1px solid var(--line); touch-action: none; cursor: grab; box-shadow: 0 24px 50px -24px #000; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 .vv-dial svg { position: absolute; inset: 9px; width: calc(100% - 18px); height: calc(100% - 18px); overflow: visible; }
 .vv-dial circle { fill: none; }
@@ -267,16 +267,21 @@ html.fx .vv-drawer:not([hidden]) { animation: vvDraw calc(var(--t) * .5s) var(--
 
 /* ---------- Écrans plus étroits ---------- */
 @media (max-width: 1180px) {
-  .vv-stage { grid-template-columns: minmax(0, 1fr) 340px; gap: 36px; }
-  .vv-th { right: calc(340px + 36px + 96px - 122px); }
+  .vv-stage { grid-template-columns: 1fr; gap: 40px; }
+  .vv-house { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 12px 30px; align-content: center; }
+  .vv-h3d { grid-row: 1 / span 4; margin: -10px 0 0 -20px; height: 400px; }
+  .vv-levels { align-self: end; }
   .vv-low { grid-template-columns: 1fr; }
 }
 @media (max-width: 900px) {
   .vv-stage { grid-template-columns: 1fr; gap: 20px; }
   .vv-view { -webkit-mask: none; mask: none; border-radius: 22px; aspect-ratio: 4 / 3.3; }
   .vv-tabs { position: static; max-width: none; margin-top: 10px; overflow-x: auto; display: flex; scrollbar-width: none; }
-  .vv-th { position: relative; right: auto; bottom: auto; margin: 4px auto 0; }
+  .vv-th { position: relative; right: auto; bottom: auto; margin: 18px auto 0; }
   .vv-side { order: 2; }
+  .vv-house { display: block; }
+  .vv-levels { margin-bottom: 10px; }
+  .vv-rooms { margin-bottom: 10px; }
   .vv-h3d { height: 300px; margin: -6px -10px 0; }
   .vv-rb { overflow-x: auto; overflow-y: hidden; border-radius: 22px; scrollbar-width: none; }
   .vv-ribbon { margin-top: 30px; }

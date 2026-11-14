@@ -212,6 +212,7 @@ def scene():
   </div>
   <div class="vv-tabs" role="group" aria-label="Lieu affiché">{tabs}</div>
   <div class="vv-pop" data-vv-pop role="dialog" aria-label="Commande" hidden></div>
+  {thermo()}
 </div>"""
 
 
@@ -342,7 +343,7 @@ CONTENT = f"""
   </header>
   <div class="vv-stage">
     {scene()}
-    <aside class="vv-side">{house()}{thermo()}</aside>
+    <aside class="vv-side">{house()}</aside>
   </div>
   {ribbon()}
   <div class="vv-low">{energy()}{jarvis()}</div>

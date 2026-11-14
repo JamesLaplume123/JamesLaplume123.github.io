@@ -593,8 +593,8 @@
       var r = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, powerPreference: "high-performance" });
       r.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2));
       r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.2; r.outputColorSpace = T.SRGBColorSpace;
-      r.shadowMap.enabled = !mobile; r.shadowMap.type = T.PCFShadowMap;
-      var st = { r: r, cv: cv, scene: new T.Scene(), cam: new T.PerspectiveCamera(fov, 1, .1, 400), dirty: true, pm: new T.PMREMGenerator(r) };
+      r.shadowMap.enabled = !mobile; r.shadowMap.type = T.PCFShadowMap; r.shadowMap.autoUpdate = false; r.shadowMap.needsUpdate = true;   /* ombres recalculées seulement quand la maquette bouge */
+      var st = { r: r, cv: cv, scene: new T.Scene(), cam: new T.PerspectiveCamera(fov, 1, .1, 400), dirty: true, first: 2, pm: new T.PMREMGenerator(r) };   /* first : images rendues même hors écran, pour ne jamais montrer une toile vide */
       stages.push(st);
       st.size = function () {
         var b = cv.parentNode.getBoundingClientRect(); if (!b.width) return;
@@ -604,7 +604,7 @@
         var m = mode(), url = D.modes[m];
         new T.TextureLoader().load(url, function (tx) {
           tx.mapping = T.EquirectangularReflectionMapping; tx.colorSpace = T.SRGBColorSpace;
-          var rt = st.pm.fromEquirectangular(tx); st.scene.environment = rt.texture; tx.dispose(); st.dirty = true; kick();
+          var rt = st.pm.fromEquirectangular(tx); st.scene.environment = rt.texture; tx.dispose(); st.dirty = true; st.first = 2; r.shadowMap.needsUpdate = true; kick();
         });
       };
       return st;
@@ -737,7 +737,7 @@
     var spillM = new T.MeshBasicMaterial({ toneMapped: false, map: GT, color: 0xffc98c, blending: T.AdditiveBlending, transparent: true, depthWrite: false, opacity: 0 });
     var spill = new T.Mesh(new T.PlaneGeometry(18, 9), spillM); spill.rotation.x = -Math.PI / 2; spill.position.set(-3, .26, 5.6); gBase.add(spill);
 
-    var cam = { az: -.62, el: .46, dist: 86, tEl: .46, tDist: 86, ty: 1.6, auto: true };
+    var cam = { az: -.62, el: .46, dist: 93, tEl: .46, tDist: 93, ty: 1.6, auto: true };
     var lift = { up: 0, roof: 0, gar: 0 }, doorK = 0;
     function placeCam() {
       var c = H.cam, ce = Math.cos(cam.el);
@@ -747,14 +747,15 @@
     function ease(o, k, t, dt, rate) { var c = o[k]; if (!fx()) { o[k] = t; return c !== t; } var n = c + (t - c) * (1 - Math.exp(-(rate || 4) * dt)); if (Math.abs(t - n) < .003) n = t; o[k] = n; return n !== c; }
     var warm = new T.Color(), tmpc = new T.Color();
     tick3d.push(function (dt) {
-      if (!vis.house) return false;
+      if (!vis.house && !(H.first-- > 0)) return false;
       var b = false, lv = S.level;
       b = ease(lift, "up", lv === "rdc" ? 9.5 : 0, dt) || b;
       b = ease(lift, "roof", lv === "etage" ? 6 : lv === "rdc" ? 9.5 : 0, dt) || b;
       b = ease(lift, "gar", lv === "rdc" ? 5 : 0, dt) || b;
+      if (b) H.r.shadowMap.needsUpdate = true;
       b = ease(cam, "el", cam.tEl, dt, 3) || b; b = ease(cam, "dist", cam.tDist, dt, 3) || b;
       gUp.position.y = lift.up; gRoof.position.y = lift.roof; gGarRoof.position.y = lift.gar;
-      if (Math.abs(doorK - cur.door) > .001) { doorK = cur.door; b = true; }
+      if (Math.abs(doorK - cur.door) > .001) { doorK = cur.door; b = true; H.r.shadowMap.needsUpdate = true; }
       door1.children.forEach(function (p, k) { var y0 = -.28 - k * .56; p.position.y = y0 * (1 - doorK * .93); p.scale.y = 1 - doorK * .9; });
       var lit = { salon: S.lit.salon, cuisine: S.lit.cuisine, garage: Math.max(cur.inL, (cur["collection:rubans"] || 0) * .35), suite: S.lit.suite, cinema: S.lit.cinema * .6 };
       Object.keys(rooms).forEach(function (id) {
@@ -805,7 +806,7 @@
       click: function (e) { var id = pick(e); if (id) openRoom(id, e); }
     });
     listeners.push(function () {
-      cam.tEl = S.level === "tout" ? Math.min(cam.el, .6) : Math.max(cam.el, .78); cam.tDist = S.level === "rdc" ? 98 : S.level === "etage" ? 92 : 86;
+      cam.tEl = S.level === "tout" ? Math.min(cam.el, .6) : Math.max(cam.el, .78); cam.tDist = S.level === "rdc" ? 104 : S.level === "etage" ? 98 : 93;
       if (S.level === "tout" && cam.el > .6) cam.tEl = .46;
     });
 
@@ -861,7 +862,7 @@
     var br = new T.DirectionalLight(0x8fa6d8, 1.2); br.position.set(4, 1, -2); bs.add(br);
     var bcam = { az: -.42, el: .08, tEl: .08, auto: false }, soc = [0, 0], okC = new T.Color(), pulse = 0;
     tick3d.push(function (dt) {
-      if (!vis.batt) return false;
+      if (!vis.batt && !(B.first-- > 0)) return false;
       var b = false;
       D.en.packs.forEach(function (p, i) { b = ease(soc, i, p.soc / 100, dt, 1.1) || b; });
       var breathe = fx(); if (breathe) pulse += dt;

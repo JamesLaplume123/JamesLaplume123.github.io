@@ -65,6 +65,10 @@ PAGE = {
       soumissions 30 jours selon sa documentation. La météo et le radar proviennent
       d’Environnement et Changement climatique Canada; les fonds de carte, d’OpenFreeMap
       (© OpenMapTiles, © contributeurs OpenStreetMap). Le site est hébergé par GitHub Pages.
+      Le Guide JARVIS (la bulle de discussion) envoie vos questions, par Cloudflare, à une IA
+      qui tourne sur le matériel de JARVIS Private Systems au Québec : aucune grande entreprise
+      d’IA ne les reçoit. Les questions et réponses sont gardées dans un journal pour améliorer
+      le Guide, sans votre adresse IP; n’y écrivez donc aucune information personnelle.
       Comme tout serveur, ces services peuvent tenir des journaux techniques (adresses IP).</p></div>
     </div>
     <div class="row" data-rev>

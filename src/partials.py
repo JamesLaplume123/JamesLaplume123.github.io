@@ -271,6 +271,10 @@ def document(page):
         script += f'\n<script src="/assets/demos/{name}.js?v={v}" defer></script>'
     api = SITE.get("api", "").rstrip("/")
     api_attr = f' data-api="{api}"' if api else ""
+    guide = SITE.get("guide", "").rstrip("/")
+    if guide:
+        api_attr += f' data-guide="{guide}"'
+        script += f'\n<script src="/assets/js/guide.js?v={v}" defer></script>'
     return f"""<!doctype html>
 <html lang="{lang}"{api_attr}>
 <head>

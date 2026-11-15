@@ -47,12 +47,12 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="{HERO}" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solution 07 / 07</p>
-    <h1 data-rev>Mobilité. <em>Partez l’esprit libre.</em></h1>
+    <p class="eyebrow" data-rev>Solution 07 / 07 · Mobilité</p>
+    <h1 data-rev>VR et véhicules connectés. <em>Partez l’esprit libre.</em></h1>
     <p class="lead" data-rev>Vous roulez; JARVIS regarde la route, le véhicule et l’heure, et vous propose
     le bon arrêt au bon moment. Chaque voyage reste ensuite sur la carte, photos comprises.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/contact/">Réserver une démo</a>
+      <a class="pill" href="/contact/">Parlons de votre projet</a>
       <a class="pill ghost" href="#jarvis">Prendre la route</a>
     </div>
     <p class="for-line" data-rev><span>Pour</span> VR · voitures familiales · voitures de collection · vélos électriques</p>
@@ -177,7 +177,7 @@ PAGE = {
   <h2 data-rev>Où partez-vous<br><span>la prochaine fois?</span></h2>
   <p data-rev>Décrivez vos véhicules et votre façon de voyager. Nous verrons ce que chacun peut offrir et ce que
   le boîtier JARVIS ajoute.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,
 }

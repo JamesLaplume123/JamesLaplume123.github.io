@@ -6,9 +6,20 @@ SITE = {
     "name": "JARVIS Private Systems",
     "domain": "https://jarvisprivatesystems.com",
     "locale": "fr-CA",
+    # Positionnement (novembre 2026) : une seule entreprise, un seul métier.
+    "metier": "Intégrateur de systèmes intelligents",
+    "phrase": "Maisons, fermes, entreprises et véhicules intelligents et sécurisés, en Montérégie.",
+    "base": "Région de Saint-Hyacinthe (Québec)",
+    # Phase de lancement : présence et crédibilité, pas de prise de commandes. Aucune date.
+    "lancement": (
+        "En phase de lancement : nous prenons les noms des personnes intéressées et "
+        "choisissons quelques premiers projets."
+    ),
+    "email": "laplumejames@gmail.com",
     "description": (
-        "JARVIS relie vos outils, vos informations et vos espaces dans une "
-        "expérience privée, contextuelle et contrôlée."
+        "Intégrateur de systèmes intelligents : maisons, fermes, entreprises et véhicules "
+        "intelligents et sécurisés, en Montérégie. Domotique, réseau et IA privée réunis "
+        "dans un seul système, installé chez vous."
     ),
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
@@ -37,7 +48,9 @@ NAV = [
         ("/catalogue/", "Catalogue et prix", "Hubs, solutions, matériel : composez et voyez le total.", "spark"),
     ]},
     {"url": "/a-propos/", "label": "À propos", "sub": [
-        ("/a-propos/", "Qui est derrière JARVIS", "James, sa démarche et le terrain.", "user"),
+        ("/a-propos/", "Qui est derrière JARVIS", "James, sa démarche et comment on travaille.", "user"),
+        ("/regions/", "Régions desservies", "Saint-Hyacinthe et la Montérégie, ville par ville.", "pin"),
+        ("/questions/", "Questions avant d’appeler", "Prix, délais, données, appareils : les réponses.", "chat"),
         ("/vision-roadmap/", "Notre vision", "Où va JARVIS, et où il en est vraiment.", "spark"),
         ("/laboratoire-mobile/", "Laboratoire mobile", "L’ambulance convertie, batteries en direct.", "route"),
         ("/confiance/", "Confiance et sécurité", "Comment vos données et vos accès sont protégés.", "shield"),
@@ -46,9 +59,35 @@ NAV = [
 ]
 
 # Appel à l'action principal (chantier wow — vente du logiciel)
-CTA_V2 = {"url": "/contact/", "label": "Réserver une démo"}
+CTA_V2 = {"url": "/contact/", "label": "Parlons de votre projet"}
+
+# Zone desservie : source unique pour les pages /regions/, le pied de page et les données
+# structurées. (clé d'URL, nom affiché, nom court)
+ZONE = [
+    ("saint-hyacinthe", "Saint-Hyacinthe"),
+    ("granby", "Granby"),
+    ("drummondville", "Drummondville"),
+    ("longueuil-rive-sud", "Longueuil et la Rive-Sud"),
+    ("saint-jean-sur-richelieu", "Saint-Jean-sur-Richelieu"),
+    ("sorel-tracy", "Sorel-Tracy"),
+    ("beloeil-mont-saint-hilaire", "Beloeil et Mont-Saint-Hilaire"),
+    ("acton-vale", "Acton Vale"),
+]
+
+# Pages « par besoin » : une recherche réelle, une page. Les sept solutions restent la référence;
+# ces pages-ci couvrent un besoin qu'aucune solution ne couvre seule. (clé d'URL, libellé)
+BESOINS_PAGES = [
+    ("maison-intelligente-cle-en-main", "Maison intelligente clé en main"),
+    ("domotique-ferme-agricole", "Domotique pour ferme"),
+    ("ia-privee-entreprise", "IA privée pour entreprise"),
+]
 
 FOOTER_COLUMNS = [
+    {
+        "title": "Régions desservies",
+        "links": [{"url": f"/regions/{k}/", "label": n} for k, n in ZONE]
+        + [{"url": "/regions/", "label": "Toute la zone desservie"}],
+    },
     {
         "title": "Explorer",
         "links": [
@@ -57,17 +96,20 @@ FOOTER_COLUMNS = [
             {"url": "/offre/", "label": "L’offre"},
             {"url": "/catalogue/", "label": "Catalogue et prix"},
             {"url": "/plateforme/", "label": "Le Hub et l’IA privée"},
+            {"url": "/laboratoire-mobile/", "label": "Laboratoire mobile"},
             {"url": "/recherche/", "label": "Recherche"},
         ],
     },
     {
-        "title": "Projet",
+        "title": "Entreprise",
         "links": [
             {"url": "/a-propos/", "label": "À propos"},
+            {"url": "/a-propos/#comment-on-travaille", "label": "Comment on travaille"},
+            {"url": "/questions/", "label": "Questions avant d’appeler"},
             {"url": "/vision-roadmap/", "label": "Vision et feuille de route"},
-            {"url": "/laboratoire-mobile/", "label": "Laboratoire mobile"},
             {"url": "/confiance/", "label": "Confiance"},
             {"url": "/confidentialite/", "label": "Confidentialité"},
+            {"url": "/mentions-legales/", "label": "Mentions légales et conditions"},
             {"url": "/contact/", "label": "Contact"},
         ],
     },
@@ -218,23 +260,29 @@ REDIRECTS = {
     "en/trading-lab/index.html": "/en/",
 }
 
-# Titres et descriptions pensés pour Google (domotique, sécurité, IA privée, Québec).
-# Ils remplacent ceux des pages au moment de produire le <head>, sans toucher au contenu.
+# Titres et descriptions pensés pour Google : une paire unique par page (vérifiée par
+# tools/verifier_seo.py). Ils remplacent ceux des pages au moment de produire le <head>.
+# Règle : le métier (intégrateur de systèmes intelligents), le besoin, le lieu (Montérégie).
 SEO = {
+    "/": (
+        "JARVIS Private Systems | Intégrateur de systèmes intelligents",
+        "Maisons, fermes, entreprises et véhicules intelligents et sécurisés, en Montérégie. "
+        "Domotique, réseau et IA privée dans un seul système. Saint-Hyacinthe.",
+    ),
     "/solutions/": (
-        "Solutions de domotique, sécurité et IA privée | JARVIS",
-        "Domotique, sécurité intelligente, IA locale, automatisation d’entreprise, réseau et "
-        "diagnostic : sept solutions privées qui fonctionnent seules ou ensemble.",
+        "Sept solutions, un seul système intelligent | JARVIS",
+        "Domotique, sécurité intelligente, IA privée, automatisation, réseau, diagnostic et "
+        "mobilité : les sept pièces d’un même système, installé en Montérégie.",
     ),
     "/solutions/environnements-intelligents/": (
-        "Domotique privée et maison intelligente au Québec | JARVIS",
-        "Lumières, chauffage, énergie et appareils de marques différentes réunis dans une "
-        "domotique locale, sans dépendre du nuage. Home Assistant, Zigbee, Z-Wave, Matter.",
+        "Domotique résidentielle en Montérégie | JARVIS",
+        "Lumières, chauffage, énergie et appareils de marques différentes réunis sur un seul "
+        "écran, sans dépendre du nuage. Home Assistant, Zigbee, Z-Wave, Matter.",
     ),
     "/solutions/securite-intelligente/": (
-        "Sécurité intelligente et caméras privées | JARVIS Québec",
-        "Caméras, accès et alarmes transformés en événements clairs, traités sur place. "
-        "Une surveillance privée pour maisons et entreprises au Québec.",
+        "Sécurité intelligente : caméras et accès réunis | JARVIS",
+        "Un logiciel qui réunit vos caméras, serrures et capteurs en événements clairs, "
+        "traités et gardés chez vous. Pour maisons, fermes et entreprises.",
     ),
     "/solutions/ia-privee-connaissances/": (
         "IA privée et locale pour vos documents | JARVIS",
@@ -242,27 +290,32 @@ SEO = {
         "ses sources et garde vos données chez vous.",
     ),
     "/solutions/automatisation-operations/": (
-        "Automatisation d’entreprise sur mesure au Québec | JARVIS",
-        "Demandes, documents et approbations qui circulent entre vos outils existants, avec "
-        "une trace de chaque décision. Pour bureaux, commerces et ateliers.",
+        "Automatisation pour PME et commerces en Montérégie | JARVIS",
+        "Réception téléphonique, demandes, documents et approbations qui circulent entre vos "
+        "outils existants, avec une trace de chaque décision. Bureaux, commerces, ateliers.",
     ),
     "/solutions/reseau-resilience/": (
-        "Réseau et cybersécurité pour maison et PME | JARVIS",
-        "Comprendre votre réseau, séparer les objets connectés, surveiller les dépendances et "
-        "garder des accès à distance privés et fiables.",
+        "Réseau et Wi-Fi fiable : maison, ferme, entreprise | JARVIS",
+        "Un Wi-Fi qui couvre partout, des zones séparées pour les objets connectés, un lien de "
+        "secours et des accès à distance privés. La fondation de tout système intelligent.",
     ),
     "/solutions/diagnostic-care/": (
         "Diagnostic technique et continuité des systèmes | JARVIS",
         "Passer d’un symptôme à des preuves : événements, capteurs et documentation pour "
         "réparer plus vite et remettre en service proprement.",
     ),
+    "/solutions/mobilite/": (
+        "VR et véhicules connectés au Québec | JARVIS",
+        "Batteries, eau, chauffage et itinéraire du VR sur un seul écran, avec un copilote de "
+        "route. Voitures, véhicules électriques et vélos électriques aussi.",
+    ),
     "/logiciel/": (
-        "Le logiciel JARVIS en démonstration | Domotique et IA privées",
+        "Le logiciel JARVIS en démonstration, écran par écran",
         "Essayez JARVIS App en plein écran : accueil, assistant, messages, appels, carte de vos "
-        "lieux et extensions. Une visite guidée, écran par écran.",
+        "lieux et extensions. Une visite guidée, sans rien installer.",
     ),
     "/offre/": (
-        "L’offre JARVIS : le Hub, vos extensions, l’installation | Québec",
+        "L’offre JARVIS : le Hub, vos extensions, l’installation",
         "Comment se compose une installation JARVIS : le Hub, les extensions choisies, puis "
         "l’installation, la formation et le soutien. Soumission gratuite après une visite.",
     ),
@@ -276,9 +329,39 @@ SEO = {
         "Une ambulance Ford 2017 transformée en laboratoire mobile : 560 Ah LiFePO₄, 500 W "
         "solaire et un tableau JARVIS sur Home Assistant.",
     ),
+    "/vision-roadmap/": (
+        "Vision et feuille de route de JARVIS : où va le projet",
+        "Le manifeste de JARVIS, ses horizons à 12 mois, 3 ans et 10 ans, et l’état réel du "
+        "projet, jalon par jalon : ce qui existe, ce qui se construit, ce qui viendra.",
+    ),
+    "/recherche/": (
+        "Recherche appliquée : une preuve avant chaque promesse | JARVIS",
+        "Le journal public des hypothèses, des expériences, des mesures et des limites du "
+        "projet JARVIS : la méthode de recherche appliquée derrière chaque solution.",
+    ),
+    "/confiance/": (
+        "Confiance : vie privée, permissions et contrôle humain | JARVIS",
+        "Les huit principes qui encadrent JARVIS : minimisation, provenance, approbation "
+        "humaine, réversibilité, traitement local, honnêteté, propriété et continuité.",
+    ),
+    "/a-propos/": (
+        "À propos de JARVIS Private Systems | Saint-Hyacinthe",
+        "Intégrateur de systèmes intelligents fondé par James Laplume, dans la région de "
+        "Saint-Hyacinthe. Qui nous sommes, comment on travaille et nos engagements.",
+    ),
     "/contact/": (
-        "Réserver une démo de domotique privée | JARVIS",
-        "Présentez votre maison, votre entreprise ou votre véhicule. James vous montre ce que "
-        "JARVIS fait aujourd’hui et la première preuve utile possible chez vous.",
+        "Parlons de votre projet | JARVIS, Montérégie",
+        "Présentez votre maison, votre ferme, votre entreprise ou votre véhicule, ou laissez "
+        "votre nom pour rester informé. Entreprise en phase de lancement, Saint-Hyacinthe.",
+    ),
+    "/confidentialite/": (
+        "Politique de confidentialité | JARVIS Private Systems",
+        "Ce que ce site recueille, pourquoi, et vos droits, en langage clair. "
+        "Aucun témoin ni pisteur publicitaire; un journal des visites gardé 24 mois.",
+    ),
+    "/en/": (
+        "JARVIS Private Systems | Smart systems integrator, Québec",
+        "Smart, secure homes, farms, businesses and vehicles in Montérégie, Québec. Home "
+        "automation, networking and private AI in one system installed on site.",
     ),
 }

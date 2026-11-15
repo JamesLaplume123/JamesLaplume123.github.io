@@ -89,12 +89,13 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solution 01 / 07</p>
-    <h1 data-rev>Environnements <em>intelligents.</em></h1>
-    <p class="lead" data-rev>Un environnement qui comprend son état, s’adapte au contexte et
-    demeure contrôlable simplement.</p>
+    <p class="eyebrow" data-rev>Solution 01 / 07 · Environnements intelligents</p>
+    <h1 data-rev>Domotique résidentielle. <em>Toute la maison sur un seul écran.</em></h1>
+    <p class="lead" data-rev>Lumières, chauffage, énergie et appareils de marques différentes, réunis
+    dans un environnement qui comprend son état, s’adapte au contexte et demeure simple à contrôler.
+    C’est la porte d’entrée de la plupart des installations, en Montérégie.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/contact/">Réserver une démo</a>
+      <a class="pill" href="/contact/">Parlons de votre projet</a>
       <a class="pill ghost" href="#journee">Vivre une journée</a>
     </div>
     <p class="for-line" data-rev><span>Pour</span> Maisons familiales · résidences de prestige · fermes · entreprises · yachts · hangars</p>
@@ -212,7 +213,7 @@ PAGE = {
   <h2 data-rev>Quel lieu mérite enfin de fonctionner<br><span>comme un ensemble?</span></h2>
   <p data-rev>Décrivez les appareils déjà en place, les irritants quotidiens et ce qui doit
   continuer de fonctionner même sans Internet.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,
 }

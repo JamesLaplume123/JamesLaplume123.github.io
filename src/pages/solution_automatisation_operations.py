@@ -119,7 +119,7 @@ DATA = {
         "vous demande votre accord pour les gestes sensibles. Derrière, il fait circuler demandes, "
         "documents et approbations."
     ),
-    "for": "PME, entreprises de services et équipes terrain",
+    "for": "PME, commerces, entreprises de services et équipes terrain",
     "demo_title": "Le téléphone sonne. <em>JARVIS répond.</em>",
     "demo_copy": (
         "Regardez JARVIS prendre un appel : il reconnaît la cliente, déplace son rendez-vous et "

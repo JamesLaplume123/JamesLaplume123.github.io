@@ -8,8 +8,8 @@ DATA = {
     "title": "Réseau et cybersécurité",
     "description": "Comprendre l’infrastructure, surveiller les dépendances et conserver des accès privés fiables.",
     "image": "/media/solutions/reseau-resilience.webp",
-    "h1": "Réseau et <em>cybersécurité.</em>",
-    "lead": "Une vue claire du réseau et de ses risques, avant que chaque problème devienne une urgence.",
+    "h1": "Un réseau et un Wi-Fi fiables. <em>La fondation de tout le reste.</em>",
+    "lead": "Maison, ferme ou entreprise : un Wi-Fi qui couvre partout, des zones séparées et une vue claire du réseau et de ses risques, avant que chaque problème devienne une urgence.",
     "for": "Maisons connectées, PME et petits multi-sites qui dépendent de leur réseau",
     "demo_title": "Tout votre réseau, <em>dans une seule console.</em>",
     "demo_copy": (

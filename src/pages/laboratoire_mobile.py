@@ -181,7 +181,7 @@ PAGE = {
   <h2 data-rev>Suivre le laboratoire<br><span>ou contribuer à une validation?</span></h2>
   <p data-rev>Décrivez le problème et son contexte. La première preuve utile sera clairement
   définie.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,
 }

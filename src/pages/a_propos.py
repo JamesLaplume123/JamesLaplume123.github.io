@@ -1,30 +1,32 @@
 # À propos — James, sa démarche et les collaborations recherchées. Version wow.
 
 import galerie
+import pro
 
 PAGE = {
     "url": "/a-propos/",
     "assets": ["galerie"],
     "v2": True,
-    "title": "À propos | James Laplume et JARVIS",
+    "title": "À propos de JARVIS Private Systems | Saint-Hyacinthe",
     "description": (
-        "Découvrez James Laplume, la philosophie de JARVIS et l’approche de recherche "
-        "appliquée derrière le projet."
+        "Intégrateur de systèmes intelligents fondé par James Laplume, dans la région de "
+        "Saint-Hyacinthe. Qui nous sommes, comment on travaille et nos engagements."
     ),
     "og_image": "/media/solutions/automatisation-operations.webp",
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-life-context-v3.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>À propos</p>
-    <h1 data-rev>Rendre les gens libres, <em>par la technologie.</em></h1>
-    <p class="lead" data-rev>Je m’appelle James Laplume. La liberté est ma valeur la plus forte.
-    Je développe JARVIS pour la rendre concrète : du temps libéré, le contrôle de sa vie en toute
-    simplicité, et une sécurité privée qui protège sans surveiller.</p>
+    <p class="eyebrow" data-rev>À propos · JARVIS Private Systems</p>
+    <h1 data-rev>Un intégrateur de systèmes intelligents, <em>à Saint-Hyacinthe.</em></h1>
+    <p class="lead" data-rev>Je m’appelle James Laplume. J’ai fondé JARVIS Private Systems pour rendre
+    les maisons, les fermes, les entreprises et les véhicules intelligents et sécurisés, en
+    Montérégie, avec un système qui reste chez le client. La liberté est ma valeur la plus forte :
+    du temps libéré, et le contrôle de ce qui vous appartient.</p>
     <div class="meta" data-rev>
-      <span class="chip">Québec, Canada</span>
-      <span class="chip">Prototypes et preuves</span>
-      <span class="chip">Technique · recherche · terrain</span>
+      <span class="chip">Région de Saint-Hyacinthe</span>
+      <span class="chip">Montérégie et environs</span>
+      <span class="chip">Entreprise en phase de lancement</span>
     </div>
   </div>
 </section>
@@ -36,9 +38,9 @@ PAGE = {
   consiste à comprendre le système complet, construire les liens manquants et vérifier dans
   le réel que l’ensemble demeure utile, compréhensible et contrôlable. JARVIS est la
   plateforme. Le <a href="/laboratoire-mobile/">laboratoire mobile JARVIS</a> est le premier
-  grand terrain de preuve, avec ses batteries en direct. À terme,
-  JARVIS Private Systems veut devenir une entreprise de sécurité privée, avec la même exigence :
-  protéger les lieux et les personnes, en expliquant toujours ce qui se passe.</p>
+  grand terrain de preuve, avec ses batteries en direct. Mon parcours part des systèmes électriques
+  12 V de véhicules et de la domotique; l’entreprise fait un seul métier, intégrer, avec la même
+  exigence partout : expliquer ce qui se passe et laisser la décision au client.</p>
   <div class="acts" data-rev>
     <a class="pill ghost" href="/laboratoire-mobile/">Voir le laboratoire en direct</a>
     <a class="pill ghost" href="/vision-roadmap/#partenariats">Les partenaires recherchés</a>
@@ -64,14 +66,26 @@ PAGE = {
   </div>
 </section>
 
-""" + galerie.a_propos_terrain() + """
+""" + pro.comment_on_travaille() + pro.engagements() + galerie.a_propos_terrain() + """
+
+<section class="sect" id="zone" aria-labelledby="zone-titre">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Où on travaille</p>
+      <h2 id="zone-titre" style="margin-top:1rem">Saint-Hyacinthe,<br><em>la Montérégie et les environs.</em></h2>
+    </div>
+    <p data-rev>On se déplace chez vous à partir de la région de Saint-Hyacinthe. Chaque ville a sa
+    page, avec ses réalités : <a href="/regions/">toute la zone desservie</a>.</p>
+  </div>
+  <div class="chiprow pro-zone" data-rev>""" + pro.zone_liens() + """</div>
+</section>
+
 
 <section class="cta">
-  <h2 data-rev>Parlons du problème, de l’expertise ou du terrain<br><span>que vous pourriez
-  apporter.</span></h2>
-  <p data-rev>Décrivez le problème et son contexte. La première preuve utile sera clairement
-  définie.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
+  <h2 data-rev>Parlons de votre lieu,<br><span>ou de ce que vous pourriez apporter.</span></h2>
+  <p data-rev>Client, partenaire ou simple curieux : décrivez le contexte en quelques lignes.
+  Des questions d’abord? <a href="/questions/">Les réponses avant d’appeler</a>.</p>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,
 }

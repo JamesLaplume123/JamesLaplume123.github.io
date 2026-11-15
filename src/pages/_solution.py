@@ -60,11 +60,11 @@ def solution_page(d):
 <section class="band top">
   <div class="bg"><img src="{d['image']}" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solution {num} / 07</p>
+    <p class="eyebrow" data-rev>Solution {num} / 07 · {d['title']}</p>
     <h1 data-rev>{d['h1']}</h1>
     <p class="lead" data-rev>{d['lead']}</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/contact/">Réserver une démo</a>
+      <a class="pill" href="/contact/">Parlons de votre projet</a>
       <a class="pill ghost" href="/solutions/">Toutes les solutions</a>
     </div>
     <p class="for-line" data-rev><span>Pour</span> {d['for']}</p>
@@ -103,7 +103,7 @@ def solution_page(d):
 <section class="cta">
   <h2 data-rev>{d['cta_title']}</h2>
   <p data-rev>{d['cta_copy']}</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,
     }

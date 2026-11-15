@@ -2,6 +2,7 @@
 
 from config import CAPABILITIES
 import galerie
+import pro
 
 GUIDE = [
     ("environnements-intelligents", "Votre lieu dépend de plusieurs applications qui ne se parlent pas?"),
@@ -84,6 +85,14 @@ PAGE = {
     "assets": ["galerie"],
     "v2": True,
     "title": "Solutions | JARVIS Private Systems",
+    "schema": [{
+        "@context": "https://schema.org", "@type": "ItemList", "name": "Les sept solutions JARVIS",
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "name": c["title"],
+             "url": f"https://jarvisprivatesystems.com/solutions/{c['slug']}/"}
+            for i, c in enumerate(CAPABILITIES)
+        ],
+    }],
     "description": (
         "Sept familles de solutions pour les environnements intelligents, l’IA privée, "
         "la sécurité, les opérations, le réseau, le diagnostic et la mobilité."
@@ -93,12 +102,13 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solutions JARVIS</p>
-    <h1 data-rev>Sept solutions.<br><em>Une architecture commune.</em></h1>
-    <p class="lead" data-rev>Commencez par un problème concret. Chaque solution peut fonctionner
-    seule; JARVIS permet ensuite de les relier sans tout reconstruire.</p>
+    <p class="eyebrow" data-rev>Solutions · intégrateur de systèmes intelligents</p>
+    <h1 data-rev>Sept solutions.<br><em>Un seul système.</em></h1>
+    <p class="lead" data-rev>Ce ne sont pas sept métiers : ce sont les pièces d’une même installation,
+    pour une maison, une ferme, une entreprise ou un véhicule. Commencez par un problème concret;
+    le reste s’ajoute sans tout reconstruire.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/contact/">Réserver une démo</a>
+      <a class="pill" href="/contact/">Parlons de votre projet</a>
       <a class="pill ghost" href="/plateforme/#ensemble">Comment elles travaillent ensemble</a>
     </div>
     <div class="meta" data-rev>
@@ -134,11 +144,28 @@ PAGE = {
   {STORIES_HTML}
 </section>
 {galerie.solutions_clients()}
+{pro.un_systeme(alt=False).replace(' data-toc="Un seul système"', '')}
+
+<section class="sect alt" id="par-besoin" aria-labelledby="pb-titre">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Par besoin</p>
+      <h2 id="pb-titre" style="margin-top:1rem">Vous cherchez<br><em>quelque chose de précis?</em></h2>
+    </div>
+    <p data-rev>Trois pages pour trois demandes fréquentes, et une page par ville de la
+    <a href="/regions/">zone desservie</a>.</p>
+  </div>
+  <div class="cards">
+    <a class="card" href="/solutions/maison-intelligente-cle-en-main/" data-rev><small>Résidentiel</small><h3>Maison intelligente clé en main</h3><p>De la visite à la formation : une maison existante ou une construction neuve, un seul système.</p></a>
+    <a class="card" href="/solutions/domotique-ferme-agricole/" data-rev><small>Agricole</small><h3>Domotique pour ferme et bâtiments agricoles</h3><p>Températures, pannes de courant, eau, portes et réseau entre les bâtiments, sur un seul écran.</p></a>
+    <a class="card" href="/solutions/ia-privee-entreprise/" data-rev><small>Entreprise</small><h3>IA privée pour entreprise</h3><p>Un assistant qui connaît vos documents et qui fonctionne dans vos murs, pas chez un fournisseur.</p></a>
+  </div>
+</section>
 
 <section class="cta">
   <h2 data-rev>Quel problème mérite<br><span>une première preuve?</span></h2>
   <p data-rev>Décrivez le problème et son contexte. La première preuve utile sera clairement définie.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,
 }

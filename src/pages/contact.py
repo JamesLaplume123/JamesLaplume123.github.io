@@ -14,19 +14,20 @@ PAGE = {
     "url": "/contact/",
     "assets": ["galerie"],
     "v2": True,
-    "title": "Contact | Réserver une démonstration JARVIS",
+    "title": "Contact | Parlons de votre projet",
     "description": (
-        "Réservez une démonstration de JARVIS ou présentez votre projet, votre problème "
+        "Présentez votre projet, votre problème "
         "ou une possibilité de collaboration à James Laplume."
     ),
     "og_image": "/media/product/jarvis-command-center-preview-og.jpg",
     "content": f"""
 <section class="plain-top">
   <p class="eyebrow" data-rev>Contact</p>
-  <h1 data-rev>Voyez JARVIS <em>de vos yeux.</em></h1>
-  <p class="lead" data-rev>Client potentiel, partenaire technique, chercheur ou investisseur :
-  décrivez ce que vous cherchez à comprendre, relier ou automatiser. Je vous montrerai ce
-  qui existe aujourd’hui et ce qui reste à construire.</p>
+  <h1 data-rev>Parlons de <em>votre projet.</em></h1>
+  <p class="lead" data-rev>Maison, ferme, entreprise ou véhicule : décrivez ce que vous cherchez à
+  comprendre, relier ou automatiser, ou laissez simplement votre nom pour rester informé. Je vous
+  dirai ce qui existe aujourd’hui et ce qui reste à construire.</p>
+  <p class="lead pro-lance" data-rev>{SITE['lancement']}</p>
 </section>
 
 <section class="sect" style="padding-top:2rem">
@@ -75,7 +76,7 @@ PAGE = {
         </div>
         <div class="field">
           <label for="f-region">Ville ou région</label>
-          <input id="f-region" name="region" type="text" autocomplete="address-level2" placeholder="Québec, Montréal…">
+          <input id="f-region" name="region" type="text" autocomplete="address-level2" placeholder="Saint-Hyacinthe, Granby…">
         </div>
         <div class="field">
           <label for="f-role">Vous êtes</label>
@@ -90,6 +91,8 @@ PAGE = {
         <div class="field">
           <label for="f-sujet">Sujet principal</label>
           <select id="f-sujet" name="sujet">
+            <option>Mon projet</option>
+            <option>Rester informé</option>
             <option>Démonstration JARVIS</option>
             <option>Environnement intelligent</option>
             <option>IA privée et connaissances</option>

@@ -50,7 +50,7 @@ PAGE = {
     <p class="lead" data-rev>Vos documents restent à leur place. L’IA vous aide à les
     comprendre — et montre toujours d’où vient sa réponse.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/contact/">Réserver une démo</a>
+      <a class="pill" href="/contact/">Parlons de votre projet</a>
       <a class="pill ghost" href="#outil">Voir l’outil</a>
     </div>
     <p class="for-line" data-rev><span>Pour</span> Particuliers · PME · équipes</p>
@@ -159,7 +159,7 @@ PAGE = {
   <h2 data-rev>Quelle information mérite enfin<br><span>d’être retrouvable?</span></h2>
   <p data-rev>Décrivez vos documents, vos outils actuels et ce que vous cherchez trop
   souvent sans le trouver.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,
 }

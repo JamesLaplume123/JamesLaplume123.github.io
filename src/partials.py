@@ -3,8 +3,9 @@
 
 import re
 
-from config import SITE, NAV, CTA_V2, CAPABILITIES, FOOTER_COLUMNS, SEO
+from config import SITE, NAV, CTA_V2, CAPABILITIES, FOOTER_COLUMNS, SEO, BESOINS_PAGES
 from demos.app import EXT_ICON, ICONS
+import pro
 
 
 def head(page):
@@ -23,11 +24,15 @@ def head(page):
         '<link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>\n'
         f'<link rel="stylesheet" href="/assets/css/wow.css?v={v}">'
     )
+    # Seul l'accueil a un équivalent anglais (/en/) : la paire hreflang ne vaut que pour eux.
     lang_alt = (
-        f'<link rel="alternate" hreflang="en" href="{SITE["domain"]}/en/">'
-        f'<link rel="alternate" hreflang="fr-CA" href="{SITE["domain"]}/">'
+        f'<link rel="alternate" hreflang="fr-CA" href="{SITE["domain"]}/">\n'
+        f'<link rel="alternate" hreflang="en" href="{SITE["domain"]}/en/">\n'
+        f'<link rel="alternate" hreflang="x-default" href="{SITE["domain"]}/">\n'
         if page["url"] in ("/", "/en/") else ""
     )
+    # Données structurées : celles de la page, puis le fil d'Ariane des pages intérieures.
+    ld = pro.ld_script(pro.schemas(page))
     return f"""<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
@@ -48,7 +53,7 @@ def head(page):
 <link rel="icon" href="/favicon.svg?v={v}">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 {MODE_SCRIPT}
-{assets}"""
+{assets}{ld}"""
 
 
 MODE_SCRIPT = (
@@ -80,11 +85,18 @@ def ext_links(cls):
     )
 
 
+def besoins_liens(cls):
+    """Sous les sept solutions : les pages par besoin et la zone desservie (une ligne discrète)."""
+    liens = "".join(f'<a href="/solutions/{k}/">{n}</a>' for k, n in BESOINS_PAGES)
+    return f'<p class="{cls}"><span>Par besoin</span>{liens}<a href="/regions/">Régions desservies</a></p>'
+
+
 def mega_menu(en):
     """Les sept solutions, une phrase chacune. Rien d'autre."""
     return f"""<div class="mega" data-mega-panel>
       <p class="mega-k">{'Seven solutions · one system' if en else 'Sept solutions · un seul système'}</p>
       <div class="mega-grid">{ext_links("mega-a")}</div>
+      {"" if en else besoins_liens("mega-more")}
     </div>"""
 
 
@@ -140,7 +152,7 @@ def header_v2(page):
 
     def sheet_sub(item):
         if item.get("menu"):
-            return f'<div class="sheet-exts">{ext_links("sheet-x")}</div>'
+            return f'<div class="sheet-exts">{ext_links("sheet-x")}{"" if en else besoins_liens("sheet-more")}</div>'
         if item.get("sub"):
             return f'<div class="sheet-exts">{sub_links(item, "sheet-x", en)}</div>'
         return ""
@@ -150,7 +162,7 @@ def header_v2(page):
         + sheet_sub(item)
         for item in NAV
     )
-    cta_label = "Book a demo" if en else CTA_V2["label"]
+    cta_label = "Let’s talk about your project" if en else CTA_V2["label"]
     nav_label = "Main navigation" if en else "Navigation principale"
     menu_label = "Open menu" if en else "Ouvrir le menu"
     lang_link = (
@@ -225,12 +237,14 @@ def footer_v2(page):
         for col in FOOTER_COLUMNS
     )
     exts = "".join(f'<a href="/solutions/{c["slug"]}/">{c["title"]}</a>' for c in CAPABILITIES)
-    cols = f"<div><h2>Extensions</h2><nav>{exts}</nav></div>" + cols
+    exts += "".join(f'<a href="/solutions/{k}/">{n}</a>' for k, n in BESOINS_PAGES)
+    cols = f"<div><h2>Solutions</h2><nav>{exts}</nav></div>" + cols
     return f"""<footer class="foot">
   <div class="foot-grid">
     <div class="foot-brand">
       <b>JARVIS <span>Private Systems</span></b>
-      <p>La liberté, par la technologie.<br>Sécurité privée, domotique et IA — Québec.</p>
+      <p><strong>{SITE['metier']}.</strong><br>{SITE['phrase']}</p>
+      <p class="foot-base">{SITE['base']}<br><a href="mailto:{SITE['email']}">{SITE['email']}</a></p>
       <p class="foot-count" hidden><i class="dot" aria-hidden="true"></i>Visites du site <b data-live="visits-foot">—</b></p>
     </div>
     {cols}
@@ -241,7 +255,7 @@ def footer_v2(page):
     <button type="button" class="is-on" data-mode-set="signature" aria-pressed="true">Signature</button>
     <button type="button" data-mode-set="platinum" aria-pressed="false">Platinum</button>
   </div>
-  <p class="foot-line"><span>{SITE['copyright']}</span><span>Privé par conception</span></p>
+  <p class="foot-line"><span>{SITE['copyright']}</span><span class="foot-legal"><a href="/mentions-legales/">Mentions légales</a><a href="/confidentialite/">Confidentialité</a><a href="/mentions-legales/#conditions">Conditions</a></span><span>Privé par conception</span></p>
 </footer>"""
 
 
@@ -256,11 +270,24 @@ def document(page):
     )
     top, bottom = header_v2(page), footer_v2(page)
     content = page["content"]
-    nav = toc(page)
+    faq = pro.solution_faq(page)
+    if faq:
+        cut = content.rfind('<section class="cta">')
+        content = content[:cut] + faq + "\n" + content[cut:]
+    nav = toc({**page, "content": content})
     if nav:
         # Juste après la première section (la bande d'ouverture) : il colle ensuite sous la barre.
         cut = content.index("</section>") + len("</section>")
         content = content[:cut] + "\n" + nav + content[cut:]
+    # Avis de lancement, sobre et visible : accueil, offre, solutions et régions.
+    u = page["url"]
+    if u in ("/", "/offre/", "/questions/", "/a-propos/") or u.startswith(("/solutions/", "/regions/")):
+        avis = (f'\n<aside class="lancement" aria-label="État de l’entreprise"><p><i class="dot" aria-hidden="true"></i>'
+                f'<span>{SITE["lancement"]}</span> <a href="/contact/">Rester informé <i aria-hidden="true">→</i></a></p></aside>')
+        cut = content.index("</section>") + len("</section>")
+        if nav:
+            cut = content.index("</nav>", cut) + len("</nav>")
+        content = content[:cut] + avis + content[cut:]
     autres = autres_extensions(page)
     if autres:
         cut = content.rfind('<section class="cta">')

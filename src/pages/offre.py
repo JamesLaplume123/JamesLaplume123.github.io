@@ -9,6 +9,7 @@ from html import escape
 
 from config import CAPABILITIES
 from demos.hub import EXT, HUB_INCLUS, SERVICES, icon
+import pro
 
 EXT_SLUG = {e[1]: e for e in EXT}
 CLE = {e[0]: e for e in EXT}
@@ -56,7 +57,7 @@ def _extensions():
         <h3>On choisit avec vous.</h3>
         <p class="of-x-l">Racontez-nous votre lieu et ce qui vous dérange. Nous vous dirons quelle extension
         règle le problème, et laquelle peut attendre.</p>
-        <p class="of-x-go"><a href="/contact/">Réserver une démo <i aria-hidden="true">→</i></a>
+        <p class="of-x-go"><a href="/contact/">Parlons de votre projet <i aria-hidden="true">→</i></a>
         <a href="/solutions/">Comparer les sept solutions <i aria-hidden="true">→</i></a></p>
       </div>
     </article>""")
@@ -150,13 +151,7 @@ FAQ = [
      "et la visite, elles, sont offertes dès maintenant."),
 ]
 
-FAQ_HTML = "".join(
-    f"""<details class="faq-item" data-rev>
-      <summary><span>{q}</span><i aria-hidden="true"></i></summary>
-      <div class="faq-a"><p>{a}</p></div>
-    </details>"""
-    for q, a in FAQ
-)
+FAQ_HTML = pro.faq_items(FAQ)
 
 
 def _etape(n):
@@ -167,6 +162,7 @@ PAGE = {
     "url": "/offre/",
     "v2": True,
     "title": "L’offre JARVIS | Le Hub, vos extensions, l’installation",
+    "schema": [pro.ld_faq(FAQ)],
     "description": (
         "Le Hub, puis seulement les extensions utiles, avec l’installation, la formation et le soutien. "
         "Soumission gratuite après une visite."
@@ -177,12 +173,13 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>L’offre JARVIS</p>
+    <p class="eyebrow" data-rev>L’offre · intégrateur de systèmes intelligents</p>
     <h1 data-rev>Le Hub, puis vos extensions.<br><em>Rien de plus.</em></h1>
-    <p class="lead" data-rev>Chaque client part du Hub. On ajoute les extensions utiles, maintenant ou plus
-    tard, avec l’installation, la formation et le soutien.</p>
+    <p class="lead" data-rev>Maison, ferme, entreprise ou véhicule : chaque installation part du Hub. On
+    ajoute les extensions utiles, maintenant ou plus tard, avec l’installation, la formation et le
+    soutien, en Montérégie.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/contact/">Réserver une démo</a>
+      <a class="pill" href="/contact/">Parlons de votre projet</a>
       <a class="pill ghost" href="#prix">Combien ça coûte</a>
     </div>
     <ol class="of-trois" data-rev>
@@ -212,7 +209,7 @@ PAGE = {
       {_etape(2)}
       <h2 id="ext-titre">Vous choisissez<br><em>vos extensions.</em></h2>
     </div>
-    <p data-rev>Réceptionniste, gardien, archiviste, technicien : chaque extension fait un travail précis,
+    <p data-rev>Réceptionniste, concierge, archiviste, technicien : chaque extension fait un travail précis,
     dans la même application. Prenez seulement ce dont vous avez besoin.</p>
   </div>
   <div class="of-xs">{_extensions()}</div>
@@ -264,7 +261,7 @@ PAGE = {
         <li><i>2</i><div><b>Une soumission écrite</b><span>Le Hub, les extensions, les appareils et les services, ligne par ligne.</span></div></li>
         <li><i>3</i><div><b>Vous décidez</b><span>Maintenant, plus tard ou pas du tout. Aucune pression.</span></div></li>
       </ol>
-      <a class="pill" href="/contact/">Demander une visite</a>
+      <a class="pill" href="/contact/">Parlons de votre projet</a>
     </article>
     <div class="of-varie" data-rev>
       <p class="of-varie-k">Ce qui fait varier le prix</p>
@@ -285,9 +282,11 @@ PAGE = {
 
 <section class="cta">
   <h2 data-rev>Voyons ce qu’il vous faut,<br><span>chez vous.</span></h2>
-  <p data-rev>Une rencontre, vos besoins réels, et ce qui fonctionne déjà aujourd’hui.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a>
-  <a class="pill ghost" href="/logiciel/">Essayer le logiciel</a></div>
+  <p data-rev>Vos besoins réels, et ce qui fonctionne déjà aujourd’hui. Voyez aussi
+  <a href="/a-propos/#comment-on-travaille">comment on travaille</a> et les
+  <a href="/questions/">questions avant d’appeler</a>.</p>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a>
+  <a class="pill ghost" href="/logiciel/">Voir le logiciel</a></div>
 </section>
 """,
 }

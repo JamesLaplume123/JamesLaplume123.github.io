@@ -126,7 +126,7 @@ PAGE = {
   <h2 data-rev>Quel environnement devrait recevoir<br><span>son propre JARVIS?</span></h2>
   <p data-rev>Présentez le lieu, les systèmes existants et le premier problème que vous
   souhaitez résoudre.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,
 }

@@ -129,6 +129,6 @@ def offre_bref(ident="offre", titre_id="offre-titre", classe="ob", toc=""):
   </div>
   <ol class="ob-steps">{etapes}</ol>
   <p class="ob-acts" data-rev><a class="pill" href="/offre/">Voir l’offre en détail</a>
-  <a class="pill ghost" href="/contact/">Réserver une démo</a></p>
+  <a class="pill ghost" href="/contact/">Parlons de votre projet</a></p>
   <p class="ob-note" data-rev>Soumission gratuite, par écrit, après une visite de votre lieu.</p>
 </section>"""

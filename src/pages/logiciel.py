@@ -151,7 +151,7 @@ PAGE = {
 <section class="cta">
   <h2 data-rev>Voyez JARVIS<br><span>chez vous.</span></h2>
   <p data-rev>Une rencontre, vos besoins réels, et ce qui fonctionne déjà aujourd’hui.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/" data-magnet>Réserver une démo</a>
+  <div class="acts" data-rev><a class="pill" href="/contact/" data-magnet>Parlons de votre projet</a>
   <a class="pill ghost" href="/offre/">Voir l’offre</a></div>
 </section>
 """,

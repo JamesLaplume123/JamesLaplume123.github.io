@@ -7,30 +7,32 @@ PAGE = {
     "assets": ["galerie"],
     "v2": True,
     "lang": "en",
-    "title": "JARVIS Private Systems | Private intelligence and connected systems",
+    "title": "JARVIS Private Systems | Smart systems integrator, Québec",
     "description": (
-        "JARVIS connects private AI, automation, networks and physical environments "
-        "while keeping humans in control."
+        "Smart, secure homes, farms, businesses and vehicles in Montérégie, Québec. Home "
+        "automation, networking and private AI in one system installed on site."
     ),
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>JARVIS · Private intelligent systems</p>
-    <h1 data-rev>Connect what exists.<br><em>Make the whole system act.</em></h1>
-    <p class="lead" data-rev>JARVIS connects information, software, devices and physical
-    environments through a private architecture built around context, explicit permissions
-    and human approval.</p>
+    <p class="eyebrow" data-rev>Smart systems integrator · Montérégie, Québec</p>
+    <h1 data-rev>Smart, secure places.<br><em>One system, on site.</em></h1>
+    <p class="lead" data-rev>JARVIS Private Systems makes homes, farms, businesses and vehicles
+    smart and secure in Montérégie, Québec. One system installed on site brings together home
+    automation, networking, cameras and a private AI. Your data stays with you, and you keep the
+    final say. We are in our launch phase: we are taking the names of interested people and
+    choosing a few first projects.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/contact/">Book a demo</a>
+      <a class="pill" href="/contact/">Let’s talk about your project</a>
       <a class="pill ghost" href="/en/contact/" data-jarvis>Talk to JARVIS</a>
       <a class="pill ghost" href="/solutions/">Explore the seven solutions</a>
       <a class="pill ghost" href="/logiciel/" hreflang="fr">Try the software (French)</a>
       <a class="pill ghost" href="/offre/" hreflang="fr">The offer (French)</a>
     </div>
     <div class="meta" data-rev>
-      <span class="chip">Development and real-world lab</span>
-      <span class="chip">Québec, Canada</span>
+      <span class="chip">Launch phase</span>
+      <span class="chip">Based near Saint-Hyacinthe, Québec</span>
       <span class="chip">Detailed site in French</span>
     </div>
   </div>
@@ -100,7 +102,7 @@ PAGE = {
   <p data-rev>Share the environment, process or research question. I will clearly separate
   what can be demonstrated now, what needs a pilot and what remains part of the long-term
   vision.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Book a demo</a></div>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Let’s talk about your project</a></div>
 </section>
 """,
 }

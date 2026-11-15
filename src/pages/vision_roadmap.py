@@ -38,7 +38,7 @@ PAGE = {
     "description": (
         "Le manifeste de JARVIS : un système privé installé chez vous qui rend du temps, garde "
         "vos données et vous laisse décider. Horizons à 12 mois, 3 ans et 10 ans, Personal "
-        "Intelligence, la firme de sécurité privée et l’état réel du projet."
+        "Intelligence, Security Pro et l’état réel du projet."
     ),
     "og_image": "/media/concept/jarvis-future-ecosystem-v1.webp",
     "assets": ["vision", "vie", "pentest", "feuille"],
@@ -91,11 +91,13 @@ PAGE = {
   permission, révocable séparément.</p>
 </section>
 
-<section class="sect alt" id="securite-pro" data-toc="La firme de sécurité">
-  """ + _head("03", "Security Pro · vision", "Une vraie firme de sécurité privée, <em>augmentée par l’IA.</em>",
-              "Six lignes de service, une même rigueur. Chaque mission part d’un mandat écrit; l’IA "
-              "accélère, un professionnel valide, chaque accès est journalisé et chaque preuve est hachée.",
-              "Vision · données fictives") + """
+<section class="sect alt" id="securite-pro" data-toc="Security Pro (vision)">
+  """ + _head("03", "Security Pro · vision", "Des services de sécurité spécialisés, <em>un jour, sous permis.</em>",
+              "Une vision à long terme, pas une offre. Aujourd’hui, JARVIS Private Systems est un "
+              "intégrateur de systèmes intelligents : il n’offre aucun de ces services et ne détient "
+              "aucun permis du Bureau de la sécurité privée. Si ce volet voit le jour, chaque mission "
+              "partira d’un mandat écrit; l’IA accélère, un professionnel valide.",
+              "Vision · non offert · données fictives") + """
   @@FIRME@@
   <div style="margin-top:3.2rem">@@PENTEST@@</div>
   <p class="form-note" data-rev style="max-width:76rem;margin:1.6rem auto 0">Différence
@@ -103,7 +105,8 @@ PAGE = {
   dans une mission limitée, autorisée et documentée. Méthodes de référence : PTES, OWASP WSTG,
   MITRE ATT&amp;CK, NIST SP 800-115 et 800-61, ISO/IEC 27037. Avant toute mission réelle : permis
   d’agence d’investigation du Bureau de la sécurité privée, assurance responsabilité et
-  vérification des antécédents de chaque analyste.</p>
+  vérification des antécédents de chaque analyste. D’ici là, rien de ce qui est montré dans cette
+  section n’est vendu ni exécuté pour un client.</p>
 </section>
 
 <section class="sect" id="partenariats" data-toc="Partenariats">
@@ -130,7 +133,7 @@ PAGE = {
   <h2 data-rev>Discuter de la vision, de la recherche<br><span>ou d’un partenariat ?</span></h2>
   <p data-rev>Décrivez le problème et son contexte. La première preuve utile sera clairement
   définie.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Réserver une démo</a></div>
+  <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """)
     .replace("@@MANIFESTE@@", vision.manifeste())

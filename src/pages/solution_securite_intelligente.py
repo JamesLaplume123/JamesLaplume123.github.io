@@ -6,10 +6,10 @@ from demos.securite import HTML as DEMO_HTML
 DATA = {
     "slug": "securite-intelligente",
     "title": "Sécurité intelligente",
-    "description": "Une plateforme de sécurité complète : mur vidéo, contrôle d’accès, plaques et véhicules, recherche de personnes, zones, incidents, sites, rondes et conformité à la Loi 25.",
+    "description": "Un logiciel qui réunit vos caméras, serrures et capteurs en événements clairs, traités et gardés chez vous : mur vidéo, accès, véhicules, zones, incidents et conformité à la Loi 25.",
     "image": "/media/solutions/securite-intelligente.webp",
     "h1": "Sécurité <em>intelligente.</em>",
-    "lead": "Une plateforme qui réunit caméras, accès, véhicules, agents et preuves de tous vos sites, sans retirer le contrôle humain.",
+    "lead": "Un logiciel installé chez vous, qui réunit vos caméras, vos serrures, vos capteurs et vos preuves dans la même application que le reste du lieu. Vous gardez le contrôle, et les images restent sur place.",
     "for": "Résidences, entreprises, entrepôts, campus et organisations réparties sur plusieurs sites",
     "clair": {
         "quoi": "JARVIS regarde toutes vos caméras et vos capteurs en même temps, puis vous dit en une phrase <em>ce qui s’est vraiment passé.</em>",
@@ -36,7 +36,7 @@ DATA = {
             ("Des preuves classées", "Les images utiles sont gardées avec l’événement, sur place, aussi longtemps que vous le décidez."),
             ("Le dernier mot", "Allumer, parler, prévenir : JARVIS propose, vous approuvez. Rien ne se déverrouille tout seul."),
             ("Les accès et les véhicules", "Badges, horaires, talonnage, visiteurs avec code QR, lecture de plaques et suivi d’un véhicule d’une caméra à l’autre."),
-            ("Des dossiers prêts pour la police", "Chronologie, extraits, plan et empreinte vérifiable, exportés en un clic avec les personnes non concernées masquées."),
+            ("Un dossier prêt à remettre", "Chronologie, extraits, plan et empreinte vérifiable, exportés en un clic avec les personnes non concernées masquées."),
             ("La Loi 25 intégrée", "Identification seulement des personnes inscrites avec leur consentement, masquage des visages hors incident, chaque consultation journalisée."),
         ],
     },
@@ -44,7 +44,8 @@ DATA = {
     "demo_copy": (
         "Le mur vidéo regroupe les alertes en un seul événement compris. Autour de lui : accès, "
         "véhicules, zones, incidents, sites, rondes et Loi 25. Passez d’un module à l’autre en haut de "
-        "la fenêtre. Données d’exemple."
+        "la fenêtre. Données d’exemple : les agents et les rondes montrés sont ceux de l’organisation "
+        "qui utilise le logiciel. JARVIS fournit le logiciel, pas de gardiennage."
     ),
     "demo_html": DEMO_HTML,
     "assets": ["securite"],
@@ -58,7 +59,12 @@ DATA = {
         "Le système ne prétend pas identifier les intentions ni déterminer qu’une personne est "
         "dangereuse. L’identification se limite aux personnes inscrites qui y ont consenti; les "
         "autres sont signalées sans nom. Les règles, responsabilités et obligations légales, dont "
-        "la déclaration d’une banque biométrique, doivent être définies avant tout déploiement."
+        "la déclaration d’une banque biométrique, doivent être définies avant tout déploiement. "
+        "JARVIS Private Systems est un intégrateur : ce n’est pas une agence de sécurité, et aucune "
+        "centrale ni aucun agent ne surveille vos images. Au Québec, la pose de caméras de "
+        "surveillance, d’alarmes et de contrôles d’accès chez un client est encadrée par la Loi sur "
+        "la sécurité privée : quand un permis est requis, elle doit être faite par un installateur "
+        "qui le détient; JARVIS relie ensuite ces appareils au système."
     ),
     "cta_title": "Quel événement de sécurité manque aujourd’hui <em>de contexte?</em>",
     "cta_copy": (

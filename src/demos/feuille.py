@@ -87,8 +87,8 @@ ITEMS = [
      "Réception, bons de travail et approbations, d’après des entrevues avec des entreprises."),
     ("res", "avenir", "Après la vente", "Plusieurs Hubs reliés",
      "Maison, chalet, entreprise et véhicule coordonnés, chacun avec ses propres règles."),
-    ("secu", "avenir", "Vision", "Firme de sécurité privée",
-     "Permis d’agence, assurance et analystes vérifiés avant toute mission réelle."),
+    ("secu", "avenir", "Vision", "Security Pro, sous permis",
+     "Permis requis, assurance et analystes vérifiés avant toute mission réelle."),
 ]
 
 

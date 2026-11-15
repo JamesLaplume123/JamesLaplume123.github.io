@@ -1,5 +1,5 @@
 # Page Vision — le manifeste de JARVIS (assets/demos/vision.css et .js).
-# Cinq blocs : manifeste, horizons, firme de sécurité privée, partenariats, principes.
+# Cinq blocs : manifeste, horizons, Security Pro (vision sous permis), partenariats, principes.
 # Les horizons sont une vision montrée avec des données d'exemple; l'état réel vit dans
 # feuille.py. La journée type et « tous vos lieux » vivent sur la page Environnements
 # intelligents; Rust et la recherche, sur /plateforme/#rust et /recherche/.
@@ -184,10 +184,10 @@ HORIZONS = [
         ],
     },
     {
-        "k": "3ans", "t": "3 ans", "s": "Sept extensions, une firme",
+        "k": "3ans", "t": "3 ans", "s": "Sept extensions, un système",
         "h": "Des maisons, des entreprises et des véhicules reliés, partout au Québec.",
-        "p": "Chaque extension devient un chantier complet, prouvé chez de vrais clients. La firme de "
-             "sécurité privée obtient ses permis et réalise ses premières missions autorisées.",
+        "p": "Chaque extension devient un chantier complet, prouvé chez de vrais clients. Le volet "
+             "Security Pro n’existe que s’il obtient d’abord les permis requis.",
         "photo": ("horizon-3-ans", "Une entreprise québécoise qui fonctionne avec JARVIS",
                   "Atelier ou bureau de PME moderne au Québec, équipe au travail, grand écran mural sombre affichant un tableau de bord noir et or, lumière naturelle, ambiance calme et professionnelle",
                   3, "16:10", "/media/solutions/jarvis-enterprise-operations-v1.webp"),
@@ -195,7 +195,7 @@ HORIZONS = [
             ("hub", "Plusieurs Hubs reliés : maison, chalet, entreprise et véhicule sous un même compte."),
             ("env", "Ambiances apprises avec vous, énergie optimisée selon le tarif et la météo."),
             ("ia", "Mémoire documentaire de la famille ou de l’entreprise, toujours sur place."),
-            ("secu", "Firme de sécurité privée : permis, assurance et premières missions sous mandat écrit."),
+            ("secu", "Security Pro : permis requis et assurance obtenus avant toute mission, sous mandat écrit."),
             ("auto", "Réception téléphonique, bons de travail et approbations chez les premières PME."),
             ("res", "Surveillance réseau assistée pour maisons connectées et petits multi-sites."),
             ("diag", "Dossiers prêts pour le technicien, partagés avec les partenaires de service."),
@@ -214,7 +214,7 @@ HORIZONS = [
             ("hub", "Hub JARVIS conçu sur mesure : matériel maison, silencieux, réparable, garanti."),
             ("env", "Résidences de prestige, chalets et ateliers : chaque lieu avec ses propres règles."),
             ("ia", "IA locale entraînée pour le français du Québec, sans aucun appel au nuage."),
-            ("secu", "Une firme reconnue : protection de résidences, d’événements et de collections."),
+            ("secu", "Security Pro, seulement sous permis : protection de résidences et de collections."),
             ("auto", "Gestion complète d’une maison de famille : personnel, fournisseurs, horaires."),
             ("res", "Réseaux privés entre les lieux, la mer et les airs, avec liens de secours."),
             ("diag", "Entretien prévu avant la panne, pour le bâtiment, la voiture, le bateau et l’avion."),
@@ -258,11 +258,11 @@ def horizons():
 
 
 # ---------------------------------------------------------------------------
-# 3. Firme de sécurité privée (introduction, avant la démonstration Security Pro)
+# 3. Security Pro : vision à long terme, sous permis (introduction, avant la démonstration)
 # ---------------------------------------------------------------------------
 FIRME = [
     ("Tests d’intrusion", "key", "Attaquer vos systèmes avant les autres, sous mandat écrit, et prouver chaque faille."),
-    ("Protection de résidences", "home", "Rondes, accès temporaires et surveillance des propriétés de prestige et des collections."),
+    ("Protection de résidences", "home", "Accès temporaires, alertes et suivi des propriétés de prestige et des collections, par le logiciel du client."),
     ("Enquêtes et OSINT", "eye", "Retrouver ce que l’on sait de vous en ligne, et le réduire."),
     ("Conformité Loi 25", "scale", "Registre, évaluation des facteurs relatifs à la vie privée, politiques et formation."),
     ("Réponse aux incidents", "flag", "Contenir, préserver les preuves, remettre en service et expliquer."),
@@ -277,7 +277,7 @@ def firme():
     )
     return f"""<div class="vn vn-fi" data-demo="vision">
   <div class="vn-fi-ph vn-framed" data-rev>
-    {photo("securite-centre", "Le centre des opérations de la firme de sécurité JARVIS",
+    {photo("securite-centre", "Un centre des opérations de sécurité, tel qu’imaginé pour Security Pro",
            "Centre des opérations de sécurité privé, pièce sombre, mur d’écrans noirs avec cartes et flux de caméras en tons or, deux analystes de dos, ambiance calme et professionnelle, aucun logo",
            1, "16:10")}
     <div class="vn-fi-badge"><span>{icon("secu")}</span><div><b>Mandat d’abord</b><small>L’IA accélère · un professionnel valide · tout est journalisé</small></div></div>

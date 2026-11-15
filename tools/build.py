@@ -25,6 +25,7 @@ PAGE_MODULES = [
     "accueil",
     "logiciel",
     "offre",
+    "catalogue",
     "solutions",
     "solution_environnements_intelligents",
     "solution_ia_privee_connaissances",

@@ -13,7 +13,7 @@ SITE = {
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
-    "asset_version": "20261114d",
+    "asset_version": "20261115a",
     # Adresse du service du site (formulaire → Resend → JARVIS, compteur). Vide tant
     # que le Worker Cloudflare n'est pas déployé : le formulaire passe alors par FormSubmit.
     "api": "https://jarvis-site-api.laplumejames.workers.dev",
@@ -32,7 +32,10 @@ NAV = [
         ("/plateforme/", "Le Hub et l’IA privée", "Ce qu’il y a sous le capot : Hub, IA, noyau, comptes.", "devices"),
     ]},
     {"url": "/solutions/", "label": "Solutions", "menu": True},
-    {"url": "/offre/", "label": "L’offre"},
+    {"url": "/offre/", "label": "L’offre", "sub": [
+        ("/offre/", "Comment ça se compose", "Le Hub, vos extensions, l’installation.", "grid"),
+        ("/catalogue/", "Catalogue et prix", "Hubs, solutions, matériel : composez et voyez le total.", "spark"),
+    ]},
     {"url": "/a-propos/", "label": "À propos", "sub": [
         ("/a-propos/", "Qui est derrière JARVIS", "James, sa démarche et le terrain.", "user"),
         ("/vision-roadmap/", "Notre vision", "Où va JARVIS, et où il en est vraiment.", "spark"),
@@ -52,6 +55,7 @@ FOOTER_COLUMNS = [
             {"url": "/logiciel/", "label": "Le logiciel"},
             {"url": "/solutions/", "label": "Solutions"},
             {"url": "/offre/", "label": "L’offre"},
+            {"url": "/catalogue/", "label": "Catalogue et prix"},
             {"url": "/plateforme/", "label": "Le Hub et l’IA privée"},
             {"url": "/recherche/", "label": "Recherche"},
         ],

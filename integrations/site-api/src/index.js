@@ -1,10 +1,15 @@
 // Service du site jameslaplume.ca — Worker Cloudflare.
+
+// Durée de conservation du journal des visites, en jours (24 mois). Une seule ligne à changer;
+// penser alors à /confidentialite/, à /admin/visites/ et aux README.
+const RETENTION_JOURS = 730;
+
 //
 //   POST /contact      reçoit le formulaire, l'envoie par Resend et le garde pour JARVIS
 //   GET  /visits       renvoie le nombre de visites
 //   POST /visits/hit   ajoute une visite (une par session, décidé par le navigateur) et l'inscrit au journal
 //   POST /visits/view  inscrit au journal une page vue de plus dans la même session (sans toucher au compteur)
-//   GET  /visits/log   journal des visites récentes (réservé à James, jeton LEADS_TOKEN requis)
+//   GET  /visits/log   journal des visites, par tranches (réservé à James, jeton LEADS_TOKEN requis)
 //   GET  /leads        liste les demandes gardées (réservé à JARVIS, jeton requis)
 //   GET  /live         batteries de l'ambulance (BouLance) en direct, lues dans Home Assistant
 //   GET  /history      énergie stockée des dernières 24 h (Home Assistant)
@@ -16,10 +21,21 @@
 //   HA_TOKEN       secret : jeton longue durée Home Assistant (lecture seulement par ce service)
 //   HA_URL, MAIL_FROM, MAIL_TO, ALLOWED_ORIGINS : variables simples
 //
-// Journal des visites : chaque visite est gardée 30 jours, puis KV l'efface tout seul (expirationTtl).
-// Il contient l'adresse IP, la localisation approximative que Cloudflare tire de cette adresse, le
+// Journal des visites : chaque visite est gardée 24 mois (RETENTION_JOURS), puis KV l'efface tout
+// seul (expirationTtl). Seules les requêtes venant du site (en-tête Origin dans ALLOWED_ORIGINS, hors
+// localhost) et qui ne sont pas des robots évidents sont comptées et inscrites. Il contient l'adresse IP, la localisation approximative que Cloudflare tire de cette adresse, le
 // fournisseur Internet, la page, le domaine du site d'où vient le visiteur et le type d'appareil.
 // Aucun témoin, aucun identifiant posé dans le navigateur. Annoncé dans /confidentialite/ (Loi 25).
+//
+// Clés KV du journal :
+//   visit:<horodatage inversé>:<8 car.>  une visite (les plus récentes sortent en premier), 24 mois
+//   vstat:AAAA-MM-JJ                     compteurs du jour (heure de Toronto) : visites, pages, et les
+//                                        cumuls depuis le début; aucun renseignement personnel, gardés
+//   vjour                                dernier jour qui a un compteur (écrit une fois par jour)
+//   visits                               ancien compteur public : lu comme point de départ, plus écrit
+//   archive:AAAA-MM-JJ                   relevé d'avant la mise en service, créé à la main par James
+// Écritures KV (quota gratuit : 1 000 par jour) : 2 par visite ou par page vue (la visite et le
+// compteur du jour), plus 1 par jour (vjour). Rien pour une requête ignorée.
 //
 // Sécurité : le jeton Home Assistant ne sort jamais du Worker. Le service ne lit qu'une liste
 // fermée d'entités (gabarit ci-dessous), ne commande rien, et met la réponse en cache 4 s pour
@@ -54,13 +70,12 @@ function escapeHtml(s) {
   return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-async function limited(env, ip, kind = "rate", max = 5) {
-  // Par défaut (formulaire) : 5 envois par heure et par adresse, assez pour un humain, trop peu pour
-  // un robot. Le journal des visites a son propre compteur (« kind ») pour ne jamais gruger celui du
-  // formulaire.
-  const key = kind + ":" + ip + ":" + Math.floor(Date.now() / 3600000);
+async function limited(env, ip) {
+  // Formulaire : 5 envois par heure et par adresse, assez pour un humain, trop peu pour un robot.
+  // (Le journal des visites a son propre plafond, en mémoire : voir tooMany.)
+  const key = "rate:" + ip + ":" + Math.floor(Date.now() / 3600000);
   const n = parseInt((await env.SITE_KV.get(key)) || "0", 10);
-  if (n >= max) return true;
+  if (n >= 5) return true;
   await env.SITE_KV.put(key, String(n + 1), { expirationTtl: 3700 });
   return false;
 }
@@ -128,19 +143,70 @@ async function contact(request, env, h) {
   return json({ ok: true, id: lead.id }, 200, h);
 }
 
-async function visits(env, h, hit) {
-  let n = parseInt((await env.SITE_KV.get("visits")) || "0", 10);
-  if (hit) {
-    n += 1;
-    await env.SITE_KV.put("visits", String(n));
-  }
-  return json({ value: n }, 200, h);
+// Compteur public : le cumul voyage dans le compteur du jour (vstat), pour ne pas payer une
+// écriture de plus par visite. L'ancienne clé « visits » sert de point de départ.
+async function visits(env, h) {
+  return json({ value: await readTotal(env) }, 200, h);
 }
 
 // ---------- Journal des visites ----------
-const VISIT_TTL = 30 * 24 * 3600; // 30 jours, puis effacement automatique par KV
-const VISITS_PER_IP_HOUR = 60;   // au-delà, l'adresse n'est plus inscrite au journal pour l'heure
+const VISIT_TTL = RETENTION_JOURS * 24 * 3600; // 24 mois, puis effacement automatique par KV
+const VISITS_PER_IP_HOUR = 60;   // au-delà, l'adresse est ignorée pour l'heure (mémoire du Worker, sans écriture)
+const JOURNAL_MAX_PAR_JOUR = 450; // au-delà, plus rien n'est écrit ce jour-là : le quota KV reste pour le formulaire
 const KEY_MAX = 9999999999999;   // horodatage inversé : les clés les plus récentes sortent en premier
+const TZ = "America/Toronto";    // les jours des compteurs suivent l'heure du Québec
+const STAT_JOURS = 400;          // nombre de jours de compteurs renvoyés à la page privée
+const PROLONGER_MAX = 20;        // visites de l'ancien régime (30 jours) prolongées par lecture du journal
+
+// Robots évidents : jamais comptés ni inscrits.
+const ROBOT_UA = /bot|crawl|spider|slurp|headless|facebookexternalhit|preview|lighthouse|pagespeed|monitor|uptime|pingdom|scrapy|curl|wget|python|httpclient|go-http|okhttp|java\/|libwww|phantom|puppeteer|playwright|selenium/i;
+function isRobot(ua) { return !ua || ROBOT_UA.test(ua); }
+
+// Vient-elle du vrai site ? Origin doit être dans ALLOWED_ORIGINS, et jamais un poste local
+// (localhost reste permis pour les essais du formulaire, mais ne compte pas comme visite).
+function fromSite(request, env) {
+  const origin = request.headers.get("Origin") || "";
+  const allowed = (env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
+  if (!origin || !allowed.includes(origin)) return false;
+  try { return !/^(localhost|127\.\d+\.\d+\.\d+|\[::1\]|.*\.localhost)$/.test(new URL(origin).hostname); } catch { return false; }
+}
+
+// Plafond par adresse et par heure, tenu en mémoire : aucune écriture KV. Approximatif (chaque
+// instance du Worker a sa mémoire); le plafond du jour ci-dessus est le vrai filet.
+const recent = new Map();
+function tooMany(ip, now) {
+  const hour = Math.floor(now / 3600000);
+  if (recent.size > 5000) recent.clear();
+  const r = recent.get(ip);
+  if (!r || r.h !== hour) { recent.set(ip, { h: hour, n: 1 }); return false; }
+  r.n += 1;
+  return r.n > VISITS_PER_IP_HOUR;
+}
+
+const dayFmt = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" });
+function dayOf(ms) { return dayFmt.format(new Date(ms)); } // « 2026-11-15 »
+
+function parseStat(v) {
+  try {
+    const s = typeof v === "string" ? JSON.parse(v) : v;
+    if (!s || typeof s !== "object") return null;
+    const n = (x) => (Number.isFinite(+x) && +x >= 0 ? Math.floor(+x) : 0);
+    return { visites: n(s.visites), pages: n(s.pages), total: n(s.total), pagesTotal: n(s.pagesTotal) };
+  } catch { return null; }
+}
+
+// Cumuls au dernier jour connu (ou l'ancien compteur, avant le premier compteur du jour).
+async function lastTotals(env) {
+  const last = await env.SITE_KV.get("vjour");
+  const s = last ? parseStat(await env.SITE_KV.get("vstat:" + last)) : null;
+  if (s) return s;
+  return { visites: 0, pages: 0, total: parseInt((await env.SITE_KV.get("visits")) || "0", 10) || 0, pagesTotal: 0 };
+}
+
+async function readTotal(env) {
+  const today = parseStat(await env.SITE_KV.get("vstat:" + dayOf(Date.now())));
+  return today ? today.total : (await lastTotals(env)).total;
+}
 
 // Chemin de la page seulement (« /solutions/ »), sans paramètres ni fragment, 200 caractères au plus.
 function cleanPath(v) {
@@ -166,7 +232,7 @@ function cleanRef(v) {
 function device(ua) {
   const u = ua || "";
   let appareil = "Ordinateur";
-  if (/bot|crawl|spider|slurp|preview|headless|lighthouse|monitor|curl|wget|python|http/i.test(u)) appareil = "Robot";
+  if (isRobot(u)) appareil = "Robot";
   else if (/iPad|Tablet|PlayBook|Silk|Android(?!.*Mobile)/i.test(u)) appareil = "Tablette";
   else if (/Mobi|iPhone|iPod|Android.*Mobile|Windows Phone/i.test(u)) appareil = "Mobile";
   const systeme =
@@ -191,12 +257,32 @@ async function readBody(request) {
   try { return JSON.parse((await request.text()) || "{}") || {}; } catch { return {}; }
 }
 
-async function logVisit(request, env, data, kind) {
+// Compte et inscrit une visite (« arrivee ») ou une page suivante (« page »). Renvoie le compteur
+// public. Deux écritures KV : le compteur du jour (attendu) et la visite (« later », sans faire attendre).
+async function record(request, env, data, kind, later) {
+  const ua = clean(request.headers.get("User-Agent"), 400);
   const ip = request.headers.get("CF-Connecting-IP") || "inconnue";
-  if (await limited(env, ip, "vrate", VISITS_PER_IP_HOUR)) return;
+  const now = Date.now();
+  if (!fromSite(request, env) || isRobot(ua) || tooMany(ip, now)) return readTotal(env);
+
+  const day = dayOf(now);
+  let stat = parseStat(await env.SITE_KV.get("vstat:" + day));
+  let firstOfDay = false;
+  if (!stat) {
+    const prev = await lastTotals(env);
+    stat = { visites: 0, pages: 0, total: prev.total, pagesTotal: prev.pagesTotal };
+    firstOfDay = true;
+  }
+  if (stat.pages >= JOURNAL_MAX_PAR_JOUR) return stat.total;
+  stat.pages += 1;
+  stat.pagesTotal += 1;
+  if (kind === "arrivee") { stat.visites += 1; stat.total += 1; }
+  // Les compteurs voyagent aussi dans les métadonnées : la page privée les lit en une seule liste.
+  await env.SITE_KV.put("vstat:" + day, JSON.stringify(stat), { metadata: stat });
+  if (firstOfDay) await env.SITE_KV.put("vjour", day);
+
   const cf = request.cf || {};
   const num = (v) => (v == null || v === "" || !isFinite(+v) ? null : Math.round(+v * 1000) / 1000);
-  const now = Date.now();
   const visit = {
     t: new Date(now).toISOString(),
     type: kind,                                    // « arrivee » (première page) ou « page » (suivantes)
@@ -211,43 +297,112 @@ async function logVisit(request, env, data, kind) {
     asn: cf.asn ? Number(cf.asn) || null : null,
     fournisseur: clean(cf.asOrganization, 100),
     ip: clean(ip, 45),
-    ...device(clean(request.headers.get("User-Agent"), 400)),
+    ...device(ua),
   };
   const key = "visit:" + String(KEY_MAX - now).padStart(13, "0") + ":" + crypto.randomUUID().slice(0, 8);
   const body = JSON.stringify(visit);
   // La visite voyage aussi dans les métadonnées de la clé (1 024 octets au plus) : le journal se lit
   // alors en une seule requête à KV, sans relire chaque visite.
   const small = new TextEncoder().encode(body).length <= 1000;
-  await env.SITE_KV.put(key, body, small ? { expirationTtl: VISIT_TTL, metadata: visit } : { expirationTtl: VISIT_TTL });
+  later(env.SITE_KV.put(key, body, small ? { expirationTtl: VISIT_TTL, metadata: visit } : { expirationTtl: VISIT_TTL }).catch(() => {}));
+  return stat.total;
+}
+
+function defer(ctx, jobs) {
+  return (p) => { if (ctx && ctx.waitUntil) ctx.waitUntil(p); else jobs.push(p); };
 }
 
 async function hit(request, env, h, ctx) {
   const data = await readBody(request);
-  const res = await visits(env, h, true); // compteur public : inchangé
-  const job = logVisit(request, env, data, "arrivee").catch(() => {}); // le journal ne bloque jamais le compteur
-  if (ctx && ctx.waitUntil) ctx.waitUntil(job); else await job;
-  return res;
+  const jobs = [];
+  const value = await record(request, env, data, "arrivee", defer(ctx, jobs));
+  await Promise.all(jobs);
+  return json({ value }, 200, h);
 }
 
 async function view(request, env, h, ctx) {
   const data = await readBody(request);
-  const job = logVisit(request, env, data, "page").catch(() => {});
-  if (ctx && ctx.waitUntil) ctx.waitUntil(job); else await job;
+  const jobs = [];
+  // Le journal ne fait jamais échouer la page : une erreur de KV reste silencieuse.
+  await record(request, env, data, "page", defer(ctx, jobs)).catch(() => {});
+  await Promise.all(jobs);
   return json({ ok: true }, 200, h);
 }
 
-async function visitLog(request, env, h) {
-  if (!authorized(request, env)) return json({ ok: false }, 401, h);
-  const asked = parseInt(new URL(request.url).searchParams.get("limit") || "200", 10);
-  const limit = Math.max(1, Math.min(1000, isFinite(asked) ? asked : 200));
-  const list = await env.SITE_KV.list({ prefix: "visit:", limit });
+// Compteurs par jour : une liste par année (métadonnées), sans lire chaque clé.
+async function dayStats(env) {
+  const year = +dayOf(Date.now()).slice(0, 4);
+  const jours = [];
+  for (const y of [year - 1, year]) {
+    let cursor;
+    do {
+      const list = await env.SITE_KV.list({ prefix: "vstat:" + y + "-", limit: 1000, cursor });
+      for (const k of list.keys) {
+        const s = parseStat(k.metadata) || parseStat(await env.SITE_KV.get(k.name));
+        if (s) jours.push({ jour: k.name.slice(6), visites: s.visites, pages: s.pages });
+      }
+      cursor = list.list_complete ? undefined : list.cursor;
+    } while (cursor);
+  }
+  jours.sort((a, b) => (a.jour < b.jour ? -1 : 1));
+  const t = await lastTotals(env);
+  return { jours: jours.slice(-STAT_JOURS), totaux: { visites: t.total, pages: t.pagesTotal } };
+}
+
+// Relevés d'avant la mise en service (clés « archive:AAAA-MM-JJ », créées à la main). Un relevé
+// plus vieux que la durée de conservation n'est plus servi et est effacé.
+async function archives(env, later) {
+  const list = await env.SITE_KV.list({ prefix: "archive:", limit: 20 });
   const out = [];
   for (const k of list.keys) {
-    if (k.metadata && k.metadata.t) { out.push(k.metadata); continue; }
+    const since = Date.parse(k.name.slice(8) + "T00:00:00Z");
+    if (isFinite(since) && Date.now() - since > VISIT_TTL * 1000) { later(env.SITE_KV.delete(k.name).catch(() => {})); continue; }
     const v = await env.SITE_KV.get(k.name);
-    if (v) { try { out.push(JSON.parse(v)); } catch {} }
+    if (!v) continue;
+    try { out.push({ cle: k.name, contenu: JSON.parse(v) }); } catch {}
   }
-  return json({ ok: true, conservation_jours: 30, visits: out }, 200, h);
+  return out;
+}
+
+async function visitLog(request, env, h, ctx) {
+  if (!authorized(request, env)) return json({ ok: false }, 401, h);
+  const q = new URL(request.url).searchParams;
+  const asked = parseInt(q.get("limit") || "200", 10);
+  const limit = Math.max(1, Math.min(500, isFinite(asked) ? asked : 200));
+  const cursor = clean(q.get("cursor"), 2000) || undefined;
+  const jobs = [];
+  const later = defer(ctx, jobs);
+  // Les clés « visit: » sortent de KV dans l'ordre alphabétique; l'horodatage inversé met donc les
+  // plus récentes en premier, et le curseur de KV donne la tranche suivante.
+  const list = await env.SITE_KV.list({ prefix: "visit:", limit, cursor });
+  const out = [];
+  let prolonged = 0;
+  for (const k of list.keys) {
+    let v = k.metadata && k.metadata.t ? k.metadata : null;
+    let raw = null;
+    if (!v) {
+      raw = await env.SITE_KV.get(k.name);
+      if (raw) { try { v = JSON.parse(raw); } catch {} }
+    }
+    if (!v) continue;
+    out.push(v);
+    // Visites écrites sous l'ancien régime (30 jours) : on repousse leur échéance à 24 mois après
+    // la visite, quelques-unes par lecture, pour qu'elles ne s'effacent pas avant.
+    const wanted = Math.floor(Date.parse(v.t) / 1000) + VISIT_TTL;
+    if (k.expiration && isFinite(wanted) && k.expiration < wanted - 86400 && prolonged < PROLONGER_MAX) {
+      prolonged += 1;
+      const small = Boolean(k.metadata && k.metadata.t);
+      later(env.SITE_KV.put(k.name, raw || JSON.stringify(v), small ? { expiration: wanted, metadata: v } : { expiration: wanted }).catch(() => {}));
+    }
+  }
+  const body = { ok: true, conservation_jours: RETENTION_JOURS, visits: out, cursor: list.list_complete ? null : list.cursor || null };
+  if (!cursor) {
+    // Première tranche seulement : les totaux et les relevés d'archive.
+    Object.assign(body, await dayStats(env));
+    body.archives = await archives(env, later);
+  }
+  await Promise.all(jobs);
+  return json(body, 200, h);
 }
 
 async function leads(request, env, h) {
@@ -356,10 +511,10 @@ export default {
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: h });
     try {
       if (url.pathname === "/contact" && request.method === "POST") return await contact(request, env, h);
-      if (url.pathname === "/visits" && request.method === "GET") return await visits(env, h, false);
+      if (url.pathname === "/visits" && request.method === "GET") return await visits(env, h);
       if (url.pathname === "/visits/hit" && request.method === "POST") return await hit(request, env, h, ctx);
       if (url.pathname === "/visits/view" && request.method === "POST") return await view(request, env, h, ctx);
-      if (url.pathname === "/visits/log" && request.method === "GET") return await visitLog(request, env, h);
+      if (url.pathname === "/visits/log" && request.method === "GET") return await visitLog(request, env, h, ctx);
       if (url.pathname === "/leads" && request.method === "GET") return await leads(request, env, h);
       if (url.pathname === "/live" && request.method === "GET") return await live(request, env, h);
       if (url.pathname === "/history" && request.method === "GET") return await history(request, env, h);

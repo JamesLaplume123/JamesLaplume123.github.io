@@ -89,6 +89,7 @@
       it.classList.toggle("is-on", q > 0);
       if (q > 0) {
         once.push({ id: it.dataset.id, n: it.querySelector("b").textContent, q: q, p: +it.dataset.prix });
+        if (it.dataset.svc) return;
         nApp += q;
         if (it.dataset.cam) nCam += q;
         if (it.closest(".ct-cat").querySelector("h3").textContent === "Capteurs") nCapt += q;
@@ -224,5 +225,9 @@
     if (e.target.closest("[data-cart-open]")) { form.classList.add("is-cart"); document.body.classList.add("ct-lock"); return; }
     if (e.target.closest("[data-cart-close]")) { form.classList.remove("is-cart"); document.body.classList.remove("ct-lock"); return; }
   });
-  compute();
+  /* Arrivée avec ?kit=N (depuis L'offre) : le kit est appliqué et la page s'ouvre dessus. */
+  var kq = +(new URLSearchParams(location.search).get("kit") || 0);
+  var kb = kq ? $$("[data-kit]")[kq - 1] : null;
+  if (kb) { applyKit(JSON.parse(kb.dataset.kit)); form.classList.remove("is-cart"); document.body.classList.remove("ct-lock"); setTimeout(function () { kb.closest(".ct-kit").scrollIntoView({ block: "center" }); }, 60); }
+  else compute();
 })();

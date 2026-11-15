@@ -342,7 +342,8 @@
         body: JSON.stringify(o)
       }), 15000).then(function (r) {
         return r.json().catch(function () { return {}; }).then(function (j) {
-          var ok = r.ok && j && (j.success === true || j.success === "true" || j.ok === true);
+          /* stored:true = la demande est gardée chez JARVIS même si le courriel n'est pas parti : c'est un succès pour le visiteur. */
+          var ok = (r.ok && j && (j.success === true || j.success === "true" || j.ok === true)) || (j && j.stored === true);
           if (!ok) { var e = new Error((j && j.message) || ("HTTP " + r.status)); e.reply = j; throw e; }
           return j;
         });

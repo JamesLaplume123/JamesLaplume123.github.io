@@ -183,6 +183,16 @@ MATERIEL = [
 MAT_BY_ID = {m[0]: m for _, items in MATERIEL for m in items}
 CAMERAS = {"camext", "camint", "cam360", "sonnette", "plaques", "inter"}
 
+# Services professionnels (une fois) : sécurité privée, audits, formation. Sur place ou à distance.
+SERVICES = [
+    ("audit_res", "Audit de sécurité résidentiel", 349, "Tour complet de la maison ou du chalet : accès, caméras, réseau, habitudes. Rapport écrit avec priorités.", "Savoir par où on entrerait chez vous avant quelqu’un d’autre."),
+    ("audit_ent", "Audit de sécurité d’entreprise", 1490, "Accès, caméras, réseau, postes, sauvegardes, employés. Rapport pour la direction et plan sur 90 jours.", "Une journée d’expert vaut moins qu’une seule intrusion."),
+    ("pentest", "Test d’intrusion réseau", 2990, "Attaque autorisée de votre réseau et de vos services, puis correction avec vous. Rapport et nouvelle vérification.", "La seule façon de savoir si ça tient, c’est d’essayer."),
+    ("osint", "Enquête OSINT", 890, "Ce qu’Internet sait de vous, de votre entreprise ou d’un partenaire, à partir de sources ouvertes. Rapport et nettoyage.", "Ce qu’un fraudeur trouverait en une heure, retiré avant lui."),
+    ("loi25", "Accompagnement Loi 25", 1990, "Registre, politiques, incidents, consentements : votre entreprise conforme, avec JARVIS comme preuve.", "Les amendes montent à 25 M$. La conformité coûte 1 990 $."),
+    ("formation", "Formation d’équipe (demi-journée)", 490, "Vos employés apprennent JARVIS, la réceptionniste et les bons réflexes de sécurité.", "Un outil que personne n’utilise ne protège personne."),
+]
+
 INSTALL = [
     ("auto", "Je l’installe moi-même", 0, "Inclus", "Prises identifiées, aucun fil à couper. Plan, vidéo et mise en service à distance (30 min)."),
     ("guide", "Mise en service guidée", 149, "149 $", "Un technicien vous accompagne en vidéo pendant l’installation."),
@@ -355,7 +365,7 @@ def _materiel():
 
 def _kits():
     out = []
-    for k in KITS:
+    for idx, k in enumerate(KITS):
         plein, once, mois = _kit_totaux(k)
         hub = HUB_BY_ID[k["hub"]]
         pieces = [f"<li><b>1×</b> {escape(hub['nom'])}</li>"] + [
@@ -373,7 +383,7 @@ def _kits():
         for a in e.get("autos", []):
             mens.append(f"{AUTOS_BY_ID[a][1]} ({AUTOS_BY_ID[a][2]} $)")
         cfg = {"nom": k["nom"], "rabais": plein - once, "hub": k["hub"], "mat": k["mat"], "sol": k["sol"], "ent": e}
-        out.append(f"""<article class="ct-kit" data-rev>
+        out.append(f"""<article class="ct-kit" data-rev id="kit-{idx + 1}">
       <div class="ct-kit-h"><h3>{escape(k['nom'])}</h3><p class="ct-pour">{escape(k['pour'])}</p></div>
       <p class="ct-prix">{_p(once)}<small>une fois</small></p>
       <p class="ct-econ"><s>{_p(plein)}</s> à la pièce · vous économisez {_p(plein - once)}</p>
@@ -383,6 +393,15 @@ def _kits():
       <button type="button" class="pill" data-kit='{json.dumps(cfg, ensure_ascii=False)}'>Partir de ce kit</button>
     </article>""")
     return "".join(out)
+
+
+def _services():
+    rows = "".join(f"""<div class="ct-item" data-id="{i}" data-prix="{p}" data-svc="1">
+        <div class="ct-item-t"><b>{escape(n)}</b><span>{escape(d)}</span><em>{escape(w)}</em></div>
+        <div class="ct-item-p">{_p(p)}</div>
+        <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
+      </div>""" for i, n, p, d, w in SERVICES)
+    return f'<section class="ct-cat ct-cat-svc" data-rev><h3>Services professionnels</h3><p class="ct-d">Payés une fois, sur soumission confirmée. Déplacement en sus hors Montérégie.</p>{rows}</section>'
 
 
 def _install():
@@ -414,7 +433,7 @@ PAGE = {
       <li><a href="#hub"><i>1</i>Le Hub</a></li>
       <li><a href="#solutions"><i>2</i>Vos solutions</a></li>
       <li><a href="#materiel"><i>3</i>Le matériel</a></li>
-      <li><a href="#lieux"><i>4</i>Lieux et installation</a></li>
+      <li><a href="#lieux"><i>4</i>Lieux, installation, services</a></li>
     </ol>
   </div>
 </section>
@@ -457,15 +476,17 @@ PAGE = {
   <div class="ct-mats">{_materiel()}</div>
 </section>
 
-<section class="sect alt" id="lieux" data-toc="4 · Lieux et installation" aria-labelledby="lieux-t">
+<section class="sect alt" id="lieux" data-toc="4 · Lieux et services" aria-labelledby="lieux-t">
   <div class="sect-head"><div data-rev><p class="of-num"><i>4</i><span>Étape 4 sur 4</span></p>
-    <h2 id="lieux-t">Plusieurs lieux?<br><em>Une seule app.</em></h2></div>
+    <h2 id="lieux-t">Lieux, installation<br><em>et services.</em></h2></div>
     <p data-rev>Un Hub par lieu. Les lieux se parlent par un lien privé et chiffré. Les petits lieux empruntent l’IA de votre plus gros Hub. Les solutions sont à 30 % de rabais dès le deuxième lieu.</p></div>
   <div class="ct-lieux" data-rev>
     <label>Ce lieu est mon <select name="rang"><option value="1">premier lieu JARVIS</option><option value="2">deuxième lieu ou plus (−30 % sur les solutions)</option></select></label>
   </div>
   <h3 class="ct-sub" data-rev>Installation <em>· à vous de choisir</em></h3>
   <div class="cards ct-install">{_install()}</div>
+  <h3 class="ct-sub" data-rev>Sécurité privée et services <em>· quand il faut plus qu’un Hub</em></h3>
+  {_services()}
   <h3 class="ct-sub" data-rev>Toujours inclus</h3>
   <ul class="ct-inclus">{_inclus()}</ul>
 </section>

@@ -97,6 +97,11 @@ def build():
     )
     written.append(Path("sitemap.xml"))
 
+    # Fiche de connaissances du JARVIS du site (assets/guide/), à partir du catalogue.
+    import guide_connaissances
+    guide_connaissances.ecrire()
+    written.append(Path("assets/guide/connaissances.md"))
+
     print(f"{len(written)} fichiers générés :")
     for w in written:
         print(f"  {w}")

@@ -77,10 +77,12 @@ Pour invalider le cache navigateur après un changement de CSS/JS, incrémenter
 - **Service du site** (`integrations/site-api`, Worker Cloudflare `jarvis-site-api`,
   adresse dans `SITE["api"]`) : formulaire (gardé dans KV puis envoyé par Resend),
   compteur et journal des visites (IP, lieu approximatif, fournisseur, page, appareil;
-  effacé après 30 jours), batteries de BouLance lues dans Home Assistant (`/live`, `/history`).
+  gardé 24 mois puis effacé; totaux par jour sans renseignement personnel), batteries de BouLance lues dans Home Assistant (`/live`, `/history`).
   Secrets dans Cloudflare seulement : `HA_TOKEN`, `RESEND_API_KEY`, `LEADS_TOKEN`.
 - **Visites** (`/admin/visites/`, page privée hors menu et hors sitemap) : James y colle le
-  jeton `LEADS_TOKEN` pour lire le journal, et peut exclure ses propres appareils
+  jeton `LEADS_TOKEN` pour lire le journal (chiffres du jour, de 7 jours, de 30 jours et depuis
+  le début; « Charger plus »; export CSV; relevé d'avant le 15 novembre 2026, servi par le
+  service et jamais gardé dans ce dépôt), et peut exclure ses propres appareils
   (`localStorage` « jarvis-moi » = 1).
 - **Formulaire** (`/contact/`) : envoi sans quitter la page; secours FormSubmit, puis lien
   courriel déjà rédigé. Sans JavaScript, envoi classique vers FormSubmit.

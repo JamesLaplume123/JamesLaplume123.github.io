@@ -2,7 +2,7 @@
 # Rédigée pour correspondre à la réalité du site : aucun témoin, aucun pisteur publicitaire,
 # formulaire par le service du site (Cloudflare + Resend, FormSubmit en secours), météo et
 # radar d'Environnement Canada, carte OpenFreeMap, compteur et journal des visites (IP, lieu
-# approximatif, fournisseur, page, appareil; 30 jours). Mettre à jour si un service change (Loi 25).
+# approximatif, fournisseur, page, appareil; 24 mois). Mettre à jour si un service change (Loi 25).
 
 PAGE = {
     "url": "/confidentialite/",
@@ -10,7 +10,7 @@ PAGE = {
     "title": "Confidentialité | JARVIS Private Systems",
     "description": (
         "Ce que ce site recueille, pourquoi, et vos droits — en langage clair. "
-        "Aucun témoin ni pisteur publicitaire; un journal des visites gardé 30 jours."
+        "Aucun témoin ni pisteur publicitaire; un journal des visites gardé 24 mois."
     ),
     "content": """
 <section class="plain-top">
@@ -46,7 +46,8 @@ PAGE = {
       <p>Ce journal sert à repérer les abus (robots, attaques) et à savoir quelles pages sont
       consultées et d’où. Il ne sert à aucune publicité ni à aucun profilage, il n’est jamais
       vendu ni partagé, et seul le responsable peut le consulter. Chaque visite est conservée
-      30 jours, puis effacée automatiquement.</p>
+      24 mois, puis effacée automatiquement. Les essais faits hors du site et les robots
+      reconnus ne sont pas inscrits.</p>
       <p>Les pages de ce site n’installent aucun témoin (cookie). Les polices et la bibliothèque
       de carte sont hébergées sur le site lui-même. Quelques requêtes partent de votre navigateur
       pour afficher des données en direct : la météo et le radar d’Environnement Canada, les fonds
@@ -83,10 +84,14 @@ PAGE = {
     <div class="row" data-rev>
       <i>06 · Conservation</i>
       <div><h3>Le temps nécessaire, pas plus.</h3>
-      <p>Chaque visite du journal est effacée automatiquement 30 jours après son
-      enregistrement. Les messages reçus sont conservés dans la boîte courriel du responsable
+      <p>Chaque visite du journal est effacée automatiquement 24 mois après son
+      enregistrement : c’est le temps qu’il faut pour comparer une année à la suivante et
+      pour retracer un abus. Le relevé de la première semaine du service (du 8 au
+      15 novembre 2026 : adresse IP, lieu approximatif, fournisseur et nombre d’appels) est
+      gardé pour la même durée. Seuls restent ensuite des totaux par jour (nombre de visites
+      et de pages vues), qui ne contiennent aucun renseignement personnel. Les messages reçus sont conservés dans la boîte courriel du responsable
       le temps du suivi, puis supprimés lorsqu’ils ne sont plus nécessaires. La copie tenue par
-      FormSubmit suit le délai de 30 jours mentionné plus haut.</p></div>
+      FormSubmit suit son propre délai de 30 jours, mentionné plus haut.</p></div>
     </div>
     <div class="row" data-rev>
       <i>07 · Vos droits</i>
@@ -101,7 +106,7 @@ PAGE = {
     </div>
   </div>
   <p class="form-note" data-rev style="max-width:76rem;margin:2rem auto 0">Dernière mise à
-  jour : 9 novembre 2026. Cette politique évoluera si le site gagne de nouvelles
+  jour : 15 novembre 2026. Cette politique évoluera si le site gagne de nouvelles
   fonctions — jamais en silence.</p>
 </section>
 

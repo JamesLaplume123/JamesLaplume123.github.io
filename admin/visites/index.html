@@ -56,7 +56,7 @@
   <p class="eyebrow">Privé · réservé à James</p>
   <h1>Visites du site.</h1>
   <p class="lead">D’où viennent les visiteurs, ce qu’ils regardent et avec quel appareil.
-  Chaque visite est gardée 30 jours, puis effacée automatiquement.</p>
+  Chaque visite est gardée 24 mois, puis effacée automatiquement.</p>
 </section>
 
 <section class="av" data-av-root>
@@ -73,6 +73,7 @@
     </form>
     <div class="av-tools">
       <button type="button" class="pill ghost" data-av="refresh">Actualiser</button>
+      <button type="button" class="pill ghost" data-av="csv">Exporter en CSV</button>
       <button type="button" class="pill ghost" data-av="forget">Oublier le jeton</button>
       <button type="button" class="pill ghost" data-av="me">Ne pas compter mes visites sur cet appareil</button>
     </div>
@@ -83,7 +84,7 @@
     <div class="av-card av-kpi"><span>Aujourd’hui</span><b data-av="k-day">—</b><small data-av="k-day-p">pages vues —</small></div>
     <div class="av-card av-kpi"><span>7 jours</span><b data-av="k-7">—</b><small data-av="k-7-p">pages vues —</small></div>
     <div class="av-card av-kpi"><span>30 jours</span><b data-av="k-30">—</b><small data-av="k-30-p">pages vues —</small></div>
-    <div class="av-card av-kpi"><span>Adresses IP · 30 jours</span><b data-av="k-ip">—</b><small data-av="k-pays">pays —</small></div>
+    <div class="av-card av-kpi"><span>Depuis le début</span><b data-av="k-all">—</b><small data-av="k-all-p">pages vues —</small></div>
   </div>
 
   <div class="av-maps" data-proj="{&quot;world&quot;: {&quot;lat0&quot;: 78, &quot;lon0&quot;: -170, &quot;step&quot;: 2.0, &quot;u&quot;: 5, &quot;w&quot;: 900, &quot;h&quot;: 335}, &quot;qc&quot;: {&quot;lat0&quot;: 45.63, &quot;lon0&quot;: -72.957, &quot;kx&quot;: 75.9201, &quot;ky&quot;: 111.13, &quot;box&quot;: [-352.5, -457.9, 698.5, 577.9]}}">
@@ -113,6 +114,7 @@
       <div class="av-filters">
         <label><span>Pays</span><select data-av="f-pays"><option value="">Tous les pays</option></select></label>
         <label><span>Page</span><select data-av="f-page"><option value="">Toutes les pages</option></select></label>
+        <label class="av-check"><input type="checkbox" data-av="f-bots" checked><span>Masquer les robots</span></label>
       </div>
       <p class="av-count" data-av="count">0 visite</p>
     </div>
@@ -126,7 +128,23 @@
       <div data-av="rows" role="rowgroup"></div>
     </div>
     <p class="av-empty" data-av="empty">Aucune visite à afficher.</p>
-    <div class="av-more"><button type="button" class="pill ghost" data-av="more" hidden>Afficher 50 visites de plus</button></div>
+    <div class="av-more"><button type="button" class="pill ghost" data-av="more" hidden>Charger plus</button></div>
+  </div>
+
+  <div class="av-card av-log av-archive" data-av="archive" hidden>
+    <div class="av-log-head">
+      <h2>Avant le 15 novembre 2026</h2>
+      <p class="av-count" data-av="a-count">—</p>
+    </div>
+    <p class="av-hint" data-av="a-lead"></p>
+    <div class="av-table" role="table" aria-label="Relevé d’avant la mise en service du journal">
+      <div class="av-row av-arow av-th" role="row">
+        <span role="columnheader">Lieu</span><span role="columnheader">Fournisseur</span>
+        <span role="columnheader">Adresse IP</span><span role="columnheader">Appels</span>
+      </div>
+      <div data-av="a-rows" role="rowgroup"></div>
+    </div>
+    <p class="av-note" data-av="a-note"></p>
   </div>
 </section>
 

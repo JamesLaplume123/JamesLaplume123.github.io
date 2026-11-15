@@ -2,6 +2,9 @@
 # Hors menu, hors sitemap, robots noindex/nofollow, /admin/ refusé dans robots.txt.
 # Le jeton LEADS_TOKEN est collé par James et gardé seulement dans sessionStorage (onglet ouvert);
 # il n'est envoyé qu'au service du site (GET /visits/log). Rien de secret n'est écrit ici.
+# Les chiffres viennent des compteurs par jour du service; le journal se charge par tranches
+# (« Charger plus »); le relevé d'avant la mise en service vient d'une clé d'archive du service,
+# jamais du dépôt (il contient des adresses IP).
 # Cartes noires : monde en points (demos/reseau_geo.py) et sud du Québec (demos/app_geo.py),
 # toutes deux tirées de Natural Earth, sans tuiles externes. Code : assets/demos/visites.css et .js.
 
@@ -73,7 +76,7 @@ PAGE = {
   <p class="eyebrow">Privé · réservé à James</p>
   <h1>Visites du site.</h1>
   <p class="lead">D’où viennent les visiteurs, ce qu’ils regardent et avec quel appareil.
-  Chaque visite est gardée 30 jours, puis effacée automatiquement.</p>
+  Chaque visite est gardée 24 mois, puis effacée automatiquement.</p>
 </section>
 
 <section class="av" data-av-root>
@@ -90,6 +93,7 @@ PAGE = {
     </form>
     <div class="av-tools">
       <button type="button" class="pill ghost" data-av="refresh">Actualiser</button>
+      <button type="button" class="pill ghost" data-av="csv">Exporter en CSV</button>
       <button type="button" class="pill ghost" data-av="forget">Oublier le jeton</button>
       <button type="button" class="pill ghost" data-av="me">Ne pas compter mes visites sur cet appareil</button>
     </div>
@@ -100,7 +104,7 @@ PAGE = {
     <div class="av-card av-kpi"><span>Aujourd’hui</span><b data-av="k-day">—</b><small data-av="k-day-p">pages vues —</small></div>
     <div class="av-card av-kpi"><span>7 jours</span><b data-av="k-7">—</b><small data-av="k-7-p">pages vues —</small></div>
     <div class="av-card av-kpi"><span>30 jours</span><b data-av="k-30">—</b><small data-av="k-30-p">pages vues —</small></div>
-    <div class="av-card av-kpi"><span>Adresses IP · 30 jours</span><b data-av="k-ip">—</b><small data-av="k-pays">pays —</small></div>
+    <div class="av-card av-kpi"><span>Depuis le début</span><b data-av="k-all">—</b><small data-av="k-all-p">pages vues —</small></div>
   </div>
 
   {_maps()}
@@ -111,6 +115,7 @@ PAGE = {
       <div class="av-filters">
         <label><span>Pays</span><select data-av="f-pays"><option value="">Tous les pays</option></select></label>
         <label><span>Page</span><select data-av="f-page"><option value="">Toutes les pages</option></select></label>
+        <label class="av-check"><input type="checkbox" data-av="f-bots" checked><span>Masquer les robots</span></label>
       </div>
       <p class="av-count" data-av="count">0 visite</p>
     </div>
@@ -124,7 +129,23 @@ PAGE = {
       <div data-av="rows" role="rowgroup"></div>
     </div>
     <p class="av-empty" data-av="empty">Aucune visite à afficher.</p>
-    <div class="av-more"><button type="button" class="pill ghost" data-av="more" hidden>Afficher 50 visites de plus</button></div>
+    <div class="av-more"><button type="button" class="pill ghost" data-av="more" hidden>Charger plus</button></div>
+  </div>
+
+  <div class="av-card av-log av-archive" data-av="archive" hidden>
+    <div class="av-log-head">
+      <h2>Avant le 15 novembre 2026</h2>
+      <p class="av-count" data-av="a-count">—</p>
+    </div>
+    <p class="av-hint" data-av="a-lead"></p>
+    <div class="av-table" role="table" aria-label="Relevé d’avant la mise en service du journal">
+      <div class="av-row av-arow av-th" role="row">
+        <span role="columnheader">Lieu</span><span role="columnheader">Fournisseur</span>
+        <span role="columnheader">Adresse IP</span><span role="columnheader">Appels</span>
+      </div>
+      <div data-av="a-rows" role="rowgroup"></div>
+    </div>
+    <p class="av-note" data-av="a-note"></p>
   </div>
 </section>
 """,

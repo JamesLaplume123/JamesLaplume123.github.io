@@ -34,6 +34,9 @@ PAGE_MODULES = [
     "solution_reseau_resilience",
     "solution_diagnostic_care",
     "solution_mobilite",
+    "besoins",  # pages par besoin : maison clé en main, ferme, IA pour entreprise
+    "regions",  # /regions/ et une page par ville de la zone desservie
+    "questions",
     "plateforme",
     "laboratoire_mobile",
     "vision_roadmap",
@@ -43,6 +46,7 @@ PAGE_MODULES = [
     "contact",
     "merci",
     "confidentialite",
+    "mentions_legales",
     "english",
     "page_404",
     "labo_cartes",  # page privée : noindex, hors sitemap et menus
@@ -66,14 +70,15 @@ def build():
         except ModuleNotFoundError:
             print(f"  (page absente, ignorée : {name})")
             continue
-        page = mod.PAGE
-        path = out_path(page["url"])
-        path.parent.mkdir(parents=True, exist_ok=True)
-        # Décodage asynchrone des images : évite de bloquer le rendu.
-        html = document(page).replace("<img src", '<img decoding="async" src')
-        path.write_text(html, encoding="utf-8")
-        written.append(path.relative_to(ROOT))
-        pages.append(page)
+        # Un module fournit PAGE (une page) ou PAGES (plusieurs : pages par besoin, pages locales).
+        for page in getattr(mod, "PAGES", None) or [mod.PAGE]:
+            path = out_path(page["url"])
+            path.parent.mkdir(parents=True, exist_ok=True)
+            # Décodage asynchrone des images : évite de bloquer le rendu.
+            html = document(page).replace("<img src", '<img decoding="async" src')
+            path.write_text(html, encoding="utf-8")
+            written.append(path.relative_to(ROOT))
+            pages.append(page)
 
     # Redirections des anciennes URL.
     for old, target in REDIRECTS.items():

@@ -1,0 +1,133 @@
+/* Page privée « Visites du site » (/admin/visites/) — verre noir, cadre de cristal selon le mode.
+   Cartes noires, cartes géographiques sur fond noir, points dorés. */
+
+.av-top { padding-bottom: 2.2rem; }
+.av {
+  --av-font: "Jarvis Manrope", var(--sans);
+  max-width: 82rem; margin: 0 auto; padding: 0 1.4rem 6rem;
+  display: grid; gap: 1.2rem; font-family: var(--av-font);
+}
+@font-face {
+  font-family: "Jarvis Manrope";
+  src: url("/assets/fonts/manrope/manrope-latin.woff2") format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+/* ---------- Carte noire à cadre de cristal ---------- */
+.av-card {
+  position: relative; min-width: 0; border-radius: 18px; margin: 0;
+  background: var(--mode-panel-solid), #050505;
+  box-shadow: var(--mode-spec), 0 24px 60px #000a;
+  border: 1px solid var(--mode-line);
+}
+.av-card::before {
+  content: ""; position: absolute; inset: -1px; z-index: 3; pointer-events: none; border-radius: inherit;
+  border: 18px solid transparent;
+  border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch;
+  filter: var(--mode-rim-filter);
+}
+:root[data-mode="base"] .av-card::before { display: none; }
+
+/* ---------- Accès ---------- */
+.av-access { padding: 1.6rem 1.7rem; display: grid; gap: 1.1rem; }
+.av-token { display: grid; gap: .55rem; }
+.av-token label, .av-filters span, .av-kpi span, .av-map figcaption span {
+  font: 500 .66rem/1.2 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft);
+}
+.av-token-row { display: flex; gap: .7rem; flex-wrap: wrap; }
+.av-token input, .av-filters select {
+  background: #0b0b0d; border: 1px solid var(--edge); border-radius: 12px; color: var(--ink);
+  font: 500 .95rem/1.4 var(--av-font); padding: .85rem 1rem; min-width: 0;
+}
+.av-token input { flex: 1 1 16rem; letter-spacing: .08em; }
+.av-token input:focus, .av-filters select:focus { outline: 2px solid var(--mode-line); outline-offset: 1px; border-color: var(--gold-soft); }
+.av .pill { font-family: var(--av-font); border: 0; cursor: pointer; }
+.av .pill.ghost { padding: .8rem 1.25rem; font-size: .86rem; }
+.av-token .pill { padding: .9rem 1.6rem; }
+.av-hint { margin: 0; color: #9a9aa3; font-size: .82rem; }
+.av-tools { display: flex; gap: .6rem; flex-wrap: wrap; }
+.av-tools [data-av="me"].is-on { background: #34d39922; color: #a7f3d0; }
+.av-status { margin: 0; padding: .75rem 1rem; border-radius: 12px; background: #ffffff08; color: #d4d4dc; font-size: .9rem; }
+.av-status.is-ok { background: #34d3991a; color: #a7f3d0; }
+.av-status.is-bad { background: #f871711c; color: #fecaca; }
+.av-status.is-warn { background: #fbbf241a; color: #fde68a; }
+
+/* ---------- Chiffres ---------- */
+.av-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.2rem; }
+.av-kpi { padding: 1.3rem 1.4rem 1.2rem; display: grid; gap: .35rem; }
+.av-kpi b {
+  font: 700 clamp(2rem, 3.4vw, 2.7rem)/1 var(--av-font); letter-spacing: -.03em;
+  background: var(--mode-display); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.av-kpi small { color: #9a9aa3; font-size: .8rem; }
+
+/* ---------- Cartes géographiques ---------- */
+.av-maps { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1.2rem; }
+.av-map { overflow: hidden; }
+.av-map figcaption {
+  position: absolute; left: 14px; top: 12px; z-index: 2; display: flex; gap: .7rem; align-items: baseline;
+  padding: .45rem .7rem; border-radius: 9px; background: #000c;
+}
+.av-map figcaption b { font: 600 .78rem/1 var(--mono); color: #fff; }
+.av-map svg { display: block; width: 100%; height: auto; background: radial-gradient(90% 120% at 30% 40%, #0e0e10, #020203 70%); border-radius: 18px; }
+.av-map:last-child svg { aspect-ratio: 900 / 560; height: 100%; }
+.av-map:last-child { display: flex; }
+.av-dots { fill: none; stroke: #ffffff40; stroke-width: 2.6; stroke-linecap: round; }
+.av-qc-sea { fill: #020203; }
+.av-qc-land { fill: #141416; stroke: #323236; stroke-width: .8px; vector-effect: non-scaling-stroke; }
+.av-qc-lakes { fill: #020203; stroke: #2c2c30; stroke-width: .7px; vector-effect: non-scaling-stroke; }
+.av-qc-border { fill: none; stroke: #55555b; stroke-width: 1px; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
+.av-qc-hw { fill: none; stroke: #4a4a50; stroke-width: 1.1px; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+.av-pt-halo { fill: var(--mode-glow); opacity: .18; }
+.av-pt { fill: var(--gold-soft); stroke: #000; stroke-width: .8; }
+.av-pt.is-new { fill: #fff; }
+.av-map [data-av="qc"] .av-pt { stroke-width: 1.4; }
+
+/* ---------- Journal ---------- */
+.av-log { padding: 1.4rem 1.4rem 1.2rem; }
+.av-log-head { display: flex; flex-wrap: wrap; gap: 1rem 1.4rem; align-items: end; margin-bottom: 1rem; }
+.av-log-head h2 { margin: 0; font: 700 1.5rem/1 var(--av-font); letter-spacing: -.02em; }
+.av-filters { display: flex; gap: .8rem; flex-wrap: wrap; flex: 1 1 auto; justify-content: flex-end; }
+.av-filters label { display: grid; gap: .35rem; min-width: 0; flex: 0 1 15rem; }
+.av-filters select { padding: .6rem .8rem; font-size: .88rem; width: 100%; }
+.av-count { margin: 0; font: 500 .72rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: #9a9aa3; }
+
+.av-row {
+  display: grid; align-items: center; gap: .9rem;
+  grid-template-columns: 7.8rem minmax(0, 1.5fr) minmax(0, 1.1fr) minmax(0, .95fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, .9fr);
+  padding: .72rem .7rem; border-top: 1px solid #ffffff10; font-size: .86rem; color: #e4e4ea;
+}
+.av-row > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.av-th { border-top: 0; color: var(--gold-soft); font: 500 .62rem/1.2 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.av-rows .av-row:hover, [data-av="rows"] .av-row:hover { background: #ffffff07; }
+.av-row .av-mono { font: 500 .8rem/1.3 var(--mono); color: #cfcfd8; }
+.av-row small { display: block; color: #8e8e98; font-size: .74rem; overflow: hidden; text-overflow: ellipsis; }
+.av-row .av-flag { margin-right: .35rem; }
+.av-tag { display: inline-block; padding: .16rem .45rem; border-radius: 6px; background: #ffffff10; color: #cfcfd8; font: 500 .66rem/1.2 var(--mono); letter-spacing: .06em; }
+.av-tag.is-bot { background: #fbbf241c; color: #fde68a; }
+.av-empty { margin: 1rem .7rem .3rem; color: #9a9aa3; font-size: .9rem; }
+.av-empty[hidden], .av-more [hidden] { display: none; }
+.av-more { display: flex; justify-content: center; padding-top: .9rem; }
+
+@media (max-width: 1100px) {
+  .av-maps { grid-template-columns: 1fr; }
+  .av-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .av-row { grid-template-columns: 6.6rem minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); }
+  .av-row > :nth-child(6), .av-row > :nth-child(7) { display: none; }
+}
+@media (max-width: 700px) {
+  .av { padding: 0 .9rem 4rem; gap: .9rem; }
+  .av-access, .av-log { padding: 1.2rem 1.1rem; }
+  .av-kpis { gap: .9rem; }
+  .av-kpi { padding: 1.05rem 1.1rem; }
+  .av-th { display: none; }
+  /* Une visite = une petite fiche sur deux colonnes */
+  .av-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .3rem .8rem; padding: .85rem .3rem;
+  }
+  .av-row > :nth-child(6), .av-row > :nth-child(7) { display: block; }
+  .av-row > :nth-child(2) { grid-column: 1 / -1; order: -1; font-weight: 600; }
+  .av-filters label { flex: 1 1 9rem; }
+  .av .pill.ghost { flex: 1 1 auto; text-align: center; }
+}

@@ -2,17 +2,24 @@
 //
 //   POST /contact      reçoit le formulaire, l'envoie par Resend et le garde pour JARVIS
 //   GET  /visits       renvoie le nombre de visites
-//   POST /visits/hit   ajoute une visite (une par session, décidé par le navigateur)
+//   POST /visits/hit   ajoute une visite (une par session, décidé par le navigateur) et l'inscrit au journal
+//   POST /visits/view  inscrit au journal une page vue de plus dans la même session (sans toucher au compteur)
+//   GET  /visits/log   journal des visites récentes (réservé à James, jeton LEADS_TOKEN requis)
 //   GET  /leads        liste les demandes gardées (réservé à JARVIS, jeton requis)
 //   GET  /live         batteries de l'ambulance (BouLance) en direct, lues dans Home Assistant
 //   GET  /history      énergie stockée des dernières 24 h (Home Assistant)
 //
 // Liaisons attendues (voir wrangler.toml.example) :
-//   SITE_KV        espace KV : demandes, compteur, limites d'envoi
+//   SITE_KV        espace KV : demandes, compteur, journal des visites, limites d'envoi
 //   RESEND_API_KEY secret : clé Resend (jamais dans le code ni dans Git)
-//   LEADS_TOKEN    secret : jeton que JARVIS présentera pour lire les demandes
+//   LEADS_TOKEN    secret : jeton que JARVIS (demandes) et la page /admin/visites/ (journal) présentent
 //   HA_TOKEN       secret : jeton longue durée Home Assistant (lecture seulement par ce service)
 //   HA_URL, MAIL_FROM, MAIL_TO, ALLOWED_ORIGINS : variables simples
+//
+// Journal des visites : chaque visite est gardée 30 jours, puis KV l'efface tout seul (expirationTtl).
+// Il contient l'adresse IP, la localisation approximative que Cloudflare tire de cette adresse, le
+// fournisseur Internet, la page, le domaine du site d'où vient le visiteur et le type d'appareil.
+// Aucun témoin, aucun identifiant posé dans le navigateur. Annoncé dans /confidentialite/ (Loi 25).
 //
 // Sécurité : le jeton Home Assistant ne sort jamais du Worker. Le service ne lit qu'une liste
 // fermée d'entités (gabarit ci-dessous), ne commande rien, et met la réponse en cache 4 s pour
@@ -26,7 +33,7 @@ function cors(origin, env) {
   return {
     "Access-Control-Allow-Origin": ok ? origin : allowed[0] || "https://jameslaplume.ca",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Accept",
+    "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization",
     "Access-Control-Max-Age": "86400",
     "Vary": "Origin",
   };
@@ -47,13 +54,21 @@ function escapeHtml(s) {
   return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-async function limited(env, ip) {
-  // 5 envois par heure et par adresse : assez pour un humain, trop peu pour un robot.
-  const key = "rate:" + ip + ":" + Math.floor(Date.now() / 3600000);
+async function limited(env, ip, kind = "rate", max = 5) {
+  // Par défaut (formulaire) : 5 envois par heure et par adresse, assez pour un humain, trop peu pour
+  // un robot. Le journal des visites a son propre compteur (« kind ») pour ne jamais gruger celui du
+  // formulaire.
+  const key = kind + ":" + ip + ":" + Math.floor(Date.now() / 3600000);
   const n = parseInt((await env.SITE_KV.get(key)) || "0", 10);
-  if (n >= 5) return true;
+  if (n >= max) return true;
   await env.SITE_KV.put(key, String(n + 1), { expirationTtl: 3700 });
   return false;
+}
+
+// Même contrôle pour tout ce qui est réservé : « Authorization: Bearer <LEADS_TOKEN> ».
+function authorized(request, env) {
+  const auth = request.headers.get("Authorization") || "";
+  return Boolean(env.LEADS_TOKEN) && auth === "Bearer " + env.LEADS_TOKEN;
 }
 
 async function contact(request, env, h) {
@@ -122,9 +137,121 @@ async function visits(env, h, hit) {
   return json({ value: n }, 200, h);
 }
 
+// ---------- Journal des visites ----------
+const VISIT_TTL = 30 * 24 * 3600; // 30 jours, puis effacement automatique par KV
+const VISITS_PER_IP_HOUR = 60;   // au-delà, l'adresse n'est plus inscrite au journal pour l'heure
+const KEY_MAX = 9999999999999;   // horodatage inversé : les clés les plus récentes sortent en premier
+
+// Chemin de la page seulement (« /solutions/ »), sans paramètres ni fragment, 200 caractères au plus.
+function cleanPath(v) {
+  let p = clean(v, 400);
+  if (!p) return "";
+  try { p = new URL(p, "https://jameslaplume.ca").pathname; } catch { return ""; }
+  try { p = decodeURIComponent(p); } catch {}
+  p = p.replace(/[^\p{L}\p{N}\/._~-]/gu, "");
+  return p.startsWith("/") ? p.slice(0, 200) : "";
+}
+
+// Domaine seulement (« www.google.com ») : jamais l'adresse complète, qui peut contenir une recherche.
+function cleanRef(v) {
+  const r = clean(v, 500);
+  if (!r) return "";
+  try {
+    const host = new URL(r).hostname.toLowerCase();
+    return /^[a-z0-9.-]{1,100}$/.test(host) ? host : "";
+  } catch { return ""; }
+}
+
+// Type d'appareil, système et navigateur, en mots simples, à partir du User-Agent.
+function device(ua) {
+  const u = ua || "";
+  let appareil = "Ordinateur";
+  if (/bot|crawl|spider|slurp|preview|headless|lighthouse|monitor|curl|wget|python|http/i.test(u)) appareil = "Robot";
+  else if (/iPad|Tablet|PlayBook|Silk|Android(?!.*Mobile)/i.test(u)) appareil = "Tablette";
+  else if (/Mobi|iPhone|iPod|Android.*Mobile|Windows Phone/i.test(u)) appareil = "Mobile";
+  const systeme =
+    /iPhone|iPad|iPod/.test(u) ? "iOS" :
+    /Android/.test(u) ? "Android" :
+    /CrOS/.test(u) ? "ChromeOS" :
+    /Windows/.test(u) ? "Windows" :
+    /Mac OS X|Macintosh/.test(u) ? "macOS" :
+    /Linux/.test(u) ? "Linux" : "Autre";
+  const navigateur =
+    /Edg\//.test(u) ? "Edge" :
+    /OPR\/|Opera/.test(u) ? "Opera" :
+    /SamsungBrowser/.test(u) ? "Samsung Internet" :
+    /Firefox\/|FxiOS/.test(u) ? "Firefox" :
+    /Chrome\/|CriOS/.test(u) ? "Chrome" :
+    /Safari\//.test(u) ? "Safari" : "Autre";
+  return { appareil, systeme, navigateur };
+}
+
+async function readBody(request) {
+  // Le site envoie du texte brut (JSON) pour éviter une requête préalable CORS.
+  try { return JSON.parse((await request.text()) || "{}") || {}; } catch { return {}; }
+}
+
+async function logVisit(request, env, data, kind) {
+  const ip = request.headers.get("CF-Connecting-IP") || "inconnue";
+  if (await limited(env, ip, "vrate", VISITS_PER_IP_HOUR)) return;
+  const cf = request.cf || {};
+  const num = (v) => (v == null || v === "" || !isFinite(+v) ? null : Math.round(+v * 1000) / 1000);
+  const now = Date.now();
+  const visit = {
+    t: new Date(now).toISOString(),
+    type: kind,                                    // « arrivee » (première page) ou « page » (suivantes)
+    page: cleanPath(data.path),
+    ref: cleanRef(data.ref),
+    pays: clean(cf.country, 2).toUpperCase(),      // code ISO à deux lettres (CA, US, FR…)
+    region: clean(cf.region, 80),
+    ville: clean(cf.city, 80),
+    lat: num(cf.latitude),
+    lon: num(cf.longitude),
+    fuseau: clean(cf.timezone, 60),
+    asn: cf.asn ? Number(cf.asn) || null : null,
+    fournisseur: clean(cf.asOrganization, 100),
+    ip: clean(ip, 45),
+    ...device(clean(request.headers.get("User-Agent"), 400)),
+  };
+  const key = "visit:" + String(KEY_MAX - now).padStart(13, "0") + ":" + crypto.randomUUID().slice(0, 8);
+  const body = JSON.stringify(visit);
+  // La visite voyage aussi dans les métadonnées de la clé (1 024 octets au plus) : le journal se lit
+  // alors en une seule requête à KV, sans relire chaque visite.
+  const small = new TextEncoder().encode(body).length <= 1000;
+  await env.SITE_KV.put(key, body, small ? { expirationTtl: VISIT_TTL, metadata: visit } : { expirationTtl: VISIT_TTL });
+}
+
+async function hit(request, env, h, ctx) {
+  const data = await readBody(request);
+  const res = await visits(env, h, true); // compteur public : inchangé
+  const job = logVisit(request, env, data, "arrivee").catch(() => {}); // le journal ne bloque jamais le compteur
+  if (ctx && ctx.waitUntil) ctx.waitUntil(job); else await job;
+  return res;
+}
+
+async function view(request, env, h, ctx) {
+  const data = await readBody(request);
+  const job = logVisit(request, env, data, "page").catch(() => {});
+  if (ctx && ctx.waitUntil) ctx.waitUntil(job); else await job;
+  return json({ ok: true }, 200, h);
+}
+
+async function visitLog(request, env, h) {
+  if (!authorized(request, env)) return json({ ok: false }, 401, h);
+  const asked = parseInt(new URL(request.url).searchParams.get("limit") || "200", 10);
+  const limit = Math.max(1, Math.min(1000, isFinite(asked) ? asked : 200));
+  const list = await env.SITE_KV.list({ prefix: "visit:", limit });
+  const out = [];
+  for (const k of list.keys) {
+    if (k.metadata && k.metadata.t) { out.push(k.metadata); continue; }
+    const v = await env.SITE_KV.get(k.name);
+    if (v) { try { out.push(JSON.parse(v)); } catch {} }
+  }
+  return json({ ok: true, conservation_jours: 30, visits: out }, 200, h);
+}
+
 async function leads(request, env, h) {
-  const auth = request.headers.get("Authorization") || "";
-  if (!env.LEADS_TOKEN || auth !== "Bearer " + env.LEADS_TOKEN) return json({ ok: false }, 401, h);
+  if (!authorized(request, env)) return json({ ok: false }, 401, h);
   const list = await env.SITE_KV.list({ prefix: "lead:", limit: 1000 });
   const out = [];
   for (const k of list.keys) {
@@ -223,14 +350,16 @@ async function history(request, env, h) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const h = cors(request.headers.get("Origin") || "", env);
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: h });
     try {
       if (url.pathname === "/contact" && request.method === "POST") return await contact(request, env, h);
       if (url.pathname === "/visits" && request.method === "GET") return await visits(env, h, false);
-      if (url.pathname === "/visits/hit" && request.method === "POST") return await visits(env, h, true);
+      if (url.pathname === "/visits/hit" && request.method === "POST") return await hit(request, env, h, ctx);
+      if (url.pathname === "/visits/view" && request.method === "POST") return await view(request, env, h, ctx);
+      if (url.pathname === "/visits/log" && request.method === "GET") return await visitLog(request, env, h);
       if (url.pathname === "/leads" && request.method === "GET") return await leads(request, env, h);
       if (url.pathname === "/live" && request.method === "GET") return await live(request, env, h);
       if (url.pathname === "/history" && request.method === "GET") return await history(request, env, h);

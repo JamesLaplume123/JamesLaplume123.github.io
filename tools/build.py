@@ -45,6 +45,7 @@ PAGE_MODULES = [
     "english",
     "page_404",
     "labo_cartes",  # page privée : noindex, hors sitemap et menus
+    "admin_visites",  # privée : noindex, hors sitemap et hors menu
 ]
 
 

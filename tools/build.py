@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Générateur du site jameslaplume.ca.
+"""Générateur du site jarvisprivatesystems.com.
 
 Usage :  python3 tools/build.py
 

@@ -47,9 +47,9 @@ PAGE = {
     </div>
     <form class="form-card" data-rev data-contact action="https://formsubmit.co/laplumejames@gmail.com" method="POST"
           data-endpoint="{ENDPOINT}" data-fallback="https://formsubmit.co/ajax/laplumejames@gmail.com">
-      <input type="hidden" name="_subject" value="Nouveau message — jameslaplume.ca">
+      <input type="hidden" name="_subject" value="Nouveau message — jarvisprivatesystems.com">
       <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_next" value="https://jameslaplume.ca/merci/">
+      <input type="hidden" name="_next" value="https://jarvisprivatesystems.com/merci/">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="form-grid">
         <div class="field">

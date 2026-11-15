@@ -61,12 +61,12 @@ SCHEMA = json.dumps(
         {
             "@context": "https://schema.org",
             "@type": "ProfessionalService",
-            "@id": "https://jameslaplume.ca/#entreprise",
+            "@id": "https://jarvisprivatesystems.com/#entreprise",
             "name": "JARVIS Private Systems",
             "alternateName": "JARVIS",
-            "url": "https://jameslaplume.ca/",
-            "logo": "https://jameslaplume.ca/apple-touch-icon.png",
-            "image": "https://jameslaplume.ca/media/product/user/accueil-og.jpg",
+            "url": "https://jarvisprivatesystems.com/",
+            "logo": "https://jarvisprivatesystems.com/apple-touch-icon.png",
+            "image": "https://jarvisprivatesystems.com/media/product/user/accueil-og.jpg",
             "email": "laplumejames@gmail.com",
             "description": (
                 "Domotique privée, sécurité intelligente, automatisation et IA locale : "
@@ -100,11 +100,11 @@ SCHEMA = json.dumps(
         {
             "@context": "https://schema.org",
             "@type": "WebSite",
-            "@id": "https://jameslaplume.ca/#site",
+            "@id": "https://jarvisprivatesystems.com/#site",
             "name": "JARVIS Private Systems",
-            "url": "https://jameslaplume.ca/",
+            "url": "https://jarvisprivatesystems.com/",
             "inLanguage": "fr-CA",
-            "publisher": {"@id": "https://jameslaplume.ca/#entreprise"},
+            "publisher": {"@id": "https://jarvisprivatesystems.com/#entreprise"},
         },
         {
             "@context": "https://schema.org",

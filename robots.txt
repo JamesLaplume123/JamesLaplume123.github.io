@@ -3,4 +3,4 @@ Allow: /
 Disallow: /labo-cartes/
 Disallow: /admin/
 
-Sitemap: https://jameslaplume.ca/sitemap.xml
+Sitemap: https://jarvisprivatesystems.com/sitemap.xml

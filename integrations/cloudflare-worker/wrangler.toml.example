@@ -3,7 +3,7 @@ main = "src/index.js"
 compatibility_date = "2026-09-03"
 
 [vars]
-ALLOWED_ORIGINS = "https://jameslaplume.ca,https://www.jameslaplume.ca,http://127.0.0.1:4173,http://localhost:4173"
+ALLOWED_ORIGINS = "https://jarvisprivatesystems.com,https://www.jarvisprivatesystems.com,http://127.0.0.1:4173,http://localhost:4173"
 
 [[kv_namespaces]]
 binding = "BATTERY_KV"

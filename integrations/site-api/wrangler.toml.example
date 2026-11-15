@@ -3,7 +3,7 @@ main = "src/index.js"
 compatibility_date = "2026-11-01"
 
 [vars]
-ALLOWED_ORIGINS = "https://jameslaplume.ca,https://www.jameslaplume.ca,http://localhost:4173"
+ALLOWED_ORIGINS = "https://jarvisprivatesystems.com,https://www.jarvisprivatesystems.com,https://jameslaplume.ca,https://www.jameslaplume.ca,http://localhost:4173"
 MAIL_FROM = "JARVIS Private Systems <site@jarvisprivatesystems.com>"
 MAIL_TO = "laplumejames@gmail.com"
 HA_URL = "https://ha.jarvisprivatesystems.com"

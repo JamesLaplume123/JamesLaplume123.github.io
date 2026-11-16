@@ -59,6 +59,12 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 2. Les solutions, par mois, annulables en tout temps : comme des apps. Environnements intelligents est inclus avec chaque Hub.
 3. Le matériel du lieu, payé une fois : capteurs, caméras, boîtiers, prêt à brancher. On réutilise ce qui existe déjà (Victron, UniFi, caméras ONVIF, NAS, Starlink).
 4. Plusieurs lieux : un Hub par lieu, une seule app, −30 % sur les solutions dès le deuxième lieu. Installation au choix.
+## Quel Hub choisir (en mots de tous les jours)
+- Hub Base — Un petit lieu à surveiller (Chalet, condo, petit VR). Savoir que tout va bien, et agir à distance. Vous pouvez : être prévenu d’une fuite, du gel ou d’une porte ouverte; régler le chauffage et les lumières de partout; voir jusqu’à deux caméras. À savoir : L’assistant passe par Internet. Idéal comme deuxième lieu, relié à votre maison.
+- Hub Signature — La maison où vous vivez (Maison, VR complet, petite entreprise). Tout le lieu, et une IA qui reste chez vous. Vous pouvez : tout gérer dans une seule application; parler à JARVIS, même sans Internet; relier jusqu’à trois lieux : maison, chalet, VR. À savoir : Jusqu’à six caméras analysées.
+- Hub Platinum — Un lieu qui ne doit jamais s’arrêter (Domaine, ferme, entreprise). Plusieurs bâtiments, beaucoup de caméras, aucune coupure. Vous pouvez : continuer pendant une panne de courant ou d’Internet; suivre tous vos bâtiments et vos lieux, sans limite; recevoir des rapports et automatiser le travail. À savoir : Pensé pour les grands lieux : trop pour une maison ordinaire.
+- Pour aider quelqu’un qui hésite, poser trois questions : combien de lieux; l’IA doit-elle fonctionner sans Internet; le lieu doit-il tourner pendant une panne. Platinum si panne ou plus de trois lieux; Signature si IA sans Internet ou deux à trois lieux; sinon Base.
+- Le Hub s’achète une fois. Les solutions se prennent au mois, et s’annulent quand le client le veut.
 ## Les trois Hubs
 ### Hub Base. Pour : Chalet, condo, petit VR.
 - Pour veiller sur un lieu simple : fuite, gel, porte, batterie. L’IA passe par Internet. A : Jusqu’à 30 appareils; 2 caméras analysées, 7 jours d’enregistrement; IA par Internet seulement; Wi-Fi, Bluetooth, Zigbee; Garantie 1 an, soutien par courriel. Manque : Pas d’IA dans le Hub; Pas d’assistant vocal ni de réceptionniste; Pas d’automatisations d’entreprise; Pas de batterie de secours.

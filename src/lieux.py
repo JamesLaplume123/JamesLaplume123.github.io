@@ -115,6 +115,49 @@ LIEUX = [
      "demo": f"/solutions/{ENV}/#essayer"},
 ]
 
+# Quel Hub choisir : des bénéfices, pas des spécifications (décision de James). Chaque carte répond à
+# « est-ce pour moi? » : une situation, une promesse, trois « Vous pouvez… », une limite honnête.
+# Les faits restent ceux du comparatif du catalogue (C.COMPARE) : caméras analysées, IA locale ou par
+# Internet, lieux reliés, batterie et Internet de secours.
+HUBS_CHOIX = {
+    "base": {
+        "situation": "Un petit lieu à surveiller", "pour": "Chalet, condo, petit VR",
+        "promesse": "Savoir que tout va bien, et agir à distance.",
+        "peut": ["Être prévenu d’une fuite, du gel ou d’une porte ouverte",
+                 "Régler le chauffage et les lumières de partout",
+                 "Voir jusqu’à deux caméras"],
+        "savoir": "L’assistant passe par Internet. Idéal comme deuxième lieu, relié à votre maison.",
+    },
+    "signature": {
+        "situation": "La maison où vous vivez", "pour": "Maison, VR complet, petite entreprise",
+        "promesse": "Tout le lieu, et une IA qui reste chez vous.",
+        "peut": ["Tout gérer dans une seule application",
+                 "Parler à JARVIS, même sans Internet",
+                 "Relier jusqu’à trois lieux : maison, chalet, VR"],
+        "savoir": "Jusqu’à six caméras analysées.",
+    },
+    "platinum": {
+        "situation": "Un lieu qui ne doit jamais s’arrêter", "pour": "Domaine, ferme, entreprise",
+        "promesse": "Plusieurs bâtiments, beaucoup de caméras, aucune coupure.",
+        "peut": ["Continuer pendant une panne de courant ou d’Internet",
+                 "Suivre tous vos bâtiments et vos lieux, sans limite",
+                 "Recevoir des rapports et automatiser le travail"],
+        "savoir": "Pensé pour les grands lieux : trop pour une maison ordinaire.",
+    },
+}
+
+# « Vous hésitez? » : trois questions, la carte conseillée et sa raison (lu par assets/demos/offre.js).
+HESITE = [
+    ("lieux", "Combien de lieux?", [("1", "Un seul"), ("3", "Deux ou trois"), ("9", "Plus de trois")]),
+    ("ia", "L’IA doit-elle fonctionner sans Internet?", [("oui", "Oui"), ("non", "Non")]),
+    ("panne", "Le lieu doit-il tourner pendant une panne?", [("oui", "Oui"), ("non", "Non")]),
+]
+HESITE_RAISON = {
+    "base": "Hub Base : un seul petit lieu, l’assistant par Internet vous suffit.",
+    "signature": "Hub Signature : l’IA reste chez vous et relie jusqu’à trois lieux.",
+    "platinum": "Hub Platinum : batterie et Internet de secours, lieux sans limite.",
+}
+
 PAR_ID = {l["id"]: l for l in LIEUX}
 _TITRE = {c["slug"]: c["title"] for c in CAPABILITIES}
 

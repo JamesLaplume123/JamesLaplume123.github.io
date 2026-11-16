@@ -486,26 +486,44 @@
 </section>
 <section class="ac-sect ac-offre" id="offre" aria-labelledby="ac-offre-titre">
   <div class="ac-tete">
-    <h2 id="ac-offre-titre">Un Hub, selon votre lieu.</h2>
+    <h2 id="ac-offre-titre">Quel Hub est pour vous?</h2>
     <a class="pill" href="/offre/">Voir l’offre</a>
   </div>
-  <div class="of-hs"><article class="of-h" data-rev>
-      <p class="of-h-k">Pour</p>
-      <h3>Chalet, condo, petit VR</h3>
-      <p class="of-h-n">Hub Base</p>
-      <ul class="of-h-d"><li><span>Appareils reliés</span><b>30</b></li><li><span>Caméras analysées</span><b>2</b></li><li><span>IA privée</span><b>Par Internet seulement</b></li><li><span>Lieux reliés</span><b>Suit un Hub principal</b></li></ul>
-    </article><article class="of-h" data-rev>
-      <span class="of-h-tag">Le plus choisi</span><p class="of-h-k">Pour</p>
-      <h3>Maison, VR complet, PME</h3>
-      <p class="of-h-n">Hub Signature</p>
-      <ul class="of-h-d"><li><span>Appareils reliés</span><b>100</b></li><li><span>Caméras analysées</span><b>6</b></li><li><span>IA privée</span><b>Locale, dans le Hub</b></li><li><span>Lieux reliés</span><b>Jusqu’à 3</b></li></ul>
-    </article><article class="of-h" data-rev>
-      <span class="of-h-tag">Rien ne manque</span><p class="of-h-k">Pour</p>
-      <h3>Domaine, entreprise, ferme</h3>
-      <p class="of-h-n">Hub Platinum</p>
-      <ul class="of-h-d"><li><span>Appareils reliés</span><b>Illimité</b></li><li><span>Caméras analysées</span><b>16 et plus</b></li><li><span>IA privée</span><b>Forte, 100 % locale</b></li><li><span>Lieux reliés</span><b>Illimité</b></li></ul>
+  <div class="of-choix" data-of-choix>
+  <div class="of-hs"><article class="of-h" data-hub="base" data-rev>
+      <p class="of-h-k">Hub Base</p>
+      <h3>Un petit lieu à surveiller</h3>
+      <p class="of-h-pour">Chalet, condo, petit VR</p>
+      <p class="of-h-pr">Savoir que tout va bien, et agir à distance.</p>
+      <p class="of-h-v">Vous pouvez</p>
+      <ul class="of-h-d"><li>Être prévenu d’une fuite, du gel ou d’une porte ouverte</li><li>Régler le chauffage et les lumières de partout</li><li>Voir jusqu’à deux caméras</li></ul>
+      <p class="of-h-s"><span>À savoir</span> L’assistant passe par Internet. Idéal comme deuxième lieu, relié à votre maison.</p>
+    </article><article class="of-h" data-hub="signature" data-rev>
+      <span class="of-h-tag">Le plus choisi</span><p class="of-h-k">Hub Signature</p>
+      <h3>La maison où vous vivez</h3>
+      <p class="of-h-pour">Maison, VR complet, petite entreprise</p>
+      <p class="of-h-pr">Tout le lieu, et une IA qui reste chez vous.</p>
+      <p class="of-h-v">Vous pouvez</p>
+      <ul class="of-h-d"><li>Tout gérer dans une seule application</li><li>Parler à JARVIS, même sans Internet</li><li>Relier jusqu’à trois lieux : maison, chalet, VR</li></ul>
+      <p class="of-h-s"><span>À savoir</span> Jusqu’à six caméras analysées.</p>
+    </article><article class="of-h" data-hub="platinum" data-rev>
+      <span class="of-h-tag">Rien ne manque</span><p class="of-h-k">Hub Platinum</p>
+      <h3>Un lieu qui ne doit jamais s’arrêter</h3>
+      <p class="of-h-pour">Domaine, ferme, entreprise</p>
+      <p class="of-h-pr">Plusieurs bâtiments, beaucoup de caméras, aucune coupure.</p>
+      <p class="of-h-v">Vous pouvez</p>
+      <ul class="of-h-d"><li>Continuer pendant une panne de courant ou d’Internet</li><li>Suivre tous vos bâtiments et vos lieux, sans limite</li><li>Recevoir des rapports et automatiser le travail</li></ul>
+      <p class="of-h-s"><span>À savoir</span> Pensé pour les grands lieux : trop pour une maison ordinaire.</p>
     </article></div>
-  <p class="ac-offre-l">Puis vos solutions, par mois, annulables en tout temps. Prix sur soumission, confirmé par écrit avant tout achat.</p>
+  <div class="of-hes" data-rev>
+    <p class="of-hes-t">Vous hésitez?</p>
+    <div class="of-qs"><div class="of-q" data-q="lieux"><p>Combien de lieux?</p><div><button type="button" data-r="1" aria-pressed="false">Un seul</button><button type="button" data-r="3" aria-pressed="false">Deux ou trois</button><button type="button" data-r="9" aria-pressed="false">Plus de trois</button></div></div><div class="of-q" data-q="ia"><p>L’IA doit-elle fonctionner sans Internet?</p><div><button type="button" data-r="oui" aria-pressed="false">Oui</button><button type="button" data-r="non" aria-pressed="false">Non</button></div></div><div class="of-q" data-q="panne"><p>Le lieu doit-il tourner pendant une panne?</p><div><button type="button" data-r="oui" aria-pressed="false">Oui</button><button type="button" data-r="non" aria-pressed="false">Non</button></div></div></div>
+    <p class="of-hes-r" data-of-raison hidden aria-live="polite"></p>
+    <script type="application/json" data-of-raisons>{"base": "Hub Base : un seul petit lieu, l’assistant par Internet vous suffit.", "signature": "Hub Signature : l’IA reste chez vous et relie jusqu’à trois lieux.", "platinum": "Hub Platinum : batterie et Internet de secours, lieux sans limite."}</script>
+  </div>
+  <p class="of-deux" data-rev>Le Hub s’achète une fois. Les solutions se prennent au mois, et s’annulent quand vous voulez.</p>
+  <p class="of-soum" data-rev>Prix sur soumission, confirmé par écrit.</p>
+</div>
 </section>
 <section class="ac-sect ac-composer" id="forfait" aria-labelledby="ac-comp-titre">
   <div class="ac-bande">

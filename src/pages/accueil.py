@@ -125,11 +125,10 @@ def _logiciel():
 def _offre():
     return f"""<section class="ac-sect ac-offre" id="offre" aria-labelledby="ac-offre-titre">
   <div class="ac-tete">
-    <h2 id="ac-offre-titre">Un Hub, selon votre lieu.</h2>
+    <h2 id="ac-offre-titre">Quel Hub est pour vous?</h2>
     <a class="pill" href="/offre/">Voir l’offre</a>
   </div>
   {offre.hubs()}
-  <p class="ac-offre-l">Puis vos solutions, par mois, annulables en tout temps. {pro.SOUMISSION if not pro.PRIX else ""}</p>
 </section>"""
 
 

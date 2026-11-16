@@ -1,4 +1,4 @@
-/* Pages professionnelles et locales (src/pro.py, pages besoins, regions, questions, mentions).
+/* Pages professionnelles (src/pro.py, pages par besoin, questions, mentions, plan du site).
    Tout le reste vient de wow.css : bandes, cartes noires à cadre de cristal, rangées, FAQ. */
 
 /* Fil d'Ariane visible */
@@ -11,19 +11,7 @@
 .band .fil { text-shadow: 0 1px 3px #000c; }
 .plain-top .fil { justify-content: center; }
 
-/* Carte d'appel dans une grille de cartes */
-.pro-go { display: flex; flex-direction: column; background:
-  radial-gradient(420px 220px at 100% 0, color-mix(in srgb, var(--mode-glow) 14%, transparent), transparent 70%), var(--mode-panel); }
-.pro-go .pro-go-a { margin: auto 0 0; padding-top: 1.4rem; }
-
-/* Liens vers les villes */
-.pro-zone { margin-top: 0; }
-.pro-zone a.chip { text-decoration: none; transition: border-color .25s, color .25s; }
-.pro-zone a.chip:hover { color: #fff; border-color: var(--gold-soft); }
-.pro-zone-s .sect-head { margin-bottom: 1.6rem; }
-
 /* Questions : groupes successifs */
 .faq + .faq { padding-top: 1rem; }
-.faq .head h2 { margin: .8rem 0 0; }
 .faq-a a, .sect-head p a, .cta p a, .row p a { color: #e9e9ee; text-underline-offset: 3px; }
 .faq-a a:hover, .sect-head p a:hover, .cta p a:hover { color: var(--gold-soft); }

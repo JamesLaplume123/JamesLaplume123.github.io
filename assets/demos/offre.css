@@ -13,46 +13,7 @@
 .of-h ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .4rem; }
 .of-h li { position: relative; padding-left: 1.2rem; font-size: .88rem; color: #d6d2ca; line-height: 1.45; }
 .of-h li::before { content: ""; position: absolute; left: 0; top: .5em; width: 7px; height: 7px; border-radius: 50%; background: #8fd3a5; }
-.of-h-go { margin-top: 1.2rem; color: var(--gold-soft); font-size: .86rem; font-weight: 600; }
-.of-h-go i { font-style: normal; }
-
-/* Prix sur les cartes de solutions */
-.of-x-prix { margin: .1rem 0 .5rem; font-size: 1.05rem; font-weight: 650; color: #fff; letter-spacing: -.01em; }
-
-/* Matériel */
-.of-ms.cards { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 80rem; }
-a.of-m:hover h3 { color: var(--gold-soft); }
-
-/* Installation */
-.of-inst.cards { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 80rem; }
-.of-note { max-width: 76rem; margin: 1.5rem auto 0; color: #a8a8b0; font-size: .9rem; line-height: 1.55; }
-.of-note a { color: var(--gold-soft); }
-
-/* Kits par lieu */
-.of-pfs { max-width: 76rem; margin: 0 auto; display: grid; gap: 16px; }
-.of-pf-prix { margin: 1rem 0 0; font-size: 1rem; color: #d6d2ca; }
-.of-pf-prix b { font-size: 1.45rem; font-weight: 650; letter-spacing: -.02em; color: #fff; }
-.of-pf-prix i { font-style: normal; color: #8e8e96; margin: 0 .5rem; }
-.of-pf-f .pill { padding: .6rem 1.1rem; font-size: .86rem; }
-
-/* Factures types */
-.of-facts { max-width: 76rem; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.of-fact { padding: 1.6rem 1.6rem 1.5rem; border-radius: 20px; background: var(--mode-panel-solid), #050505; box-shadow: 0 18px 44px #0006, inset 0 0 0 1px #ffffff14; }
-.of-fact-k { margin: 0; font: 600 .62rem/1 var(--mono); letter-spacing: .15em; text-transform: uppercase; color: var(--gold-soft); }
-.of-fact-n { margin: .5rem 0 1rem; font-size: 1.2rem; font-weight: 650; letter-spacing: -.02em; }
-.of-fact dl { margin: 0; display: grid; gap: .5rem; }
-.of-fact dl div { display: flex; justify-content: space-between; align-items: baseline; padding: .5rem 0; border-top: 1px solid #ffffff12; }
-.of-fact dt { margin: 0; font-size: .88rem; color: #a9a9b2; }
-.of-fact dd { margin: 0; font-size: 1.2rem; font-weight: 650; letter-spacing: -.02em; color: #fff; }
-.of-fact dl div:last-child dd { color: var(--gold-soft); }
-.of-fact > a { display: inline-block; margin-top: 1rem; color: var(--gold-soft); text-decoration: none; font-size: .86rem; font-weight: 600; }
-.of-fact > a i { font-style: normal; }
-.ob-acts { max-width: 76rem; margin: 2rem auto 0; display: flex; flex-wrap: wrap; gap: .8rem; }
 
 @media (max-width: 1100px) {
-  .of-hs, .of-facts { grid-template-columns: 1fr; }
-  .of-ms.cards, .of-inst.cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 720px) {
-  .of-ms.cards, .of-inst.cards { grid-template-columns: 1fr; }
+  .of-hs { grid-template-columns: 1fr; }
 }

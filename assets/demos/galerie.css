@@ -4,6 +4,15 @@
 
 .gl-sect .sect-head h2 em { white-space: normal; }
 
+/* ---------- Mosaïque ---------- */
+.gl-mos {
+  max-width: 82rem; margin: 0 auto; display: grid; gap: 18px;
+  grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-flow: row dense;
+}
+.gl-mos.gl-n3, .gl-mos.gl-n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.gl-mos .gl-fig { aspect-ratio: 4 / 3; }
+.gl-mos .gl-fig.is-big { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; min-height: 100%; }
+
 /* ---------- Carte photo ---------- */
 .gl-fig {
   position: relative; margin: 0; min-width: 0; overflow: hidden; border-radius: 18px; isolation: isolate;
@@ -14,7 +23,7 @@
   border: 14px solid transparent; border-image: url("/media/modes/rim.png") 50 / 14px / 0 stretch;
   filter: var(--mode-rim-filter);
 }
-.gl-fig.is-big::after { border-width: 18px; border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch; }
+.gl-fig.is-big::after, .gl-wide::after { border-width: 18px; border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch; }
 :root[data-mode="base"] .gl-fig::after { inset: 0; border: 1px solid var(--mode-line); border-image: none; filter: none; border-radius: 18px; }
 .gl-fig > img {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
@@ -89,7 +98,24 @@
 
 /* ---------- Photos en tête des colonnes « En clair » (pages de solution) ---------- */
 .vs-col .gl-fig.vs-ph { aspect-ratio: 3 / 2; margin: 0 0 1.4rem; border-radius: 14px; }
+.vs-col .gl-fig.vs-ph::after { border-radius: 16px; }
+.vs-col .gl-fig.vs-ph figcaption { padding: 2.6rem 1.1rem 1rem; }
+.vs-col .gl-fig.vs-ph figcaption b { font-size: .95rem; }
+
+/* ---------- Panorama cinéma ---------- */
+.gl-pano { padding: 2.5rem 1.4rem; }
+.gl-wide { max-width: 90rem; margin: 0 auto; aspect-ratio: 21 / 9; }
+.gl-wide .gl-wide-t {
+  top: 0; right: auto; width: min(44rem, 62%); padding: clamp(1.6rem, 4vw, 3.6rem);
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 0;
+  background: linear-gradient(90deg, #000000e6, #000000a8 55%, transparent);
+}
+.gl-wide .gl-wide-t h2 {
+  margin: 1rem 0 0; font-weight: 650; font-size: clamp(1.8rem, 3.4vw, 3rem); letter-spacing: -.035em; line-height: 1.08; color: #f5f5f7;
+}
 .gl-wide .gl-wide-t p:not(.eyebrow) { margin: 1rem 0 0; max-width: 34rem; color: #d2d2d8; }
+.gl-wide.is-ph .gl-ph { place-content: center end; padding-right: 9%; }
+.gl-note { max-width: 82rem; margin: 1.4rem auto 0; font: 500 .66rem/1.6 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
 
 /* ---------- Mouvement (seulement sous html.fx, en pause hors écran) ---------- */
 @keyframes gl-kb { from { transform: scale(1.02); } to { transform: scale(1.09) translate(-1%, -1%); } }
@@ -131,3 +157,6 @@
   .gl-badge { top: 16px; left: 16px; }
   .gl-fig:not(.gl-wide) .gl-ph-n { margin-top: -4.2rem; font-size: .68rem; }
 }
+
+/* ---------- Règles récentes (structure, essentiel) replacées après la restauration ---------- */
+.gl-fig.is-big::after { border-width: 18px; border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch; }

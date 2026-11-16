@@ -3,7 +3,7 @@
 
 import re
 
-from config import SITE, NAV, CTA_V2, CAPABILITIES, FOOTER_COLUMNS, LIEUX_NAV, SEO
+from config import SITE, NAV, CTA_V2, FORFAIT, CAPABILITIES, FOOTER_COLUMNS, LIEUX_NAV, SEO
 from demos.app import EXT_ICON, ICONS
 import pro
 
@@ -136,7 +136,7 @@ def header_v2(page):
         + sheet_sub(item)
         for item in NAV
     )
-    cta_label = "Let’s talk about your project" if en else CTA_V2["label"]
+    cta_label = FORFAIT["en"] if en else FORFAIT["label"]
     nav_label = "Main navigation" if en else "Navigation principale"
     menu_label = "Open menu" if en else "Ouvrir le menu"
     lang_link = (
@@ -154,7 +154,7 @@ def header_v2(page):
   <nav class="bar-nav" aria-label="{nav_label}">{"".join(bar_links)}</nav>
   <div class="bar-actions">
     {bar_lang}
-    <a class="bar-cta" href="{CTA_V2['url']}">{cta_label}</a>
+    <a class="bar-cta" href="{FORFAIT['url']}" data-forfait>{cta_label}<b data-forfait-n hidden></b></a>
     <button class="bar-menu" type="button" aria-expanded="false" aria-label="{menu_label}" data-menu>
       <span></span><span></span>
     </button>
@@ -163,7 +163,7 @@ def header_v2(page):
 <nav class="sheet" aria-label="Menu">
   <div class="sheet-in">
     {sheet_links}
-    <a class="sheet-cta" href="{CTA_V2['url']}">{cta_label}</a>
+    <a class="sheet-cta" href="{FORFAIT['url']}" data-forfait>{cta_label}<b data-forfait-n hidden></b></a>
     {lang_link}
   </div>
 </nav>"""

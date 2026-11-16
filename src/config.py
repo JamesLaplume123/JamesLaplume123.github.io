@@ -27,6 +27,11 @@ SITE = {
         "Entreprise de technologie et de sécurité. JARVIS, un système privé qui gère et "
         "protège les maisons, les fermes, les entreprises et les véhicules."
     ),
+    # Prix publics (décision de James, novembre 2026) : False pendant le lancement. Aucun montant
+    # n'est alors affiché nulle part (accueil, offre, solutions, questions, fiche de l'IA) et le
+    # configurateur (/catalogue/) reste public mais sans montant ni total : « une fois », « par mois »,
+    # « prix confirmé dans votre soumission ». Remettre True rétablit tous les prix d'un seul coup.
+    "prix_publics": False,
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
@@ -50,19 +55,24 @@ LIEUX_NAV = [
 ]
 APROPOS_NAV = [
     ("/a-propos/", "À propos", "About"),
+    ("/laboratoire-mobile/", "Laboratoire mobile · l’exemple réel", "Mobile lab · the real example"),
     ("/vision-roadmap/", "Vision", "Vision"),
-    ("/laboratoire-mobile/", "Laboratoire mobile", "Mobile lab"),
+    ("/plateforme/", "Le Hub", "The Hub"),
     ("/confiance/", "Confiance", "Trust"),
     ("/questions/", "Questions", "Questions"),
+    ("/contact/", "Contact", "Contact"),
 ]
 NAV = [
     {"url": "/solutions/", "label": "Solutions", "en": "Solutions", "menu": True},
     {"url": "/logiciel/", "label": "Le logiciel", "en": "The software"},
-    {"url": "/plateforme/", "label": "Le Hub", "en": "The Hub"},
-    {"url": "/offre/", "label": "L’offre", "en": "The offer", "aussi": ["/catalogue/"]},
+    {"url": "/offre/", "label": "L’offre", "en": "The offer"},
     {"url": "/a-propos/", "label": "À propos", "en": "About", "sub": APROPOS_NAV,
-     "aussi": ["/vision-roadmap/", "/laboratoire-mobile/", "/confiance/", "/questions/", "/recherche/"]},
+     "aussi": [u for u, _, _ in APROPOS_NAV] + ["/recherche/"]},
 ]
+
+# Le parcours du visiteur (décision de James) : voir → tester → comprendre → composer son forfait.
+# Le bouton doré de la barre mène au configurateur; le contact vit dans À propos et dans le pied de page.
+FORFAIT = {"url": "/catalogue/", "label": "Composer mon forfait", "en": "Build my package"}
 
 # Appel à l'action principal (chantier wow — vente du logiciel)
 CTA_V2 = {"url": "/contact/", "label": "Parlons de votre projet"}
@@ -78,7 +88,8 @@ BESOINS_PAGES = [
 # Pied de page en quatre colonnes : Solutions (les sept, ajoutées par partials.py), Produit, Entreprise, Aide.
 FOOTER_COLUMNS = [
     ("Produit", [
-        ("/logiciel/", "Le logiciel"), ("/plateforme/", "Le Hub"), ("/offre/", "L’offre"), ("/catalogue/", "Catalogue"),
+        ("/logiciel/", "Le logiciel"), ("/plateforme/", "Le Hub"), ("/offre/", "L’offre"),
+        ("/catalogue/", "Composer mon forfait"),
     ]),
     ("Entreprise", [
         ("/a-propos/", "À propos"), ("/vision-roadmap/", "Vision"), ("/laboratoire-mobile/", "Laboratoire mobile"),

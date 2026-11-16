@@ -538,4 +538,17 @@
   });
   window.JarvisForfait = { lire: lireF, ecrire: ecrireF, maj: majF };
   majF();
+
+  /* ---------- Les cadres de démonstration tiennent dans la fenêtre ----------
+     Scènes fixes (Hub) : réduites d'un seul tenant si elles sont plus hautes que la fenêtre moins la barre. */
+  var cadres = $$(".hb-frame");
+  function tient() {
+    if (window.innerWidth <= 900) { cadres.forEach(function (c) { c.style.zoom = ""; }); return; }
+    cadres.forEach(function (c) {
+      c.style.zoom = "";
+      var h = c.offsetHeight, max = window.innerHeight - 96;
+      if (h > max) { c.style.zoom = (max / h).toFixed(4); c.style.marginLeft = "auto"; c.style.marginRight = "auto"; }
+    });
+  }
+  if (cadres.length) { tient(); window.addEventListener("resize", tient); window.addEventListener("load", tient); }
 })();

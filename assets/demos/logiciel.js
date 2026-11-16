@@ -46,14 +46,18 @@
   function fit() {
     app.style.width = "";
     app.style.zoom = "";
-    if (stage.classList.contains("is-phone")) return;
+    var plein = stage.classList.contains("is-full"), tel = stage.classList.contains("is-phone");
     var w = host.clientWidth;
-    if (w < 700) return;
-    /* L'écran complet tient aussi en hauteur dans la fenêtre, sous la barre (sauf en plein écran). */
-    app.style.width = DESIGN + "px";
+    if (!tel && w < 700) return;
+    /* Règle du site : le cadre tient en entier dans la fenêtre. En plein écran, il prend la fenêtre (moins le
+       bouton « Quitter »); sinon la fenêtre moins la barre du site. L'app est dessinée à 1240 px (400 px en
+       aperçu téléphone), puis réduite. */
+    var large = tel ? 400 : DESIGN;
+    app.style.width = large + "px";
     var h = app.offsetHeight;
-    var z = Math.min(1, w / DESIGN, stage.classList.contains("is-full") || !h ? 1 : (window.innerHeight - 96) / h);
-    if (z >= 1) { if (w >= DESIGN) app.style.width = ""; return; }
+    var dispo = window.innerHeight - (plein ? 84 : 96);
+    var z = Math.min(1, w / large, h ? dispo / h : 1);
+    if (z >= 1) { if (!tel && w >= DESIGN) app.style.width = ""; return; }
     app.style.zoom = z.toFixed(4);
   }
   var fitT = 0;

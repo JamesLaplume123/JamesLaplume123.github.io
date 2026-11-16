@@ -176,3 +176,15 @@
   .xs-body { padding: 0 8px 8px; }
   .xs .demo-shell { border-radius: 14px; }
 }
+
+/* ---------- Le cadre tient dans la fenêtre (règle du site) ----------
+   coquille.js réduit le cadre (zoom, jamais sous 62 %) et fixe sa hauteur à la fenêtre moins la barre du site
+   et le menu de sections. Ce qui reste trop long défile À L'INTÉRIEUR du cadre, jamais la page derrière.
+   Sur téléphone, le cadre suit la page. */
+@media (min-width: 901px) {
+  .xs-screen { overflow: hidden; }
+  .xs-main, .xs-side { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #ffffff2e transparent; }
+  .xs-side { scrollbar-width: none; }
+  .xs-side::-webkit-scrollbar { display: none; }
+  html:has(.toc) .xs { scroll-margin-top: 124px; }
+}

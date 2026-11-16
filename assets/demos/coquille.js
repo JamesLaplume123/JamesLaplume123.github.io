@@ -46,4 +46,30 @@
     .then(function (j) { try { ss && ss.setItem("jarvis-ec", JSON.stringify({ t: Date.now(), j: j })); } catch (e) {} return j; }))
     .then(paint)
     .catch(function () { root.setAttribute("data-wx-state", "off"); });
+
+  /* ---------- Le cadre tient dans la fenêtre ----------
+     Hauteur disponible : la fenêtre moins la barre du site (et le menu de sections s'il y en a un). Le cadre est
+     réduit d'un seul tenant (jamais sous 62 %, pour rester lisible); ce qui dépasse encore défile à l'intérieur. */
+  var coques = Array.prototype.slice.call(document.querySelectorAll("[data-xs]"));
+  function tient() {
+    var toc = document.querySelector(".toc");
+    var dispo = window.innerHeight - 96 - (toc ? toc.offsetHeight : 0);
+    coques.forEach(function (xs) {
+      var ecran = xs.querySelector(".xs-screen"), main = xs.querySelector(".xs-main"), cote = xs.querySelector(".xs-side");
+      if (!ecran || !main) return;
+      [ecran, main, cote].forEach(function (e) { if (e) e.style.maxHeight = ""; });
+      xs.style.zoom = "";
+      if (window.innerWidth <= 900) return;
+      var nat = Math.max(main.scrollHeight, cote ? cote.scrollHeight : 0);
+      var z = Math.max(.62, Math.min(1, dispo / nat));
+      if (z < 1) xs.style.zoom = z.toFixed(4);
+      var max = Math.floor(dispo / z) + "px";
+      [ecran, main, cote].forEach(function (e) { if (e) e.style.maxHeight = max; });
+    });
+  }
+  if (coques.length) {
+    tient();
+    window.addEventListener("resize", tient);
+    window.addEventListener("load", tient);
+  }
 })();

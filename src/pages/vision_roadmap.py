@@ -78,7 +78,7 @@ PAGE = {
               "JARVIS relie seulement ce que vous autorisez, repère ce qui vous nuit et vous aide à "
               "atteindre vos objectifs. Vous décidez à chaque étape.",
               "Vision · données d’exemple") + """
-  @@VIE@@
+  <div class="vn-cadre">@@VIE@@</div>
   <details class="vn-note" data-rev><summary>La règle centrale</summary><p class="form-note">Règle centrale :
   JARVIS relie les outils choisis; il ne remplace ni le médecin, ni le conseiller financier, ni
   l’entraîneur. Bien-être seulement, aucun diagnostic. Les projections sont des estimations
@@ -93,7 +93,7 @@ PAGE = {
               "Aujourd’hui, l’entreprise n’offre aucun de ces services et ne détient aucun permis.",
               "Vision · non offert · données fictives") + """
   @@FIRME@@
-  <div style="margin-top:3.2rem">@@PENTEST@@</div>
+  <div class="vn-cadre" style="margin-top:3.2rem">@@PENTEST@@</div>
   <details class="vn-note" data-rev><summary>Le cadre légal et les méthodes</summary><p class="form-note">Différence
   importante : l’administration réseau JARVIS surveille au quotidien; Security Pro intervient
   dans une mission limitée, autorisée et documentée. Méthodes de référence : PTES, OWASP WSTG,

@@ -9,14 +9,15 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - JARVIS continue de fonctionner sans Internet (règles, IA locale, caméras, journal). Les mises à jour sont signées, la nuit, avec retour arrière.
 - Le logiciel est en construction : le site montre des démonstrations; le premier JARVIS tourne dans le laboratoire mobile (une ambulance convertie). La démo et la visite sont offertes dès maintenant.
 ## Les pages du site (donner le lien complet quand c’est utile)
-- Menu du site : Solutions (les sept, puis Maison, Ferme, Entreprise) · Le logiciel · Le Hub · L’offre · À propos (Vision, Laboratoire mobile, Confiance, Questions) · bouton « Parlons de votre projet ».
-- Parcours conseillé : une solution, puis l’offre, puis le catalogue ou le contact.
+- Menu du site : Solutions (les sept, puis Maison, Ferme, Entreprise) · Le logiciel · L’offre · À propos (Laboratoire mobile, Vision, Le Hub, Confiance, Questions, Contact) · bouton doré « Composer mon forfait ».
+- Parcours conseillé : voir (accueil, solutions) → tester (le logiciel, la démonstration de chaque solution) → comprendre (l’offre, le Hub, les questions) → composer son forfait (le configurateur), puis « Recevoir ma soumission ».
+- Le forfait se bâtit en chemin : « Ajouter à mon forfait » sur chaque page de solution; le compteur de la barre mène au configurateur, où tout est déjà coché.
 - https://jarvisprivatesystems.com/ : Accueil
 - https://jarvisprivatesystems.com/solutions/ : Les sept solutions
 - https://jarvisprivatesystems.com/logiciel/ : Le logiciel en démonstration
 - https://jarvisprivatesystems.com/plateforme/ : Le Hub : le boîtier, son IA privée, le noyau
 - https://jarvisprivatesystems.com/offre/ : L’offre : un Hub payé une fois (Base, Signature, Platinum), des solutions par mois, le matériel
-- https://jarvisprivatesystems.com/catalogue/ : Catalogue : on compose son système; le panier fait le total
+- https://jarvisprivatesystems.com/catalogue/ : Composer mon forfait : le configurateur (lieu, Hub conseillé, solutions, matériel, récapitulatif, soumission)
 - https://jarvisprivatesystems.com/solutions/maison-intelligente-cle-en-main/ : Maison intelligente clé en main
 - https://jarvisprivatesystems.com/solutions/domotique-ferme-agricole/ : Domotique pour ferme
 - https://jarvisprivatesystems.com/solutions/ia-privee-entreprise/ : IA privée pour entreprise
@@ -37,6 +38,25 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - https://jarvisprivatesystems.com/solutions/reseau-resilience/ : Réseau et cybersécurité (Réseau)
 - https://jarvisprivatesystems.com/solutions/diagnostic-care/ : Diagnostic & continuité (Continuité)
 - https://jarvisprivatesystems.com/solutions/mobilite/ : Mobilité (Mobilité)
+## Entrer par son lieu (même source que le site : src/lieux.py)
+### Chez vous
+- Maison : Hub Signature. L’IA tourne dans le Hub, sans Internet, et relie jusqu’à 100 appareils. Solutions qui comptent : Environnements intelligents (Lumières, chauffage et énergie sur un seul écran); Sécurité intelligente (Caméras, portes et alarme dans un seul fil); Réseau et cybersécurité (Un Wi-Fi solide dans toute la maison).
+- Condo : Hub Base. Un lieu simple : quelques appareils, une fuite ou une porte à surveiller. Solutions qui comptent : Environnements intelligents (Chauffage et éclairage réglés selon votre journée); Diagnostic & continuité (Une fuite d’eau repérée avant le dégât).
+- Chalet : Hub Base. Il veille sur un lieu fermé : gel, fuite, porte, batterie. Solutions qui comptent : Diagnostic & continuité (Gel, fuite, panne : prévenu avant le dégât); Sécurité intelligente (Une porte ouverte ou un mouvement, vous le savez); Environnements intelligents (Le chauffage monté avant votre arrivée).
+- Domaine : Hub Platinum. Plusieurs bâtiments, beaucoup de caméras, rien ne doit s’arrêter. Solutions qui comptent : Sécurité intelligente (Caméras, plaques et accès de toute la propriété); Environnements intelligents (Maison, garage et dépendances sur un seul écran); Réseau et cybersécurité (Un réseau qui relie chaque bâtiment); Diagnostic & continuité (Eau, énergie et équipements suivis jour après jour).
+### Votre entreprise
+- Bureau ou commerce : Hub Signature. Réceptionniste IA et jusqu’à dix automatisations, traitées sur place. Solutions qui comptent : Automatisation d’entreprise (La réception ne manque plus un appel); IA privée et connaissances (Vos documents répondent aux questions de l’équipe); Réseau et cybersécurité (Un réseau séparé pour les clients, les postes et les caméras).
+- Atelier, entrepôt ou usine : Hub Signature. Accès, caméras et machines suivis au même endroit. Solutions qui comptent : Sécurité intelligente (Qui entre, quand, et par quelle porte); Diagnostic & continuité (Une machine qui dérive se voit avant le bris); Réseau et cybersécurité (Un réseau séparé pour les machines); Automatisation d’entreprise (Commandes et bons qui circulent sans ressaisie).
+- Ferme : Hub Platinum. Des bâtiments et des animaux qui ne peuvent pas attendre : batterie et Internet de secours. Solutions qui comptent : Diagnostic & continuité (Température, courant, eau : l’alerte avant la perte); Environnements intelligents (Tous les bâtiments sur un seul écran); Réseau et cybersécurité (Internet dans chaque bâtiment); Sécurité intelligente (Portes, barrières et visiteurs).
+- Garage ou hangar : Hub Signature. Des biens de valeur : caméras analysées sur place, accès contrôlés. Solutions qui comptent : Sécurité intelligente (Chaque entrée et chaque sortie, avec l’image); Environnements intelligents (Portes, humidité et température du bâtiment); Diagnostic & continuité (Batteries et équipements suivis).
+### En déplacement
+- VR (lieu mobile) : Hub Signature + Boîtier VR. Une maison qui roule : le Hub et le Boîtier VR gèrent batteries, eau, chauffage et sécurité. Solutions qui comptent : Environnements intelligents (Batteries, eau, chauffage et lumières à bord); Mobilité (Un copilote qui propose le bon arrêt); Sécurité intelligente (Le véhicule surveillé quand vous êtes ailleurs); Diagnostic & continuité (Une batterie ou une pompe qui faiblit se voit tôt).
+- Roulotte (lieu mobile) : Hub Base + Boîtier VR. Batteries, réservoirs, gel et porte : l’essentiel d’un petit lieu mobile. Solutions qui comptent : Environnements intelligents (Batteries et réservoirs d’un coup d’œil); Diagnostic & continuité (Le gel et les fuites signalés); Mobilité (Le trajet et les arrêts gardés sur la carte).
+- Bateau habitable (lieu mobile) : Hub Base + Boîtier VR. À quai comme en route : énergie, cale et accès surveillés. Solutions qui comptent : Environnements intelligents (Énergie, réservoirs et confort à bord); Diagnostic & continuité (Pompe de cale et batteries suivies); Sécurité intelligente (Une présence à bord, vous le savez).
+- Auto ou camion (véhicule) : Boîtier Mobilité. Aucun Hub à bord : le Boîtier Mobilité donne la position, le diagnostic et l’antivol. Solutions qui comptent : Mobilité (Position, diagnostic et antivol, de partout).
+- Moto (véhicule) : Boîtier Mobilité. Aucun Hub à bord : le Boîtier Mobilité suffit. Solutions qui comptent : Mobilité (Position et antivol, de partout).
+- Avion (véhicule) : Boîtier Mobilité. L’appareil est suivi par son boîtier; le hangar, lui, reçoit un Hub. Solutions qui comptent : Mobilité (L’appareil, son état et ses vols au même endroit).
+- Un lieu mobile (VR, roulotte, bateau habitable) se traite comme une maison qui roule : Hub et Boîtier VR. Un véhicule (auto, camion, moto, avion) reçoit un Boîtier Mobilité, sans Hub à bord.
 ## Les prix
 - Les prix ne sont pas publiés pendant le lancement : chaque projet reçoit une soumission écrite. Ne donner aucun montant, même approximatif.
 

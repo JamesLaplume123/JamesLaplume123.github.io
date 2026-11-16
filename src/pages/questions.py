@@ -29,8 +29,7 @@ GROUPES = [
          "<a href=\"/a-propos/#comment-on-travaille\">comment on travaille</a>."),
         ("Combien ça coûte?",
          "Ça dépend du lieu, de ce qui existe déjà et de ce qu’on relie. Le prix est toujours remis par "
-         "écrit, ligne par ligne, après une visite gratuite, et vous décidez ensuite. Le "
-         "<a href=\"/catalogue/\">catalogue</a> donne une idée des composantes."),
+         "écrit, ligne par ligne, après une visite gratuite, et vous décidez ensuite." + pro.VOIR_CATALOGUE),
         ("Combien de temps dure une installation?",
          "Ça dépend de la taille du lieu et des travaux à faire. La durée prévue est écrite dans le plan, "
          "avant de commencer. On ne promet aucun délai avant d’avoir vu les lieux."),

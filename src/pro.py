@@ -20,11 +20,17 @@ from config import SITE, CAPABILITIES, BESOINS_PAGES
 D = SITE["domain"]
 ENT = D + "/#entreprise"
 
+# Prix publics ou non (SITE["prix_publics"]) : une seule phrase remplace tout montant pendant le lancement.
+PRIX = SITE["prix_publics"]
+SOUMISSION = "Prix sur soumission, confirmé par écrit avant tout achat."
+# Phrase des questions fréquentes qui renvoie au configurateur.
+VOIR_CATALOGUE = ' Vous pouvez déjà <a href="/catalogue/">composer votre forfait</a>.' 
+
 # Nom court de chaque page pour le fil d'Ariane (les autres : titre avant « | »).
 NOMS = {
     "/logiciel/": "Le logiciel",
     "/offre/": "L’offre",
-    "/catalogue/": "Catalogue",
+    "/catalogue/": "Composer mon forfait",
     "/solutions/": "Solutions",
     "/plateforme/": "Le Hub",
     "/laboratoire-mobile/": "Laboratoire mobile",
@@ -44,7 +50,8 @@ NOMS.update({f"/solutions/{k}/": n for k, n in BESOINS_PAGES})
 # Page mère de chaque page intérieure (fil d'Ariane) : les solutions sous Solutions, le catalogue sous
 # L'offre, les pages de l'entreprise sous À propos.
 MERES = {"/catalogue/": "/offre/", "/vision-roadmap/": "/a-propos/", "/laboratoire-mobile/": "/a-propos/",
-         "/confiance/": "/a-propos/", "/questions/": "/a-propos/", "/recherche/": "/a-propos/"}
+         "/plateforme/": "/a-propos/", "/confiance/": "/a-propos/", "/questions/": "/a-propos/",
+         "/recherche/": "/a-propos/"}
 
 
 def _texte(html):

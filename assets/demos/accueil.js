@@ -205,4 +205,26 @@
     });
     ouvre(cartes[0]);
   });
+
+  /* ================================================================ Aperçu du logiciel : l'écran complet tient dans la fenêtre
+     Au-dessus de 720 px, l'appareil est rendu à 1040 px de large puis réduit (zoom) pour que sa hauteur
+     tienne sous la barre : s = min(1, (hauteur de fenêtre − 120) / hauteur naturelle, largeur disponible / 1040). */
+  var dev = document.querySelector(".ac-dev"), ecran = document.querySelector(".ac-ecran");
+  function ajuste() {
+    if (!dev || !ecran) return;
+    dev.style.zoom = ""; dev.style.width = ""; ecran.style.maxWidth = "";
+    if (window.innerWidth <= 720) return;
+    var scene = ecran.parentElement, cs = getComputedStyle(scene);
+    var dispo = scene.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    dev.style.width = "1040px";
+    var h = dev.offsetHeight;
+    if (!h) return;
+    var s = Math.min(1, (window.innerHeight - 120) / h, dispo / 1040);
+    dev.style.zoom = s;
+    ecran.style.maxWidth = (1040 * s) + "px";
+  }
+  ajuste();
+  window.addEventListener("resize", ajuste);
+  window.addEventListener("load", ajuste);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuste);
 })();

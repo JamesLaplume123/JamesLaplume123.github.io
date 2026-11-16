@@ -75,8 +75,7 @@ MAISON = {
          "appareils et des applications de marques différentes."),
         ("Combien coûte une maison intelligente?",
          "Ça dépend de la taille de la maison, de ce qui est déjà en place et de ce que vous voulez "
-         "relier. Le prix est toujours remis par écrit, ligne par ligne, après une visite gratuite. Le "
-         "<a href=\"/catalogue/\">catalogue</a> donne une idée des composantes."),
+         "relier. Le prix est toujours remis par écrit, ligne par ligne, après une visite gratuite." + pro.VOIR_CATALOGUE),
         ("Est-ce que tout doit être fait en une seule fois?",
          "Non. On commence souvent par une partie, comme l’éclairage et le chauffage, puis le reste "
          "s’ajoute au même système sans tout refaire."),

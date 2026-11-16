@@ -880,6 +880,7 @@
   [data-demo="app"] .ap-es { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
   [data-demo="app"] .ap-home-a { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
   [data-demo="app"] .ap-home-a > .ap-col { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }
+  [data-demo="app"] .ap-home-a > .ap-day { grid-column: 1 / -1; } /* pas de vide à droite de « Ma journée » */
   [data-demo="app"] .ap-ap { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
 }
 @container ap (max-width: 899px) {

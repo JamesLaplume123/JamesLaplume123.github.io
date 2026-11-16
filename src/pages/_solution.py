@@ -14,6 +14,14 @@ PRIX["automatisation-operations"] = f"Dès {CAT.ENT_SOCLE['prix']} $ par mois, p
 _CAP = {c["slug"]: c for c in CAPABILITIES}
 
 
+def prix_ligne(slug):
+    """Le prix de la solution et le lien vers le catalogue; sur soumission tant que les prix ne sont pas publics."""
+    if not pro.PRIX:
+        return pro.SOUMISSION
+    return (f"{PRIX.get(slug, 'Voir le catalogue')} · "
+            '<a href="/catalogue/#solutions" style="color:var(--gold-soft)">Voir le catalogue</a>')
+
+
 def bande(slug, h1, lead, image):
     """Ouverture : le titre, une phrase, un bouton, le prix."""
     c = _CAP[slug]
@@ -27,7 +35,7 @@ def bande(slug, h1, lead, image):
     <div class="acts" data-rev>
       <a class="pill" href="/contact/">Parlons de votre projet</a>
     </div>
-    <p class="for-line" data-rev><span>Prix</span> {PRIX.get(slug, 'Voir le catalogue')} · <a href="/catalogue/#solutions" style="color:var(--gold-soft)">Voir le catalogue</a></p>
+    <p class="for-line" data-rev><span>Prix</span> {prix_ligne(slug)}</p>
   </div>
 </section>
 """

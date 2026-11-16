@@ -1018,3 +1018,7 @@ html:not(.fx) .progress { display: none; }
 .band .fil { text-shadow: 0 1px 3px #000c; }
 .plain-top .fil { justify-content: center; }
 @media (max-width: 560px) { .sheet-x small { display: none; } .sheet-x { padding: .35rem 0; } }
+/* Compteur de visites : à gauche, à côté du copyright, jamais sous la bulle JARVIS (en bas à droite) */
+.foot-line { justify-content: flex-start; align-items: center; gap: .6rem 2rem; }
+.foot-count { margin-top: 0; }
+@media (max-width: 880px) { .foot { padding-bottom: 6rem; } }

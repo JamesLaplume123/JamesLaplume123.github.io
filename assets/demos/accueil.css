@@ -50,8 +50,9 @@
 .ac-hero-bas { display: flex; align-items: center; gap: 1.2rem 2.6rem; flex-wrap: wrap; }
 .ac-phrase { margin: 0; max-width: 27rem; font-size: 1.08rem; line-height: 1.5; color: #dedad2; }
 .ac-acts { display: flex; gap: .8rem; flex-wrap: wrap; }
-.ac-lanc { margin: 1.7rem 0 0; padding: .95rem 0 1.15rem; border-top: 1px solid #ffffff21; display: flex; align-items: baseline; gap: .65rem; flex-wrap: wrap; font-size: .82rem; color: #aeaaa1; }
-.ac-lanc i { flex: none; align-self: center; width: 6px; height: 6px; border-radius: 50%; background: var(--ac); }
+.ac-lanc { margin: 1.7rem 0 0; padding: .95rem 0 1.15rem; border-top: 1px solid #ffffff21; font-size: .82rem; color: #aeaaa1; }
+.ac-lanc i { display: inline-block; vertical-align: middle; margin: -2px .65rem 0 0; width: 6px; height: 6px; border-radius: 50%; background: var(--ac); }
+.ac-lanc span { margin-right: .5rem; }
 .ac-lanc a { color: var(--ac-hi); text-decoration: none; border-bottom: 1px solid var(--ac-line); }
 .ac-lanc a:hover { border-color: var(--ac); }
 .ac-demo { position: absolute; z-index: 3; right: var(--ac-pad); top: 5.6rem; margin: 0; font-size: .76rem; color: #ffffffb3; opacity: 0; transition: opacity .6s; }
@@ -60,6 +61,8 @@
 .fx .ac-hero-bas { animation-delay: .12s; }
 .fx .ac-lanc { animation-delay: .24s; }
 @keyframes acMonte { from { opacity: 0; transform: translateY(14px); } }
+
+@media (max-width: 1180px) { .ac-hero-bas { flex-direction: column; align-items: flex-start; } }
 
 /* ---------- Sections ---------- */
 .ac-sect { padding: clamp(4rem, 7.5vw, 6.6rem) var(--ac-pad) 0; }
@@ -93,8 +96,10 @@
   .ac-sol.is-on p, .ac-sol.is-on .ac-sol-plus { max-height: 4rem; opacity: 1; visibility: visible; transition: opacity .5s .25s, max-height .6s var(--ease), margin .6s var(--ease); }
   .ac-sol.is-on p { margin-top: .45rem; }
   .ac-sol.is-on .ac-sol-plus { margin-top: .75rem; }
-  .ac-sol.is-on h3 { font-size: 1.3rem; }
-  .ac-sol h3 { transition: font-size .5s var(--ease); }
+  /* Le titre suit la largeur de la colonne : il tient toujours, et grandit quand elle s'ouvre. */
+  .ac-sol { container-type: inline-size; }
+  .ac-sol-t { padding-left: .85rem; padding-right: .85rem; }
+  .ac-sol h3 { font-size: .86rem; font-size: clamp(.78rem, 10.3cqi, 1.3rem); }
 }
 @media (max-width: 1099.98px), (hover: none) {
   .ac-sols { height: auto; margin: 0 calc(var(--ac-pad) * -1); padding: 0 var(--ac-pad); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--ac-pad); scrollbar-width: none; }
@@ -201,11 +206,8 @@
   .ac-ph, .ac-gl { object-position: 56% 30%; }
   .ac-view::after { background: linear-gradient(180deg, #000000a6 0, #0000 20%, #0000 62%, #000 100%); }
   .ac-hero-in { margin-top: -3.4rem; }
-  .ac-hero-bas { flex-direction: column; align-items: flex-start; }
   .ac-phrase { font-size: 1.02rem; }
   .ac-demo { top: 4.6rem; }
-  .ac-lanc { display: block; }
-  .ac-lanc i { display: inline-block; margin-right: .55rem; vertical-align: middle; }
   .ac-spot span { font-size: .74rem; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -1,5 +1,5 @@
 /* Coquille « logiciel » des pages de solution : météo réelle dans l'en-tête
-   (Environnement Canada), avec le même cache de session que la démo de l'app. */
+   avec le même cache de session que la démo de l'app. */
 (function () {
   "use strict";
   var root = document.querySelector("[data-xs]");

@@ -409,18 +409,18 @@
         { id: "v2", tid: "53", img: "parking", kind: "car", plate: "H2B 519", keys: [[10600, 685, 940, 300], [13200, 590, 734, 217], [18800, 590, 734, 217], [20400, 474, 418, 100]] }
       ],
       props: [
-        { img: "parking", kind: "chip", tile: 0, at: 5600, until: 9000, x: 490, y: 332, tone: "ok", html: "<b>XKE 204 · Québec</b><small>Autorisée · N. Tremblay, employée</small>" },
+        { img: "parking", kind: "chip", tile: 0, at: 5600, until: 9000, x: 490, y: 332, tone: "ok", html: "<b>XKE 204</b><small>Autorisée · N. Tremblay, employée</small>" },
         { img: "parking", kind: "chip", tile: 0, at: 15400, until: 20200, x: 490, y: 332, tone: "warn", html: "<b>H2B 519 · inconnue</b><small>Consignée · visiteur</small>" }
       ],
       boxes: [
         { tile: 0, track: "v1", shape: "car", from: 1100, to: 9200, labels: [[1100, "Véhicule · 97" + PC, "vehicle"]] },
-        { tile: 0, rect: [543, 664, 86, 31], under: true, from: 3900, to: 7400, labels: [[3900, "Plaque · lecture…", "move"], [4700, "XKE 204 · Québec", "plate"]] },
+        { tile: 0, rect: [543, 664, 86, 31], under: true, from: 3900, to: 7400, labels: [[3900, "Plaque · lecture…", "move"], [4700, "XKE 204", "plate"]] },
         { tile: 0, track: "v2", shape: "car", from: 10900, to: 20200, labels: [[10900, "Véhicule · 96" + PC, "vehicle"]] },
         { tile: 0, rect: [546, 667, 87, 31], under: true, from: 13700, to: 18500, labels: [[13700, "Plaque · lecture…", "move"], [14500, "H2B 519 · inconnue", "person"]] }
       ],
       events: [
         { t: 1100, k: "vehicle", title: "Véhicule — voie d’entrée", src: "Caméra 01 · 97" + PC, tile: 0 },
-        { t: 4700, k: "plate", title: "Plaque lue — XKE 204 · Québec", src: "Lecteur de plaques · voie d’entrée", sensor: "lpr", state: "XKE 204", tile: 0, reg: ["XKE 204", "Autorisée · N. Tremblay", "ok"] },
+        { t: 4700, k: "plate", title: "Plaque lue — XKE 204", src: "Lecteur de plaques · voie d’entrée", sensor: "lpr", state: "XKE 204", tile: 0, reg: ["XKE 204", "Autorisée · N. Tremblay", "ok"] },
         { t: 5800, k: "grant", title: "Véhicule autorisé — N. Tremblay, employée", src: "Registre des plaques · entrée permise", sensor: "barriere", state: "Ouverte", reset: 3600, tile: 0 },
         { t: 10900, k: "vehicle", title: "Véhicule — voie d’entrée", src: "Caméra 01 · 96" + PC, tile: 0 },
         { t: 14500, k: "plate", title: "Plaque lue — H2B 519 · inconnue", src: "Lecteur de plaques · aucun dossier", sensor: "lpr", state: "H2B 519", tile: 0 },
@@ -2799,12 +2799,12 @@
      ===================================================================== */
   function geo(lon, lat) { return [(lon + 74.05) / 3.25 * 1000, (47.05 - lat) / 2.0 * 560]; }
   var ST_LIST = [
-    { id: "mtl", name: "Montréal", role: "Siège social", ll: [-73.57, 45.50], st: "ok", cams: "64/64", doors: 48, arm: "Partiel", ag: 3, dy: 22 },
-    { id: "sth", name: "Saint-Hyacinthe", role: "Centre de distribution · centre de contrôle", ll: [-72.96, 45.63], st: "ok", cams: "82/82", doors: 61, arm: "Partiel", ag: 4, soc: true, dy: 24 },
-    { id: "dru", name: "Drummondville", role: "Entrepôt", ll: [-72.48, 45.88], st: "warn", cams: "37/38", doors: 22, arm: "Armé", ag: 1, note: "CAM 12 hors ligne depuis 02 h 14 · technicien prévenu", dy: -14 },
-    { id: "she", name: "Sherbrooke", role: "Usine", ll: [-71.89, 45.40], st: "ok", cams: "71/71", doors: 54, arm: "Partiel", ag: 2, dy: 22 },
-    { id: "trv", name: "Trois-Rivières", role: "Bureau régional", ll: [-72.55, 46.35], st: "bad", cams: "29/29", doors: 14, arm: "Armé", ag: 1, note: "Intrusion · clôture nord · agent en route", dy: -14 },
-    { id: "qbc", name: "Québec", role: "Bureau régional", ll: [-71.21, 46.81], st: "ok", cams: "78/78", doors: 113, arm: "Armé à 18 h 04", ag: 0, dy: -14 }
+    { id: "mtl", name: "Siège", role: "Siège social", ll: [-73.57, 45.50], st: "ok", cams: "64/64", doors: 48, arm: "Partiel", ag: 3, dy: 22 },
+    { id: "sth", name: "Distribution", role: "Centre de distribution · centre de contrôle", ll: [-72.96, 45.63], st: "ok", cams: "82/82", doors: 61, arm: "Partiel", ag: 4, soc: true, dy: 24 },
+    { id: "dru", name: "Entrepôt", role: "Entrepôt", ll: [-72.48, 45.88], st: "warn", cams: "37/38", doors: 22, arm: "Armé", ag: 1, note: "CAM 12 hors ligne depuis 02 h 14 · technicien prévenu", dy: -14 },
+    { id: "she", name: "Usine", role: "Usine", ll: [-71.89, 45.40], st: "ok", cams: "71/71", doors: 54, arm: "Partiel", ag: 2, dy: 22 },
+    { id: "trv", name: "Bureau nord", role: "Bureau régional", ll: [-72.55, 46.35], st: "bad", cams: "29/29", doors: 14, arm: "Armé", ag: 1, note: "Intrusion · clôture nord · agent en route", dy: -14 },
+    { id: "qbc", name: "Bureau est", role: "Bureau régional", ll: [-71.21, 46.81], st: "ok", cams: "78/78", doors: 113, arm: "Armé à 18 h 04", ag: 0, dy: -14 }
   ];
   var ST_EV = [
     ["trv", "bad", "Intrusion · clôture nord", "Agent en route · arrivée estimée 4 min"],
@@ -2819,7 +2819,7 @@
   var ST_RIVER = [[-74.3, 45.2], [-73.95, 45.33], [-73.62, 45.45], [-73.47, 45.62], [-73.25, 45.85], [-73.0, 46.04], [-72.75, 46.2], [-72.55, 46.32], [-72.2, 46.45], [-71.8, 46.6], [-71.4, 46.72], [-71.2, 46.8], [-70.95, 46.92], [-70.6, 47.1]];
 
   MODS.sites = {
-    site: "Vue multisite · 6 sites · centre de contrôle Saint-Hyacinthe",
+    site: "Vue multisite · 6 sites · centre de contrôle",
     clock: "19:12:30",
     len: 24000,
     build: function (P) {
@@ -3139,7 +3139,7 @@
             "Politique de conservation publiée",
             "Registre des incidents de confidentialité",
             "Accès par rôle · double approbation des exports",
-            "Hébergement au Québec · données sur place"
+            "Hébergement sur place · données chez vous"
           ].map(function (s) { return '<li><i class="sx-chk">' + CHECK + "</i>" + s + "</li>"; }).join("") + "</ul>" +
           '<p class="sx-resp"><small>Responsable de la protection des renseignements personnels</small><b>Camille Lavoie · direction</b></p>') +
       "</div>";

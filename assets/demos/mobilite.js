@@ -37,7 +37,7 @@
      COPILOTE
      ================================================================ */
   var START = 9 * 60 + 5, SPEED = 80, KM0 = 150, SUNRISE = 6 * 60 + 48, SUNSET = 16 * 60 + 42, GOLDEN = SUNSET - 22;
-  var PRODUITS = { orleans: 1, bleuets: 1 };
+  var PRODUITS = { ile: 1, bleuets: 1 };
   var HORIZON = { decouverte: 240, efficace: 120, nature: 320, gourmand: 240, famille: 200, horsreseau: 300 };
   var NEEDS = { eau: 1, propane: 1, webasto: 1, meca: 1 };
   var MEALS = [[11 * 60 + 15, 13 * 60 + 45, "dîner"], [17 * 60 + 15, 20 * 60, "souper"]];
@@ -320,7 +320,7 @@
     var nx = null;
     for (var i = 0; i < D.stops.length; i++) if (D.stops[i].km > km + .5) { nx = D.stops[i]; break; }
     hud.next.textContent = nx ? nx.nom : "Arrivée";
-    hud.nexteta.textContent = nx ? "dans " + dur(clockAt(nx.km) - now) + " · " + kmf(nx.km - km) + NB + "km" : "Roberval";
+    hud.nexteta.textContent = nx ? "dans " + dur(clockAt(nx.km) - now) + " · " + kmf(nx.km - km) + NB + "km" : "Chalet";
     hud.prog.style.width = (km / D.len * 100).toFixed(1) + "%";
     hud.done.textContent = Math.round(km); hud.left.textContent = Math.round(D.len - km);
     var f = Math.min(1, Math.max(0, (now - SUNRISE) / (SUNSET - SUNRISE))), ang = Math.PI * (1 - f);
@@ -380,7 +380,7 @@
     if (t - feedT > 450) { feedT = t; renderFeed(); }
     if (S.km >= D.len && !S.ended) {
       S.ended = true;
-      toast(ico("check") + "<span><b>Arrivée à Roberval.</b> Le voyage est enregistré dans votre journal.</span>");
+      toast(ico("check") + "<span><b>Arrivée au chalet.</b> Le voyage est enregistré dans votre journal.</span>");
       endT = setTimeout(function () { restart(0); }, 6500);
     }
     if (!S.ended) raf = requestAnimationFrame(loop);
@@ -425,11 +425,7 @@
     return src ? '<img src="' + src + '" alt="' + esc(alt) + '" loading="lazy" decoding="async">'
       : '<span class="mb-noph" role="img" aria-label="' + esc(alt) + ' · photo à venir">' + ico("photo") + "<small>Photo à venir</small></span>";
   }
-  function geoOf(e) {
-    if (e.geo) return e.geo;
-    var lat = 48.95 - e.y / 111.13, lon = -73.9 + e.x / (111.32 * Math.cos(47.05 * Math.PI / 180));
-    return lat.toFixed(2).replace(".", ",") + "° N · " + (-lon).toFixed(2).replace(".", ",") + "° O";
-  }
+  function geoOf(e) { return e.geo || "Position enregistrée"; }
   function select(i, scroll) {
     var t = trips[jtrip], es = entries(t), e = es[i];
     if (!e) return;
@@ -443,7 +439,7 @@
   }
   function renderJournal(keepSel) {
     replayT.forEach(clearTimeout); replayT = [];
-    if (!jtrip) jtrip = entries(trips.encours).some(function (e) { return e.src; }) ? "encours" : "mauricie";
+    if (!jtrip) jtrip = entries(trips.encours).some(function (e) { return e.src; }) ? "encours" : "foret";
     var t = trips[jtrip], es = entries(t);
     var lt = entries(trips.encours).length, tn = $('[data-tripn="encours"]');
     if (tn) tn.textContent = trips.encours.km + NB + "km · " + lt + NB + "souvenir" + (lt > 1 ? "s" : "");

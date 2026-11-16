@@ -4,7 +4,7 @@
 #
 # Trois onglets dans JARVIS App :
 #   1. Copilote de route : carte vectorielle noire (aucune tuile), le VR qui avance de
-#      Saint-Hyacinthe au Lac-Saint-Jean, et des suggestions calculées selon la distance, les
+#      de la Résidence au Chalet, et des suggestions calculées selon la distance, les
 #      heures d'ouverture, le soleil et l'état du véhicule. Six modes de voyage replanifient.
 #   2. Journal de voyage : photos et points géolocalisés sur la carte, chronologie, « Mes voyages ».
 #   3. Véhicules : garage connecté pour un client au quotidien (VR, VUS électrique familial, vélo
@@ -148,10 +148,10 @@ SAGUENAY = [(48.13, -69.70), (48.19, -69.86), (48.25, -70.02), (48.28, -70.25), 
             (48.42, -70.95), (48.43, -71.07), (48.45, -71.25), (48.50, -71.45), (48.54, -71.62)]
 RIVIERES = [
     [(46.35, -72.54), (46.50, -72.70), (46.62, -72.74), (46.78, -72.66), (46.98, -72.72), (47.20, -72.80), (47.44, -72.78), (47.70, -72.90), (47.95, -73.05)],
-    [(45.05, -73.30), (45.31, -73.26), (45.53, -73.21), (46.04, -73.11)],  # Richelieu
+    [(45.05, -73.30), (45.31, -73.26), (45.53, -73.21), (46.04, -73.11)],  
     [(45.05, -72.27), (45.15, -72.27), (45.24, -72.24), (45.30, -72.21), (45.35, -72.25)],  # Memphrémagog
     [(48.52, -72.23), (48.64, -72.45), (48.78, -72.62), (48.98, -72.68)],  # Ashuapmushuan
-    [(48.80, -71.90), (48.95, -71.85), (49.10, -71.80)],  # Péribonka
+    [(48.80, -71.90), (48.95, -71.85), (49.10, -71.80)],
 ]
 
 # --- Routes (secondaires, discrètes) ----------------------------------------------------------
@@ -202,7 +202,7 @@ def _relief():
     return out
 
 
-# --- Trajet du copilote : Saint-Hyacinthe → Québec → Charlevoix → Tadoussac → Lac-Saint-Jean --
+# --- Trajet du copilote : Résidence → Chalet --
 ROUTE_WP = [(45.63, -72.96), (45.76, -72.68), (45.88, -72.48), (46.05, -72.18), (46.22, -71.95), (46.40, -71.75),
             (46.57, -71.54), (46.70, -71.36), (46.81, -71.21), (46.88, -71.16), (46.94, -71.02), (46.99, -70.90),
             (47.06, -70.78), (47.20, -70.70), (47.34, -70.60), (47.44, -70.51), (47.53, -70.36), (47.65, -70.17),
@@ -210,17 +210,12 @@ ROUTE_WP = [(45.63, -72.96), (45.76, -72.68), (45.88, -72.48), (46.05, -72.18), 
             (48.38, -70.55), (48.43, -70.86), (48.42, -71.06), (48.47, -71.30), (48.52, -71.50), (48.55, -71.66),
             (48.44, -71.84), (48.42, -72.00), (48.46, -72.16), (48.52, -72.26)]
 
-STOPS = [  # (nom, lat, lon, importance) — importance 2 : ville du trajet, 1 : repère discret
-    ("Saint-Hyacinthe", 45.63, -72.96, 2), ("Drummondville", 45.88, -72.48, 1), ("Québec", 46.81, -71.21, 2),
-    ("Baie-Saint-Paul", 47.44, -70.50, 2), ("La Malbaie", 47.65, -70.15, 2), ("Tadoussac", 48.14, -69.72, 2),
-    ("Saguenay", 48.42, -71.06, 2, "b"), ("Alma", 48.55, -71.65, 1), ("Roberval", 48.52, -72.23, 2, "l"),
-    ("Montréal", 45.50, -73.57, 1), ("Trois-Rivières", 46.35, -72.55, 1), ("Rivière-du-Loup", 47.83, -69.53, 1),
-    ("Rimouski", 48.45, -68.52, 1), ("Sherbrooke", 45.40, -71.89, 1), ("La Tuque", 47.44, -72.78, 1),
+STOPS = [  # (nom, lat, lon, importance) — importance 2 : étape du trajet, 1 : repère discret. Noms neutres : aucun lieu réel.
+    ("Résidence", 45.63, -72.96, 2), ("Première halte", 45.88, -72.48, 1), ("Vieille ville", 46.81, -71.21, 2),
+    ("Village de la baie", 47.44, -70.50, 2), ("Le belvédère", 47.65, -70.15, 2), ("Le traversier", 48.14, -69.72, 2),
+    ("Le fjord", 48.42, -71.06, 2, "b"), ("La plage", 48.55, -71.65, 1), ("Chalet", 48.52, -72.23, 2, "l"),
 ]
-WATER_LABELS = [("Fleuve Saint-Laurent", 47.55, -69.65, -38), ("Fjord du Saguenay", 48.33, -70.42, -10),
-                ("Lac Saint-Jean", 48.64, -71.98, 0), ("Lac Saint-Pierre", 46.19, -72.85, -25)]
-REGION_LABELS = [("Charlevoix", 47.78, -70.62), ("Réserve des Laurentides", 47.62, -71.35), ("Mauricie", 46.95, -73.25),
-                 ("Bas-Saint-Laurent", 47.95, -68.95), ("Cantons-de-l’Est", 45.55, -71.75), ("Centre-du-Québec", 46.10, -71.85)]
+# Aucune étiquette d'eau, de région ni de coordonnées : la carte garde son dessin, sans nom de lieu.
 
 
 def _route():
@@ -255,7 +250,7 @@ def _at(km, off=0.0):
     return x + dy / n * off, y - dx / n * off
 
 
-K = {st[0]: _km_of(st[1], st[2]) for st in STOPS if st[3] == 2 or st[0] in ("Drummondville", "Alma")}
+K = {st[0]: _km_of(st[1], st[2]) for st in STOPS if st[3] == 2 or st[0] in ("Première halte", "La plage")}
 
 # ---------------------------------------------------------------------------------------------
 # Points d'intérêt du copilote (Données d'exemple : aucun commerce réel n'est nommé)
@@ -269,55 +264,55 @@ def _poi(pid, cat, nom, ref, dk, off, stop, h, why, photo_nom=None, val=None):
 
 
 POIS = [
-    _poi("eau1", "eau", "Halte routière · eau potable gratuite", "Québec", -48, 0.4, 12, (0, 1440),
+    _poi("eau1", "eau", "Halte routière · eau potable gratuite", "Vieille ville", -48, 0.4, 12, (0, 1440),
          "Remplissage gratuit, accès facile pour un véhicule de 7 m."),
-    _poi("diner1", "repas", "Bistro au bord du fleuve", "Québec", -9, 1.6, 50, (660, 1260),
+    _poi("diner1", "repas", "Bistro au bord du fleuve", "Vieille ville", -9, 1.6, 50, (660, 1260),
          "Terrasse vue sur le fleuve, stationnement pour véhicules longs.", "bistro-fleuve"),
-    _poi("vieuxqc", "histoire", "Vieux-Québec", "Québec", 3, 4, 120, (0, 1440),
-         "Site du patrimoine mondial : remparts, Petit-Champlain, terrasse Dufferin.", "vieux-quebec"),
-    _poi("montmo", "nature", "Chute Montmorency", "Québec", 13, 0.5, 40, (540, 1080),
-         "Plus haute que les chutes Niagara : 83 m. Escalier panoramique et pont suspendu.", "chute-montmorency"),
-    _poi("orleans", "repas", "Île d’Orléans · route des produits locaux", "Québec", 17, 5, 75, (600, 1080),
-         "Fromages, cidres et petits fruits chez les producteurs de l’île.", "ile-orleans"),
-    _poi("propane1", "propane", "Station-service · poste de propane", "Québec", 27, 0.6, 15, (420, 1200),
+    _poi("vieilleville", "histoire", "Vieille ville", "Vieille ville", 3, 4, 120, (0, 1440),
+         "Site du patrimoine mondial : remparts, vieilles rues, terrasse sur le fleuve.", "vieille-ville"),
+    _poi("chute", "nature", "Grande chute", "Vieille ville", 13, 0.5, 40, (540, 1080),
+         "Plus haute que les chutes Niagara : 83 m. Escalier panoramique et pont suspendu.", "grande-chute"),
+    _poi("ile", "repas", "L’île · route des produits locaux", "Vieille ville", 17, 5, 75, (600, 1080),
+         "Fromages, cidres et petits fruits chez les producteurs de l’île.", "ile-produits"),
+    _poi("propane1", "propane", "Station-service · poste de propane", "Vieille ville", 27, 0.6, 15, (420, 1200),
          "Remplissage de bonbonne et de réservoir fixe sur place."),
-    _poi("famille1", "famille", "Parc et aire de jeux au bord du fleuve", "Québec", 38, 0.8, 30, (480, 1200),
+    _poi("famille1", "famille", "Parc et aire de jeux au bord du fleuve", "Vieille ville", 38, 0.8, 30, (480, 1200),
          "Grands espaces, toilettes propres, sentier plat pour les enfants."),
-    _poi("webasto", "webasto", "Garage spécialisé · chauffage d’appoint", "Baie-Saint-Paul", -6, 1.2, 60, (480, 1020),
+    _poi("webasto", "webasto", "Garage spécialisé · chauffage d’appoint", "Village de la baie", -6, 1.2, 60, (480, 1020),
          "450 h de fonctionnement depuis le dernier entretien : nettoyage et vérification avant l’hiver.", None, "450 h"),
-    _poi("bsp", "histoire", "Baie-Saint-Paul · village des artistes", "Baie-Saint-Paul", 0, 0.6, 60, (600, 1080),
-         "Galeries d’art et rue Saint-Jean-Baptiste, à pied depuis le stationnement.", "baie-saint-paul"),
-    _poi("belv1", "soleil", "Belvédère sur le fleuve · Charlevoix", "Baie-Saint-Paul", 21, 0.4, 35, (0, 1440),
-         "Vue dégagée vers l’ouest : le soleil se couche dans l’axe du fleuve.", "charlevoix-belvedere"),
-    _poi("meca1", "meca", "Vérification des freins avant les côtes", "Baie-Saint-Paul", 4, 0.9, 20, (480, 1020),
-         "Descente de 12 % vers Baie-Saint-Paul : JARVIS a mesuré une chauffe des freins à la dernière côte.", None),
-    _poi("souper", "repas", "Table du terroir de Charlevoix", "La Malbaie", 2, 1.4, 70, (1050, 1290),
+    _poi("bsp", "histoire", "Village des artistes", "Village de la baie", 0, 0.6, 60, (600, 1080),
+         "Galeries d’art et rue principale, à pied depuis le stationnement.", "village-baie"),
+    _poi("belv1", "soleil", "Belvédère sur le fleuve", "Village de la baie", 21, 0.4, 35, (0, 1440),
+         "Vue dégagée vers l’ouest : le soleil se couche dans l’axe du fleuve.", "belvedere-fleuve"),
+    _poi("meca1", "meca", "Vérification des freins avant les côtes", "Village de la baie", 4, 0.9, 20, (480, 1020),
+         "Descente de 12 % vers le village : JARVIS a mesuré une chauffe des freins à la dernière côte.", None),
+    _poi("souper", "repas", "Table du terroir", "Le belvédère", 2, 1.4, 70, (1050, 1290),
          "Menu du terroir, réservation conseillée le samedi.", "table-terroir"),
-    _poi("eau2", "eau", "Poste de vidange et eau potable", "La Malbaie", 14, 0.9, 15, (480, 1260),
+    _poi("eau2", "eau", "Poste de vidange et eau potable", "Le belvédère", 14, 0.9, 15, (480, 1260),
          "Vidange des eaux grises et remplissage au même endroit.", None),
-    _poi("traversier", "traversier", "Traversier Baie-Sainte-Catherine → Tadoussac", "Tadoussac", -4, 0, 20, (0, 1440),
+    _poi("traversier", "traversier", "Traversier · embouchure du fjord", "Le traversier", -4, 0, 20, (0, 1440),
          "Gratuit, départ aux 20 minutes; JARVIS calcule l’attente selon votre heure d’arrivée.", None),
-    _poi("baleines", "nature", "Observation des baleines", "Tadoussac", 3, 0.5, 150, (540, 1080),
-         "Bélugas et rorquals jusqu’à la fin d’octobre; sorties en mer et sentier de la Pointe-de-l’Islet.", "tadoussac-fjord"),
-    _poi("belv2", "soleil", "Pointe-Noire · embouchure du fjord", "Tadoussac", -2, 0.8, 30, (0, 1440),
-         "Le soleil se couche sur le fjord : la falaise s’allume en orange 20 minutes avant.", "pointe-noire"),
-    _poi("signal1", "signal", "Zone sans réseau cellulaire · 62 km", "Tadoussac", 26, 0, 0, (0, 1440),
+    _poi("baleines", "nature", "Observation des baleines", "Le traversier", 3, 0.5, 150, (540, 1080),
+         "Bélugas et rorquals jusqu’à la fin d’octobre; sorties en mer et sentier de la pointe.", "embouchure-fjord"),
+    _poi("belv2", "soleil", "La pointe · embouchure du fjord", "Le traversier", -2, 0.8, 30, (0, 1440),
+         "Le soleil se couche sur le fjord : la falaise s’allume en orange 20 minutes avant.", "pointe-fjord"),
+    _poi("signal1", "signal", "Zone sans réseau cellulaire · 62 km", "Le traversier", 26, 0, 0, (0, 1440),
          "Cartes, itinéraire et musique téléchargés d’avance par JARVIS.", None),
-    _poi("propane2", "propane", "Dernier poste de propane avant le fjord", "Tadoussac", 6, 0.7, 15, (480, 1080),
-         "Après ce poste, le prochain ouvert est à Saguenay.", None),
-    _poi("nuit1", "nuit", "Emplacement gratuit au bord du fjord", "Tadoussac", 52, 1.8, 0, (0, 1440),
-         "Toléré pour une nuit, sans services; vue sur le fjord au lever du soleil.", "fjord-saguenay"),
-    _poi("fjordparc", "nature", "Parc national du Fjord-du-Saguenay · sentier", "Tadoussac", 70, 3.5, 120, (480, 1080),
-         "Sentier de la Statue : 7 km aller-retour, falaises de 350 m au-dessus du fjord.", "fjord-sentier"),
-    _poi("famille2", "famille", "Village historique et chute · Lac-Saint-Jean", "Roberval", -14, 3, 120, (570, 1050),
-         "Village ouvrier de 1901, chute de 72 m, téléphérique : idéal avec des enfants.", "val-jalbert"),
-    _poi("bleuets", "repas", "Comptoir de bleuets et chocolaterie", "Alma", 9, 0.5, 20, (540, 1140),
-         "Spécialités du Lac-Saint-Jean : bleuets enrobés de chocolat.", None),
-    _poi("plage", "nature", "Grande plage du Lac-Saint-Jean", "Alma", 24, 1.2, 60, (0, 1440),
-         "Sable fin et coucher de soleil sur le lac; aurores possibles par nuit claire.", "lac-saint-jean"),
-    _poi("diner2", "repas", "Casse-croûte de la route du fjord", "Saguenay", -38, 0.3, 35, (660, 1200),
+    _poi("propane2", "propane", "Dernier poste de propane avant le fjord", "Le traversier", 6, 0.7, 15, (480, 1080),
+         "Après ce poste, le prochain ouvert est après le fjord.", None),
+    _poi("nuit1", "nuit", "Emplacement gratuit au bord du fjord", "Le traversier", 52, 1.8, 0, (0, 1440),
+         "Toléré pour une nuit, sans services; vue sur le fjord au lever du soleil.", "fjord-belvedere"),
+    _poi("fjordparc", "nature", "Parc national du fjord · sentier", "Le traversier", 70, 3.5, 120, (480, 1080),
+         "Sentier des falaises : 7 km aller-retour, falaises de 350 m au-dessus du fjord.", "fjord-sentier"),
+    _poi("famille2", "famille", "Village historique et chute", "Chalet", -14, 3, 120, (570, 1050),
+         "Village ouvrier de 1901, chute de 72 m, téléphérique : idéal avec des enfants.", "village-chute"),
+    _poi("bleuets", "repas", "Comptoir de bleuets et chocolaterie", "La plage", 9, 0.5, 20, (540, 1140),
+         "Spécialités du coin : bleuets enrobés de chocolat.", None),
+    _poi("plage", "nature", "Grande plage du lac", "La plage", 24, 1.2, 60, (0, 1440),
+         "Sable fin et coucher de soleil sur le lac; aurores possibles par nuit claire.", "grand-lac"),
+    _poi("diner2", "repas", "Casse-croûte de la route du fjord", "Le fjord", -38, 0.3, 35, (660, 1200),
          "Poutine et guédille, service rapide.", None),
-    _poi("eau3", "eau", "Camping municipal · eau et vidange", "Saguenay", 6, 1.5, 15, (480, 1260),
+    _poi("eau3", "eau", "Camping municipal · eau et vidange", "Le fjord", 6, 1.5, 15, (480, 1260),
          "Remplissage sans réservation, 5 $ pour les visiteurs.", None),
 ]
 WATER_POLY = _cr(NORTH_SHORE, 6) + list(reversed(_cr(SOUTH_SHORE, 6)))
@@ -345,54 +340,54 @@ for p in POIS:
 
 # Souvenirs pris automatiquement en roulant (Voyage en cours) : photo géolocalisée au passage.
 AUTO_SHOTS = [
-    ("Drummondville", 3, "Lever du jour sur l’autoroute 20, première pause café", "aube-autoroute-20"),
-    ("Québec", 2, "Arrivée sur le pont, le Château Frontenac au loin", "vieux-quebec"),
-    ("Baie-Saint-Paul", -9, "La descente vers Baie-Saint-Paul et l’Isle-aux-Coudres", "baie-saint-paul"),
-    ("La Malbaie", 6, "Le fleuve à marée haute, La Malbaie", "charlevoix-belvedere"),
-    ("Tadoussac", 1, "Le traversier entre dans l’embouchure du fjord", "tadoussac-fjord"),
-    ("Saguenay", -60, "Les falaises du fjord depuis la route 172", "fjord-saguenay"),
-    ("Roberval", -2, "Le Lac-Saint-Jean à perte de vue", "lac-saint-jean"),
+    ("Première halte", 3, "Lever du jour sur l’autoroute, première pause café", "aube-autoroute"),
+    ("Vieille ville", 2, "Arrivée sur le pont, la vieille ville au loin", "vieille-ville"),
+    ("Village de la baie", -9, "La descente vers la baie et son île", "village-baie"),
+    ("Le belvédère", 6, "Le fleuve à marée haute", "belvedere-fleuve"),
+    ("Le traversier", 1, "Le traversier entre dans l’embouchure du fjord", "embouchure-fjord"),
+    ("Le fjord", -60, "Les falaises du fjord depuis la route", "fjord-belvedere"),
+    ("Chalet", -2, "Le lac à perte de vue", "grand-lac"),
 ]
 
 # ---------------------------------------------------------------------------------------------
 # Photos du journal : media/mobilite/<nom>.webp, sinon une photo existante qui convient
 # ---------------------------------------------------------------------------------------------
 REPLI = {  # photos existantes du site qui conviennent, en attendant les photos de media/mobilite/
-    "lac-saint-jean": "/media/app/banniere-lac.webp",
-    "charlevoix-belvedere": "/media/ambiances/heure-doree.webp",
-    "mauricie-lac": "/media/vr/chambre.webp",
-    "mauricie-aurores": "/media/ambiances/aurore.webp",
-    "mauricie-bivouac": "/media/vr/exterieur.webp",
+    "grand-lac": "/media/app/banniere-lac.webp",
+    "belvedere-fleuve": "/media/ambiances/heure-doree.webp",
+    "lac-matin": "/media/vr/chambre.webp",
+    "aurores-lac": "/media/ambiances/aurore.webp",
+    "bivouac-riviere": "/media/vr/exterieur.webp",
 }
 PHOTOS = {}
 PHOTO_DESC = {
-    "aube-autoroute-20": "Lever du jour sur une autoroute du Centre-du-Québec, champs givrés, VR noir de dos",
-    "hero": "VR noir sur une route de Charlevoix à l’heure dorée, le fleuve en contrebas (bannière de la page)",
-    "vieux-quebec": "Vieux-Québec en soirée d’automne : remparts, rues de pierre, Château Frontenac au loin",
-    "bistro-fleuve": "Terrasse de bistro au bord du fleuve à Lévis, Québec en face (aucune enseigne lisible)",
-    "chute-montmorency": "Chute Montmorency avec le pont suspendu, lumière d’automne",
-    "ile-orleans": "Champs et kiosque de produits sur l’Île d’Orléans, le fleuve derrière",
-    "baie-saint-paul": "Baie-Saint-Paul vue de la côte : la baie, le village et l’Isle-aux-Coudres",
-    "charlevoix-belvedere": "Coucher de soleil sur le fleuve depuis un belvédère de Charlevoix",
-    "table-terroir": "Table dressée avec produits du terroir de Charlevoix, fenêtre sur le fleuve",
-    "tadoussac-fjord": "Embouchure du fjord à Tadoussac : dunes, eau sombre, dos de baleine",
-    "pointe-noire": "Falaise de la Pointe-Noire au coucher du soleil, fjord orangé",
-    "fjord-saguenay": "VR noir garé au belvédère du fjord du Saguenay, falaises au lever du jour",
+    "aube-autoroute": "Lever du jour sur une autoroute, champs givrés, VR noir de dos",
+    "hero": "VR noir sur une route côtière à l’heure dorée, le fleuve en contrebas (bannière de la page)",
+    "vieille-ville": "Vieille ville en soirée d’automne : remparts, rues de pierre, château au loin",
+    "bistro-fleuve": "Terrasse de bistro au bord du fleuve, la ville en face (aucune enseigne lisible)",
+    "grande-chute": "Grande chute avec le pont suspendu, lumière d’automne",
+    "ile-produits": "Champs et kiosque de produits sur une île, le fleuve derrière",
+    "village-baie": "Village vu de la côte : la baie, le village et son île",
+    "belvedere-fleuve": "Coucher de soleil sur le fleuve depuis un belvédère",
+    "table-terroir": "Table dressée avec produits du terroir, fenêtre sur le fleuve",
+    "embouchure-fjord": "Embouchure du fjord : dunes, eau sombre, dos de baleine",
+    "pointe-fjord": "Falaise de la pointe au coucher du soleil, fjord orangé",
+    "fjord-belvedere": "VR noir garé au belvédère du fjord, falaises au lever du jour",
     "fjord-sentier": "Randonneur au sommet d’une falaise de 350 m au-dessus du fjord",
-    "val-jalbert": "Chute de 72 m et vieux village ouvrier du Lac-Saint-Jean",
-    "lac-saint-jean": "Plage du Lac-Saint-Jean au crépuscule, horizon d’eau à perte de vue",
-    "mauricie-aurores": "Aurores boréales au-dessus d’un lac de la Haute-Mauricie, vues depuis le VR",
-    "mauricie-bivouac": "VR noir en bivouac au bord de la rivière Saint-Maurice, montagnes au crépuscule",
-    "trois-rivieres": "Vieux-Trois-Rivières et le fleuve au coucher du soleil",
-    "shawinigan": "Chute et centrale historique de Shawinigan",
-    "mauricie-lac": "Lac du parc national de la Mauricie au matin, canot sur la rive",
-    "la-tuque": "Rivière Saint-Maurice et forêt boréale près de La Tuque",
-    "magog": "Lac Memphrémagog et le mont Orford, fin de journée",
-    "north-hatley": "Village de North Hatley au bord du lac Massawippi",
-    "vignoble": "Vignoble des Cantons-de-l’Est, rangs de vigne en pente",
-    "sherbrooke": "Gorge de la rivière Magog à Sherbrooke",
-    "cote-beaupre": "Route de la Côte-de-Beaupré, fleuve et Île d’Orléans à droite",
-    "sainte-anne": "Canyon et chute Sainte-Anne, passerelle suspendue",
+    "village-chute": "Chute de 72 m et vieux village ouvrier",
+    "grand-lac": "Plage du lac au crépuscule, horizon d’eau à perte de vue",
+    "aurores-lac": "Aurores boréales au-dessus d’un lac du nord, vues depuis le VR",
+    "bivouac-riviere": "VR noir en bivouac au bord de la rivière, montagnes au crépuscule",
+    "vieux-quartier": "Vieux quartier et le fleuve au coucher du soleil",
+    "chutes-centrale": "Chute et centrale historique",
+    "lac-matin": "Lac du parc national au matin, canot sur la rive",
+    "riviere-boreale": "Rivière et forêt boréale",
+    "lac-montagne": "Grand lac et montagne, fin de journée",
+    "village-lac": "Village au bord d’un lac",
+    "vignoble": "Vignoble, rangs de vigne en pente",
+    "gorge-riviere": "Gorge d’une rivière en ville",
+    "route-fleuve": "Route du fleuve, une île à droite",
+    "canyon": "Canyon et chute, passerelle suspendue",
     "vus-electrique": "VUS électrique familial blanc, sans logo, en recharge dans le garage chauffé d’une résidence moderne, le soir",
     "velo-electrique": "Vélo électrique noir et or appuyé contre un mur, lumière du soir",
     "lamborghini-huracan": "Lamborghini Huracán vert ou noir mat dans un garage de collection sombre, rampes DEL au plafond, sans plaque",
@@ -400,7 +395,7 @@ PHOTO_DESC = {
     "nissan-gt-r-r35": "Nissan GT-R R35 gris foncé dans un garage de collection, lumière rasante, sans plaque",
     "audi-rs4-avant": "Audi RS4 Avant gris Nardo dans un garage de collection, pneus d’hiver, vue de trois quarts avant",
     "mercedes-amg-g63": "Mercedes-AMG G63 noir dans un garage de collection, phares allumés, sol de béton poli",
-    "cadillac-escalade": "Cadillac Escalade noir sur une autoroute québécoise au crépuscule, phares allumés",
+    "cadillac-escalade": "Cadillac Escalade noir sur une autoroute au crépuscule, phares allumés",
     "range-rover": "Range Rover noir ou gris foncé dans un garage de collection, éclairage chaud, sans plaque",
 }
 
@@ -415,42 +410,42 @@ def ph(nom):
 # Journal : voyages passés et voyage en cours
 # ---------------------------------------------------------------------------------------------
 TRIPS = [
-    {"id": "encours", "nom": "Charlevoix, fjord et Lac-Saint-Jean", "quand": "En cours · 8 novembre 2026",
-     "jours": 3, "wp": None, "cover": "lac-saint-jean", "live": True,
+    {"id": "encours", "nom": "Fleuve, fjord et grand lac", "quand": "En cours · 8 novembre 2026",
+     "jours": 3, "wp": None, "cover": "grand-lac", "live": True,
      "entries": [
-         ("Saint-Hyacinthe", 45.63, -72.96, "9 h 05", "Départ · plein d’essence fait, eau propre à 24 %", None),
+         ("Résidence", 45.63, -72.96, "9 h 05", "Départ · plein d’essence fait, eau propre à 24 %", None),
      ]},
-    {"id": "mauricie", "nom": "Mauricie et Haute-Mauricie", "quand": "Août 2026 · 4 jours", "jours": 4,
+    {"id": "foret", "nom": "Lacs et forêt boréale", "quand": "Août 2026 · 4 jours", "jours": 4,
      "wp": [(45.63, -72.96), (45.88, -72.48), (46.14, -72.52), (46.35, -72.55), (46.56, -72.74), (46.76, -72.82),
             (46.86, -72.66), (47.16, -72.74), (47.44, -72.78)],
-     "cover": "mauricie-lac",
+     "cover": "lac-matin",
      "entries": [
-         ("Trois-Rivières", 46.35, -72.55, "Jour 1 · 11 h 20", "Dîner au Vieux-Trois-Rivières, vue sur le fleuve", "trois-rivieres"),
-         ("Shawinigan", 46.56, -72.74, "Jour 1 · 15 h 40", "Les chutes et la vieille centrale", "shawinigan"),
-         ("Parc national de la Mauricie", 46.76, -72.82, "Jour 2 · 7 h 10", "Réveil au bord du lac, canot avant le déjeuner", "mauricie-lac"),
-         ("Haute-Mauricie", 47.16, -72.74, "Jour 3 · 22 h 40", "Aurores boréales au-dessus du lac, vues depuis le lit", "mauricie-aurores"),
-         ("La Tuque", 47.44, -72.78, "Jour 4 · 19 h 05", "Bivouac au bord de la Saint-Maurice", "mauricie-bivouac"),
+         ("Vieux quartier", 46.35, -72.55, "Jour 1 · 11 h 20", "Dîner dans le vieux quartier, vue sur le fleuve", "vieux-quartier"),
+         ("Les chutes", 46.56, -72.74, "Jour 1 · 15 h 40", "Les chutes et la vieille centrale", "chutes-centrale"),
+         ("Parc national", 46.76, -72.82, "Jour 2 · 7 h 10", "Réveil au bord du lac, canot avant le déjeuner", "lac-matin"),
+         ("Lac du nord", 47.16, -72.74, "Jour 3 · 22 h 40", "Aurores boréales au-dessus du lac, vues depuis le lit", "aurores-lac"),
+         ("Bivouac", 47.44, -72.78, "Jour 4 · 19 h 05", "Bivouac au bord de la rivière", "bivouac-riviere"),
      ]},
-    {"id": "cantons", "nom": "Cantons-de-l’Est", "quand": "Juin 2026 · 2 jours", "jours": 2,
+    {"id": "vignobles", "nom": "Route des vignobles", "quand": "Juin 2026 · 2 jours", "jours": 2,
      "wp": [(45.63, -72.96), (45.48, -72.80), (45.40, -72.73), (45.30, -72.40), (45.27, -72.15), (45.24, -72.02),
             (45.29, -71.96), (45.40, -71.89)],
-     "cover": "magog",
+     "cover": "lac-montagne",
      "entries": [
-         ("Granby", 45.40, -72.73, "Jour 1 · 10 h 15", "Café et marché public", None),
-         ("Magog", 45.27, -72.15, "Jour 1 · 16 h 30", "Le lac Memphrémagog et le mont Orford", "magog"),
+         ("Marché public", 45.40, -72.73, "Jour 1 · 10 h 15", "Café et marché public", None),
+         ("Grand lac", 45.27, -72.15, "Jour 1 · 16 h 30", "Le lac et la montagne", "lac-montagne"),
          ("Vignoble", 45.24, -72.02, "Jour 2 · 13 h 00", "Dégustation sur les pentes", "vignoble"),
-         ("North Hatley", 45.29, -71.96, "Jour 2 · 15 h 20", "Promenade au bord du lac Massawippi", "north-hatley"),
-         ("Sherbrooke", 45.40, -71.89, "Jour 2 · 18 h 10", "La gorge de la rivière Magog", "sherbrooke"),
+         ("Village du lac", 45.29, -71.96, "Jour 2 · 15 h 20", "Promenade au bord du lac", "village-lac"),
+         ("La gorge", 45.40, -71.89, "Jour 2 · 18 h 10", "La gorge de la rivière", "gorge-riviere"),
      ]},
-    {"id": "beaupre", "nom": "Côte-de-Beaupré et Île d’Orléans", "quand": "Septembre 2026 · 2 jours", "jours": 2,
+    {"id": "fleuve", "nom": "Route du fleuve et l’île", "quand": "Septembre 2026 · 2 jours", "jours": 2,
      "wp": [(46.81, -71.21), (46.88, -71.16), (46.94, -71.02), (46.92, -70.95), (46.99, -70.86), (47.06, -70.78),
             (47.07, -70.58)],
-     "cover": "ile-orleans",
+     "cover": "ile-produits",
      "entries": [
-         ("Chute Montmorency", 46.89, -71.15, "Jour 1 · 10 h 00", "Le pont suspendu au-dessus de la chute", "chute-montmorency"),
-         ("Île d’Orléans", 46.95, -70.95, "Jour 1 · 13 h 30", "Cidre et fraises d’automne", "ile-orleans"),
-         ("Côte-de-Beaupré", 47.03, -70.82, "Jour 2 · 9 h 15", "La route du fleuve au matin", "cote-beaupre"),
-         ("Canyon Sainte-Anne", 47.07, -70.58, "Jour 2 · 11 h 40", "Passerelle au-dessus du canyon", "sainte-anne"),
+         ("Grande chute", 46.89, -71.15, "Jour 1 · 10 h 00", "Le pont suspendu au-dessus de la chute", "grande-chute"),
+         ("L’île", 46.95, -70.95, "Jour 1 · 13 h 30", "Cidre et fraises d’automne", "ile-produits"),
+         ("Route du fleuve", 47.03, -70.82, "Jour 2 · 9 h 15", "La route du fleuve au matin", "route-fleuve"),
+         ("Le canyon", 47.07, -70.58, "Jour 2 · 11 h 40", "Passerelle au-dessus du canyon", "canyon"),
      ]},
 ]
 
@@ -473,8 +468,7 @@ for t in TRIPS:
     for nom, lat, lon, quand, note, pnom in t["entries"]:
         x, y = P(lat, lon)
         ents.append({"lieu": nom, "x": round(x, 2), "y": round(y, 2), "quand": quand, "note": note,
-                     "src": ph(pnom) if pnom else None, "geo": f"{lat:.2f}".replace(".", ",") + "° N · "
-                     + f"{-lon:.2f}".replace(".", ",") + "° O"})
+                     "src": ph(pnom) if pnom else None, "geo": "Position enregistrée"})
     TRIPS_JS.append({"id": t["id"], "nom": t["nom"], "quand": t["quand"], "jours": t["jours"], "km": round(km),
                      "live": t.get("live", False), "d": _d(pts), "cover": ph(t["cover"]), "entries": ents})
 
@@ -533,7 +527,7 @@ VEHICLES = [
     {"id": "vr", "grp": "q", "nom": "VR BouLance", "type": "Ambulance Ford 2017 convertie", "ico": "vr",
      "img": "/media/ambulance/ambulance-ford-2017-hd.jpg", "pos": "50% 62%", "real_photo": True,
      "conn": "Boîtier JARVIS + Hub de la cellule", "connk": "b",
-     "where": "En route · A-20, près de Québec", "lvl": ("Carburant", 54),
+     "where": "En route · sur l’autoroute", "lvl": ("Carburant", 54),
      "caps": {"loc": "b", "lock": None, "clim": None, "nrj": "b", "pneus": "b", "diag": "b", "garde": "b", "zone": "b"},
      "stats": [("Carburant", "54 % · 410 km", 54), ("Batterie du moteur", "12,7 V", 92), ("Eau propre · cellule", "22 %", 22), ("Propane · cellule", "31 %", 31)],
      "info": [("Webasto", "Entretien dû · 450 h"), ("Pneus", "80 psi · 4 sur 4 conformes"), ("Kilométrage", "148 320 km"), ("Codes défaut", "Aucun")],
@@ -657,7 +651,7 @@ VEHICLES = [
     {"id": "escalade", "grp": "c", "nom": "Cadillac Escalade noir", "type": "VUS · connexion du constructeur", "ico": "vus",
      **_veh_img("cadillac-escalade"),
      "conn": "Connexion du constructeur (application officielle autorisée)", "connk": "c",
-     "where": "En route · A-20, retour vers 18 h", "lvl": ("Essence", 46),
+     "where": "En route · retour vers 18 h", "lvl": ("Essence", 46),
      "caps": {"loc": "c", "lock": "c", "clim": "c", "nrj": "c", "pneus": "c", "diag": "c", "garde": "c", "zone": "b"},
      "stats": [("Essence", "46 % · 330 km", 46), ("Arrivée prévue", "18 h 05 · 42 km", 70)],
      "info": [("Conducteur", "Alexandre"), ("Pneus", "4 sur 4 conformes"), ("Santé du véhicule", "Aucun avis du constructeur")],
@@ -674,7 +668,7 @@ VEHICLES = [
 # Rendu
 # ---------------------------------------------------------------------------------------------
 VB_CO = (26, 0, 356, 404)  # cadrage du copilote : le trajet, sans les marges vides
-VB_JO = (0, 0, W, H)        # journal : toute la région (Mauricie et Cantons-de-l’Est compris)
+VB_JO = (0, 0, W, H)        # journal : toute la région
 
 
 def _pct(x, y, vb=VB_CO):
@@ -734,16 +728,6 @@ def _labels(route_only=False, vb=VB_CO):
         x, y = P(lat, lon)
         side = {"b": " is-b", "l": " is-l"}.get(pl[0], "") if pl else ""
         out.append(f'<span class="mb-city{" is-major" if imp == 2 else ""}{side}" style="{_pct(x, y, vb)}"><i></i><b>{nom}</b></span>')
-    for nom, lat, lon, rot in WATER_LABELS:
-        x, y = P(lat, lon)
-        out.append(f'<span class="mb-wl" style="{_pct(x, y, vb)};--r:{rot}deg">{nom}</span>')
-    for nom, lat, lon in REGION_LABELS:
-        x, y = P(lat, lon)
-        out.append(f'<span class="mb-rl" style="{_pct(x, y, vb)}">{nom}</span>')
-    for lat in (46, 47, 48):
-        out.append(f'<span class="mb-gl mb-gl-y" style="top:{(P(lat, LON0)[1] - vb[1]) / vb[3] * 100:.2f}%">{lat}° N</span>')
-    for lon in (-72, -70):
-        out.append(f'<span class="mb-gl mb-gl-x" style="left:{(P(LAT1, lon)[0] - vb[0]) / vb[2] * 100:.2f}%">{-lon}° O</span>')
     return "".join(out)
 
 
@@ -824,14 +808,14 @@ def _copilote():
         </div>
         <div class="mb-hud mb-hud-t">
           <span class="mb-live"><i></i>En route</span>
-          <b>Saint-Hyacinthe → Lac-Saint-Jean</b>
+          <b>Résidence → Chalet</b>
           <span class="mb-prog"><i data-mb-prog></i></span>
           <small><span data-mb-kmdone>0</span>{NB}km parcourus · <span data-mb-kmleft>{round(ROUTE_LEN)}</span>{NB}km restants</small>
         </div>
         <div class="mb-hud mb-hud-b">
           <div><small>Heure</small><b data-mb-clock>9 h 05</b></div>
           <div><small>Vitesse</small><b><span data-mb-speed>92</span>{NB}km/h</b></div>
-          <div><small>Prochaine étape</small><b data-mb-next>Québec</b><em data-mb-nexteta>dans 2 h 40</em></div>
+          <div><small>Prochaine étape</small><b data-mb-next>Vieille ville</b><em data-mb-nexteta>dans 2 h 40</em></div>
           <div class="mb-sun"><small>Soleil</small><svg viewBox="0 0 80 30" aria-hidden="true"><path d="M4 27a36 36 0 0 1 72 0" class="mb-sun-arc"/><circle r="3.4" cx="4" cy="27" class="mb-sun-dot" data-mb-sun/></svg><em>Coucher 16{NB}h{NB}42</em></div>
         </div>
         <div class="mb-ctrl">
@@ -878,7 +862,7 @@ def _journal():
         <div class="mb-ov">{_labels(True, VB_JO)}<div class="mb-jpins" data-mb-jpins></div></div>
         <div class="mb-hud mb-hud-t mb-jhud">
           <span class="mb-live is-rec"><i></i>Journal automatique</span>
-          <b data-mb-jtitle>Charlevoix, fjord et Lac-Saint-Jean</b>
+          <b data-mb-jtitle>Fleuve, fjord et grand lac</b>
           <small>Chaque photo prise en route se place seule sur la carte.</small>
         </div>
         <div class="mb-ctrl"><button type="button" class="mb-pill" data-mb-replay>{ico("play")}<span>Revoir le voyage</span></button></div>
@@ -997,7 +981,7 @@ DATA = {
     "W": W, "H": H, "len": round(ROUTE_LEN, 1), "vbco": VB_CO, "vbjo": VB_JO,
     "route": [[round(x, 2), round(y, 2)] for x, y in ROUTE_PTS],
     "km": [round(k, 2) for k in ROUTE_KM],
-    "stops": [{"nom": n, "km": round(K[n], 1)} for n in ("Québec", "Baie-Saint-Paul", "La Malbaie", "Tadoussac", "Saguenay", "Alma", "Roberval")],
+    "stops": [{"nom": n, "km": round(K[n], 1)} for n in ("Vieille ville", "Village de la baie", "Le belvédère", "Le traversier", "Le fjord", "La plage", "Chalet")],
     "pois": [{k: p[k] for k in ("id", "cat", "nom", "km", "off", "stop", "h", "why", "x", "y", "src", "val")} for p in POIS],
     "modes": {k: {"nom": lab, "desc": desc, "w": w} for k, lab, desc, _ic, w in MODES},
     "cats": CAT_LABEL,

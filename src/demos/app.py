@@ -5,9 +5,9 @@
 # barre latérale (barre d'onglets en bas sur cellulaire). Toute la barre du haut fonctionne : recherche
 # (palette de commandes), température réelle (simple indication), Mes appels, Carte et menu du profil (espace,
 # mode d'affichage du site). Un sélecteur Personnel | Professionnel bascule le contenu des deux espaces.
-# La Carte est une vraie carte vectorielle noire du sud du Québec (demos/app_geo.py, Natural Earth)
+# La Carte est une vraie carte vectorielle noire (demos/app_geo.py, Natural Earth)
 # avec les environnements de James. Styles et script : assets/demos/app.css et app.js.
-# Données fictives, sauf l'heure locale, la météo réelle de Saint-Hyacinthe et les batteries de BouLance.
+# Données fictives, sauf l'heure locale, la météo réelle et les batteries de BouLance.
 
 import json
 import math
@@ -15,7 +15,7 @@ import os
 import re
 
 from config import CAPABILITIES
-from demos.app_geo import BOX, GEO, ROUTE_KM, SHIELDS
+from demos.app_geo import BOX, GEO, ROUTE_KM
 
 NB = "\u00a0"
 _ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
@@ -174,7 +174,7 @@ SCREENS = [
     ("appels", "espace", 8500, "JARVIS répond quand vous ne pouvez pas.",
      "Appels et visioconférences, en personnel comme en professionnel. Un numéro inconnu est filtré d’abord par JARVIS, et vous gardez le dernier mot."),
     ("carte", "carte", 9500, "Tous vos lieux, d’un coup d’œil.",
-     "BouLance au Lac-Saint-Jean, la résidence, le chalet, le bureau, le garage de collection, la ferme et le hangar : chaque environnement en direct, à sa vraie place."),
+     "BouLance en voyage, la résidence, le chalet, le bureau, le garage de collection, la ferme et le hangar : chaque environnement en direct, à sa vraie place."),
     ("outils", "outils", 7000, "Toutes vos extensions, au même endroit.",
      "Domotique, IA, caméras, entreprise, réseau, diagnostic, mobilité : chacune s’ouvre d’un seul clic, directement dans JARVIS."),
 ]
@@ -211,7 +211,7 @@ ENV_HREF = "/solutions/environnements-intelligents/#jarvis"
 
 
 # ---------------------------------------------------------------------------------------------
-# Carte : sud du Québec en kilomètres (origine Saint-Hyacinthe), même projection que app_geo.py
+# Carte en kilomètres, même projection que app_geo.py. Aucun nom de lieu réel n'est affiché.
 # ---------------------------------------------------------------------------------------------
 LAT0, LON0 = 45.630, -72.957
 KX = 111.32 * math.cos(math.radians(47.0))
@@ -223,52 +223,52 @@ def P(lat, lon):
 
 
 # Les environnements de James (positions d'affichage; données d'exemple sauf les batteries de BouLance).
-# Groupe « sth » : les quatre lieux de Saint-Hyacinthe, réunis en une bulle quand la carte est éloignée.
+# Groupe « sth » : les quatre lieux voisins de la résidence, réunis en une bulle quand la carte est éloignée.
 ENVS = [
-    {"key": "boulance", "name": "BouLance", "kind": "Véhicule récréatif", "place": "Roberval · Lac-Saint-Jean",
+    {"key": "boulance", "name": "BouLance", "kind": "Véhicule récréatif", "place": "En voyage · au bord du lac",
      "lat": 48.515, "lon": -72.226, "icon": "rv", "img": "/media/env/boulance.webp", "pos": "62% 50%", "w": 74,
      "short": "Stationné · au bord du lac", "state": "ok",
      "chips": [("battery", "Batteries", "—", "soc"), ("shield", "Alarme", "Armée", ""), ("thermo", "Intérieur", "19 °C", "")],
-     "rows": [("route", f"Arrivé hier, 17 h 40 · {ROUTE_KM} km depuis la Maison"), ("pin", "Camping municipal de Roberval · Tour du Lac-Saint-Jean"),
+     "rows": [("route", f"Arrivé hier, 17 h 40 · {ROUTE_KM} km depuis la Maison"), ("pin", "Camping au bord du lac"),
               ("info", "Batteries mesurées en direct · le reste, données d’exemple")]},
-    {"key": "maison", "name": "Résidence", "kind": "Résidence de prestige", "place": "Saint-Hyacinthe",
+    {"key": "maison", "name": "Résidence", "kind": "Résidence de prestige", "place": "Résidence principale",
      "lat": 45.655, "lon": -73.020, "icon": "home", "img": "/media/solutions/environnements-intelligents.webp", "pos": "70% 42%",
      "w": 22, "grp": "sth", "short": "21 °C · chauffage réduit", "state": "ok",
      "chips": [("shield", "Système", "Armé", ""), ("thermo", "Salon", "21 °C", ""), ("users", "Présence", "Personne", "")],
      "rows": [("clock", "Retour prévu pour 17 h · préchauffage à 16 h 15"), ("check", "Portes verrouillées · stores fermés"),
               ("info", "Données d’exemple")]},
-    {"key": "chalet", "name": "Chalet", "kind": "Chalet d’architecte", "place": "Saint-Donat · Lac Archambault",
+    {"key": "chalet", "name": "Chalet", "kind": "Chalet d’architecte", "place": "Au bord d’un lac",
      "lat": 46.318, "lon": -74.222, "icon": "tree", "img": "/media/concept/jarvis-hero-architecture-v1.webp", "pos": "30% 50%",
      "w": 60, "short": "Hors saison · 12 °C maintenu", "state": "ok",
      "chips": [("drop", "Eau", "Coupée", ""), ("camera", "Caméras", "Actives", ""), ("thermo", "Intérieur", "12 °C", "")],
      "rows": [("check", "Dernière visite il y a 9 jours · tout est fermé"), ("shield", "Aucun mouvement détecté cette semaine"),
               ("info", "Données d’exemple")]},
-    {"key": "bureau", "name": "Bureau", "kind": "Entreprise · bureaux", "place": "Saint-Hyacinthe · centre-ville",
+    {"key": "bureau", "name": "Bureau", "kind": "Entreprise · bureaux", "place": "Centre-ville",
      "lat": 45.627, "lon": -72.953, "icon": "brief", "img": "/media/solutions/jarvis-enterprise-operations-v1.webp", "pos": "50% 50%",
      "w": 22, "grp": "sth", "short": "Fermé · système armé", "state": "ok",
      "chips": [("lock", "Accès", "Verrouillés", ""), ("devices", "Postes", "3 en veille", ""), ("thermo", "Bureaux", "17 °C", "")],
      "rows": [("calendar", "Ouverture lundi, 8 h · chauffage à 7 h 15"), ("check", "Sauvegarde de la nuit réussie"),
               ("info", "Données d’exemple")]},
-    {"key": "atelier", "name": "Garage", "kind": "Garage de collection", "place": "Sainte-Rosalie",
+    {"key": "atelier", "name": "Garage", "kind": "Garage de collection", "place": "Près de la résidence",
      "lat": 45.643, "lon": -72.893, "icon": "garage", "img": "/media/solutions/camera-garage-supercars-v1.webp", "pos": "55% 40%",
      "w": 22, "grp": "sth", "short": "Portes fermées · 6 voitures sur 7", "state": "ok",
      "chips": [("garage", "Portes", "Fermées", ""), ("drop", "Humidité", "45 %", ""), ("thermo", "Garage", "15 °C", "")],
      "rows": [("check", "Mainteneurs de charge : 6 sur 6"), ("route", "Escalade noir de retour vers 18 h"), ("info", "Données d’exemple")]},
-    {"key": "ferme", "name": "Ferme", "kind": "Ferme multi-élevage", "place": "Montérégie",
+    {"key": "ferme", "name": "Ferme", "kind": "Ferme multi-élevage", "place": "À la campagne",
      "lat": 45.565, "lon": -72.950, "icon": "barn", "img": media("/media/env/ferme.webp"), "pos": "50% 50%",
      "w": 22, "grp": "sth", "short": "Traite de 17 h terminée", "state": "ok",
      "chips": [("thermo", "Étable", "8 °C", ""), ("drop", "Abreuvoirs", "Normaux", ""), ("shield", "Bâtiments", "Fermés", "")],
      "rows": [("clock", "Prochaine traite à 5 h · robot prêt"), ("check", "Ventilation automatique · 62 % d’humidité"),
               ("info", "Données d’exemple")]},
-    {"key": "hangar", "name": "Hangar", "kind": "Hangar privé · turbopropulseur et jet", "place": "Saint-Jean-sur-Richelieu · aéroport",
+    {"key": "hangar", "name": "Hangar", "kind": "Hangar privé · turbopropulseur et jet", "place": "Aéroport privé",
      "lat": 45.295, "lon": -73.281, "icon": "plane", "img": media("/media/vision/lieu-jet.webp"), "pos": "62% 46%", "w": 40,
      "short": "2 appareils · jet en préparation", "state": "ok",
      "chips": [("plane", "Appareils", "2 au hangar", ""), ("shield", "Hangar", "Armé", ""), ("thermo", "Cabine du jet", "9 °C", "")],
-     "rows": [("calendar", "Jet vers Miami demain, 9 h · préchauffage de la cabine à 7 h"), ("check", "Turbopropulseur prêt · vol vers Sherbrooke demain, 10 h"),
+     "rows": [("calendar", "Départ du jet demain, 9 h · préchauffage de la cabine à 7 h"), ("check", "Turbopropulseur prêt · vol demain, 10 h"),
               ("info", "Données d’exemple")]},
 ]
 GROUP_STH = "sth"
-CLUSTER_W = 120  # au-delà de cette largeur visible (km), les lieux de Saint-Hyacinthe se regroupent
+CLUSTER_W = 120  # au-delà de cette largeur visible (km), les lieux voisins de la résidence se regroupent
 
 
 def _env_photo(e, cls, w=320):
@@ -283,34 +283,6 @@ def _cam_all(pad=1.3):
     ys = [P(e["lat"], e["lon"])[1] for e in ENVS]
     cx, cy = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2
     return cx, cy, (max(xs) - min(xs)) * pad, (max(ys) - min(ys)) * pad
-
-
-# Repères (nom, lat, lon, largeur visible maximale en km pour l'afficher; 0 = toujours)
-CITIES = [
-    ("Montréal", 45.508, -73.561, 0, 2), ("Québec", 46.813, -71.208, 0, 2), ("Trois-Rivières", 46.345, -72.543, 0, 1),
-    ("Saguenay", 48.428, -71.068, 0, 1), ("Sherbrooke", 45.404, -71.893, 0, 1), ("Ottawa", 45.421, -75.697, 0, 1),
-    ("Drummondville", 45.883, -72.484, 400, 1), ("Granby", 45.400, -72.733, 330, 1), ("Alma", 48.550, -71.650, 520, 1),
-    ("Dolbeau-Mistassini", 48.879, -72.231, 560, 1), ("La Tuque", 47.436, -72.783, 640, 1), ("Shawinigan", 46.567, -72.746, 330, 1),
-    ("Joliette", 46.022, -73.440, 300, 1), ("Saint-Jérôme", 45.780, -74.004, 330, 1), ("Mont-Tremblant", 46.119, -74.596, 560, 1),
-    ("Saint-Jean-sur-Richelieu", 45.307, -73.262, 330, 1), ("Sorel-Tracy", 46.040, -73.113, 250, 1), ("Victoriaville", 46.057, -71.960, 330, 1),
-    ("Saint-Hyacinthe", 45.612, -72.957, CLUSTER_W, 1), ("Beloeil", 45.567, -73.205, 150, 0), ("Saint-Pie", 45.507, -72.909, 80, 0),
-    ("Saint-Dominique", 45.571, -72.853, 80, 0), ("Saint-Damase", 45.531, -73.003, 80, 0), ("Saint-Liboire", 45.651, -72.763, 80, 0),
-    ("Saint-Simon", 45.723, -72.839, 80, 0), ("Roberval", 48.519, -72.222, 0, -1), ("Chambord", 48.430, -72.063, 160, 0),
-    ("Saint-Félicien", 48.650, -72.450, 220, 0), ("Saint-Donat", 46.319, -74.222, 0, -1),
-]
-# Eaux et régions (nom, lat, lon, rotation, largeur visible minimale, maximale)
-WATERS = [
-    ("Fleuve Saint-Laurent", 46.62, -71.80, -33, 0, 9999), ("Fleuve Saint-Laurent", 45.86, -73.24, -50, 0, 260),
-    ("Lac Saint-Jean", 48.665, -71.93, 0, 0, 9999), ("Lac Saint-Pierre", 46.21, -72.84, -30, 0, 360),
-    ("Rivière Saguenay", 48.33, -70.55, -18, 0, 9999), ("Réservoir Gouin", 48.42, -74.25, 0, 0, 9999),
-    ("Lac Champlain", 44.80, -73.33, -78, 0, 9999), ("Rivière Yamaska", 45.70, -72.975, -78, 0, 90),
-    ("Rivière Richelieu", 45.68, -73.19, -80, 0, 110),
-]
-REGIONS = [
-    ("ONTARIO", 45.55, -76.45, 300), ("ÉTATS-UNIS", 44.80, -71.90, 300), ("MAURICIE", 47.25, -73.35, 300),
-    ("LAURENTIDES", 46.55, -75.05, 300), ("SAGUENAY–LAC-SAINT-JEAN", 49.12, -71.55, 300), ("CAPITALE-NATIONALE", 47.30, -71.05, 300),
-    ("MONTÉRÉGIE", 45.30, -73.05, 200), ("ESTRIE", 45.35, -71.55, 300), ("CENTRE-DU-QUÉBEC", 46.10, -72.15, 300),
-]
 
 
 def geo_defs(uid):
@@ -373,32 +345,16 @@ def _cluster(small=False):
     cx, cy = sum(p[0] for p in xs) / len(xs), sum(p[1] for p in xs) / len(xs)
     if small:
         return (f'<span class="ap-dotpin is-grp" data-x="{cx:.1f}" data-y="{cy:.1f}" data-minw="{CLUSTER_W}" aria-hidden="true">'
-                f'<i></i><b>{len(g)} lieux · Saint-Hyacinthe</b></span>')
+                f'<i></i><b>{len(g)} lieux</b></span>')
     thumbs = "".join(_env_photo(e, "ap-cl-img") for e in g[:3])
     return (f'<button type="button" class="ap-cluster" data-cluster="{GROUP_STH}" data-x="{cx:.1f}" data-y="{cy:.1f}" '
-            f'data-minw="{CLUSTER_W}" data-w="26" aria-label="{len(g)} lieux à Saint-Hyacinthe : rapprocher">'
-            f'<span class="ap-cl-ph">{thumbs}</span><span class="ap-cl-t"><b>{len(g)} lieux</b><small>Saint-Hyacinthe</small></span></button>')
-
-
-SHIELD_W = {"10": 240, "15": 300, "30": 240, "55": 300, "40": 420, "20": 700}
+            f'data-minw="{CLUSTER_W}" data-w="26" aria-label="{len(g)} lieux près de la résidence : rapprocher">'
+            f'<span class="ap-cl-ph">{thumbs}</span><span class="ap-cl-t"><b>{len(g)} lieux</b><small>Près de la résidence</small></span></button>')
 
 
 def map_overlays(big=True):
+    """Les lieux du client sur la carte. Aucune étiquette de ville, d'eau, de région ni de route."""
     out = []
-    if big:
-        for name, la, lo, rot, mn, mx in WATERS:
-            out.append(f'<span class="ap-water" {_xy(la, lo)} data-minw="{mn}" data-maxw="{mx}" data-layer="villes" '
-                       f'style="--rot:{rot}deg" aria-hidden="true">{name}</span>')
-        for name, la, lo, mx in REGIONS:
-            out.append(f'<span class="ap-region" {_xy(la, lo)} data-minw="{mx}" data-layer="villes" aria-hidden="true">{name}</span>')
-        for num, x, y in SHIELDS:
-            out.append(f'<span class="ap-shield{" is-a" if len(num) <= 2 else ""}" data-x="{x}" data-y="{y}" data-maxw="{SHIELD_W.get(num, 700)}" '
-                       f'data-layer="routes" aria-hidden="true">{num}</span>')
-    for name, la, lo, mx, imp in CITIES:
-        if imp < 0 or (not big and imp < 2):
-            continue
-        mx_attr = f' data-maxw="{mx}"' if mx else ""
-        out.append(f'<span class="ap-city c{imp}{" is-n" if name == "Montréal" else ""}" {_xy(la, lo)}{mx_attr} data-layer="villes"><i></i><b>{name}</b></span>')
     if big:
         out.append(_cluster())
         out += [_env_pin(e) for e in ENVS]
@@ -441,7 +397,7 @@ def _px(perso, pro):
 # Accueil : l'état du moment de chaque extension (perso, pro ou None). Une extension sans entrée
 # affiche sa description courte : la bande accepte autant d'extensions que config.CAPABILITIES.
 HOME_STATE = {
-    "environnements-intelligents": ("6 lieux en ligne · BouLance au Lac-Saint-Jean", None),
+    "environnements-intelligents": ("6 lieux en ligne · BouLance en voyage", None),
     "securite-intelligente": ("Nuit calme · système armé · 2 véhicules reconnus", None),
     "automatisation-operations": ("1 appel répondu par JARVIS ce matin", "2 appels d’affaires répondus ce matin"),
     "ia-privee-connaissances": ("3 documents classés · résumé prêt", None),
@@ -538,7 +494,7 @@ def v_accueil():
     <ul class="ap-rows">
       <li><button type="button" data-go="journee">{icon("calendar")}<span><b>Mon agenda</b><small>Vos prochains événements</small></span>{icon("right", "ap-chev")}</button></li>
       <li><button type="button" data-go="partage">{icon("share")}<span><b>Mes partages</b><small>Qui voit quoi, et jusqu’à quand</small></span>{icon("right", "ap-chev")}</button></li>
-      <li><button type="button" data-go="carte" data-env-go="boulance">{icon("rv")}<span><b>BouLance</b><small>Au Lac-Saint-Jean · batteries en direct</small></span>{icon("right", "ap-chev")}</button></li>
+      <li><button type="button" data-go="carte" data-env-go="boulance">{icon("rv")}<span><b>BouLance</b><small>En voyage · batteries en direct</small></span>{icon("right", "ap-chev")}</button></li>
     </ul>
   </article>
   <article class="ap-card ap-msgs" data-r>
@@ -597,7 +553,7 @@ EVENTS = [
     (1, 8.5, 10, "Préparer les documents", "trav", "Travail", "brief"),
     (1, 13, 14.5, "Hockey de Léo", "fam", "Aréna · lecture seule", "lock"),
     (2, 10.5, 12, "Brunch chez Camille", "perso", "Personnel", "fork"),
-    (2, 14, 16.5, "Marche au mont Saint-Hilaire", "perso", "Personnel", "pin"),
+    (2, 14, 16.5, "Marche en montagne", "perso", "Personnel", "pin"),
 ]
 H0, H1 = 8, 22
 
@@ -1082,7 +1038,6 @@ def v_carte():
     <aside class="ap-card ap-layers" data-r>
       <h4 class="ap-k">Afficher</h4>
       <div class="ap-lchips">
-        <button type="button" class="ap-lchip" data-layer-t="villes" aria-pressed="true">{icon("city")}Villes</button>
         <button type="button" class="ap-lchip" data-layer-t="routes" aria-pressed="true">{icon("route")}Routes</button>
         <button type="button" class="ap-lchip" data-layer-t="trajet" aria-pressed="true">{icon("rv")}Trajet</button>
         <button type="button" class="ap-lchip" data-layer-t="personnes" aria-pressed="false">{icon("users")}Personnes</button>
@@ -1216,7 +1171,7 @@ def _me_menu():
         for m, lab in (("signature", "Signature"), ("platinum", "Platinum"), ("base", "Base"))
     )
     return f"""<div class="ap-pop ap-menu" data-pop-panel="me" hidden role="dialog" aria-label="Profil d’Alex">
-  <div class="ap-me-h">{face(AV_ALEX)}<span><b>Alex</b><small>Compte personnel · Hub de Saint-Hyacinthe</small></span></div>
+  <div class="ap-me-h">{face(AV_ALEX)}<span><b>Alex</b><small>Compte personnel · Hub de la résidence</small></span></div>
   <button type="button" class="ap-mi" data-toast="Mon profil : nom, photo et clés d’accès. Votre biométrie reste sur votre appareil.">{icon("user")}<span><b>Mon profil</b><small>Nom, photo, clés d’accès</small></span></button>
   <p class="ap-mk">Espace affiché</p>
   {_pp()}
@@ -1339,9 +1294,9 @@ def _device(only=None):
             <header class="ap-top">
               <button type="button" class="ap-search" data-pop-open="cmd" aria-haspopup="dialog" aria-label="Rechercher dans JARVIS">{icon("search")}<span>Que souhaitez-vous faire{NB}?</span><kbd>Ctrl K</kbd></button>
               <span class="ap-status-time" data-ap="clock">19{NB}h{NB}42</span>
-              <span class="ap-wx" role="img" aria-label="Météo de Saint-Hyacinthe, en direct">
+              <span class="ap-wx" role="img" aria-label="Météo, en direct">
                 <span class="ap-wx-i" aria-hidden="true">{WX}</span>
-                <span><b><span data-ap="temp">—</span><span class="ap-unit">{NB}°C</span></b><small>Saint-Hyacinthe<span class="ap-live"> · en direct</span></small></span>
+                <span><b><span data-ap="temp">—</span><span class="ap-unit">{NB}°C</span></b><small>Météo<span class="ap-live"> · en direct</span></small></span>
               </span>
               <button type="button" class="ap-top-call" data-go="appels" aria-label="Mes appels" title="Mes appels">{icon("call")}</button>
               <button type="button" class="ap-top-call ap-pin" data-go="carte" aria-label="Carte de mes lieux" title="Carte de mes lieux">{icon("pin")}</button>

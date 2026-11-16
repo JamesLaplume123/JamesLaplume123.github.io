@@ -153,11 +153,11 @@ def O(label, state, tone, zone, ago, who="", lock=None, icon=None):
 
 
 # =============================================================================================
-# BouLance · véhicule récréatif (le laboratoire mobile). Scénario : stationné à Roberval,
-# Lac-Saint-Jean, pendant le Tour du Lac-Saint-Jean. Batteries réelles quand la liaison répond.
+# BouLance · véhicule récréatif (le laboratoire mobile). Scénario : stationné au bord d’un lac,
+# pendant le tour du lac. Batteries réelles quand la liaison répond.
 # =============================================================================================
 
-LAC = {  # Lac-Saint-Jean stylisé (géographie illustrative, 5 unités par kilomètre)
+LAC = {  # lac stylisé (géographie illustrative, 5 unités par kilomètre)
     "km": 5,
     "water": [[[150, 62], [190, 44], [236, 40], [272, 48], [302, 70], [318, 100], [320, 132], [306, 164],
                [276, 186], [236, 198], [194, 198], [158, 186], [130, 166], [116, 138], [118, 106], [130, 80]]],
@@ -171,9 +171,8 @@ LAC = {  # Lac-Saint-Jean stylisé (géographie illustrative, 5 unités par kilo
               {"pts": [[160, 202], [154, 222], [150, 240]], "n": "155", "at": [155, 224]},
               {"pts": [[80, 98], [48, 112], [0, 120]], "minor": True},
               {"pts": [[106, 150], [70, 166], [30, 176], [0, 180]], "minor": True}],
-    "towns": [[104, 151, "Roberval", "b"], [76, 92, "Saint-Félicien", "a"], [170, 24, "Dolbeau-Mistassini"],
-              [252, 26, "Péribonka"], [344, 134, "Alma"], [236, 220, "Métabetchouan"], [158, 210, "Chambord"]],
-    "lake": [218, 122, "Lac Saint-Jean"],
+    "towns": [],
+    "lake": [218, 122, "Le lac"],
     "me": [104, 150],
 }
 
@@ -195,9 +194,9 @@ BOULANCE_POINTS = [
 ]
 
 BOULANCE = {
-    "key": "boulance", "name": "BouLance", "kind": "Véhicule récréatif", "place": "Roberval · Lac-Saint-Jean",
+    "key": "boulance", "name": "BouLance", "kind": "Véhicule récréatif", "place": "En voyage · au bord du lac",
     "mobile": True, "icon": "rv", "meIcon": "rv", "points": BOULANCE_POINTS,
-    "geo": {"lat": 48.52, "lon": -72.23, "place": "Roberval, Lac-Saint-Jean"},
+    "geo": {"lat": 48.52, "lon": -72.23, "place": "Au bord du lac"},
     "banner": {"img": "/media/env/boulance.webp", "pos": "62% 50%", "alt": "BouLance, le véhicule récréatif, au bord d’un lac au crépuscule"},
     "titles": {"voyage": "Voyage et entretien"},
     "subs": {
@@ -220,7 +219,7 @@ BOULANCE = {
         "t24": [-3, -4, -4, -5, -5, -6, -6, -5, -3, -1, 1, 2, 3, 4, 4, 3, 2, 0, -1, -2, -2, -3, -3, -4],
         "sky": "dddddddpppddddppcccdddpp", "p24": "000000001111222211100000",
         "days": [["cloudsun", 4, -6, 20], ["snow", 1, -8, 60], ["cloud", -1, -9, 30], ["sun", 3, -5, 10], ["rain", 6, -1, 70]],
-        "src": "Environnement Canada · exemple", "upd": 8,
+        "src": "Service météo · exemple", "upd": 8,
     },
     "energy": {
         "unit": "Ah", "cap": 560, "nominal": "12,8 V", "chem": "LiFePO₄", "soc": 78, "v": "13,2 V", "reserve": 10, "load": 270,
@@ -252,8 +251,8 @@ BOULANCE = {
                      ["Câble extérieur débranché", False, "capteur|Prise de quai · 30 A encore détectés"],
                      ["Marche rentrée", False, "capteur|Fin de course de la marche électrique"],
                      ["Propane fermé pour la route", False, "fab|Manuel du véhicule · avant chaque déplacement"]]),
-            C("trip", 12, title="Mon voyage", name="Tour du Lac-Saint-Jean", next="Prochaine étape : Saint-Félicien", go="voyage",
-              stages=["Alma", "Chambord", "Roberval", "Saint-Félicien", "Dolbeau-Mistassini", "Péribonka", "Alma"], at=2,
+            C("trip", 12, title="Mon voyage", name="Tour du lac", next="Prochaine étape : Le village", go="voyage",
+              stages=["La plage", "Le quai", "Le camping", "Le village", "La rivière", "Le belvédère", "La plage"], at=2,
               done="146 km", left="110 km", eta="Départ dans 2 jours · 10 h"),
         ],
         "confort": [
@@ -295,7 +294,7 @@ BOULANCE = {
                 C("kpi", 3, icon="chart", label="Produit jusqu’ici", value="solar:sofar", sub="Mesure d’exemple", tone="gold"),
                 C("list", 3, h=2, icon="gear", title="Installation déclarée",
                   rows=[["bolt", "Puissance", "500 Wc"], ["compass", "Orientation", "Toit · à plat"], ["sliders", "Inclinaison", "0°"],
-                        ["pin", "Position", "Roberval · exemple"]]),
+                        ["pin", "Position", "Camping · exemple"]]),
                 C("solar", 9),
                 C("fwx", 12, cond="Nuages variables", cloud=45, quality=2, src="Scénario météo d’exemple"),
             ]],
@@ -341,8 +340,8 @@ BOULANCE = {
             ]],
             ["alertes", "Alertes extérieures", [
                 C("ec", 12, title="Météo · secteur du VR", counts=[0, 0, 1, 0, 1],
-                  alert={"level": "Avis", "title": "Bourrasques de neige", "text": "Visibilité réduite par endroits sur la route 169 demain matin · consulter le bulletin avant le départ.",
-                         "src": "Environnement Canada · exemple", "ago": 8}),
+                  alert={"level": "Avis", "title": "Bourrasques de neige", "text": "Visibilité réduite par endroits sur la route demain matin · consulter le bulletin avant le départ.",
+                         "src": "Service météo · exemple", "ago": 8}),
                 C("danger", 6, title="SOPFEU · Feux et restrictions", level=1, fires="0 feu dans un rayon de 25 km",
                   note="Saison de protection jusqu’au 15 novembre", src="SOPFEU · exemple", ago=13),
                 C("zone", 6, title="Zone consultée · 25 km", map="lac", radius=25),
@@ -394,10 +393,10 @@ BOULANCE = {
         ],
         "voyage": [
             ["voyage", "Voyage", [
-                C("trip", 8, big=True, title="Voyage lié", name="Tour du Lac-Saint-Jean", next="Prochaine étape · Saint-Félicien",
+                C("trip", 8, big=True, title="Voyage lié", name="Tour du lac", next="Prochaine étape · Le village",
                   dist="24 km", dur="25 min", map="lac", view=[20, 0, 360, 216], route=BOULANCE_TRIP),
-                C("arrival", 4, place="Saint-Félicien", temp=2, icon="cloud", cond="Nuageux", wind="Vent 14 km/h"),
-                C("list", 6, icon="warn", title="Travaux sur le trajet", sub="Québec 511 · 2 entraves d’exemple",
+                C("arrival", 4, place="Le village", temp=2, icon="cloud", cond="Nuageux", wind="Vent 14 km/h"),
+                C("list", 6, icon="warn", title="Travaux sur le trajet", sub="Info-routes · 2 entraves d’exemple",
                   rows=[["cone", "Route 169 · circulation alternée", "6 km", "warn"], ["cone", "Accès local · détour temporaire", "11 km", "warn"]],
                   note="Disponibilité réelle à vérifier."),
                 C("list", 6, icon="clip", title="Avant de partir",
@@ -409,7 +408,7 @@ BOULANCE = {
                                        [2, "10:00", "11:00", "Départ", "res"], [3, "14:00", "15:00", "Inspection des joints", "maint"],
                                        [1, "09:00", "10:30", "Vidange et remplissage", "maint"]]),
                 C("next", 4, icon="wrench", kick="Prochain événement", title="Vidange et remplissage", d=1, h="09:00"),
-                C("next", 4, icon="clock", kick="Départ du camping", title="Vers Saint-Félicien", d=2, h="10:00", countdown=True),
+                C("next", 4, icon="clock", kick="Départ du camping", title="Vers le village", d=2, h="10:00", countdown=True),
                 C("next", 4, icon="tent", kick="Réservation d’exemple", title="Camping du lac", text="Arrivée hier 14 h · départ dans 2 jours · 3 nuits"),
             ]],
             ["listes", "Listes", [
@@ -429,13 +428,13 @@ BOULANCE = {
                                ["Déployer l’auvent", "Si le vent le permet (limite 30 km/h)", False, "saison|Vent mesuré : 18 km/h"],
                                ["Allumer le chauffage", "Consigne 21 °C", False, "saison|Nuit à −6 °C prévue"]]},
                     {"k": "hiver", "l": "Froid", "sub": "Nuits sous zéro.", "icon": "snowflake",
-                     "items": [["Câble chauffant des conduites", "Vérifier le branchement", True, "saison|Nuits sous 0 °C prévues · Environnement Canada (exemple)"],
+                     "items": [["Câble chauffant des conduites", "Vérifier le branchement", True, "saison|Nuits sous 0 °C prévues · Service météo (exemple)"],
                                ["Réservoirs à moins de 80 %", "Laisser de la place au gel", False, "capteur|Jauges des réservoirs · eaux grises 34 %"],
                                ["Antigel dans les siphons", "Eaux grises et noires", False, "fab|Manuel du véhicule · sous −5 °C"],
                                ["Couvercles des évents", "Ventilation sans infiltration", False, "jarvis|Recommandé : neige prévue jeudi"]]},
                     {"k": "courses", "l": "Courses", "sub": "Haltes et ravitaillement.", "icon": "cart",
                      "items": [["Propane", "Remplir une bonbonne", True, "jarvis|Propane à 62 % · ≈ 9 jours au rythme du chauffage"],
-                               ["Eau potable", "Bidons de 20 L", True, "vous|Ajouté par vous"], ["Épicerie", "Roberval", True, "vous|Ajouté par vous"],
+                               ["Eau potable", "Bidons de 20 L", True, "vous|Ajouté par vous"], ["Épicerie", "Au village", True, "vous|Ajouté par vous"],
                                ["Bleuets séchés", "Spécialité de la région", True, "vous|Ajouté par Marie"], ["Lave-glace −40 °C", "", False, "saison|Neige et froid prévus"],
                                ["Piles AA", "", False, "jarvis|Pile faible : détecteur de fumée"], ["Bois d’allumage", "", False, "vous|Ajouté par vous"],
                                ["Café", "", False, "vous|Ajouté par Marie"], ["Fromage en grains", "", False, "vous|Ajouté par vous"]]},
@@ -444,7 +443,7 @@ BOULANCE = {
             ["entretien", "Entretien", [
                 C("maint", 8, h=2, rows=[
                     M("wheel", "Pneus d’hiver", "Pose avant la date limite",
-                      regle_date("Règlement québécois : pneus d’hiver obligatoires du 1er décembre au 15 mars", "12-01")),
+                      regle_date("Règlement : pneus d’hiver obligatoires du 1er décembre au 15 mars", "12-01")),
                     M("awning", "Inspection de l’auvent et des joints", "Atelier d’exemple · étanchéité du toit",
                       fab("Manuel du fabricant du véhicule · joints et scellants", "aux 12 mois", 365, -360)),
                     M("engine", "Vidange d’huile du moteur", "Huile et filtre",
@@ -463,7 +462,7 @@ BOULANCE = {
                       src_fixe("vous", "Ajouté par Marie le 3 novembre", 12)),
                 ]),
                 C("next", 4, icon="wrench", kick="Prochain rendez-vous", title="Inspection de l’auvent et des joints", d=5, h="14:00"),
-                C("next", 4, icon="wheel", kick="À planifier", title="Pose des pneus d’hiver", text="Le Québec exige les pneus d’hiver du 1er décembre au 15 mars."),
+                C("next", 4, icon="wheel", kick="À planifier", title="Pose des pneus d’hiver", text="Pneus d’hiver obligatoires du 1er décembre au 15 mars."),
             ]],
         ],
         "modes": [
@@ -535,7 +534,7 @@ def T_diag(services, fresh, cpu=14, mem=(1.6, 4), disk=(31, 128), boot="d:-6 03:
 def wx(t24, sky, p24, days, **kw):
     assert len(t24) == 24 and len(sky) == 24 and len(p24) == 24
     base = {"hum": 70, "dew": -2, "wind": 12, "dir": "Ouest", "gust": 22, "vis": 30, "hpa": 1019, "trend": "Stable", "uv": 1, "cas": 2,
-            "src": "Environnement Canada · exemple", "upd": 6, "icon": "cloudsun"}
+            "src": "Service météo · exemple", "upd": 6, "icon": "cloudsun"}
     base.update(kw)
     base.update({"t24": t24, "sky": sky, "p24": p24, "days": days})
     return base
@@ -548,10 +547,10 @@ WX_SH = wx([0, -1, -1, -2, -2, -2, -1, 0, 2, 4, 6, 7, 8, 8, 7, 6, 4, 3, 2, 2, 1,
 
 
 # =============================================================================================
-# Résidence de prestige · Saint-Hyacinthe (piscine, spa, cellier, cinéma maison, garage chauffé 4 places)
+# Résidence de prestige (piscine, spa, cellier, cinéma maison, garage chauffé 4 places)
 # =============================================================================================
 
-QUARTIER = {  # quartier stylisé au bord de la Yamaska (200 unités par kilomètre)
+QUARTIER = {  # quartier stylisé au bord de la rivière (200 unités par kilomètre)
     "km": 200, "note": "Quartier illustratif",
     "water": [[[0, 22], [70, 30], [140, 50], [200, 90], [246, 140], [276, 196], [292, 240], [330, 240], [312, 186], [280, 128],
                [230, 74], [160, 30], [90, 8], [0, 0]]],
@@ -563,17 +562,17 @@ QUARTIER = {  # quartier stylisé au bord de la Yamaska (200 unités par kilomè
     "blocks": [[52, 128, 14, 10], [72, 128, 14, 10], [52, 146, 14, 10], [72, 146, 14, 10], [112, 128, 14, 10], [112, 146, 14, 10],
                [132, 146, 16, 12, "hi"], [52, 176, 14, 10], [72, 176, 14, 10], [112, 176, 14, 10], [132, 176, 14, 10], [172, 176, 14, 10],
                [10, 176, 22, 50, "park"], [172, 128, 12, 10], [350, 160, 40, 40], [356, 40, 34, 22]],
-    "labels": [[214, 80, "Rivière Yamaska", "water"], [22, 168, "Parc"]],
+    "labels": [[214, 80, "Rivière", "water"], [22, 168, "Parc"]],
     "me": [140, 152],
 }
 
 MAISON = {
-    "key": "maison", "name": "Résidence", "kind": "Résidence de prestige", "place": "Saint-Hyacinthe · bord de la Yamaska", "icon": "home", "meIcon": "home",
-    "geo": {"lat": 45.63, "lon": -72.96, "place": "Saint-Hyacinthe, Montérégie"},
+    "key": "maison", "name": "Résidence", "kind": "Résidence de prestige", "place": "Résidence principale · bord de la rivière", "icon": "home", "meIcon": "home",
+    "geo": {"lat": 45.63, "lon": -72.96, "place": "Résidence"},
     "banner": {"img": "/media/solutions/environnements-intelligents.webp", "pos": "70% 42%", "alt": "Intérieur d’une résidence de prestige au crépuscule, vue sur l’eau"},
     "titles": {"voyage": "Entretien"}, "voyageIcon": "calendar",
     "subs": {"apercu": "L’essentiel de la résidence en un regard.", "confort": "Chauffage, cellier, air et météo du quartier.",
-             "energie": "Solaire, batterie et réseau d’Hydro-Québec.", "eau": "Eau chaude, fuites et consommation.",
+             "energie": "Solaire, batterie et réseau électrique.", "eau": "Eau chaude, fuites et consommation.",
              "securite": "Portes, fenêtres, caméras et alertes du secteur.", "internet": "La fibre, le secours et tous les appareils.",
              "equipements": "Piscine, spa, cellier, cinéma et garage chauffé en un regard.", "voyage": "Rendez-vous, listes et entretien de la résidence.",
              "modes": "Matin, soirée, nuit : des routines claires."},
@@ -584,7 +583,7 @@ MAISON = {
                "autonomy": "≈ 9 h · charges essentielles", "ringTitle": "Batteries domestiques", "packsTitle": "Batteries domestiques",
                "packs": [{"name": "Batterie domestique A", "cap": 13.5, "soc": 65, "v": 52.1, "a": 0.0, "t": 19.5, "cycles": 212, "hi": 3.268, "lo": 3.259},
                          {"name": "Batterie domestique B", "cap": 13.5, "soc": 63, "v": 52.0, "a": 0.0, "t": 19.8, "cycles": 209, "hi": 3.266, "lo": 3.258}],
-               "sources": [["solaire", "Solaire · 14,4 kWc", "sun", "solar"], ["reseau", "Hydro-Québec", "hydro", "grid"]],
+               "sources": [["solaire", "Solaire · 14,4 kWc", "sun", "solar"], ["reseau", "Réseau électrique", "hydro", "grid"]],
                "store": "Batteries", "loads": "Résidence",
                "solar": {"peak": 14400, "cloud": .3, "base": 2100, "eve": 4200, "tilt": 35, "morn": .6}},
     "s": {
@@ -596,13 +595,13 @@ MAISON = {
             C("conditions", 7, title="Conditions au quartier"),
             C("lumieres", 5),
             C("around", 7, title="Autour de la résidence", map="quartier", listTitle="Dans le secteur",
-              list=[["plug", "ok", "Bornes de recharge", "2 à moins de 1 km"], ["hydro", "ok", "Hydro-Québec", "Aucune panne dans le secteur"],
+              list=[["plug", "ok", "Bornes de recharge", "2 à moins de 1 km"], ["hydro", "ok", "Réseau électrique", "Aucune panne dans le secteur"],
                     ["drop", "water", "Avis d’eau potable", "Aucun avis en vigueur"]],
               pinsList=[{"x": 205, "y": 186, "icon": "plug", "tone": "ok", "title": "Borne de recharge"}, {"x": 330, "y": 120, "icon": "plug", "tone": "ok", "title": "Borne de recharge"}],
               btn=["Alertes du secteur", "securite:alertes"]),
             C("checklist", 5, id="nuit", title="Avant la nuit", icon="moon",
               items=[["Portes verrouillées", True], ["Portes du garage fermées", True], ["Fenêtre de la chambre fermée", False], ["Couverture du spa posée", False]]),
-            C("upcoming", 7, title="Prochaines 48 heures", icon="bolt", note="Pointe Hydro-Québec demain, de 6 h à 9 h.",
+            C("upcoming", 7, title="Prochaines 48 heures", icon="bolt", note="Pointe du réseau demain, de 6 h à 9 h.",
               text="Le préchauffage commencera à 4 h 30, la piscine et la recharge des voitures seront reportées.", go="energie:pointe"),
             C("next", 5, icon="wrench", kick="Prochain rendez-vous", title="Entretien de la thermopompe", d=3, h="10:00"),
         ],
@@ -633,14 +632,14 @@ MAISON = {
                                       ["evcharge", "Bornes de recharge", "Reportées à 21 h", "muted"]]),
             ]],
             ["pointe", "Tarif et pointes", [
-                C("kpi", 3, icon="bolt", label="Prochaine pointe", value="Demain", sub="De 6 h à 9 h · Hydro-Québec", tone="gold"),
+                C("kpi", 3, icon="bolt", label="Prochaine pointe", value="Demain", sub="De 6 h à 9 h · réseau électrique", tone="gold"),
                 C("kpi", 3, icon="clock", label="Période actuelle", value="Hors pointe", sub="Tarif Flex D · exemple", tone="ok"),
                 C("kpi", 3, icon="leaf", label="Pointes réussies", value="4 / 4", sub="Depuis le 1er décembre dernier", tone="ok"),
                 C("kpi", 3, icon="chart", label="Économie de la saison", value="38 $", sub="Estimation d’exemple", tone="gold"),
                 C("list", 7, icon="list", title="Préparation de la prochaine pointe", sub="Rien n’est appliqué sans votre accord",
                   rows=[["thermo", "Préchauffage", "Dès 4 h 30 · +1 °C", "ok"], ["heater", "Chauffe-eau", "Coupé de 6 h à 9 h", "ok"],
                         ["evcharge", "Bornes de recharge", "Reportées après 9 h", "ok"], ["battery", "Batteries domestiques", "Réservées à la pointe", "ok"]]),
-                C("list", 5, icon="hydro", title="Hydro-Québec", sub="Données d’exemple",
+                C("list", 5, icon="hydro", title="Réseau électrique", sub="Données d’exemple",
                   rows=[["clock", "Dernière pointe", "Mardi · 16 h – 20 h"], ["chart", "Réduction obtenue", "−2,4 kW"], ["bell", "Avis", "La veille, vers 15 h"]]),
             ]],
             ["batterie", "Batterie", [
@@ -653,7 +652,7 @@ MAISON = {
                 C("kpi", 3, icon="calendar", label="Demain", value="8,2 kWh", sub="Prévision · pluie", tone="gold"),
                 C("kpi", 3, icon="chart", label="Produit jusqu’ici", value="solar:sofar", sub="Mesure d’exemple", tone="gold"),
                 C("list", 3, h=2, icon="gear", title="Installation déclarée",
-                  rows=[["bolt", "Puissance", "14,4 kWc"], ["compass", "Orientation", "Sud-sud-ouest"], ["sliders", "Inclinaison", "35°"], ["pin", "Position", "Saint-Hyacinthe"]]),
+                  rows=[["bolt", "Puissance", "14,4 kWc"], ["compass", "Orientation", "Sud-sud-ouest"], ["sliders", "Inclinaison", "35°"], ["pin", "Position", "Résidence"]]),
                 C("solar", 9), C("fwx", 12, cond="Passages nuageux", cloud=40, quality=3, src="Scénario météo d’exemple"),
             ]],
         ],
@@ -699,10 +698,10 @@ MAISON = {
                 C("note", 12, icon="info", text="Déverrouiller, désarmer ou ouvrir le garage demande toujours votre confirmation."),
             ]],
             ["alertes", "Alertes extérieures", [
-                C("ec", 12, title="Météo · Saint-Hyacinthe", counts=[0, 1, 0, 0, 0],
-                  alert={"level": "Veille", "title": "Pluie verglaçante", "text": "Possible demain soir en Montérégie · prévoir du temps pour déglacer l’entrée et la voiture.",
-                         "src": "Environnement Canada · exemple", "ago": 22}),
-                C("list", 6, icon="hydro", title="Hydro-Québec · pannes et pointes", sub="Données d’exemple",
+                C("ec", 12, title="Météo · Résidence", counts=[0, 1, 0, 0, 0],
+                  alert={"level": "Veille", "title": "Pluie verglaçante", "text": "Possible demain soir · prévoir du temps pour déglacer l’entrée et la voiture.",
+                         "src": "Service météo · exemple", "ago": 22}),
+                C("list", 6, icon="hydro", title="Réseau électrique · pannes et pointes", sub="Données d’exemple",
                   rows=[["hydro", "Pannes dans le secteur", "Aucune", "ok"], ["bolt", "Événement de pointe", "Demain 6 h – 9 h", "warn"],
                         ["clock", "Dernière panne", "12 octobre · 18 min", "muted"]]),
                 C("list", 6, icon="leaf", title="Air et eau", sub="Données d’exemple",
@@ -719,9 +718,9 @@ MAISON = {
                 C("prio", 5, items=[["router", "Fibre"], ["antenna", "LTE de secours"]]),
             ]],
             T_diag([["radar", "Zigbee · 48 appareils", "En ligne", "ok"], ["camera", "Caméras · 4 flux", "En ligne", "ok"],
-                    ["hydro", "Hydro-Québec · pointes", "À jour", "ok"], ["cloud", "Connecteur météo", "À jour", "ok"]],
+                    ["hydro", "Réseau électrique · pointes", "À jour", "ok"], ["cloud", "Connecteur météo", "À jour", "ok"]],
                    [["cloud", "Météo", "Dernière lecture : il y a 6 min", "ok"], ["camera", "Caméras", "En direct · il y a 2 s", "ok"],
-                    ["hydro", "Hydro-Québec", "Dernière lecture : il y a 1 h", "ok"], ["radar", "Capteurs Zigbee", "Dernière lecture : il y a 8 s", "ok"]],
+                    ["hydro", "Réseau électrique", "Dernière lecture : il y a 1 h", "ok"], ["radar", "Capteurs Zigbee", "Dernière lecture : il y a 8 s", "ok"]],
                    cpu=11, mem=(2.1, 8), disk=(64, 256)),
         ],
         "equipements": [
@@ -751,10 +750,10 @@ MAISON = {
             ["agenda", "Agenda", [
                 C("agenda", 12, l1="Événements (collectes, pointes)", l2="Entretien (rendez-vous, rappels)",
                   events=[[-3, "09:00", "10:00", "Changement des filtres", "maint"], [-1, "08:00", "09:00", "Collecte du recyclage", "event"],
-                          [0, "10:00", "11:00", "Livraison de bois", "event"], [1, "08:00", "09:00", "Pointe Hydro-Québec", "peak"],
+                          [0, "10:00", "11:00", "Livraison de bois", "event"], [1, "08:00", "09:00", "Pointe du réseau", "peak"],
                           [3, "10:00", "12:00", "Entretien de la thermopompe", "maint"], [5, "13:00", "14:30", "Ramonage", "maint"]]),
                 C("next", 4, icon="wrench", kick="Prochain rendez-vous", title="Entretien de la thermopompe", d=3, h="10:00"),
-                C("next", 4, icon="bolt", kick="Prochaine pointe", title="Hydro-Québec · 6 h à 9 h", d=1, h="06:00", countdown=True),
+                C("next", 4, icon="bolt", kick="Prochaine pointe", title="Pointe du réseau · 6 h à 9 h", d=1, h="06:00", countdown=True),
                 C("next", 4, icon="calendar", kick="Collecte", title="Recyclage", text="Chaque semaine · bac bleu au chemin la veille."),
             ]],
             ["listes", "Listes", [
@@ -814,11 +813,11 @@ MAISON = {
                             ["valve", "Vanne d’eau principale", "Fermée pendant l’absence", "Fermée", "crit fail"], ["heater", "Chauffe-eau", "Mode vacances", "Vacances"]],
                      "autos": [["calendar", "Retour planifié", "Remonte le chauffage 6 h avant"]]},
                 ], scenarios=[["Arrivée à la maison", "Entrée éclairée, alarme désarmée après confirmation"], ["Cinéma", "Stores fermés, éclairage tamisé, projecteur et son allumés"],
-                              ["Pointe Hydro-Québec", "Préchauffage, chauffe-eau coupé, borne reportée"]]),
+                              ["Pointe du réseau", "Préchauffage, chauffe-eau coupé, borne reportée"]]),
             ]],
             ["autos", "Automatisations", [
                 C("autos", 12, rows=[["sun", "Éclairage au coucher du soleil", "Entrée et allée à 40 %", "Coucher du soleil", True],
-                                     ["bolt", "Préparation des pointes", "Préchauffage et délestage", "Avis d’Hydro-Québec", True],
+                                     ["bolt", "Préparation des pointes", "Préchauffage et délestage", "Avis du réseau", True],
                                      ["drop", "Fuite détectée", "Ferme la vanne principale et vous avertit", "Capteur de fuite", True],
                                      ["lock", "Verrouillage de nuit", "Vérifie les portes à 23 h", "Heure", True],
                                      ["evcharge", "Recharge de nuit", "Démarre à 21 h", "Heure et tarif", True], ["blinds", "Stores en été", "Ferme au soleil de l’après-midi", "Ensoleillement", False]]),
@@ -845,16 +844,16 @@ ARCHAMBAULT = {  # lac stylisé (20 unités par kilomètre)
     "roads": [{"pts": [[60, 240], [96, 220], [118, 200], [146, 176], [170, 150], [200, 112], [226, 84], [250, 56], [276, 28], [300, 0]], "n": "125", "at": [168, 140]},
               {"pts": [[118, 200], [190, 214], [260, 210], [330, 190], [400, 170]], "n": "329", "at": [300, 202]},
               {"pts": [[200, 112], [174, 104], [150, 108]], "minor": True}, {"pts": [[0, 150], [60, 166], [118, 200]], "minor": True}],
-    "towns": [[110, 226, "Saint-Donat", "l"]],
-    "labels": [[244, 104, "Lac Archambault", "water"], [356, 206, "Lac Ouareau", "water"], [176, 96, "Chemin du lac"]],
+    "towns": [],
+    "labels": [[244, 104, "Lac", "water"], [356, 206, "Lac", "water"], [176, 96, "Chemin du lac"]],
     "lake": None,
     "me": [168, 114],
 }
 del ARCHAMBAULT["lake"]
 
 CHALET = {
-    "key": "chalet", "name": "Chalet", "kind": "Chalet d’architecte", "place": "Saint-Donat · Lac Archambault", "icon": "tree", "meIcon": "home",
-    "geo": {"lat": 46.32, "lon": -74.22, "place": "Saint-Donat, Lanaudière"},
+    "key": "chalet", "name": "Chalet", "kind": "Chalet d’architecte", "place": "Au bord d’un lac", "icon": "tree", "meIcon": "home",
+    "geo": {"lat": 46.32, "lon": -74.22, "place": "Chalet"},
     "banner": {"img": "/media/concept/jarvis-hero-architecture-v1.webp", "pos": "30% 50%", "alt": "Chalet d’architecte vitré au bord d’un lac, au crépuscule"},
     "titles": {"voyage": "Entretien"}, "voyageIcon": "calendar",
     "subs": {"apercu": "Le chalet surveillé, même à distance.", "confort": "Hors-gel, chauffage et météo du lac.",
@@ -871,7 +870,7 @@ CHALET = {
     "energy": {"unit": "kWh", "cap": 10, "nominal": "51,2 V", "chem": "LiFePO₄", "soc": 92, "v": "53,0 V", "reserve": 30, "load": 650, "battW": 0,
                "autonomy": "≈ 15 h · hors-gel en cas de panne", "ringTitle": "Batterie de secours", "packsTitle": "Batterie de secours",
                "packs": [{"name": "Batterie de secours", "cap": 10, "soc": 92, "v": 53.0, "a": 0.0, "t": 11.2, "cycles": 64, "hi": 3.321, "lo": 3.314}],
-               "sources": [["solaire", "Solaire · 3 kWc", "sun", "solar"], ["reseau", "Hydro-Québec", "hydro", "grid"], ["gen", "Génératrice", "gen", 0, "en veille"]],
+               "sources": [["solaire", "Solaire · 3 kWc", "sun", "solar"], ["reseau", "Réseau électrique", "hydro", "grid"], ["gen", "Génératrice", "gen", 0, "en veille"]],
                "store": "Batterie", "loads": "Chalet",
                "solar": {"peak": 3000, "cloud": .45, "base": 560, "eve": 640, "tilt": 40, "morn": .1}},
     "s": {
@@ -970,9 +969,9 @@ CHALET = {
                 C("note", 12, icon="info", text="Personne n’est sur place : toute commande à distance demande confirmation, et le foyer est limité à 2 heures."),
             ]],
             ["alertes", "Alertes extérieures", [
-                C("ec", 12, title="Météo · Saint-Donat", counts=[1, 0, 0, 1, 0],
+                C("ec", 12, title="Météo · Chalet", counts=[1, 0, 0, 1, 0],
                   alert={"level": "Avertissement", "title": "Neige", "text": "15 à 20 cm prévus d’ici demain matin · routes glissantes vers le chalet.",
-                         "src": "Environnement Canada · exemple", "ago": 35, "tone": "err", "icon": "snowflake"}),
+                         "src": "Service météo · exemple", "ago": 35, "tone": "err", "icon": "snowflake"}),
                 C("danger", 6, title="SOPFEU · Feux et restrictions", level=1, fires="0 feu dans un rayon de 25 km", note="Saison de protection jusqu’au 15 novembre",
                   src="SOPFEU · exemple", ago=40),
                 C("zone", 6, title="Zone consultée · 5 km", map="lac", radius=5),
@@ -1087,7 +1086,7 @@ CHALET = {
 
 
 # =============================================================================================
-# Bureau · entreprise au centre-ville de Saint-Hyacinthe
+# Bureau · entreprise au centre-ville
 # =============================================================================================
 
 CENTRE = {
@@ -1101,13 +1100,13 @@ CENTRE = {
                [10, 70, 70, 18], [100, 70, 40, 18], [160, 70, 40, 18], [220, 70, 36, 18], [276, 70, 36, 18], [330, 70, 60, 18],
                [10, 104, 70, 18], [100, 104, 40, 18], [160, 104, 40, 18, "hi"], [220, 104, 36, 18, "park"], [276, 104, 36, 18], [330, 104, 60, 18],
                [10, 140, 70, 18], [100, 140, 40, 18, "park"], [160, 140, 40, 18], [220, 140, 36, 18], [276, 140, 36, 18], [330, 140, 60, 18]],
-    "labels": [[180, 222, "Rivière Yamaska", "water"], [238, 99, "P"], [120, 135, "P"]],
+    "labels": [[180, 222, "Rivière", "water"], [238, 99, "P"], [120, 135, "P"]],
     "me": [180, 113],
 }
 
 ENTREPRISE = {
-    "key": "entreprise", "name": "Bureau", "kind": "Entreprise · bureaux", "place": "Saint-Hyacinthe · centre-ville", "icon": "brief", "meIcon": "city",
-    "geo": {"lat": 45.626, "lon": -72.957, "place": "Saint-Hyacinthe, centre-ville"},
+    "key": "entreprise", "name": "Bureau", "kind": "Entreprise · bureaux", "place": "Centre-ville", "icon": "brief", "meIcon": "city",
+    "geo": {"lat": 45.626, "lon": -72.957, "place": "Bureau, centre-ville"},
     "banner": {"img": "/media/solutions/jarvis-enterprise-operations-v1.webp", "pos": "50% 50%", "alt": "Bureaux de direction au crépuscule, vue sur la ville"},
     "titles": {"voyage": "Entretien"}, "voyageIcon": "calendar",
     "subs": {"apercu": "Les bureaux, les accès et l’énergie en un regard.", "confort": "Ventilation, CO₂ et températures des zones.",
@@ -1122,7 +1121,7 @@ ENTREPRISE = {
                "autonomy": "≈ 25 min · serveurs et réseau", "ringTitle": "Alimentation sans coupure", "packsTitle": "Alimentation sans coupure",
                "packs": [{"name": "Module A", "cap": 10, "soc": 100, "v": 204.1, "a": 0.0, "t": 21.0, "cycles": 9, "hi": 3.402, "lo": 3.398},
                          {"name": "Module B", "cap": 10, "soc": 100, "v": 204.0, "a": 0.0, "t": 21.3, "cycles": 9, "hi": 3.401, "lo": 3.396}],
-               "sources": [["solaire", "Solaire · 30 kWc", "sun", "solar"], ["reseau", "Hydro-Québec · tarif M", "hydro", "grid"]],
+               "sources": [["solaire", "Solaire · 30 kWc", "sun", "solar"], ["reseau", "Réseau électrique · tarif affaires", "hydro", "grid"]],
                "store": "Onduleur", "loads": "Bâtiment",
                "solar": {"peak": 30000, "cloud": .3, "base": 9000, "day": 41000, "eve": 12000, "tilt": 10, "morn": 0}},
     "s": {
@@ -1172,7 +1171,7 @@ ENTREPRISE = {
             ["pointe", "Pointe et tarif", [
                 C("kpi", 3, icon="bolt", label="Puissance appelée", value="42 kW", sub="Maintenant · exemple", bar=72, tone="gold"),
                 C("kpi", 3, icon="chart", label="Pointe du mois", value="58 kW", sub="Le 21 octobre · 8 h 45", tone="gold"),
-                C("kpi", 3, icon="calendar", label="Prochain événement", value="Demain", sub="De 7 h à 9 h · Hydro-Québec", tone="gold"),
+                C("kpi", 3, icon="calendar", label="Prochain événement", value="Demain", sub="De 7 h à 9 h · réseau électrique", tone="gold"),
                 C("kpi", 3, icon="leaf", label="Objectif de pointe", value="≤ 50 kW", sub="Plan de délestage prêt", tone="ok"),
                 C("list", 7, icon="list", title="Plan de délestage", sub="Appliqué seulement pendant l’événement, après votre accord",
                   rows=[["evcharge", "Bornes de recharge", "Réduites à 3,6 kW", "ok"], ["fan", "CVC", "Préchauffage à 6 h, puis −1 °C", "ok"],
@@ -1225,10 +1224,10 @@ ENTREPRISE = {
                 C("note", 12, icon="info", text="Verrouiller, déverrouiller ou désactiver un badge demande confirmation et laisse une trace."),
             ]],
             ["alertes", "Alertes extérieures", [
-                C("ec", 12, title="Météo · Saint-Hyacinthe", counts=[0, 1, 0, 0, 0],
+                C("ec", 12, title="Météo · Résidence", counts=[0, 1, 0, 0, 0],
                   alert={"level": "Veille", "title": "Pluie verglaçante", "text": "Possible demain soir · prévoir l’épandage d’abrasif à l’entrée et au stationnement.",
-                         "src": "Environnement Canada · exemple", "ago": 22}),
-                C("list", 6, icon="hydro", title="Hydro-Québec", sub="Données d’exemple",
+                         "src": "Service météo · exemple", "ago": 22}),
+                C("list", 6, icon="hydro", title="Réseau électrique", sub="Données d’exemple",
                   rows=[["hydro", "Pannes dans le secteur", "Aucune", "ok"], ["bolt", "Événement de pointe", "Demain 7 h – 9 h", "warn"]]),
                 C("list", 6, icon="key", title="Accès hors heures", sub="Dernières 24 h",
                   rows=[["key", "Entrées hors horaire", "1 · autorisée", "ok"], ["x", "Badges refusés", "0", "ok"], ["users", "Visiteurs", "3 inscrits", "muted"]]),
@@ -1243,9 +1242,9 @@ ENTREPRISE = {
                 C("prio", 5, items=[["router", "Fibre dédiée"], ["link", "Câble"], ["antenna", "LTE"]]),
             ]],
             T_diag([["key", "Contrôle d’accès", "En ligne", "ok"], ["camera", "Enregistreur · 9 caméras", "En ligne", "ok"], ["shield", "Réseau des invités", "Isolé", "ok"],
-                    ["hydro", "Hydro-Québec · pointes", "À jour", "ok"]],
+                    ["hydro", "Réseau électrique · pointes", "À jour", "ok"]],
                    [["key", "Badges", "Dernière lecture : il y a 6 min", "ok"], ["camera", "Caméras", "En direct · il y a 1 s", "ok"],
-                    ["hydro", "Hydro-Québec", "Dernière lecture : il y a 40 min", "ok"], ["cloud", "Météo", "Dernière lecture : il y a 6 min", "ok"]],
+                    ["hydro", "Réseau électrique", "Dernière lecture : il y a 40 min", "ok"], ["cloud", "Météo", "Dernière lecture : il y a 6 min", "ok"]],
                    cpu=23, mem=(5.4, 16), disk=(310, 1000), boot="d:-21 02:00", uptime="21 j 9 h"),
         ],
         "equipements": [
@@ -1272,9 +1271,9 @@ ENTREPRISE = {
             ["agenda", "Agenda", [
                 C("agenda", 12, l1="Événements (livraisons, réunions, pointes)", l2="Entretien (inspections, contrats)",
                   events=[[-4, "10:00", "11:30", "Réunion de direction", "event"], [-2, "13:00", "15:00", "Entretien du CVC", "maint"], [-1, "08:00", "09:00", "Livraison", "event"],
-                          [1, "07:00", "09:00", "Pointe Hydro-Québec", "peak"], [2, "10:00", "11:30", "Réunion d’équipe", "event"], [5, "09:00", "11:00", "Inspection des gicleurs", "maint"]]),
+                          [1, "07:00", "09:00", "Pointe du réseau", "peak"], [2, "10:00", "11:30", "Réunion d’équipe", "event"], [5, "09:00", "11:00", "Inspection des gicleurs", "maint"]]),
                 C("next", 4, icon="wrench", kick="Prochaine inspection", title="Gicleurs", d=5, h="09:00"),
-                C("next", 4, icon="bolt", kick="Prochaine pointe", title="Hydro-Québec · 7 h à 9 h", d=1, h="07:00", countdown=True),
+                C("next", 4, icon="bolt", kick="Prochaine pointe", title="Pointe du réseau · 7 h à 9 h", d=1, h="07:00", countdown=True),
                 C("next", 4, icon="users", kick="Prochaine réunion", title="Réunion d’équipe", d=2, h="10:00"),
             ]],
             ["listes", "Listes", [
@@ -1324,7 +1323,7 @@ ENTREPRISE = {
             ["autos", "Automatisations", [
                 C("autos", 12, rows=[["clock", "Horaire des portes", "Déverrouille à 7 h 30, verrouille à 18 h", "Jours ouvrables", True],
                                      ["wind", "Air neuf selon le CO₂", "Plus d’air quand les salles se remplissent", "CO₂ au-dessus de 900 ppm", True],
-                                     ["bolt", "Délestage de pointe", "Bornes, CVC et chauffe-eau", "Avis d’Hydro-Québec", True],
+                                     ["bolt", "Délestage de pointe", "Bornes, CVC et chauffe-eau", "Avis du réseau", True],
                                      ["drop", "Fuite en salle des serveurs", "Avertit le responsable de garde", "Capteur de fuite", True],
                                      ["users", "Salle réservée", "Prépare la salle 10 min avant", "Agenda de l’équipe", False]]),
             ]],
@@ -1337,7 +1336,7 @@ ENTREPRISE = {
 }
 
 # =============================================================================================
-# Garage de collection · Sainte-Rosalie (Saint-Hyacinthe) : sept voitures, mainteneurs de charge,
+# Garage de collection : sept voitures, mainteneurs de charge,
 # humidité contrôlée, portes, caméras et coin d'entretien. Les modèles nommés sont les véhicules du
 # client (données d'exemple), jamais une association avec un constructeur; aucun logo.
 # =============================================================================================
@@ -1368,8 +1367,8 @@ COLLECTION = [  # baie, voiture, état, mainteneur de charge
 ]
 
 GARAGE = {
-    "key": "garage", "name": "Garage", "kind": "Garage de collection · 8 places", "place": "Saint-Hyacinthe · Sainte-Rosalie", "icon": "garage", "meIcon": "garage",
-    "geo": {"lat": 45.645, "lon": -72.905, "place": "Sainte-Rosalie, Saint-Hyacinthe"},
+    "key": "garage", "name": "Garage", "kind": "Garage de collection · 8 places", "place": "Près de la résidence", "icon": "garage", "meIcon": "garage",
+    "geo": {"lat": 45.645, "lon": -72.905, "place": "Garage"},
     "banner": _GARAGE_BANNER,
     "titles": {"voyage": "Entretien"}, "voyageIcon": "calendar",
     "subs": {"apercu": "La collection, l’air et les portes en un regard.", "confort": "Température, humidité et air du garage.",
@@ -1383,7 +1382,7 @@ GARAGE = {
     "energy": {"unit": "kWh", "cap": 10, "nominal": "51,2 V", "chem": "LiFePO₄", "soc": 81, "v": "52,8 V", "reserve": 30, "load": 1900, "battW": 0,
                "autonomy": "≈ 5 h · portes, caméras, mainteneurs et humidité", "ringTitle": "Batterie du garage", "packsTitle": "Batterie du garage",
                "packs": [{"name": "Batterie du garage", "cap": 10, "soc": 81, "v": 52.8, "a": 0.0, "t": 15.1, "cycles": 131, "hi": 3.302, "lo": 3.295}],
-               "sources": [["solaire", "Solaire · 10 kWc", "sun", "solar"], ["reseau", "Hydro-Québec", "hydro", "grid"]],
+               "sources": [["solaire", "Solaire · 10 kWc", "sun", "solar"], ["reseau", "Réseau électrique", "hydro", "grid"]],
                "store": "Batterie", "loads": "Garage",
                "solar": {"peak": 10000, "cloud": .3, "base": 900, "day": 2400, "eve": 1300, "tilt": 30, "morn": 0}},
     "s": {
@@ -1471,10 +1470,10 @@ GARAGE = {
                 C("note", 12, icon="info", text="Ouvrir une porte de garage ou l’armoire à clés à distance demande confirmation et vérifie d’abord la caméra."),
             ]],
             ["alertes", "Alertes extérieures", [
-                C("ec", 12, title="Météo · Saint-Hyacinthe", counts=[0, 1, 0, 0, 0],
-                  alert={"level": "Veille", "title": "Pluie verglaçante", "text": "Possible demain soir · sel sur les routes : garder les voitures de collection à l’intérieur.", "src": "Environnement Canada · exemple", "ago": 22}),
-                C("list", 6, icon="hydro", title="Hydro-Québec", sub="Données d’exemple", rows=[["hydro", "Pannes dans le secteur", "Aucune", "ok"], ["bolt", "Événement de pointe", "Demain 6 h – 9 h", "warn"]]),
-                C("list", 6, icon="road", title="Routes · exemple", sub="Québec 511", rows=[["road", "Autoroute 20", "Chaussée mouillée · sel épandu", "warn"], ["cone", "Rang de la Presqu’île", "Aucune entrave", "ok"]]),
+                C("ec", 12, title="Météo · Résidence", counts=[0, 1, 0, 0, 0],
+                  alert={"level": "Veille", "title": "Pluie verglaçante", "text": "Possible demain soir · sel sur les routes : garder les voitures de collection à l’intérieur.", "src": "Service météo · exemple", "ago": 22}),
+                C("list", 6, icon="hydro", title="Réseau électrique", sub="Données d’exemple", rows=[["hydro", "Pannes dans le secteur", "Aucune", "ok"], ["bolt", "Événement de pointe", "Demain 6 h – 9 h", "warn"]]),
+                C("list", 6, icon="road", title="Routes · exemple", sub="Info-routes", rows=[["road", "Autoroute", "Chaussée mouillée · sel épandu", "warn"], ["cone", "Rang", "Aucune entrave", "ok"]]),
             ]],
         ],
         "internet": [
@@ -1581,10 +1580,10 @@ GARAGE = {
 }
 
 # =============================================================================================
-# Ferme · exploitation multi-élevage, Montérégie (données d’exemple) : étable laitière et veaux,
+# Ferme · exploitation multi-élevage (données d’exemple) : étable laitière et veaux,
 # pondoir, poulets de chair, porcherie, écurie, silos et séchoir, machinerie, fosse à lisier.
 # Vue d'ensemble (plan noir de la cour et une tuile par bâtiment), puis le détail par bâtiment dans
-# « Ambiance des bâtiments ». Génératrice avec transfert automatique, pointe Hydro-Québec, biosécurité.
+# « Ambiance des bâtiments ». Génératrice avec transfert automatique, pointe du réseau, biosécurité.
 # La photo media/env/ferme.webp est utilisée dès qu’elle existe (voir photo_ou_attente).
 # =============================================================================================
 
@@ -1596,7 +1595,7 @@ RANGS = {
     "roads": [{"pts": [[0, 120], [400, 120]], "straight": True, "n": "Rang", "at": [60, 120]}, {"pts": [[155, 0], [155, 240]], "straight": True, "minor": True},
               {"pts": [[305, 0], [305, 240]], "straight": True, "minor": True}, {"pts": [[150, 120], [150, 160]], "minor": True}],
     "blocks": [[112, 140, 60, 22, "hi"], [112, 168, 34, 18], [154, 166, 12, 12], [176, 144, 14, 14]],
-    "labels": [[80, 64, "Champ nord · maïs"], [230, 64, "Prairie"], [56, 180, "Pâturage"], [250, 180, "Soya"], [200, 228, "Rivière Noire", "water"]],
+    "labels": [[80, 64, "Champ nord · maïs"], [230, 64, "Prairie"], [56, 180, "Pâturage"], [250, 180, "Soya"], [200, 228, "Rivière", "water"]],
     "me": [142, 151],
 }
 
@@ -1654,13 +1653,13 @@ FERME_BAT = {
 }
 
 FERME = {
-    "key": "ferme", "name": "Ferme", "kind": "Ferme multi-élevage · 7 bâtiments", "place": "Montérégie", "icon": "barn", "meIcon": "barn",
-    "geo": {"lat": 45.55, "lon": -72.95, "place": "Montérégie"},
+    "key": "ferme", "name": "Ferme", "kind": "Ferme multi-élevage · 7 bâtiments", "place": "À la campagne", "icon": "barn", "meIcon": "barn",
+    "geo": {"lat": 45.55, "lon": -72.95, "place": "Ferme"},
     "banner": photo_ou_attente("ferme", "Les bâtiments de la ferme : étable, poulaillers, porcherie, écurie et silos"),
     "titles": {"voyage": "Entretien", "confort": "Ambiance des bâtiments"}, "voyageIcon": "calendar",
     "subs": {"apercu": "Tous les bâtiments de la ferme en un regard.",
              "confort": "Le détail de chaque bâtiment : ambiance, animaux, eau, moulée et alarmes.",
-             "energie": "Génératrice, pointe Hydro-Québec et consommation par bâtiment.",
+             "energie": "Génératrice, pointe du réseau et consommation par bâtiment.",
              "eau": "Abreuvoirs, puits et eau de lavage : le troupeau d’abord.",
              "securite": "Biosécurité, alarmes et surveillance des bâtiments.",
              "internet": "Liaison rurale, capteurs et secours.",
@@ -1677,7 +1676,7 @@ FERME = {
                "autonomy": "≈ 1 h · alarmes, contrôleurs et lait", "ringTitle": "Batterie de secours", "packsTitle": "Batterie de secours",
                "packs": [{"name": "Batterie A", "cap": 10, "soc": 88, "v": 53.1, "a": 0.0, "t": 10.4, "cycles": 77, "hi": 3.318, "lo": 3.309},
                          {"name": "Batterie B", "cap": 10, "soc": 87, "v": 53.0, "a": 0.0, "t": 10.9, "cycles": 79, "hi": 3.316, "lo": 3.307}],
-               "sources": [["solaire", "Solaire · 60 kWc", "sun", "solar"], ["reseau", "Hydro-Québec · triphasé", "hydro", "grid"], ["gen", "Génératrice diesel · 150 kW", "gen", 0, "en veille"]],
+               "sources": [["solaire", "Solaire · 60 kWc", "sun", "solar"], ["reseau", "Réseau électrique · triphasé", "hydro", "grid"], ["gen", "Génératrice diesel · 150 kW", "gen", 0, "en veille"]],
                "store": "Batterie", "loads": "Ferme",
                "solar": {"peak": 60000, "cloud": .3, "base": 17000, "day": 21000, "eve": 26000, "tilt": 30, "morn": .8}},
     "s": {
@@ -1840,7 +1839,7 @@ FERME = {
                 C("bars", 5, title="Consommation par bâtiment", sub="Puissance instantanée · exemple",
                   rows=[["fire", "Séchoir à grain", 6800], ["barn", "Porcherie", 4600], ["barn", "Étable laitière et veaux", 4200], ["milk", "Laiterie · tank et lavage", 3600],
                         ["sparkle", "Pondoir", 2100], ["gauge", "Poulets de chair", 1900], ["fence", "Écurie", 600], ["home", "Résidence et bureau", 900]]),
-                C("chips", 12, items=[["gen", "Génératrice", "Prête · essai lundi", "ok"], ["solar", "Source active", "src", "gold"], ["bolt", "Pointe Hydro-Québec", "Demain 6 h – 9 h", "warn"]]),
+                C("chips", 12, items=[["gen", "Génératrice", "Prête · essai lundi", "ok"], ["solar", "Source active", "src", "gold"], ["bolt", "Pointe du réseau", "Demain 6 h – 9 h", "warn"]]),
             ]],
             ["secours", "Génératrice", [
                 C("gauge", 5, icon="fuel", title="Diesel de la génératrice", sub="Réservoir de 1 000 L", pct=74, value="740 L", est="≈ 22 h", estsub="à pleine charge, ventilation de tous les bâtiments comprise"),
@@ -1849,15 +1848,15 @@ FERME = {
                         ["bolt", "Charges vitales", "Ventilation des poulaillers et de la porcherie, tank à lait, abreuvoirs", "ok"], ["wrench", "Prochain entretien", "Dans 3 jours", "warn"]]),
                 C("packs", 12),
             ]],
-            ["pointe", "Pointe Hydro-Québec", [
-                C("kpi", 3, icon="bolt", label="Prochaine pointe", value="Demain", sub="De 6 h à 9 h · Hydro-Québec", tone="gold"),
+            ["pointe", "Pointe du réseau", [
+                C("kpi", 3, icon="bolt", label="Prochaine pointe", value="Demain", sub="De 6 h à 9 h · réseau électrique", tone="gold"),
                 C("kpi", 3, icon="clock", label="Période actuelle", value="Hors pointe", sub="Crédit hivernal · exemple", tone="ok"),
                 C("kpi", 3, icon="leaf", label="Pointes réussies", value="6 / 6", sub="Depuis le 1er décembre dernier", tone="ok"),
                 C("kpi", 3, icon="chart", label="Réduction visée", value="−48 kW", sub="Séchoir en pause · animaux jamais touchés", tone="gold"),
                 C("list", 7, icon="list", title="Plan pendant la pointe", sub="Rien n’est appliqué sans votre accord",
                   rows=[["fire", "Séchoir à grain", "En pause de 6 h à 9 h", "ok"], ["heater", "Eau de lavage", "Chauffée avant 6 h", "ok"], ["milk", "Tank à lait", "Refroidissement maintenu · jamais délesté", "ok"],
                         ["fan", "Ventilation des bâtiments", "Maintenue · jamais délestée", "ok"], ["gen", "Génératrice", "Disponible si la réduction ne suffit pas", "ok"]]),
-                C("list", 5, icon="hydro", title="Hydro-Québec", sub="Données d’exemple",
+                C("list", 5, icon="hydro", title="Réseau électrique", sub="Données d’exemple",
                   rows=[["clock", "Dernière pointe", "Mardi · 6 h – 9 h"], ["chart", "Réduction obtenue", "−19 kW"], ["bell", "Avis", "La veille, vers 15 h"]]),
             ]],
             ["prevision", "Prévision solaire", [
@@ -1914,9 +1913,9 @@ FERME = {
                 C("note", 12, icon="info", text="Couper la clôture, l’eau ou la ventilation demande toujours confirmation : le troupeau en dépend."),
             ]],
             ["alertes", "Alertes extérieures", [
-                C("ec", 12, title="Météo · Montérégie", counts=[0, 0, 1, 0, 0],
+                C("ec", 12, title="Météo · Ferme", counts=[0, 0, 1, 0, 0],
                   alert={"level": "Avis", "title": "Vents forts", "text": "Rafales jusqu’à 60 km/h demain après-midi · reporter l’épandage et vérifier les rideaux de l’étable.",
-                         "src": "Environnement Canada · exemple", "ago": 14, "icon": "wind"}),
+                         "src": "Service météo · exemple", "ago": 14, "icon": "wind"}),
                 C("danger", 6, title="SOPFEU · Feux et brûlage", level=1, fires="0 feu dans un rayon de 25 km", note="Brûlage agricole : permis municipal", src="SOPFEU · exemple", ago=40),
                 C("list", 6, icon="leaf", title="Agriculture · exemple", sub="Indices utiles aux travaux",
                   rows=[["thermo", "Sol à 10 cm", "5 °C", "muted"], ["drop", "Pluie des 7 derniers jours", "18 mm", "muted"], ["wind", "Épandage demain", "Déconseillé · vent", "warn"],
@@ -2056,7 +2055,7 @@ FERME = {
 
 
 # =============================================================================================
-# Bateau · yacht à moteur de 52 pieds (deux moteurs diesel, génératrice, annexe) à la marina de Sorel-Tracy
+# Bateau · yacht à moteur de 52 pieds (deux moteurs diesel, génératrice, annexe) à la marina
 # =============================================================================================
 
 FLEUVE = {
@@ -2066,8 +2065,8 @@ FLEUVE = {
               [[150, 140], [168, 120], [176, 100], [190, 98], [186, 124], [170, 150], [158, 180], [150, 240], [136, 240], [140, 190]]],
     "roads": [{"pts": [[0, 176], [80, 160], [140, 150], [190, 130], [260, 104], [340, 84], [400, 72]], "n": "132", "at": [300, 100]},
               {"pts": [[188, 136], [204, 190], [214, 240]], "minor": True}],
-    "towns": [[178, 92, "Sorel-Tracy", "l"], [88, 130, "Contrecœur", "b"], [330, 28, "Lac Saint-Pierre", "a"]],
-    "labels": [[110, 92, "Fleuve Saint-Laurent", "water"], [176, 200, "Rivière Richelieu", "water"], [250, 46, "Îles de Sorel", "water"]],
+    "towns": [],
+    "labels": [[110, 92, "Fleuve", "water"], [176, 200, "Rivière", "water"], [250, 46, "Îles", "water"]],
     "me": [184, 104],
 }
 
@@ -2079,9 +2078,9 @@ BATEAU_POINTS = [
 ]
 
 BATEAU = {
-    "key": "bateau", "name": "Yacht", "kind": "Yacht à moteur de 52 pieds", "place": "Sorel-Tracy · fleuve Saint-Laurent", "icon": "boat", "meIcon": "boat",
+    "key": "bateau", "name": "Yacht", "kind": "Yacht à moteur de 52 pieds", "place": "Marina · sur le fleuve", "icon": "boat", "meIcon": "boat",
     "mobile": True, "points": BATEAU_POINTS,
-    "geo": {"lat": 46.04, "lon": -73.12, "place": "Marina de Sorel-Tracy"},
+    "geo": {"lat": 46.04, "lon": -73.12, "place": "Marina"},
     "banner": photo_ou_attente("bateau", "Le yacht à moteur de 52 pieds amarré au quai de la marina", "50% 55%"),
     "titles": {"voyage": "Navigation et entretien", "eau": "Eau et réservoirs"}, "voyageIcon": "anchor",
     "subs": {"apercu": "Le yacht au quai, prêt pour la dernière sortie.", "confort": "Salon, cabines, humidité et météo du fleuve.",
@@ -2150,7 +2149,7 @@ BATEAU = {
                 C("kpi", 3, icon="calendar", label="Demain", value="0,9 kWh", sub="Prévision · pluie", tone="gold"),
                 C("kpi", 3, icon="chart", label="Produit jusqu’ici", value="solar:sofar", sub="Mesure d’exemple", tone="gold"),
                 C("list", 3, h=2, icon="gear", title="Installation déclarée",
-                  rows=[["bolt", "Puissance", "800 Wc"], ["compass", "Orientation", "Hardtop · variable"], ["sliders", "Inclinaison", "0°"], ["pin", "Position", "Marina de Sorel"]]),
+                  rows=[["bolt", "Puissance", "800 Wc"], ["compass", "Orientation", "Hardtop · variable"], ["sliders", "Inclinaison", "0°"], ["pin", "Position", "Marina"]]),
                 C("solar", 9), C("fwx", 12, cond="Passages nuageux", cloud=45, quality=2, src="Scénario météo d’exemple"),
             ]],
         ],
@@ -2188,14 +2187,14 @@ BATEAU = {
                 C("note", 12, icon="info", text="En navigation, les commandes d’ouverture sont verrouillées. Toute commande critique demande confirmation."),
             ]],
             ["alertes", "Alertes extérieures", [
-                C("ec", 12, title="Météo · secteur de Sorel", counts=[0, 0, 1, 0, 0],
+                C("ec", 12, title="Météo · Marina", counts=[0, 0, 1, 0, 0],
                   alert={"level": "Avis", "title": "Vents forts sur le fleuve", "text": "Sud-ouest 15 à 20 nœuds, rafales à 25 cet après-midi · reporter les sorties.",
-                         "src": "Environnement Canada · exemple", "ago": 18, "icon": "wind"}),
-                C("list", 6, icon="waves", title="Prévisions maritimes · exemple", sub="Fleuve Saint-Laurent, secteur de Sorel",
+                         "src": "Service météo · exemple", "ago": 18, "icon": "wind"}),
+                C("list", 6, icon="waves", title="Prévisions maritimes · exemple", sub="Fleuve, secteur de la marina",
                   rows=[["wind", "Vent", "Sud-ouest 15 à 20 nœuds", "warn"], ["waves", "Vagues", "0,5 à 1 m", "muted"], ["eye", "Visibilité", "Bonne", "ok"],
                         ["warn", "Avertissement", "Vent fort cet après-midi", "warn"]]),
-                C("list", 6, icon="waves", title="Niveau d’eau · exemple", sub="Pêches et Océans Canada",
-                  rows=[["waves", "Niveau à Sorel", "5,1 m · sous la moyenne", "warn"], ["chart", "Tendance", "Baisse de 4 cm par jour", "muted"],
+                C("list", 6, icon="waves", title="Niveau d’eau · exemple", sub="Service hydrographique",
+                  rows=[["waves", "Niveau à la marina", "5,1 m · sous la moyenne", "warn"], ["chart", "Tendance", "Baisse de 4 cm par jour", "muted"],
                         ["anchor", "Bouées de balisage", "Retrait en cours pour l’hiver", "warn"]]),
             ]],
         ],
@@ -2317,7 +2316,7 @@ BATEAU = {
 }
 
 # =============================================================================================
-# Avion · turbopropulseur d'affaires (8 places) dans un hangar privé, aéroport de Saint-Jean-sur-Richelieu (CYJN)
+# Avion · turbopropulseur d'affaires (8 places) dans un hangar privé, aéroport privé
 # =============================================================================================
 
 AEROPORT = {
@@ -2327,7 +2326,7 @@ AEROPORT = {
     "roads": [{"pts": [[110, 158], [150, 190], [200, 206]], "minor": True}, {"pts": [[200, 206], [270, 206]], "straight": True, "minor": True},
               {"pts": [[0, 226], [340, 226]], "straight": True}],
     "blocks": [[200, 196, 70, 18], [150, 200, 16, 10], [172, 200, 16, 10], [282, 196, 30, 18, "park"], [236, 196, 14, 10, "hi"]],
-    "labels": [[118, 142, "Piste 06-24"], [120, 74, "Piste 11-29"], [384, 120, "Richelieu", "water"], [235, 184, "Aérogare"]],
+    "labels": [[118, 142, "Piste 06-24"], [120, 74, "Piste 11-29"], [384, 120, "Rivière", "water"], [235, 184, "Aérogare"]],
     "me": [243, 201],
 }
 
@@ -2336,8 +2335,8 @@ REGION = {
     "water": [[[300, 150], [312, 170], [318, 200], [312, 240], [296, 240], [300, 200], [294, 170]], [[220, 150], [236, 146], [240, 160], [226, 168]]],
     "rivers": [[[40, 0], [44, 60], [40, 120], [46, 180], [40, 240]], [[0, 20], [120, 8], [240, 0]]],
     "roads": [{"pts": [[0, 116], [80, 112], [160, 114], [250, 116], [340, 100], [400, 92]], "n": "10", "at": [160, 114]}],
-    "towns": [[50, 118, "Saint-Jean", "b"], [160, 104, "Granby", "a"], [348, 92, "Sherbrooke", "b"], [300, 150, "Magog", "l"]],
-    "labels": [[306, 214, "Memphrémagog", "water"], [230, 176, "Lac Brome", "water"], [30, 70, "Richelieu", "water"]],
+    "towns": [],
+    "labels": [[306, 214, "Lac", "water"], [230, 176, "Lac", "water"], [30, 70, "Rivière", "water"]],
     "me": [50, 118],
 }
 
@@ -2347,22 +2346,22 @@ AVION_POINTS = [
     {"n": 3, "x": 262, "y": 190, "kind": "eau", "name": "Aérogare", "what": "Eau et services", "dist": "120 m", "info": "Ouverte de 7 h à 19 h (exemple)"},
 ]
 
-# Le hangar privé de CYJN abrite deux appareils : le turbopropulseur et le jet d'affaires. Chacun a son
+# Le hangar privé abrite deux appareils : le turbopropulseur et le jet d'affaires. Chacun a son
 # tableau; la bande « Hangar privé » et la carte « Le hangar » (Vue d'ensemble) montrent les deux.
 HANGAR = {
-    "name": "Hangar privé · CYJN", "sub": "Deux appareils · porte de 34 m · chauffé hors-gel", "fleet": ["avion", "jet"],
+    "name": "Hangar privé", "sub": "Deux appareils · porte de 34 m · chauffé hors-gel", "fleet": ["avion", "jet"],
     "rows": [["thermo", "Hangar · hors-gel", "6 °C", "ok"], ["drop", "Humidité", "48 %", "ok"], ["hangar", "Porte du hangar", "Fermée", "ok"],
              ["shield", "Surveillance", "Armée", "ok"]],
 }
 
 AVION = {
-    "key": "avion", "name": "Turbopropulseur", "kind": "Turbopropulseur d’affaires · 8 places", "place": "Saint-Jean-sur-Richelieu · hangar privé", "icon": "prop", "meIcon": "hangar",
+    "key": "avion", "name": "Turbopropulseur", "kind": "Turbopropulseur d’affaires · 8 places", "place": "Aéroport privé · hangar", "icon": "prop", "meIcon": "hangar",
     "mobile": True, "points": AVION_POINTS, "hangar": HANGAR,
     "plane": {"short": "Turbopropulseur", "spot": "Place 1 · côté atelier", "photo": "/media/env/avion.webp", "pos": "50% 55%",
               "state": ["Au hangar · prêt demain", "ok"],
               "kpis": [["fuel", "Carburant", "942 L · 62 %"], ["battery", "Batterie", "96 %"], ["engine", "Préchauffage", "Demain 7 h"],
-                       ["route", "Demain 10 h", "Sherbrooke"]]},
-    "geo": {"lat": 45.29, "lon": -73.28, "place": "Aéroport de Saint-Jean-sur-Richelieu"},
+                       ["route", "Demain 10 h", "Vol régional"]]},
+    "geo": {"lat": 45.29, "lon": -73.28, "place": "Aéroport privé"},
     "banner": photo_ou_attente("avion", "Le turbopropulseur d’affaires dans son hangar privé éclairé", "50% 55%"),
     "titles": {"voyage": "Vols et entretien", "eau": "Eau et carburant", "confort": "Climat du hangar"}, "voyageIcon": "plane",
     "subs": {"apercu": "L’avion au hangar, prêt pour le prochain vol.", "confort": "Hangar, moteur et météo du terrain.",
@@ -2397,7 +2396,7 @@ AVION = {
             C("checklist", 5, id="prevol", title="Préparer le vol", icon="clip",
               items=[["Météo et NOTAM consultés", True], ["Plan de vol déposé", False], ["Purges de carburant", False], ["Caches d’entrée d’air retirés", False]]),
             C("upcoming", 7, title="Prochaines 48 heures", icon="warn", note="Piste 11-29 fermée pour travaux (exemple).", text="Décollage prévu sur la piste 24 · vent 250° à 12 nœuds.", go="securite:alertes"),
-            C("trip", 5, title="Mon prochain vol", name="Vers Sherbrooke (CYSC)", next="Départ prévu demain à 10 h", go="voyage"),
+            C("trip", 5, title="Mon prochain vol", name="Vol régional", next="Départ prévu demain à 10 h", go="voyage"),
         ],
         "confort": [
             ["synthese", "Synthèse", [
@@ -2463,12 +2462,12 @@ AVION = {
                 C("note", 12, icon="info", text="Moteur en marche, les commandes du hangar sont verrouillées. Toute commande critique demande confirmation."),
             ]],
             ["alertes", "Météo aéronautique", [
-                C("metar", 12, station="CYJN · Saint-Jean-sur-Richelieu", sub="Observation d’exemple", cat="VFR",
-                  raw="CYJN 071300Z 25012KT 15SM FEW040 BKN090 03/M04 A3012 RMK SC1AC5 SLP209",
+                C("metar", 12, station="Aéroport privé", sub="Observation d’exemple", cat="VFR",
+                  raw="CXXX 071300Z 25012KT 15SM FEW040 BKN090 03/M04 A3012 RMK SC1AC5 SLP209",
                   rows=[["wind", "Vent", "250° · 12 nœuds"], ["eye", "Visibilité", "15 milles terrestres"], ["cloud", "Nuages", "Quelques à 4 000 pi · fragmentés à 9 000 pi"],
                         ["thermo", "Température / point de rosée", "3 °C / −4 °C"], ["gauge", "Altimètre", "30,12 po Hg"], ["plane", "Piste en service", "24"]],
-                  taf="TAF CYJN 071140Z 0712/0800 26012KT P6SM FEW040 BKN090 TEMPO 0718/0800 5SM -SHSN BKN030"),
-                C("ec", 6, title="Météo · Saint-Jean-sur-Richelieu", counts=[0, 0, 0, 1, 0]),
+                  taf="TAF CXXX 071140Z 0712/0800 26012KT P6SM FEW040 BKN090 TEMPO 0718/0800 5SM -SHSN BKN030"),
+                C("ec", 6, title="Météo · Hangar", counts=[0, 0, 0, 1, 0]),
                 C("list", 6, icon="doc", title="NOTAM · exemple", sub="NAV CANADA · consulter les avis officiels",
                   rows=[["warn", "Piste 11-29", "Fermée pour travaux", "warn"], ["bulb", "Balisage lumineux", "Normal", "ok"], ["plane", "Circuit", "Écoles de pilotage actives", "muted"]]),
             ]],
@@ -2505,20 +2504,20 @@ AVION = {
         ],
         "voyage": [
             ["vol", "Vol", [
-                C("trip", 8, big=True, title="Vol planifié", name="Vers Sherbrooke (CYSC)", next="Départ prévu · demain 10 h", dist="126 km", dur="20 min à 260 nœuds",
+                C("trip", 8, big=True, title="Vol planifié", name="Vol régional", next="Départ prévu · demain 10 h", dist="126 km", dur="20 min à 260 nœuds",
                   map="region", view=[0, 0, 400, 240], route={"next": [[50, 118], [160, 112], [348, 92]]}),
-                C("arrival", 4, place="Sherbrooke (CYSC)", temp=1, icon="cloud", cond="Nuageux · plafond 4 500 pi", wind="Vent 270° · 14 nœuds"),
+                C("arrival", 4, place="Aéroport d’arrivée", temp=1, icon="cloud", cond="Nuageux · plafond 4 500 pi", wind="Vent 270° · 14 nœuds"),
                 C("list", 6, icon="doc", title="NOTAM sur la route", sub="Exemple · consulter les avis officiels",
-                  rows=[["warn", "CYJN · piste 11-29 fermée", "Départ en 24", "warn"], ["plane", "CYSC · carburant Jet A-1", "Disponible", "ok"]]),
+                  rows=[["warn", "Piste 11-29 fermée", "Départ en 24", "warn"], ["plane", "Arrivée · carburant Jet A-1", "Disponible", "ok"]]),
                 C("list", 6, icon="clip", title="Avant de partir",
                   rows=[["doc", "Plan de vol : à déposer", "", "", True], ["fuel", "Carburant : 942 L · suffisant", "", "", True], ["drop", "Purges : à faire", "", "", True],
                         ["list", "Liste de vérification prévol", "", "", True]]),
             ]],
             ["agenda", "Agenda", [
                 C("agenda", 12, l1="Vols", l2="Entretien (inspections, rappels)",
-                  events=[[-1, "10:00", "11:10", "Vol local", "flight"], [1, "08:00", "10:00", "Préchauffage", "maint"], [1, "10:00", "11:00", "Vol vers Sherbrooke", "flight"],
-                          [1, "15:00", "16:00", "Retour à CYJN", "flight"], [6, "09:00", "12:00", "Test de la batterie", "maint"]]),
-                C("next", 4, icon="plane", kick="Prochain vol", title="Vers Sherbrooke", d=1, h="10:00", countdown=True),
+                  events=[[-1, "10:00", "11:10", "Vol local", "flight"], [1, "08:00", "10:00", "Préchauffage", "maint"], [1, "10:00", "11:00", "Vol régional", "flight"],
+                          [1, "15:00", "16:00", "Retour au hangar", "flight"], [6, "09:00", "12:00", "Test de la batterie", "maint"]]),
+                C("next", 4, icon="plane", kick="Prochain vol", title="Vol régional", d=1, h="10:00", countdown=True),
                 C("next", 4, icon="engine", kick="Préchauffage", title="Moteur · 3 h avant", d=1, h="07:00"),
                 C("next", 4, icon="wrench", kick="Inspection annuelle", title="Atelier d’exemple", d=24, h="09:00"),
             ]],
@@ -2536,7 +2535,7 @@ AVION = {
             ["entretien", "Entretien", [
                 C("maint", 8, h=2, rows=[
                     M("wrench", "Inspection annuelle", "Atelier d’exemple",
-                      src_fixe("regle", "Règlement de l’aviation canadien · inspection annuelle", 24)),
+                      src_fixe("regle", "Règlement de l’aviation · inspection annuelle", 24)),
                     M("engine", "Inspection de la turbine", "Endoscopie et filtres",
                       compteur("Compteur d’heures de la turbine", "aux 100 heures", 82, 100, 0.6, "h")),
                     M("battery", "Batterie de bord", "Test de capacité",
@@ -2544,7 +2543,7 @@ AVION = {
                     M("radar", "Balise de détresse (ELT)", "Batterie à remplacer",
                       fab("Manuel de la balise", "date de péremption de la pile", 1825, -1705)),
                     M("doc", "Certificat de navigabilité", "À jour",
-                      src_fixe("regle", "Règlement de l’aviation canadien", 200)),
+                      src_fixe("regle", "Règlement de l’aviation", 200)),
                 ]),
                 C("next", 4, icon="wrench", kick="Prochain rendez-vous", title="Inspection annuelle", d=24, h="09:00"),
                 C("next", 4, icon="battery", kick="En retard", title="Test de la batterie de bord", text="Prévu il y a 3 jours."),
@@ -2582,7 +2581,7 @@ AVION = {
 
 # =============================================================================================
 # Jet d'affaires super-intermédiaire (biréacteur, 10 passagers, autonomie transcontinentale),
-# même hangar privé de CYJN que le turbopropulseur. Aucun fabricant ni modèle réel.
+# même hangar privé que le turbopropulseur. Aucun fabricant ni modèle réel.
 # =============================================================================================
 
 def _ll(lon, lat):
@@ -2615,26 +2614,25 @@ EST = {
         _lls([(-84.5, 46.5), (-85.2, 47.0), (-87.5, 47.2), (-89.0, 46.9), (-90.5, 46.6), (-92.1, 46.7), (-90.0, 47.6), (-86.0, 47.6)]),
     ],
     "rivers": [_lls([(-76.4, 44.2), (-75.2, 44.9), (-73.6, 45.5), (-72.5, 46.3), (-71.2, 46.8), (-70.0, 47.4)])],
-    "towns": [_ll(-79.4, 43.7) + ["Toronto", "a"], _ll(-74.0, 40.7) + ["New York", "b"], _ll(-81.7, 30.3) + ["Jacksonville", "a"],
-              _ll(-80.3, 25.9) + ["Miami", "a"]],
-    "labels": [_ll(-66.5, 34.0) + ["Océan Atlantique", "water"], _ll(-89.0, 27.9) + ["Golfe du Mexique", "water"]],
+    "towns": [],
+    "labels": [_ll(-66.5, 34.0) + ["Océan", "water"], _ll(-89.0, 27.9) + ["Golfe", "water"]],
     "me": _ll(-73.28, 45.29),
 }
 JET_ROUTE = [_ll(-73.28, 45.29), _ll(-75.4, 39.6), _ll(-78.6, 32.4), _ll(-80.28, 25.91)]
 
 JET = {
-    "key": "jet", "name": "Jet d’affaires", "kind": "Jet d’affaires super-intermédiaire · 10 passagers", "place": "Saint-Jean-sur-Richelieu · hangar privé",
+    "key": "jet", "name": "Jet d’affaires", "kind": "Jet d’affaires super-intermédiaire · 10 passagers", "place": "Aéroport privé · hangar",
     "icon": "plane", "meIcon": "plane",
     "mobile": True, "points": AVION_POINTS, "hangar": HANGAR,
     "plane": {"short": "Jet d’affaires", "spot": "Place 2 · face à la porte", "photo": "/media/vision/lieu-jet.webp", "pos": "62% 46%",
               "state": ["Préparation · départ demain 9 h", "gold"],
               "kpis": [["fuel", "Carburant", "4 570 L · 58 %"], ["battery", "Batteries", "94 %"], ["thermo", "Cabine · 21 °C à 7 h", "9 °C"],
-                       ["route", "Demain 9 h", "Miami"]]},
-    "geo": {"lat": 45.29, "lon": -73.28, "place": "Aéroport de Saint-Jean-sur-Richelieu"},
+                       ["route", "Demain 9 h", "Vol vers le sud"]]},
+    "geo": {"lat": 45.29, "lon": -73.28, "place": "Aéroport privé"},
     "banner": photo_ou_attente("jet", "Le jet d’affaires dans le hangar privé, escalier déployé", "50% 50%",
                                repli="/media/vitrine/accueil/jet-hangar.webp", repli_pos="62% 52%"),
     "titles": {"voyage": "Vols et entretien", "eau": "Carburant et eau", "confort": "Cabine et hangar"}, "voyageIcon": "plane",
-    "subs": {"apercu": "Le jet au hangar, en préparation pour Miami.", "confort": "Préchauffage et humidité de la cabine, hangar et météo.",
+    "subs": {"apercu": "Le jet au hangar, en préparation pour un vol vers le sud.", "confort": "Préchauffage et humidité de la cabine, hangar et météo.",
              "energie": "Batteries, groupe de parc 28 V et groupe auxiliaire.", "eau": "Jet A-1, purges, eau potable et eaux usées.",
              "securite": "Portes du jet, hangar et météo aéronautique.", "internet": "Wi-Fi du hangar, connectivité en vol et secours.",
              "equipements": "Groupe de parc, groupe auxiliaire, préchauffage, remorqueur et chargeurs.",
@@ -2653,20 +2651,20 @@ JET = {
     "s": {
         "apercu": [
             C("hangar", 12),
-            C("kpi", 3, icon="fuel", label="Carburant", value="4 570 L", sub="Jet A-1 · 58 % · 5 400 L requis pour Miami", bar=58, tone="warn", go="eau"),
+            C("kpi", 3, icon="fuel", label="Carburant", value="4 570 L", sub="Jet A-1 · 58 % · 5 400 L requis pour le vol", bar=58, tone="warn", go="eau"),
             C("kpi", 3, icon="thermo", label="Cabine", value="9 °C", sub="Préchauffage demain 7 h · 21 °C", subicon="clock", tone="water", go="confort"),
             C("kpi", 3, icon="battery", label="Batteries", value="94 %", sub="Principale et APU · 26,2 V", bar=94, tone="bat", go="energie"),
             C("kpi", 3, icon="sun", label="Conditions", value="VFR", dot="ok", sub="Départ IFR · vent 250° · 12 nœuds", subicon="wind", tone="ok", go="securite:alertes"),
             C("conditions", 7, title="Conditions au terrain"),
             C("lumieres", 5),
-            C("trip", 7, title="Mon prochain vol", name="Vers Miami (KOPF)", next="Départ prévu demain à 9 h · 2 h 55 de vol", go="voyage"),
+            C("trip", 7, title="Mon prochain vol", name="Vol vers le sud", next="Départ prévu demain à 9 h · 2 h 55 de vol", go="voyage"),
             C("list", 5, icon="users", title="Équipage", sub="Préparation de demain",
               rows=[["plane", "Commandant · Marc-André", "Arrivée 7 h 15", "ok"], ["plane", "Copilote · Élise", "Arrivée 7 h 15", "ok"],
                     ["users", "Agent de bord · Julien", "Commissariat à 8 h", "muted"], ["users2", "Passagers", "6 sur 10 inscrits", "gold"]]),
             C("upcoming", 7, title="Prochaines 48 heures", icon="warn", note="Avitaillement à confirmer avant 7 h : 830 L de Jet A-1.",
               text="Remorquage hors du hangar à 8 h · démarrage de l’APU à l’extérieur seulement.", go="eau"),
             C("checklist", 5, id="prep", title="Préparation par l’équipage", icon="clip",
-              items=[["Plan de vol IFR déposé", True], ["Avitaillement : +830 L demandé", False], ["Déclaration de douane américaine", False],
+              items=[["Plan de vol IFR déposé", True], ["Avitaillement : +830 L demandé", False], ["Déclaration de douane", False],
                      ["Cabine à 21 °C pour 8 h 30", False], ["Soute à bagages fermée", False]]),
         ],
         "confort": [
@@ -2707,7 +2705,7 @@ JET = {
                   items=[["Aile gauche", 62, 2950, "fuel"], ["Aile droite", 61, 2950, "fuel"], ["Réservoir central", 47, 2000, "fuel"],
                          ["Huile · moteur gauche", 90, 12, "oil"], ["Huile · moteur droit", 88, 12, "oil"]]),
                 C("gauge", 5, icon="fuel", title="Carburant total", sub="Jet A-1 · 7 900 L utilisables", pct=58, value="4 570 / 7 900 L",
-                  est="≈ 2 h 50 de vol", estsub="Miami demande 5 400 L avec réserve et dégagement · +830 L à commander"),
+                  est="≈ 2 h 50 de vol", estsub="Le vol demande 5 400 L avec réserve et dégagement · +830 L à commander"),
                 C("list", 6, icon="drop", title="Eau dans le carburant", sub="Purges avant chaque vol",
                   rows=[["drop", "Purge de l’aile gauche", "Claire", "ok"], ["drop", "Purge de l’aile droite", "Claire", "ok"],
                         ["drop", "Purge du réservoir central", "À faire après l’avitaillement", "warn"]]),
@@ -2742,17 +2740,17 @@ JET = {
                 C("note", 12, icon="info", text="Moteurs ou APU en marche, les commandes du hangar sont verrouillées. Toute commande critique demande confirmation."),
             ]],
             ["alertes", "Météo aéronautique", [
-                C("metar", 12, station="CYJN · Saint-Jean-sur-Richelieu", sub="Observation d’exemple", cat="VFR",
-                  raw="CYJN 071300Z 25012KT 15SM FEW040 BKN090 03/M04 A3012 RMK SC1AC5 SLP209",
+                C("metar", 12, station="Aéroport privé", sub="Observation d’exemple", cat="VFR",
+                  raw="CXXX 071300Z 25012KT 15SM FEW040 BKN090 03/M04 A3012 RMK SC1AC5 SLP209",
                   rows=[["wind", "Vent", "250° · 12 nœuds"], ["eye", "Visibilité", "15 milles terrestres"], ["cloud", "Nuages", "Quelques à 4 000 pi · fragmentés à 9 000 pi"],
                         ["thermo", "Température / point de rosée", "3 °C / −4 °C"], ["gauge", "Altimètre", "30,12 po Hg"], ["plane", "Piste en service", "24"]],
-                  taf="TAF CYJN 071140Z 0712/0800 26012KT P6SM FEW040 BKN090 TEMPO 0718/0800 5SM -SHSN BKN030"),
-                C("list", 6, icon="plane", title="À destination · KOPF", sub="Miami · observation d’exemple",
+                  taf="TAF CXXX 071140Z 0712/0800 26012KT P6SM FEW040 BKN090 TEMPO 0718/0800 5SM -SHSN BKN030"),
+                C("list", 6, icon="plane", title="À destination", sub="Observation d’exemple",
                   rows=[["sun", "Conditions", "VFR · quelques nuages à 3 000 pi", "ok"], ["thermo", "Température", "27 °C", "muted"],
                         ["wind", "Vent", "110° · 9 nœuds", "ok"], ["cloud", "Orages en après-midi", "Possibles après 15 h", "warn"]]),
                 C("list", 6, icon="doc", title="NOTAM · exemple", sub="Consulter les avis officiels",
-                  rows=[["warn", "CYJN · piste 11-29", "Fermée pour travaux", "warn"], ["bulb", "Balisage lumineux", "Normal", "ok"],
-                        ["plane", "KOPF · voie de circulation", "Fermée en partie", "muted"]]),
+                  rows=[["warn", "Piste 11-29", "Fermée pour travaux", "warn"], ["bulb", "Balisage lumineux", "Normal", "ok"],
+                        ["plane", "Destination · voie de circulation", "Fermée en partie", "muted"]]),
             ]],
         ],
         "internet": [
@@ -2795,36 +2793,36 @@ JET = {
         ],
         "voyage": [
             ["vol", "Plan de vol", [
-                C("trip", 8, big=True, title="Vol planifié", name="Vers Miami (KOPF)", next="Départ prévu · demain 9 h · IFR", dist="2 270 km", dur="2 h 55 à 460 nœuds",
+                C("trip", 8, big=True, title="Vol planifié", name="Vol vers le sud", next="Départ prévu · demain 9 h · IFR", dist="2 270 km", dur="2 h 55 à 460 nœuds",
                   map="est", view=[-45, -6, 500, 300], route={"next": JET_ROUTE}),
-                C("arrival", 4, place="Miami (KOPF)", temp=27, icon="cloudsun", cond="Quelques nuages · orages possibles après 15 h", wind="Vent 110° · 9 nœuds"),
+                C("arrival", 4, place="Destination", temp=27, icon="cloudsun", cond="Quelques nuages · orages possibles après 15 h", wind="Vent 110° · 9 nœuds"),
                 C("list", 6, icon="route", title="Plan de vol IFR · exemple", sub="Déposé hier à 18 h",
                   rows=[["plane", "Niveau de croisière", "FL410", "muted"], ["clock", "Départ · arrivée", "9 h · 11 h 55", "muted"], ["fuel", "Carburant requis", "5 400 L avec réserve", "warn"],
-                        ["pin", "Dégagement", "Fort Lauderdale (KFLL)", "muted"], ["users", "À bord", "3 d’équipage · 6 passagers", "ok"]]),
+                        ["pin", "Dégagement", "Aéroport voisin", "muted"], ["users", "À bord", "3 d’équipage · 6 passagers", "ok"]]),
                 C("list", 6, icon="clip", title="Avant de partir",
-                  rows=[["doc", "Plan de vol IFR : déposé", "", "", True], ["fuel", "Avitaillement : +830 L à confirmer", "", "", True], ["doc", "Déclaration de douane américaine", "", "", True],
+                  rows=[["doc", "Plan de vol IFR : déposé", "", "", True], ["fuel", "Avitaillement : +830 L à confirmer", "", "", True], ["doc", "Déclaration de douane", "", "", True],
                         ["users", "Passeports des 6 passagers", "", "", True], ["list", "Liste de vérification prévol", "", "", True]]),
             ]],
             ["equipage", "Préparation", [
                 C("lists", 12, title="Préparation par l’équipage", sub="Chacun sa liste · tout se coche ici.", lists=[
                     {"k": "commandant", "l": "Commandant", "sub": "Marc-André · le vol.", "icon": "plane",
-                     "items": [["Météo, NOTAM et TAF de Miami", "Consultés", True], ["Plan de vol IFR", "Déposé", True], ["Masse et centrage", "6 passagers, 180 kg de bagages", False],
+                     "items": [["Météo, NOTAM et TAF de la destination", "Consultés", True], ["Plan de vol IFR", "Déposé", True], ["Masse et centrage", "6 passagers, 180 kg de bagages", False],
                                ["Avitaillement", "+830 L · Jet A-1", False], ["Purges", "Après l’avitaillement", False]]},
                     {"k": "copilote", "l": "Copilote", "sub": "Élise · autour du jet.", "icon": "list",
                      "items": [["Tour de l’avion", "", False], ["Caches et cales retirés", "Pitot, moteurs, APU", False], ["Base de navigation", "Cycle en vigueur", True],
                                ["Niveaux d’huile des moteurs", "Selon le manuel", True]]},
                     {"k": "cabine", "l": "Cabine", "sub": "Julien · le confort.", "icon": "users",
                      "items": [["Cabine à 21 °C", "Préchauffage à 7 h", False], ["Commissariat", "Livraison 8 h", False], ["Eau potable", "Plein", True],
-                               ["Soute à bagages", "Fermée et verrouillée", False], ["Écran de cabine", "Route vers Miami", True]]},
-                    {"k": "douane", "l": "Douane", "sub": "Avant de quitter le Canada.", "icon": "doc",
-                     "items": [["Manifeste des passagers", "Transmis 1 h avant", False], ["Passeports", "6 sur 6", False], ["Arrivée à Miami", "Agents avisés", False]]},
+                               ["Soute à bagages", "Fermée et verrouillée", False], ["Écran de cabine", "Route du vol", True]]},
+                    {"k": "douane", "l": "Douane", "sub": "Avant de quitter le pays.", "icon": "doc",
+                     "items": [["Manifeste des passagers", "Transmis 1 h avant", False], ["Passeports", "6 sur 6", False], ["Arrivée à destination", "Agents avisés", False]]},
                 ]),
             ]],
             ["agenda", "Agenda", [
                 C("agenda", 12, l1="Vols", l2="Entretien (inspections, rappels)",
-                  events=[[-3, "13:00", "16:10", "Retour de Toronto", "flight"], [1, "07:00", "08:30", "Préchauffage cabine", "maint"], [1, "08:00", "08:45", "Remorquage et commissariat", "maint"],
-                          [1, "09:00", "11:55", "Vol vers Miami", "flight"], [4, "14:00", "17:00", "Retour vers CYJN", "flight"], [41, "09:00", "17:00", "Inspection de 12 mois", "maint"]]),
-                C("next", 4, icon="plane", kick="Prochain vol", title="Vers Miami", d=1, h="09:00", countdown=True),
+                  events=[[-3, "13:00", "16:10", "Retour de voyage d’affaires", "flight"], [1, "07:00", "08:30", "Préchauffage cabine", "maint"], [1, "08:00", "08:45", "Remorquage et commissariat", "maint"],
+                          [1, "09:00", "11:55", "Vol vers le sud", "flight"], [4, "14:00", "17:00", "Retour au hangar", "flight"], [41, "09:00", "17:00", "Inspection de 12 mois", "maint"]]),
+                C("next", 4, icon="plane", kick="Prochain vol", title="Vol vers le sud", d=1, h="09:00", countdown=True),
                 C("next", 4, icon="thermo", kick="Préchauffage cabine", title="1 h 30 avant · 21 °C", d=1, h="07:00"),
                 C("next", 4, icon="wrench", kick="Inspection de 12 mois", title="Atelier d’exemple", d=41, h="09:00"),
             ]],
@@ -2853,7 +2851,7 @@ JET = {
                     M("fire", "Extincteurs de cabine", "Pesée annuelle",
                       fab("Manuel des extincteurs", "aux 12 mois", 365, -351)),
                     M("doc", "Certificat de navigabilité", "À jour",
-                      src_fixe("regle", "Règlement de l’aviation canadien", 230)),
+                      src_fixe("regle", "Règlement de l’aviation", 230)),
                 ]),
                 C("next", 4, icon="doc", kick="Navigation", title="Nouveau cycle de 28 jours", d=9, h="00:00"),
                 C("next", 4, icon="fire", kick="Bientôt", title="Pesée des extincteurs", d=14, h="10:00"),
@@ -2885,8 +2883,8 @@ JET = {
                                      ["battery", "Batteries faibles", "Alerte sous 24,5 V", "Tension", True]]),
             ]],
             ["activite", "Activité", [
-                C("activity", 12, rows=[[190, "Julien", "Soute à bagages ouverte pour le chargement"], [1080, "Marc-André", "Plan de vol IFR vers Miami déposé"],
-                                        [1240, "Marc-André", "Porte passagers verrouillée"], [4310, "Système", "Vol de Toronto enregistré · 1 h 10"]]),
+                C("activity", 12, rows=[[190, "Julien", "Soute à bagages ouverte pour le chargement"], [1080, "Marc-André", "Plan de vol IFR déposé"],
+                                        [1240, "Marc-André", "Porte passagers verrouillée"], [4310, "Système", "Vol de retour enregistré · 1 h 10"]]),
             ]],
         ],
     },
@@ -2905,7 +2903,7 @@ SITES = {
                  "alerts": [["water", "Nuit froide : −6 °C vers 5 h", "Conduites protégées · consigne de nuit suggérée", "confort"]],
                  "multi": {"absence": "absence", "nuit": "nuit", "froid": "hivernage"}},
     "maison": {"who": "Léa · à la maison", "n": 1, "armed": True, "arm": "Armé · périmètre", "inside": 21,
-               "alerts": [["gold", "Pointe Hydro-Québec demain, de 6 h à 9 h", "Préchauffage prévu à 5 h", "energie"]],
+               "alerts": [["gold", "Pointe du réseau demain, de 6 h à 9 h", "Préchauffage prévu à 5 h", "energie"]],
                "multi": {"absence": "absent", "nuit": "nuit", "froid": "vacances"}},
     "chalet": {"who": "Personne · inoccupé depuis 5 jours", "n": 0, "armed": True, "arm": "Armé · hors saison", "inside": 12,
                "alerts": [["warn", "Avertissement de neige : 15 à 20 cm", "Déneigeur prévu · chemin du lac", "securite:alertes"]],
@@ -2926,7 +2924,7 @@ SITES = {
               "alerts": [["gold", "Piste 11-29 fermée pour travaux", "Décollage prévu sur la piste 24", "securite:alertes"]],
               "multi": {"absence": "hangar", "nuit": "hangar", "froid": "hangar"}},
     "jet": {"who": "Personne · équipage demain 7 h", "n": 0, "armed": True, "arm": "Armé · hangar fermé", "inside": 9,
-            "alerts": [["warn", "Carburant à compléter pour Miami", "4 570 L à bord · 5 400 L requis · +830 L à commander", "eau"]],
+            "alerts": [["warn", "Carburant à compléter pour le vol", "4 570 L à bord · 5 400 L requis · +830 L à commander", "eau"]],
             "multi": {"absence": "hangar", "nuit": "hangar", "froid": "hangar"}},
 }
 

@@ -53,7 +53,7 @@ SCENARIOS = [
             {"k": "fields", "icon": "scan", "label": "JARVIS lit et extrait",
              "say": "JARVIS lit le courriel et le devis, puis remplit la demande. Personne ne recopie rien.",
              "log": "4 champs extraits du courriel et du devis", "sum": "4 champs remplis",
-             "fields": [("Fournisseur", "Outillage Rive-Sud", "", "devis-2231.pdf"),
+             "fields": [("Fournisseur", "Outillage Pro", "", "devis-2231.pdf"),
                         ("Montant", "1 284,50 $", "", "devis-2231.pdf"),
                         ("Projet", "Chantier Lavoie", "", "Chantier Lavoie"),
                         ("Date requise", "14 novembre", "", "14 novembre")],
@@ -66,15 +66,15 @@ SCENARIOS = [
             {"k": "approve", "icon": "user", "label": "Votre approbation",
              "say": "À vous : vous êtes le gérant. Rien ne part sans votre clic.",
              "log": "En attente de l’approbation du gérant",
-             "ask": "Approuver l’achat de <b>1 284,50 $</b> chez Outillage Rive-Sud?",
+             "ask": "Approuver l’achat de <b>1 284,50 $</b> chez Outillage Pro?",
              "ok": ("Approuver", "Approuvé par vous (gérant)"),
              "no": ("Refuser", "Refusé par vous (gérant) · aucune action")},
             {"k": "result", "icon": "doc", "label": "Bon de commande",
              "say": "Le bon de commande part au fournisseur, qui confirme. Tout est inscrit au journal.",
              "sum": "BC-0418 · confirmé",
-             "doc": ("Bon de commande", "BC-0418", "Outillage Rive-Sud · 1 284,50 $ · livraison le 14 novembre"),
+             "doc": ("Bon de commande", "BC-0418", "Outillage Pro · 1 284,50 $ · livraison le 14 novembre"),
              "track": ("Créé", "Envoyé", "Confirmé"),
-             "sent": "BC-0418 créé et envoyé à Outillage Rive-Sud",
+             "sent": "BC-0418 créé et envoyé à Outillage Pro",
              "conf": "Commande confirmée par le fournisseur",
              "skip": "Rien n’est commandé. La demande reste au dossier, avec votre refus."},
         ],
@@ -128,8 +128,8 @@ SCENARIOS = [
         "stages": [
             {"k": "mail", "icon": "mail", "label": "Facture reçue",
              "say": "Le fournisseur envoie sa facture par courriel.",
-             "log": "Facture F-88214 reçue · Outillage Rive-Sud", "sum": "Facture F-88214",
-             "from": ("OR", "Outillage Rive-Sud", "Comptes clients · 8 h 47"),
+             "log": "Facture F-88214 reçue · Outillage Pro", "sum": "Facture F-88214",
+             "from": ("OR", "Outillage Pro", "Comptes clients · 8 h 47"),
              "subj": "Facture F-88214",
              "body": "Bonjour, voici la facture de votre commande BC-0418. Merci de votre confiance.",
              "att": "F-88214.pdf"},
@@ -1317,7 +1317,7 @@ def secteurs_html():
   <div class="se-head">
     <p class="eyebrow">Votre secteur</p>
     <h3>Votre métier a ses casse-têtes. <em>JARVIS les connaît.</em></h3>
-    <p>{len(SECTEURS)} secteurs du Québec, {n_auto} problèmes bien réels — et pour chacun, l’automatisation qui le règle,
+    <p>{len(SECTEURS)} secteurs, {n_auto} problèmes bien réels — et pour chacun, l’automatisation qui le règle,
     étape par étape, avec un humain aux commandes quand il le faut. Choisissez votre secteur ou tapez votre métier.</p>
   </div>
   <div class="se-search">

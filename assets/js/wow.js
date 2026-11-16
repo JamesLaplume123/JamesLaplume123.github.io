@@ -246,7 +246,7 @@
       var cfg = new URLSearchParams(location.search).get("config");
       var msg = $('textarea[name="message"]', form);
       if (cfg && msg && !msg.value) {
-        msg.value = "Ma configuration JARVIS (du catalogue) :\n" + cfg.split(" + ").join("\n- ").replace(/^/, "- ") + "\n\nMon lieu et mes questions :\n";
+        msg.value = "Mon forfait JARVIS :\n" + cfg.split(" + ").join("\n- ").replace(/^/, "- ") + "\n\nMon lieu et mes questions :\n";
         var sujet = $('select[name="sujet"]', form);
         if (sujet) { var o = document.createElement("option"); o.textContent = "Soumission à partir du catalogue"; sujet.insertBefore(o, sujet.firstChild); sujet.value = o.textContent; }
         msg.focus();

@@ -142,7 +142,31 @@ def fiche(complet=True):
     a("## Ce qu’on ne promet pas")
     a("- Pas de téléphone à donner : le contact passe par la page Contact. Pas de délai de livraison précis. Pas de « sans engagement » : les solutions sont annulables en tout temps, le matériel non installé est remboursable 30 jours, moins la configuration.")
     a("- Les capacités des Hubs sont des repères; elles dépendent aussi des caméras et des solutions actives. Les prix sont confirmés par écrit avant tout achat.")
-    return "\n".join(L) + "\n"
+    texte = "\n".join(L) + "\n"
+    return texte if SITE["prix_publics"] else sans_prix(texte)
+
+
+def sans_prix(texte):
+    """Prix non publics (SITE["prix_publics"] = False) : la fiche garde tout (Hubs, différences, solutions,
+    ce que chacune ne fait pas) mais aucun montant. Une phrase dit pourquoi."""
+    import re
+    m = r"\d[\d\u00a0\u202f ]*[,.]?\d*\s?\$"
+    unite = r"(?:\s?/\s?mois|\spar mois|,?\sune fois|\sl’heure)?"
+    lignes = []
+    for l in texte.split("\n"):
+        if "$" in l:
+            l = re.sub(r"\s*\((?:[^()]*?)" + m + r"[^()]*\)", "", l)                 # (valeur à la carte 75 $)
+            l = re.sub(r"\s*(?::|,|\+|puis|dès|à|au lieu de)?\s*" + m + unite, "", l)   # : 590 $, une fois
+            l = l.replace(" la minute ensuite", "")
+            l = re.sub(r"\s+([.;,])", r"\1", l).replace("..", ".").replace(" .", ".")
+        if "$" in l or not l.strip("-# .;,:"):
+            continue
+        lignes.append(l)
+    out = "\n".join(lignes)
+    return out.replace(
+        "## L’offre en quatre étapes",
+        "## Les prix\n- Les prix ne sont pas publiés pendant le lancement : chaque projet reçoit une soumission écrite. "
+        "Ne donner aucun montant, même approximatif.\n\n## L’offre en quatre étapes", 1)
 
 
 def ecrire():

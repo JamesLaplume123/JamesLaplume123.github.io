@@ -181,13 +181,13 @@ def autres_extensions(page):
 
 def toc(page):
     """Menu de sections collant : construit à partir des <section id="…" data-toc="Libellé">.
-    Affiché seulement sur les pages longues (cinq sections nommées ou plus)."""
+    Affiché seulement sur les pages longues (quatre sections nommées ou plus)."""
     items = []
     for tag in re.findall(r"<section\b[^>]*>", page["content"]):
         sid, lab = re.search(r'\bid="([^"]+)"', tag), re.search(r'\bdata-toc="([^"]+)"', tag)
         if sid and lab:
             items.append((sid.group(1), lab.group(1)))
-    if len(items) < 5:
+    if len(items) < 4:
         return ""
     links = "".join(f'<a href="#{i}">{l}</a>' for i, l in items)
     cta = "" if page["url"].startswith("/contact") else f'<a class="toc-cta" href="{CTA_V2["url"]}">{CTA_V2["label"]}</a>'

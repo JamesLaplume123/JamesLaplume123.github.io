@@ -224,3 +224,6 @@
   .vn-hz-line i { transition: none; }
   .fx .vn-hz-panel.is-on .vn-hz-j li { animation: none; }
 }
+.vn-note { max-width: 76rem; margin: 1.6rem auto 0; }
+.vn-note summary { cursor: pointer; color: var(--gold-soft); font: 500 .95rem/1.4 var(--sans); }
+.vn-note .form-note { margin: .8rem 0 0; }

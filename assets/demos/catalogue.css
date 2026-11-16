@@ -243,3 +243,8 @@ body.ct-lock { overflow: hidden; }
 /* Sélecteur de lieux : ne dépasse jamais l'écran */
 .ct-lieux select { max-width: 100%; }
 @media (max-width: 560px) { .ct-lieux select { display: block; width: 100%; margin: .6rem 0 0; } }
+
+/* Sans prix publics : ni total ni montant; le récapitulatif garde ses lignes, « une fois » et « par mois » */
+.ct[data-sansprix] .ct-cart-tot, .ct[data-sansprix] .ct-bar > div { display: none; }
+.ct[data-sansprix] .ct-bar { justify-content: center; }
+.ct[data-sansprix] .ct-prix small, .ct[data-sansprix] .ct-auto-p small { margin-left: 0; }

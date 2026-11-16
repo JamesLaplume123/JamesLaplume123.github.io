@@ -7,7 +7,7 @@ from demos import hub, rust
 PAGE = {
     "url": "/plateforme/",
     "v2": True,
-    "title": "Le Hub et l’IA privée | Sous le capot de JARVIS",
+    "title": "Le Hub JARVIS | Sous le capot",
     "description": (
         "Le Hub installé chez vous, son IA locale en français et sept extensions qui "
         "travaillent ensemble : un système privé, local et contrôlé."
@@ -18,7 +18,7 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Sous le capot · le Hub et l’IA privée</p>
+    <p class="eyebrow" data-rev>Le Hub · sous le capot</p>
     <h1 data-rev>Votre système privé.<br><em>Un seul point d’entrée.</em></h1>
     <p class="lead" data-rev>Un boîtier chez vous, une IA privée, un noyau sûr.</p>
   </div>
@@ -48,8 +48,8 @@ PAGE = {
 
 <section class="cta">
   <h2 data-rev>Un lieu qui mérite<br><span>son propre JARVIS?</span></h2>
-  <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
-  <p class="pro-suite" data-rev><a href="/logiciel/">Essayer le logiciel</a><a href="/offre/">L’offre</a></p>
+  <div class="acts" data-rev><a class="pill" href="/offre/">Voir l’offre</a>
+  <a class="pill ghost" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,
 }

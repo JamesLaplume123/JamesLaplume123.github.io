@@ -148,3 +148,7 @@
 @media (prefers-reduced-motion: reduce) {
   .ac-sol, .ac-sol img, .ac-gl { transition: none; }
 }
+
+/* ---------- L'offre : les trois Hubs ---------- */
+.ac-offre .of-hs { max-width: 84rem; margin-top: 0; }
+.ac-offre-l { max-width: 84rem; margin: 1.4rem auto 0; color: #b9b4ab; font-size: .98rem; }

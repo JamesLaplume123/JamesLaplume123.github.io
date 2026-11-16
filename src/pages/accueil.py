@@ -1,8 +1,9 @@
-# Accueil — aller à l'essentiel (refonte « essentiel », novembre 2026). Quatre sections :
+# Accueil — aller à l'essentiel (novembre 2026). Cinq sections :
 #   1. héros vivant : la photo de la résidence réagit (assets/demos/accueil.js, shader WebGL);
 #   2. les sept solutions en bande de photos, une ligne chacune;
 #   3. le logiciel : l'aperçu vivant de JARVIS App (démo complète sur /logiciel/);
-#   4. fin : « Parlons de votre projet » et « Posez votre question à JARVIS » (ouvre la bulle).
+#   4. l'offre : les trois Hubs en trois cartes (src/pages/offre.py), prix lus dans le catalogue;
+#   5. fin : « Parlons de votre projet » et « Posez votre question à JARVIS » (ouvre la bulle).
 # Les étapes vivent sur /a-propos/, les questions sur /questions/.
 # Styles et scripts : assets/demos/accueil.css et accueil.js.
 
@@ -10,6 +11,7 @@ import json
 
 from config import SITE, CAPABILITIES
 from demos import app
+from pages import offre
 import pro
 
 
@@ -116,7 +118,19 @@ def _logiciel():
 </section>"""
 
 
-# --- 4. Fin : l'appel, et JARVIS pour les questions --------------------------------------------
+# --- 4. L'offre : les trois Hubs, prix lus dans le catalogue ------------------------------------
+def _offre():
+    return f"""<section class="ac-sect ac-offre" id="offre" aria-labelledby="ac-offre-titre">
+  <div class="ac-tete">
+    <h2 id="ac-offre-titre">Un Hub. Vos solutions.</h2>
+    <a class="pill" href="/offre/">Voir l’offre</a>
+  </div>
+  {offre.hubs()}
+  <p class="ac-offre-l">Puis vos solutions, par mois, annulables en tout temps.</p>
+</section>"""
+
+
+# --- 5. Fin : l'appel, et JARVIS pour les questions --------------------------------------------
 # [data-jarvis] ouvre la bulle « Parler à JARVIS » (assets/js/guide.js); sans elle, le lien mène au contact.
 def _fin():
     return """<section class="ac-fin" id="projet" aria-labelledby="ac-fin-titre">
@@ -136,11 +150,11 @@ PAGE = {
     "v2": True,
     "title": "JARVIS Private Systems | Technologies de sécurité et intelligence privée",
     "schema": [pro.ld_entreprise(), pro.ld_site()],
-    "assets": ["app", "accueil"],
+    "assets": ["app", "offre", "accueil"],
     "lancement_integre": True,  # l'avis de lancement est dans le héros, pas sous la première section
     "description": (
         "JARVIS, un système privé qui gère et protège les maisons, les fermes, les entreprises "
         "et les véhicules. Domotique, réseau, caméras reliées et IA privée, chez vous."
     ),
-    "content": "\n".join([_heros(), _solutions(), _logiciel(), _fin()]) + "\n",
+    "content": "\n".join([_heros(), _solutions(), _logiciel(), _offre(), _fin()]) + "\n",
 }

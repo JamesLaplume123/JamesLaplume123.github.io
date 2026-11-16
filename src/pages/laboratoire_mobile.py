@@ -2,6 +2,7 @@
 
 from demos import boulance
 import galerie
+import pro
 
 PAGE = {
     "url": "/laboratoire-mobile/",
@@ -17,7 +18,7 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Laboratoire mobile · Ford 2017 V10</p>
+    """ + pro.fil("/laboratoire-mobile/") + """
     <h1 data-rev>Construire le premier environnement JARVIS <em>dans le réel.</em></h1>
     <p class="lead" data-rev>Une ancienne ambulance transformée en véhicule habitable et en banc
     d’essai : le premier JARVIS sur la route.</p>

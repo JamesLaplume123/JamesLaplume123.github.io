@@ -6,6 +6,7 @@
 # Styles : assets/demos/catalogue.css · Script : assets/demos/catalogue.js
 
 from html import escape
+import pro
 import json
 
 HUBS = [
@@ -457,8 +458,8 @@ PAGE = {
 <section class="band top ct-top">
   <div class="bg"><img src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Catalogue</p>
-    <h1 data-rev>Un Hub. Vos solutions.<br><em>Rien de plus.</em></h1>
+    {pro.fil("/catalogue/")}
+    <h1 data-rev>Composez<br><em>votre système.</em></h1>
     <p class="lead" data-rev>Composez votre JARVIS en quatre étapes. Chaque ligne s’ajoute au panier, à droite. Vos données restent chez vous.</p>
     <ol class="of-trois" data-rev>
       <li><a href="#hub"><i>1</i>Le Hub</a></li>

@@ -17,3 +17,5 @@
 @media (max-width: 1100px) {
   .of-hs { grid-template-columns: 1fr; }
 }
+
+.of-h-l { margin: 0; font-size: .9rem; line-height: 1.5; color: #d6d2ca; }

@@ -1,16 +1,6 @@
 /* Pages professionnelles (src/pro.py, pages par besoin, questions, mentions, plan du site).
    Tout le reste vient de wow.css : bandes, cartes noires à cadre de cristal, rangées, FAQ. */
 
-/* Fil d'Ariane visible */
-.fil { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .55rem; margin: 0 0 1.4rem;
-  font: 500 .68rem/1.6 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: #b9b9c2; }
-.fil a { color: #b9b9c2; text-decoration: none; }
-.fil a:hover { color: #fff; }
-.fil i { font-style: normal; color: var(--gold-soft); }
-.fil span { color: var(--gold-soft); }
-.band .fil { text-shadow: 0 1px 3px #000c; }
-.plain-top .fil { justify-content: center; }
-
 /* Questions : groupes successifs */
 .faq + .faq { padding-top: 1rem; }
 .faq-a a, .sect-head p a, .cta p a, .row p a { color: #e9e9ee; text-underline-offset: 3px; }

@@ -3,7 +3,7 @@
 
 import re
 
-from config import SITE, NAV, CTA_V2, CAPABILITIES, FOOTER_LINKS, SEO
+from config import SITE, NAV, CTA_V2, CAPABILITIES, FOOTER_COLUMNS, LIEUX_NAV, SEO
 from demos.app import EXT_ICON, ICONS
 import pro
 
@@ -63,14 +63,6 @@ MODE_SCRIPT = (
     'document.documentElement.dataset.mode=m}catch(e){}</script>'
 )
 
-NAV_EN_LABELS = {
-    "/logiciel/": "The software",
-    "/solutions/": "Solutions",
-    "/offre/": "The offer",
-    "/a-propos/": "About",
-}
-
-
 def ext_icon(slug):
     """Icône d'une extension : la même que dans JARVIS App (src/demos/app.py, lecture seule)."""
     return f'<svg class="mm-i" viewBox="0 0 24 24" aria-hidden="true">{ICONS[EXT_ICON[slug]]}</svg>'
@@ -85,28 +77,41 @@ def ext_links(cls):
     )
 
 
+def lieux_liens(cls, en):
+    """Sous les sept solutions : les trois pages par type de lieu, sur une ligne."""
+    liens = "".join(f'<a href="{u}">{e if en else n}</a>' for u, n, e in LIEUX_NAV)
+    return f'<p class="{cls}"><span>{"By type of place" if en else "Par type de lieu"}</span>{liens}</p>'
+
+
 def mega_menu(en):
-    """Les sept solutions, une phrase chacune. Rien d'autre."""
+    """Les sept solutions, une phrase chacune, puis les trois types de lieu."""
     return f"""<div class="mega" data-mega-panel>
       <div class="mega-grid">{ext_links("mega-a")}</div>
+      {lieux_liens("mega-more", en)}
     </div>"""
 
 
+def sub_menu(item, en):
+    """Petit menu d'une entrée (À propos) : des liens simples, sans description."""
+    liens = "".join(f'<a class="mega-l" href="{u}">{e if en else n}</a>' for u, n, e in item["sub"])
+    return f'<div class="mega mega-s" data-mega-panel>{liens}</div>'
+
+
 def header_v2(page):
-    """En-tête des pages wow : barre fixe fine, menu des extensions, menu mobile plein écran."""
+    """En-tête : barre fixe fine, menus Solutions et À propos, menu mobile plein écran (mêmes groupes)."""
     en = page.get("lang") == "en"
 
     def label(item):
-        return NAV_EN_LABELS.get(item["url"], item["label"]) if en else item["label"]
+        return item["en"] if en else item["label"]
 
     def current(item):
-        return page["url"].startswith(item["url"])
+        return page["url"].startswith(item["url"]) or page["url"] in item.get("aussi", [])
 
     bar_links = []
     for item in NAV:
         cur = ' aria-current="page"' if current(item) else ""
-        if item.get("menu"):
-            panel = mega_menu(en)
+        if item.get("menu") or item.get("sub"):
+            panel = mega_menu(en) if item.get("menu") else sub_menu(item, en)
             what = label(item)
             bar_links.append(
                 f'<div class="bar-dd" data-mega><a href="{item["url"]}"{cur}>{what}</a>'
@@ -119,7 +124,12 @@ def header_v2(page):
             bar_links.append(f'<a href="{item["url"]}"{cur}>{label(item)}</a>')
 
     def sheet_sub(item):
-        return f'<div class="sheet-exts">{ext_links("sheet-x")}</div>' if item.get("menu") else ""
+        if item.get("menu"):
+            return f'<div class="sheet-exts">{ext_links("sheet-x")}{lieux_liens("sheet-more", en)}</div>'
+        if item.get("sub"):
+            liens = "".join(f'<a class="sheet-l" href="{u}">{e if en else n}</a>' for u, n, e in item["sub"][1:])
+            return f'<div class="sheet-exts">{liens}</div>'
+        return ""
 
     sheet_links = "".join(
         f'<a class="sheet-main" href="{item["url"]}"{" aria-current=" + chr(34) + "page" + chr(34) if current(item) else ""}>{label(item)}</a>'
@@ -160,12 +170,13 @@ def header_v2(page):
 
 
 def autres_extensions(page):
-    """Bas des pages de solution : une ligne vers les sept solutions, pour ne jamais finir dans un cul-de-sac."""
+    """Bas des pages de solution : le prochain pas (l'offre), et le retour aux sept solutions."""
     slugs = [c["slug"] for c in CAPABILITIES]
     here = page["url"].strip("/").split("/")[-1]
     if not page["url"].startswith("/solutions/") or here not in slugs:
         return ""
-    return '<p class="ext-next"><a href="/solutions/">Voir les sept solutions <i aria-hidden="true">→</i></a></p>\n'
+    return ('<p class="ext-next"><a href="/offre/">Voir l’offre <i aria-hidden="true">→</i></a>'
+            '<a href="/solutions/">Les sept solutions <i aria-hidden="true">→</i></a></p>\n')
 
 
 def toc(page):
@@ -184,14 +195,15 @@ def toc(page):
 
 
 def footer_v2(page):
-    """Pied de page compact : le nom, la ligne d'entreprise, les liens essentiels, le mode, le copyright.
-    Tout le reste du site est listé sur /plan-du-site/."""
-    liens = "".join(f'<a href="{u}">{n}</a>' for u, n in FOOTER_LINKS)
+    """Pied de page en quatre colonnes : Solutions, Produit, Entreprise, Aide. Puis le mode et le copyright."""
+    def col(titre, liens):
+        return f'<div><h2>{titre}</h2><nav aria-label="{titre}">' + "".join(f'<a href="{u}">{n}</a>' for u, n in liens) + "</nav></div>"
+
+    cols = col("Solutions", [(f"/solutions/{c['slug']}/", c["title"]) for c in CAPABILITIES])
+    cols += "".join(col(t, liens) for t, liens in FOOTER_COLUMNS)
     return f"""<footer class="foot">
-  <div class="foot-top">
-    <p class="foot-brand"><b>JARVIS <span>Private Systems</span></b><span>{SITE['signature']}</span></p>
-    <nav class="foot-nav" aria-label="Pied de page">{liens}</nav>
-  </div>
+  <p class="foot-brand"><b>JARVIS <span>Private Systems</span></b><span>{SITE['signature']}</span></p>
+  <div class="foot-cols">{cols}</div>
   <div class="foot-modes" role="group" aria-label="Mode d’affichage">
     <span>Mode</span>
     <button type="button" data-mode-set="base" aria-pressed="false">Base</button>

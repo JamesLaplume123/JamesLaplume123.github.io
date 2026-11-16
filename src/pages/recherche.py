@@ -1,5 +1,7 @@
 # Recherche — expliquer la méthode de validation. Version wow.
 
+import pro
+
 QUESTIONS = [
     ("Environnements intelligents", "Une automatisation peut-elle rester utile sans devenir imprévisible?",
      "Le contexte et une explication simple réduisent les corrections manuelles.", "Maison, atelier et véhicule · Laboratoire"),
@@ -51,7 +53,7 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/solutions/diagnostic-care.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Recherche appliquée</p>
+    {pro.fil("/recherche/")}
     <h1 data-rev>Des idées ambitieuses.<br><em>Des preuves vérifiables.</em></h1>
     <p class="lead" data-rev>Une question, un essai, une mesure : rien n’est promis avant la preuve.</p>
   </div>
@@ -82,6 +84,7 @@ PAGE = {
 <section class="cta">
   <h2 data-rev>Un terrain d’essai<br><span>à proposer?</span></h2>
   <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
+  <p class="pro-suite" data-rev><a href="/vision-roadmap/">Vision et feuille de route</a></p>
 </section>
 """,
 }

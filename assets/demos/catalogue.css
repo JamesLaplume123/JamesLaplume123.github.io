@@ -239,3 +239,7 @@ body.ct-lock { overflow: hidden; }
   .ct-qty { grid-column: 2; grid-row: 1 / span 2; }
   .ct-kit-d ul { grid-template-columns: 1fr; }
 }
+
+/* Sélecteur de lieux : ne dépasse jamais l'écran */
+.ct-lieux select { max-width: 100%; }
+@media (max-width: 560px) { .ct-lieux select { display: block; width: 100%; margin: .6rem 0 0; } }

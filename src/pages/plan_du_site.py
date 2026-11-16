@@ -1,30 +1,30 @@
 # Plan du site — toutes les pages, sur une seule page sobre. Le menu et le pied de page vont à
 # l'essentiel; c'est cette page qui garde tout le reste accessible.
 
-from config import CAPABILITIES, BESOINS_PAGES
+from config import CAPABILITIES, LIEUX_NAV
 import pro
 
 GROUPES = [
-    ("Le produit", [
+    ("Produit", [
         ("/", "Accueil"),
         ("/logiciel/", "Le logiciel"),
-        ("/plateforme/", "Le Hub et l’IA privée"),
+        ("/plateforme/", "Le Hub"),
         ("/offre/", "L’offre"),
-        ("/catalogue/", "Catalogue et prix"),
+        ("/catalogue/", "Catalogue"),
     ]),
-    ("Les sept solutions", [("/solutions/", "Toutes les solutions")]
+    ("Solutions", [("/solutions/", "Les sept solutions")]
      + [(f"/solutions/{c['slug']}/", c["title"]) for c in CAPABILITIES]),
-    ("Par besoin", [(f"/solutions/{k}/", n) for k, n in BESOINS_PAGES]),
-    ("L’entreprise", [
+    ("Par type de lieu", [(u, n) for u, n, _ in LIEUX_NAV]),
+    ("Entreprise", [
         ("/a-propos/", "À propos"),
-        ("/vision-roadmap/", "Vision et feuille de route"),
+        ("/vision-roadmap/", "Vision"),
         ("/laboratoire-mobile/", "Laboratoire mobile"),
-        ("/recherche/", "Recherche"),
         ("/confiance/", "Confiance"),
+        ("/recherche/", "Recherche"),
+    ]),
+    ("Aide", [
         ("/questions/", "Questions"),
         ("/contact/", "Contact"),
-    ]),
-    ("Légal", [
         ("/confidentialite/", "Confidentialité"),
         ("/mentions-legales/", "Mentions légales"),
         ("/en/", "English"),

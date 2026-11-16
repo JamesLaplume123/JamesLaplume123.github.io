@@ -475,7 +475,8 @@
   function lireF() {
     var o = {};
     try { o = JSON.parse(localStorage.getItem(CLE_F) || "{}") || {}; } catch (e) { o = {}; }
-    return { lieux: o.lieux || [], sols: o.sols || [], hub: o.hub || "", manuel: !!o.manuel, n: o.n || 0 };
+    return { lieux: o.lieux || [], sols: o.sols || [], hub: o.hub || "", manuel: !!o.manuel, n: o.n || 0,
+      public: o.public === "entreprise" || o.public === "deux" ? o.public : "moi", separee: !!o.separee };
   }
   function ecrireF(o) { try { localStorage.setItem(CLE_F, JSON.stringify(o)); } catch (e) {} majF(); }
   function compteF(o) { return o.n || (o.sols.length + (o.hub ? 1 : 0)); }
@@ -497,6 +498,9 @@
       if (a) a.hidden = on; if (c) c.hidden = !on;
     });
     $$("[data-lieu]").forEach(function (b) { b.setAttribute("aria-pressed", o.lieux.indexOf(b.getAttribute("data-lieu")) >= 0 ? "true" : "false"); });
+    /* Pour chez moi / Pour mon entreprise / Les deux : posé sur <html>, lu par la feuille de style */
+    doc.setAttribute("data-public", o.public);
+    $$("[data-public-set]").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-public-set") === o.public ? "true" : "false"); });
     if (!LIEUX) return;
     /* Les solutions qui comptent pour les lieux choisis : mises en avant, sans cacher les autres */
     var utiles = {};
@@ -524,10 +528,25 @@
       document.dispatchEvent(new CustomEvent("jarvis:forfait", { detail: { sol: s, ajoute: i < 0 } }));
       return;
     }
+    var pb = e.target.closest && e.target.closest("[data-public-set]");
+    if (pb) {
+      var g = lireF(); g.public = pb.getAttribute("data-public-set");
+      /* Côté particulier, les lieux d'entreprise déjà choisis sortent de la sélection (ils restent choisissables). */
+      if (g.public === "moi" && LIEUX) g.lieux = g.lieux.filter(function (x) { return !LIEUX[x] || LIEUX[x].public !== "entreprise"; });
+      if (g.public === "entreprise" && LIEUX) g.lieux = g.lieux.filter(function (x) { return !LIEUX[x] || LIEUX[x].public !== "particulier"; });
+      g.n = 0; ecrireF(g);
+      document.dispatchEvent(new CustomEvent("jarvis:forfait", { detail: { public: g.public } }));
+      return;
+    }
     var b = e.target.closest && e.target.closest("[data-lieu]");
     if (b && LIEUX) {
       var f = lireF(), id = b.getAttribute("data-lieu"), j = f.lieux.indexOf(id);
       if (j >= 0) f.lieux.splice(j, 1); else f.lieux.push(id);
+      /* Un lieu d'entreprise choisi côté particulier (ou l'inverse) : le choix devient « Les deux ». */
+      if (j < 0 && LIEUX[id]) {
+        if (LIEUX[id].public === "entreprise" && f.public === "moi") f.public = f.lieux.length > 1 ? "deux" : "entreprise";
+        if (LIEUX[id].public === "particulier" && f.public === "entreprise") f.public = "deux";
+      }
       if (!f.manuel) {
         f.hub = "";
         f.lieux.forEach(function (x) { var h = LIEUX[x] && LIEUX[x].hub; if (h && (RANG[h] || 0) > (RANG[f.hub] || 0)) f.hub = h; });

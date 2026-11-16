@@ -176,3 +176,4 @@ DATA = {
 }
 
 PAGE = solution_page(DATA)
+PAGE["public"] = "entreprise"  # propre à l'entreprise : avis et bascule côté « Pour chez moi »

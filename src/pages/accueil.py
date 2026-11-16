@@ -89,7 +89,7 @@ _TITRES = {c["slug"]: c["title"] for c in CAPABILITIES}
 def _solutions():
     cartes = ""
     for slug, img, pos, ligne in SOLUTIONS:
-        cartes += f"""<article class="ac-sol{'' if cartes else ' is-on'}" data-sol="{slug}">
+        cartes += f"""<article class="ac-sol{'' if cartes else ' is-on'}" data-sol="{slug}"{lieux.public_sol(slug)}>
       <img src="/media/accueil/{img}.webp" alt="" loading="lazy" style="object-position:{pos}">
       <div class="ac-sol-t">
         <h3><a class="ac-sol-a" href="/solutions/{slug}/">{_TITRES[slug]}</a></h3>

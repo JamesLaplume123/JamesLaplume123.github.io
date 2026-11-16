@@ -180,11 +180,22 @@
     } else { tb.hidden = true; tb.innerHTML = ""; }
 
     var lines = once.concat(month).map(function (l) { return (l.q > 1 ? l.q + "× " : "") + l.n; });
-    /* Les lieux choisis ouvrent le récapitulatif envoyé avec la demande de soumission. */
+    /* Les lieux choisis ouvrent le récapitulatif, en deux blocs : « Chez vous » et « Votre entreprise ».
+       Une seule soumission, ou une soumission séparée pour l'entreprise : simple case, transmise au contact. */
     try {
       var Fo = window.JarvisForfait && window.JarvisForfait.lire(), Ld = JSON.parse(document.querySelector("[data-lieux-data]").textContent);
-      var noms = (Fo ? Fo.lieux : []).map(function (id) { return Ld[id] && Ld[id].nom; }).filter(Boolean);
-      if (noms.length) lines.unshift("Lieu : " + noms.join(", "));
+      var chez = [], ent = [];
+      (Fo ? Fo.lieux : []).forEach(function (id) { var l = Ld[id]; if (l) (l.public === "entreprise" ? ent : chez).push(l.nom); });
+      var bl = $("[data-cart-lieux]"), sep = $("[data-cart-sep]"), cb = $('input[name="separee"]');
+      if (bl) {
+        bl.hidden = !(chez.length || ent.length);
+        bl.innerHTML = (chez.length ? "<p><small>Chez vous</small>" + esc(chez.join(", ")) + "</p>" : "") +
+          (ent.length ? "<p><small>Votre entreprise</small>" + esc(ent.join(", ")) + "</p>" : "");
+      }
+      if (sep) sep.hidden = !(chez.length && ent.length);
+      if (ent.length && cb && cb.checked && chez.length) lines.unshift("Soumission séparée pour l’entreprise, au nom de l’entreprise");
+      if (ent.length) lines.unshift("Votre entreprise : " + ent.join(", "));
+      if (chez.length) lines.unshift("Chez vous : " + chez.join(", "));
     } catch (x) {}
     var link = $("[data-total-link]");
     if (link) link.href = "/contact/?config=" + encodeURIComponent(lines.join(" + ") + (rabais ? " | 2e lieu" : "") + (SANS ? "" : " | " + fmt(totOnce) + " une fois, " + fmt(totMonth) + " par mois"));

@@ -4,6 +4,11 @@
 # conseillé et pourquoi. Sert à l'accueil (sélecteur), à la page Solutions (filtre), à l'offre
 # (« lequel choisir »), au configurateur (première étape) et à la fiche de l'IA.
 #
+# Public (décision de James) : « Pour chez moi », « Pour mon entreprise » ou « Les deux ». Chaque lieu et
+# chaque solution dit pour qui il est : "particulier", "entreprise" ou "les deux". Côté particulier, on ne
+# montre pas ce qui est propre à l'entreprise (SOLUTIONS_PUBLIC, lieux de la famille « entreprise »).
+# Le contenu reste dans le HTML : le filtrage se fait par l'attribut data-public (CSS et assets/js/wow.js).
+#
 # Trois familles. « En déplacement » distingue deux sortes, comme le catalogue :
 #   - lieux mobiles (on y vit) : Hub + Boîtier VR, presque toutes les solutions d'un lieu, plus Mobilité;
 #   - véhicules (on s'y déplace) : Boîtier Mobilité, sans Hub à bord.
@@ -23,6 +28,15 @@ FAMILLES = [
     ("entreprise", "Votre entreprise"),
     ("deplacement", "En déplacement"),
 ]
+
+# Les solutions propres à l'entreprise (les autres servent aux deux publics)
+SOLUTIONS_PUBLIC = {AUTO: "entreprise"}
+
+
+def public_sol(slug):
+    """Attribut data-public d'une solution : vide si elle sert aux deux publics."""
+    return ' data-public="entreprise"' if SOLUTIONS_PUBLIC.get(slug) == "entreprise" else ""
+
 
 HUB_NOM = {"base": "Hub Base", "signature": "Hub Signature", "platinum": "Hub Platinum"}
 
@@ -80,6 +94,11 @@ LIEUX = [
                    (ENV, "Portes, humidité et température du bâtiment."),
                    (DIAG, "Batteries et équipements suivis.")],
      "demo": f"/solutions/{SECU}/#essayer"},
+    {"id": "flotte", "nom": "Flotte de véhicules", "famille": "entreprise", "hub": None, "boitier": "Boîtier Mobilité",
+     "raison": "Un Boîtier Mobilité par véhicule : position, diagnostic et antivol pour toute la flotte.",
+     "solutions": [(MOB, "Chaque véhicule, son état et ses trajets au même endroit."),
+                   (DIAG, "L’entretien prévu avant la panne.")],
+     "demo": f"/solutions/{MOB}/#essayer"},
     # ---------------- En déplacement : lieux mobiles (on y vit)
     {"id": "vr", "nom": "VR", "famille": "deplacement", "sorte": "Lieu mobile", "hub": "signature", "boitier": "Boîtier VR",
      "raison": "Une maison qui roule : le Hub et le Boîtier VR gèrent batteries, eau, chauffage et sécurité.",
@@ -129,7 +148,7 @@ HUBS_CHOIX = {
         "savoir": "L’assistant passe par Internet. Idéal comme deuxième lieu, relié à votre maison.",
     },
     "signature": {
-        "situation": "La maison où vous vivez", "pour": "Maison, VR complet, petite entreprise",
+        "situation": "La maison où vous vivez", "pour": "Maison, VR complet, petite entreprise", "pour_moi": "Maison, VR complet",
         "promesse": "Tout le lieu, et une IA qui reste chez vous.",
         "peut": ["Tout gérer dans une seule application",
                  "Parler à JARVIS, même sans Internet",
@@ -137,11 +156,12 @@ HUBS_CHOIX = {
         "savoir": "Jusqu’à six caméras analysées.",
     },
     "platinum": {
-        "situation": "Un lieu qui ne doit jamais s’arrêter", "pour": "Domaine, ferme, entreprise",
+        "situation": "Un lieu qui ne doit jamais s’arrêter", "pour": "Domaine, ferme, entreprise", "pour_moi": "Domaine",
         "promesse": "Plusieurs bâtiments, beaucoup de caméras, aucune coupure.",
         "peut": ["Continuer pendant une panne de courant ou d’Internet",
                  "Suivre tous vos bâtiments et vos lieux, sans limite",
                  "Recevoir des rapports et automatiser le travail"],
+        "peut_moi": {2: "Analyser seize caméras et plus, sur place"},  # côté particulier, à la place du 3e point
         "savoir": "Pensé pour les grands lieux : trop pour une maison ordinaire.",
     },
 }
@@ -158,6 +178,9 @@ HESITE_RAISON = {
     "platinum": "Hub Platinum : batterie et Internet de secours, lieux sans limite.",
 }
 
+for _l in LIEUX:
+    _l["public"] = "entreprise" if _l["famille"] == "entreprise" else "particulier" if _l["famille"] == "chez-vous" else "les deux"
+
 PAR_ID = {l["id"]: l for l in LIEUX}
 _TITRE = {c["slug"]: c["title"] for c in CAPABILITIES}
 
@@ -170,15 +193,26 @@ def par_hub(hub):
 def donnees():
     """Ce que le script du site lit (assets/js/wow.js) : un seul bloc JSON, placé par selecteur()."""
     return json.dumps({
-        l["id"]: {"nom": l["nom"], "hub": l["hub"], "hubNom": HUB_NOM.get(l["hub"]), "boitier": l.get("boitier"),
+        l["id"]: {"nom": l["nom"], "famille": l["famille"], "public": l["public"], "hub": l["hub"], "hubNom": HUB_NOM.get(l["hub"]), "boitier": l.get("boitier"),
                   "raison": l["raison"], "demo": l["demo"],
                   "sols": [{"slug": s, "nom": _TITRE[s], "raison": r} for s, r in l["solutions"]]}
         for l in LIEUX
     }, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 
 
+PUBLICS = [("moi", "Pour chez moi"), ("entreprise", "Pour mon entreprise"), ("deux", "Les deux")]
+
+
+def choix_public(cls="pub"):
+    """Le choix de premier niveau : trois gros boutons. Retenu dans le navigateur avec le forfait."""
+    return (f'<div class="{cls}" role="group" aria-label="Pour qui">'
+            + "".join(f'<button type="button" data-public-set="{k}" aria-pressed="false">{n}</button>' for k, n in PUBLICS)
+            + "</div>")
+
+
 def selecteur(titre="Quel est votre lieu?", ident="lieux"):
-    """Le sélecteur de lieu : trois familles, gros boutons, plusieurs choix possibles.
+    """Le sélecteur de lieu : d'abord « Pour chez moi / Pour mon entreprise / Les deux », puis trois familles,
+    gros boutons, plusieurs choix possibles. Les lieux d'entreprise ne s'affichent pas côté particulier.
     Le choix est gardé dans le navigateur (clé « jarvis-forfait ») et suit le visiteur jusqu'au configurateur."""
     groupes = []
     for fid, fnom in FAMILLES:
@@ -190,9 +224,11 @@ def selecteur(titre="Quel est votre lieu?", ident="lieux"):
                 sorte = l["sorte"]
                 boutons += f'<span class="lx-sorte">{"Lieux mobiles" if sorte == "Lieu mobile" else "Véhicules"}</span>'
             boutons += f'<button type="button" class="lx-b" data-lieu="{l["id"]}" aria-pressed="false">{l["nom"]}</button>'
-        groupes.append(f'<div class="lx-g"><p>{fnom}</p><div class="lx-bs">{boutons}</div></div>')
+        pub = ' data-public="entreprise"' if fid == "entreprise" else ' data-public="particulier"' if fid == "chez-vous" else ""
+        groupes.append(f'<div class="lx-g"{pub}><p>{fnom}</p><div class="lx-bs">{boutons}</div></div>')
     return f"""<div class="lx" id="{ident}" data-lieux>
   <h2 class="lx-t">{titre}</h2>
+  {choix_public()}
   <div class="lx-gs">{"".join(groupes)}</div>
   <div class="lx-res" data-lieux-res hidden aria-live="polite"></div>
   <script type="application/json" data-lieux-data>{donnees()}</script>

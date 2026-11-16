@@ -60,6 +60,12 @@ def fiche(complet=True):
     else:
         a("- Chaque solution a sa page : " + D + "/solutions/<nom>/ avec " + ", ".join(c["slug"] for c in CAPABILITIES))
     a("")
+    a("## Pour chez moi, pour mon entreprise, ou les deux")
+    a("- Le site demande d’abord pour qui : « Pour chez moi », « Pour mon entreprise » ou « Les deux ». Côté « Pour chez moi », il ne montre pas ce qui est propre à l’entreprise.")
+    a("- Propre à l’entreprise : " + ", ".join(lieux._TITRE[s] for s in lieux.SOLUTIONS_PUBLIC) + " (réceptionniste IA, lignes téléphoniques, automatisations), les services professionnels, les rapports et la base de données du Hub Platinum, et les lieux d’entreprise (" + ", ".join(l["nom"].lower() for l in lieux.LIEUX if l["public"] == "entreprise") + ").")
+    a("- Les six autres solutions servent aux deux publics.")
+    a("- Un propriétaire d’entreprise a souvent aussi une maison : un seul compte, une seule application, plusieurs lieux personnels et d’entreprise possibles. La soumission se fait ensemble ou séparément pour l’entreprise (au nom de l’entreprise), au choix. Ne donner aucun conseil fiscal.")
+    a("")
     a("## Entrer par son lieu (même source que le site : src/lieux.py)")
     for fid, fnom in lieux.FAMILLES:
         a(f"### {fnom}")

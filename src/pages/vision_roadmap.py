@@ -87,7 +87,7 @@ PAGE = {
   permission, révocable séparément.</p></details>
 </section>
 
-<section class="sect alt" id="securite-pro" data-toc="Security Pro (vision)">
+<section class="sect alt" id="securite-pro" data-toc="Security Pro (vision)" data-public="entreprise">
   """ + _head("03", "Security Pro · vision", "Des services de sécurité spécialisés, <em>un jour, sous permis.</em>",
               "Une vision, pas une offre : vérifier les systèmes du client lui-même, sur mandat écrit. "
               "Aujourd’hui, l’entreprise n’offre aucun de ces services et ne détient aucun permis.",

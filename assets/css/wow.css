@@ -1290,3 +1290,33 @@ html:not(.fx) .progress { display: none; }
 .bar-cta b, .sheet-cta b { font-weight: inherit; }
 .pill[data-forfait-add][aria-pressed="true"] { background: #0a0a0a; color: var(--gold-soft); box-shadow: inset 0 0 0 1px var(--gold-soft); }
 @media (max-width: 880px) { .lx-gs { grid-template-columns: 1fr; } }
+
+/* ---------- Pour chez moi / Pour mon entreprise / Les deux ----------
+   Le choix est posé sur <html data-public> avant le rendu (src/partials.py). Côté « Pour chez moi », ce qui est
+   propre à l'entreprise ne s'affiche pas; côté entreprise ou « Les deux », on voit tout, et les variantes
+   écrites pour les particuliers s'effacent. Sans script, tout reste visible. Source : src/lieux.py. */
+html[data-public="moi"] [data-public="entreprise"] { display: none !important; }
+html[data-public="entreprise"] [data-public="particulier"]:not(.lx-g), html[data-public="deux"] [data-public="particulier"]:not(.lx-g) { display: none !important; }
+html[data-public="entreprise"] .lx-g[data-public="particulier"] { display: none !important; }
+html:not([data-public]) [data-public="particulier"]:not(.lx-g) { display: none; }
+/* L'extension Entreprise dans les démonstrations de l'app (côté particulier) */
+html[data-public="moi"] [data-demo="app"] [data-ext="automatisation-operations"],
+html[data-public="moi"] .xs-ext[href*="automatisation-operations"] { display: none !important; }
+/* Les trois gros choix (accueil, sélecteur de lieu) */
+.pub { display: inline-flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.2rem; padding: .35rem; border-radius: 999px; background: #0a0a0a; box-shadow: inset 0 0 0 1px var(--mode-line); }
+.pub button, .bar-pub button, .sheet-pub button { border: 0; border-radius: 999px; background: transparent; color: #cfcfd6; cursor: pointer; font-family: var(--sans); transition: background .25s, color .25s; }
+.pub button { padding: .75rem 1.3rem; font: 600 1rem/1.1 var(--sans); }
+.pub button:hover, .bar-pub button:hover { color: #fff; }
+.pub button[aria-pressed="true"], .bar-pub button[aria-pressed="true"], .sheet-pub button[aria-pressed="true"] { background: var(--mode-action); color: var(--mode-on-action); }
+/* Dans la barre : compact, à partir de 1280 px */
+.bar-pub { display: none; align-items: center; gap: .15rem; padding: .2rem; border-radius: 999px; box-shadow: inset 0 0 0 1px #ffffff24; }
+.bar-pub button { padding: .42rem .7rem; font: 600 .68rem/1 var(--sans); letter-spacing: .02em; white-space: nowrap; }
+@media (min-width: 1280px) { .bar-pub { display: inline-flex; } }
+.sheet-pub { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1rem; }
+.sheet-pub button { padding: .65rem 1rem; font: 600 .95rem/1.1 var(--sans); box-shadow: inset 0 0 0 1px #ffffff24; }
+/* Page propre à l'entreprise, ouverte côté particulier */
+.pub-avis { padding: 0 1.4rem; }
+.pub-avis p { max-width: 76rem; margin: 1.4rem auto 0; padding: .85rem 1.2rem; border: 1px solid var(--mode-line); border-radius: 14px; background: var(--mode-panel); color: #cfcfd6; font-size: .92rem; display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1rem; }
+.pub-avis button { border: 0; background: none; padding: 0; color: var(--gold-soft); font: 600 .92rem/1.3 var(--sans); cursor: pointer; }
+@media (max-width: 560px) { .pub { display: flex; border-radius: 22px; } .pub button { flex: 1 1 100%; } }
+.lx-gs { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }

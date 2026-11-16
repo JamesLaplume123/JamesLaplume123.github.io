@@ -5,7 +5,10 @@ import re
 
 from config import SITE, NAV, CTA_V2, FORFAIT, CAPABILITIES, FOOTER_COLUMNS, LIEUX_NAV, SEO
 from demos.app import EXT_ICON, ICONS
+import lieux
 import pro
+
+PUB_ENT = ' data-public="entreprise"'
 
 
 def head(page):
@@ -60,7 +63,11 @@ MODE_SCRIPT = (
     '<script>try{var m=new URLSearchParams(location.search).get("mode")'
     '||localStorage.getItem("jarvis-mode");'
     'if(m==="base"||m==="signature"||m==="platinum")'
-    'document.documentElement.dataset.mode=m}catch(e){}</script>'
+    'document.documentElement.dataset.mode=m}catch(e){}'
+    # Public choisi (« Pour chez moi » par défaut) : posé avant le rendu, pour ne rien faire clignoter.
+    'try{var f=JSON.parse(localStorage.getItem("jarvis-forfait")||"{}")||{};'
+    'document.documentElement.dataset.public=(f.public==="entreprise"||f.public==="deux")?f.public:"moi"}'
+    'catch(e){document.documentElement.dataset.public="moi"}</script>'
 )
 
 def ext_icon(slug):
@@ -71,7 +78,7 @@ def ext_icon(slug):
 def ext_links(cls):
     """Les sept extensions : icône, nom et une ligne. Sert au menu déroulant et au menu mobile."""
     return "".join(
-        f'<a class="{cls}" href="/solutions/{c["slug"]}/">{ext_icon(c["slug"])}'
+        f'<a class="{cls}" href="/solutions/{c["slug"]}/"{lieux.public_sol(c["slug"])}>{ext_icon(c["slug"])}'
         f'<span><b>{c["title"]}</b><small>{c["menu"]}</small></span></a>'
         for c in CAPABILITIES
     )
@@ -79,7 +86,7 @@ def ext_links(cls):
 
 def lieux_liens(cls, en):
     """Sous les sept solutions : les trois pages par type de lieu, sur une ligne."""
-    liens = "".join(f'<a href="{u}">{e if en else n}</a>' for u, n, e in LIEUX_NAV)
+    liens = "".join(f'<a href="{u}"{"" if n == "Maison" else PUB_ENT}>{e if en else n}</a>' for u, n, e in LIEUX_NAV)
     return f'<p class="{cls}"><span>{"By type of place" if en else "Par type de lieu"}</span>{liens}</p>'
 
 
@@ -153,6 +160,7 @@ def header_v2(page):
   <a class="bar-brand" href="{'/en/' if en else '/'}"><b>JARVIS</b> <span>Private Systems</span></a>
   <nav class="bar-nav" aria-label="{nav_label}">{"".join(bar_links)}</nav>
   <div class="bar-actions">
+    {"" if en else lieux.choix_public("bar-pub")}
     {bar_lang}
     <a class="bar-cta" href="{FORFAIT['url']}" data-forfait><span data-forfait-l data-plein="{'My package' if en else 'Mon forfait'}">{cta_label}</span><b data-forfait-n hidden></b></a>
     <button class="bar-menu" type="button" aria-expanded="false" aria-label="{menu_label}" data-menu>
@@ -162,6 +170,7 @@ def header_v2(page):
 </header>
 <nav class="sheet" aria-label="Menu">
   <div class="sheet-in">
+    {"" if en else lieux.choix_public("sheet-pub")}
     {sheet_links}
     <a class="sheet-cta" href="{FORFAIT['url']}" data-forfait><span data-forfait-l data-plein="{'My package' if en else 'Mon forfait'}">{cta_label}</span><b data-forfait-n hidden></b></a>
     {lang_link}
@@ -186,12 +195,12 @@ def toc(page):
     for tag in re.findall(r"<section\b[^>]*>", page["content"]):
         sid, lab = re.search(r'\bid="([^"]+)"', tag), re.search(r'\bdata-toc="([^"]+)"', tag)
         if sid and lab:
-            items.append((sid.group(1), lab.group(1)))
+            items.append((sid.group(1), lab.group(1), PUB_ENT if 'data-public="entreprise"' in tag else ""))
     if len(items) < 4:
         return ""
     # « Essayer » vise le cadre de la démonstration lui-même (#jarvis) : il se place juste sous ce menu.
     cible = lambda i: "jarvis" if i == "essayer" and 'id="jarvis"' in page["content"] else i
-    links = "".join(f'<a href="#{cible(i)}">{l}</a>' for i, l in items)
+    links = "".join(f'<a href="#{cible(i)}"{pub}>{l}</a>' for i, l, pub in items)
     cta = "" if page["url"].startswith("/contact") else f'<a class="toc-cta" href="{CTA_V2["url"]}">{CTA_V2["label"]}</a>'
     return f'<nav class="toc" aria-label="Sections de la page" data-toc-nav><div class="toc-in">{links}</div>{cta}</nav>'
 
@@ -201,7 +210,8 @@ def footer_v2(page):
     def col(titre, liens):
         return f'<div><h2>{titre}</h2><nav aria-label="{titre}">' + "".join(f'<a href="{u}">{n}</a>' for u, n in liens) + "</nav></div>"
 
-    cols = col("Solutions", [(f"/solutions/{c['slug']}/", c["title"]) for c in CAPABILITIES])
+    cols = ('<div><h2>Solutions</h2><nav aria-label="Solutions">' + "".join(
+        f'<a href="/solutions/{c["slug"]}/"{lieux.public_sol(c["slug"])}>{c["title"]}</a>' for c in CAPABILITIES) + "</nav></div>")
     cols += "".join(col(t, liens) for t, liens in FOOTER_COLUMNS)
     return f"""<footer class="foot">
   <p class="foot-brand"><b>JARVIS <span>Private Systems</span></b><span>{SITE['signature']}</span></p>
@@ -244,6 +254,12 @@ def document(page):
         cut = content.index("</section>") + len("</section>")
         if nav:
             cut = content.index("</nav>", cut) + len("</nav>")
+        content = content[:cut] + avis + content[cut:]
+    # Page propre à l'entreprise ouverte côté « Pour chez moi » : elle reste lisible, et propose de basculer.
+    if page.get("public") == "entreprise":
+        avis = ('\n<aside class="pub-avis" data-public="particulier"><p>Cette page s’adresse aux entreprises. '
+                '<button type="button" data-public-set="entreprise">Voir le site pour mon entreprise</button></p></aside>')
+        cut = content.index("</section>") + len("</section>")
         content = content[:cut] + avis + content[cut:]
     autres = autres_extensions(page)
     if autres:

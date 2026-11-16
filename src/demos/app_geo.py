@@ -1,7 +1,7 @@
-# Géographie du sud du Québec pour la Carte de l’app (fichier généré, ne pas modifier à la main).
+# Géographie pour la Carte de l’app (fichier généré, ne pas modifier à la main).
 # Source : Natural Earth 1:10 M (domaine public) : terres, lacs, rivières, routes, zones urbaines, frontières.
-# Projection : kilomètres, origine à Saint-Hyacinthe (45,630 N, 72,957 O), échelle est-ouest à 47° N.
-# Découpage 44,55–49,75 N, 77,6–68,4 O; simplification Douglas-Peucker 0,3 km, lissage de Chaikin en Montérégie.
+# Projection : kilomètres, origine à 45,630 N, 72,957 O, échelle est-ouest à 47° N.
+# Découpage 44,55–49,75 N, 77,6–68,4 O; simplification Douglas-Peucker 0,3 km, lissage de Chaikin près de l’origine.
 # Le trajet de BouLance suit le réseau routier réel (plus court chemin : A-20, A-55, 155, 169).
 
 BOX = (-352.5, -457.9, 698.5, 577.9)

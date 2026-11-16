@@ -4,7 +4,7 @@
    Professionnel (data-pp) bascule le contenu des deux espaces, d'un seul état pour tout l'appareil.
    Barre du haut : palette de recherche (Ctrl K), température réelle, Mes appels, Carte, menu du profil (espace,
    mode d'affichage du site). Messages, appels et visio sont simulés. La Carte est vectorielle (caméra en km).
-   Vraies données : l'heure locale, la météo de Saint-Hyacinthe (Environnement Canada) et les batteries
+   Vraies données : l'heure locale, la météo réelle et les batteries
    de BouLance (service /live du site). Tout le reste est fictif : rien de réel n'est touché. */
 (function () {
   "use strict";
@@ -22,7 +22,7 @@
   function num(n) { return n < 0 ? "−" + Math.abs(n) : String(n); }
   function store() { try { return window.sessionStorage; } catch (e) { return null; } }
 
-  /* Lecture du JSON d'Environnement Canada (même logique que la console en direct) */
+  /* Lecture du JSON de la météo (même logique que la console en direct) */
   function val(o) {
     if (o == null) return undefined;
     var v = o.value !== undefined ? o.value : o;
@@ -162,7 +162,7 @@
       root.setAttribute("data-wx-state", "on");
       $$('[data-ap="temp"]').forEach(function (el) { countUp(el, Math.round(t)); });
       var chip = $(".ap-wx");
-      if (chip) chip.title = "Saint-Hyacinthe : " + (cond ? cond.toLowerCase() + ", " : "") + num(Math.round(t)) + NB + "°C · Environnement Canada, en direct";
+      if (chip) chip.title = "Météo : " + (cond ? cond.toLowerCase() + ", " : "") + num(Math.round(t)) + NB + "°C, en direct";
     }
     function wxLoad(fresh) { wxFetch(fresh).then(wxPaint).catch(wxFail); }
     function wxStart() {
@@ -571,7 +571,7 @@
             html = '<div class="ap-bubx is-photo"><img src="/media/ambiances/heure-doree.webp" alt="" decoding="async" style="object-position:50% 60%"></div>';
           } else {
             html = '<div class="ap-bubx is-pos"><span class="ap-pos-map"><svg viewBox="-16 -11 32 22" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#' +
-              root.getAttribute("data-geo") + '"/></svg><i class="ap-pos-pin"></i></span><span class="ap-pos-t"><b>Hub · Saint-Hyacinthe</b><small>Emplacement de référence, pas votre position</small></span></div>';
+              root.getAttribute("data-geo") + '"/></svg><i class="ap-pos-pin"></i></span><span class="ap-pos-t"><b>Hub · Résidence</b><small>Emplacement de référence, pas votre position</small></span></div>';
           }
           var row = add(cur, "out", html);
           if (row) deliver(cur, row);

@@ -2,7 +2,7 @@
 #   1. héros vivant : la photo de la résidence réagit (assets/demos/accueil.js, shader WebGL);
 #   2. les sept solutions en bande de photos, une ligne chacune;
 #   3. le logiciel : l'aperçu vivant de JARVIS App (démo complète sur /logiciel/);
-#   4. l'offre : les trois Hubs en trois cartes (src/pages/offre.py), prix lus dans le catalogue;
+#   4. l'offre : trois cartes par type de lieu (src/pages/offre.py), sans montant tant que les prix ne sont pas publics;
 #   5. fin : « Parlons de votre projet » et « Posez votre question à JARVIS » (ouvre la bulle).
 # Les étapes vivent sur /a-propos/, les questions sur /questions/.
 # Styles et scripts : assets/demos/accueil.css et accueil.js.
@@ -122,11 +122,11 @@ def _logiciel():
 def _offre():
     return f"""<section class="ac-sect ac-offre" id="offre" aria-labelledby="ac-offre-titre">
   <div class="ac-tete">
-    <h2 id="ac-offre-titre">Un Hub. Vos solutions.</h2>
+    <h2 id="ac-offre-titre">Un Hub, selon votre lieu.</h2>
     <a class="pill" href="/offre/">Voir l’offre</a>
   </div>
   {offre.hubs()}
-  <p class="ac-offre-l">Puis vos solutions, par mois, annulables en tout temps.</p>
+  <p class="ac-offre-l">Puis vos solutions, par mois, annulables en tout temps. {pro.SOUMISSION if not pro.PRIX else ""}</p>
 </section>"""
 
 

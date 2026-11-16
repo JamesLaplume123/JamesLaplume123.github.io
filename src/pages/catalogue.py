@@ -543,7 +543,7 @@ PAGE = {
       <div><small>Par mois</small><b data-total-month>0 $</b></div>
       <div class="ct-cart-an"><small>Première année</small><b data-total-year>1 290 $</b></div>
     </div>
-    <a class="pill" href="/contact/" data-total-link>Obtenir ma soumission</a>
+    <a class="pill" href="/contact/" data-total-link>Recevoir ma soumission</a>
     <p class="ct-cart-note">Dollars canadiens, taxes en sus. Soumission confirmée par écrit, ligne par ligne. Rien à payer ici.</p>
   </div>
 </aside>
@@ -569,3 +569,39 @@ PAGE = {
 </section>
 """,
 }
+
+
+# ---------------------------------------------------------------------------------------------
+# Sans prix publics (SITE["prix_publics"] = False) : le configurateur reste public, mais n'affiche
+# aucun montant ni total. Chaque ligne dit « une fois » ou « par mois »; le prix est confirmé dans la
+# soumission. Les prix restent dans ce fichier : remettre le drapeau à True les fait tous revenir.
+# ---------------------------------------------------------------------------------------------
+def _sans_prix(html):
+    import re
+    M = r"\d[\d\u00a0\u202f ]*[,.]?\d*\s?\$"          # un montant : « 1 290 $ », « 59 $ »
+    html = html.replace('<form id="ct" class="ct"', '<form id="ct" class="ct" data-sansprix')
+    html = re.sub(r'<p class="ct-econ">.*?</p>', "", html, flags=re.S)
+    html = re.sub(r'<p class="ct-note ct-note-prix"[^>]*>.*?</p>', "", html, flags=re.S)
+    html = re.sub(r'<p class="ct-mois">' + M + r"/mois<small> · ", '<p class="ct-mois"><small>Par mois : ', html)
+    html = re.sub(M + r"<small>/mois", "<small>par mois", html)
+    html = re.sub(M + r"<small>une fois \+ " + M + r"/mois</small>", "<small>une fois, puis par mois</small>", html)
+    html = re.sub(M + r"<small>une fois", "<small>une fois", html)
+    html = re.sub(r'<div class="ct-item-p">' + M + "</div>", '<div class="ct-item-p">une fois</div>', html)
+    html = re.sub(r"<small>" + M + "</small>", "", html)
+    html = re.sub(r"(<b data-total-[a-z]+>)" + M + "</b>", r"\1</b>", html)
+    html = re.sub(r" \(" + M + r"\)", "", html)
+    html = re.sub(r" · " + M + r"/mois</h3>", "</h3>", html)
+    # Phrases entières qui ne parlent que d'un montant
+    html = re.sub(r"[^.<>]*" + M + r"[^.<>]*\.", "", html)
+    html = re.sub(r"[^.<>;:]*" + M + r"[^.<>]*(?=<)", "", html)
+    html = html.replace("Dollars canadiens, taxes en sus. Soumission confirmée par écrit, ligne par ligne. Rien à payer ici.",
+                        "Prix confirmé dans votre soumission, ligne par ligne. Rien à payer ici.")
+    html = html.replace("Prix en dollars canadiens, taxes en sus. Points de départ : chaque soumission est confirmée par écrit, ligne par ligne.",
+                        "Chaque soumission est confirmée par écrit, ligne par ligne.")
+    return html
+
+
+if not pro.PRIX:
+    PAGE["content"] = _sans_prix(PAGE["content"])
+    PAGE["title"] = "Composer mon forfait JARVIS | Hub, solutions et matériel"
+

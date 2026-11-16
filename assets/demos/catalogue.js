@@ -4,7 +4,9 @@
   if (!form) return;
   var $ = function (s, r) { return (r || form).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || form).querySelectorAll(s)); };
-  var fmt = function (n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " $"; };
+  /* Sans prix publics (data-sansprix sur le formulaire) : aucun montant ni total; « une fois » / « par mois » suffisent. */
+  var SANS = form.hasAttribute("data-sansprix");
+  var fmt = function (n) { return SANS ? "" : String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " $"; };
   var txt = function (el, s) { if (el) el.textContent = s; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
 
@@ -132,7 +134,7 @@
     if (hasSecu && nCam === 0) tips.push({ t: "Sécurité intelligente sans caméra : ajoutez au moins une caméra ou une sonnette." });
     if (hasDiag && nCapt === 0 && !hasBoitierVR) tips.push({ t: "Diagnostic sans capteur : ajoutez au moins un capteur (fuite, température, porte)." });
     if (hasMob && !hasBoitierMob && !hasBoitierVR) tips.push({ t: complet && complet.checked
-      ? "JARVIS Complet comprend Mobilité pour un véhicule : ajoutez un Boîtier Mobilité (249 $) pour en profiter."
+      ? "JARVIS Complet comprend Mobilité pour un véhicule : ajoutez un Boîtier Mobilité pour en profiter."
       : "Mobilité a besoin d’un Boîtier Mobilité (voiture) ou d’un Boîtier VR Signature ou Platinum (GPS)." });
     if (hubId === "base" && once.some(function (l) { return l.id === "vrs" || l.id === "vrp"; })) tips.push({ t: "Le Boîtier VR Signature ou Platinum donne tout son sens avec un Hub Signature (IA locale, 4G).", up: "signature" });
 
@@ -141,7 +143,7 @@
 
   function line(l) {
     var sub = fmt(l.q * l.p);
-    var q = l.q > 1 || l.unit ? '<i>' + l.q + "× " + (l.unit ? l.unit + (l.q > 1 ? "s" : "") + " · " : "") + fmt(l.p) + "</i>" : "";
+    var q = l.q > 1 || l.unit ? '<i>' + l.q + "× " + (l.unit ? l.unit + (l.q > 1 ? "s" : "") + (SANS ? "" : " · ") : "") + fmt(l.p) + "</i>" : "";
     var rm = l.fixed ? "" : '<button type="button" data-rm="' + esc(l.id) + '" aria-label="Retirer">×</button>';
     return '<li class="' + (l.p < 0 ? "is-rab" : "") + '"><span><b>' + esc(l.n) + "</b>" + q + "</span><em>" + sub + "</em>" + rm + "</li>";
   }
@@ -150,7 +152,7 @@
     txt($("[data-cart-nom]"), hubNom);
     var lo = $("[data-cart-once]"), lm = $("[data-cart-month]");
     lo.innerHTML = once.map(line).join("");
-    lm.innerHTML = month.length ? month.map(line).join("") + (monthRab ? '<li class="is-rab"><span><b>Deuxième lieu : −30 % sur les solutions</b></span><em>−' + fmt(monthRab) + "</em></li>" : "")
+    lm.innerHTML = month.length ? month.map(line).join("") + (monthRab ? '<li class="is-rab"><span><b>Deuxième lieu : −30 % sur les solutions</b></span><em>' + (SANS ? "" : "−" + fmt(monthRab)) + "</em></li>" : "")
       : '<li class="is-vide">Aucune solution payante. JARVIS fonctionne chez vous; ajoutez une solution pour l’accès de partout et les alertes.</li>';
     txt($("[data-cart-once-sub]"), fmt(totOnce));
     txt($("[data-cart-month-sub]"), fmt(totMonth));
@@ -170,7 +172,7 @@
 
     var lines = once.concat(month).map(function (l) { return (l.q > 1 ? l.q + "× " : "") + l.n; });
     var link = $("[data-total-link]");
-    if (link) link.href = "/contact/?config=" + encodeURIComponent(lines.join(" + ") + (rabais ? " | 2e lieu" : "") + " | " + fmt(totOnce) + " une fois, " + fmt(totMonth) + " par mois");
+    if (link) link.href = "/contact/?config=" + encodeURIComponent(lines.join(" + ") + (rabais ? " | 2e lieu" : "") + (SANS ? "" : " | " + fmt(totOnce) + " une fois, " + fmt(totMonth) + " par mois"));
   }
 
   /* Retirer une ligne du panier */

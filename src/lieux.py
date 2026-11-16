@@ -1,0 +1,156 @@
+# Les lieux du client : source unique (décision de James, novembre 2026).
+# Les gens pensent « j'ai une ferme », pas « je veux Diagnostic & continuité ». Pour chaque lieu :
+# les solutions qui comptent (une raison d'une ligne chacune), la démonstration à ouvrir, le Hub
+# conseillé et pourquoi. Sert à l'accueil (sélecteur), à la page Solutions (filtre), à l'offre
+# (« lequel choisir »), au configurateur (première étape) et à la fiche de l'IA.
+#
+# Trois familles. « En déplacement » distingue deux sortes, comme le catalogue :
+#   - lieux mobiles (on y vit) : Hub + Boîtier VR, presque toutes les solutions d'un lieu, plus Mobilité;
+#   - véhicules (on s'y déplace) : Boîtier Mobilité, sans Hub à bord.
+# Aucun nom de lieu réel. Aucun prix ici.
+
+import json
+
+from config import CAPABILITIES
+
+ENV, IA, SECU, AUTO, RES, DIAG, MOB = (
+    "environnements-intelligents", "ia-privee-connaissances", "securite-intelligente",
+    "automatisation-operations", "reseau-resilience", "diagnostic-care", "mobilite",
+)
+
+FAMILLES = [
+    ("chez-vous", "Chez vous"),
+    ("entreprise", "Votre entreprise"),
+    ("deplacement", "En déplacement"),
+]
+
+HUB_NOM = {"base": "Hub Base", "signature": "Hub Signature", "platinum": "Hub Platinum"}
+
+# id, nom, famille, sorte, hub conseillé (None : aucun Hub à bord), raison, solutions [(slug, raison)], démonstration
+LIEUX = [
+    # ---------------- Chez vous
+    {"id": "maison", "nom": "Maison", "famille": "chez-vous", "hub": "signature",
+     "raison": "L’IA tourne dans le Hub, sans Internet, et relie jusqu’à 100 appareils.",
+     "solutions": [(ENV, "Lumières, chauffage et énergie sur un seul écran."),
+                   (SECU, "Caméras, portes et alarme dans un seul fil."),
+                   (RES, "Un Wi-Fi solide dans toute la maison.")],
+     "demo": f"/solutions/{ENV}/#essayer"},
+    {"id": "condo", "nom": "Condo", "famille": "chez-vous", "hub": "base",
+     "raison": "Un lieu simple : quelques appareils, une fuite ou une porte à surveiller.",
+     "solutions": [(ENV, "Chauffage et éclairage réglés selon votre journée."),
+                   (DIAG, "Une fuite d’eau repérée avant le dégât.")],
+     "demo": f"/solutions/{ENV}/#essayer"},
+    {"id": "chalet", "nom": "Chalet", "famille": "chez-vous", "hub": "base",
+     "raison": "Il veille sur un lieu fermé : gel, fuite, porte, batterie.",
+     "solutions": [(DIAG, "Gel, fuite, panne : prévenu avant le dégât."),
+                   (SECU, "Une porte ouverte ou un mouvement, vous le savez."),
+                   (ENV, "Le chauffage monté avant votre arrivée.")],
+     "demo": f"/solutions/{DIAG}/#essayer"},
+    {"id": "domaine", "nom": "Domaine", "famille": "chez-vous", "hub": "platinum",
+     "raison": "Plusieurs bâtiments, beaucoup de caméras, rien ne doit s’arrêter.",
+     "solutions": [(SECU, "Caméras, plaques et accès de toute la propriété."),
+                   (ENV, "Maison, garage et dépendances sur un seul écran."),
+                   (RES, "Un réseau qui relie chaque bâtiment."),
+                   (DIAG, "Eau, énergie et équipements suivis jour après jour.")],
+     "demo": f"/solutions/{SECU}/#essayer"},
+    # ---------------- Votre entreprise
+    {"id": "bureau", "nom": "Bureau ou commerce", "famille": "entreprise", "hub": "signature",
+     "raison": "Réceptionniste IA et jusqu’à dix automatisations, traitées sur place.",
+     "solutions": [(AUTO, "La réception ne manque plus un appel."),
+                   (IA, "Vos documents répondent aux questions de l’équipe."),
+                   (RES, "Un réseau séparé pour les clients, les postes et les caméras.")],
+     "demo": f"/solutions/{AUTO}/#essayer"},
+    {"id": "atelier", "nom": "Atelier, entrepôt ou usine", "famille": "entreprise", "hub": "signature",
+     "raison": "Accès, caméras et machines suivis au même endroit.",
+     "solutions": [(SECU, "Qui entre, quand, et par quelle porte."),
+                   (DIAG, "Une machine qui dérive se voit avant le bris."),
+                   (RES, "Un réseau séparé pour les machines."),
+                   (AUTO, "Commandes et bons qui circulent sans ressaisie.")],
+     "demo": f"/solutions/{SECU}/#essayer"},
+    {"id": "ferme", "nom": "Ferme", "famille": "entreprise", "hub": "platinum",
+     "raison": "Des bâtiments et des animaux qui ne peuvent pas attendre : batterie et Internet de secours.",
+     "solutions": [(DIAG, "Température, courant, eau : l’alerte avant la perte."),
+                   (ENV, "Tous les bâtiments sur un seul écran."),
+                   (RES, "Internet dans chaque bâtiment."),
+                   (SECU, "Portes, barrières et visiteurs.")],
+     "demo": "/solutions/domotique-ferme-agricole/"},
+    {"id": "garage", "nom": "Garage ou hangar", "famille": "entreprise", "hub": "signature",
+     "raison": "Des biens de valeur : caméras analysées sur place, accès contrôlés.",
+     "solutions": [(SECU, "Chaque entrée et chaque sortie, avec l’image."),
+                   (ENV, "Portes, humidité et température du bâtiment."),
+                   (DIAG, "Batteries et équipements suivis.")],
+     "demo": f"/solutions/{SECU}/#essayer"},
+    # ---------------- En déplacement : lieux mobiles (on y vit)
+    {"id": "vr", "nom": "VR", "famille": "deplacement", "sorte": "Lieu mobile", "hub": "signature", "boitier": "Boîtier VR",
+     "raison": "Une maison qui roule : le Hub et le Boîtier VR gèrent batteries, eau, chauffage et sécurité.",
+     "solutions": [(ENV, "Batteries, eau, chauffage et lumières à bord."),
+                   (MOB, "Un copilote qui propose le bon arrêt."),
+                   (SECU, "Le véhicule surveillé quand vous êtes ailleurs."),
+                   (DIAG, "Une batterie ou une pompe qui faiblit se voit tôt.")],
+     "demo": f"/solutions/{MOB}/#essayer"},
+    {"id": "roulotte", "nom": "Roulotte", "famille": "deplacement", "sorte": "Lieu mobile", "hub": "base", "boitier": "Boîtier VR",
+     "raison": "Batteries, réservoirs, gel et porte : l’essentiel d’un petit lieu mobile.",
+     "solutions": [(ENV, "Batteries et réservoirs d’un coup d’œil."),
+                   (DIAG, "Le gel et les fuites signalés."),
+                   (MOB, "Le trajet et les arrêts gardés sur la carte.")],
+     "demo": f"/solutions/{ENV}/#essayer"},
+    {"id": "bateau", "nom": "Bateau habitable", "famille": "deplacement", "sorte": "Lieu mobile", "hub": "base", "boitier": "Boîtier VR",
+     "raison": "À quai comme en route : énergie, cale et accès surveillés.",
+     "solutions": [(ENV, "Énergie, réservoirs et confort à bord."),
+                   (DIAG, "Pompe de cale et batteries suivies."),
+                   (SECU, "Une présence à bord, vous le savez.")],
+     "demo": f"/solutions/{ENV}/#essayer"},
+    # ---------------- En déplacement : véhicules (on s'y déplace)
+    {"id": "auto", "nom": "Auto ou camion", "famille": "deplacement", "sorte": "Véhicule", "hub": None, "boitier": "Boîtier Mobilité",
+     "raison": "Aucun Hub à bord : le Boîtier Mobilité donne la position, le diagnostic et l’antivol.",
+     "solutions": [(MOB, "Position, diagnostic et antivol, de partout.")],
+     "demo": f"/solutions/{MOB}/#essayer"},
+    {"id": "moto", "nom": "Moto", "famille": "deplacement", "sorte": "Véhicule", "hub": None, "boitier": "Boîtier Mobilité",
+     "raison": "Aucun Hub à bord : le Boîtier Mobilité suffit.",
+     "solutions": [(MOB, "Position et antivol, de partout.")],
+     "demo": f"/solutions/{MOB}/#essayer"},
+    {"id": "avion", "nom": "Avion", "famille": "deplacement", "sorte": "Véhicule", "hub": None, "boitier": "Boîtier Mobilité",
+     "raison": "L’appareil est suivi par son boîtier; le hangar, lui, reçoit un Hub.",
+     "solutions": [(MOB, "L’appareil, son état et ses vols au même endroit.")],
+     "demo": f"/solutions/{ENV}/#essayer"},
+]
+
+PAR_ID = {l["id"]: l for l in LIEUX}
+_TITRE = {c["slug"]: c["title"] for c in CAPABILITIES}
+
+
+def par_hub(hub):
+    """Les lieux pour lesquels ce Hub est conseillé (l'offre : « lequel choisir »)."""
+    return [l for l in LIEUX if l["hub"] == hub]
+
+
+def donnees():
+    """Ce que le script du site lit (assets/js/wow.js) : un seul bloc JSON, placé par selecteur()."""
+    return json.dumps({
+        l["id"]: {"nom": l["nom"], "hub": l["hub"], "hubNom": HUB_NOM.get(l["hub"]), "boitier": l.get("boitier"),
+                  "raison": l["raison"], "demo": l["demo"],
+                  "sols": [{"slug": s, "nom": _TITRE[s], "raison": r} for s, r in l["solutions"]]}
+        for l in LIEUX
+    }, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+
+
+def selecteur(titre="Quel est votre lieu?", ident="lieux"):
+    """Le sélecteur de lieu : trois familles, gros boutons, plusieurs choix possibles.
+    Le choix est gardé dans le navigateur (clé « jarvis-forfait ») et suit le visiteur jusqu'au configurateur."""
+    groupes = []
+    for fid, fnom in FAMILLES:
+        boutons, sorte = "", None
+        for l in LIEUX:
+            if l["famille"] != fid:
+                continue
+            if l.get("sorte") and l["sorte"] != sorte:
+                sorte = l["sorte"]
+                boutons += f'<span class="lx-sorte">{"Lieux mobiles" if sorte == "Lieu mobile" else "Véhicules"}</span>'
+            boutons += f'<button type="button" class="lx-b" data-lieu="{l["id"]}" aria-pressed="false">{l["nom"]}</button>'
+        groupes.append(f'<div class="lx-g"><p>{fnom}</p><div class="lx-bs">{boutons}</div></div>')
+    return f"""<div class="lx" id="{ident}" data-lieux>
+  <h2 class="lx-t">{titre}</h2>
+  <div class="lx-gs">{"".join(groupes)}</div>
+  <div class="lx-res" data-lieux-res hidden aria-live="polite"></div>
+  <script type="application/json" data-lieux-data>{donnees()}</script>
+</div>"""

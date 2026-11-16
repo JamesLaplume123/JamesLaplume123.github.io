@@ -275,11 +275,12 @@ def _kit_totaux(k):
 
 
 def _hubs():
+    """Les trois Hubs, avec les mêmes mots que l'offre (src/lieux.py, HUBS_CHOIX) : situation, promesse,
+    trois « Vous pouvez… », une limite. Le comparatif détaillé reste dans le volet replié, dessous."""
     out = []
     for h in HUBS:
-        pts = "".join(f"<li>{escape(p)}</li>" for p in h["pts"])
-        manque = "".join(f"<li>{escape(p)}</li>" for p in h["manque"])
-        manque_html = f'<p class="ct-k ct-k-no">Ce qui manque</p><ul class="ct-no">{manque}</ul>' if manque else ""
+        c = lieux.HUBS_CHOIX[h["id"]]
+        peut = "".join(f"<li>{x}</li>" for x in c["peut"])
         tag = f'<span class="ct-tag">{escape(h["tag"])}</span>' if h["tag"] else ""
         out.append(f"""<label class="ct-hub" data-rev data-hub="{h['id']}">
       <input type="radio" name="hub" value="{h['id']}" data-prix="{h['prix']}" data-cam="{h['cam']}" data-app="{h['app']}" data-autos="{h['autos']}"{' checked' if h['id'] == 'signature' else ''}>
@@ -288,11 +289,12 @@ def _hubs():
       <figure class="ct-hub-ph"><img src="/media/product/jarvis-hub-v1.webp" alt="" loading="lazy" decoding="async"></figure>
       <h3>{escape(h['nom'])}</h3>
       <p class="ct-prix">{_p(h['prix'])}<small>une fois</small></p>
-      <p class="ct-pour">{escape(h['pour'])}</p>
-      <p class="ct-why">{escape(h['pourquoi'])}</p>
-      <p class="ct-k">Ce que vous avez</p>
-      <ul class="ct-oui">{pts}</ul>
-      {manque_html}
+      <p class="ct-pour">{c['situation']} · {c['pour']}</p>
+      <p class="ct-why">{c['promesse']}</p>
+      <p class="ct-k">Vous pouvez</p>
+      <ul class="ct-oui">{peut}</ul>
+      <p class="ct-k ct-k-no">À savoir</p>
+      <ul class="ct-no"><li>{c['savoir']}</li></ul>
     </label>""")
     return "".join(out)
 

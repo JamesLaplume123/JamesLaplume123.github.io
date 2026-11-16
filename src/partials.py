@@ -189,7 +189,9 @@ def toc(page):
             items.append((sid.group(1), lab.group(1)))
     if len(items) < 4:
         return ""
-    links = "".join(f'<a href="#{i}">{l}</a>' for i, l in items)
+    # « Essayer » vise le cadre de la démonstration lui-même (#jarvis) : il se place juste sous ce menu.
+    cible = lambda i: "jarvis" if i == "essayer" and 'id="jarvis"' in page["content"] else i
+    links = "".join(f'<a href="#{cible(i)}">{l}</a>' for i, l in items)
     cta = "" if page["url"].startswith("/contact") else f'<a class="toc-cta" href="{CTA_V2["url"]}">{CTA_V2["label"]}</a>'
     return f'<nav class="toc" aria-label="Sections de la page" data-toc-nav><div class="toc-in">{links}</div>{cta}</nav>'
 

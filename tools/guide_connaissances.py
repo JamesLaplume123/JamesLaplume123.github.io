@@ -77,6 +77,13 @@ def fiche(complet=True):
     a("3. Le matériel du lieu, payé une fois : capteurs, caméras, boîtiers, prêt à brancher. On réutilise ce qui existe déjà (Victron, UniFi, caméras ONVIF, NAS, Starlink).")
     a("4. Plusieurs lieux : un Hub par lieu, une seule app, −30 % sur les solutions dès le deuxième lieu. Installation au choix.")
     a("")
+    a("## Quel Hub choisir (en mots de tous les jours)")
+    for h in C.HUBS:
+        c = lieux.HUBS_CHOIX[h["id"]]
+        a(f"- {h['nom']} — {c['situation']} ({c['pour']}). {c['promesse']} Vous pouvez : " + "; ".join(x[0].lower() + x[1:] for x in c["peut"]) + f". À savoir : {c['savoir']}")
+    a("- Pour aider quelqu’un qui hésite, poser trois questions : combien de lieux; l’IA doit-elle fonctionner sans Internet; le lieu doit-il tourner pendant une panne. Platinum si panne ou plus de trois lieux; Signature si IA sans Internet ou deux à trois lieux; sinon Base.")
+    a("- Le Hub s’achète une fois. Les solutions se prennent au mois, et s’annulent quand le client le veut.")
+    a("")
     a("## Les trois Hubs")
     for h in C.HUBS:
         a(f"### {h['nom']} : {p(h['prix'])}, une fois. Pour : {h['pour']}.")

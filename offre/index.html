@@ -78,7 +78,6 @@
     <div class="acts" data-rev>
       <a class="pill" href="/catalogue/">Composer mon forfait</a>
     </div>
-    <p class="for-line" data-rev><span>Prix</span> Prix sur soumission, confirmé par écrit avant tout achat.</p>
   </div>
 </section>
 
@@ -105,25 +104,45 @@
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Lequel choisir</p>
-      <h2 id="hub-titre">Selon votre lieu,<br><em>pas selon la fiche technique.</em></h2>
+      <h2 id="hub-titre">Lequel est<br><em>pour vous?</em></h2>
     </div>
   </div>
-  <div class="of-hs"><article class="of-h" data-rev>
-      <p class="of-h-k">Pour</p>
-      <h3>Chalet, condo, petit VR</h3>
-      <p class="of-h-n">Hub Base</p>
-      <ul class="of-h-d"><li><span>Appareils reliés</span><b>30</b></li><li><span>Caméras analysées</span><b>2</b></li><li><span>IA privée</span><b>Par Internet seulement</b></li><li><span>Lieux reliés</span><b>Suit un Hub principal</b></li></ul>
-    </article><article class="of-h" data-rev>
-      <span class="of-h-tag">Le plus choisi</span><p class="of-h-k">Pour</p>
-      <h3>Maison, VR complet, PME</h3>
-      <p class="of-h-n">Hub Signature</p>
-      <ul class="of-h-d"><li><span>Appareils reliés</span><b>100</b></li><li><span>Caméras analysées</span><b>6</b></li><li><span>IA privée</span><b>Locale, dans le Hub</b></li><li><span>Lieux reliés</span><b>Jusqu’à 3</b></li></ul>
-    </article><article class="of-h" data-rev>
-      <span class="of-h-tag">Rien ne manque</span><p class="of-h-k">Pour</p>
-      <h3>Domaine, entreprise, ferme</h3>
-      <p class="of-h-n">Hub Platinum</p>
-      <ul class="of-h-d"><li><span>Appareils reliés</span><b>Illimité</b></li><li><span>Caméras analysées</span><b>16 et plus</b></li><li><span>IA privée</span><b>Forte, 100 % locale</b></li><li><span>Lieux reliés</span><b>Illimité</b></li></ul>
+  <div class="of-choix" data-of-choix>
+  <div class="of-hs"><article class="of-h" data-hub="base" data-rev>
+      <p class="of-h-k">Hub Base</p>
+      <h3>Un petit lieu à surveiller</h3>
+      <p class="of-h-pour">Chalet, condo, petit VR</p>
+      <p class="of-h-pr">Savoir que tout va bien, et agir à distance.</p>
+      <p class="of-h-v">Vous pouvez</p>
+      <ul class="of-h-d"><li>Être prévenu d’une fuite, du gel ou d’une porte ouverte</li><li>Régler le chauffage et les lumières de partout</li><li>Voir jusqu’à deux caméras</li></ul>
+      <p class="of-h-s"><span>À savoir</span> L’assistant passe par Internet. Idéal comme deuxième lieu, relié à votre maison.</p>
+    </article><article class="of-h" data-hub="signature" data-rev>
+      <span class="of-h-tag">Le plus choisi</span><p class="of-h-k">Hub Signature</p>
+      <h3>La maison où vous vivez</h3>
+      <p class="of-h-pour">Maison, VR complet, petite entreprise</p>
+      <p class="of-h-pr">Tout le lieu, et une IA qui reste chez vous.</p>
+      <p class="of-h-v">Vous pouvez</p>
+      <ul class="of-h-d"><li>Tout gérer dans une seule application</li><li>Parler à JARVIS, même sans Internet</li><li>Relier jusqu’à trois lieux : maison, chalet, VR</li></ul>
+      <p class="of-h-s"><span>À savoir</span> Jusqu’à six caméras analysées.</p>
+    </article><article class="of-h" data-hub="platinum" data-rev>
+      <span class="of-h-tag">Rien ne manque</span><p class="of-h-k">Hub Platinum</p>
+      <h3>Un lieu qui ne doit jamais s’arrêter</h3>
+      <p class="of-h-pour">Domaine, ferme, entreprise</p>
+      <p class="of-h-pr">Plusieurs bâtiments, beaucoup de caméras, aucune coupure.</p>
+      <p class="of-h-v">Vous pouvez</p>
+      <ul class="of-h-d"><li>Continuer pendant une panne de courant ou d’Internet</li><li>Suivre tous vos bâtiments et vos lieux, sans limite</li><li>Recevoir des rapports et automatiser le travail</li></ul>
+      <p class="of-h-s"><span>À savoir</span> Pensé pour les grands lieux : trop pour une maison ordinaire.</p>
     </article></div>
+  <div class="of-hes" data-rev>
+    <p class="of-hes-t">Vous hésitez?</p>
+    <div class="of-qs"><div class="of-q" data-q="lieux"><p>Combien de lieux?</p><div><button type="button" data-r="1" aria-pressed="false">Un seul</button><button type="button" data-r="3" aria-pressed="false">Deux ou trois</button><button type="button" data-r="9" aria-pressed="false">Plus de trois</button></div></div><div class="of-q" data-q="ia"><p>L’IA doit-elle fonctionner sans Internet?</p><div><button type="button" data-r="oui" aria-pressed="false">Oui</button><button type="button" data-r="non" aria-pressed="false">Non</button></div></div><div class="of-q" data-q="panne"><p>Le lieu doit-il tourner pendant une panne?</p><div><button type="button" data-r="oui" aria-pressed="false">Oui</button><button type="button" data-r="non" aria-pressed="false">Non</button></div></div></div>
+    <p class="of-hes-r" data-of-raison hidden aria-live="polite"></p>
+    <script type="application/json" data-of-raisons>{"base": "Hub Base : un seul petit lieu, l’assistant par Internet vous suffit.", "signature": "Hub Signature : l’IA reste chez vous et relie jusqu’à trois lieux.", "platinum": "Hub Platinum : batterie et Internet de secours, lieux sans limite."}</script>
+  </div>
+  <p class="of-deux" data-rev>Le Hub s’achète une fois. Les solutions se prennent au mois, et s’annulent quand vous voulez.</p>
+  <p class="of-soum" data-rev>Prix sur soumission, confirmé par écrit.</p>
+</div>
+  <details class="of-cmp" data-rev><summary>Comparer en détail</summary><div class="of-cmp-w"><table><thead><tr><th></th><th>Hub Base</th><th>Hub Signature</th><th>Hub Platinum</th></tr></thead><tbody><tr><th>Processeur</th><td>Standard</td><td>4× plus rapide</td><td>16× plus rapide + carte IA</td></tr><tr><th>Mémoire</th><td>8 Go</td><td>16 Go</td><td>32 Go</td></tr><tr><th>Stockage</th><td>128 Go SSD</td><td>512 Go SSD</td><td>2 To SSD</td></tr><tr><th>Appareils reliés</th><td>30</td><td>100</td><td>Illimité</td></tr><tr><th>Caméras analysées par l’IA</th><td>2</td><td>6</td><td>16 et plus</td></tr><tr><th>Enregistrement vidéo</th><td>7 jours</td><td>30 jours</td><td>90 jours et plus</td></tr><tr><th>IA privée</th><td>Par Internet seulement</td><td>Locale, dans le Hub</td><td>Forte, 100 % locale</td></tr><tr><th>Assistant vocal « Jarvis »</th><td>—</td><td>Oui</td><td>Oui, plusieurs pièces</td></tr><tr><th>Réceptionniste IA</th><td>—</td><td>Oui</td><td>Oui, plusieurs lignes</td></tr><tr><th>Automatisations d’entreprise</th><td>—</td><td>Jusqu’à 10</td><td>Illimitées</td></tr><tr><th>Base de données et rapports</th><td>—</td><td>—</td><td>Oui</td></tr><tr><th>Lieux reliés (multi-Hubs)</th><td>Suit un Hub principal</td><td>Jusqu’à 3</td><td>Illimité</td></tr><tr><th>Réseau</th><td>Wi-Fi, Bluetooth, Zigbee</td><td>+ Z-Wave, Matter</td><td>+ 2 ports 2,5 Gb</td></tr><tr><th>Internet de secours</th><td>—</td><td>Prêt pour 4G</td><td>4G ou Starlink intégré</td></tr><tr><th>Alimentation de secours</th><td>—</td><td>—</td><td>Batterie interne 2 h</td></tr><tr><th>Puce de sécurité</th><td>—</td><td>Oui</td><td>Oui, certifiée</td></tr><tr><th>Boîtier</th><td>Plastique</td><td>Aluminium</td><td>Aluminium, refroidissement silencieux</td></tr><tr><th>Garantie</th><td>1 an</td><td>2 ans</td><td>3 ans + remplacement express</td></tr><tr><th>Soutien</th><td>Courriel</td><td>Courriel et téléphone</td><td>Prioritaire, personne dédiée</td></tr></tbody></table></div></details>
   <p class="pro-suite" data-rev><a href="/plateforme/">Ce qu’il y a dans le Hub <i aria-hidden="true">→</i></a></p>
 </section>
 

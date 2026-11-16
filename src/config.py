@@ -10,7 +10,7 @@ SITE = {
     # sécurité. JARVIS est son produit; le fil conducteur est « protéger » : les lieux, le
     # réseau, les données. Jamais « sécurité privée » comme activité (voir src/pro.py).
     "metier": "Entreprise de technologie et de sécurité",
-    "signature": "Technologie et sécurité pour vos lieux.",
+    "signature": "Technologies de sécurité et intelligence privée",
     "phrase": (
         "Nous concevons et installons JARVIS, un système privé qui gère et protège les maisons, "
         "les fermes, les entreprises et les véhicules, en Montérégie."
@@ -29,7 +29,7 @@ SITE = {
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
-    "asset_version": "20261116a",
+    "asset_version": "20261116b",
     # Adresse du service du site (formulaire → Resend → JARVIS, compteur). Vide tant
     # que le Worker Cloudflare n'est pas déployé : le formulaire passe alors par FormSubmit.
     "api": "https://jarvis-site-api.laplumejames.workers.dev",

@@ -82,7 +82,7 @@ def _heros():
     <div class="ac-spots" role="group" aria-label="Démonstration : commandes de la maison">{spots}</div>
   </div>
   <div class="ac-hero-in">
-    <p class="ac-sig">{SITE["signature"]}</p>
+    <p class="ac-sig"><b>JARVIS Private Systems</b><span>{SITE["signature"]}</span></p>
     <h1 id="ac-titre">Des lieux intelligents et sécurisés.</h1>
     <div class="ac-hero-bas">
       <p class="ac-phrase">{SITE["phrase"]}</p>
@@ -245,7 +245,7 @@ def _fin():
 PAGE = {
     "url": "/",
     "v2": True,
-    "title": "JARVIS Private Systems | Technologie et sécurité, Montérégie",
+    "title": "JARVIS Private Systems | Technologies de sécurité et intelligence privée",
     "schema": [pro.ld_entreprise(), pro.ld_site(), pro.ld_faq(FAQ)],
     "assets": ["app", "accueil"],
     "lancement_integre": True,  # l'avis de lancement est dans le héros, pas sous la première section

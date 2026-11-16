@@ -46,7 +46,9 @@
 .ac-spot:focus-visible i { box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--ac-hi); }
 
 .ac-hero-in { position: relative; z-index: 3; padding: 0 var(--ac-pad); }
-.ac-sig { margin: 0 0 .7rem; font: 600 .86rem/1.3 var(--sans); letter-spacing: .13em; text-transform: uppercase; color: var(--ac-hi); text-shadow: 0 1px 14px #000c; }
+.ac-sig { margin: 0 0 .9rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem .9rem; font: 600 1rem/1.3 var(--sans); letter-spacing: .13em; text-transform: uppercase; text-shadow: 0 1px 14px #000c; }
+.ac-sig b { color: #f5f5f7; font-weight: 700; }
+.ac-sig span { color: var(--ac-hi); padding-left: .9rem; border-left: 1px solid color-mix(in srgb, var(--ac-hi) 55%, transparent); }
 .ac-hero h1 { margin: 0 0 1.1rem; font: 600 clamp(2.3rem, 4.5vw, 4.1rem)/1.04 var(--sans); letter-spacing: -.038em; color: #fff; text-wrap: balance; }
 .ac-hero-bas { display: flex; align-items: center; gap: 1.2rem 2.6rem; flex-wrap: wrap; }
 .ac-phrase { margin: 0; max-width: 33rem; font-size: 1.08rem; line-height: 1.5; color: #dedad2; }
@@ -209,6 +211,7 @@
   .ac-hero-in { margin-top: -3.4rem; }
   .ac-phrase { font-size: 1.02rem; }
   .ac-sig { font-size: .74rem; letter-spacing: .11em; }
+  .ac-sig span { padding-left: 0; border-left: 0; flex-basis: 100%; }
   .ac-demo { top: 4.6rem; }
   .ac-spot span { font-size: .74rem; }
 }

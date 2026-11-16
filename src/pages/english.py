@@ -16,7 +16,7 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Technology and security for your places · Montérégie, Québec</p>
+    <p class="eyebrow" data-rev>Security technology and private AI · Montérégie, Québec</p>
     <h1 data-rev>Smart, secure places.<br><em>One system, on site.</em></h1>
     <p class="lead" data-rev>JARVIS Private Systems is a technology and security company. We design
     and install JARVIS, a private system that runs and protects homes, farms, businesses and

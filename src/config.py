@@ -6,9 +6,15 @@ SITE = {
     "name": "JARVIS Private Systems",
     "domain": "https://jarvisprivatesystems.com",
     "locale": "fr-CA",
-    # Positionnement (novembre 2026) : une seule entreprise, un seul métier.
-    "metier": "Intégrateur de systèmes intelligents",
-    "phrase": "Maisons, fermes, entreprises et véhicules intelligents et sécurisés, en Montérégie.",
+    # Identité (décision de James, novembre 2026) : une entreprise de technologie et de
+    # sécurité. JARVIS est son produit; le fil conducteur est « protéger » : les lieux, le
+    # réseau, les données. Jamais « sécurité privée » comme activité (voir src/pro.py).
+    "metier": "Entreprise de technologie et de sécurité",
+    "signature": "Technologie et sécurité pour vos lieux.",
+    "phrase": (
+        "Nous concevons et installons JARVIS, un système privé qui gère et protège les maisons, "
+        "les fermes, les entreprises et les véhicules, en Montérégie."
+    ),
     "base": "Région de Saint-Hyacinthe (Québec)",
     # Phase de lancement : présence et crédibilité, pas de prise de commandes. Aucune date.
     "lancement": (
@@ -17,9 +23,8 @@ SITE = {
     ),
     "email": "laplumejames@gmail.com",
     "description": (
-        "Intégrateur de systèmes intelligents : maisons, fermes, entreprises et véhicules "
-        "intelligents et sécurisés, en Montérégie. Domotique, réseau et IA privée réunis "
-        "dans un seul système, installé chez vous."
+        "Entreprise de technologie et de sécurité. JARVIS, un système privé qui gère et "
+        "protège les maisons, les fermes, les entreprises et les véhicules, en Montérégie."
     ),
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
@@ -262,17 +267,17 @@ REDIRECTS = {
 
 # Titres et descriptions pensés pour Google : une paire unique par page (vérifiée par
 # tools/verifier_seo.py). Ils remplacent ceux des pages au moment de produire le <head>.
-# Règle : le métier (intégrateur de systèmes intelligents), le besoin, le lieu (Montérégie).
+# Règle : le métier (entreprise de technologie et de sécurité), le besoin, le lieu (Montérégie).
 SEO = {
     "/": (
-        "JARVIS Private Systems | Intégrateur de systèmes intelligents",
-        "Maisons, fermes, entreprises et véhicules intelligents et sécurisés, en Montérégie. "
-        "Domotique, réseau et IA privée dans un seul système. Saint-Hyacinthe.",
+        "JARVIS Private Systems | Technologie et sécurité, Montérégie",
+        "JARVIS, un système privé qui gère et protège les maisons, les fermes, les entreprises "
+        "et les véhicules, en Montérégie. Conçu et installé depuis Saint-Hyacinthe.",
     ),
     "/solutions/": (
-        "Sept solutions, un seul système intelligent | JARVIS",
+        "Sept solutions, un seul système privé | JARVIS",
         "Domotique, sécurité intelligente, IA privée, automatisation, réseau, diagnostic et "
-        "mobilité : les sept pièces d’un même système, installé en Montérégie.",
+        "mobilité : sept pièces d’un système qui gère et protège vos lieux, en Montérégie.",
     ),
     "/solutions/environnements-intelligents/": (
         "Domotique résidentielle en Montérégie | JARVIS",
@@ -346,7 +351,7 @@ SEO = {
     ),
     "/a-propos/": (
         "À propos de JARVIS Private Systems | Saint-Hyacinthe",
-        "Intégrateur de systèmes intelligents fondé par James Laplume, dans la région de "
+        "Une entreprise de technologie et de sécurité fondée par James Laplume, près de "
         "Saint-Hyacinthe. Qui nous sommes, comment on travaille et nos engagements.",
     ),
     "/contact/": (
@@ -360,8 +365,8 @@ SEO = {
         "Aucun témoin ni pisteur publicitaire; un journal des visites gardé 24 mois.",
     ),
     "/en/": (
-        "JARVIS Private Systems | Smart systems integrator, Québec",
-        "Smart, secure homes, farms, businesses and vehicles in Montérégie, Québec. Home "
-        "automation, networking and private AI in one system installed on site.",
+        "JARVIS Private Systems | Technology and security, Québec",
+        "We design and install JARVIS, a private system that runs and protects homes, farms, "
+        "businesses and vehicles in Montérégie, Québec. Your data stays on site.",
     ),
 }

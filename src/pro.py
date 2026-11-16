@@ -1,5 +1,6 @@
 # Positionnement professionnel et référencement local (novembre 2026).
-# Une seule entreprise : JARVIS Private Systems, intégrateur de systèmes intelligents.
+# Une seule entreprise : JARVIS Private Systems, entreprise de technologie et de sécurité.
+# JARVIS est son produit; le fil conducteur est « protéger » : les lieux, le réseau, les données.
 #
 #   - Données structurées (JSON-LD) : entreprise, site, services, FAQ, fil d'Ariane;
 #   - blocs réutilisés : FAQ, fil d'Ariane visible, « Comment on travaille », engagements;
@@ -7,7 +8,8 @@
 #     (src/pages/regions.py).
 #
 # Règles : rien d'inventé (aucun avis, client, chiffre, permis ou certification). L'entreprise
-# n'est jamais présentée comme une agence de sécurité, de gardiennage ou d'investigation.
+# n'est jamais présentée comme une agence de sécurité, de gardiennage ou d'investigation, ni
+# comme une centrale de surveillance; « sécurité privée » n'est jamais une activité offerte.
 # Styles : assets/demos/pro.css.
 
 import json
@@ -118,16 +120,17 @@ def ld_entreprise():
         "@id": ENT,
         "name": SITE["name"],
         "alternateName": "JARVIS",
-        "slogan": SITE["phrase"],
+        "slogan": SITE["signature"],
         "url": D + "/",
         "logo": D + "/apple-touch-icon.png",
         "image": D + SITE["og_image"],
         "email": SITE["email"],
         "description": (
-            "Intégrateur de systèmes intelligents basé dans la région de Saint-Hyacinthe. "
-            "Domotique, réseau, caméras et serrures connectées, automatisation et IA privée "
-            "réunis dans un seul système installé chez le client : maisons, fermes, "
-            "entreprises et véhicules, en Montérégie."
+            "Entreprise de technologie et de sécurité basée dans la région de Saint-Hyacinthe. "
+            "Elle conçoit et installe JARVIS, un système privé qui gère et protège les maisons, "
+            "les fermes, les entreprises et les véhicules, en Montérégie : domotique, réseau et "
+            "cybersécurité, caméras et serrures connectées, et IA privée dont les données "
+            "restent chez le client."
         ),
         "founder": {"@type": "Person", "name": "James Laplume"},
         "address": {
@@ -138,16 +141,16 @@ def ld_entreprise():
         },
         "areaServed": ZONE_LD,
         "knowsAbout": [
+            "Cybersécurité résidentielle et de PME",
+            "Réseau et Wi-Fi",
             "Domotique",
+            "IA privée et locale",
             "Maison intelligente",
             "Home Assistant",
             "Zigbee, Z-Wave et Matter",
             "Domotique agricole",
-            "Réseau et Wi-Fi",
-            "Cybersécurité résidentielle et de PME",
-            "Intégration de caméras et de serrures connectées",
+            "Logiciel de caméras et de serrures connectées",
             "Automatisation d’entreprise",
-            "Intelligence artificielle locale",
             "Systèmes électriques 12 V de véhicules récréatifs",
             "Énergie solaire et batteries LiFePO4",
             "Loi 25 (protection des renseignements personnels)",
@@ -337,9 +340,10 @@ def un_systeme(ident="un-systeme", toc="Un seul système", alt=True):
       <p class="eyebrow">Un seul système</p>
       <h2 id="{ident}-titre" style="margin-top:1rem">Quatre pièces.<br><em>Une seule installation.</em></h2>
     </div>
-    <p data-rev>JARVIS Private Systems fait un seul métier : intégrer. Tout ce qu’on installe se parle
-    et se pilote au même endroit. L’automatisation d’entreprise, le diagnostic et la mobilité
-    s’ajoutent ensuite, selon vos besoins : <a href="/solutions/">les sept solutions</a>.</p>
+    <p data-rev>JARVIS est notre produit : une application, un Hub et une IA privée. Tout ce qu’on
+    installe se parle, se pilote et se protège au même endroit. L’automatisation d’entreprise, le
+    diagnostic et la mobilité s’ajoutent ensuite, selon vos besoins :
+    <a href="/solutions/">les sept solutions</a>.</p>
   </div>
   <div class="cards two">{cartes}</div>
 </section>"""
@@ -362,10 +366,11 @@ _PERMIS = (
     "au système et à l’application."
 )
 _PAS_AGENCE = (
-    "Non. JARVIS Private Systems est un intégrateur de systèmes intelligents : on installe et on "
-    "relie des technologies chez nos clients. L’entreprise n’offre ni gardiennage, ni agents, ni "
-    "enquête, ni centrale de télésurveillance. « Private », dans notre nom, renvoie à la vie privée : "
-    "vos données restent chez vous."
+    "Non. JARVIS Private Systems est une entreprise de technologie et de sécurité : la sécurité "
+    "dont on parle est celle de votre système, c’est-à-dire vos lieux reliés par le logiciel, votre "
+    "réseau et vos données. L’entreprise n’offre ni gardiennage, ni agents, ni enquête, ni centrale "
+    "de télésurveillance. « Private », dans notre nom, renvoie à la vie privée : vos données "
+    "restent chez vous."
 )
 
 SOLUTIONS_FAQ = {

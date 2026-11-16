@@ -243,7 +243,7 @@ def footer_v2(page):
   <div class="foot-grid">
     <div class="foot-brand">
       <b>JARVIS <span>Private Systems</span></b>
-      <p><strong>{SITE['metier']}.</strong><br>{SITE['phrase']}</p>
+      <p><strong>{SITE['signature']}</strong><br>{SITE['phrase']}</p>
       <p class="foot-base">{SITE['base']}<br><a href="mailto:{SITE['email']}">{SITE['email']}</a></p>
       <p class="foot-count" hidden><i class="dot" aria-hidden="true"></i>Visites du site <b data-live="visits-foot">—</b></p>
     </div>

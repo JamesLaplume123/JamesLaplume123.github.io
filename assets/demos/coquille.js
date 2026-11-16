@@ -1,4 +1,4 @@
-/* Coquille « logiciel » des pages de solution : météo réelle de Saint-Hyacinthe dans l'en-tête
+/* Coquille « logiciel » des pages de solution : météo réelle dans l'en-tête
    (Environnement Canada), avec le même cache de session que la démo de l'app. */
 (function () {
   "use strict";

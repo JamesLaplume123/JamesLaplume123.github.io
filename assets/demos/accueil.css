@@ -1,5 +1,4 @@
-/* Accueil (refonte « présence ») : héros vivant, bande des solutions, scène du logiciel, carte de la
-   Montérégie, ligne du temps, fin. Un seul accent par mode, traits d'un pixel, aucune lueur épaisse.
+/* Accueil (refonte « présence ») : héros vivant, bande des solutions, scène du logiciel, fin. Un seul accent par mode, traits d'un pixel, aucune lueur épaisse.
    Mouvement seulement sous html.fx; voir assets/demos/accueil.js. */
 :root, :root[data-mode="signature"] { --ac: #c7a476; --ac-hi: #eccb9c; --ac-line: #c7a47640; }
 :root[data-mode="platinum"] { --ac: #bccde7; --ac-hi: #eef4ff; --ac-line: #bccde74a; }

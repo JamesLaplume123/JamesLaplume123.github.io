@@ -95,6 +95,7 @@
 </script>
 <link rel="stylesheet" href="/assets/demos/coquille.css?v=20261116i">
 <link rel="stylesheet" href="/assets/demos/automatisation.css?v=20261116i">
+<link rel="stylesheet" href="/assets/demos/galerie.css?v=20261116i">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -126,20 +127,24 @@
   <div class="band-inner">
     <nav class="fil" aria-label="Fil d’Ariane" data-rev><a href="/">Accueil</a><i aria-hidden="true">›</i><a href="/solutions/">Solutions</a><i aria-hidden="true">›</i><span aria-current="page">Automatisation d’entreprise</span></nav>
     <h1 data-rev>Votre réception ne manque <em>plus un appel.</em></h1>
-    <p class="lead" data-rev>JARVIS répond au téléphone, fait circuler demandes, documents et approbations, et vous demande votre accord pour les gestes sensibles.</p>
+    <p class="lead" data-rev>JARVIS répond au téléphone comme une réceptionniste, suit la procédure de votre équipe et vous demande votre accord pour les gestes sensibles. Derrière, il fait circuler demandes, documents et approbations.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/contact/">Parlons de votre projet</a>
+      <button type="button" class="pill" data-forfait-add="automatisation-operations" aria-pressed="false"><span data-forfait-off>Ajouter à mon forfait</span><span data-forfait-on hidden>Dans mon forfait ✓</span></button>
+      <a class="pill ghost" href="#essayer">Essayer la démonstration</a>
     </div>
+    <p class="for-line" data-rev><span>Pour</span> PME, commerces, entreprises de services et équipes terrain</p>
     <p class="for-line" data-rev><span>Prix</span> Prix sur soumission, confirmé par écrit avant tout achat.</p>
   </div>
 </section>
+<nav class="toc" aria-label="Sections de la page" data-toc-nav><div class="toc-in"><a href="#essayer">Essayer</a><a href="#terrain">Sur le terrain</a><a href="#en-clair">En clair</a><a href="#deploiement">Déploiement</a></div><a class="toc-cta" href="/contact/">Parlons de votre projet</a></nav>
 
-<section class="sect sol-demo" id="essayer">
+<section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">Démonstration interactive</p>
+      <p class="eyebrow">Essayez · démonstration interactive</p>
       <h2>Le téléphone sonne. <em>JARVIS répond.</em></h2>
     </div>
+    <p data-rev>Regardez JARVIS prendre un appel : il reconnaît la cliente, déplace son rendez-vous et s’arrête quand la procédure exige un humain — vous. Plus bas : votre secteur, parmi 19, et l’automatisation qui règle chacun de ses problèmes.</p>
   </div>
   <div class="xs" id="jarvis" data-xs>
   <div class="xs-device">
@@ -1793,11 +1798,109 @@
     </div>
   </article></div>
   <p class="se-note">Données d’exemple · les gains sont des estimations, pas des mesures réelles · chaque automatisation est conçue et validée avec vous</p>
-</div>
+</div><div class="au-sect au-cat" data-rev>
+    <div class="au-cat-head">
+      <p class="eyebrow">Le socle commun · dans tous les secteurs</p>
+      <h3>Ce que JARVIS prend en charge partout</h3>
+      <p>Peu importe le métier, ces douze automatisations servent dans chaque entreprise. JARVIS et ses extensions,
+      c’est l’équivalent d’une équipe d’une dizaine de personnes déjà en poste — réceptionniste, archiviste,
+      commis, technicien.</p>
+    </div>
+    <ul class="au-cat-grid"><li class="is-star">
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.4 3.6c.6 0 1.1.4 1.3 1l.9 2.5c.2.6 0 1.2-.5 1.6l-1.1 1a12.6 12.6 0 0 0 6.3 6.3l1-1.1c.4-.5 1-.7 1.6-.5l2.5.9c.6.2 1 .7 1 1.3v2c0 1-.8 1.8-1.8 1.7C10.8 19.7 4.3 13.2 3.7 5.4c-.1-1 .7-1.8 1.7-1.8z"/></svg><span>Accueil</span><em class="au-cat-star">La vedette</em></span>
+      <b>Réception et appels</b><p>JARVIS répond sur la ligne IP, identifie l’appelant et suit la procédure de votre équipe.</p>
+    </li><li>
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg><span>Accueil</span></span>
+      <b>Prise de rendez-vous</b><p>Agenda vérifié, créneaux proposés, confirmation envoyée par courriel et SMS.</p>
+    </li><li>
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg><span>Accueil</span></span>
+      <b>Tri du courriel entrant</b><p>Chaque message est classé, résumé et acheminé à la bonne personne.</p>
+    </li><li>
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M14 3v5h5M8.5 13h7M8.5 16.5h4.5"/></svg><span>Ventes</span></span>
+      <b>Soumissions et devis</b><p>La demande devient un devis prêt à relire, avec vos prix et vos modèles.</p>
+    </li><li>
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12V21l-2.4-1.6L13.2 21l-2.4-1.6L8.4 21 6 19.4z"/><path d="M9.5 8.5h5M9.5 12h5"/></svg><span>Finances</span></span>
+      <b>Facturation et relances</b><p>Factures préparées, écarts détectés, rappels polis aux retardataires.</p>
+    </li><li>
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="8" r="3.6"/><path d="M3.5 20c.4-3.6 3.1-6 6.5-6 1.1 0 2.1.2 3 .7"/><path d="M17.5 14.5v6M14.5 17.5h6"/></svg><span>RH</span></span>
+      <b>Accueil d’un nouvel employé</b><p>Comptes, accès, équipement, formation : la liste se déroule sans oubli.</p>
+    </li><li>
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg><span>Opérations</span></span>
+      <b>Inventaire et commandes</b><p>Seuils surveillés, bons de commande préparés quand le stock baisse.</p>
+    </li><li>
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span>RH</span></span>
+      <b>Horaires d’équipe et rappels</b><p>Quarts publiés, remplacements proposés, rappels envoyés à chacun.</p>
+    </li><li>
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v16h16"/><path d="M8.5 15.5v-5M12.5 15.5v-8M16.5 15.5v-3"/></svg><span>Direction</span></span>
+      <b>Rapports hebdomadaires automatiques</b><p>Ventes, chantiers, heures : le portrait de la semaine, sans compilation à la main.</p>
+    </li><li>
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg><span>Opérations</span></span>
+      <b>Suivi de flotte et véhicules</b><p>Kilométrage, entretiens et inspections consignés, rappels avant échéance.</p>
+    </li><li>
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 6v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="m9 11.8 2.2 2.2 3.8-4"/></svg><span>Conformité</span></span>
+      <b>Registres et conformité</b><p>Les documents exigés, tenus à jour et prêts pour une vérification.</p>
+    </li><li>
+      <span class="au-cat-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 21 19.5H3z"/><path d="M12 10v4.5M12 17v.01"/></svg><span>Opérations</span></span>
+      <b>Alertes d’équipement et maintenance</b><p>Un équipement dérive : l’équipe est prévenue avant la panne.</p>
+    </li></ul>
+    <p class="au-cat-foot"><b>Chaque automatisation est construite sur mesure, étape par étape, validée avec vous.</b>
+    Votre processus n’est ni ici ni dans votre secteur ? Décrivez-le-nous : s’il suit des règles, il s’automatise.</p>
+  </div><div class="au-sect au-diff" data-rev>
+    <div class="au-diff-head">
+      <p class="eyebrow">La différence</p>
+      <h3>Trois solutions, trois terrains.</h3>
+      <p>Le même JARVIS, trois responsabilités distinctes — et elles se parlent.</p>
+    </div>
+    <div class="au-diff-grid"><a href="/solutions/environnements-intelligents/">
+      <small>Le lieu physique</small><b>Environnements intelligents</b><p>JARVIS s’occupe du lieu : bâtiments, énergie, équipements.</p>
+    </a><a href="/solutions/automatisation-operations/" class="is-here" aria-current="page">
+      <small>Les processus · vous êtes ici</small><b>Automatisation d’entreprise</b><p>JARVIS s’occupe des processus : appels, documents, approbations, suivis.</p>
+    </a><a href="/solutions/securite-intelligente/">
+      <small>La protection</small><b>Sécurité intelligente</b><p>JARVIS s’occupe de la protection : caméras, accès, incidents.</p>
+    </a></div>
+  </div>
 </section>
 
-<section class="sect sol-points" aria-label="L’essentiel">
-  <div class="cards"><article class="card" data-rev><h3>Moins de ressaisie</h3><p>Les informations passent d’un outil à l’autre, sans copier-coller.</p></article><article class="card" data-rev><h3>Vos règles, appliquées</h3><p>Seuils, approbations, exceptions : écrits une fois, respectés chaque fois.</p></article><article class="card" data-rev><h3>Une trace complète</h3><p>Un journal clair de chaque étape, consultable en tout temps.</p></article></div>
+<section class="sect gl-sect" id="terrain" data-toc="Sur le terrain">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Sur le terrain · ordinaire et prestige</p>
+      <h2 style="margin-top:1rem">Du family office à l’atelier.<br><em>Le travail avance seul.</em></h2>
+    </div>
+    <p data-rev>Demandes, documents et approbations qui suivent leur chemin entre vos outils, dans une PME de quartier comme dans un bureau privé de gestion de patrimoine.</p>
+  </div>
+  <div class="gl-mos gl-n3"><figure class="gl-fig is-big" data-rev><img decoding="async" src="/media/vitrine/solutions/automatisation/family-office.webp" alt="Bureau privé de gestion de patrimoine en verre et bois sombre, vue sur la ville la nuit" loading="lazy" style="object-position:50% 50%"><figcaption><span>Bureau privé</span><b>Les approbations prêtes à signer le matin</b></figcaption></figure><figure class="gl-fig" data-rev><img decoding="async" src="/media/vitrine/solutions/automatisation/atelier-pme.webp" alt="Atelier de PME propre et organisé, établis, tablette sur support et bacs étiquetés" loading="lazy" style="object-position:50% 50%"><figcaption><span>Atelier</span><b>Les bons de travail créés depuis un courriel</b></figcaption></figure><figure class="gl-fig" data-rev><img decoding="async" src="/media/vitrine/solutions/automatisation/entrepot-quai.webp" alt="Quai de chargement d&#x27;un petit entrepôt au lever du jour, palettes alignées" loading="lazy" style="object-position:50% 50%"><figcaption><span>Entrepôt</span><b>Les réceptions confirmées sans ressaisie</b></figcaption></figure></div>
+  
+</section>
+
+<section class="clair" id="en-clair" data-toc="En clair" aria-labelledby="clair-titre">
+  <div class="clair-head" data-rev>
+    <p class="eyebrow">En clair</p>
+    <h2 id="clair-titre">JARVIS répond, trie et fait circuler le travail. <em>Vous gardez la décision.</em></h2>
+    <p class="clair-ex"><b>Exemple concret.</b> Une cliente appelle pour déplacer son rendez-vous. JARVIS répond avant la deuxième sonnerie, retrouve son dossier, propose deux créneaux et confirme le nouveau. Elle demande un remboursement de 45 $ : la procédure exige un humain, alors JARVIS vous notifie et attend votre accord — la cliente patiente trente secondes, pas deux jours. Tout est consigné : transcription, décision, heure.</p>
+  </div>
+  <div class="vs" data-rev>
+    <div class="vs-col vs-before"><figure class="gl-fig vs-ph" data-rev><img decoding="async" src="/media/vitrine/solutions/automatisation/avant-ressaisie.webp" alt="Employé fatigué devant deux écrans et des papiers, recopiant des informations tard le soir" loading="lazy" style="object-position:50% 50%"><figcaption><b>Les mêmes informations tapées trois fois</b></figcaption></figure><p class="vs-k">Aujourd’hui, sans JARVIS</p><ul><li>Le téléphone sonne occupé : l’appel tombe dans la boîte vocale et personne ne rappelle.</li><li>Le même renseignement est retapé dans trois logiciels.</li><li>Les demandes dorment dans une boîte de courriel en attendant quelqu’un.</li><li>Personne ne sait vraiment qui a approuvé quoi, ni quand.</li></ul></div>
+    <div class="vs-arrow" aria-hidden="true"><span></span></div>
+    <div class="vs-col vs-after"><figure class="gl-fig vs-ph" data-rev><img decoding="async" src="/media/vitrine/solutions/automatisation/apres-equipe.webp" alt="Petite équipe détendue autour d&#x27;une table lumineuse, une tablette au centre, lumière de fin d&#x27;après-midi" loading="lazy" style="object-position:50% 50%"><figcaption><b>L’équipe décide, le reste suit</b></figcaption></figure><p class="vs-k">Avec JARVIS</p><ul><li>JARVIS répond à chaque appel et suit la procédure écrite avec votre équipe.</li><li>Les informations passent d’un outil à l’autre, sans copier-coller.</li><li>Vos règles décident de ce qui exige une approbation humaine.</li><li>Chaque étape laisse une trace : source, règle, décision et heure.</li></ul></div>
+  </div>
+  <p class="eyebrow clair-k" data-rev>Ce que vous obtenez</p>
+  <div class="cards"><article class="card" data-rev><small>01</small><h3>Une réception toujours en ligne</h3><p>Chaque appel est pris, suivi et consigné — et un humain reste joignable à tout moment.</p></article><article class="card" data-rev><small>02</small><h3>Vos règles, appliquées</h3><p>Seuils, approbations, exceptions : écrits une fois, respectés à chaque fois.</p></article><article class="card" data-rev><small>03</small><h3>Une trace complète</h3><p>Un journal clair de chaque appel et de chaque étape, consultable en tout temps.</p></article></div>
+</section>
+
+<section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
+  <div class="trust" data-rev>
+    <div>
+      <p class="eyebrow">Déploiement responsable</p>
+      <h2>Vos processus, vos règles, votre rythme.</h2>
+      <p>La réception téléphonique s’installe d’abord en écoute, puis prend les appels simples, puis le reste — à votre rythme. Les connecteurs sont activés un à un, selon la valeur réelle. Les flux critiques peuvent fonctionner sur une infrastructure privée.</p>
+    </div>
+    <dl>
+      <div><dt>Accord humain</dt><dd>Les actions sensibles exigent une validation adaptée au risque.</dd></div>
+      <div><dt>Limite publiée</dt><dd>JARVIS ne remplace ni le CRM, ni la comptabilité, ni les logiciels spécialisés — ni votre équipe : il exécute ce qu’elle a décidé. Il relie des systèmes autorisés et documentés ; chaque flux exige une conception validée.</dd></div>
+      <div><dt>Compatibilités possibles</dt><dd class="chips"><span class="chip">Téléphonie IP</span><span class="chip">Courriel</span><span class="chip">CRM</span><span class="chip">Calendrier</span><span class="chip">Comptabilité</span><span class="chip">RH</span><span class="chip">Documents</span><span class="chip">API métier</span></dd></div>
+    </dl>
+  </div>
 </section>
 
 <section class="faq" id="questions" aria-labelledby="questions-titre">
@@ -1819,7 +1922,7 @@
 <p class="ext-next"><a href="/offre/">Voir l’offre <i aria-hidden="true">→</i></a><a href="/solutions/">Les sept solutions <i aria-hidden="true">→</i></a></p>
 
 <section class="cta">
-  <h2 data-rev>Des appels manqués <em>cette semaine?</em></h2>
+  <h2 data-rev>Combien d’appels manqués <em>cette semaine?</em></h2>
   <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 
@@ -1838,6 +1941,7 @@
 <script src="/assets/js/wow.js?v=20261116i" defer></script>
 <script src="/assets/demos/coquille.js?v=20261116i" defer></script>
 <script src="/assets/demos/automatisation.js?v=20261116i" defer></script>
+<script src="/assets/demos/galerie.js?v=20261116i" defer></script>
 <script src="/assets/js/guide.js?v=20261116i" defer></script>
 </body>
 </html>

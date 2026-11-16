@@ -95,6 +95,7 @@
 </script>
 <link rel="stylesheet" href="/assets/demos/coquille.css?v=20261116i">
 <link rel="stylesheet" href="/assets/demos/reseau.css?v=20261116i">
+<link rel="stylesheet" href="/assets/demos/galerie.css?v=20261116i">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -126,20 +127,24 @@
   <div class="band-inner">
     <nav class="fil" aria-label="Fil d’Ariane" data-rev><a href="/">Accueil</a><i aria-hidden="true">›</i><a href="/solutions/">Solutions</a><i aria-hidden="true">›</i><span aria-current="page">Réseau et cybersécurité</span></nav>
     <h1 data-rev>Un réseau et un Wi-Fi fiables. <em>La fondation de tout le reste.</em></h1>
-    <p class="lead" data-rev>Un Wi-Fi qui couvre partout, des zones séparées et une vue claire du réseau et de ses risques.</p>
+    <p class="lead" data-rev>Maison, ferme ou entreprise : un Wi-Fi qui couvre partout, des zones séparées et une vue claire du réseau et de ses risques, avant que chaque problème devienne une urgence.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/contact/">Parlons de votre projet</a>
+      <button type="button" class="pill" data-forfait-add="reseau-resilience" aria-pressed="false"><span data-forfait-off>Ajouter à mon forfait</span><span data-forfait-on hidden>Dans mon forfait ✓</span></button>
+      <a class="pill ghost" href="#essayer">Essayer la démonstration</a>
     </div>
+    <p class="for-line" data-rev><span>Pour</span> Maisons connectées, PME et petits multi-sites qui dépendent de leur réseau</p>
     <p class="for-line" data-rev><span>Prix</span> Prix sur soumission, confirmé par écrit avant tout achat.</p>
   </div>
 </section>
+<nav class="toc" aria-label="Sections de la page" data-toc-nav><div class="toc-in"><a href="#essayer">Essayer</a><a href="#terrain">Sur le terrain</a><a href="#en-clair">En clair</a><a href="#deploiement">Déploiement</a></div><a class="toc-cta" href="/contact/">Parlons de votre projet</a></nav>
 
-<section class="sect sol-demo" id="essayer">
+<section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">Démonstration interactive</p>
+      <p class="eyebrow">Essayez · démonstration interactive</p>
       <h2>Tout votre réseau, <em>dans une seule console.</em></h2>
     </div>
+    <p data-rev>Douze modules, de la carte du réseau au score de la semaine : appareils, Wi-Fi, trafic, menaces, VPN, contrôles parentaux, continuité, sauvegardes, mises à jour et segmentation. JARVIS explique en une phrase et attend votre accord avant d’agir. Données d’exemple.</p>
   </div>
   <div class="xs" id="jarvis" data-xs>
   <div class="xs-device">
@@ -356,8 +361,46 @@
   
 </section>
 
-<section class="sect sol-points" aria-label="L’essentiel">
-  <div class="cards"><article class="card" data-rev><h3>Une carte que tout le monde comprend</h3><p>Internet, routeur, zones et appareils, avec ce qui circule en direct.</p></article><article class="card" data-rev><h3>Des diagnostics en mots simples</h3><p>La vraie cause et une seule action proposée, que vous approuvez.</p></article><article class="card" data-rev><h3>Une maison qui tient bon</h3><p>Zones séparées, lien de secours, essentiel qui marche même sans Internet.</p></article></div>
+<section class="sect gl-sect" id="terrain" data-toc="Sur le terrain">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Sur le terrain · ordinaire et prestige</p>
+      <h2 style="margin-top:1rem">Du routeur de la maison<br><em>à la passerelle du yacht.</em></h2>
+    </div>
+    <p data-rev>Un réseau compris, surveillé et privé : dans une PME, dans la salle technique d’un domaine ou à bord d’un yacht relié par satellite.</p>
+  </div>
+  <div class="gl-mos gl-n3"><figure class="gl-fig is-big" data-rev><img decoding="async" src="/media/vitrine/solutions/reseau/salle-technique-domaine.webp" alt="Salle technique d&#x27;une résidence de prestige, baie réseau noire impeccable, câbles rangés, voyants ambrés" loading="lazy" style="object-position:50% 50%"><figcaption><span>Salle technique</span><b>Chaque équipement connu, chaque lien suivi</b></figcaption></figure><figure class="gl-fig" data-rev><img decoding="async" src="/media/vitrine/solutions/reseau/yacht-passerelle.webp" alt="Passerelle de commandement d&#x27;un yacht la nuit, écrans de navigation, mer sombre au-delà des vitres" loading="lazy" style="object-position:50% 50%"><figcaption><span>Yacht</span><b>Satellite, LTE et Wi-Fi de bord sous contrôle</b></figcaption></figure><figure class="gl-fig" data-rev><img decoding="async" src="/media/vitrine/solutions/reseau/bureau-pme-routeur.webp" alt="Petit bureau de PME, armoire réseau murale propre et bien étiquetée" loading="lazy" style="object-position:50% 50%"><figcaption><span>PME</span><b>Le réseau visible avant qu’il tombe</b></figcaption></figure></div>
+  
+</section>
+
+<section class="clair" id="en-clair" data-toc="En clair" aria-labelledby="clair-titre">
+  <div class="clair-head" data-rev>
+    <p class="eyebrow">En clair</p>
+    <h2 id="clair-titre">JARVIS dessine votre réseau comme une carte vivante et vous dit, en mots simples, <em>pourquoi quelque chose ne marche pas.</em></h2>
+    <p class="clair-ex"><b>Exemple concret.</b> La caméra du garage cesse d’enregistrer. Au lieu de tout redémarrer au hasard, JARVIS remonte le câble jusqu’au commutateur, trouve le port coupé et propose de le relancer. Vous approuvez; il confirme que l’image est revenue.</p>
+  </div>
+  <div class="vs" data-rev>
+    <div class="vs-col vs-before"><figure class="gl-fig vs-ph" data-rev><img decoding="async" src="/media/vitrine/solutions/reseau/avant-cables.webp" alt="Placard technique en désordre, câbles emmêlés, routeurs empilés, poussière" loading="lazy" style="object-position:50% 50%"><figcaption><b>Personne ne sait ce qui est branché</b></figcaption></figure><p class="vs-k">Aujourd’hui, sans JARVIS</p><ul><li>Quand quelque chose ne marche plus, on redémarre tout et on espère.</li><li>Personne ne sait vraiment quels appareils sont branchés au réseau.</li><li>Une ampoule connectée peut voir les mêmes ordinateurs que vous.</li><li>Une panne Internet arrête aussi les caméras et les lumières.</li><li>On ne sait pas si les sauvegardes marchent ni si un équipement a une faille connue.</li></ul></div>
+    <div class="vs-arrow" aria-hidden="true"><span></span></div>
+    <div class="vs-col vs-after"><figure class="gl-fig vs-ph" data-rev><img decoding="async" src="/media/vitrine/solutions/reseau/apres-baie.webp" alt="Le même placard refait : baie noire, câbles peignés, voyants ordonnés" loading="lazy" style="object-position:50% 50%"><figcaption><b>Tout est inventorié et surveillé</b></figcaption></figure><p class="vs-k">Avec JARVIS</p><ul><li>La carte montre l’appareil touché et le chemin jusqu’à la cause.</li><li>Chaque appareil est connu, rangé dans sa zone et suivi.</li><li>Des murs séparent la famille, les objets, les caméras et les invités.</li><li>Le lien de secours prend le relais et la maison continue en local.</li><li>Les sauvegardes sont testées chaque mois et chaque faille a sa date de correction.</li></ul></div>
+  </div>
+  <p class="eyebrow clair-k" data-rev>Ce que vous obtenez</p>
+  <div class="cards"><article class="card" data-rev><small>01</small><h3>Une console complète, lisible par tous</h3><p>Carte du réseau, appareils, Wi-Fi par pièce, trafic, menaces et score de la semaine, avec ce qui circule en direct.</p></article><article class="card" data-rev><small>02</small><h3>Des diagnostics en mots simples</h3><p>La vraie cause, le chemin pour la trouver et une seule action proposée, que vous approuvez.</p></article><article class="card" data-rev><small>03</small><h3>Une maison qui tient bon</h3><p>Zones séparées, lien de secours et fonctions essentielles qui marchent même sans Internet.</p></article></div>
+</section>
+
+<section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
+  <div class="trust" data-rev>
+    <div>
+      <p class="eyebrow">Déploiement responsable</p>
+      <h2>L’observation reste sur votre infrastructure.</h2>
+      <p>Les sondes, journaux et inventaires peuvent demeurer locaux. Les accès distants passent par des mécanismes privés, limités et auditables.</p>
+    </div>
+    <dl>
+      <div><dt>Accord humain</dt><dd>Les actions sensibles exigent une validation adaptée au risque.</dd></div>
+      <div><dt>Limite publiée</dt><dd>Cette solution observe, documente et assiste l’administration. Elle ne remplace ni un pare-feu, ni une équipe de sécurité, ni un programme complet de cybersécurité.</dd></div>
+      <div><dt>Compatibilités possibles</dt><dd class="chips"><span class="chip">Wi-Fi 7</span><span class="chip">VLAN</span><span class="chip">Pare-feu</span><span class="chip">Détection d’intrusion</span><span class="chip">VPN</span><span class="chip">5G</span><span class="chip">Satellite</span><span class="chip">PoE</span><span class="chip">Sauvegardes 3-2-1</span><span class="chip">Multi-sites</span></dd></div>
+    </dl>
+  </div>
 </section>
 
 <section class="faq" id="questions" aria-labelledby="questions-titre">
@@ -379,7 +422,7 @@
 <p class="ext-next"><a href="/offre/">Voir l’offre <i aria-hidden="true">→</i></a><a href="/solutions/">Les sept solutions <i aria-hidden="true">→</i></a></p>
 
 <section class="cta">
-  <h2 data-rev>Un réseau à remettre d’aplomb?</h2>
+  <h2 data-rev>Quelle partie de votre infrastructure reste <em>un angle mort?</em></h2>
   <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 
@@ -398,6 +441,7 @@
 <script src="/assets/js/wow.js?v=20261116i" defer></script>
 <script src="/assets/demos/coquille.js?v=20261116i" defer></script>
 <script src="/assets/demos/reseau.js?v=20261116i" defer></script>
+<script src="/assets/demos/galerie.js?v=20261116i" defer></script>
 <script src="/assets/js/guide.js?v=20261116i" defer></script>
 </body>
 </html>

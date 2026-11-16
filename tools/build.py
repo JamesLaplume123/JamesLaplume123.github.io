@@ -35,7 +35,6 @@ PAGE_MODULES = [
     "solution_diagnostic_care",
     "solution_mobilite",
     "besoins",  # pages par besoin : maison clé en main, ferme, IA pour entreprise
-    "regions",  # /regions/ et une page par ville de la zone desservie
     "questions",
     "plateforme",
     "laboratoire_mobile",
@@ -47,6 +46,7 @@ PAGE_MODULES = [
     "merci",
     "confidentialite",
     "mentions_legales",
+    "plan_du_site",
     "english",
     "page_404",
     "labo_cartes",  # page privée : noindex, hors sitemap et menus

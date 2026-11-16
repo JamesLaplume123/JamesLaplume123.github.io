@@ -109,7 +109,7 @@ EXT = [
       "Zones séparées : famille, objets, caméras, invités",
       "Lien de secours quand Internet tombe",
       "Appareil suspect isolé, sur votre approbation"]),
-    ("diag", "diagnostic-care", "Diagnostic", "Diagnostic et continuité", "#62dbd2",
+    ("diag", "diagnostic-care", "Diagnostic", "Diagnostic & continuité", "#62dbd2",
      "Mesurer, tester, comprendre.",
      "Écarts confirmés, résultats de tests, retours à la normale",
      "Mesures hors seuil, interventions terminées",

@@ -13,9 +13,10 @@ SITE = {
     "signature": "Technologies de sécurité et intelligence privée",
     "phrase": (
         "Nous concevons et installons JARVIS, un système privé qui gère et protège les maisons, "
-        "les fermes, les entreprises et les véhicules, en Montérégie."
+        "les fermes, les entreprises et les véhicules."
     ),
-    "base": "Région de Saint-Hyacinthe (Québec)",
+    # Aucune mention de lieu sur le site (décision de James, novembre 2026) : ni ville, ni région,
+    # ni province. Seules exceptions : les lois applicables, dans les pages légales.
     # Phase de lancement : présence et crédibilité, pas de prise de commandes. Aucune date.
     "lancement": (
         "En phase de lancement : nous prenons les noms des personnes intéressées et "
@@ -24,7 +25,7 @@ SITE = {
     "email": "laplumejames@gmail.com",
     "description": (
         "Entreprise de technologie et de sécurité. JARVIS, un système privé qui gère et "
-        "protège les maisons, les fermes, les entreprises et les véhicules, en Montérégie."
+        "protège les maisons, les fermes, les entreprises et les véhicules."
     ),
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
@@ -36,48 +37,19 @@ SITE = {
     # Portier public du Guide JARVIS (agent d'accueil IA, hébergé sur le matériel de JARVIS).
     # Vide = la bulle de discussion n'apparaît pas.
     "guide": "https://guide.jarvisprivatesystems.com",
-    "copyright": "© 2026 JARVIS Private Systems · Québec, Canada",
+    "copyright": "© 2026 JARVIS Private Systems",
 }
 
-# Navigation principale : quatre entrées et un bouton (refonte « clarté », novembre 2026).
-# Le logiciel → ce qu'on vend; Solutions → quelle extension pour moi; L'offre → comment ça se
-# compose et comment commencer; À propos → qui est derrière. Le reste vit dans le pied de page.
+# Navigation principale : trois entrées et un bouton (refonte « essentiel », novembre 2026).
+# Solutions ouvre les sept solutions, rien d'autre. Tout le reste est sur /plan-du-site/.
 NAV = [
-    {"url": "/logiciel/", "label": "Le logiciel", "sub": [
-        ("/logiciel/", "Le logiciel en démonstration", "L’application en grand, écran par écran.", "grid"),
-        ("/plateforme/", "Le Hub et l’IA privée", "Ce qu’il y a sous le capot : Hub, IA, noyau, comptes.", "devices"),
-    ]},
+    {"url": "/logiciel/", "label": "Le logiciel"},
     {"url": "/solutions/", "label": "Solutions", "menu": True},
-    {"url": "/offre/", "label": "L’offre", "sub": [
-        ("/offre/", "Comment ça se compose", "Le Hub, vos extensions, l’installation.", "grid"),
-        ("/catalogue/", "Catalogue et prix", "Hubs, solutions, matériel : composez et voyez le total.", "spark"),
-    ]},
-    {"url": "/a-propos/", "label": "À propos", "sub": [
-        ("/a-propos/", "Qui est derrière JARVIS", "James, sa démarche et comment on travaille.", "user"),
-        ("/regions/", "Régions desservies", "Saint-Hyacinthe et la Montérégie, ville par ville.", "pin"),
-        ("/questions/", "Questions avant d’appeler", "Prix, délais, données, appareils : les réponses.", "chat"),
-        ("/vision-roadmap/", "Notre vision", "Où va JARVIS, et où il en est vraiment.", "spark"),
-        ("/laboratoire-mobile/", "Laboratoire mobile", "L’ambulance convertie, batteries en direct.", "route"),
-        ("/confiance/", "Confiance et sécurité", "Comment vos données et vos accès sont protégés.", "shield"),
-        ("/recherche/", "Recherche", "La méthode derrière chaque preuve.", "search"),
-    ]},
+    {"url": "/a-propos/", "label": "À propos"},
 ]
 
 # Appel à l'action principal (chantier wow — vente du logiciel)
 CTA_V2 = {"url": "/contact/", "label": "Parlons de votre projet"}
-
-# Zone desservie : source unique pour les pages /regions/, le pied de page et les données
-# structurées. (clé d'URL, nom affiché, nom court)
-ZONE = [
-    ("saint-hyacinthe", "Saint-Hyacinthe"),
-    ("granby", "Granby"),
-    ("drummondville", "Drummondville"),
-    ("longueuil-rive-sud", "Longueuil et la Rive-Sud"),
-    ("saint-jean-sur-richelieu", "Saint-Jean-sur-Richelieu"),
-    ("sorel-tracy", "Sorel-Tracy"),
-    ("beloeil-mont-saint-hilaire", "Beloeil et Mont-Saint-Hilaire"),
-    ("acton-vale", "Acton Vale"),
-]
 
 # Pages « par besoin » : une recherche réelle, une page. Les sept solutions restent la référence;
 # ces pages-ci couvrent un besoin qu'aucune solution ne couvre seule. (clé d'URL, libellé)
@@ -87,37 +59,16 @@ BESOINS_PAGES = [
     ("ia-privee-entreprise", "IA privée pour entreprise"),
 ]
 
-FOOTER_COLUMNS = [
-    {
-        "title": "Régions desservies",
-        "links": [{"url": f"/regions/{k}/", "label": n} for k, n in ZONE]
-        + [{"url": "/regions/", "label": "Toute la zone desservie"}],
-    },
-    {
-        "title": "Explorer",
-        "links": [
-            {"url": "/logiciel/", "label": "Le logiciel"},
-            {"url": "/solutions/", "label": "Solutions"},
-            {"url": "/offre/", "label": "L’offre"},
-            {"url": "/catalogue/", "label": "Catalogue et prix"},
-            {"url": "/plateforme/", "label": "Le Hub et l’IA privée"},
-            {"url": "/laboratoire-mobile/", "label": "Laboratoire mobile"},
-            {"url": "/recherche/", "label": "Recherche"},
-        ],
-    },
-    {
-        "title": "Entreprise",
-        "links": [
-            {"url": "/a-propos/", "label": "À propos"},
-            {"url": "/a-propos/#comment-on-travaille", "label": "Comment on travaille"},
-            {"url": "/questions/", "label": "Questions avant d’appeler"},
-            {"url": "/vision-roadmap/", "label": "Vision et feuille de route"},
-            {"url": "/confiance/", "label": "Confiance"},
-            {"url": "/confidentialite/", "label": "Confidentialité"},
-            {"url": "/mentions-legales/", "label": "Mentions légales et conditions"},
-            {"url": "/contact/", "label": "Contact"},
-        ],
-    },
+# Pied de page compact : les liens essentiels. /plan-du-site/ liste toutes les pages.
+FOOTER_LINKS = [
+    ("/logiciel/", "Le logiciel"),
+    ("/solutions/", "Solutions"),
+    ("/questions/", "Questions"),
+    ("/a-propos/", "À propos"),
+    ("/contact/", "Contact"),
+    ("/confidentialite/", "Confidentialité"),
+    ("/mentions-legales/", "Mentions légales"),
+    ("/plan-du-site/", "Plan du site"),
 ]
 
 # Les six capacités : source unique pour l'accueil, la page Solutions et les sous-pages.
@@ -267,20 +218,20 @@ REDIRECTS = {
 
 # Titres et descriptions pensés pour Google : une paire unique par page (vérifiée par
 # tools/verifier_seo.py). Ils remplacent ceux des pages au moment de produire le <head>.
-# Règle : le métier (entreprise de technologie et de sécurité), le besoin, le lieu (Montérégie).
+# Règle : le métier (entreprise de technologie et de sécurité) et le besoin. Aucune zone géographique.
 SEO = {
     "/": (
-        "JARVIS Private Systems | Technologie et sécurité, Montérégie",
+        "JARVIS Private Systems | Technologies de sécurité et intelligence privée",
         "JARVIS, un système privé qui gère et protège les maisons, les fermes, les entreprises "
-        "et les véhicules, en Montérégie. Conçu et installé depuis Saint-Hyacinthe.",
+        "et les véhicules. Domotique, réseau, caméras reliées et IA privée, chez vous.",
     ),
     "/solutions/": (
         "Sept solutions, un seul système privé | JARVIS",
         "Domotique, sécurité intelligente, IA privée, automatisation, réseau, diagnostic et "
-        "mobilité : sept pièces d’un système qui gère et protège vos lieux, en Montérégie.",
+        "mobilité : sept pièces d’un système privé qui gère et protège vos lieux.",
     ),
     "/solutions/environnements-intelligents/": (
-        "Domotique résidentielle en Montérégie | JARVIS",
+        "Domotique résidentielle sur un seul écran | JARVIS",
         "Lumières, chauffage, énergie et appareils de marques différentes réunis sur un seul "
         "écran, sans dépendre du nuage. Home Assistant, Zigbee, Z-Wave, Matter.",
     ),
@@ -295,7 +246,7 @@ SEO = {
         "ses sources et garde vos données chez vous.",
     ),
     "/solutions/automatisation-operations/": (
-        "Automatisation pour PME et commerces en Montérégie | JARVIS",
+        "Automatisation pour PME et commerces | JARVIS",
         "Réception téléphonique, demandes, documents et approbations qui circulent entre vos "
         "outils existants, avec une trace de chaque décision. Bureaux, commerces, ateliers.",
     ),
@@ -310,7 +261,7 @@ SEO = {
         "réparer plus vite et remettre en service proprement.",
     ),
     "/solutions/mobilite/": (
-        "VR et véhicules connectés au Québec | JARVIS",
+        "VR et véhicules connectés, copilote de route | JARVIS",
         "Batteries, eau, chauffage et itinéraire du VR sur un seul écran, avec un copilote de "
         "route. Voitures, véhicules électriques et vélos électriques aussi.",
     ),
@@ -350,14 +301,14 @@ SEO = {
         "humaine, réversibilité, traitement local, honnêteté, propriété et continuité.",
     ),
     "/a-propos/": (
-        "À propos de JARVIS Private Systems | Saint-Hyacinthe",
-        "Une entreprise de technologie et de sécurité fondée par James Laplume, près de "
-        "Saint-Hyacinthe. Qui nous sommes, comment on travaille et nos engagements.",
+        "À propos de JARVIS Private Systems | Qui est derrière",
+        "Une entreprise de technologie et de sécurité fondée par James Laplume. Qui nous "
+        "sommes, comment on travaille et ce que vous pouvez exiger de nous.",
     ),
     "/contact/": (
-        "Parlons de votre projet | JARVIS, Montérégie",
+        "Parlons de votre projet | JARVIS Private Systems",
         "Présentez votre maison, votre ferme, votre entreprise ou votre véhicule, ou laissez "
-        "votre nom pour rester informé. Entreprise en phase de lancement, Saint-Hyacinthe.",
+        "votre nom pour rester informé. Entreprise en phase de lancement; réponse de James.",
     ),
     "/confidentialite/": (
         "Politique de confidentialité | JARVIS Private Systems",
@@ -365,8 +316,8 @@ SEO = {
         "Aucun témoin ni pisteur publicitaire; un journal des visites gardé 24 mois.",
     ),
     "/en/": (
-        "JARVIS Private Systems | Technology and security, Québec",
+        "JARVIS Private Systems | Security technology and private AI",
         "We design and install JARVIS, a private system that runs and protects homes, farms, "
-        "businesses and vehicles in Montérégie, Québec. Your data stays on site.",
+        "businesses and vehicles. Home automation, networking and private AI, on site.",
     ),
 }

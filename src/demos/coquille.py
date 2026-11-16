@@ -34,9 +34,9 @@ def html(slug, inner):
       <div class="xs-main">
         <header class="xs-top">
           <a class="xs-search" href="/recherche/">{icon("search")}<span>Que souhaitez-vous faire{NB}?</span></a>
-          <span class="xs-wx" title="Saint-Hyacinthe · Environnement Canada">
+          <span class="xs-wx" title="Météo réelle">
             <span class="xs-wx-i" aria-hidden="true">{WX}</span>
-            <span><b><span data-xs="temp">—</span>{NB}°C</b><small>Saint-Hyacinthe<span class="xs-live"> · en direct</span></small></span>
+            <span><b><span data-xs="temp">—</span>{NB}°C</b><small>Météo<span class="xs-live"> · en direct</span></small></span>
           </span>
           <span class="xs-pin" title="Emplacement du Hub">{icon("pin")}</span>
           <span class="xs-me">{face(AV_ALEX)}<b>Alex</b>{icon("down")}</span>

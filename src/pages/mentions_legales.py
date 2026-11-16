@@ -30,7 +30,7 @@ PAGE = {
       <i>01 · Éditeur</i>
       <div><h3>JARVIS Private Systems.</h3>
       <p>Ce site est publié par JARVIS Private Systems, entreprise en phase de lancement fondée par
-      James Laplume et basée dans la région de Saint-Hyacinthe (Québec), Canada. Responsable de la
+      James Laplume et basée au Québec, Canada. Responsable de la
       publication : James Laplume. Pour nous joindre :
       <a href="mailto:{SITE['email']}" style="color:#fff">{SITE['email']}</a> ou le
       <a href="/contact/" style="color:#fff">formulaire de contact</a>.</p></div>

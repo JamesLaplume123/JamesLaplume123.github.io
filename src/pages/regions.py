@@ -26,7 +26,7 @@ VILLES = [
         "mrc": "MRC des Maskoutains",
         "title": "Domotique et systèmes intelligents à Saint-Hyacinthe | JARVIS",
         "description": (
-            "Intégrateur de systèmes intelligents basé dans la région de Saint-Hyacinthe : "
+            "Entreprise de technologie et de sécurité de la région de Saint-Hyacinthe : "
             "domotique, réseau, caméras et IA privée pour maisons, fermes et PME maskoutaines."
         ),
         "image": "/media/vitrine/a-propos/atelier-saint-hyacinthe.webp",
@@ -84,13 +84,13 @@ VILLES = [
         "title": "Domotique et maison intelligente à Granby | JARVIS",
         "description": (
             "Domotique, réseau, caméras reliées et IA privée à Granby et en Haute-Yamaska. Un "
-            "intégrateur de la région de Saint-Hyacinthe, à environ 40 minutes de route."
+            "seul système, installé depuis Saint-Hyacinthe, à environ 40 minutes de route."
         ),
         "image": "/media/vitrine/accueil/maison-familiale.webp",
         "h1": "Maison et entreprise intelligentes <em>à Granby.</em>",
         "lead": (
             "Granby et la Haute-Yamaska sont à environ 40 minutes de notre base. Maisons familiales, "
-            "commerces et entreprises manufacturières y trouvent un seul intégrateur pour la "
+            "commerces et entreprises manufacturières y trouvent une seule entreprise pour la "
             "domotique, le réseau et l’IA privée."
         ),
         "route": ("Environ 45 km · 40 min",
@@ -141,7 +141,7 @@ VILLES = [
         "title": "Automatisation et domotique à Drummondville | JARVIS",
         "description": (
             "Réseau, automatisation, IA privée et domotique pour les PME et les maisons de "
-            "Drummondville. Un intégrateur à environ 35 minutes par l’autoroute 20."
+            "Drummondville. Une seule entreprise, à environ 35 minutes par l’autoroute 20."
         ),
         "image": "/media/secteurs/manufacturier.webp",
         "h1": "PME et maisons intelligentes <em>à Drummondville.</em>",
@@ -248,7 +248,7 @@ VILLES = [
         "title": "Domotique à Saint-Jean-sur-Richelieu | JARVIS",
         "description": (
             "Maison intelligente, capteurs d’eau, réseau et IA privée à Saint-Jean-sur-Richelieu "
-            "et dans le Haut-Richelieu. Un intégrateur de la Montérégie, sur rendez-vous."
+            "et dans le Haut-Richelieu. Une entreprise de la Montérégie, sur rendez-vous."
         ),
         "image": "/media/secteurs/residences.webp",
         "h1": "Systèmes intelligents <em>à Saint-Jean-sur-Richelieu.</em>",
@@ -477,8 +477,8 @@ def _ville(v):
         "og_image": v["image"],
         "assets": ["pro"],
         "schema": [
-            pro.ld_service(f"Intégration de systèmes intelligents à {v['lieu']}", v["description"], url,
-                           "Intégration de systèmes intelligents", zone),
+            pro.ld_service(f"Technologie et sécurité des lieux à {v['lieu']}", v["description"], url,
+                           "Système privé de gestion et de protection des lieux", zone),
             pro.ld_faq(v["faq"]),
         ],
         "content": f"""
@@ -629,7 +629,7 @@ INDEX = {
     <h1 data-rev>Saint-Hyacinthe, la Montérégie <em>et les environs.</em></h1>
     <p class="lead" data-rev>JARVIS Private Systems est basé dans la région de Saint-Hyacinthe et se
     déplace chez vous, à environ une heure de route à la ronde. Maisons, fermes, entreprises et
-    véhicules : un seul intégrateur, un seul système.</p>
+    véhicules : une seule entreprise, un seul système, pour gérer et protéger vos lieux.</p>
     <div class="acts" data-rev>
       <a class="pill" href="/contact/">Parlons de votre projet</a>
       <a class="pill ghost" href="#villes">Voir les villes</a>

@@ -102,7 +102,7 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solutions · intégrateur de systèmes intelligents</p>
+    <p class="eyebrow" data-rev>Solutions · technologie et sécurité pour vos lieux</p>
     <h1 data-rev>Sept solutions.<br><em>Un seul système.</em></h1>
     <p class="lead" data-rev>Ce ne sont pas sept métiers : ce sont les pièces d’une même installation,
     pour une maison, une ferme, une entreprise ou un véhicule. Commencez par un problème concret;

@@ -93,8 +93,8 @@ PAGE = {
 
 <section class="sect alt" id="securite-pro" data-toc="Security Pro (vision)">
   """ + _head("03", "Security Pro · vision", "Des services de sécurité spécialisés, <em>un jour, sous permis.</em>",
-              "Une vision à long terme, pas une offre. Aujourd’hui, JARVIS Private Systems est un "
-              "intégrateur de systèmes intelligents : il n’offre aucun de ces services et ne détient "
+              "Une vision à long terme, pas une offre. Aujourd’hui, JARVIS Private Systems est une "
+              "entreprise de technologie et de sécurité : elle n’offre aucun de ces services et ne détient "
               "aucun permis du Bureau de la sécurité privée. Si ce volet voit le jour, chaque mission "
               "partira d’un mandat écrit; l’IA accélère, un professionnel valide.",
               "Vision · non offert · données fictives") + """

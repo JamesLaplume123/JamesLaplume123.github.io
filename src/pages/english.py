@@ -7,21 +7,22 @@ PAGE = {
     "assets": ["galerie"],
     "v2": True,
     "lang": "en",
-    "title": "JARVIS Private Systems | Smart systems integrator, Québec",
+    "title": "JARVIS Private Systems | Technology and security, Québec",
     "description": (
-        "Smart, secure homes, farms, businesses and vehicles in Montérégie, Québec. Home "
-        "automation, networking and private AI in one system installed on site."
+        "We design and install JARVIS, a private system that runs and protects homes, farms, "
+        "businesses and vehicles in Montérégie, Québec. Your data stays on site."
     ),
     "content": """
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-hero-architecture-v1.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Smart systems integrator · Montérégie, Québec</p>
+    <p class="eyebrow" data-rev>Technology and security for your places · Montérégie, Québec</p>
     <h1 data-rev>Smart, secure places.<br><em>One system, on site.</em></h1>
-    <p class="lead" data-rev>JARVIS Private Systems makes homes, farms, businesses and vehicles
-    smart and secure in Montérégie, Québec. One system installed on site brings together home
-    automation, networking, cameras and a private AI. Your data stays with you, and you keep the
-    final say. We are in our launch phase: we are taking the names of interested people and
+    <p class="lead" data-rev>JARVIS Private Systems is a technology and security company. We design
+    and install JARVIS, a private system that runs and protects homes, farms, businesses and
+    vehicles in Montérégie, Québec. It brings together home automation, networking and
+    cybersecurity, connected cameras and locks, and a private AI. Your data stays with you, and
+    you keep the final say. We are in our launch phase: we are taking the names of interested people and
     choosing a few first projects.</p>
     <div class="acts" data-rev>
       <a class="pill" href="/contact/">Let’s talk about your project</a>

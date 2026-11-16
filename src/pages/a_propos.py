@@ -9,7 +9,7 @@ PAGE = {
     "v2": True,
     "title": "À propos de JARVIS Private Systems | Saint-Hyacinthe",
     "description": (
-        "Intégrateur de systèmes intelligents fondé par James Laplume, dans la région de "
+        "Une entreprise de technologie et de sécurité fondée par James Laplume, près de "
         "Saint-Hyacinthe. Qui nous sommes, comment on travaille et nos engagements."
     ),
     "og_image": "/media/solutions/automatisation-operations.webp",
@@ -18,11 +18,12 @@ PAGE = {
   <div class="bg"><img src="/media/concept/jarvis-life-context-v3.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
     <p class="eyebrow" data-rev>À propos · JARVIS Private Systems</p>
-    <h1 data-rev>Un intégrateur de systèmes intelligents, <em>à Saint-Hyacinthe.</em></h1>
-    <p class="lead" data-rev>Je m’appelle James Laplume. J’ai fondé JARVIS Private Systems pour rendre
-    les maisons, les fermes, les entreprises et les véhicules intelligents et sécurisés, en
-    Montérégie, avec un système qui reste chez le client. La liberté est ma valeur la plus forte :
-    du temps libéré, et le contrôle de ce qui vous appartient.</p>
+    <h1 data-rev>Technologie et sécurité, <em>à Saint-Hyacinthe.</em></h1>
+    <p class="lead" data-rev>Je m’appelle James Laplume. J’ai fondé JARVIS Private Systems, une
+    entreprise de technologie et de sécurité. Nous concevons et installons JARVIS, un système privé
+    qui gère et protège les maisons, les fermes, les entreprises et les véhicules, en Montérégie.
+    La liberté est ma valeur la plus forte : du temps libéré, et le contrôle de ce qui vous
+    appartient.</p>
     <div class="meta" data-rev>
       <span class="chip">Région de Saint-Hyacinthe</span>
       <span class="chip">Montérégie et environs</span>
@@ -39,8 +40,10 @@ PAGE = {
   le réel que l’ensemble demeure utile, compréhensible et contrôlable. JARVIS est la
   plateforme. Le <a href="/laboratoire-mobile/">laboratoire mobile JARVIS</a> est le premier
   grand terrain de preuve, avec ses batteries en direct. Mon parcours part des systèmes électriques
-  12 V de véhicules et de la domotique; l’entreprise fait un seul métier, intégrer, avec la même
-  exigence partout : expliquer ce qui se passe et laisser la décision au client.</p>
+  12 V de véhicules et de la domotique. Je suis en informatique et j’étudie en réseautique et
+  en cybersécurité. Le fil conducteur est de protéger : vos lieux, votre réseau et vos données,
+  avec la même exigence partout, soit expliquer ce qui se passe et laisser la décision au
+  client.</p>
   <div class="acts" data-rev>
     <a class="pill ghost" href="/laboratoire-mobile/">Voir le laboratoire en direct</a>
     <a class="pill ghost" href="/vision-roadmap/#partenariats">Les partenaires recherchés</a>

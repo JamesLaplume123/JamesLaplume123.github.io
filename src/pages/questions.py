@@ -7,9 +7,9 @@ import pro
 GROUPES = [
     ("L’entreprise", "entreprise", [
         ("Que fait JARVIS Private Systems, en une phrase?",
-         "On rend les maisons, les fermes, les entreprises et les véhicules intelligents et sécurisés, "
-         "en Montérégie, en installant un seul système qui réunit la domotique, le réseau, les caméras "
-         "et serrures connectées, et une IA privée."),
+         "Nous concevons et installons JARVIS, un système privé qui gère et protège les maisons, les "
+         "fermes, les entreprises et les véhicules, en Montérégie. Il réunit la domotique, le réseau "
+         "et sa cybersécurité, les caméras et serrures connectées, et une IA privée."),
         ("L’entreprise est-elle nouvelle?",
          "Oui. JARVIS Private Systems est en phase de lancement : nous prenons les noms des personnes "
          "intéressées et choisissons quelques premiers projets. Le logiciel JARVIS est en construction; "
@@ -96,7 +96,7 @@ PAGE = {
     "title": "Questions avant de nous appeler | JARVIS Private Systems",
     "description": (
         "Prix, durée, appareils, données, caméras, pannes, régions desservies : les réponses "
-        "franches d’un intégrateur de systèmes intelligents en phase de lancement."
+        "franches d’une entreprise de technologie et de sécurité en phase de lancement."
     ),
     "og_image": "/media/vitrine/contact/demo-chez-vous.webp",
     "assets": ["pro"],

@@ -60,7 +60,7 @@ DATA = {
         "dangereuse. L’identification se limite aux personnes inscrites qui y ont consenti; les "
         "autres sont signalées sans nom. Les règles, responsabilités et obligations légales, dont "
         "la déclaration d’une banque biométrique, doivent être définies avant tout déploiement. "
-        "JARVIS Private Systems est un intégrateur : ce n’est pas une agence de sécurité, et aucune "
+        "JARVIS Private Systems fournit le logiciel : ce n’est pas une agence de sécurité, et aucune "
         "centrale ni aucun agent ne surveille vos images. Au Québec, la pose de caméras de "
         "surveillance, d’alarmes et de contrôles d’accès chez un client est encadrée par la Loi sur "
         "la sécurité privée : quand un permis est requis, elle doit être faite par un installateur "

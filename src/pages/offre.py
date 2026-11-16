@@ -206,7 +206,7 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>L’offre JARVIS</p>
+    <p class="eyebrow" data-rev>L’offre JARVIS · technologie et sécurité pour vos lieux</p>
     <h1 data-rev>Un Hub. Vos solutions.<br><em>Rien de plus.</em></h1>
     <p class="lead" data-rev>Un Hub payé une fois. Des solutions par mois, comme des apps. Le matériel de votre lieu.
     Vos données restent chez vous.</p>

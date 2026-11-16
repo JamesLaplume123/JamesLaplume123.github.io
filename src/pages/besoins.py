@@ -129,7 +129,7 @@ MAISON = {
     "genre": "Domotique résidentielle clé en main",
     "title": "Maison intelligente clé en main en Montérégie | JARVIS",
     "description": (
-        "Une maison intelligente pensée, installée et expliquée par un seul intégrateur : "
+        "Une maison intelligente pensée, installée et expliquée par une seule entreprise : "
         "éclairage, chauffage, réseau, caméras et IA privée. Maison existante ou neuve."
     ),
     "image": "/media/offre/maison.webp",
@@ -138,7 +138,7 @@ MAISON = {
     "lead": (
         "Vous n’avez pas à choisir des marques, à comparer des protocoles ni à tout configurer. "
         "On regarde votre maison, on dessine le système, on l’installe et on vous montre comment "
-        "vous en servir. Un seul intégrateur, un seul système, une seule application."
+        "vous en servir. Une seule entreprise, un seul système, une seule application."
     ),
     "pour": "Propriétaires d’une maison, d’un condo ou d’un chalet, existant ou en construction",
     "comprend_titre": "Tout ce qu’il faut,<br><em>rien à assembler vous-même.</em>",
@@ -206,7 +206,7 @@ MAISON = {
     "faq_eyebrow": "Questions fréquentes · Maison intelligente",
     "faq": [
         ("Qu’est-ce qu’une maison intelligente « clé en main »?",
-         "Un projet où un seul intégrateur s’occupe de tout : le plan, le choix du matériel, "
+         "Un projet où une seule entreprise s’occupe de tout : le plan, le choix du matériel, "
          "l’installation, les réglages et la formation. Vous n’avez pas à assembler vous-même des "
          "appareils et des applications de marques différentes."),
         ("Combien coûte une maison intelligente?",

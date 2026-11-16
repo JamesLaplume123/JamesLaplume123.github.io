@@ -37,11 +37,11 @@ PAGE = {
     </div>
     <div class="row" data-rev>
       <i>02 · Activité</i>
-      <div><h3>Un intégrateur de systèmes intelligents.</h3>
-      <p>JARVIS Private Systems conçoit, installe et relie des systèmes intelligents : domotique,
-      réseau, automatisation et IA privée, pour des maisons, des fermes, des entreprises et des
-      véhicules. L’entreprise n’est pas une agence de sécurité, de gardiennage ou d’investigation,
-      et n’offre aucun service de télésurveillance. Dans son nom, « Private » renvoie à la vie
+      <div><h3>Une entreprise de technologie et de sécurité.</h3>
+      <p>JARVIS Private Systems conçoit et installe JARVIS, un système privé qui gère et protège des
+      maisons, des fermes, des entreprises et des véhicules : domotique, réseau et cybersécurité,
+      automatisation et IA privée. L’entreprise n’est pas une agence de sécurité, de gardiennage ou
+      d’investigation, et n’offre aucun service de télésurveillance. Dans son nom, « Private » renvoie à la vie
       privée : les données du client restent chez lui.</p>
       <p>Au Québec, certaines activités, dont l’installation de systèmes d’alarme, de caméras de
       surveillance et de contrôles d’accès chez un client, sont encadrées par la Loi sur la sécurité

@@ -281,7 +281,8 @@ def document(page):
         content = content[:cut] + "\n" + nav + content[cut:]
     # Avis de lancement, sobre et visible : accueil, offre, solutions et régions.
     u = page["url"]
-    if u in ("/", "/offre/", "/questions/", "/a-propos/") or u.startswith(("/solutions/", "/regions/")):
+    if not page.get("lancement_integre") and (
+            u in ("/", "/offre/", "/questions/", "/a-propos/") or u.startswith(("/solutions/", "/regions/"))):
         avis = (f'\n<aside class="lancement" aria-label="État de l’entreprise"><p><i class="dot" aria-hidden="true"></i>'
                 f'<span>{SITE["lancement"]}</span> <a href="/contact/">Rester informé <i aria-hidden="true">→</i></a></p></aside>')
         cut = content.index("</section>") + len("</section>")

@@ -27,7 +27,7 @@ def _etapes():
     out = []
     for i, (k, _n, _d, titre, texte) in enumerate(SCREENS):
         on = i == 0
-        out.append(f"""<li><button type="button" class="lg-step{" is-on" if on else ""}" data-step="{k}" aria-pressed="{"true" if on else "false"}">
+        out.append(f"""<li id="ecran-{k}"><button type="button" class="lg-step{" is-on" if on else ""}" data-step="{k}" aria-pressed="{"true" if on else "false"}">
         <i>{i + 1:02d}</i><span class="lg-step-n">{NOM.get(k, TITLE[k])}</span>
         <span class="lg-step-d"><b>{fr(titre)}</b><span>{fr(texte)}</span><em>{icon("check")}{fr(GAIN[k])}</em></span>
       </button></li>""")
@@ -113,12 +113,13 @@ PAGE = {
     </div>
   </div>
   <div class="lg-vs">{_vrai()}</div>
-  <p class="lg-under" data-rev><a href="/plateforme/">Le Hub et l’IA privée, sous le capot <i aria-hidden="true">→</i></a></p>
+  <p class="lg-under" data-rev><a href="/plateforme/">Le Hub, sous le capot <i aria-hidden="true">→</i></a></p>
 </section>
 
 <section class="cta">
   <h2 data-rev>Voyez JARVIS<br><span>chez vous.</span></h2>
-  <div class="acts" data-rev><a class="pill" href="/contact/" data-magnet>Parlons de votre projet</a></div>
+  <div class="acts" data-rev><a class="pill" href="/offre/" data-magnet>Voir l’offre</a>
+  <a class="pill ghost" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,
 }

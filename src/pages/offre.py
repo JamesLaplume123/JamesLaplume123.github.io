@@ -20,7 +20,9 @@ def _p(n):
     return f"{n:,}".replace(",", " ") + " $"
 
 
-def _hub():
+def hubs():
+    """Les trois Hubs en trois cartes : pour qui, le nom, le prix (lu dans le catalogue), une ligne.
+    Sert à /offre/ et à l'accueil."""
     tuiles = []
     for h in CAT.HUBS:
         tag = f'<span class="of-h-tag">{escape(h["tag"])}</span>' if h["tag"] else ""
@@ -28,6 +30,7 @@ def _hub():
       {tag}<p class="of-h-k">{escape(h['pour'])}</p>
       <h3>{escape(h['nom'])}</h3>
       <p class="of-h-prix">{_p(h['prix'])}<small>une fois</small></p>
+      <p class="of-h-l">{escape(h['pourquoi'])}</p>
     </a>""")
     return f'<div class="of-hs">{"".join(tuiles)}</div>'
 
@@ -73,7 +76,7 @@ PAGE = {
     <h1 data-rev>Un Hub. Vos solutions.<br><em>Rien de plus.</em></h1>
     <p class="lead" data-rev>Un Hub payé une fois, des solutions par mois, le matériel de votre lieu.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/catalogue/">Composer mon JARVIS</a>
+      <a class="pill" href="/catalogue/">Composer mon système</a>
     </div>
   </div>
 </section>
@@ -85,7 +88,7 @@ PAGE = {
       <h2 id="hub-titre">Trois tailles,<br><em>un seul logiciel.</em></h2>
     </div>
   </div>
-  {_hub()}
+  {hubs()}
 </section>
 
 <section class="sect alt" id="solutions" aria-labelledby="ext-titre">
@@ -109,7 +112,7 @@ PAGE = {
 
 <section class="cta">
   <h2 data-rev>Voyons ce qu’il vous faut.</h2>
-  <div class="acts" data-rev><a class="pill" href="/catalogue/">Composer mon JARVIS</a>
+  <div class="acts" data-rev><a class="pill" href="/catalogue/">Composer mon système</a>
   <a class="pill ghost" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,

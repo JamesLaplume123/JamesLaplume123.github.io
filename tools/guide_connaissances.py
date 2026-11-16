@@ -37,12 +37,19 @@ def fiche(complet=True):
     a("")
     a("## Les pages du site (donner le lien complet quand c’est utile)")
     pages = [
-        ("/", "Accueil"), ("/catalogue/", "Catalogue et prix : on coche son Hub, ses solutions, son matériel; le panier fait le total"),
-        ("/offre/", "L’offre : comment ça se compose"), ("/logiciel/", "Le logiciel en démonstration"),
-        ("/plateforme/", "Le Hub et l’IA privée"), ("/solutions/", "Les sept solutions"), ("/contact/", "Contact : démo, visite, soumission"),
-        ("/a-propos/", "À propos de James"), ("/questions/", "Questions fréquentes"), ("/plan-du-site/", "Plan du site : toutes les pages"), ("/vision-roadmap/", "Vision et feuille de route"), ("/laboratoire-mobile/", "Laboratoire mobile (ambulance)"),
-        ("/confiance/", "Confiance et sécurité"), ("/confidentialite/", "Confidentialité (Loi 25)"),
+        ("/", "Accueil"), ("/solutions/", "Les sept solutions"), ("/logiciel/", "Le logiciel en démonstration"),
+        ("/plateforme/", "Le Hub : le boîtier, son IA privée, le noyau"),
+        ("/offre/", "L’offre : un Hub payé une fois (Base, Signature, Platinum), des solutions par mois, le matériel"),
+        ("/catalogue/", "Catalogue : on compose son système; le panier fait le total"),
+        ("/solutions/maison-intelligente-cle-en-main/", "Maison intelligente clé en main"),
+        ("/solutions/domotique-ferme-agricole/", "Domotique pour ferme"), ("/solutions/ia-privee-entreprise/", "IA privée pour entreprise"),
+        ("/a-propos/", "À propos de James"), ("/vision-roadmap/", "Vision et feuille de route"), ("/laboratoire-mobile/", "Laboratoire mobile (ambulance)"),
+        ("/confiance/", "Confiance"), ("/recherche/", "Recherche : la méthode"), ("/questions/", "Questions fréquentes"),
+        ("/contact/", "Contact : démo, visite, soumission"), ("/confidentialite/", "Confidentialité (Loi 25)"),
+        ("/mentions-legales/", "Mentions légales"), ("/plan-du-site/", "Plan du site : toutes les pages"),
     ]
+    a("- Menu du site : Solutions (les sept, puis Maison, Ferme, Entreprise) · Le logiciel · Le Hub · L’offre · À propos (Vision, Laboratoire mobile, Confiance, Questions) · bouton « Parlons de votre projet ».")
+    a("- Parcours conseillé : une solution, puis l’offre, puis le catalogue ou le contact.")
     for u, t in pages:
         a(f"- {D}{u} : {t}")
     if complet:

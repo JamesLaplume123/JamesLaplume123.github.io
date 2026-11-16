@@ -36,7 +36,8 @@ def page(d):
 
 <section class="sect" aria-label="Ce que ça comprend">
   <div class="cards">{cartes}</div>
-  <p class="pro-suite" data-rev><a href="{d['suite'][0]}">{d['suite'][1]} <i aria-hidden="true">→</i></a></p>
+  <p class="pro-suite" data-rev><a href="{d['suite'][0]}">{d['suite'][1]} <i aria-hidden="true">→</i></a>
+  <a href="/offre/">Voir l’offre <i aria-hidden="true">→</i></a></p>
 </section>
 
 {pro.faq_section(d['faq'], d['nom'], "Questions fréquentes")}

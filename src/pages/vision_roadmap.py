@@ -7,6 +7,7 @@
 import re
 
 from demos import feuille, vision
+import pro
 
 
 def _fr(s):
@@ -38,7 +39,7 @@ PAGE = {
 <section class="band top vn-hero">
   <div class="bg"><img src="/media/concept/jarvis-future-ecosystem-v1.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Vision · le manifeste de JARVIS</p>
+    """ + pro.fil("/vision-roadmap/") + """
     <h1 data-rev style="max-width:none">Rendre les gens libres.<br><em>Un système privé à la fois.</em></h1>
     <p class="lead" data-rev>Où va JARVIS, et où il en est vraiment.</p>
   </div>
@@ -61,6 +62,7 @@ PAGE = {
 <section class="cta">
   <h2 data-rev>Discuter de la vision<br><span>ou d’un partenariat ?</span></h2>
   <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
+  <p class="pro-suite" data-rev><a href="/recherche/">La méthode de recherche</a><a href="/laboratoire-mobile/">Laboratoire mobile</a></p>
 </section>
 """)
     .replace("@@MANIFESTE@@", vision.manifeste())

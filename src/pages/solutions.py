@@ -45,16 +45,15 @@ PAGE = {
 <section class="sect alt" id="par-besoin" aria-labelledby="pb-titre">
   <div class="sect-head">
     <div data-rev>
-      <h2 id="pb-titre">Par besoin.</h2>
+      <h2 id="pb-titre">Par type de lieu.</h2>
     </div>
   </div>
   <div class="cards">
-    <a class="card" href="/solutions/maison-intelligente-cle-en-main/" data-rev><h3>Maison intelligente clé en main</h3><p>De la visite à la formation, un seul système.</p></a>
-    <a class="card" href="/solutions/domotique-ferme-agricole/" data-rev><h3>Domotique pour ferme</h3><p>Tous les bâtiments sur un seul écran.</p></a>
-    <a class="card" href="/solutions/ia-privee-entreprise/" data-rev><h3>IA privée pour entreprise</h3><p>Un assistant qui connaît vos documents, dans vos murs.</p></a>
+    <a class="card" href="/solutions/maison-intelligente-cle-en-main/" data-rev><small>Maison</small><h3>Maison intelligente clé en main</h3><p>De la visite à la formation, un seul système.</p></a>
+    <a class="card" href="/solutions/domotique-ferme-agricole/" data-rev><small>Ferme</small><h3>Domotique pour ferme</h3><p>Tous les bâtiments sur un seul écran.</p></a>
+    <a class="card" href="/solutions/ia-privee-entreprise/" data-rev><small>Entreprise</small><h3>IA privée pour entreprise</h3><p>Un assistant qui connaît vos documents, dans vos murs.</p></a>
   </div>
-  <p class="pro-suite" data-rev><a href="/offre/">Comment ça se compose <i aria-hidden="true">→</i></a>
-  <a href="/catalogue/">Catalogue et prix <i aria-hidden="true">→</i></a></p>
+  <p class="pro-suite" data-rev><a href="/offre/">Voir l’offre <i aria-hidden="true">→</i></a></p>
 </section>
 
 <section class="cta">

@@ -11,20 +11,27 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Le logiciel est en construction : le site montre des démonstrations; le premier JARVIS tourne dans le laboratoire mobile (une ambulance convertie). La démo et la visite sont offertes dès maintenant.
 
 ## Les pages du site (donner le lien complet quand c’est utile)
+- Menu du site : Solutions (les sept, puis Maison, Ferme, Entreprise) · Le logiciel · Le Hub · L’offre · À propos (Vision, Laboratoire mobile, Confiance, Questions) · bouton « Parlons de votre projet ».
+- Parcours conseillé : une solution, puis l’offre, puis le catalogue ou le contact.
 - https://jarvisprivatesystems.com/ : Accueil
-- https://jarvisprivatesystems.com/catalogue/ : Catalogue et prix : on coche son Hub, ses solutions, son matériel; le panier fait le total
-- https://jarvisprivatesystems.com/offre/ : L’offre : comment ça se compose
-- https://jarvisprivatesystems.com/logiciel/ : Le logiciel en démonstration
-- https://jarvisprivatesystems.com/plateforme/ : Le Hub et l’IA privée
 - https://jarvisprivatesystems.com/solutions/ : Les sept solutions
-- https://jarvisprivatesystems.com/contact/ : Contact : démo, visite, soumission
+- https://jarvisprivatesystems.com/logiciel/ : Le logiciel en démonstration
+- https://jarvisprivatesystems.com/plateforme/ : Le Hub : le boîtier, son IA privée, le noyau
+- https://jarvisprivatesystems.com/offre/ : L’offre : un Hub payé une fois (Base, Signature, Platinum), des solutions par mois, le matériel
+- https://jarvisprivatesystems.com/catalogue/ : Catalogue : on compose son système; le panier fait le total
+- https://jarvisprivatesystems.com/solutions/maison-intelligente-cle-en-main/ : Maison intelligente clé en main
+- https://jarvisprivatesystems.com/solutions/domotique-ferme-agricole/ : Domotique pour ferme
+- https://jarvisprivatesystems.com/solutions/ia-privee-entreprise/ : IA privée pour entreprise
 - https://jarvisprivatesystems.com/a-propos/ : À propos de James
-- https://jarvisprivatesystems.com/questions/ : Questions fréquentes
-- https://jarvisprivatesystems.com/plan-du-site/ : Plan du site : toutes les pages
 - https://jarvisprivatesystems.com/vision-roadmap/ : Vision et feuille de route
 - https://jarvisprivatesystems.com/laboratoire-mobile/ : Laboratoire mobile (ambulance)
-- https://jarvisprivatesystems.com/confiance/ : Confiance et sécurité
+- https://jarvisprivatesystems.com/confiance/ : Confiance
+- https://jarvisprivatesystems.com/recherche/ : Recherche : la méthode
+- https://jarvisprivatesystems.com/questions/ : Questions fréquentes
+- https://jarvisprivatesystems.com/contact/ : Contact : démo, visite, soumission
 - https://jarvisprivatesystems.com/confidentialite/ : Confidentialité (Loi 25)
+- https://jarvisprivatesystems.com/mentions-legales/ : Mentions légales
+- https://jarvisprivatesystems.com/plan-du-site/ : Plan du site : toutes les pages
 - Chaque solution a sa page : https://jarvisprivatesystems.com/solutions/<nom>/ avec environnements-intelligents, ia-privee-connaissances, securite-intelligente, automatisation-operations, reseau-resilience, diagnostic-care, mobilite
 
 ## L’offre en quatre étapes

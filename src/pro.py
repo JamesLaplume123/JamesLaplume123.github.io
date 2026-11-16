@@ -24,24 +24,27 @@ ENT = D + "/#entreprise"
 NOMS = {
     "/logiciel/": "Le logiciel",
     "/offre/": "L’offre",
-    "/catalogue/": "Catalogue et prix",
+    "/catalogue/": "Catalogue",
     "/solutions/": "Solutions",
-    "/plateforme/": "Le Hub et l’IA privée",
+    "/plateforme/": "Le Hub",
     "/laboratoire-mobile/": "Laboratoire mobile",
-    "/vision-roadmap/": "Vision et feuille de route",
+    "/vision-roadmap/": "Vision",
     "/recherche/": "Recherche",
     "/confiance/": "Confiance",
     "/a-propos/": "À propos",
     "/contact/": "Contact",
     "/confidentialite/": "Confidentialité",
     "/mentions-legales/": "Mentions légales",
-    "/questions/": "Questions avant d’appeler",
+    "/questions/": "Questions",
     "/plan-du-site/": "Plan du site",
 }
 NOMS.update({f"/solutions/{c['slug']}/": c["title"] for c in CAPABILITIES})
 NOMS.update({f"/solutions/{k}/": n for k, n in BESOINS_PAGES})
 
-PARENTS = {"/solutions/": "/solutions/"}
+# Page mère de chaque page intérieure (fil d'Ariane) : les solutions sous Solutions, le catalogue sous
+# L'offre, les pages de l'entreprise sous À propos.
+MERES = {"/catalogue/": "/offre/", "/vision-roadmap/": "/a-propos/", "/laboratoire-mobile/": "/a-propos/",
+         "/confiance/": "/a-propos/", "/questions/": "/a-propos/", "/recherche/": "/a-propos/"}
 
 
 def _texte(html):
@@ -58,9 +61,9 @@ def miettes(page):
     if url == "/" or url.endswith(".html") or page.get("noindex") or page.get("lang") == "en":
         return []
     out = [("Accueil", "/")]
-    for racine in PARENTS:
-        if url.startswith(racine) and url != racine:
-            out.append((NOMS[racine], racine))
+    mere = MERES.get(url) or ("/solutions/" if url.startswith("/solutions/") and url != "/solutions/" else None)
+    if mere:
+        out.append((NOMS[mere], mere))
     out.append((NOMS.get(url) or page["title"].split(" | ")[0], url))
     return out
 

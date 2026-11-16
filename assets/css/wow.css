@@ -402,14 +402,15 @@ html:has(.toc) { scroll-padding-top: 52px; }
 
 /* ---------- Pied de page ---------- */
 .foot { border-top: 1px solid #ffffff14; padding: 3.5rem 2.2rem 2.6rem; background: #000000a8; }
-.foot-top { max-width: 76rem; margin: 0 auto 1.8rem; display: flex; align-items: baseline; justify-content: space-between; gap: 1.2rem 2.5rem; flex-wrap: wrap; }
-.foot-brand { margin: 0; display: flex; align-items: baseline; gap: .4rem 1rem; flex-wrap: wrap; }
+.foot-brand { max-width: 76rem; margin: 0 auto 2.2rem; display: flex; align-items: baseline; gap: .4rem 1rem; flex-wrap: wrap; }
 .foot-brand b { font: 600 .9rem/1.4 var(--sans); letter-spacing: .14em; text-transform: uppercase; }
 .foot-brand b span { font-weight: 450; color: #9a9aa0; }
 .foot-brand > span { color: var(--dim); font-size: .9rem; }
-.foot-nav { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; }
-.foot-nav a { color: #b9b9c2; text-decoration: none; font-size: .92rem; }
-.foot-nav a:hover { color: #fff; }
+.foot-cols { max-width: 76rem; margin: 0 auto 2.4rem; display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 2rem 2.4rem; }
+.foot-cols h2 { margin: 0 0 .9rem; font: 500 .68rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--gold-soft); }
+.foot-cols nav { display: grid; gap: .55rem; justify-items: start; }
+.foot-cols a { color: #b9b9c2; text-decoration: none; font-size: .92rem; }
+.foot-cols a:hover { color: #fff; }
 .foot-line {
   max-width: 76rem; margin: 0 auto; padding-top: 1.8rem; border-top: 1px solid #1c1c1f;
   display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
@@ -994,4 +995,26 @@ html:not(.fx) .progress { display: none; }
 .plan-g a { color: #cfcfd6; text-decoration: none; font-size: .98rem; }
 .plan-g a:hover { color: #fff; }
 .plan-site { padding-top: 1rem; }
-@media (max-width: 880px) { .foot-top { flex-direction: column; } }
+@media (max-width: 880px) { .foot-cols { grid-template-columns: 1fr 1fr; } }
+/* Menus : la ligne « Par type de lieu » sous les sept solutions, et le petit menu À propos */
+.mega-more { margin: .7rem .4rem .1rem; padding-top: .7rem; border-top: 1px solid var(--mode-line); display: flex; flex-wrap: wrap; gap: .35rem 1.2rem; align-items: baseline; }
+.mega-more span, .sheet-more span { font: 500 .62rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft); }
+.bar-nav .mega .mega-more a, .mega-more a { display: inline; padding: 0; font: 500 .88rem/1.5 var(--sans); letter-spacing: 0; text-transform: none; color: #cfcfd6; text-decoration: none; opacity: 1; }
+.bar-nav .mega .mega-more a:hover, .mega-more a:hover { color: #fff; }
+.mega.mega-s { width: 15rem; left: 50%; translate: -50% 0; padding: .6rem; display: grid; gap: .1rem; }
+.bar-nav .mega .mega-l, .mega-l { display: block; padding: .6rem .8rem; border-radius: 10px; font: 500 .92rem/1.3 var(--sans); letter-spacing: 0; text-transform: none; color: #e9e9ee; text-decoration: none; opacity: 1; }
+.bar-nav .mega .mega-l:hover, .mega-l:hover, .mega-l:focus-visible { background: #ffffff0f; color: #fff; }
+.sheet-more { margin: .5rem 0 0; padding-top: .7rem; border-top: 1px solid var(--mode-line); display: flex; flex-wrap: wrap; gap: .5rem 1.2rem; align-items: baseline; }
+.sheet-more a, .sheet-l { color: #cfcfd6; text-decoration: none; font: 500 .98rem/1.3 var(--sans); }
+.sheet-l { display: block; padding: .45rem 0; }
+.ext-next { display: flex; justify-content: center; flex-wrap: wrap; gap: .5rem 1.8rem; }
+/* Fil d'Ariane visible (pages intérieures) */
+.fil { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .55rem; margin: 0 0 1.4rem;
+  font: 500 .68rem/1.6 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: #b9b9c2; }
+.fil a { color: #b9b9c2; text-decoration: none; }
+.fil a:hover { color: #fff; }
+.fil i { font-style: normal; color: var(--gold-soft); }
+.fil span { color: var(--gold-soft); }
+.band .fil { text-shadow: 0 1px 3px #000c; }
+.plain-top .fil { justify-content: center; }
+@media (max-width: 560px) { .sheet-x small { display: none; } .sheet-x { padding: .35rem 0; } }

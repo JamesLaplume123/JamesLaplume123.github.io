@@ -40,12 +40,28 @@ SITE = {
     "copyright": "© 2026 JARVIS Private Systems",
 }
 
-# Navigation principale : trois entrées et un bouton (refonte « essentiel », novembre 2026).
-# Solutions ouvre les sept solutions, rien d'autre. Tout le reste est sur /plan-du-site/.
+# Navigation principale : la structure d'un vrai site commercial (refonte « structure », novembre 2026).
+# Solutions (les sept, puis par type de lieu) · Le logiciel · Le Hub · L'offre · À propos (et ses pages).
+# (adresse, libellé français, libellé anglais)
+LIEUX_NAV = [
+    ("/solutions/maison-intelligente-cle-en-main/", "Maison", "Home"),
+    ("/solutions/domotique-ferme-agricole/", "Ferme", "Farm"),
+    ("/solutions/ia-privee-entreprise/", "Entreprise", "Business"),
+]
+APROPOS_NAV = [
+    ("/a-propos/", "À propos", "About"),
+    ("/vision-roadmap/", "Vision", "Vision"),
+    ("/laboratoire-mobile/", "Laboratoire mobile", "Mobile lab"),
+    ("/confiance/", "Confiance", "Trust"),
+    ("/questions/", "Questions", "Questions"),
+]
 NAV = [
-    {"url": "/logiciel/", "label": "Le logiciel"},
-    {"url": "/solutions/", "label": "Solutions", "menu": True},
-    {"url": "/a-propos/", "label": "À propos"},
+    {"url": "/solutions/", "label": "Solutions", "en": "Solutions", "menu": True},
+    {"url": "/logiciel/", "label": "Le logiciel", "en": "The software"},
+    {"url": "/plateforme/", "label": "Le Hub", "en": "The Hub"},
+    {"url": "/offre/", "label": "L’offre", "en": "The offer", "aussi": ["/catalogue/"]},
+    {"url": "/a-propos/", "label": "À propos", "en": "About", "sub": APROPOS_NAV,
+     "aussi": ["/vision-roadmap/", "/laboratoire-mobile/", "/confiance/", "/questions/", "/recherche/"]},
 ]
 
 # Appel à l'action principal (chantier wow — vente du logiciel)
@@ -59,16 +75,19 @@ BESOINS_PAGES = [
     ("ia-privee-entreprise", "IA privée pour entreprise"),
 ]
 
-# Pied de page compact : les liens essentiels. /plan-du-site/ liste toutes les pages.
-FOOTER_LINKS = [
-    ("/logiciel/", "Le logiciel"),
-    ("/solutions/", "Solutions"),
-    ("/questions/", "Questions"),
-    ("/a-propos/", "À propos"),
-    ("/contact/", "Contact"),
-    ("/confidentialite/", "Confidentialité"),
-    ("/mentions-legales/", "Mentions légales"),
-    ("/plan-du-site/", "Plan du site"),
+# Pied de page en quatre colonnes : Solutions (les sept, ajoutées par partials.py), Produit, Entreprise, Aide.
+FOOTER_COLUMNS = [
+    ("Produit", [
+        ("/logiciel/", "Le logiciel"), ("/plateforme/", "Le Hub"), ("/offre/", "L’offre"), ("/catalogue/", "Catalogue"),
+    ]),
+    ("Entreprise", [
+        ("/a-propos/", "À propos"), ("/vision-roadmap/", "Vision"), ("/laboratoire-mobile/", "Laboratoire mobile"),
+        ("/confiance/", "Confiance"),
+    ]),
+    ("Aide", [
+        ("/questions/", "Questions"), ("/contact/", "Contact"), ("/confidentialite/", "Confidentialité"),
+        ("/mentions-legales/", "Mentions légales"), ("/plan-du-site/", "Plan du site"),
+    ]),
 ]
 
 # Les six capacités : source unique pour l'accueil, la page Solutions et les sous-pages.

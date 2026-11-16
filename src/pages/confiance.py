@@ -1,5 +1,7 @@
 # Confiance — les huit principes, une ligne chacun (refonte « essentiel », novembre 2026).
 
+import pro
+
 PRINCIPLES = [
     ("Minimisation", "Utiliser seulement ce qui est nécessaire."),
     ("Provenance", "Montrer d’où vient l’information."),
@@ -29,7 +31,7 @@ PAGE = {
 <section class="band top">
   <div class="bg"><img src="/media/concept/jarvis-earth-network-v1.jpg" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Confiance et gouvernance</p>
+    {pro.fil("/confiance/")}
     <h1 data-rev>La capacité d’agir exige <em>des limites visibles.</em></h1>
     <p class="lead" data-rev>Huit principes décident de ce que JARVIS peut voir et faire.</p>
   </div>

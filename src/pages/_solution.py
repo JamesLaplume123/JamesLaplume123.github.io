@@ -6,6 +6,7 @@
 from config import CAPABILITIES
 from pages import catalogue as CAT
 from demos import coquille
+import pro
 
 PRIX = {s["slug"]: ("Inclus avec chaque Hub" if s["prix"] == 0 else f"{s['prix']} $ par mois" + (" par véhicule" if s.get("unite") else "")) for s in CAT.SOLUTIONS}
 PRIX["automatisation-operations"] = f"Dès {CAT.ENT_SOCLE['prix']} $ par mois, puis 9 à 29 $ par automatisation"
@@ -20,7 +21,7 @@ def bande(slug, h1, lead, image):
 <section class="band top">
   <div class="bg"><img src="{image}" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <p class="eyebrow" data-rev>Solution {c['num']} / 07 · {c['title']}</p>
+    {pro.fil(f"/solutions/{slug}/")}
     <h1 data-rev>{h1}</h1>
     <p class="lead" data-rev>{lead}</p>
     <div class="acts" data-rev>

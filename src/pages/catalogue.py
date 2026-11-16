@@ -415,7 +415,7 @@ def _kits():
         for a in e.get("autos", []):
             mens.append(f"{AUTOS_BY_ID[a][1]} ({AUTOS_BY_ID[a][2]} $)")
         cfg = {"nom": k["nom"], "rabais": plein - once, "hub": k["hub"], "mat": k["mat"], "sol": k["sol"], "ent": e}
-        out.append(f"""<article class="ct-kit" data-rev id="kit-{idx + 1}">
+        out.append(f"""<article class="ct-kit"{' data-public="entreprise"' if k.get("ent") else ''} data-rev id="kit-{idx + 1}">
       <div class="ct-kit-h"><h3>{escape(k['nom'])}</h3><p class="ct-pour">{escape(k['pour'])}</p></div>
       <p class="ct-prix">{_p(once)}<small>une fois</small></p>
       <p class="ct-econ"><s>{_p(plein)}</s> à la pièce · vous économisez {_p(plein - once)}</p>
@@ -479,7 +479,7 @@ PAGE = {
 </section>
 <nav class="ct-lieux-nav" aria-label="Partir d’un kit" data-rev>
   <p>Ou partez d’un kit :</p>
-  {"".join(f'<button type="button" data-kit-go="{i + 1}">{escape(k["nom"].replace("Kit ", ""))}</button>' for i, k in enumerate(KITS))}
+  {"".join(f'<button type="button" data-kit-go="{i + 1}"{" data-public=" + chr(34) + "entreprise" + chr(34) if k.get("ent") else ""}>{escape(k["nom"].replace("Kit ", ""))}</button>' for i, k in enumerate(KITS))}
   <a href="#hub">ou composez pièce par pièce →</a>
 </nav>
 <div class="ct-wrap">
@@ -504,9 +504,11 @@ PAGE = {
     <span class="ct-tag">Meilleure valeur</span>
     <div><h3>{COMPLET['nom']} · {COMPLET['prix']} $/mois</h3><p>Les cinq solutions payantes, Mobilité pour un véhicule comprise. Valeur à la carte : {COMPLET['valeur']} $/mois. Vous économisez {COMPLET['valeur'] - COMPLET['prix']} $ par mois.</p></div>
   </label>
+  <div data-public="entreprise">
   <h3 class="ct-sub" id="entreprise" data-rev>Pour une entreprise <em>· une réceptionniste IA et des automatisations à la carte</em></h3>
   <p class="ct-intro" data-rev>Tout est à l’unité et payable par mois. Vous commencez avec le Socle et une automatisation; vous en ajoutez quand vous en voyez le gain. Demande un Hub Signature ou Platinum.</p>
   {_entreprise()}
+  </div>
 </section>
 
 <section class="sect" id="materiel" data-toc="3 · Le matériel" aria-labelledby="mat-t">
@@ -528,8 +530,10 @@ PAGE = {
   </div>
   <h3 class="ct-sub" data-rev>Installation <em>· à vous de choisir</em></h3>
   <div class="cards ct-install">{_install()}</div>
+  <div data-public="entreprise">
   <h3 class="ct-sub" data-rev>Services professionnels <em>· vérifier, protéger, former</em></h3>
   {_services()}
+  </div>
   <h3 class="ct-sub" data-rev>Toujours inclus</h3>
   <ul class="ct-inclus">{_inclus()}</ul>
 </section>
@@ -542,6 +546,8 @@ PAGE = {
     <div class="ct-cart-body">
       <section class="ct-cart-g"><h4>Une fois <span data-cart-once-sub></span></h4><ul data-cart-once></ul></section>
       <section class="ct-cart-g"><h4>Par mois <span data-cart-month-sub></span></h4><ul data-cart-month></ul></section>
+      <div class="ct-cart-lieux" data-cart-lieux hidden></div>
+      <label class="ct-cart-sep" data-cart-sep hidden><input type="checkbox" name="separee" value="1"><span>Une soumission séparée pour l’entreprise, au nom de l’entreprise</span></label>
       <div class="ct-cart-tips" data-cart-tips hidden></div>
     </div>
     <div class="ct-cart-tot">

@@ -38,6 +38,11 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - https://jarvisprivatesystems.com/solutions/reseau-resilience/ : Réseau et cybersécurité (Réseau)
 - https://jarvisprivatesystems.com/solutions/diagnostic-care/ : Diagnostic & continuité (Continuité)
 - https://jarvisprivatesystems.com/solutions/mobilite/ : Mobilité (Mobilité)
+## Pour chez moi, pour mon entreprise, ou les deux
+- Le site demande d’abord pour qui : « Pour chez moi », « Pour mon entreprise » ou « Les deux ». Côté « Pour chez moi », il ne montre pas ce qui est propre à l’entreprise.
+- Propre à l’entreprise : Automatisation d’entreprise (réceptionniste IA, lignes téléphoniques, automatisations), les services professionnels, les rapports et la base de données du Hub Platinum, et les lieux d’entreprise (bureau ou commerce, atelier, entrepôt ou usine, ferme, garage ou hangar, flotte de véhicules).
+- Les six autres solutions servent aux deux publics.
+- Un propriétaire d’entreprise a souvent aussi une maison : un seul compte, une seule application, plusieurs lieux personnels et d’entreprise possibles. La soumission se fait ensemble ou séparément pour l’entreprise (au nom de l’entreprise), au choix. Ne donner aucun conseil fiscal.
 ## Entrer par son lieu (même source que le site : src/lieux.py)
 ### Chez vous
 - Maison : Hub Signature. L’IA tourne dans le Hub, sans Internet, et relie jusqu’à 100 appareils. Solutions qui comptent : Environnements intelligents (Lumières, chauffage et énergie sur un seul écran); Sécurité intelligente (Caméras, portes et alarme dans un seul fil); Réseau et cybersécurité (Un Wi-Fi solide dans toute la maison).
@@ -49,6 +54,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Atelier, entrepôt ou usine : Hub Signature. Accès, caméras et machines suivis au même endroit. Solutions qui comptent : Sécurité intelligente (Qui entre, quand, et par quelle porte); Diagnostic & continuité (Une machine qui dérive se voit avant le bris); Réseau et cybersécurité (Un réseau séparé pour les machines); Automatisation d’entreprise (Commandes et bons qui circulent sans ressaisie).
 - Ferme : Hub Platinum. Des bâtiments et des animaux qui ne peuvent pas attendre : batterie et Internet de secours. Solutions qui comptent : Diagnostic & continuité (Température, courant, eau : l’alerte avant la perte); Environnements intelligents (Tous les bâtiments sur un seul écran); Réseau et cybersécurité (Internet dans chaque bâtiment); Sécurité intelligente (Portes, barrières et visiteurs).
 - Garage ou hangar : Hub Signature. Des biens de valeur : caméras analysées sur place, accès contrôlés. Solutions qui comptent : Sécurité intelligente (Chaque entrée et chaque sortie, avec l’image); Environnements intelligents (Portes, humidité et température du bâtiment); Diagnostic & continuité (Batteries et équipements suivis).
+- Flotte de véhicules : Boîtier Mobilité. Un Boîtier Mobilité par véhicule : position, diagnostic et antivol pour toute la flotte. Solutions qui comptent : Mobilité (Chaque véhicule, son état et ses trajets au même endroit); Diagnostic & continuité (L’entretien prévu avant la panne).
 ### En déplacement
 - VR (lieu mobile) : Hub Signature + Boîtier VR. Une maison qui roule : le Hub et le Boîtier VR gèrent batteries, eau, chauffage et sécurité. Solutions qui comptent : Environnements intelligents (Batteries, eau, chauffage et lumières à bord); Mobilité (Un copilote qui propose le bon arrêt); Sécurité intelligente (Le véhicule surveillé quand vous êtes ailleurs); Diagnostic & continuité (Une batterie ou une pompe qui faiblit se voit tôt).
 - Roulotte (lieu mobile) : Hub Base + Boîtier VR. Batteries, réservoirs, gel et porte : l’essentiel d’un petit lieu mobile. Solutions qui comptent : Environnements intelligents (Batteries et réservoirs d’un coup d’œil); Diagnostic & continuité (Le gel et les fuites signalés); Mobilité (Le trajet et les arrêts gardés sur la carte).

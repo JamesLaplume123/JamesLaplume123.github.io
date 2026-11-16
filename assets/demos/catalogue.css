@@ -252,3 +252,11 @@ body.ct-lock { overflow: hidden; }
 /* Première étape : le lieu */
 .ct-lieu-etape { max-width: 92rem; margin: 0 auto; padding: 1.6rem 1.4rem .4rem; }
 .ct-lieu-etape .lx { max-width: none; }
+
+/* Récapitulatif : les lieux en deux blocs, et la soumission séparée pour l'entreprise */
+.ct-cart-lieux { margin: 0 0 .8rem; display: grid; gap: .5rem; font-size: .88rem; }
+.ct-cart-lieux[hidden], .ct-cart-sep[hidden] { display: none; }
+.ct-cart-lieux p { margin: 0; color: #e9e9ee; }
+.ct-cart-lieux small { display: block; margin-bottom: .15rem; font: 600 .6rem/1 var(--mono); letter-spacing: .15em; text-transform: uppercase; color: var(--gold-soft); }
+.ct-cart-sep { display: flex; gap: .6rem; align-items: flex-start; margin: 0 0 .9rem; font-size: .86rem; line-height: 1.4; color: #cfcfd6; cursor: pointer; }
+.ct-cart-sep input { margin-top: .15rem; accent-color: var(--gold); }

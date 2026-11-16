@@ -40,12 +40,18 @@ def hubs():
     for h in CAT.HUBS:
         c = lieux.HUBS_CHOIX[h["id"]]
         tag = f'<span class="of-h-tag">{escape(h["tag"])}</span>' if h["tag"] else ""
-        peut = "".join(f"<li>{x}</li>" for x in c["peut"])
+        moi = c.get("peut_moi", {})
+        peut = "".join(
+            (f'<li data-public="entreprise">{x}</li><li data-public="particulier">{moi[i]}</li>' if i in moi else f"<li>{x}</li>")
+            for i, x in enumerate(c["peut"])
+        )
+        pour = (f'<span data-public="entreprise">{c["pour"]}</span><span data-public="particulier">{c["pour_moi"]}</span>'
+                if c.get("pour_moi") else c["pour"])
         prix = f'<p class="of-h-prix">{_p(h["prix"])}<small>une fois</small></p>' if pro.PRIX else ""
         tuiles.append(f"""<article class="of-h" data-hub="{h['id']}" data-rev>
       {tag}{_photo_hub(h['id'])}<p class="of-h-k">{escape(h['nom'])}</p>
       <h3>{c['situation']}</h3>
-      <p class="of-h-pour">{c['pour']}</p>{prix}
+      <p class="of-h-pour">{pour}</p>{prix}
       <p class="of-h-pr">{c['promesse']}</p>
       <p class="of-h-v">Vous pouvez</p>
       <ul class="of-h-d">{peut}</ul>
@@ -116,7 +122,7 @@ def _etapes():
 
 def _exemples():
     return "".join(
-        f"""<article class="of-ex" data-rev>
+        f"""<article class="of-ex"{' data-public="entreprise"' if t == "Une ferme" else ''} data-rev>
       <img src="{img}" alt="">
       <div>
         <h3>{t}</h3>

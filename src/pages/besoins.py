@@ -16,6 +16,7 @@ def page(d):
         "title": d["title"],
         "description": d["description"],
         "og_image": d["image"],
+        "public": d.get("public", ""),
         "assets": ["pro"],
         "schema": [
             pro.ld_service(d["nom"], d["description"], url, d["genre"]),
@@ -86,6 +87,7 @@ MAISON = {
 
 FERME = {
     "slug": "domotique-ferme-agricole",
+    "public": "entreprise",
     "nom": "Domotique pour ferme et bâtiments agricoles",
     "genre": "Domotique agricole",
     "title": "Domotique pour ferme et bâtiments agricoles | JARVIS",
@@ -120,6 +122,7 @@ FERME = {
 
 IA = {
     "slug": "ia-privee-entreprise",
+    "public": "entreprise",
     "nom": "IA privée pour entreprise",
     "genre": "Intelligence artificielle locale pour entreprise",
     "title": "IA privée pour entreprise, hébergée chez vous | JARVIS",

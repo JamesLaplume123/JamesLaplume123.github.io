@@ -1,5 +1,5 @@
 /* Le logiciel (/logiciel/) : JARVIS App en grand avec visite guidée, plein écran et aperçu téléphone.
-   Aussi l'aperçu vivant de l'accueil (.lg-apercu). Verre noir et or; l'app garde ses propres styles (app.css). */
+   Verre noir et or; l'app garde ses propres styles (app.css). */
 
 /* ---------- Icônes de l'app hors de l'app ---------- */
 .lg-guide .ap-i, .lg-exit .ap-i { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
@@ -8,7 +8,7 @@
 .lg-hero { padding: calc(var(--bar-h) + 4.2rem) 1.4rem 2.2rem; }
 .lg-hero-in { max-width: 78rem; margin: 0 auto; }
 .lg-hero h1 { margin: 1rem 0 0; font-weight: 650; font-size: clamp(2.3rem, 5vw, 4.3rem); letter-spacing: -.045em; line-height: 1.02; }
-.lg-hero h1 em, .lga-head h2 em { font-style: normal; background: var(--mode-display); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lg-hero h1 em { font-style: normal; background: var(--mode-display); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .lg-hero .lead { margin: 1.2rem 0 0; max-width: 40rem; color: #c6c1b8; font-size: clamp(1rem, 1.3vw, 1.18rem); line-height: 1.6; }
 
 /* ---------- Visite : guide + appareil ---------- */
@@ -121,30 +121,3 @@ body.lg-full-open { overflow: hidden; }
 .lg-under a:hover { color: #fff; }
 .lg-under i { font-style: normal; }
 @media (max-width: 880px) { .lg-vs { grid-template-columns: minmax(0, 1fr); } }
-
-/* ---------- Accueil : aperçu vivant du logiciel ---------- */
-.lg-apercu { padding: 6rem 1.4rem 5.5rem; }
-.lga-head { max-width: 77.5rem; margin: 0 auto 2.6rem; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 1.4rem 4rem; align-items: end; }
-.lga-head h2 { margin: 1rem 0 0; font-weight: 650; font-size: clamp(2rem, 3.6vw, 3.1rem); letter-spacing: -.035em; line-height: 1.08; }
-.lga-side { display: grid; gap: 1.3rem; justify-items: start; }
-.lga-side p { margin: 0; color: #c6c1b8; line-height: 1.6; }
-.lga-frame { position: relative; max-width: 1260px; margin: 0 auto; }
-.lga-dev { pointer-events: none; user-select: none; }
-.lga-hit { position: absolute; inset: 0; z-index: 20; display: grid; place-items: end center; padding-bottom: 7%; border-radius: 28px; text-decoration: none; }
-.lga-hit span {
-  display: inline-flex; gap: .5rem; align-items: center; padding: .95rem 1.6rem; border-radius: 999px;
-  font: 650 .98rem/1 var(--sans); background: var(--mode-action); color: var(--mode-on-action);
-  box-shadow: var(--mode-action-edge), 0 18px 50px #000c; transform: translateY(6px); opacity: .94; transition: transform .35s var(--ease), opacity .35s;
-}
-.lga-hit:hover span, .lga-hit:focus-visible span { transform: none; opacity: 1; }
-.lga-hit i { font-style: normal; }
-.lga-hit:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 4px; }
-@media (max-width: 880px) {
-  .lg-apercu { padding: 4.5rem .8rem 4rem; }
-  .lga-head { grid-template-columns: minmax(0, 1fr); padding: 0 .3rem; }
-}
-@media (max-width: 700px) {
-  /* Le téléphone est haut : on en montre le haut, avec un fondu, et le bouton par-dessus */
-  .lga-dev { max-height: 620px; overflow: hidden; -webkit-mask: linear-gradient(180deg, #000 70%, #0000); mask: linear-gradient(180deg, #000 70%, #0000); }
-  .lga-hit { padding-bottom: 2.2rem; }
-}

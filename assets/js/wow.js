@@ -128,22 +128,7 @@
   });
 
   /* ---------- Outils d'affichage ---------- */
-  var TZ = "America/Toronto";
-  function partsInTz(d) {
-    var out = {};
-    try {
-      new Intl.DateTimeFormat("fr-CA", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
-        .formatToParts(d).forEach(function (p) { out[p.type] = p.value; });
-    } catch (e) {
-      out = { hour: String(d.getHours()).padStart(2, "0"), minute: String(d.getMinutes()).padStart(2, "0") };
-    }
-    return out;
-  }
-  function hm(d) { var p = partsInTz(d); return +p.hour + " h " + p.minute; }
   function fmtInt(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
-  function setText(key, value, root) {
-    $$('[data-live="' + key + '"]', root).forEach(function (el) { el.textContent = value; });
-  }
 
   /* Compteur à rouleaux : chaque chiffre glisse vers sa valeur */
   function setOdo(el, text) {
@@ -227,7 +212,7 @@
         return v;
       });
   }
-  var visitTargets = $$('[data-live="visits"], [data-live="visits-short"], [data-live="visits-foot"]');
+  var visitTargets = $$('[data-live="visits"], [data-live="visits-foot"]');
   /* Le grand compteur ne roule qu'une fois à l'écran */
   var visitOdos = $$('[data-live="visits"]');
   if (visitOdos.length && "IntersectionObserver" in window) {
@@ -245,52 +230,10 @@
     loadVisits().then(function (v) {
       var txt = fmtInt(v);
       visitOdos.forEach(function (el) { el._odo = txt; if (el._seen) setOdo(el, txt); });
-      setText("visits-short", txt + " visites");
       $$('[data-live="visits-foot"]').forEach(function (el) { el.textContent = txt; el.closest(".foot-count").hidden = false; });
     }).catch(function () {
-      setText("visits-short", "Visites —");
       visitOdos.forEach(function (el) { el.textContent = "—"; });
     });
-  }
-
-  /* ---------- Météo réelle pour le héros (pastille et panneau) ----------
-     JARVIS App (assets/demos/app.js) lit la même source; ce cache de session s'appelle « jarvis-ec ». */
-  var livePill = $("[data-live-pill]");
-  if (livePill || $("[data-hero-panel]")) {
-    var EC_URL = "https://api.weather.gc.ca/collections/citypageweather-realtime/items/qc-22?f=json&lang=fr";
-    var ecText = function (o) {
-      if (o == null) return "";
-      if (typeof o !== "object") return String(o);
-      if (o.fr !== undefined) return String(o.fr);
-      return o.value !== undefined ? ecText(o.value) : "";
-    };
-    var ecDate = function (o) { var d = o ? new Date(ecText(o)) : null; return d && !isNaN(d) ? d : null; };
-    var pillDot = function (ok) { var dot = livePill && $(".dot", livePill); if (dot) dot.classList.toggle("is-off", !ok); };
-    var heroLoad = function () {
-      var cached = null;
-      try { var c = JSON.parse(session.getItem("jarvis-ec")); if (Date.now() - c.t < 300000) cached = c.j; } catch (e) {}
-      var got = cached ? Promise.resolve(cached) : fetch(EC_URL).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
-      got.then(function (j) {
-        if (!cached && session) { try { session.setItem("jarvis-ec", JSON.stringify({ t: Date.now(), j: j })); } catch (e) {} }
-        var p = j.properties || {}, cc = p.currentConditions || {}, rs = p.riseSet || {};
-        var t = parseFloat(ecText(cc.temperature)), temp = isFinite(t) ? t : null, cond = ecText(cc.condition);
-        if (temp === null && !cond) throw new Error("vide");
-        pillDot(true);
-        setText("temp-short", temp !== null ? String(Math.round(temp) || 0).replace("-", "\u2212") + "\u00a0°C" : "—");
-        setText("cond", cond || "Conditions actuelles");
-        try {
-          document.dispatchEvent(new CustomEvent("jv:weather", { detail: {
-            now: new Date(), temp: temp, condition: cond, rise: ecDate(rs.sunrise), set: ecDate(rs.sunset)
-          } }));
-        } catch (e) {}
-      }).catch(function () {
-        pillDot(false);
-        setText("temp-short", "hors ligne");
-        setText("cond", "Météo indisponible pour l’instant");
-      });
-    };
-    heroLoad();
-    setInterval(function () { if (!document.hidden) heroLoad(); }, 600000);
   }
 
   /* ---------- Formulaire de contact : envoi sans quitter la page ---------- */
@@ -393,107 +336,12 @@
     });
   });
 
-  /* ---------- Panneau JARVIS du héros : propositions approuvées, pièces qui suivent ---------- */
-  var hp = $("[data-hero-panel]");
-  if (hp) {
-    var hpAsk = $("[data-hp-ask]", hp), hpText = $("[data-hp-text]", hp), hpState = $(".hp-state", hp);
-    var hpClock = $("[data-hp-clock]", hp);
-    var clockTick = function () { if (hpClock) hpClock.textContent = hm(new Date()); };
-    clockTick();
-    setInterval(clockTick, 30000);
-    var room = function (k) { return $('[data-room="' + k + '"]', hp); };
-    var setRoom = function (k, txt, v) {
-      var li = room(k); if (!li) return;
-      var b = $("b", li); b.textContent = txt; b.classList.add("is-new");
-      setTimeout(function () { b.classList.remove("is-new"); }, 1600);
-      var bar = $("i", li); if (bar && v !== undefined) bar.style.setProperty("--v", v);
-    };
-    $$(".hp-rooms li", hp).forEach(function (li, k) { li.style.setProperty("--k", k); });
-    /* Propositions : la première suit la vraie météo dès qu'elle arrive */
-    var asks = [
-      { t: "Passer la maison en mode nuit à 23 h ? Portes verrouillées, caméras en détection.",
-        done: "Confirmé · mode nuit prévu à 23 h", apply: function () { setRoom("entree", "Verrouillée"); setRoom("salon", "Veilleuse · 10 %", .1); setRoom("energie", "0,6 kW", .15); } },
-      { t: "La porte du garage est ouverte depuis 20 minutes. La fermer ?",
-        done: "Confirmé · porte du garage fermée", apply: function () { setRoom("energie", "0,7 kW", .18); } },
-      { t: "Plus personne à la maison. Passer en mode Absent ? Lumières éteintes, chauffage à 17 °C.",
-        done: "Confirmé · mode Absent actif", apply: function () { setRoom("salon", "Éteint", 0); setRoom("chambre", "17 °C", .2); setRoom("entree", "Verrouillée"); setRoom("energie", "0,3 kW", .08); } }
-    ];
-    var initial = { salon: ["Soirée · 60 %", .6], chambre: ["19 °C", .42], entree: ["Déverrouillée"], energie: ["1,2 kW", .3] };
-    document.addEventListener("jv:weather", function (e) {
-      var d = e.detail;
-      if (d.temp === null) return;
-      var night = d.rise && d.set ? (d.now < d.rise || d.now > d.set) : true;
-      if (d.temp <= 8) {
-        asks[0] = { t: "Il fait " + String(Math.round(d.temp)).replace("-", "−") + " °C dehors. Monter les chambres à 20 °C pour 6 h 30 ?",
-          done: "Confirmé · chambres à 20 °C pour 6 h 30", apply: function () { setRoom("chambre", "20 °C à 6 h 30", .55); setRoom("energie", "1,6 kW", .42); } };
-      } else if (!night && d.set) {
-        var on = new Date(d.set.getTime() - 15 * 60000);
-        asks[0] = { t: "Le soleil se couche à " + hm(d.set) + ". Allumer l’extérieur à " + hm(on) + " ?",
-          done: "Confirmé · extérieur à " + hm(on), apply: function () { setRoom("energie", "1,3 kW", .34); } };
-      }
-      if (cur === 0 && !hpAsk.classList.contains("is-sent")) hpText.textContent = asks[0].t;
-    });
-    var cur = 0, busy = false, touched = false, timer = null;
-    var show = function (i) {
-      cur = i % asks.length;
-      hpAsk.classList.remove("is-sent", "is-ok");
-      hpText.textContent = asks[cur].t;
-      busy = false;
-    };
-    var answer = function (ok) {
-      if (busy) return;
-      busy = true;
-      var btn = $('[data-hp="' + (ok ? "ok" : "no") + '"]', hp);
-      btn.classList.add("is-press");
-      setTimeout(function () {
-        btn.classList.remove("is-press");
-        hpAsk.classList.add("is-sent");
-        if (!ok) { hpState.textContent = "Reporté · JARVIS reproposera plus tard"; return; }
-        hpState.textContent = "Envoyé…";
-        setTimeout(function () {
-          hpAsk.classList.add("is-ok");
-          hpState.textContent = asks[cur].done;
-          asks[cur].apply();
-        }, 900);
-      }, 220);
-    };
-    hp.addEventListener("click", function (e) {
-      var b = e.target.closest("[data-hp]");
-      if (!b) return;
-      touched = true;
-      clearTimeout(timer);
-      answer(b.getAttribute("data-hp") === "ok");
-      timer = setTimeout(function () { show(cur + 1); }, 6000);
-    });
-    /* Lecture automatique tant que le visiteur n'a pas touché */
-    var cycle = function () {
-      if (touched || document.hidden) return;
-      answer(true);
-      timer = setTimeout(function () {
-        if (touched) return;
-        Object.keys(initial).forEach(function (k) { setRoom(k, initial[k][0], initial[k][1]); });
-        show(cur + 1);
-        timer = setTimeout(cycle, 4200);
-      }, 5200);
-    };
-    var hpSeen = false;
-    var hpGo = function () {
-      if (hpSeen) return;
-      hpSeen = true;
-      hp.classList.add("is-in");
-      if (!reduce) timer = setTimeout(cycle, 4200);
-    };
-    setTimeout(hpGo, reduce ? 0 : 1900);
-  }
-
   if (reduce) return;
   doc.classList.add("fx");
 
   /* Filet de sécurité : tout redevient visible (impression) */
   function defuse() {
     doc.classList.remove("fx");
-    $$(".hero .bg,.hero .bg img")
-      .forEach(function (el) { el.style.opacity = ""; el.style.transform = ""; el.style.filter = ""; });
   }
   addEventListener("beforeprint", defuse);
 
@@ -528,33 +376,10 @@
     })(h);
   });
 
-  /* Héros : zoom, assombrissement et parallaxe à la souris */
-  var hero = $("[data-hero]") || $(".hero");
-  var heroImg = hero ? $(".bg", hero) : null;
-  var mx = 0, my = 0, tmx = 0, tmy = 0;
-  if (hero && finePointer) {
-    hero.addEventListener("pointermove", function (e) {
-      var r = hero.getBoundingClientRect();
-      tmx = (e.clientX - r.left) / r.width - .5;
-      tmy = (e.clientY - r.top) / r.height - .5;
-      schedule();
-    });
-    hero.addEventListener("pointerleave", function () { tmx = 0; tmy = 0; schedule(); });
-  }
-
   function frame() {
     var vh = innerHeight;
     var max = Math.max(1, document.documentElement.scrollHeight - vh);
     progress.style.transform = "scaleX(" + c01(scrollY / max).toFixed(4) + ")";
-
-    mx += (tmx - mx) * .12;
-    my += (tmy - my) * .12;
-    if (heroImg) {
-      var p = c01(scrollY / Math.max(vh, 1));
-      heroImg.style.transform = "translate3d(" + (-mx * 22).toFixed(2) + "px," + (-my * 14).toFixed(2) + "px,0) scale(" + (1.04 + p * .14) + ")";
-      heroImg.style.filter = "brightness(" + (1 - p * .55) + ")";
-      if (Math.abs(tmx - mx) > .002 || Math.abs(tmy - my) > .002) schedule();
-    }
   }
   var queued = false;
   function schedule() {

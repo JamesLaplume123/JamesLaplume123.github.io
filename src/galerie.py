@@ -125,7 +125,7 @@ def avant_apres(page, avant, apres, eyebrow, titre, intro, ident="", toc="", alt
 
 
 # ---------------------------------------------------------------------------------------------
-# Clients : du quotidien au prestige (accueil, et repris en anglais sur /en/).
+# Clients : du quotidien au prestige (version anglaise /en/).
 
 CLIENTS = [
     {"f": "accueil/panorama-domaine-crepuscule", "pos": "50% 55%",
@@ -160,16 +160,6 @@ CLIENTS_EN = [
     ("Cabin", "Heated and checked before you arrive"),
     ("Small business", "Evening closing done in one touch"),
 ]
-
-
-def clients_fr(page="/"):
-    return mosaique(
-        page, "clients", "Pour qui · du quotidien au prestige",
-        "Une maison familiale ou un domaine.<br><em>Le même soin.</em>",
-        "Une famille, un collectionneur, un propriétaire de yacht ou une PME : JARVIS s’adapte au lieu, "
-        "pas l’inverse. Chaque installation est privée, locale et faite sur mesure.",
-        CLIENTS,
-    )
 
 
 def clients_en(page="/en/"):

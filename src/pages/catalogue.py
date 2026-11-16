@@ -58,24 +58,30 @@ COMPARE = [
 SOLUTIONS = [
     {"id": "env", "nom": "Environnements intelligents", "prix": 0, "slug": "environnements-intelligents",
      "pourquoi": "Inclus avec chaque Hub : c’est la base de JARVIS.",
-     "pts": ["Lumières, chauffage, stores, foyer, serrures", "Scènes : Matin, Soir, Nuit, Absent", "Énergie pièce par pièce", "Fonctionne sans Internet"]},
+     "pts": ["Lumières, chauffage, stores, foyer, serrures", "Scènes : Matin, Soir, Nuit, Absent", "Énergie pièce par pièce", "Fonctionne sans Internet"],
+     "non": ["Pas d’accès de partout ni d’alertes sans une solution payante"]},
     {"id": "diag", "nom": "Diagnostic et continuité", "prix": 15, "slug": "diagnostic-care",
      "pourquoi": "Un dégât d’eau coûte 12 000 $ en moyenne. Ici, vous êtes prévenu à la première goutte.",
-     "pts": ["Veille 24/7 : fuite, gel, batterie, panne", "Alertes de partout, avec la cause probable", "Dossier prêt pour le technicien", "Rapport mensuel de santé du lieu"]},
+     "pts": ["Veille 24/7 : fuite, gel, batterie, panne", "Alertes de partout, avec la cause probable", "Dossier prêt pour le technicien", "Rapport mensuel de santé du lieu"],
+     "non": ["Ne ferme pas l’eau sans la vanne automatique", "Ne remplace pas un plombier ou un électricien"]},
     {"id": "secu", "nom": "Sécurité intelligente", "prix": 20, "slug": "securite-intelligente",
      "pourquoi": "Vos caméras comprennent ce qu’elles voient. Une alerte utile, pas cent notifications.",
-     "pts": ["Enregistrement local, rien dans le nuage", "Reconnaît personne, véhicule, animal, colis", "Alertes regroupées en une phrase", "Mode urgence et accès temporaires"]},
+     "pts": ["Enregistrement local, rien dans le nuage", "Reconnaît personne, véhicule, animal, colis", "Alertes regroupées en une phrase", "Mode urgence et accès temporaires"],
+     "non": ["Pas de centrale d’alarme ni d’agents : c’est vous qu’on prévient", "Demande au moins une caméra ou une sonnette"]},
     {"id": "ia", "nom": "IA privée et connaissances", "prix": 15, "slug": "ia-privee-connaissances",
      "pourquoi": "Posez une question sur votre lieu ou vos documents. La réponse ne sort jamais de chez vous.",
-     "pts": ["Assistant qui connaît votre lieu", "Répond à partir de vos documents, source citée", "Assistant vocal (Signature et Platinum)", "Option IA par Internet avec votre clé"]},
+     "pts": ["Assistant qui connaît votre lieu", "Répond à partir de vos documents, source citée", "Assistant vocal (Signature et Platinum)", "Option IA par Internet avec votre clé"],
+     "non": ["Sur un Hub Base, l’IA passe par Internet", "N’envoie jamais vos documents à un service externe sans votre clé"]},
     {"id": "res", "nom": "Réseau et cybersécurité", "prix": 10, "slug": "reseau-resilience",
      "pourquoi": "Un appareil inconnu sur votre réseau est bloqué avant de faire des dégâts.",
-     "pts": ["Carte du réseau en direct", "Appareils inconnus détectés et bloqués", "Zones séparées : invités, caméras, travail", "Lien de secours géré automatiquement"]},
+     "pts": ["Carte du réseau en direct", "Appareils inconnus détectés et bloqués", "Zones séparées : invités, caméras, travail", "Lien de secours géré automatiquement"],
+     "non": ["Ne fournit pas Internet : routeur 4G ou Starlink à part", "Pas un antivirus pour vos ordinateurs"]},
     {"id": "mob", "nom": "Mobilité", "prix": 15, "slug": "mobilite", "unite": "par véhicule",
      "pourquoi": "Position, diagnostic et antivol de chaque véhicule. Les données cellulaires sont comprises.",
-     "pts": ["Position en direct, historique des trajets", "Diagnostic moteur, pression des pneus", "Alerte de mouvement (antivol)", "Données cellulaires incluses"]},
+     "pts": ["Position en direct, historique des trajets", "Diagnostic moteur, pression des pneus", "Alerte de mouvement (antivol)", "Données cellulaires incluses"],
+     "non": ["Demande un Boîtier Mobilité ou un Boîtier VR Signature/Platinum", "Ne bloque pas le véhicule à distance"]},
 ]
-COMPLET = {"id": "complet", "nom": "JARVIS Complet", "prix": 49, "valeur": sum(s["prix"] for s in SOLUTIONS)}
+COMPLET = {"id": "complet", "nom": "JARVIS Complet", "prix": 59, "valeur": sum(s["prix"] for s in SOLUTIONS)}
 
 # Entreprise à la carte : socle, réceptionniste par ligne, automatisations une par une.
 ENT_SOCLE = {"id": "socle", "nom": "Socle Entreprise", "prix": 29,
@@ -88,6 +94,11 @@ ENT_TOUTES = {"id": "toutes", "nom": "Toutes les automatisations", "prix": 149,
               "pourquoi": "Toute la bibliothèque, activée au besoin. Hub Platinum recommandé."}
 ENT_MESURE = {"id": "mesure", "nom": "Automatisation sur mesure", "prix": 295, "mois": 19,
               "d": "Vous décrivez le besoin, nous la construisons et la testons. 295 $ une fois, puis 19 $ par mois."}
+# Entretien et veille : le contrat mensuel des entreprises (mises à jour, surveillance, soutien, rapport).
+ENT_VEILLE = [
+    ("veille_pme", "Entretien et veille PME", 149, "Mises à jour vérifiées, surveillance du réseau et des caméras, rapport mensuel, 2 heures de soutien par mois, réponse le jour ouvrable suivant.", "Un système qu’on n’entretient pas finit par ne plus protéger."),
+    ("veille_pro", "Entretien et veille Pro", 349, "PME + réponse en 4 heures, 6 heures de soutien par mois, revue trimestrielle sur place, personne dédiée.", "Pour une entreprise qui ne peut pas attendre à demain."),
+]
 ENT_USAGE = "Au-delà : minute d’appel 0,15 $ · texto 0,05 $ · ligne supplémentaire = une réceptionniste de plus."
 # Trois niveaux de prix : simple 9 $ (un déclencheur, une action), reliée 19 $ (parle à un outil externe), critique 29 $ (veille 24/7, escalade).
 AUTOMATISATIONS = [
@@ -185,13 +196,22 @@ CAMERAS = {"camext", "camint", "cam360", "sonnette", "plaques", "inter"}
 
 # Services professionnels (une fois) : sécurité privée, audits, formation. Sur place ou à distance.
 SERVICES = [
-    ("audit_res", "Audit de sécurité résidentiel", 349, "Tour complet de la maison ou du chalet : accès, caméras, réseau, habitudes. Rapport écrit avec priorités.", "Savoir par où on entrerait chez vous avant quelqu’un d’autre."),
-    ("audit_ent", "Audit de sécurité d’entreprise", 1490, "Accès, caméras, réseau, postes, sauvegardes, employés. Rapport pour la direction et plan sur 90 jours.", "Une journée d’expert vaut moins qu’une seule intrusion."),
-    ("pentest", "Test d’intrusion réseau", 2990, "Attaque autorisée de votre réseau et de vos services, puis correction avec vous. Rapport et nouvelle vérification.", "La seule façon de savoir si ça tient, c’est d’essayer."),
-    ("osint", "Revue de votre exposition en ligne", 890, "Ce qu’Internet sait de vous et de votre entreprise, à partir de sources ouvertes. Rapport et nettoyage.", "Ce qu’un fraudeur trouverait en une heure, retiré avant lui."),
-    ("loi25", "Accompagnement Loi 25", 1990, "Registre, politiques, incidents, consentements : votre entreprise conforme, avec JARVIS comme preuve.", "Les amendes montent à 25 M$. La conformité coûte 1 990 $."),
-    ("formation", "Formation d’équipe (demi-journée)", 490, "Vos employés apprennent JARVIS, la réceptionniste et les bons réflexes de sécurité.", "Un outil que personne n’utilise ne protège personne."),
+    ("Vérifier", [
+        ("audit_res", "Vérification de vos systèmes (résidence)", 349, "Caméras, accès, réseau, Wi-Fi, sauvegardes, habitudes : le tour complet de la maison ou du chalet. Rapport écrit avec priorités.", "Savoir ce qui est faible avant que quelqu’un d’autre le trouve."),
+        ("audit_ent", "Vérification de vos systèmes (entreprise)", 1490, "Accès, caméras, réseau, postes, sauvegardes, comptes employés. Rapport pour la direction et plan sur 90 jours.", "Une journée de vérification coûte moins qu’une seule panne."),
+        ("pentest", "Test d’intrusion réseau", 2990, "Attaque autorisée de votre réseau et de vos services, puis correction avec vous. Rapport et nouvelle vérification.", "La seule façon de savoir si ça tient, c’est d’essayer."),
+        ("osint", "Revue de votre exposition en ligne", 890, "Ce qu’Internet dit de vous et de votre entreprise, à partir de sources publiques. Rapport et nettoyage.", "Ce qu’un fraudeur trouverait en une heure, retiré avant lui."),
+    ]),
+    ("Protéger", [
+        ("loi25", "Accompagnement Loi 25", 1990, "Registre, politiques, incidents, consentements : votre entreprise conforme, avec JARVIS comme preuve.", "Les amendes montent à 25 M$. La conformité coûte 1 990 $."),
+        ("durcir", "Mise à niveau du réseau", 790, "Zones séparées, mots de passe, mises à jour, sauvegardes testées, caméras isolées. Une journée, puis vérification.", "Le gros des intrusions passe par ce qui n’a jamais été réglé."),
+    ]),
+    ("Former", [
+        ("formation", "Formation d’équipe (demi-journée)", 490, "Vos employés apprennent JARVIS, la réceptionniste et les bons réflexes : hameçonnage, mots de passe, accès.", "Un outil que personne n’utilise ne protège personne."),
+        ("formation_fam", "Prise en main à la maison (2 h)", 190, "Toute la famille apprend JARVIS : scènes, alertes, caméras, codes invités.", "Le système sert seulement si tout le monde s’en sert."),
+    ]),
 ]
+SERVICES_PLATS = [x for _, items in SERVICES for x in items]
 
 INSTALL = [
     ("auto", "Je l’installe moi-même", 0, "Inclus", "Prises identifiées, aucun fil à couper. Plan, vidéo et mise en service à distance (30 min)."),
@@ -307,6 +327,7 @@ def _solutions():
       <div class="ct-sol-h"><h3>{escape(s['nom'])}</h3><p class="ct-prix">{prix}</p></div>
       <p class="ct-why">{escape(s['pourquoi'])}</p>
       <ul class="ct-oui">{pts}</ul>
+      <ul class="ct-no ct-no-sol">{"".join(f"<li>{escape(x)}</li>" for x in s.get("non", []))}</ul>
       {qty}
       <a href="/solutions/{s['slug']}/">Voir la solution <i aria-hidden="true">→</i></a>
     </label>""")
@@ -335,6 +356,11 @@ def _entreprise():
       <p class="ct-d">{escape(ENT_MESURE['d'])}</p>
       <div class="ct-qty"><button type="button" data-q="-1" aria-label="Une de moins">−</button><output>0</output><button type="button" data-q="1" aria-label="Une de plus">+</button></div>
     </div>"""
+    veille = "".join(f"""<label class="ct-ent ct-ent-veille" data-rev>
+      <input type="checkbox" name="veille" value="{i}" data-prix="{p}"><span class="ct-check" aria-hidden="true"></span>
+      <h3>{escape(n)}</h3><p class="ct-prix">{p} $<small>/mois</small></p>
+      <p class="ct-why">{escape(w)}</p><p class="ct-d">{escape(d)}</p>
+    </label>""" for i, n, p, d, w in ENT_VEILLE)
     cats = []
     for cat, items in AUTOMATISATIONS:
         rows = "".join(f"""<label class="ct-auto" data-id="{i}">
@@ -348,7 +374,9 @@ def _entreprise():
     <p class="ct-note ct-note-prix" data-rev><b>9 $</b> un déclencheur, une action · <b>19 $</b> reliée à un de vos outils · <b>29 $</b> veille 24/7 avec escalade. Toutes demandent le Socle Entreprise et un Hub Signature ou Platinum.</p>
     <div class="ct-autos">{"".join(cats)}</div>
     <div class="ct-ents ct-ents-bas">{mesure}</div>
-    <p class="ct-note">{escape(ENT_USAGE)}</p>"""
+    <p class="ct-note">{escape(ENT_USAGE)}</p>
+    <h3 class="ct-sub" data-rev>Entretien et veille <em>· pour que ça continue de protéger, mois après mois</em></h3>
+    <div class="ct-ents ct-ents-veille">{veille}</div>"""
 
 
 def _materiel():
@@ -396,12 +424,15 @@ def _kits():
 
 
 def _services():
-    rows = "".join(f"""<div class="ct-item" data-id="{i}" data-prix="{p}" data-svc="1">
+    cats = []
+    for fam, items in SERVICES:
+        rows = "".join(f"""<div class="ct-item" data-id="{i}" data-prix="{p}" data-svc="1">
         <div class="ct-item-t"><b>{escape(n)}</b><span>{escape(d)}</span><em>{escape(w)}</em></div>
         <div class="ct-item-p">{_p(p)}</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
-      </div>""" for i, n, p, d, w in SERVICES)
-    return f'<section class="ct-cat ct-cat-svc" data-rev><h3>Services professionnels</h3><p class="ct-d">Payés une fois, sur soumission confirmée. Déplacement en sus hors Montérégie.</p>{rows}</section>'
+      </div>""" for i, n, p, d, w in items)
+        cats.append(f'<section class="ct-cat ct-cat-svc" data-rev><h3>{escape(fam)}</h3>{rows}</section>')
+    return f'<div class="ct-mats ct-svcs">{"".join(cats)}</div><p class="ct-note">Payés une fois, sur soumission confirmée. Déplacement en sus hors Montérégie. Nous vérifions et protégeons vos systèmes; nous ne sommes pas une agence de gardiennage ni d’enquête.</p>'
 
 
 def _install():
@@ -439,6 +470,11 @@ PAGE = {
 </section>
 
 <form id="ct" class="ct" novalidate>
+<nav class="ct-lieux-nav" aria-label="Commencez par votre lieu" data-rev>
+  <p>Commencez par votre lieu :</p>
+  {"".join(f'<button type="button" data-kit-go="{i + 1}">{escape(k["nom"].replace("Kit ", ""))}</button>' for i, k in enumerate(KITS))}
+  <a href="#hub">ou composez pièce par pièce →</a>
+</nav>
 <div class="ct-wrap">
 <div class="ct-main">
 
@@ -459,7 +495,7 @@ PAGE = {
   <label class="ct-complet" data-rev>
     <input type="checkbox" name="complet" value="complet" data-prix="{COMPLET['prix']}"><span class="ct-check" aria-hidden="true"></span>
     <span class="ct-tag">Meilleure valeur</span>
-    <div><h3>{COMPLET['nom']} · {COMPLET['prix']} $/mois</h3><p>Les cinq solutions payantes, Mobilité pour un véhicule comprise. Valeur à la carte : {COMPLET['valeur']} $/mois.</p></div>
+    <div><h3>{COMPLET['nom']} · {COMPLET['prix']} $/mois</h3><p>Les cinq solutions payantes, Mobilité pour un véhicule comprise. Valeur à la carte : {COMPLET['valeur']} $/mois. Vous économisez {COMPLET['valeur'] - COMPLET['prix']} $ par mois.</p></div>
   </label>
   <h3 class="ct-sub" id="entreprise" data-rev>Pour une entreprise <em>· une réceptionniste IA et des automatisations à la carte</em></h3>
   <p class="ct-intro" data-rev>Tout est à l’unité et payable par mois. Vous commencez avec le Socle et une automatisation; vous en ajoutez quand vous en voyez le gain. Demande un Hub Signature ou Platinum.</p>
@@ -485,7 +521,7 @@ PAGE = {
   </div>
   <h3 class="ct-sub" data-rev>Installation <em>· à vous de choisir</em></h3>
   <div class="cards ct-install">{_install()}</div>
-  <h3 class="ct-sub" data-rev>Services professionnels <em>· quand il faut plus qu’un Hub</em></h3>
+  <h3 class="ct-sub" data-rev>Services professionnels <em>· vérifier, protéger, former</em></h3>
   {_services()}
   <h3 class="ct-sub" data-rev>Toujours inclus</h3>
   <ul class="ct-inclus">{_inclus()}</ul>

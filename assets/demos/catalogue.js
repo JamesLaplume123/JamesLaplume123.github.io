@@ -76,9 +76,13 @@
       once.push({ id: "mesure", n: "Automatisation sur mesure (construction)", q: nMesure, p: +mesure.dataset.prix });
       month.push({ id: "mesure-m", n: "Automatisation sur mesure", q: nMesure, p: +mesure.dataset.mois, kind: "ent" });
     }
+    $$('input[name="veille"]').forEach(function (v) {
+      if (v.checked) { entActif = true; month.push({ id: v.value, n: v.closest(".ct-ent").querySelector("h3").textContent, q: 1, p: +v.dataset.prix, kind: "ent" }); }
+    });
     if (recep) recep.classList.toggle("is-on", nRecep > 0);
     if (mesure) mesure.classList.toggle("is-on", nMesure > 0);
-    if (entActif && socle && !socle.checked) { socle.checked = true; }
+    var veilleSeule = entActif && nAutos === 0 && nRecep === 0 && nMesure === 0;
+    if (entActif && !veilleSeule && socle && !socle.checked) { socle.checked = true; }
     if (socle && socle.checked) month.unshift({ id: "socle", n: "Socle Entreprise", q: 1, p: +socle.dataset.prix, kind: "ent" });
     var socleOn = socle && socle.checked;
 
@@ -178,6 +182,7 @@
     else if (id === "toutes") { $('input[name="toutes"]').checked = false; $$('input[name="auto"]').forEach(function (a) { a.checked = false; }); }
     else if (id === "socle") { $('input[name="socle"]').checked = false; $('input[name="toutes"]').checked = false; $$('input[name="auto"]').forEach(function (a) { a.checked = false; }); setQty($(".ct-ent-recep"), 0); setQty($(".ct-ent-mesure"), 0); }
     else if ((el = $('input[name="auto"][value="' + id + '"]'))) el.checked = false;
+    else if ((el = $('input[name="veille"][value="' + id + '"]'))) el.checked = false;
     else if (id === "recep") setQty($(".ct-ent-recep"), 0);
     else if (id === "mesure" || id === "mesure-m") setQty($(".ct-ent-mesure"), 0);
     else if ((el = $('.ct-item[data-id="' + id + '"]'))) setQty(el, 0);
@@ -198,6 +203,7 @@
     setQty($(".ct-ent-recep"), e.recep || 0);
     setQty($(".ct-ent-mesure"), 0);
     $$('input[name="auto"]').forEach(function (a) { a.checked = (e.autos || []).indexOf(a.value) >= 0; });
+    $$('input[name="veille"]').forEach(function (v) { v.checked = (e.veille || []).indexOf(v.value) >= 0; });
     $('input[name="install"][value="auto"]').checked = true;
     compute();
     var cart = $(".ct-cart");
@@ -220,6 +226,8 @@
     if (rm) { remove(rm.dataset.rm); return; }
     var up = e.target.closest("[data-up]");
     if (up) { var h = $('input[name="hub"][value="' + up.dataset.up + '"]'); if (h) { h.checked = true; compute(); } return; }
+    var kg = e.target.closest("[data-kit-go]");
+    if (kg) { var kb2 = $$("[data-kit]")[+kg.dataset.kitGo - 1]; if (kb2) { applyKit(JSON.parse(kb2.dataset.kit)); kb2.closest(".ct-kit").scrollIntoView({ behavior: "smooth", block: "center" }); } return; }
     var k = e.target.closest("[data-kit]");
     if (k) { e.preventDefault(); applyKit(JSON.parse(k.dataset.kit)); return; }
     if (e.target.closest("[data-cart-open]")) { form.classList.add("is-cart"); document.body.classList.add("ct-lock"); return; }

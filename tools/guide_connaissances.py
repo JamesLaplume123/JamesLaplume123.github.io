@@ -109,8 +109,13 @@ def fiche(complet=True):
             a(f"- {k['nom']} : {p(once)} + {mois} $/mois, {hub}, {1 + sum(k['mat'].values())} pièces. Pour : {k['pour']}. {D}/catalogue/?kit={i}")
     a("")
     a("## Sécurité privée et services professionnels (payés une fois)")
-    for _, n, pr, d, w in C.SERVICES:
-        a(f"- {n} : {p(pr)}. {d}" + (f" {w}" if complet else ""))
+    for fam, items in C.SERVICES:
+        for _, n, pr, d, w in items:
+            a(f"- {fam} · {n} : {p(pr)}. {d}" + (f" {w}" if complet else ""))
+    a("- Nous vérifions et protégeons des systèmes; nous ne sommes pas une agence de gardiennage ni d’enquête.")
+    a("### Entretien et veille (entreprise, par mois)")
+    for _, n, pr, d, w in C.ENT_VEILLE:
+        a(f"- {n} : {pr} $ par mois. {d}")
     a("")
     a("## Installation")
     for _, n, pr, aff, d in C.INSTALL:

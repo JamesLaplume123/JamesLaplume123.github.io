@@ -55,7 +55,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - IA privée et connaissances : 15 $ par mois. Posez une question sur votre lieu ou vos documents. La réponse ne sort jamais de chez vous.
 - Réseau et cybersécurité : 10 $ par mois. Un appareil inconnu sur votre réseau est bloqué avant de faire des dégâts.
 - Mobilité : 15 $ par mois par véhicule. Position, diagnostic et antivol de chaque véhicule. Les données cellulaires sont comprises.
-- JARVIS Complet : 49 $ par mois pour les cinq solutions payantes, Mobilité pour un véhicule comprise (valeur à la carte 75 $).
+- JARVIS Complet : 59 $ par mois pour les cinq solutions payantes, Mobilité pour un véhicule comprise (valeur à la carte 75 $).
 - Chaque solution payante inclut l’accès de partout et les alertes sur le téléphone. Sans solution payante, JARVIS fonctionne quand même chez le client, sur place.
 
 ## Pour une entreprise (à la carte, par mois; demande un Hub Signature ou Platinum)
@@ -82,21 +82,27 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 
 ## Les kits (prix des pièces moins 8 %, ajustables pièce par pièce)
 - Kit VR Essentiel : 1 160 $ + 30 $/mois, Hub Base, 6 pièces. Pour : Roulotte, petit VR, bateau de 25 pi. https://jarvisprivatesystems.com/catalogue/?kit=1
-- Kit VR Complet : 2 920 $ + 49 $/mois, Hub Signature, 12 pièces. Pour : VR de classe A ou C, cinquième roue. https://jarvisprivatesystems.com/catalogue/?kit=2
+- Kit VR Complet : 2 920 $ + 59 $/mois, Hub Signature, 12 pièces. Pour : VR de classe A ou C, cinquième roue. https://jarvisprivatesystems.com/catalogue/?kit=2
 - Kit Chalet : 1 250 $ + 15 $/mois, Hub Base, 10 pièces. Pour : Chalet fermé l’hiver, sans Internet. https://jarvisprivatesystems.com/catalogue/?kit=3
-- Kit Maison : 2 350 $ + 49 $/mois, Hub Signature, 12 pièces. Pour : Maison familiale, condo. https://jarvisprivatesystems.com/catalogue/?kit=4
-- Kit Maison Sécurité : 3 820 $ + 49 $/mois, Hub Signature, 18 pièces. Pour : Maison en coin de rue, absences fréquentes. https://jarvisprivatesystems.com/catalogue/?kit=5
+- Kit Maison : 2 350 $ + 59 $/mois, Hub Signature, 12 pièces. Pour : Maison familiale, condo. https://jarvisprivatesystems.com/catalogue/?kit=4
+- Kit Maison Sécurité : 3 820 $ + 59 $/mois, Hub Signature, 18 pièces. Pour : Maison en coin de rue, absences fréquentes. https://jarvisprivatesystems.com/catalogue/?kit=5
 - Kit PME : 2 630 $ + 135 $/mois, Hub Signature, 8 pièces. Pour : Garage, clinique, bureau de 2 à 10 employés. https://jarvisprivatesystems.com/catalogue/?kit=6
-- Kit Domaine : 7 970 $ + 49 $/mois, Hub Platinum, 19 pièces. Pour : Grande propriété, terrain, dépendances. https://jarvisprivatesystems.com/catalogue/?kit=7
-- Kit Ferme : 5 670 $ + 155 $/mois, Hub Platinum, 18 pièces. Pour : Ferme laitière, érablière, serre. https://jarvisprivatesystems.com/catalogue/?kit=8
+- Kit Domaine : 7 970 $ + 59 $/mois, Hub Platinum, 19 pièces. Pour : Grande propriété, terrain, dépendances. https://jarvisprivatesystems.com/catalogue/?kit=7
+- Kit Ferme : 5 670 $ + 165 $/mois, Hub Platinum, 18 pièces. Pour : Ferme laitière, érablière, serre. https://jarvisprivatesystems.com/catalogue/?kit=8
 
 ## Sécurité privée et services professionnels (payés une fois)
-- Audit de sécurité résidentiel : 349 $. Tour complet de la maison ou du chalet : accès, caméras, réseau, habitudes. Rapport écrit avec priorités.
-- Audit de sécurité d’entreprise : 1 490 $. Accès, caméras, réseau, postes, sauvegardes, employés. Rapport pour la direction et plan sur 90 jours.
-- Test d’intrusion réseau : 2 990 $. Attaque autorisée de votre réseau et de vos services, puis correction avec vous. Rapport et nouvelle vérification.
-- Revue de votre exposition en ligne : 890 $. Ce qu’Internet sait de vous et de votre entreprise, à partir de sources ouvertes. Rapport et nettoyage.
-- Accompagnement Loi 25 : 1 990 $. Registre, politiques, incidents, consentements : votre entreprise conforme, avec JARVIS comme preuve.
-- Formation d’équipe (demi-journée) : 490 $. Vos employés apprennent JARVIS, la réceptionniste et les bons réflexes de sécurité.
+- Vérifier · Vérification de vos systèmes (résidence) : 349 $. Caméras, accès, réseau, Wi-Fi, sauvegardes, habitudes : le tour complet de la maison ou du chalet. Rapport écrit avec priorités.
+- Vérifier · Vérification de vos systèmes (entreprise) : 1 490 $. Accès, caméras, réseau, postes, sauvegardes, comptes employés. Rapport pour la direction et plan sur 90 jours.
+- Vérifier · Test d’intrusion réseau : 2 990 $. Attaque autorisée de votre réseau et de vos services, puis correction avec vous. Rapport et nouvelle vérification.
+- Vérifier · Revue de votre exposition en ligne : 890 $. Ce qu’Internet dit de vous et de votre entreprise, à partir de sources publiques. Rapport et nettoyage.
+- Protéger · Accompagnement Loi 25 : 1 990 $. Registre, politiques, incidents, consentements : votre entreprise conforme, avec JARVIS comme preuve.
+- Protéger · Mise à niveau du réseau : 790 $. Zones séparées, mots de passe, mises à jour, sauvegardes testées, caméras isolées. Une journée, puis vérification.
+- Former · Formation d’équipe (demi-journée) : 490 $. Vos employés apprennent JARVIS, la réceptionniste et les bons réflexes : hameçonnage, mots de passe, accès.
+- Former · Prise en main à la maison (2 h) : 190 $. Toute la famille apprend JARVIS : scènes, alertes, caméras, codes invités.
+- Nous vérifions et protégeons des systèmes; nous ne sommes pas une agence de gardiennage ni d’enquête.
+### Entretien et veille (entreprise, par mois)
+- Entretien et veille PME : 149 $ par mois. Mises à jour vérifiées, surveillance du réseau et des caméras, rapport mensuel, 2 heures de soutien par mois, réponse le jour ouvrable suivant.
+- Entretien et veille Pro : 349 $ par mois. PME + réponse en 4 heures, 6 heures de soutien par mois, revue trimestrielle sur place, personne dédiée.
 
 ## Installation
 - Je l’installe moi-même : Inclus. Prises identifiées, aucun fil à couper. Plan, vidéo et mise en service à distance (30 min).

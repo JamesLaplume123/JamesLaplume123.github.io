@@ -18,11 +18,11 @@
 <meta name="geo.region" content="CA-QC">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="/favicon.svg?v=20261116b">
+<link rel="icon" href="/favicon.svg?v=20261116d">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script>try{var m=new URLSearchParams(location.search).get("mode")||localStorage.getItem("jarvis-mode");if(m==="base"||m==="signature"||m==="platinum")document.documentElement.dataset.mode=m}catch(e){}</script>
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/wow.css?v=20261116b">
+<link rel="stylesheet" href="/assets/css/wow.css?v=20261116d">
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -43,7 +43,7 @@
  ]
 }
 </script>
-<link rel="stylesheet" href="/assets/demos/catalogue.css?v=20261116b">
+<link rel="stylesheet" href="/assets/demos/catalogue.css?v=20261116d">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -88,6 +88,11 @@
 <nav class="toc" aria-label="Sections de la page" data-toc-nav><div class="toc-in"><a href="#hub">1 · Le Hub</a><a href="#solutions">2 · Vos solutions</a><a href="#materiel">3 · Le matériel</a><a href="#lieux">4 · Lieux et services</a><a href="#pourquoi">Pourquoi</a></div><a class="toc-cta" href="/contact/">Parlons de votre projet</a></nav>
 
 <form id="ct" class="ct" novalidate>
+<nav class="ct-lieux-nav" aria-label="Commencez par votre lieu" data-rev>
+  <p>Commencez par votre lieu :</p>
+  <button type="button" data-kit-go="1">VR Essentiel</button><button type="button" data-kit-go="2">VR Complet</button><button type="button" data-kit-go="3">Chalet</button><button type="button" data-kit-go="4">Maison</button><button type="button" data-kit-go="5">Maison Sécurité</button><button type="button" data-kit-go="6">PME</button><button type="button" data-kit-go="7">Domaine</button><button type="button" data-kit-go="8">Ferme</button>
+  <a href="#hub">ou composez pièce par pièce →</a>
+</nav>
 <div class="ct-wrap">
 <div class="ct-main">
 
@@ -148,6 +153,7 @@
       <div class="ct-sol-h"><h3>Environnements intelligents</h3><p class="ct-prix">Inclus</p></div>
       <p class="ct-why">Inclus avec chaque Hub : c’est la base de JARVIS.</p>
       <ul class="ct-oui"><li>Lumières, chauffage, stores, foyer, serrures</li><li>Scènes : Matin, Soir, Nuit, Absent</li><li>Énergie pièce par pièce</li><li>Fonctionne sans Internet</li></ul>
+      <ul class="ct-no ct-no-sol"><li>Pas d’accès de partout ni d’alertes sans une solution payante</li></ul>
       
       <a href="/solutions/environnements-intelligents/">Voir la solution <i aria-hidden="true">→</i></a>
     </label><label class="ct-sol" data-rev data-sol="diag">
@@ -155,6 +161,7 @@
       <div class="ct-sol-h"><h3>Diagnostic et continuité</h3><p class="ct-prix">15 $<small>/mois</small></p></div>
       <p class="ct-why">Un dégât d’eau coûte 12 000 $ en moyenne. Ici, vous êtes prévenu à la première goutte.</p>
       <ul class="ct-oui"><li>Veille 24/7 : fuite, gel, batterie, panne</li><li>Alertes de partout, avec la cause probable</li><li>Dossier prêt pour le technicien</li><li>Rapport mensuel de santé du lieu</li></ul>
+      <ul class="ct-no ct-no-sol"><li>Ne ferme pas l’eau sans la vanne automatique</li><li>Ne remplace pas un plombier ou un électricien</li></ul>
       
       <a href="/solutions/diagnostic-care/">Voir la solution <i aria-hidden="true">→</i></a>
     </label><label class="ct-sol" data-rev data-sol="secu">
@@ -162,6 +169,7 @@
       <div class="ct-sol-h"><h3>Sécurité intelligente</h3><p class="ct-prix">20 $<small>/mois</small></p></div>
       <p class="ct-why">Vos caméras comprennent ce qu’elles voient. Une alerte utile, pas cent notifications.</p>
       <ul class="ct-oui"><li>Enregistrement local, rien dans le nuage</li><li>Reconnaît personne, véhicule, animal, colis</li><li>Alertes regroupées en une phrase</li><li>Mode urgence et accès temporaires</li></ul>
+      <ul class="ct-no ct-no-sol"><li>Pas de centrale d’alarme ni d’agents : c’est vous qu’on prévient</li><li>Demande au moins une caméra ou une sonnette</li></ul>
       
       <a href="/solutions/securite-intelligente/">Voir la solution <i aria-hidden="true">→</i></a>
     </label><label class="ct-sol" data-rev data-sol="ia">
@@ -169,6 +177,7 @@
       <div class="ct-sol-h"><h3>IA privée et connaissances</h3><p class="ct-prix">15 $<small>/mois</small></p></div>
       <p class="ct-why">Posez une question sur votre lieu ou vos documents. La réponse ne sort jamais de chez vous.</p>
       <ul class="ct-oui"><li>Assistant qui connaît votre lieu</li><li>Répond à partir de vos documents, source citée</li><li>Assistant vocal (Signature et Platinum)</li><li>Option IA par Internet avec votre clé</li></ul>
+      <ul class="ct-no ct-no-sol"><li>Sur un Hub Base, l’IA passe par Internet</li><li>N’envoie jamais vos documents à un service externe sans votre clé</li></ul>
       
       <a href="/solutions/ia-privee-connaissances/">Voir la solution <i aria-hidden="true">→</i></a>
     </label><label class="ct-sol" data-rev data-sol="res">
@@ -176,6 +185,7 @@
       <div class="ct-sol-h"><h3>Réseau et cybersécurité</h3><p class="ct-prix">10 $<small>/mois</small></p></div>
       <p class="ct-why">Un appareil inconnu sur votre réseau est bloqué avant de faire des dégâts.</p>
       <ul class="ct-oui"><li>Carte du réseau en direct</li><li>Appareils inconnus détectés et bloqués</li><li>Zones séparées : invités, caméras, travail</li><li>Lien de secours géré automatiquement</li></ul>
+      <ul class="ct-no ct-no-sol"><li>Ne fournit pas Internet : routeur 4G ou Starlink à part</li><li>Pas un antivirus pour vos ordinateurs</li></ul>
       
       <a href="/solutions/reseau-resilience/">Voir la solution <i aria-hidden="true">→</i></a>
     </label><label class="ct-sol" data-rev data-sol="mob">
@@ -183,13 +193,14 @@
       <div class="ct-sol-h"><h3>Mobilité</h3><p class="ct-prix">15 $<small>/mois par véhicule</small></p></div>
       <p class="ct-why">Position, diagnostic et antivol de chaque véhicule. Les données cellulaires sont comprises.</p>
       <ul class="ct-oui"><li>Position en direct, historique des trajets</li><li>Diagnostic moteur, pression des pneus</li><li>Alerte de mouvement (antivol)</li><li>Données cellulaires incluses</li></ul>
+      <ul class="ct-no ct-no-sol"><li>Demande un Boîtier Mobilité ou un Boîtier VR Signature/Platinum</li><li>Ne bloque pas le véhicule à distance</li></ul>
       <div class="ct-qty ct-qty-sol"><button type="button" data-q="-1" aria-label="Un véhicule de moins">−</button><output>0</output><button type="button" data-q="1" aria-label="Un véhicule de plus">+</button><span>véhicule(s)</span></div>
       <a href="/solutions/mobilite/">Voir la solution <i aria-hidden="true">→</i></a>
     </label></div>
   <label class="ct-complet" data-rev>
-    <input type="checkbox" name="complet" value="complet" data-prix="49"><span class="ct-check" aria-hidden="true"></span>
+    <input type="checkbox" name="complet" value="complet" data-prix="59"><span class="ct-check" aria-hidden="true"></span>
     <span class="ct-tag">Meilleure valeur</span>
-    <div><h3>JARVIS Complet · 49 $/mois</h3><p>Les cinq solutions payantes, Mobilité pour un véhicule comprise. Valeur à la carte : 75 $/mois.</p></div>
+    <div><h3>JARVIS Complet · 59 $/mois</h3><p>Les cinq solutions payantes, Mobilité pour un véhicule comprise. Valeur à la carte : 75 $/mois. Vous économisez 16 $ par mois.</p></div>
   </label>
   <h3 class="ct-sub" id="entreprise" data-rev>Pour une entreprise <em>· une réceptionniste IA et des automatisations à la carte</em></h3>
   <p class="ct-intro" data-rev>Tout est à l’unité et payable par mois. Vous commencez avec le Socle et une automatisation; vous en ajoutez quand vous en voyez le gain. Demande un Hub Signature ou Platinum.</p>
@@ -312,6 +323,16 @@
       <div class="ct-qty"><button type="button" data-q="-1" aria-label="Une de moins">−</button><output>0</output><button type="button" data-q="1" aria-label="Une de plus">+</button></div>
     </div></div>
     <p class="ct-note">Au-delà : minute d’appel 0,15 $ · texto 0,05 $ · ligne supplémentaire = une réceptionniste de plus.</p>
+    <h3 class="ct-sub" data-rev>Entretien et veille <em>· pour que ça continue de protéger, mois après mois</em></h3>
+    <div class="ct-ents ct-ents-veille"><label class="ct-ent ct-ent-veille" data-rev>
+      <input type="checkbox" name="veille" value="veille_pme" data-prix="149"><span class="ct-check" aria-hidden="true"></span>
+      <h3>Entretien et veille PME</h3><p class="ct-prix">149 $<small>/mois</small></p>
+      <p class="ct-why">Un système qu’on n’entretient pas finit par ne plus protéger.</p><p class="ct-d">Mises à jour vérifiées, surveillance du réseau et des caméras, rapport mensuel, 2 heures de soutien par mois, réponse le jour ouvrable suivant.</p>
+    </label><label class="ct-ent ct-ent-veille" data-rev>
+      <input type="checkbox" name="veille" value="veille_pro" data-prix="349"><span class="ct-check" aria-hidden="true"></span>
+      <h3>Entretien et veille Pro</h3><p class="ct-prix">349 $<small>/mois</small></p>
+      <p class="ct-why">Pour une entreprise qui ne peut pas attendre à demain.</p><p class="ct-d">PME + réponse en 4 heures, 6 heures de soutien par mois, revue trimestrielle sur place, personne dédiée.</p>
+    </label></div>
 </section>
 
 <section class="sect" id="materiel" data-toc="3 · Le matériel" aria-labelledby="mat-t">
@@ -331,7 +352,7 @@
       <div class="ct-kit-h"><h3>Kit VR Complet</h3><p class="ct-pour">VR de classe A ou C, cinquième roue</p></div>
       <p class="ct-prix">2 920 $<small>une fois</small></p>
       <p class="ct-econ"><s>3 170 $</s> à la pièce · vous économisez 250 $</p>
-      <p class="ct-mois">49 $/mois<small> · JARVIS Complet (49 $)</small></p>
+      <p class="ct-mois">59 $/mois<small> · JARVIS Complet (59 $)</small></p>
       <p class="ct-why">Le VR au complet dans la poche : contrôle, caméra, écran, propane, et JARVIS Complet.</p>
       <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (12 pièces)</summary><ul><li><b>1×</b> Hub Signature</li><li><b>1×</b> Boîtier VR Signature</li><li><b>4×</b> Température et humidité</li><li><b>2×</b> Porte et fenêtre</li><li><b>1×</b> Fuite d’eau</li><li><b>1×</b> Propane</li><li><b>1×</b> Caméra intérieure</li><li><b>1×</b> Écran JARVIS 7 po</li></ul></details>
       <button type="button" class="pill" data-kit='{"nom": "Kit VR Complet", "rabais": 250, "hub": "signature", "mat": {"vrs": 1, "temp": 4, "porte": 2, "fuite": 1, "propane": 1, "camint": 1, "ecr7": 1}, "sol": ["complet"], "ent": {}}'>Partir de ce kit</button>
@@ -347,7 +368,7 @@
       <div class="ct-kit-h"><h3>Kit Maison</h3><p class="ct-pour">Maison familiale, condo</p></div>
       <p class="ct-prix">2 350 $<small>une fois</small></p>
       <p class="ct-econ"><s>2 559 $</s> à la pièce · vous économisez 209 $</p>
-      <p class="ct-mois">49 $/mois<small> · JARVIS Complet (49 $)</small></p>
+      <p class="ct-mois">59 $/mois<small> · JARVIS Complet (59 $)</small></p>
       <p class="ct-why">L’eau coupée toute seule, la sonnette qui reconnaît, l’IA chez vous.</p>
       <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (12 pièces)</summary><ul><li><b>1×</b> Hub Signature</li><li><b>3×</b> Fuite d’eau</li><li><b>1×</b> Vanne d’eau automatique</li><li><b>3×</b> Porte et fenêtre</li><li><b>2×</b> Présence (radar)</li><li><b>1×</b> Sonnette vidéo</li><li><b>1×</b> Thermostat intelligent</li></ul></details>
       <button type="button" class="pill" data-kit='{"nom": "Kit Maison", "rabais": 209, "hub": "signature", "mat": {"fuite": 3, "vanne": 1, "porte": 3, "radar": 2, "sonnette": 1, "thermo": 1}, "sol": ["complet"], "ent": {}}'>Partir de ce kit</button>
@@ -355,7 +376,7 @@
       <div class="ct-kit-h"><h3>Kit Maison Sécurité</h3><p class="ct-pour">Maison en coin de rue, absences fréquentes</p></div>
       <p class="ct-prix">3 820 $<small>une fois</small></p>
       <p class="ct-econ"><s>4 153 $</s> à la pièce · vous économisez 333 $</p>
-      <p class="ct-mois">49 $/mois<small> · JARVIS Complet (49 $)</small></p>
+      <p class="ct-mois">59 $/mois<small> · JARVIS Complet (59 $)</small></p>
       <p class="ct-why">Le Kit Maison, plus trois caméras qui comprennent ce qu’elles voient et une serrure.</p>
       <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (18 pièces)</summary><ul><li><b>1×</b> Hub Signature</li><li><b>3×</b> Fuite d’eau</li><li><b>1×</b> Vanne d’eau automatique</li><li><b>3×</b> Porte et fenêtre</li><li><b>2×</b> Présence (radar)</li><li><b>1×</b> Sonnette vidéo</li><li><b>1×</b> Thermostat intelligent</li><li><b>3×</b> Caméra extérieure</li><li><b>1×</b> Switch PoE 8 ports</li><li><b>1×</b> Sirène et stroboscope</li><li><b>1×</b> Serrure intelligente</li></ul></details>
       <button type="button" class="pill" data-kit='{"nom": "Kit Maison Sécurité", "rabais": 333, "hub": "signature", "mat": {"fuite": 3, "vanne": 1, "porte": 3, "radar": 2, "sonnette": 1, "thermo": 1, "camext": 3, "poe": 1, "sirene": 1, "serrure": 1}, "sol": ["complet"], "ent": {}}'>Partir de ce kit</button>
@@ -371,7 +392,7 @@
       <div class="ct-kit-h"><h3>Kit Domaine</h3><p class="ct-pour">Grande propriété, terrain, dépendances</p></div>
       <p class="ct-prix">7 970 $<small>une fois</small></p>
       <p class="ct-econ"><s>8 662 $</s> à la pièce · vous économisez 692 $</p>
-      <p class="ct-mois">49 $/mois<small> · JARVIS Complet (49 $)</small></p>
+      <p class="ct-mois">59 $/mois<small> · JARVIS Complet (59 $)</small></p>
       <p class="ct-why">Caméras, plaques, serrures, eau et secours : rien n’entre, rien ne coule, rien ne s’arrête.</p>
       <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (19 pièces)</summary><ul><li><b>1×</b> Hub Platinum</li><li><b>6×</b> Caméra extérieure</li><li><b>1×</b> Lecteur de plaques</li><li><b>2×</b> Serrure intelligente</li><li><b>1×</b> Interphone vidéo</li><li><b>4×</b> Fuite d’eau</li><li><b>1×</b> Vanne d’eau automatique</li><li><b>1×</b> Switch PoE 8 ports</li><li><b>1×</b> Boîtier Secours</li><li><b>1×</b> Écran JARVIS 10 po</li></ul></details>
       <button type="button" class="pill" data-kit='{"nom": "Kit Domaine", "rabais": 692, "hub": "platinum", "mat": {"camext": 6, "plaques": 1, "serrure": 2, "inter": 1, "fuite": 4, "vanne": 1, "poe": 1, "sec": 1, "ecr10": 1}, "sol": ["complet"], "ent": {}}'>Partir de ce kit</button>
@@ -379,7 +400,7 @@
       <div class="ct-kit-h"><h3>Kit Ferme</h3><p class="ct-pour">Ferme laitière, érablière, serre</p></div>
       <p class="ct-prix">5 670 $<small>une fois</small></p>
       <p class="ct-econ"><s>6 163 $</s> à la pièce · vous économisez 493 $</p>
-      <p class="ct-mois">155 $/mois<small> · JARVIS Complet (49 $) + Socle Entreprise (29 $) + Alerte de température : frigo, réservoir à lait, étable (29 $) + Commande de moulée quand le silo est bas (19 $) + Veille d’une pompe ou d’un abreuvoir (29 $)</small></p>
+      <p class="ct-mois">165 $/mois<small> · JARVIS Complet (59 $) + Socle Entreprise (29 $) + Alerte de température : frigo, réservoir à lait, étable (29 $) + Commande de moulée quand le silo est bas (19 $) + Veille d’une pompe ou d’un abreuvoir (29 $)</small></p>
       <p class="ct-why">Frigo, réservoir à lait, pompes, silo : les alertes qui sauvent une récolte ou un troupeau.</p>
       <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (18 pièces)</summary><ul><li><b>1×</b> Hub Platinum</li><li><b>1×</b> Routeur 4G/5G</li><li><b>4×</b> Caméra extérieure</li><li><b>6×</b> Température et humidité</li><li><b>4×</b> Capteur universel</li><li><b>1×</b> Boîtier Secours</li><li><b>1×</b> Compteur d’énergie</li></ul></details>
       <button type="button" class="pill" data-kit='{"nom": "Kit Ferme", "rabais": 493, "hub": "platinum", "mat": {"r4g": 1, "camext": 4, "temp": 6, "univ": 4, "sec": 1, "energie": 1}, "sol": ["complet"], "ent": {"socle": true, "autos": ["a_frigo", "a_silo", "a_pompe"]}}'>Partir de ce kit</button>
@@ -565,13 +586,13 @@
       <input type="radio" name="install" value="visite" data-prix="0"><span class="ct-check" aria-hidden="true"></span>
       <small>Gratuite</small><h3>Visite de planification</h3><p>Domaine, entreprise, ferme : inventaire, plan écrit, soumission ligne par ligne.</p>
     </label></div>
-  <h3 class="ct-sub" data-rev>Services professionnels <em>· quand il faut plus qu’un Hub</em></h3>
-  <section class="ct-cat ct-cat-svc" data-rev><h3>Services professionnels</h3><p class="ct-d">Payés une fois, sur soumission confirmée. Déplacement en sus hors Montérégie.</p><div class="ct-item" data-id="audit_res" data-prix="349" data-svc="1">
-        <div class="ct-item-t"><b>Audit de sécurité résidentiel</b><span>Tour complet de la maison ou du chalet : accès, caméras, réseau, habitudes. Rapport écrit avec priorités.</span><em>Savoir par où on entrerait chez vous avant quelqu’un d’autre.</em></div>
+  <h3 class="ct-sub" data-rev>Services professionnels <em>· vérifier, protéger, former</em></h3>
+  <div class="ct-mats ct-svcs"><section class="ct-cat ct-cat-svc" data-rev><h3>Vérifier</h3><div class="ct-item" data-id="audit_res" data-prix="349" data-svc="1">
+        <div class="ct-item-t"><b>Vérification de vos systèmes (résidence)</b><span>Caméras, accès, réseau, Wi-Fi, sauvegardes, habitudes : le tour complet de la maison ou du chalet. Rapport écrit avec priorités.</span><em>Savoir ce qui est faible avant que quelqu’un d’autre le trouve.</em></div>
         <div class="ct-item-p">349 $</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
       </div><div class="ct-item" data-id="audit_ent" data-prix="1490" data-svc="1">
-        <div class="ct-item-t"><b>Audit de sécurité d’entreprise</b><span>Accès, caméras, réseau, postes, sauvegardes, employés. Rapport pour la direction et plan sur 90 jours.</span><em>Une journée d’expert vaut moins qu’une seule intrusion.</em></div>
+        <div class="ct-item-t"><b>Vérification de vos systèmes (entreprise)</b><span>Accès, caméras, réseau, postes, sauvegardes, comptes employés. Rapport pour la direction et plan sur 90 jours.</span><em>Une journée de vérification coûte moins qu’une seule panne.</em></div>
         <div class="ct-item-p">1 490 $</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
       </div><div class="ct-item" data-id="pentest" data-prix="2990" data-svc="1">
@@ -579,18 +600,26 @@
         <div class="ct-item-p">2 990 $</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
       </div><div class="ct-item" data-id="osint" data-prix="890" data-svc="1">
-        <div class="ct-item-t"><b>Revue de votre exposition en ligne</b><span>Ce qu’Internet sait de vous et de votre entreprise, à partir de sources ouvertes. Rapport et nettoyage.</span><em>Ce qu’un fraudeur trouverait en une heure, retiré avant lui.</em></div>
+        <div class="ct-item-t"><b>Revue de votre exposition en ligne</b><span>Ce qu’Internet dit de vous et de votre entreprise, à partir de sources publiques. Rapport et nettoyage.</span><em>Ce qu’un fraudeur trouverait en une heure, retiré avant lui.</em></div>
         <div class="ct-item-p">890 $</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
-      </div><div class="ct-item" data-id="loi25" data-prix="1990" data-svc="1">
+      </div></section><section class="ct-cat ct-cat-svc" data-rev><h3>Protéger</h3><div class="ct-item" data-id="loi25" data-prix="1990" data-svc="1">
         <div class="ct-item-t"><b>Accompagnement Loi 25</b><span>Registre, politiques, incidents, consentements : votre entreprise conforme, avec JARVIS comme preuve.</span><em>Les amendes montent à 25 M$. La conformité coûte 1 990 $.</em></div>
         <div class="ct-item-p">1 990 $</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
-      </div><div class="ct-item" data-id="formation" data-prix="490" data-svc="1">
-        <div class="ct-item-t"><b>Formation d’équipe (demi-journée)</b><span>Vos employés apprennent JARVIS, la réceptionniste et les bons réflexes de sécurité.</span><em>Un outil que personne n’utilise ne protège personne.</em></div>
+      </div><div class="ct-item" data-id="durcir" data-prix="790" data-svc="1">
+        <div class="ct-item-t"><b>Mise à niveau du réseau</b><span>Zones séparées, mots de passe, mises à jour, sauvegardes testées, caméras isolées. Une journée, puis vérification.</span><em>Le gros des intrusions passe par ce qui n’a jamais été réglé.</em></div>
+        <div class="ct-item-p">790 $</div>
+        <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
+      </div></section><section class="ct-cat ct-cat-svc" data-rev><h3>Former</h3><div class="ct-item" data-id="formation" data-prix="490" data-svc="1">
+        <div class="ct-item-t"><b>Formation d’équipe (demi-journée)</b><span>Vos employés apprennent JARVIS, la réceptionniste et les bons réflexes : hameçonnage, mots de passe, accès.</span><em>Un outil que personne n’utilise ne protège personne.</em></div>
         <div class="ct-item-p">490 $</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
-      </div></section>
+      </div><div class="ct-item" data-id="formation_fam" data-prix="190" data-svc="1">
+        <div class="ct-item-t"><b>Prise en main à la maison (2 h)</b><span>Toute la famille apprend JARVIS : scènes, alertes, caméras, codes invités.</span><em>Le système sert seulement si tout le monde s’en sert.</em></div>
+        <div class="ct-item-p">190 $</div>
+        <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
+      </div></section></div><p class="ct-note">Payés une fois, sur soumission confirmée. Déplacement en sus hors Montérégie. Nous vérifions et protégeons vos systèmes; nous ne sommes pas une agence de gardiennage ni d’enquête.</p>
   <h3 class="ct-sub" data-rev>Toujours inclus</h3>
   <ul class="ct-inclus"><li data-rev><b>Configuration pour votre lieu</b><span>Vos appareils déjà jumelés, vos scènes de base prêtes.</span></li><li data-rev><b>Test d’une heure</b><span>Chaque kit tourne une heure sur banc avant l’envoi.</span></li><li data-rev><b>Mises à jour automatiques</b><span>Signées, la nuit, avec retour arrière.</span></li><li data-rev><b>Sauvegarde chiffrée</b><span>Si le Hub brise, le nouveau repart comme avant.</span></li><li data-rev><b>Garantie</b><span>1 an Base, 2 ans Signature, 3 ans Platinum. Garantie légale du Québec en plus.</span></li><li data-rev><b>Retour 30 jours</b><span>Matériel non installé : remboursé, moins la configuration.</span></li></ul>
 </section>
@@ -654,8 +683,8 @@
   </div>
   <p class="foot-line"><span>© 2026 JARVIS Private Systems · Québec, Canada</span><span class="foot-legal"><a href="/mentions-legales/">Mentions légales</a><a href="/confidentialite/">Confidentialité</a><a href="/mentions-legales/#conditions">Conditions</a></span><span>Privé par conception</span></p>
 </footer>
-<script src="/assets/js/wow.js?v=20261116b" defer></script>
-<script src="/assets/demos/catalogue.js?v=20261116b" defer></script>
-<script src="/assets/js/guide.js?v=20261116b" defer></script>
+<script src="/assets/js/wow.js?v=20261116d" defer></script>
+<script src="/assets/demos/catalogue.js?v=20261116d" defer></script>
+<script src="/assets/js/guide.js?v=20261116d" defer></script>
 </body>
 </html>

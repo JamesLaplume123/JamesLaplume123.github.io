@@ -68,12 +68,12 @@
 .lg-app [data-demo="app"] .ap-screen { min-height: calc((100cqw - 18px) / 1.6); }
 .lg-app [data-demo="app"] .ap-cap-txt { display: none; } /* le guide affiche la même légende */
 .lg-app [data-demo="app"] .ap-caps { margin-top: 1.4rem; }
-.lg-stage.is-phone .lg-app { width: 400px !important; max-width: 100%; zoom: 1 !important; }
+.lg-stage.is-phone .lg-app { max-width: 100%; }
 .lg-exit { display: none; }
 
 /* Plein écran (API du navigateur, ou repli en position fixe) */
 .lg-stage.is-full {
-  position: fixed; inset: 0; z-index: 200; overflow: auto; padding: 3.6rem 2rem 2rem;
+  position: fixed; inset: 0; z-index: 200; overflow: hidden; padding: 3.6rem 2rem 1.2rem;
   background: radial-gradient(1200px 600px at 50% 0, color-mix(in srgb, var(--mode-glow) 10%, transparent), transparent 65%), #000;
 }
 .lg-stage.is-full .lg-host { max-width: 1600px; margin: 0 auto; }
@@ -125,3 +125,6 @@ body.lg-full-open { overflow: hidden; }
 @media (min-width: 1101px) {
   .lg-guide { align-self: start; max-height: calc(100vh - 96px); overflow-y: auto; overscroll-behavior: contain; }
 }
+
+/* En plein écran, la bulle « Parler à JARVIS » ne couvre rien */
+body.lg-full-open #jv-root { display: none !important; }

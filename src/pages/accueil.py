@@ -20,11 +20,11 @@ import pro
 FAQ = [
     (
         "Que fait JARVIS Private Systems, concrètement?",
-        "JARVIS Private Systems est un intégrateur de systèmes intelligents. On installe et on relie, "
-        "dans un seul système, ce qui rend un lieu intelligent et sécurisé : la domotique, le réseau, "
-        "les caméras et serrures connectées, et une IA privée. Tout passe par un petit boîtier "
-        "silencieux installé chez vous, le JARVIS Hub, et par une seule application. Le système "
-        "propose des actions; vous gardez la décision.",
+        "JARVIS Private Systems est une entreprise de technologie et de sécurité. Nous concevons et "
+        "installons JARVIS, un système privé qui gère et protège un lieu : la domotique, le réseau "
+        "et sa cybersécurité, les caméras et serrures connectées, et une IA privée. Tout passe par "
+        "un petit boîtier silencieux installé chez vous, le JARVIS Hub, et par une seule "
+        "application. Le système propose des actions; vous gardez la décision.",
     ),
     (
         "Mes données quittent-elles la maison ou l’entreprise?",
@@ -82,6 +82,7 @@ def _heros():
     <div class="ac-spots" role="group" aria-label="Démonstration : commandes de la maison">{spots}</div>
   </div>
   <div class="ac-hero-in">
+    <p class="ac-sig">{SITE["signature"]}</p>
     <h1 id="ac-titre">Des lieux intelligents et sécurisés.</h1>
     <div class="ac-hero-bas">
       <p class="ac-phrase">{SITE["phrase"]}</p>
@@ -244,13 +245,13 @@ def _fin():
 PAGE = {
     "url": "/",
     "v2": True,
-    "title": "JARVIS Private Systems | Intégrateur de systèmes intelligents",
+    "title": "JARVIS Private Systems | Technologie et sécurité, Montérégie",
     "schema": [pro.ld_entreprise(), pro.ld_site(), pro.ld_faq(FAQ)],
     "assets": ["app", "accueil"],
     "lancement_integre": True,  # l'avis de lancement est dans le héros, pas sous la première section
     "description": (
-        "Maisons, fermes, entreprises et véhicules intelligents et sécurisés, en Montérégie. "
-        "Domotique, réseau et IA privée dans un seul système. Saint-Hyacinthe."
+        "JARVIS, un système privé qui gère et protège les maisons, les fermes, les entreprises "
+        "et les véhicules, en Montérégie. Conçu et installé depuis Saint-Hyacinthe."
     ),
     "content": "\n".join([_heros(), _solutions(), _logiciel(), _lieux(), _etapes(), _fin()]) + "\n",
 }

@@ -3,7 +3,7 @@
 
 import re
 
-from config import SITE, NAV, CTA_V2, CAPABILITIES, FOOTER_COLUMNS, SEO, BESOINS_PAGES
+from config import SITE, NAV, CTA_V2, CAPABILITIES, FOOTER_LINKS, SEO
 from demos.app import EXT_ICON, ICONS
 import pro
 
@@ -85,41 +85,11 @@ def ext_links(cls):
     )
 
 
-def besoins_liens(cls):
-    """Sous les sept solutions : les pages par besoin et la zone desservie (une ligne discrète)."""
-    liens = "".join(f'<a href="/solutions/{k}/">{n}</a>' for k, n in BESOINS_PAGES)
-    return f'<p class="{cls}"><span>Par besoin</span>{liens}<a href="/regions/">Régions desservies</a></p>'
-
-
 def mega_menu(en):
     """Les sept solutions, une phrase chacune. Rien d'autre."""
     return f"""<div class="mega" data-mega-panel>
-      <p class="mega-k">{'Seven solutions · one system' if en else 'Sept solutions · un seul système'}</p>
       <div class="mega-grid">{ext_links("mega-a")}</div>
-      {"" if en else besoins_liens("mega-more")}
     </div>"""
-
-
-SUB_EN = {
-    "/logiciel/": ("The software, live", "The app, screen by screen (in French)."),
-    "/plateforme/": ("The Hub and private AI", "Under the hood: Hub, AI, core, accounts."),
-    "/a-propos/": ("Who is behind JARVIS", "James, his approach and the field."),
-    "/vision-roadmap/": ("Our vision", "Where JARVIS is going, and where it truly stands."),
-    "/laboratoire-mobile/": ("Mobile lab", "The converted ambulance, live batteries."),
-    "/confiance/": ("Trust and security", "How your data and access are protected."),
-    "/recherche/": ("Research", "The method behind every proof."),
-}
-
-
-def sub_links(item, cls, en):
-    """Sous-menu d'une entrée (Le logiciel, À propos) : icône, titre et une ligne."""
-    out = []
-    for url, lab, desc, ic in item["sub"]:
-        if en and url in SUB_EN:
-            lab, desc = SUB_EN[url]
-        out.append(f'<a class="{cls}" href="{url}"><svg class="mm-i" viewBox="0 0 24 24" aria-hidden="true">{ICONS[ic]}</svg>'
-                   f'<span><b>{lab}</b><small>{desc}</small></span></a>')
-    return "".join(out)
 
 
 def header_v2(page):
@@ -130,15 +100,13 @@ def header_v2(page):
         return NAV_EN_LABELS.get(item["url"], item["label"]) if en else item["label"]
 
     def current(item):
-        urls = [item["url"]] + [u for u, *_ in item.get("sub", [])]
-        return any("#" not in u and page["url"].startswith(u) for u in urls)
+        return page["url"].startswith(item["url"])
 
     bar_links = []
     for item in NAV:
         cur = ' aria-current="page"' if current(item) else ""
-        if item.get("menu") or item.get("sub"):
-            panel = mega_menu(en) if item.get("menu") else (
-                f'<div class="mega mega-s" data-mega-panel><div class="mega-grid">{sub_links(item, "mega-a", en)}</div></div>')
+        if item.get("menu"):
+            panel = mega_menu(en)
             what = label(item)
             bar_links.append(
                 f'<div class="bar-dd" data-mega><a href="{item["url"]}"{cur}>{what}</a>'
@@ -151,11 +119,7 @@ def header_v2(page):
             bar_links.append(f'<a href="{item["url"]}"{cur}>{label(item)}</a>')
 
     def sheet_sub(item):
-        if item.get("menu"):
-            return f'<div class="sheet-exts">{ext_links("sheet-x")}{"" if en else besoins_liens("sheet-more")}</div>'
-        if item.get("sub"):
-            return f'<div class="sheet-exts">{sub_links(item, "sheet-x", en)}</div>'
-        return ""
+        return f'<div class="sheet-exts">{ext_links("sheet-x")}</div>' if item.get("menu") else ""
 
     sheet_links = "".join(
         f'<a class="sheet-main" href="{item["url"]}"{" aria-current=" + chr(34) + "page" + chr(34) if current(item) else ""}>{label(item)}</a>'
@@ -196,32 +160,23 @@ def header_v2(page):
 
 
 def autres_extensions(page):
-    """Bas des pages de solution : les six autres extensions, pour ne jamais finir dans un cul-de-sac."""
+    """Bas des pages de solution : une ligne vers les sept solutions, pour ne jamais finir dans un cul-de-sac."""
     slugs = [c["slug"] for c in CAPABILITIES]
     here = page["url"].strip("/").split("/")[-1]
     if not page["url"].startswith("/solutions/") or here not in slugs:
         return ""
-    liens = "".join(
-        f'<a href="/solutions/{c["slug"]}/#jarvis">{ext_icon(c["slug"])}<span>{c["title"]}</span></a>'
-        for c in CAPABILITIES if c["slug"] != here
-    )
-    return f"""<nav class="ext-next" aria-labelledby="ext-next-t">
-  <p class="eyebrow" id="ext-next-t">Les autres extensions</p>
-  <div class="ext-next-row">{liens}</div>
-  <p class="ext-next-all"><a href="/solutions/">Comparer les sept solutions <i aria-hidden="true">→</i></a></p>
-</nav>
-"""
+    return '<p class="ext-next"><a href="/solutions/">Voir les sept solutions <i aria-hidden="true">→</i></a></p>\n'
 
 
 def toc(page):
     """Menu de sections collant : construit à partir des <section id="…" data-toc="Libellé">.
-    Affiché seulement quand la page en compte au moins trois."""
+    Affiché seulement sur les pages longues (cinq sections nommées ou plus)."""
     items = []
     for tag in re.findall(r"<section\b[^>]*>", page["content"]):
         sid, lab = re.search(r'\bid="([^"]+)"', tag), re.search(r'\bdata-toc="([^"]+)"', tag)
         if sid and lab:
             items.append((sid.group(1), lab.group(1)))
-    if len(items) < 3:
+    if len(items) < 5:
         return ""
     links = "".join(f'<a href="#{i}">{l}</a>' for i, l in items)
     cta = "" if page["url"].startswith("/contact") else f'<a class="toc-cta" href="{CTA_V2["url"]}">{CTA_V2["label"]}</a>'
@@ -229,25 +184,13 @@ def toc(page):
 
 
 def footer_v2(page):
-    cols = "".join(
-        "<div><h2>{t}</h2><nav>{links}</nav></div>".format(
-            t=col["title"],
-            links="".join(f'<a href="{l["url"]}">{l["label"]}</a>' for l in col["links"]),
-        )
-        for col in FOOTER_COLUMNS
-    )
-    exts = "".join(f'<a href="/solutions/{c["slug"]}/">{c["title"]}</a>' for c in CAPABILITIES)
-    exts += "".join(f'<a href="/solutions/{k}/">{n}</a>' for k, n in BESOINS_PAGES)
-    cols = f"<div><h2>Solutions</h2><nav>{exts}</nav></div>" + cols
+    """Pied de page compact : le nom, la ligne d'entreprise, les liens essentiels, le mode, le copyright.
+    Tout le reste du site est listé sur /plan-du-site/."""
+    liens = "".join(f'<a href="{u}">{n}</a>' for u, n in FOOTER_LINKS)
     return f"""<footer class="foot">
-  <div class="foot-grid">
-    <div class="foot-brand">
-      <b>JARVIS <span>Private Systems</span></b>
-      <p><strong>{SITE['signature']}</strong><br>{SITE['phrase']}</p>
-      <p class="foot-base">{SITE['base']}<br><a href="mailto:{SITE['email']}">{SITE['email']}</a></p>
-      <p class="foot-count" hidden><i class="dot" aria-hidden="true"></i>Visites du site <b data-live="visits-foot">—</b></p>
-    </div>
-    {cols}
+  <div class="foot-top">
+    <p class="foot-brand"><b>JARVIS <span>Private Systems</span></b><span>{SITE['signature']}</span></p>
+    <nav class="foot-nav" aria-label="Pied de page">{liens}</nav>
   </div>
   <div class="foot-modes" role="group" aria-label="Mode d’affichage">
     <span>Mode</span>
@@ -255,7 +198,7 @@ def footer_v2(page):
     <button type="button" class="is-on" data-mode-set="signature" aria-pressed="true">Signature</button>
     <button type="button" data-mode-set="platinum" aria-pressed="false">Platinum</button>
   </div>
-  <p class="foot-line"><span>{SITE['copyright']}</span><span class="foot-legal"><a href="/mentions-legales/">Mentions légales</a><a href="/confidentialite/">Confidentialité</a><a href="/mentions-legales/#conditions">Conditions</a></span><span>Privé par conception</span></p>
+  <p class="foot-line"><span>{SITE['copyright']}</span><span class="foot-count" hidden>Visites du site <b data-live="visits-foot">—</b></span></p>
 </footer>"""
 
 
@@ -279,10 +222,9 @@ def document(page):
         # Juste après la première section (la bande d'ouverture) : il colle ensuite sous la barre.
         cut = content.index("</section>") + len("</section>")
         content = content[:cut] + "\n" + nav + content[cut:]
-    # Avis de lancement, sobre et visible : accueil, offre, solutions et régions.
+    # Avis de lancement : une seule fois, sur l'accueil (dans le héros) et sur À propos.
     u = page["url"]
-    if not page.get("lancement_integre") and (
-            u in ("/", "/offre/", "/questions/", "/a-propos/") or u.startswith(("/solutions/", "/regions/"))):
+    if u == "/a-propos/":
         avis = (f'\n<aside class="lancement" aria-label="État de l’entreprise"><p><i class="dot" aria-hidden="true"></i>'
                 f'<span>{SITE["lancement"]}</span> <a href="/contact/">Rester informé <i aria-hidden="true">→</i></a></p></aside>')
         cut = content.index("</section>") + len("</section>")

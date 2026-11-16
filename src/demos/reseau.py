@@ -637,7 +637,7 @@ def mod_menaces():
                      ("Exploits connus", 37), ("Objets au comportement anormal", 23), ("Commande et contrôle", 19)]
     )
     mp = f"""<div class="rs-geo" data-geo="{a(json.dumps(data, ensure_ascii=False))}">
-      <svg class="rs-geo-svg" viewBox="0 0 {W} {H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Carte du monde : provenance des attaques bloquées vers la maison, à Saint-Hyacinthe">
+      <svg class="rs-geo-svg" viewBox="0 0 {W} {H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Carte du monde : provenance des attaques bloquées vers la maison">
         <path class="rs-geo-dots" d=""/><g class="rs-geo-arcs"></g><g class="rs-geo-home"></g>
       </svg>
       <div class="rs-geo-hud"><span><i class="rs-dot is-ok"></i>Bouclier actif</span><span><b data-live="blocked">1 284</b> blocages · 24 h</span></div>
@@ -661,9 +661,9 @@ def mod_vpn():
         f'<span class="rs-mono">{where}</span><span class="rs-mono" data-since="{since}">—</span>'
         f'<span class="rs-mono">{tx}</span>{pill(scope, "gold")}</li>'
         for icn, n, d, where, since, tx, scope in [
-            ("phone", "Téléphone principal", "Tunnel chiffré · double authentification", "Montréal · LTE", 2780, "184 Mo", "Toute la maison"),
+            ("phone", "Téléphone principal", "Tunnel chiffré · double authentification", "À distance · LTE", 2780, "184 Mo", "Toute la maison"),
             ("charger", "Véhicule récréatif · routeur 5G", "Site à site · permanent", "Route 132 · 5G", 15120, "2,1 Go", "Caméras + JARVIS"),
-            ("laptop", "Technicien · accès temporaire", "Approuvé par vous · expire à 19 h 00", "Granby · fibre", 640, "36 Mo", "Stockage seulement"),
+            ("laptop", "Technicien · accès temporaire", "Approuvé par vous · expire à 19 h 00", "À distance · fibre", 640, "36 Mo", "Stockage seulement"),
         ]
     )
     prof = "".join(
@@ -795,7 +795,7 @@ def mod_sauvegardes():
         f'<span class="rs-copy-f"><span class="rs-mono">{s}</span>{pill(st, "ok")}</span></div>'
         for n, t, d, s, st in [
             ("1", "Stockage local", "Dans la maison · 4 disques en miroir", "2,1 To · il y a 2 h", "À jour"),
-            ("2", "Hors site, chiffré", "Centre de données au Québec · clé gardée chez vous", "2,1 To · il y a 2 h", "À jour"),
+            ("2", "Hors site, chiffré", "Centre de données · clé gardée chez vous", "2,1 To · il y a 2 h", "À jour"),
             ("3", "Copie immuable", "Impossible à effacer ou chiffrer pendant 30 jours", "30 versions", "Protégée"),
         ]
     )
@@ -1022,7 +1022,7 @@ def build():
         ]
     )
     return f"""<div class="demo-shell" data-demo="reseau">
-  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · Réseau et cybersécurité</b><span class="rs-site">Résidence · Saint-Hyacinthe</span><span class="rs-clock" data-clock>17:52:04</span><span class="tag tag-sim">Démo · données d’exemple</span></div>
+  <div class="demo-top"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><b>JARVIS · Réseau et cybersécurité</b><span class="rs-site">Résidence</span><span class="rs-clock" data-clock>17:52:04</span><span class="tag tag-sim">Démo · données d’exemple</span></div>
   <div class="demo-body">
     <dl class="rs-status">{status}</dl>
     <nav class="rs-tabs" aria-label="Modules du réseau">{tabs}</nav>

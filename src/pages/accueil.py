@@ -1,49 +1,17 @@
-# Accueil — impressionner en cinq secondes, se lire en trente (refonte « présence », novembre 2026).
-# Six sections, chacune portée par une image ou une scène :
+# Accueil — aller à l'essentiel (refonte « essentiel », novembre 2026). Quatre sections :
 #   1. héros vivant : la photo de la résidence réagit (assets/demos/accueil.js, shader WebGL);
-#   2. ce que nous faisons : les sept solutions en bande de photos;
+#   2. les sept solutions en bande de photos, une ligne chacune;
 #   3. le logiciel : l'aperçu vivant de JARVIS App (démo complète sur /logiciel/);
-#   4. pour qui et où : cinq lieux en photos, carte noire de la Montérégie (src/carte_region.py);
-#   5. comment on travaille : cinq étapes sur une ligne du temps (détail sur /a-propos/);
-#   6. fin : trois questions clés et l'appel « Parlons de votre projet ».
-# Les questions affichées alimentent les données structurées (FAQPage); les autres vivent sur /questions/.
+#   4. fin : « Parlons de votre projet » et « Posez votre question à JARVIS » (ouvre la bulle).
+# Les étapes vivent sur /a-propos/, les questions sur /questions/.
 # Styles et scripts : assets/demos/accueil.css et accueil.js.
 
 import json
 
 from config import SITE, CAPABILITIES
 from demos import app
-import carte_region
 import pro
 
-
-FAQ = [
-    (
-        "Que fait JARVIS Private Systems, concrètement?",
-        "JARVIS Private Systems est une entreprise de technologie et de sécurité. Nous concevons et "
-        "installons JARVIS, un système privé qui gère et protège un lieu : la domotique, le réseau "
-        "et sa cybersécurité, les caméras et serrures connectées, et une IA privée. Tout passe par "
-        "un petit boîtier silencieux installé chez vous, le JARVIS Hub, et par une seule "
-        "application. Le système propose des actions; vous gardez la décision.",
-    ),
-    (
-        "Mes données quittent-elles la maison ou l’entreprise?",
-        "Pas par défaut. Tout vit sur le Hub, chez vous, et aucun abonnement au nuage n’est "
-        "nécessaire. L’interface et les automatisations continuent de fonctionner sans Internet; "
-        "le nuage ne sert qu’à ce que vous choisissez, comme un accès à distance par un relais qui "
-        "ne garde rien ou une copie de sauvegarde chiffrée.",
-    ),
-    (
-        "Est-ce disponible aujourd’hui, et combien ça coûte?",
-        "L’entreprise est en phase de lancement : nous prenons les noms des personnes intéressées "
-        "et choisissons quelques premiers projets. Le logiciel JARVIS est en construction : son "
-        "noyau (comptes, droits, sécurité) est en développement et le tableau JARVIS Signature "
-        "fonctionne déjà sur Home Assistant. Le prix dépend de votre lieu et de ce qu’on relie; "
-        "il est toujours remis par écrit, après une visite gratuite.",
-    ),
-]
-
-FAQ_HTML = pro.faq_items(FAQ)
 
 # --- 1. Héros vivant --------------------------------------------------------------------------
 # La photo montre tout allumé; éteindre une lumière assombrit seulement ses zones (cx, cy, rx, ry
@@ -100,38 +68,27 @@ def _heros():
 
 
 # --- 2. Ce que nous faisons : les sept solutions, dans l'ordre officiel -----------------------
-# (solution, photo, cadrage, une ligne, [(page de service liée, libellé)])
+# (solution, photo, cadrage, une ligne)
 SOLUTIONS = [
-    ("environnements-intelligents", "sol-environnements", "32% 50%",
-     "Lumières, chauffage et énergie sur un seul écran.",
-     [("maison-intelligente-cle-en-main", "Maison clé en main"), ("domotique-ferme-agricole", "Ferme")]),
-    ("ia-privee-connaissances", "sol-ia", "74% 50%",
-     "Une IA qui lit vos documents, chez vous.",
-     [("ia-privee-entreprise", "En entreprise")]),
-    ("securite-intelligente", "sol-securite", "13% 50%",
-     "Caméras, portes et alarme dans un seul fil.", []),
-    ("automatisation-operations", "sol-automatisation", "47% 50%",
-     "Demandes et approbations qui avancent seules.", []),
-    ("reseau-resilience", "sol-reseau", "40% 50%",
-     "Un Wi-Fi solide, partout, bien protégé.", []),
-    ("diagnostic-care", "sol-diagnostic", "60% 50%",
-     "La panne repérée avant le bris.", []),
-    ("mobilite", "sol-mobilite", "72% 50%",
-     "Le VR et les véhicules, suivis de partout.", []),
+    ("environnements-intelligents", "sol-environnements", "32% 50%", "Lumières, chauffage et énergie sur un seul écran."),
+    ("ia-privee-connaissances", "sol-ia", "74% 50%", "Une IA qui lit vos documents, chez vous."),
+    ("securite-intelligente", "sol-securite", "13% 50%", "Caméras, portes et alarme dans un seul fil."),
+    ("automatisation-operations", "sol-automatisation", "47% 50%", "Demandes et approbations qui avancent seules."),
+    ("reseau-resilience", "sol-reseau", "40% 50%", "Un Wi-Fi solide, partout, bien protégé."),
+    ("diagnostic-care", "sol-diagnostic", "60% 50%", "La panne repérée avant le bris."),
+    ("mobilite", "sol-mobilite", "72% 50%", "Le VR et les véhicules, suivis de partout."),
 ]
 _TITRES = {c["slug"]: c["title"] for c in CAPABILITIES}
 
 
 def _solutions():
     cartes = ""
-    for slug, img, pos, ligne, services in SOLUTIONS:
-        plus = "".join(f'<a href="/solutions/{k}/">{n}</a>' for k, n in services)
-        plus = f'<span class="ac-sol-plus">{plus}</span>' if plus else ""
+    for slug, img, pos, ligne in SOLUTIONS:
         cartes += f"""<article class="ac-sol{'' if cartes else ' is-on'}">
       <img src="/media/accueil/{img}.webp" alt="" loading="lazy" style="object-position:{pos}">
       <div class="ac-sol-t">
         <h3><a class="ac-sol-a" href="/solutions/{slug}/">{_TITRES[slug]}</a></h3>
-        <p>{ligne}</p>{plus}
+        <p>{ligne}</p>
       </div>
     </article>"""
     return f"""<section class="ac-sect ac-faire" id="solutions" aria-labelledby="ac-faire-titre">
@@ -147,10 +104,7 @@ def _solutions():
 def _logiciel():
     return f"""<section class="ac-sect ac-log" id="logiciel" aria-labelledby="ac-log-titre">
   <div class="ac-tete">
-    <div>
-      <h2 id="ac-log-titre">Une seule application.</h2>
-      <p>L’écran d’accueil de JARVIS, en direct : l’heure et la météo sont réelles.</p>
-    </div>
+    <h2 id="ac-log-titre">Une seule application.</h2>
     <a class="pill" href="/logiciel/">Essayer le logiciel</a>
   </div>
   <div class="ac-scene">
@@ -162,81 +116,16 @@ def _logiciel():
 </section>"""
 
 
-# --- 4. Pour qui et où ------------------------------------------------------------------------
-LIEUX = [
-    ("Maison", "Clé en main", "/solutions/maison-intelligente-cle-en-main/", "lieu-maison", "50% 58%"),
-    ("Domaine", "Maison, garage, quai", "/solutions/environnements-intelligents/", "lieu-domaine", "62% 55%"),
-    ("Ferme", "Bâtiments surveillés", "/solutions/domotique-ferme-agricole/", "lieu-ferme", "50% 62%"),
-    ("Entreprise", "IA privée et automatisation", "/solutions/ia-privee-entreprise/", "lieu-entreprise", "50% 45%"),
-    ("Véhicule", "VR et véhicules aménagés", "/solutions/mobilite/", "lieu-vehicule", "50% 60%"),
-]
-
-
-def _lieux():
-    lames = "".join(
-        f"""<a class="ac-lieu" href="{url}">
-      <img src="/media/accueil/{img}.webp" alt="" loading="lazy" style="object-position:{pos}">
-      <span><b>{nom}</b><em>{ligne}</em></span>
-    </a>"""
-        for nom, ligne, url, img, pos in LIEUX
-    )
-    return f"""<section class="ac-sect ac-ou" id="regions" aria-labelledby="ac-ou-titre">
-  <div class="ac-tete">
-    <h2 id="ac-ou-titre">Votre lieu, en Montérégie.</h2>
-    <a class="ac-lien" href="/regions/">Toutes les régions desservies</a>
-  </div>
-  <div class="ac-ou-grille">
-    <div class="ac-carte-cadre">
-      {carte_region.carte()}
-      <p class="ac-carte-note">Basé à Saint-Hyacinthe. On se déplace chez vous.</p>
-    </div>
-    <div class="ac-lieux">{lames}</div>
-  </div>
-</section>"""
-
-
-# --- 5. Comment on travaille : les cinq étapes de pro.ETAPES, en très court -------------------
-ETAPES = [
-    ("etape-visite", "Chez vous, gratuite."),
-    ("etape-plan", "Le prix, ligne par ligne."),
-    ("etape-installation", "Propre, essayée avec vous."),
-    ("etape-formation", "Sur votre téléphone."),
-    ("etape-suivi", "Entretien et réglages."),
-]
-
-
-def _etapes():
-    pas = "".join(
-        f"""<li class="ac-pas">
-      <i aria-hidden="true">{i + 1}</i>
-      <img src="/media/accueil/{img}.webp" alt="" loading="lazy">
-      <b>{pro.ETAPES[i][0]}</b>
-      <span>{ligne}</span>
-    </li>"""
-        for i, (img, ligne) in enumerate(ETAPES)
-    )
-    return f"""<section class="ac-sect ac-travail" id="comment-on-travaille" aria-labelledby="ac-travail-titre">
-  <div class="ac-tete">
-    <h2 id="ac-travail-titre">Cinq étapes. Aucune surprise.</h2>
-    <a class="ac-lien" href="/a-propos/#comment-on-travaille">Comment on travaille</a>
-  </div>
-  <ol class="ac-ligne">{pas}</ol>
-</section>"""
-
-
-# --- 6. Fin : trois questions et l'appel ------------------------------------------------------
+# --- 4. Fin : l'appel, et JARVIS pour les questions --------------------------------------------
+# [data-jarvis] ouvre la bulle « Parler à JARVIS » (assets/js/guide.js); sans elle, le lien mène au contact.
 def _fin():
-    return f"""<section class="ac-fin" id="questions" aria-labelledby="ac-fin-titre">
+    return """<section class="ac-fin" id="projet" aria-labelledby="ac-fin-titre">
   <img class="ac-fin-ph" src="/media/vitrine/contact/demo-salon-prestige.webp" alt="" loading="lazy" width="2560" height="1100">
   <div class="ac-fin-in">
-    <div class="ac-fin-appel">
-      <h2 id="ac-fin-titre">Commençons par une visite.</h2>
-      <p>Gratuite, sans engagement. Vous voyez ce qui fonctionne déjà.</p>
-      <a class="pill" href="/contact/">Parlons de votre projet</a>
-    </div>
-    <div class="ac-fin-faq">
-      <div class="faq-list">{FAQ_HTML}</div>
-      <a class="ac-lien" href="/questions/">Toutes les questions</a>
+    <h2 id="ac-fin-titre">Parlons de votre projet.</h2>
+    <div class="ac-acts">
+      <a class="pill" href="/contact/">Nous écrire</a>
+      <a class="pill ghost" href="/contact/" data-jarvis>Posez votre question à JARVIS</a>
     </div>
   </div>
 </section>"""
@@ -246,12 +135,12 @@ PAGE = {
     "url": "/",
     "v2": True,
     "title": "JARVIS Private Systems | Technologies de sécurité et intelligence privée",
-    "schema": [pro.ld_entreprise(), pro.ld_site(), pro.ld_faq(FAQ)],
+    "schema": [pro.ld_entreprise(), pro.ld_site()],
     "assets": ["app", "accueil"],
     "lancement_integre": True,  # l'avis de lancement est dans le héros, pas sous la première section
     "description": (
         "JARVIS, un système privé qui gère et protège les maisons, les fermes, les entreprises "
-        "et les véhicules, en Montérégie. Conçu et installé depuis Saint-Hyacinthe."
+        "et les véhicules. Domotique, réseau, caméras reliées et IA privée, chez vous."
     ),
-    "content": "\n".join([_heros(), _solutions(), _logiciel(), _lieux(), _etapes(), _fin()]) + "\n",
+    "content": "\n".join([_heros(), _solutions(), _logiciel(), _fin()]) + "\n",
 }

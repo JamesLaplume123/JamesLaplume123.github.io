@@ -88,7 +88,7 @@ SCENARIOS = [
             {"k": "form", "icon": "form", "label": "Formulaire reçu",
              "say": "Une demande arrive par le formulaire de votre site web.",
              "log": "Formulaire reçu · site web", "sum": "Nadia Côté · caméras extérieures",
-             "rows": [("Nom", "Nadia Côté"), ("Besoin", "Caméras extérieures"), ("Ville", "Saint-Hyacinthe")],
+             "rows": [("Nom", "Nadia Côté"), ("Besoin", "Caméras extérieures")],
              "msg": "« Une soumission avant décembre, si possible. »"},
             {"k": "fields", "icon": "scan", "label": "Fiche client créée",
              "say": "JARVIS vérifie qu’elle n’est pas déjà cliente, puis crée sa fiche dans votre logiciel clients.",

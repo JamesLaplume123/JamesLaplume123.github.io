@@ -28,8 +28,7 @@ QUESTIONS_HTML = "".join(
     f"""<article class="card" data-rev>
       <small>{domain}</small>
       <h3>{question}</h3>
-      <p><b style="color:var(--gold-soft);font-weight:550">Hypothèse.</b> {hypothesis}</p>
-      <ul><li>Terrain · {terrain}</li></ul>
+      <p>{hypothesis}</p>
     </article>"""
     for domain, question, hypothesis, terrain in QUESTIONS
 )
@@ -54,50 +53,26 @@ PAGE = {
   <div class="band-inner">
     <p class="eyebrow" data-rev>Recherche appliquée</p>
     <h1 data-rev>Des idées ambitieuses.<br><em>Des preuves vérifiables.</em></h1>
-    <p class="lead" data-rev>Le projet avance par questions, prototypes, mesures et décisions
-    documentées. Cette section devient la mémoire publique de ce qui est testé, appris et
-    corrigé.</p>
-    <div class="meta" data-rev>
-      <span class="chip">Hypothèse → essai → preuve</span>
-      <span class="chip">Limites publiées</span>
-      <span class="chip">Détails sensibles privés</span>
-    </div>
+    <p class="lead" data-rev>Une question, un essai, une mesure : rien n’est promis avant la preuve.</p>
   </div>
 </section>
 
-<section class="statement">
-  <p class="eyebrow" data-rev>Le cadre</p>
-  <h2 data-rev style="margin-top:1.2rem">Le site présente.<br><em>La recherche démontre.</em></h2>
-  <p data-rev>Chaque sujet public sera relié à une question précise, un protocole, des
-  observations et une conclusion limitée. Les secrets, accès, données personnelles et
-  architectures exploitables restent dans un dépôt privé. Une démonstration n’est pas encore
-  une validation.</p>
-</section>
-
-<section class="sect alt">
+<section class="sect alt" id="questions-de-recherche" aria-labelledby="rq-titre">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">Programme de recherche</p>
-      <h2 style="margin-top:1rem">Les sept solutions produisent <em>leurs propres
-      questions.</em></h2>
+      <h2 id="rq-titre">Chaque solution a <em>sa question.</em></h2>
     </div>
-    <p data-rev>Le laboratoire mobile JARVIS est un premier terrain d’essai. D’autres
-    environnements seront nécessaires pour éviter de confondre une preuve locale avec une
-    solution générale.</p>
   </div>
   <div class="cards">
     {QUESTIONS_HTML}
   </div>
 </section>
 
-<section class="sect">
+<section class="sect" id="maturite" aria-labelledby="mat-titre">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">Niveaux de maturité</p>
-      <h2 style="margin-top:1rem">Dire précisément où <em>chaque élément se trouve.</em></h2>
+      <h2 id="mat-titre">Six niveaux <em>de maturité.</em></h2>
     </div>
-    <p data-rev>Le même vocabulaire est utilisé dans le site, les documents de recherche et
-    la feuille de route.</p>
   </div>
   <div class="rows">
     {MATURITY_HTML}
@@ -105,9 +80,7 @@ PAGE = {
 </section>
 
 <section class="cta">
-  <h2 data-rev>Un centre de recherche, un partenaire<br><span>ou un terrain d’essai?</span></h2>
-  <p data-rev>Décrivez le problème et son contexte. La première preuve utile sera clairement
-  définie.</p>
+  <h2 data-rev>Un terrain d’essai<br><span>à proposer?</span></h2>
   <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """,

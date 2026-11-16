@@ -132,7 +132,7 @@ def manifeste():
     </div>
     <div class="vn-mani-ph vn-framed" data-rev>
       {photo("vision-liberte", "Un matin calme : la maison s’occupe d’elle-même",
-             "Matin calme dans une résidence moderne québécoise : une personne boit son café face à une grande fenêtre sur un lac au lever du soleil, téléphone posé, maison silencieuse et lumière dorée naturelle",
+             "Matin calme dans une résidence moderne : une personne boit son café face à une grande fenêtre sur un lac au lever du soleil, téléphone posé, maison silencieuse et lumière dorée naturelle",
              1, "4:5", pos="50% 45%")}
       <div class="vn-mani-tag"><i></i>Ce que JARVIS vise : moins d’écrans, plus de vie</div>
     </div>
@@ -169,8 +169,8 @@ HORIZONS = [
         "h": "Le logiciel complet, installé, audité, prêt pour les premiers clients.",
         "p": "Les quatorze étapes du logiciel terminées, la mise en service sur le Hub du laboratoire "
              "mobile, quatorze jours d’essai en parallèle, puis une revue de sécurité externe avant toute vente.",
-        "photo": ("horizon-12-mois", "Une résidence québécoise équipée de JARVIS, au crépuscule",
-                  "Maison moderne québécoise au crépuscule, grandes fenêtres éclairées de lumière chaude, neige légère, un écran mural JARVIS visible dans l’entrée, ambiance accueillante et haut de gamme",
+        "photo": ("horizon-12-mois", "Une résidence équipée de JARVIS, au crépuscule",
+                  "Maison moderne au crépuscule, grandes fenêtres éclairées de lumière chaude, neige légère, un écran mural JARVIS visible dans l’entrée, ambiance accueillante et haut de gamme",
                   2, "16:10", "/media/solutions/environnements-intelligents.webp"),
         "j": [
             ("hub", "Mises à jour signées avec retour en arrière, sauvegardes chiffrées dont la restauration est prouvée."),
@@ -185,11 +185,11 @@ HORIZONS = [
     },
     {
         "k": "3ans", "t": "3 ans", "s": "Sept extensions, un système",
-        "h": "Des maisons, des entreprises et des véhicules reliés, partout au Québec.",
+        "h": "Des maisons, des entreprises et des véhicules reliés, partout.",
         "p": "Chaque extension devient un chantier complet, prouvé chez de vrais clients. Le volet "
              "Security Pro n’existe que s’il obtient d’abord les permis requis.",
-        "photo": ("horizon-3-ans", "Une entreprise québécoise qui fonctionne avec JARVIS",
-                  "Atelier ou bureau de PME moderne au Québec, équipe au travail, grand écran mural sombre affichant un tableau de bord noir et or, lumière naturelle, ambiance calme et professionnelle",
+        "photo": ("horizon-3-ans", "Une entreprise qui fonctionne avec JARVIS",
+                  "Atelier ou bureau de PME moderne, équipe au travail, grand écran mural sombre affichant un tableau de bord noir et or, lumière naturelle, ambiance calme et professionnelle",
                   3, "16:10", "/media/solutions/jarvis-enterprise-operations-v1.webp"),
         "j": [
             ("hub", "Plusieurs Hubs reliés : maison, chalet, entreprise et véhicule sous un même compte."),
@@ -213,7 +213,7 @@ HORIZONS = [
         "j": [
             ("hub", "Hub JARVIS conçu sur mesure : matériel maison, silencieux, réparable, garanti."),
             ("env", "Résidences de prestige, chalets et ateliers : chaque lieu avec ses propres règles."),
-            ("ia", "IA locale entraînée pour le français du Québec, sans aucun appel au nuage."),
+            ("ia", "IA locale entraînée pour le français d’ici, sans aucun appel au nuage."),
             ("secu", "Security Pro, seulement sous permis : protection de résidences et de collections."),
             ("auto", "Gestion complète d’une maison de famille : personnel, fournisseurs, horaires."),
             ("res", "Réseaux privés entre les lieux, la mer et les airs, avec liens de secours."),

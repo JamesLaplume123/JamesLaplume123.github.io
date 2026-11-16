@@ -8,7 +8,7 @@ GROUPES = [
     ("L’entreprise", "entreprise", [
         ("Que fait JARVIS Private Systems, en une phrase?",
          "Nous concevons et installons JARVIS, un système privé qui gère et protège les maisons, les "
-         "fermes, les entreprises et les véhicules, en Montérégie. Il réunit la domotique, le réseau "
+         "fermes, les entreprises et les véhicules. Il réunit la domotique, le réseau "
          "et sa cybersécurité, les caméras et serrures connectées, et une IA privée."),
         ("L’entreprise est-elle nouvelle?",
          "Oui. JARVIS Private Systems est en phase de lancement : nous prenons les noms des personnes "
@@ -17,9 +17,10 @@ GROUPES = [
          "une ambulance convertie. L’état réel du projet est publié sur la page "
          "<a href=\"/vision-roadmap/#feuille-de-route\">Vision et feuille de route</a>."),
         ("Êtes-vous une agence de sécurité?", pro._PAS_AGENCE),
-        ("Qui vais-je rencontrer?",
-         "James Laplume, le fondateur. C’est lui qui visite votre lieu, prépare le plan et répond à vos "
-         "questions."),
+        ("Comment vous joindre?",
+         "Par le <a href=\"/contact/\">formulaire de contact</a> ou par courriel. James Laplume, le "
+         "fondateur, répond personnellement. Vous pouvez aussi simplement laisser votre nom pour "
+         "rester informé."),
     ]),
     ("Le projet", "projet", [
         ("Par quoi commence-t-on?",
@@ -36,10 +37,6 @@ GROUPES = [
         ("Dois-je remplacer mes appareils?",
          "Généralement non. JARVIS s’appuie sur Home Assistant et sur les standards ouverts Zigbee, "
          "Z-Wave, Matter et MQTT : on commence par ce que vous avez déjà."),
-        ("Que dois-je préparer avant de vous écrire?",
-         "Trois choses suffisent : le type de lieu (maison, ferme, entreprise, véhicule), le problème "
-         "qui vous dérange le plus, et la liste approximative de ce qui est déjà installé (thermostats, "
-         "caméras, routeur, applications). Des photos aident, mais ne sont pas nécessaires."),
     ]),
     ("Le système", "systeme", [
         ("Mes données sortent-elles de chez moi?",
@@ -56,23 +53,6 @@ GROUPES = [
         ("Faut-il un abonnement?",
          "Aucun abonnement au nuage n’est nécessaire pour que le système fonctionne. L’entretien et le "
          "soutien que vous choisissez sont décrits dans la soumission, avant que vous décidiez."),
-        ("Et si je veux arrêter, ou changer de fournisseur?",
-         "Le système vous est remis avec sa documentation : le plan, la liste des appareils, les règles "
-         "et vos accès. Il s’appuie sur des standards ouverts, pas sur un format fermé."),
-    ]),
-    ("La région", "region", [
-        ("Où vous déplacez-vous?",
-         "En Montérégie et aux environs, à partir de la région de Saint-Hyacinthe : Saint-Hyacinthe, "
-         "Granby, Drummondville, Longueuil et la Rive-Sud, Saint-Jean-sur-Richelieu, Sorel-Tracy, "
-         "Beloeil, Mont-Saint-Hilaire et Acton Vale. Chaque ville a sa page : "
-         "<a href=\"/regions/\">régions desservies</a>."),
-        ("Travaillez-vous avec les fermes et les entreprises?",
-         "Oui. Voyez la <a href=\"/solutions/domotique-ferme-agricole/\">domotique pour ferme</a>, "
-         "l’<a href=\"/solutions/automatisation-operations/\">automatisation pour PME et commerces</a> "
-         "et l’<a href=\"/solutions/ia-privee-entreprise/\">IA privée pour entreprise</a>."),
-        ("Comment vous joindre?",
-         "Par le <a href=\"/contact/\">formulaire de contact</a> ou par courriel. James répond "
-         "personnellement. Vous pouvez aussi simplement laisser votre nom pour rester informé."),
     ]),
 ]
 
@@ -80,9 +60,8 @@ TOUTES = [qa for _, _, qs in GROUPES for qa in qs]
 
 BLOCS = "".join(
     f"""
-<section class="faq{' pro-faq-alt' if i % 2 else ''}" id="{ident}" data-toc="{nom}" aria-labelledby="{ident}-titre">
+<section class="faq{' pro-faq-alt' if i % 2 else ''}" id="{ident}" aria-labelledby="{ident}-titre">
   <div class="head" data-rev>
-    <p class="eyebrow">{i + 1:02d} · {nom}</p>
     <h2 id="{ident}-titre">{nom}</h2>
   </div>
   <div class="faq-list">{pro.faq_items(qs)}</div>
@@ -95,7 +74,7 @@ PAGE = {
     "v2": True,
     "title": "Questions avant de nous appeler | JARVIS Private Systems",
     "description": (
-        "Prix, durée, appareils, données, caméras, pannes, régions desservies : les réponses "
+        "Prix, durée, appareils, données, caméras, pannes : les réponses courtes et "
         "franches d’une entreprise de technologie et de sécurité en phase de lancement."
     ),
     "og_image": "/media/vitrine/contact/demo-chez-vous.webp",
@@ -104,18 +83,15 @@ PAGE = {
     "content": f"""
 <section class="plain-top">
   {pro.fil("/questions/")}
-  <p class="eyebrow" data-rev>Questions avant de nous appeler</p>
   <h1 data-rev>Les réponses, <em>avant l’appel.</em></h1>
-  <p class="lead" data-rev>Ce qu’on fait, ce que ça coûte, ce qu’on ne fait pas. Des réponses courtes
-  et franches, pour que vous sachiez à quoi vous attendre avant de nous écrire.</p>
+  <p class="lead" data-rev>Courtes et franches.</p>
 </section>
 {BLOCS}
 
 <section class="cta">
   <h2 data-rev>Une question<br><span>qui n’est pas ici?</span></h2>
-  <p data-rev>Écrivez-la en quelques lignes. James répond personnellement, sans pression.</p>
   <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a>
-  <a class="pill ghost" href="/logiciel/">Voir le logiciel</a></div>
+  <a class="pill ghost" href="/contact/" data-jarvis>Posez-la à JARVIS</a></div>
 </section>
 """,
 }

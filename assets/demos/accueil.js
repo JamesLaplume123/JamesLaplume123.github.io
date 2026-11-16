@@ -1,4 +1,4 @@
-/* Accueil : le héros vivant, la bande des solutions et la carte.
+/* Accueil : le héros vivant et la bande des solutions.
    Héros : un petit shader WebGL (même principe que /labo-cartes/) part de la vraie photo, où tout est
    allumé. Éteindre une lumière assombrit seulement ses zones; la porte du garage remonte et laisse voir
    l'intérieur. Rien n'est recoloré. Quand personne ne touche, la maison vit seule, lentement.
@@ -205,10 +205,4 @@
     });
     ouvre(cartes[0]);
   });
-
-  /* ================================================================ Carte : l'onde de la base seulement à l'écran */
-  var carte = document.querySelector("[data-ac-carte]");
-  if (carte && "IntersectionObserver" in window) {
-    new IntersectionObserver(function (e) { carte.classList.toggle("is-vue", e[0].isIntersecting); }, { threshold: .1 }).observe(carte);
-  }
 })();

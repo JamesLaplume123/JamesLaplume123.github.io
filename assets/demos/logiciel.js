@@ -48,9 +48,13 @@
     app.style.zoom = "";
     if (stage.classList.contains("is-phone")) return;
     var w = host.clientWidth;
-    if (w >= DESIGN || w < 700) return;
+    if (w < 700) return;
+    /* L'écran complet tient aussi en hauteur dans la fenêtre, sous la barre (sauf en plein écran). */
     app.style.width = DESIGN + "px";
-    app.style.zoom = (w / DESIGN).toFixed(4);
+    var h = app.offsetHeight;
+    var z = Math.min(1, w / DESIGN, stage.classList.contains("is-full") || !h ? 1 : (window.innerHeight - 96) / h);
+    if (z >= 1) { if (w >= DESIGN) app.style.width = ""; return; }
+    app.style.zoom = z.toFixed(4);
   }
   var fitT = 0;
   function refit() {
@@ -64,6 +68,7 @@
       if (w !== lastW) { lastW = w; fit(); }
     }).observe(host);
   } else addEventListener("resize", fit);
+  addEventListener("resize", fit);
   fit();
 
   /* Aperçu téléphone */

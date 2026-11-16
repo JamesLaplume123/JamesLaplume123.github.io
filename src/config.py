@@ -24,7 +24,7 @@ SITE = {
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
-    "asset_version": "20261116b",
+    "asset_version": "20261116c",
     # Adresse du service du site (formulaire → Resend → JARVIS, compteur). Vide tant
     # que le Worker Cloudflare n'est pas déployé : le formulaire passe alors par FormSubmit.
     "api": "https://jarvis-site-api.laplumejames.workers.dev",

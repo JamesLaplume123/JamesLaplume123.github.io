@@ -285,9 +285,14 @@
         body: JSON.stringify(o)
       }), 15000).then(function (r) {
         return r.json().catch(function () { return {}; }).then(function (j) {
-          /* stored:true = la demande est gardée chez JARVIS même si le courriel n'est pas parti : c'est un succès pour le visiteur. */
-          var ok = (r.ok && j && (j.success === true || j.success === "true" || j.ok === true)) || (j && j.stored === true);
-          if (!ok) { var e = new Error((j && j.message) || ("HTTP " + r.status)); e.reply = j; throw e; }
+          var ok = r.ok && j && (j.success === true || j.success === "true" || j.ok === true);
+          if (!ok) {
+            var e = new Error((j && j.message) || ("HTTP " + r.status)); e.reply = j;
+            /* stored:true = la demande est gardée chez JARVIS même si le courriel n'est pas parti :
+               on essaie quand même le service de secours, mais le visiteur verra un succès. */
+            if (j && j.stored === true) e.stored = true;
+            throw e;
+          }
           return j;
         });
       });
@@ -306,10 +311,13 @@
       btn.disabled = true;
       if (label) label.textContent = "Envoi en cours…";
       status.className = "form-status";
+      var stored = false;
       var attempt = function (i) {
-        if (i >= endpoints.length) return Promise.reject(new Error("aucun service"));
+        if (i >= endpoints.length) return stored ? Promise.resolve({ stored: true }) : Promise.reject(new Error("aucun service"));
         return post(endpoints[i], o).catch(function (err) {
+          if (err && err.stored) stored = true;
           if (i + 1 < endpoints.length) return attempt(i + 1);
+          if (stored) return { stored: true };
           throw err;
         });
       };

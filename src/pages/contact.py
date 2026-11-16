@@ -5,14 +5,12 @@
 # Sans JavaScript, le formulaire reste un envoi classique vers FormSubmit.
 
 from config import SITE
-import galerie
 
 API = SITE.get("api", "").rstrip("/")
 ENDPOINT = f"{API}/contact" if API else ""
 
 PAGE = {
     "url": "/contact/",
-    "assets": ["galerie"],
     "v2": True,
     "title": "Contact | Parlons de votre projet",
     "description": (
@@ -24,28 +22,12 @@ PAGE = {
 <section class="plain-top">
   <p class="eyebrow" data-rev>Contact</p>
   <h1 data-rev>Parlons de <em>votre projet.</em></h1>
-  <p class="lead" data-rev>Maison, ferme, entreprise ou véhicule : décrivez ce que vous cherchez à
-  comprendre, relier ou automatiser, ou laissez simplement votre nom pour rester informé. Je vous
-  dirai ce qui existe aujourd’hui et ce qui reste à construire.</p>
-  <p class="lead pro-lance" data-rev>{SITE['lancement']}</p>
+  <p class="lead" data-rev>Décrivez votre lieu en quelques lignes, ou laissez simplement votre nom
+  pour rester informé. James vous répond personnellement.</p>
 </section>
 
-<section class="sect" style="padding-top:2rem">
-  <div class="sect-head" style="align-items:start">
-    <div data-rev>
-      <p class="eyebrow">Premier échange</p>
-      <h2 style="margin-top:1rem">Une idée claire peut commencer par <em>quelques
-      lignes.</em></h2>
-      <p style="color:var(--dim);margin-top:1.2rem">Je vous répondrai sur ce qui semble
-      réalisable, ce qui mérite une première preuve et les informations nécessaires pour
-      aller plus loin.</p>
-      <p style="margin-top:1.6rem"><a class="pill ghost" href="mailto:laplumejames@gmail.com">laplumejames@gmail.com</a></p>
-      <div class="meta" style="display:flex;gap:.7rem;flex-wrap:wrap;margin-top:2rem">
-        <span class="chip">Réponse personnelle</span>
-        <span class="chip">Québec, Canada</span>
-        <span class="chip">Échanges confidentiels</span>
-      </div>
-    </div>
+<section class="sect" style="padding-top:2rem" aria-label="Formulaire">
+  <div class="contact-form">
     <form class="form-card" data-rev data-contact action="https://formsubmit.co/laplumejames@gmail.com" method="POST"
           data-endpoint="{ENDPOINT}" data-fallback="https://formsubmit.co/ajax/laplumejames@gmail.com">
       <input type="hidden" name="_subject" value="Nouveau message — jarvisprivatesystems.com">
@@ -76,7 +58,7 @@ PAGE = {
         </div>
         <div class="field">
           <label for="f-region">Ville ou région</label>
-          <input id="f-region" name="region" type="text" autocomplete="address-level2" placeholder="Saint-Hyacinthe, Granby…">
+          <input id="f-region" name="region" type="text" autocomplete="address-level2">
         </div>
         <div class="field">
           <label for="f-role">Vous êtes</label>
@@ -94,12 +76,13 @@ PAGE = {
             <option>Mon projet</option>
             <option>Rester informé</option>
             <option>Démonstration JARVIS</option>
-            <option>Environnement intelligent</option>
+            <option>Environnements intelligents</option>
             <option>IA privée et connaissances</option>
             <option>Sécurité intelligente</option>
             <option>Automatisation d’entreprise</option>
             <option>Réseau et cybersécurité</option>
-            <option>Diagnostic & continuité</option>
+            <option>Diagnostic &amp; continuité</option>
+            <option>Mobilité</option>
             <option>Laboratoire mobile JARVIS</option>
             <option>Recherche ou partenariat</option>
           </select>
@@ -107,17 +90,16 @@ PAGE = {
         <div class="field full">
           <label for="f-message">Votre message</label>
           <textarea id="f-message" name="message" required
-            placeholder="Le contexte, le problème, les systèmes déjà présents et le type de collaboration recherché."></textarea>
+            placeholder="Votre lieu, ce qui vous dérange, ce qui est déjà en place."></textarea>
         </div>
       </div>
-      <p class="form-note">Votre message sera transmis directement à James. Aucune liste
-      d’envoi, aucun suivi publicitaire — voir la
+      <p class="form-note">Aucune liste d’envoi, aucun suivi publicitaire :
       <a href="/confidentialite/" style="color:#d4d4d8">politique de confidentialité</a>.</p>
       <button class="pill" type="submit"><span class="lbl">Envoyer le message</span><i class="spin" aria-hidden="true"></i></button>
       <p class="form-status" aria-live="polite"></p>
     </form>
+    <p class="pro-suite" data-rev><a href="mailto:{SITE['email']}">{SITE['email']}</a></p>
   </div>
 </section>
-{galerie.contact_visuels()}
 """,
 }

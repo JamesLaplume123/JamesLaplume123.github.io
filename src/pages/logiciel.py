@@ -1,8 +1,7 @@
 # Le logiciel (/logiciel/) — JARVIS App en grand, « comme un vrai produit » (refonte « clarté »,
 # novembre 2026). La démo complète (src/demos/app.py) dans un cadre d'ordinateur, avec une visite
 # guidée : chaque étape ouvre l'écran correspondant et dit ce que le client y gagne. Plein écran et
-# aperçu téléphone. Puis ce que l'app prévoit (déplacé de /plateforme/), ce qui est vrai aujourd'hui,
-# et l'appel à l'action. Les liens /logiciel/#ecran-<clé> ouvrent directement un écran.
+# aperçu téléphone. Puis ce qui est vrai aujourd'hui, et l'appel à l'action. Les liens /logiciel/#ecran-<clé> ouvrent directement un écran.
 # Styles et script : assets/demos/logiciel.css et logiciel.js (l'app : assets/demos/app.*).
 
 from demos import app
@@ -40,17 +39,6 @@ def _maintenant():
     k, _n, _d, titre, texte = SCREENS[0]
     return f'<b>{fr(titre)}</b><span>{fr(texte)}</span><em>{icon("check")}{fr(GAIN[k])}</em>'
 
-
-PREVU = """<ul class="feats">
-    <li data-rev><small>Accès</small><h3>Sur invitation seulement.</h3><p>Aucune inscription publique : chaque compte est créé par l’administrateur du Hub. Clés d’accès prévues — votre biométrie reste sur votre appareil.</p></li>
-    <li data-rev><small>Ma journée</small><h3>Agenda et tâches, enfin ensemble.</h3><p>Tous vos calendriers et vos listes, de toutes vos sources, dans une seule vue. Un calendrier en lecture seule le reste.</p></li>
-    <li data-rev><small>Messages</small><h3>Vos conversations, chez vous.</h3><p>Texte, photos, documents, vocaux et appels sur le Hub. Micro et caméra ne s’activent jamais sans votre permission.</p></li>
-    <li data-rev><small>Assistant</small><h3>Il propose. Vous décidez.</h3><p>En texte ou en voix, il prépare l’action puis attend votre confirmation. Jamais de succès affiché sans résultat réel.</p></li>
-    <li data-rev><small>Recommandations</small><h3>Chaque suggestion montre d’où elle vient.</h3><p>Provenance et raison visibles. Une suggestion n’agit jamais à votre place.</p></li>
-    <li data-rev><small>Partage</small><h3>Je choisis ce que je partage.</h3><p>Avec qui, pour combien de temps, révocable en tout temps. Un accès retiré disparaît partout.</p></li>
-    <li data-rev><small>Carte</small><h3>Voir votre monde, pas celui des autres.</h3><p>Le Hub, vos appareils, et seulement les personnes qui ont choisi de partager. Jamais de fausse position.</p></li>
-    <li data-rev><small>Personnalisation</small><h3>Votre accueil vous ressemble.</h3><p>Affichez, ordonnez et dimensionnez vos cartes. Vos préférences suivent votre compte, sans changer vos droits.</p></li>
-  </ul>"""
 
 # Ce que vous voyez est vrai : cohérent avec la feuille de route réelle (src/demos/feuille.py).
 VRAI = [
@@ -95,8 +83,7 @@ PAGE = {
   <div class="lg-hero-in" data-rev>
     <p class="eyebrow">Le logiciel · JARVIS App</p>
     <h1 id="lg-titre">Le logiciel JARVIS.<br><em>Voyez-le comme si vous l’aviez.</em></h1>
-    <p class="lead">L’application que vous et vos proches utiliseriez chaque jour. Choisissez une étape :
-    l’écran s’ouvre. Tout est cliquable.</p>
+    <p class="lead">Choisissez une étape : l’écran s’ouvre. Tout est cliquable.</p>
   </div>
 </section>
 
@@ -119,40 +106,19 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect alt" id="prevu" aria-labelledby="prevu-titre">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Ce que l’app prévoit · 58 vues conçues</p>
-      <h2 id="prevu-titre">Tout votre quotidien. <em>Aucune surprise.</em></h2>
-    </div>
-    <p data-rev>Le parcours complet du compte personnel est dessiné, écran par écran. C’est la direction
-    de conception : chaque fonction sera confirmée seulement une fois construite et prouvée.</p>
-  </div>
-  {PREVU}
-</section>
-
 <section class="sect" id="vrai" aria-labelledby="vrai-titre">
   <div class="sect-head">
     <div data-rev>
-      <p class="eyebrow">Ce que vous voyez est vrai</p>
       <h2 id="vrai-titre">Ce qui existe.<br><em>Ce qui s’en vient.</em></h2>
-    </div>
-    <div class="side" data-rev>
-      <p>Pas de promesse floue : voici où en est vraiment JARVIS. La démo montre les écrans prévus; le
-      noyau du logiciel est en construction.</p>
-      <a class="pill ghost" href="/vision-roadmap/#feuille-de-route">Voir la feuille de route complète</a>
     </div>
   </div>
   <div class="lg-vs">{_vrai()}</div>
-  <p class="lg-under" data-rev>Envie de voir ce qui fait tourner l’application?
-  <a href="/plateforme/">Le Hub et l’IA privée, sous le capot <i aria-hidden="true">→</i></a></p>
+  <p class="lg-under" data-rev><a href="/plateforme/">Le Hub et l’IA privée, sous le capot <i aria-hidden="true">→</i></a></p>
 </section>
 
 <section class="cta">
   <h2 data-rev>Voyez JARVIS<br><span>chez vous.</span></h2>
-  <p data-rev>Une rencontre, vos besoins réels, et ce qui fonctionne déjà aujourd’hui.</p>
-  <div class="acts" data-rev><a class="pill" href="/contact/" data-magnet>Parlons de votre projet</a>
-  <a class="pill ghost" href="/offre/">Voir l’offre</a></div>
+  <div class="acts" data-rev><a class="pill" href="/contact/" data-magnet>Parlons de votre projet</a></div>
 </section>
 """,
 }

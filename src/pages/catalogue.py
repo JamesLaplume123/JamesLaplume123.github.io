@@ -6,6 +6,7 @@
 # Styles : assets/demos/catalogue.css · Script : assets/demos/catalogue.js
 
 from html import escape
+import lieux
 import pro
 import json
 
@@ -318,10 +319,10 @@ def _solutions():
         inclus = s["prix"] == 0
         prix = "Inclus" if inclus else f"{s['prix']} $<small>/mois{' ' + s['unite'] if s.get('unite') else ''}</small>"
         if s.get("unite"):
-            inp = f'<input type="checkbox" name="sol" value="{s["id"]}" data-prix="{s["prix"]}" data-qty="1">'
+            inp = f'<input type="checkbox" name="sol" value="{s["id"]}" data-slug="{s["slug"]}" data-prix="{s["prix"]}" data-qty="1">'
             qty = '<div class="ct-qty ct-qty-sol"><button type="button" data-q="-1" aria-label="Un véhicule de moins">−</button><output>0</output><button type="button" data-q="1" aria-label="Un véhicule de plus">+</button><span>véhicule(s)</span></div>'
         else:
-            inp = f'<input type="checkbox" name="sol" value="{s["id"]}" data-prix="{s["prix"]}"{" checked disabled" if inclus else ""}>'
+            inp = f'<input type="checkbox" name="sol" value="{s["id"]}" data-slug="{s["slug"]}" data-prix="{s["prix"]}"{" checked disabled" if inclus else ""}>'
             qty = ""
         out.append(f"""<label class="ct-sol{' is-inclus' if inclus else ''}" data-rev data-sol="{s['id']}">
       {inp}<span class="ct-check" aria-hidden="true"></span>
@@ -460,7 +461,7 @@ PAGE = {
   <div class="band-inner">
     {pro.fil("/catalogue/")}
     <h1 data-rev>Composez<br><em>votre système.</em></h1>
-    <p class="lead" data-rev>Composez votre JARVIS en quatre étapes. Chaque ligne s’ajoute au panier, à droite. Vos données restent chez vous.</p>
+    <p class="lead" data-rev>Votre lieu, le Hub conseillé, vos solutions, votre matériel. Chaque choix s’ajoute à votre forfait, à droite.</p>
     <ol class="of-trois" data-rev>
       <li><a href="#hub"><i>1</i>Le Hub</a></li>
       <li><a href="#solutions"><i>2</i>Vos solutions</a></li>
@@ -471,8 +472,11 @@ PAGE = {
 </section>
 
 <form id="ct" class="ct" novalidate>
-<nav class="ct-lieux-nav" aria-label="Commencez par votre lieu" data-rev>
-  <p>Commencez par votre lieu :</p>
+<section class="ct-lieu-etape" aria-label="Votre lieu">
+  {lieux.selecteur("Commencez par votre lieu.", ident="lieu")}
+</section>
+<nav class="ct-lieux-nav" aria-label="Partir d’un kit" data-rev>
+  <p>Ou partez d’un kit :</p>
   {"".join(f'<button type="button" data-kit-go="{i + 1}">{escape(k["nom"].replace("Kit ", ""))}</button>' for i, k in enumerate(KITS))}
   <a href="#hub">ou composez pièce par pièce →</a>
 </nav>
@@ -482,7 +486,7 @@ PAGE = {
 <section class="sect" id="hub" data-toc="1 · Le Hub" aria-labelledby="hub-t">
   <div class="sect-head"><div data-rev><p class="of-num"><i>1</i><span>Étape 1 sur 4</span></p>
     <h2 id="hub-t">Choisissez votre Hub.<br><em>Selon la taille de votre lieu.</em></h2></div>
-    <p data-rev>Même logiciel, même app, mêmes solutions. Ce qui change : la puissance, le nombre d’appareils, l’IA et la sécurité. Payé une fois. Le panier vous dira si votre Hub devient trop petit.</p></div>
+    <p data-rev>Même logiciel, même app, mêmes solutions. Ce qui change : la puissance, le nombre d’appareils, l’IA et la sécurité. Payé une fois. Votre forfait vous dira si votre Hub devient trop petit.</p></div>
   <div class="ct-hubs">{_hubs()}</div>
   <details class="ct-details" data-rev><summary>Comparer les trois Hubs en détail</summary>{_compare()}</details>
   <div class="ct-inclus-hub" data-rev><b>Dans chaque Hub :</b> la solution Environnements intelligents, l’app JARVIS, les comptes et droits, les mises à jour signées, les sauvegardes chiffrées.</div>
@@ -551,7 +555,7 @@ PAGE = {
 <div class="ct-bar" aria-live="polite">
   <div><small>Aujourd’hui</small><b data-total-once>1 290 $</b></div>
   <div><small>Par mois</small><b data-total-month>0 $</b></div>
-  <button type="button" class="pill ghost" data-cart-open>Voir le panier<span data-cart-count></span></button>
+  <button type="button" class="pill ghost" data-cart-open>Voir mon forfait<span data-cart-count></span></button>
 </div>
 </div>
 </form>

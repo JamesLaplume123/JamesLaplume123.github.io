@@ -1,10 +1,12 @@
-# Accueil — aller à l'essentiel (novembre 2026). Cinq sections :
+# Accueil — le parcours du visiteur (décision de James, novembre 2026) : voir, tester, comprendre,
+# composer son forfait.
 #   1. héros vivant : la photo de la résidence réagit (assets/demos/accueil.js, shader WebGL);
-#   2. les sept solutions en bande de photos, une ligne chacune;
-#   3. le logiciel : l'aperçu vivant de JARVIS App (démo complète sur /logiciel/);
-#   4. l'offre : trois cartes par type de lieu (src/pages/offre.py), sans montant tant que les prix ne sont pas publics;
-#   5. fin : « Parlons de votre projet » et « Posez votre question à JARVIS » (ouvre la bulle).
-# Les étapes vivent sur /a-propos/, les questions sur /questions/.
+#   2. « Quel est votre lieu? » (src/lieux.py) : met en avant les solutions concernées;
+#   3. voir : les sept solutions en bande de photos, une ligne chacune;
+#   4. tester : l'aperçu vivant de JARVIS App (démo complète sur /logiciel/);
+#   5. comprendre : l'offre, trois cartes par type de lieu (src/pages/offre.py), sans montant;
+#   6. composer son forfait (une bande et son bouton), puis l'exemple réel (le laboratoire mobile);
+#   7. fin : « Parlons de votre projet » et « Posez votre question à JARVIS » (ouvre la bulle).
 # Styles et scripts : assets/demos/accueil.css et accueil.js.
 
 import json
@@ -12,6 +14,7 @@ import json
 from config import SITE, CAPABILITIES
 from demos import app
 from pages import offre
+import lieux
 import pro
 
 
@@ -86,7 +89,7 @@ _TITRES = {c["slug"]: c["title"] for c in CAPABILITIES}
 def _solutions():
     cartes = ""
     for slug, img, pos, ligne in SOLUTIONS:
-        cartes += f"""<article class="ac-sol{'' if cartes else ' is-on'}">
+        cartes += f"""<article class="ac-sol{'' if cartes else ' is-on'}" data-sol="{slug}">
       <img src="/media/accueil/{img}.webp" alt="" loading="lazy" style="object-position:{pos}">
       <div class="ac-sol-t">
         <h3><a class="ac-sol-a" href="/solutions/{slug}/">{_TITRES[slug]}</a></h3>
@@ -98,7 +101,7 @@ def _solutions():
     <h2 id="ac-faire-titre">Sept solutions, un seul système.</h2>
     <a class="ac-lien" href="/solutions/">Comparer les sept solutions</a>
   </div>
-  <div class="ac-sols" data-ac-sols>{cartes}</div>
+  <div class="ac-sols" data-ac-sols data-sols>{cartes}</div>
 </section>"""
 
 
@@ -130,7 +133,31 @@ def _offre():
 </section>"""
 
 
-# --- 5. Fin : l'appel, et JARVIS pour les questions --------------------------------------------
+# --- 5. Composer son forfait, puis l'exemple réel ----------------------------------------------
+def _composer():
+    return """<section class="ac-sect ac-composer" id="forfait" aria-labelledby="ac-comp-titre">
+  <div class="ac-bande">
+    <div>
+      <h2 id="ac-comp-titre">Composez votre forfait.</h2>
+      <p>Votre lieu, le Hub conseillé, vos solutions, votre matériel. Un récapitulatif clair, puis votre soumission.</p>
+    </div>
+    <a class="pill" href="/catalogue/">Composer mon forfait</a>
+  </div>
+  <a class="ac-reel" href="/laboratoire-mobile/">
+    <img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="" loading="lazy">
+    <span><em>L’exemple réel</em><b>Un vrai JARVIS, qui tourne.</b><small>Le laboratoire mobile : une ambulance convertie, ses batteries en direct.</small></span>
+  </a>
+</section>"""
+
+
+# --- Le lieu : on entre par son lieu (src/lieux.py) ---------------------------------------------
+def _lieu():
+    return f"""<section class="ac-sect ac-lieu" aria-label="Votre lieu">
+  {lieux.selecteur()}
+</section>"""
+
+
+# --- 6. Fin : l'appel, et JARVIS pour les questions --------------------------------------------
 # [data-jarvis] ouvre la bulle « Parler à JARVIS » (assets/js/guide.js); sans elle, le lien mène au contact.
 def _fin():
     return """<section class="ac-fin" id="projet" aria-labelledby="ac-fin-titre">
@@ -156,5 +183,5 @@ PAGE = {
         "JARVIS, un système privé qui gère et protège les maisons, les fermes, les entreprises "
         "et les véhicules. Domotique, réseau, caméras reliées et IA privée, chez vous."
     ),
-    "content": "\n".join([_heros(), _solutions(), _logiciel(), _offre(), _fin()]) + "\n",
+    "content": "\n".join([_heros(), _lieu(), _solutions(), _logiciel(), _offre(), _composer(), _fin()]) + "\n",
 }

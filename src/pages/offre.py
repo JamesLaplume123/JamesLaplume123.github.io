@@ -85,7 +85,7 @@ EXEMPLES = [
 def _etapes():
     return "".join(
         f"""<article class="of-e" data-rev>
-      <img src="{img}" alt="" loading="lazy" decoding="async" style="object-position:{pos}">
+      <img src="{img}" alt="" style="object-position:{pos}">
       <div><i>{n}</i><h3>{t}</h3><p>{p}</p></div>
     </article>"""
         for n, t, p, img, pos in ETAPES
@@ -95,7 +95,7 @@ def _etapes():
 def _exemples():
     return "".join(
         f"""<article class="of-ex" data-rev>
-      <img src="{img}" alt="" loading="lazy" decoding="async">
+      <img src="{img}" alt="">
       <div>
         <h3>{t}</h3>
         <p class="of-ex-h">{hub}</p>

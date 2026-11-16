@@ -12,6 +12,7 @@ sys.path[:0] = [os.path.join(RACINE, "src"), os.path.join(RACINE, "src", "pages"
 
 import catalogue as C  # noqa: E402
 from config import SITE, CAPABILITIES  # noqa: E402
+import lieux  # noqa: E402
 
 D = SITE["domain"].rstrip("/")
 
@@ -40,7 +41,7 @@ def fiche(complet=True):
         ("/", "Accueil"), ("/solutions/", "Les sept solutions"), ("/logiciel/", "Le logiciel en démonstration"),
         ("/plateforme/", "Le Hub : le boîtier, son IA privée, le noyau"),
         ("/offre/", "L’offre : un Hub payé une fois (Base, Signature, Platinum), des solutions par mois, le matériel"),
-        ("/catalogue/", "Catalogue : on compose son système; le panier fait le total"),
+        ("/catalogue/", "Composer mon forfait : le configurateur (lieu, Hub conseillé, solutions, matériel, récapitulatif, soumission)"),
         ("/solutions/maison-intelligente-cle-en-main/", "Maison intelligente clé en main"),
         ("/solutions/domotique-ferme-agricole/", "Domotique pour ferme"), ("/solutions/ia-privee-entreprise/", "IA privée pour entreprise"),
         ("/a-propos/", "À propos de James"), ("/vision-roadmap/", "Vision et feuille de route"), ("/laboratoire-mobile/", "Laboratoire mobile (ambulance)"),
@@ -48,8 +49,9 @@ def fiche(complet=True):
         ("/contact/", "Contact : démo, visite, soumission"), ("/confidentialite/", "Confidentialité (Loi 25)"),
         ("/mentions-legales/", "Mentions légales"), ("/plan-du-site/", "Plan du site : toutes les pages"),
     ]
-    a("- Menu du site : Solutions (les sept, puis Maison, Ferme, Entreprise) · Le logiciel · Le Hub · L’offre · À propos (Vision, Laboratoire mobile, Confiance, Questions) · bouton « Parlons de votre projet ».")
-    a("- Parcours conseillé : une solution, puis l’offre, puis le catalogue ou le contact.")
+    a("- Menu du site : Solutions (les sept, puis Maison, Ferme, Entreprise) · Le logiciel · L’offre · À propos (Laboratoire mobile, Vision, Le Hub, Confiance, Questions, Contact) · bouton doré « Composer mon forfait ».")
+    a("- Parcours conseillé : voir (accueil, solutions) → tester (le logiciel, la démonstration de chaque solution) → comprendre (l’offre, le Hub, les questions) → composer son forfait (le configurateur), puis « Recevoir ma soumission ».")
+    a("- Le forfait se bâtit en chemin : « Ajouter à mon forfait » sur chaque page de solution; le compteur de la barre mène au configurateur, où tout est déjà coché.")
     for u, t in pages:
         a(f"- {D}{u} : {t}")
     if complet:
@@ -57,6 +59,17 @@ def fiche(complet=True):
             a(f"- {D}/solutions/{c['slug']}/ : {c['title']} ({c['label']})")
     else:
         a("- Chaque solution a sa page : " + D + "/solutions/<nom>/ avec " + ", ".join(c["slug"] for c in CAPABILITIES))
+    a("")
+    a("## Entrer par son lieu (même source que le site : src/lieux.py)")
+    for fid, fnom in lieux.FAMILLES:
+        a(f"### {fnom}")
+        for l in lieux.LIEUX:
+            if l["famille"] != fid:
+                continue
+            quoi = " + ".join(x for x in (lieux.HUB_NOM.get(l["hub"]), l.get("boitier")) if x)
+            sols = "; ".join(f"{lieux._TITRE[s]} ({r.rstrip('.')})" for s, r in l["solutions"])
+            a(f"- {l['nom']}" + (f" ({l['sorte'].lower()})" if l.get("sorte") else "") + f" : {quoi}. {l['raison']} Solutions qui comptent : {sols}.")
+    a("- Un lieu mobile (VR, roulotte, bateau habitable) se traite comme une maison qui roule : Hub et Boîtier VR. Un véhicule (auto, camion, moto, avion) reçoit un Boîtier Mobilité, sans Hub à bord.")
     a("")
     a("## L’offre en quatre étapes")
     a("1. Le Hub, payé une fois : Base, Signature ou Platinum selon la taille du lieu. Même logiciel, même app; ce qui change, c’est la puissance, le nombre d’appareils, l’IA et la sécurité.")

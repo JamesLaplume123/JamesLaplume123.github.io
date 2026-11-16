@@ -150,7 +150,7 @@ DAY = [  # ruban de la journée : heure décimale, titre, détail, action liée
 NOW = 16 + 40 / 60
 
 SUGG = [
-    {"id": "pointe", "txt": "Pointe d’Hydro-Québec demain, de 6 h à 9 h. Je préchauffe la maison à 4 h 30 et je reporte la recharge des voitures ?",
+    {"id": "pointe", "txt": "Pointe du réseau demain, de 6 h à 9 h. Je préchauffe la maison à 4 h 30 et je reporte la recharge des voitures ?",
      "yes": "Oui, prépare la pointe", "done": "C’est prévu. Préchauffage à 4 h 30, recharge reportée à 9 h."},
     {"id": "soleil", "txt": "Demain, le soleil couvre tout dès 9 h 30. Je recharge le coupé à ce moment-là plutôt que ce soir ?",
      "yes": "Oui, recharge au soleil", "done": "Entendu. Le coupé se rechargera demain à 9 h 30, sans toucher au réseau."},
@@ -333,7 +333,7 @@ CONTENT = f"""
   <header class="vv-top">
     <div>
       <h1>Résidence de prestige</h1>
-      <p>Saint-Hyacinthe, au bord de la Yamaska. Mardi, 16 h 40. Touchez une lampe, le foyer ou la porte : la pièce répond.</p>
+      <p>Mardi, 16 h 40. Touchez une lampe, le foyer ou la porte : la pièce répond.</p>
     </div>
     <div class="vv-modes" role="group" aria-label="Mode d’affichage">
       <button type="button" data-mode-set="signature" aria-pressed="true" class="is-on">Signature</button>

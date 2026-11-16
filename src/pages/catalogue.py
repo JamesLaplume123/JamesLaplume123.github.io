@@ -60,7 +60,7 @@ SOLUTIONS = [
      "pourquoi": "Inclus avec chaque Hub : c’est la base de JARVIS.",
      "pts": ["Lumières, chauffage, stores, foyer, serrures", "Scènes : Matin, Soir, Nuit, Absent", "Énergie pièce par pièce", "Fonctionne sans Internet"],
      "non": ["Pas d’accès de partout ni d’alertes sans une solution payante"]},
-    {"id": "diag", "nom": "Diagnostic et continuité", "prix": 15, "slug": "diagnostic-care",
+    {"id": "diag", "nom": "Diagnostic & continuité", "prix": 15, "slug": "diagnostic-care",
      "pourquoi": "Un dégât d’eau coûte 12 000 $ en moyenne. Ici, vous êtes prévenu à la première goutte.",
      "pts": ["Veille 24/7 : fuite, gel, batterie, panne", "Alertes de partout, avec la cause probable", "Dossier prêt pour le technicien", "Rapport mensuel de santé du lieu"],
      "non": ["Ne ferme pas l’eau sans la vanne automatique", "Ne remplace pas un plombier ou un électricien"]},
@@ -173,12 +173,12 @@ MATERIEL = [
         ("plaques", "Lecteur de plaques", 599, "Véhicule connu, inconnu, refusé. Ouvre la barrière aux connus.", "La barrière s’ouvre pour vous, pas pour les autres."),
         ("serrure", "Serrure intelligente", 349, "Déverrouiller par cellulaire, codes invités.", "Un code pour le locataire, effacé quand il part."),
         ("clavier", "Clavier et lecteur de badges", 249, "Entrée d’entreprise ou de garage, badges et codes QR.", "Qui est entré, à quelle heure, avec quel badge."),
-        ("inter", "Interphone vidéo", 399, "Parler au visiteur et ouvrir de partout.", "Le livreur est reçu même si vous êtes à Montréal."),
+        ("inter", "Interphone vidéo", 399, "Parler au visiteur et ouvrir de partout.", "Le livreur est reçu même si vous êtes au travail."),
         ("sirene", "Sirène et stroboscope", 99, "Pour le mode urgence.", "Faire fuir avant que ça entre."),
         ("urgence", "Bouton d’urgence", 49, "Lumières, sirène, enregistrement, appel aux contacts.", "Un geste, et tout le lieu réagit."),
     ]),
     ("Confort et réseau", [
-        ("thermo", "Thermostat intelligent", 189, "Chauffage ou climatisation par pièce. Compatible plinthes du Québec.", "Chauffer les pièces où vous êtes, pas la maison entière."),
+        ("thermo", "Thermostat intelligent", 189, "Chauffage ou climatisation par pièce. Compatible plinthes électriques.", "Chauffer les pièces où vous êtes, pas la maison entière."),
         ("inter2", "Interrupteur ou gradateur", 89, "Remplace l’interrupteur existant. Par électricien.", "Vos lumières existantes deviennent intelligentes."),
         ("prise", "Prise intelligente", 35, "Lampe, pompe, chauffe-moteur.", "Le chauffe-moteur part à 5 h, pas toute la nuit."),
         ("ampoule", "Ampoule couleur", 29, "Scènes et ambiances.", "La scène Soir, d’un mot."),
@@ -224,7 +224,7 @@ INCLUS = [
     ("Test d’une heure", "Chaque kit tourne une heure sur banc avant l’envoi."),
     ("Mises à jour automatiques", "Signées, la nuit, avec retour arrière."),
     ("Sauvegarde chiffrée", "Si le Hub brise, le nouveau repart comme avant."),
-    ("Garantie", "1 an Base, 2 ans Signature, 3 ans Platinum. Garantie légale du Québec en plus."),
+    ("Garantie", "1 an Base, 2 ans Signature, 3 ans Platinum. Garantie légale en plus."),
     ("Retour 30 jours", "Matériel non installé : remboursé, moins la configuration."),
 ]
 
@@ -432,7 +432,7 @@ def _services():
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
       </div>""" for i, n, p, d, w in items)
         cats.append(f'<section class="ct-cat ct-cat-svc" data-rev><h3>{escape(fam)}</h3>{rows}</section>')
-    return f'<div class="ct-mats ct-svcs">{"".join(cats)}</div><p class="ct-note">Payés une fois, sur soumission confirmée. Déplacement en sus hors Montérégie. Nous vérifions et protégeons vos systèmes; nous ne sommes pas une agence de gardiennage ni d’enquête.</p>'
+    return f'<div class="ct-mats ct-svcs">{"".join(cats)}</div><p class="ct-note">Payés une fois, sur soumission confirmée. Déplacement selon la distance. Nous vérifions et protégeons vos systèmes; nous ne sommes pas une agence de gardiennage ni d’enquête.</p>'
 
 
 def _install():

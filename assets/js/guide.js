@@ -29,7 +29,7 @@
   var soir = new Date().getHours() >= 17;
   var T = EN ? {
     open: "Talk to JARVIS", state: "Online", title: "JARVIS",
-    sub: "Private systems · Québec node",
+    sub: "Security technology · private AI",
     hello: (soir ? "Good evening." : "Good day.") + " I'm JARVIS. Tell me about your home, your cottage or your business, and what you'd like me to take care of.",
     teaser: (soir ? "Good evening." : "Good day.") + " I'm JARVIS. Anything I can look after for you?",
     ph: "Talk to JARVIS…", send: "Send", think: "Analysing",
@@ -39,7 +39,7 @@
     chips: ["What is the Hub?", "How much does it cost?", "What do I need for my RV?", "Security for my business"]
   } : {
     open: "Parler à JARVIS", state: "En ligne", title: "JARVIS",
-    sub: "Systèmes privés · nœud Québec",
+    sub: "Sécurité et intelligence privée",
     hello: (soir ? "Bonsoir." : "Bonjour.") + " Je suis JARVIS. Parlez-moi de votre maison, de votre chalet ou de votre entreprise, et de ce que vous aimeriez me confier.",
     teaser: (soir ? "Bonsoir." : "Bonjour.") + " Je suis JARVIS. Je peux veiller sur quelque chose pour vous?",
     ph: "Parlez à JARVIS…", send: "Envoyer", think: "Analyse",

@@ -2,7 +2,10 @@
 Mise à jour automatique à partir du catalogue du site. Tous les prix sont en dollars canadiens, taxes en sus, et sont des points de départ : chaque soumission est confirmée par écrit, ligne par ligne, avant tout achat. Rien ne se paie sur le site.
 
 ## Qui nous sommes
-- JARVIS Private Systems : systèmes privés de domotique, de sécurité et d’IA, basés à Saint-Hyacinthe (Montérégie, Québec). Fondateur : James Laplume.
+- JARVIS Private Systems : technologies de sécurité et intelligence privée. Nous concevons et installons JARVIS, un système privé qui gère et protège les maisons, les fermes, les entreprises et les véhicules. Fondateur : James Laplume.
+- En phase de lancement : nous prenons les noms des personnes intéressées et nous choisissons quelques premiers projets.
+- Aucune zone desservie n’est publiée et aucun lieu n’est nommé (ni ville, ni région, ni province). Pour savoir si un projet est possible à un endroit donné, la réponse se donne par la page Contact.
+- L’entreprise parle toujours au « nous ». JARVIS, l’assistant, parle au « je » seulement de lui-même.
 - Tout tourne chez le client, dans un Hub. Les données restent sur place; aucun stockage dans le nuage. Un relais chiffré sert seulement à l’accès de partout et à relier plusieurs lieux; il ne garde rien.
 - JARVIS continue de fonctionner sans Internet (règles, IA locale, caméras, journal). Les mises à jour sont signées, la nuit, avec retour arrière.
 - Le logiciel est en construction : le site montre des démonstrations; le premier JARVIS tourne dans le laboratoire mobile (une ambulance convertie). La démo et la visite sont offertes dès maintenant.
@@ -16,6 +19,8 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - https://jarvisprivatesystems.com/solutions/ : Les sept solutions
 - https://jarvisprivatesystems.com/contact/ : Contact : démo, visite, soumission
 - https://jarvisprivatesystems.com/a-propos/ : À propos de James
+- https://jarvisprivatesystems.com/questions/ : Questions fréquentes
+- https://jarvisprivatesystems.com/plan-du-site/ : Plan du site : toutes les pages
 - https://jarvisprivatesystems.com/vision-roadmap/ : Vision et feuille de route
 - https://jarvisprivatesystems.com/laboratoire-mobile/ : Laboratoire mobile (ambulance)
 - https://jarvisprivatesystems.com/confiance/ : Confiance et sécurité
@@ -50,7 +55,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 
 ## Les solutions (par mois)
 - Environnements intelligents : incluse avec chaque Hub. Inclus avec chaque Hub : c’est la base de JARVIS.
-- Diagnostic et continuité : 15 $ par mois. Un dégât d’eau coûte 12 000 $ en moyenne. Ici, vous êtes prévenu à la première goutte.
+- Diagnostic & continuité : 15 $ par mois. Un dégât d’eau coûte 12 000 $ en moyenne. Ici, vous êtes prévenu à la première goutte.
 - Sécurité intelligente : 20 $ par mois. Vos caméras comprennent ce qu’elles voient. Une alerte utile, pas cent notifications.
 - IA privée et connaissances : 15 $ par mois. Posez une question sur votre lieu ou vos documents. La réponse ne sort jamais de chez vous.
 - Réseau et cybersécurité : 10 $ par mois. Un appareil inconnu sur votre réseau est bloqué avant de faire des dégâts.
@@ -90,7 +95,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Kit Domaine : 7 970 $ + 59 $/mois, Hub Platinum, 19 pièces. Pour : Grande propriété, terrain, dépendances. https://jarvisprivatesystems.com/catalogue/?kit=7
 - Kit Ferme : 5 670 $ + 165 $/mois, Hub Platinum, 18 pièces. Pour : Ferme laitière, érablière, serre. https://jarvisprivatesystems.com/catalogue/?kit=8
 
-## Sécurité privée et services professionnels (payés une fois)
+## Services professionnels (payés une fois)
 - Vérifier · Vérification de vos systèmes (résidence) : 349 $. Caméras, accès, réseau, Wi-Fi, sauvegardes, habitudes : le tour complet de la maison ou du chalet. Rapport écrit avec priorités.
 - Vérifier · Vérification de vos systèmes (entreprise) : 1 490 $. Accès, caméras, réseau, postes, sauvegardes, comptes employés. Rapport pour la direction et plan sur 90 jours.
 - Vérifier · Test d’intrusion réseau : 2 990 $. Attaque autorisée de votre réseau et de vos services, puis correction avec vous. Rapport et nouvelle vérification.
@@ -109,14 +114,14 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Mise en service guidée : 149 $. Un technicien vous accompagne en vidéo pendant l’installation.
 - JARVIS s’en occupe : dès 330 $. Sur place : 110 $ l’heure, minimum 3 h. Déplacement en sus. Le panier compte 3 h.
 - Visite de planification : Gratuite. Domaine, entreprise, ferme : inventaire, plan écrit, soumission ligne par ligne.
-- Toujours inclus : Configuration pour votre lieu (Vos appareils déjà jumelés, vos scènes de base prêtes); Test d’une heure (Chaque kit tourne une heure sur banc avant l’envoi); Mises à jour automatiques (Signées, la nuit, avec retour arrière); Sauvegarde chiffrée (Si le Hub brise, le nouveau repart comme avant); Garantie (1 an Base, 2 ans Signature, 3 ans Platinum. Garantie légale du Québec en plus); Retour 30 jours (Matériel non installé : remboursé, moins la configuration).
+- Toujours inclus : Configuration pour votre lieu (Vos appareils déjà jumelés, vos scènes de base prêtes); Test d’une heure (Chaque kit tourne une heure sur banc avant l’envoi); Mises à jour automatiques (Signées, la nuit, avec retour arrière); Sauvegarde chiffrée (Si le Hub brise, le nouveau repart comme avant); Garantie (1 an Base, 2 ans Signature, 3 ans Platinum. Garantie légale en plus); Retour 30 jours (Matériel non installé : remboursé, moins la configuration).
 
 ## Plusieurs lieux
 - Un Hub par lieu (maison, chalet, VR, bateau, entreprise, ferme, garage, hangar). Les lieux se parlent par un lien privé et chiffré; les petits lieux empruntent l’IA du plus gros Hub. Les solutions sont à −30 % dès le deuxième lieu; l’Entreprise et le matériel ne sont pas réduits.
 - Un Hub Base suit un Hub principal; un Signature relie jusqu’à 3 lieux; un Platinum, sans limite.
 
 ## Chiffres utiles (sources : Bureau d’assurance du Canada, Chubb)
-- Au Québec, 47 % des réclamations d’assurance habitation sont des dégâts d’eau, 12 000 $ en moyenne. Seulement 9 % des gens ont un système qui détecte les fuites. Diagnostic et continuité coûte 15 $ par mois; un capteur de fuite, 59 $; la vanne d’eau automatique, 349 $.
+- 47 % des réclamations d’assurance habitation sont des dégâts d’eau, 12 000 $ en moyenne. Seulement 9 % des gens ont un système qui détecte les fuites. Diagnostic & continuité coûte 15 $ par mois; un capteur de fuite, 59 $; la vanne d’eau automatique, 349 $.
 
 ## Ce qu’on ne promet pas
 - Pas de téléphone à donner : le contact passe par la page Contact. Pas de délai de livraison précis. Pas de « sans engagement » : les solutions sont annulables en tout temps, le matériel non installé est remboursable 30 jours, moins la configuration.

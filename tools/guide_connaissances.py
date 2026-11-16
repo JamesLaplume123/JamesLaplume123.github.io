@@ -27,7 +27,10 @@ def fiche(complet=True):
     a(f"Mise à jour automatique à partir du catalogue du site. Tous les prix sont en dollars canadiens, taxes en sus, et sont des points de départ : chaque soumission est confirmée par écrit, ligne par ligne, avant tout achat. Rien ne se paie sur le site.")
     a("")
     a("## Qui nous sommes")
-    a("- JARVIS Private Systems : systèmes privés de domotique, de sécurité et d’IA, basés à Saint-Hyacinthe (Montérégie, Québec). Fondateur : James Laplume.")
+    a("- JARVIS Private Systems : technologies de sécurité et intelligence privée. Nous concevons et installons JARVIS, un système privé qui gère et protège les maisons, les fermes, les entreprises et les véhicules. Fondateur : James Laplume.")
+    a("- En phase de lancement : nous prenons les noms des personnes intéressées et nous choisissons quelques premiers projets.")
+    a("- Aucune zone desservie n’est publiée et aucun lieu n’est nommé (ni ville, ni région, ni province). Pour savoir si un projet est possible à un endroit donné, la réponse se donne par la page Contact.")
+    a("- L’entreprise parle toujours au « nous ». JARVIS, l’assistant, parle au « je » seulement de lui-même.")
     a("- Tout tourne chez le client, dans un Hub. Les données restent sur place; aucun stockage dans le nuage. Un relais chiffré sert seulement à l’accès de partout et à relier plusieurs lieux; il ne garde rien.")
     a("- JARVIS continue de fonctionner sans Internet (règles, IA locale, caméras, journal). Les mises à jour sont signées, la nuit, avec retour arrière.")
     a("- Le logiciel est en construction : le site montre des démonstrations; le premier JARVIS tourne dans le laboratoire mobile (une ambulance convertie). La démo et la visite sont offertes dès maintenant.")
@@ -37,7 +40,7 @@ def fiche(complet=True):
         ("/", "Accueil"), ("/catalogue/", "Catalogue et prix : on coche son Hub, ses solutions, son matériel; le panier fait le total"),
         ("/offre/", "L’offre : comment ça se compose"), ("/logiciel/", "Le logiciel en démonstration"),
         ("/plateforme/", "Le Hub et l’IA privée"), ("/solutions/", "Les sept solutions"), ("/contact/", "Contact : démo, visite, soumission"),
-        ("/a-propos/", "À propos de James"), ("/vision-roadmap/", "Vision et feuille de route"), ("/laboratoire-mobile/", "Laboratoire mobile (ambulance)"),
+        ("/a-propos/", "À propos de James"), ("/questions/", "Questions fréquentes"), ("/plan-du-site/", "Plan du site : toutes les pages"), ("/vision-roadmap/", "Vision et feuille de route"), ("/laboratoire-mobile/", "Laboratoire mobile (ambulance)"),
         ("/confiance/", "Confiance et sécurité"), ("/confidentialite/", "Confidentialité (Loi 25)"),
     ]
     for u, t in pages:
@@ -108,7 +111,7 @@ def fiche(complet=True):
         else:
             a(f"- {k['nom']} : {p(once)} + {mois} $/mois, {hub}, {1 + sum(k['mat'].values())} pièces. Pour : {k['pour']}. {D}/catalogue/?kit={i}")
     a("")
-    a("## Sécurité privée et services professionnels (payés une fois)")
+    a("## Services professionnels (payés une fois)")
     for fam, items in C.SERVICES:
         for _, n, pr, d, w in items:
             a(f"- {fam} · {n} : {p(pr)}. {d}" + (f" {w}" if complet else ""))
@@ -127,7 +130,7 @@ def fiche(complet=True):
     a("- Un Hub Base suit un Hub principal; un Signature relie jusqu’à 3 lieux; un Platinum, sans limite.")
     a("")
     a("## Chiffres utiles (sources : Bureau d’assurance du Canada, Chubb)")
-    a("- Au Québec, 47 % des réclamations d’assurance habitation sont des dégâts d’eau, 12 000 $ en moyenne. Seulement 9 % des gens ont un système qui détecte les fuites. Diagnostic et continuité coûte 15 $ par mois; un capteur de fuite, 59 $; la vanne d’eau automatique, 349 $.")
+    a("- 47 % des réclamations d’assurance habitation sont des dégâts d’eau, 12 000 $ en moyenne. Seulement 9 % des gens ont un système qui détecte les fuites. Diagnostic & continuité coûte 15 $ par mois; un capteur de fuite, 59 $; la vanne d’eau automatique, 349 $.")
     a("")
     a("## Ce qu’on ne promet pas")
     a("- Pas de téléphone à donner : le contact passe par la page Contact. Pas de délai de livraison précis. Pas de « sans engagement » : les solutions sont annulables en tout temps, le matériel non installé est remboursable 30 jours, moins la configuration.")

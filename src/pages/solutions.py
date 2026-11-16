@@ -2,9 +2,10 @@
 # Chaque carte mène à la page de la solution, où se trouve sa démonstration.
 
 from config import CAPABILITIES
+import lieux
 
 CARTES = "".join(
-    f'<a class="card" href="/solutions/{c["slug"]}/" data-rev><small>{c["num"]}</small>'
+    f'<a class="card" href="/solutions/{c["slug"]}/" data-sol="{c["slug"]}" data-rev><small>{c["num"]}</small>'
     f'<h3>{c["title"]}</h3><p>{c["menu"]}</p></a>'
     for c in CAPABILITIES
 )
@@ -39,7 +40,8 @@ PAGE = {
 </section>
 
 <section class="sect" id="sept" aria-label="Les sept solutions">
-  <div class="cards">{CARTES}</div>
+  {lieux.selecteur("Filtrer par lieu.")}
+  <div class="cards" data-sols>{CARTES}</div>
 </section>
 
 <section class="sect alt" id="par-besoin" aria-labelledby="pb-titre">

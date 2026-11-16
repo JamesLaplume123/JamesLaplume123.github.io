@@ -1,30 +1,50 @@
-# Gabarit commun des pages de solution (refonte « essentiel », novembre 2026).
-# Une page = une idée, dite une fois : le titre et une phrase, LA démonstration interactive,
-# trois points clés (config.CAPABILITIES), trois questions repliées (src/pro.py, ajoutées par
-# partials.document) et un bouton.
+# Gabarit commun des pages de solution.
+# Chaque module fournit un dict DATA ; solution_page() le transforme en page :
+# bande (fil d'Ariane, une phrase, « Ajouter à mon forfait ») → démonstration interactive (le cœur) →
+# sur le terrain (photos) → « En clair » (avant / avec JARVIS, ce que vous obtenez) → déploiement
+# responsable → questions (ajoutées par partials.document) → prochain pas.
+# Les pages sur mesure (Environnements, IA privée, Mobilité) reprennent la même bande par bande().
 
 from config import CAPABILITIES
 from pages import catalogue as CAT
-from demos import coquille
-import pro
 
 PRIX = {s["slug"]: ("Inclus avec chaque Hub" if s["prix"] == 0 else f"{s['prix']} $ par mois" + (" par véhicule" if s.get("unite") else "")) for s in CAT.SOLUTIONS}
 PRIX["automatisation-operations"] = f"Dès {CAT.ENT_SOCLE['prix']} $ par mois, puis 9 à 29 $ par automatisation"
+from demos import coquille
+import galerie
+import pro
 
 _CAP = {c["slug"]: c for c in CAPABILITIES}
 
 
+# Image d'aperçu, utilisée tant qu'une solution n'a pas sa démo interactive (DATA["demo_html"]).
+FRAME = """<figure class="frame" data-rev>
+    <img src="{img}" alt="Aperçu conceptuel — {title}" loading="lazy">
+    <figcaption>
+      <span>JARVIS App · {up}</span>
+      <strong>{cap}</strong>
+    </figcaption>
+  </figure>"""
+
+
 def prix_ligne(slug):
-    """Le prix de la solution et le lien vers le catalogue; sur soumission tant que les prix ne sont pas publics."""
+    """Le prix de la solution; sur soumission tant que les prix ne sont pas publics (SITE["prix_publics"])."""
     if not pro.PRIX:
         return pro.SOUMISSION
-    return (f"{PRIX.get(slug, 'Voir le catalogue')} · "
-            '<a href="/catalogue/#solutions" style="color:var(--gold-soft)">Voir le catalogue</a>')
+    return PRIX.get(slug, "Voir le configurateur")
 
 
-def bande(slug, h1, lead, image):
-    """Ouverture : le titre, une phrase, un bouton, le prix."""
-    c = _CAP[slug]
+def forfait_bouton(slug):
+    """« Ajouter à mon forfait » : le choix suit le visiteur jusqu'au configurateur (assets/js/wow.js).
+    Environnements intelligents vient avec chaque Hub : rien à ajouter, on va composer."""
+    if slug == "environnements-intelligents":
+        return '<a class="pill" href="/catalogue/">Inclus avec chaque Hub · composer mon forfait</a>'
+    return (f'<button type="button" class="pill" data-forfait-add="{slug}" aria-pressed="false">'
+            '<span data-forfait-off>Ajouter à mon forfait</span><span data-forfait-on hidden>Dans mon forfait ✓</span></button>')
+
+
+def bande(slug, h1, lead, image, pour):
+    """Ouverture commune : fil d'Ariane, le titre, une phrase, le forfait, pour qui, le prix."""
     return f"""
 <section class="band top">
   <div class="bg"><img src="{image}" alt="" fetchpriority="high"></div>
@@ -33,62 +53,96 @@ def bande(slug, h1, lead, image):
     <h1 data-rev>{h1}</h1>
     <p class="lead" data-rev>{lead}</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/contact/">Parlons de votre projet</a>
+      {forfait_bouton(slug)}
+      <a class="pill ghost" href="#essayer">Essayer la démonstration</a>
     </div>
+    <p class="for-line" data-rev><span>Pour</span> {pour}</p>
     <p class="for-line" data-rev><span>Prix</span> {prix_ligne(slug)}</p>
   </div>
 </section>
 """
 
 
-def demo(slug, titre, html, extra="", ident="essayer"):
-    """La démonstration interactive : le produit. Rien autour, sauf son titre."""
-    return f"""
-<section class="sect sol-demo" id="{ident}">
-  <div class="sect-head">
-    <div data-rev>
-      <p class="eyebrow">Démonstration interactive</p>
-      <h2>{titre}</h2>
-    </div>
-  </div>
-  {coquille.html(slug, html)}
-  {extra}
-</section>
-"""
-
-
-def points(slug):
-    """Au plus trois points clés, une ligne chacun."""
-    cartes = "".join(
-        f'<article class="card" data-rev><h3>{t}</h3><p>{p}</p></article>' for t, p in _CAP[slug]["points"][:3]
-    )
-    return f"""
-<section class="sect sol-points" aria-label="L’essentiel">
-  <div class="cards">{cartes}</div>
-</section>
-"""
+def avec_bande(contenu, slug, h1, lead, image, pour):
+    """Pages sur mesure : remplace leur première section (l'ancienne bande) par la bande commune."""
+    fin = contenu.index("</section>") + len("</section>")
+    return bande(slug, h1, lead, image, pour) + contenu[fin:]
 
 
 def fin(titre):
-    return f"""
-<section class="cta">
+    return f"""<section class="cta">
   <h2 data-rev>{titre}</h2>
   <div class="acts" data-rev><a class="pill" href="/contact/">Parlons de votre projet</a></div>
 </section>
 """
 
 
+def clair_section(c, slug=""):
+    """Bloc « En clair » : la solution expliquée simplement, avant / avec JARVIS (avec leurs photos)."""
+    if not c:
+        return ""
+    ph_avant, ph_apres = galerie.avant_apres_photos(slug)
+    avant = "".join(f"<li>{x}</li>" for x in c["avant"])
+    apres = "".join(f"<li>{x}</li>" for x in c["apres"])
+    obtenez = "".join(
+        f"""<article class="card" data-rev><small>{i + 1:02d}</small><h3>{t}</h3><p>{p}</p></article>"""
+        for i, (t, p) in enumerate(c["obtenez"])
+    )
+    return f"""
+<section class="clair" id="en-clair" data-toc="En clair" aria-labelledby="clair-titre">
+  <div class="clair-head" data-rev>
+    <p class="eyebrow">En clair</p>
+    <h2 id="clair-titre">{c['quoi']}</h2>
+    <p class="clair-ex"><b>Exemple concret.</b> {c['exemple']}</p>
+  </div>
+  <div class="vs" data-rev>
+    <div class="vs-col vs-before">{ph_avant}<p class="vs-k">Aujourd’hui, sans JARVIS</p><ul>{avant}</ul></div>
+    <div class="vs-arrow" aria-hidden="true"><span></span></div>
+    <div class="vs-col vs-after">{ph_apres}<p class="vs-k">Avec JARVIS</p><ul>{apres}</ul></div>
+  </div>
+  <p class="eyebrow clair-k" data-rev>Ce que vous obtenez</p>
+  <div class="cards">{obtenez}</div>
+</section>"""
+
+
 def solution_page(d):
-    slug = d["slug"]
+    compat = "".join(f'<span class="chip">{c}</span>' for c in d["compat"])
     return {
-        "url": f"/solutions/{slug}/",
+        "url": f"/solutions/{d['slug']}/",
         "v2": True,
         "title": f"{d['title']} | Solutions JARVIS",
         "description": d["description"],
         "og_image": d["image"],
-        "assets": ["coquille", *d.get("assets", [])],
-        "content": bande(slug, d["h1"], d["lead"], d["image"])
-        + demo(slug, d["demo_title"], d["demo_html"], d.get("extra", ""))
-        + points(slug)
-        + fin(d["cta_title"]),
+        "assets": ["coquille", *d.get("assets", []), "galerie"],
+        "content": bande(d["slug"], d["h1"], d["lead"], d["image"], d["for"]) + f"""
+<section class="sect sol-demo" id="essayer" data-toc="Essayer">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">Essayez · démonstration interactive</p>
+      <h2>{d['demo_title']}</h2>
+    </div>
+    <p data-rev>{d['demo_copy']}</p>
+  </div>
+  {coquille.html(d['slug'], d.get('demo_html') or FRAME.format(img=d.get('demo_image', d['image']), title=d['title'], up=d['title'].upper(), cap=d.get('demo_caption', 'Prototype interactif — données simulées.')))}
+  {d.get('extra', '')}
+</section>
+{galerie.terrain(d['slug']) if d['slug'] in galerie.SOLUTIONS else ''}
+{clair_section(d.get('clair'), d['slug'])}
+
+<section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
+  <div class="trust" data-rev>
+    <div>
+      <p class="eyebrow">Déploiement responsable</p>
+      <h2>{d['deploy_title']}</h2>
+      <p>{d['deploy_copy']}</p>
+    </div>
+    <dl>
+      <div><dt>Accord humain</dt><dd>Les actions sensibles exigent une validation adaptée au risque.</dd></div>
+      <div><dt>Limite publiée</dt><dd>{d['limit']}</dd></div>
+      <div><dt>Compatibilités possibles</dt><dd class="chips">{compat}</dd></div>
+    </dl>
+  </div>
+</section>
+
+""" + fin(d["cta_title"]) + """""",
     }

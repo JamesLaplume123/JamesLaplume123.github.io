@@ -248,3 +248,7 @@ body.ct-lock { overflow: hidden; }
 .ct[data-sansprix] .ct-cart-tot, .ct[data-sansprix] .ct-bar > div { display: none; }
 .ct[data-sansprix] .ct-bar { justify-content: center; }
 .ct[data-sansprix] .ct-prix small, .ct[data-sansprix] .ct-auto-p small { margin-left: 0; }
+
+/* Première étape : le lieu */
+.ct-lieu-etape { max-width: 92rem; margin: 0 auto; padding: 1.6rem 1.4rem .4rem; }
+.ct-lieu-etape .lx { max-width: none; }

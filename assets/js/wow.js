@@ -248,7 +248,7 @@
       if (cfg && msg && !msg.value) {
         msg.value = "Mon forfait JARVIS :\n" + cfg.split(" + ").join("\n- ").replace(/^/, "- ") + "\n\nMon lieu et mes questions :\n";
         var sujet = $('select[name="sujet"]', form);
-        if (sujet) { var o = document.createElement("option"); o.textContent = "Soumission à partir du catalogue"; sujet.insertBefore(o, sujet.firstChild); sujet.value = o.textContent; }
+        if (sujet) { var o = document.createElement("option"); o.textContent = "Soumission pour mon forfait"; sujet.insertBefore(o, sujet.firstChild); sujet.value = o.textContent; }
         msg.focus();
       }
     } catch (e) {}
@@ -467,4 +467,75 @@
     });
     el.addEventListener("pointerleave", function () { el.style.transform = ""; });
   });
+
+  /* ---------- Mon forfait : il se bâtit en chemin ----------
+     Une seule clé (« jarvis-forfait ») partagée avec le configurateur (/catalogue/) : les lieux choisis,
+     le Hub conseillé, les solutions ajoutées et le nombre de lignes. Rien ne quitte le navigateur. */
+  var CLE_F = "jarvis-forfait", RANG = { base: 1, signature: 2, platinum: 3 };
+  function lireF() {
+    var o = {};
+    try { o = JSON.parse(localStorage.getItem(CLE_F) || "{}") || {}; } catch (e) { o = {}; }
+    return { lieux: o.lieux || [], sols: o.sols || [], hub: o.hub || "", manuel: !!o.manuel, n: o.n || 0 };
+  }
+  function ecrireF(o) { try { localStorage.setItem(CLE_F, JSON.stringify(o)); } catch (e) {} majF(); }
+  function compteF(o) { return o.n || (o.sols.length + (o.hub ? 1 : 0)); }
+  var LIEUX = null, boiteL = $("[data-lieux-data]");
+  if (boiteL) { try { LIEUX = JSON.parse(boiteL.textContent); } catch (e) { LIEUX = null; } }
+  function echap(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function majF() {
+    var o = lireF(), n = compteF(o);
+    $$("[data-forfait-n]").forEach(function (b) { b.hidden = !n; b.textContent = n ? " · " + n : ""; });
+    $$("[data-forfait-l]").forEach(function (l) {
+      if (!l.getAttribute("data-vide")) l.setAttribute("data-vide", l.textContent);
+      l.textContent = n ? l.getAttribute("data-plein") : l.getAttribute("data-vide");
+    });
+    $$("[data-forfait-add]").forEach(function (b) {
+      var on = o.sols.indexOf(b.getAttribute("data-forfait-add")) >= 0;
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      var a = $("[data-forfait-off]", b), c = $("[data-forfait-on]", b);
+      if (a) a.hidden = on; if (c) c.hidden = !on;
+    });
+    $$("[data-lieu]").forEach(function (b) { b.setAttribute("aria-pressed", o.lieux.indexOf(b.getAttribute("data-lieu")) >= 0 ? "true" : "false"); });
+    if (!LIEUX) return;
+    /* Les solutions qui comptent pour les lieux choisis : mises en avant, sans cacher les autres */
+    var utiles = {};
+    o.lieux.forEach(function (id) { if (LIEUX[id]) LIEUX[id].sols.forEach(function (x) { utiles[x.slug] = 1; }); });
+    $$("[data-sol]").forEach(function (c) { c.classList.toggle("is-lieu", !!utiles[c.getAttribute("data-sol")]); });
+    $$("[data-sols]").forEach(function (g) { g.classList.toggle("has-lieu", o.lieux.length > 0); });
+    $$("[data-lieux-res]").forEach(function (res) {
+      if (!o.lieux.length) { res.hidden = true; res.innerHTML = ""; return; }
+      res.hidden = false;
+      res.innerHTML = o.lieux.filter(function (id) { return LIEUX[id]; }).map(function (id) {
+        var l = LIEUX[id];
+        var quoi = (l.hubNom ? l.hubNom : "") + (l.boitier ? (l.hubNom ? " + " : "") + l.boitier : "");
+        return '<article class="lx-r"><h3>' + echap(l.nom) + '</h3><p class="lx-r-h"><b>' + echap(quoi) + "</b> " + echap(l.raison) + "</p><ul>" +
+          l.sols.map(function (x) { return '<li><a href="/solutions/' + x.slug + '/">' + echap(x.nom) + "</a><span>" + echap(x.raison) + "</span></li>"; }).join("") +
+          '</ul><p class="lx-r-a"><a href="' + l.demo + '">Voir la démonstration <i aria-hidden="true">→</i></a></p></article>';
+      }).join("") + (/^\/catalogue\//.test(location.pathname) ? "" : '<p class="lx-go"><a class="pill" href="/catalogue/">Composer mon forfait</a></p>');
+    });
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("[data-forfait-add]");
+    if (a) {
+      var o = lireF(), s = a.getAttribute("data-forfait-add"), i = o.sols.indexOf(s);
+      if (i >= 0) o.sols.splice(i, 1); else o.sols.push(s);
+      o.n = 0; ecrireF(o);
+      document.dispatchEvent(new CustomEvent("jarvis:forfait", { detail: { sol: s, ajoute: i < 0 } }));
+      return;
+    }
+    var b = e.target.closest && e.target.closest("[data-lieu]");
+    if (b && LIEUX) {
+      var f = lireF(), id = b.getAttribute("data-lieu"), j = f.lieux.indexOf(id);
+      if (j >= 0) f.lieux.splice(j, 1); else f.lieux.push(id);
+      if (!f.manuel) {
+        f.hub = "";
+        f.lieux.forEach(function (x) { var h = LIEUX[x] && LIEUX[x].hub; if (h && (RANG[h] || 0) > (RANG[f.hub] || 0)) f.hub = h; });
+      }
+      f.n = 0; ecrireF(f);
+      document.dispatchEvent(new CustomEvent("jarvis:forfait", { detail: { lieu: id, ajoute: j < 0 } }));
+    }
+  });
+  window.JarvisForfait = { lire: lireF, ecrire: ecrireF, maj: majF };
+  majF();
 })();

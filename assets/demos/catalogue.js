@@ -15,6 +15,14 @@
   function setQty(el, v) { var o = el && el.querySelector("output"); if (o) o.value = Math.max(0, v); }
   function h3(el) { var h = el && el.querySelector("h3, b"); return h ? h.textContent.trim() : ""; }
 
+  var pret = false;
+  function garde(hubId, n) {
+    var F = window.JarvisForfait; if (!F || !pret) return;
+    var o = F.lire();
+    o.sols = $$('input[name="sol"]:checked:not(:disabled)').map(function (c) { return c.getAttribute("data-slug"); }).filter(Boolean);
+    if (o.hub !== hubId) { o.manuel = o.manuel || !!o.hub; o.hub = hubId; }
+    o.n = n; F.ecrire(o);
+  }
   function compute() {
     var once = [], month = [], tips = [];
     var hubIn = $('input[name="hub"]:checked');
@@ -139,6 +147,7 @@
     if (hubId === "base" && once.some(function (l) { return l.id === "vrs" || l.id === "vrp"; })) tips.push({ t: "Le Boîtier VR Signature ou Platinum donne tout son sens avec un Hub Signature (IA locale, 4G).", up: "signature" });
 
     render(once, month, monthRab, totOnce, totMonth, hubNom, tips, rabais);
+    garde(hubId, once.length + month.length);
   }
 
   function line(l) {
@@ -171,6 +180,12 @@
     } else { tb.hidden = true; tb.innerHTML = ""; }
 
     var lines = once.concat(month).map(function (l) { return (l.q > 1 ? l.q + "× " : "") + l.n; });
+    /* Les lieux choisis ouvrent le récapitulatif envoyé avec la demande de soumission. */
+    try {
+      var Fo = window.JarvisForfait && window.JarvisForfait.lire(), Ld = JSON.parse(document.querySelector("[data-lieux-data]").textContent);
+      var noms = (Fo ? Fo.lieux : []).map(function (id) { return Ld[id] && Ld[id].nom; }).filter(Boolean);
+      if (noms.length) lines.unshift("Lieu : " + noms.join(", "));
+    } catch (x) {}
     var link = $("[data-total-link]");
     if (link) link.href = "/contact/?config=" + encodeURIComponent(lines.join(" + ") + (rabais ? " | 2e lieu" : "") + (SANS ? "" : " | " + fmt(totOnce) + " une fois, " + fmt(totMonth) + " par mois"));
   }
@@ -239,5 +254,30 @@
   var kq = +(new URLSearchParams(location.search).get("kit") || 0);
   var kb = kq ? $$("[data-kit]")[kq - 1] : null;
   if (kb) { applyKit(JSON.parse(kb.dataset.kit)); form.classList.remove("is-cart"); document.body.classList.remove("ct-lock"); setTimeout(function () { kb.closest(".ct-kit").scrollIntoView({ block: "center" }); }, 60); }
-  else compute();
+  else { depuisForfait(); compute(); }
+  pret = true; compute();
+
+  /* Le forfait bâti en chemin (clé « jarvis-forfait », assets/js/wow.js) : le Hub conseillé pour le lieu et
+     les solutions ajoutées sont déjà cochés à l'arrivée; chaque changement ici est gardé de la même façon. */
+  function depuisForfait() {
+    var F = window.JarvisForfait; if (!F) return;
+    var o = F.lire();
+    if (o.hub) { var h = $('input[name="hub"][value="' + o.hub + '"]'); if (h) h.checked = true; }
+    o.sols.forEach(function (slug) { coche(slug, true); });
+  }
+  function coche(slug, oui) {
+    var cb = $('input[name="sol"][data-slug="' + slug + '"]'); if (!cb || cb.disabled) return;
+    cb.checked = oui;
+    var box = cb.closest(".ct-sol"); if (box && cb.hasAttribute("data-qty")) setQty(box, oui ? Math.max(1, qtyOf(box)) : 0);
+  }
+  document.addEventListener("jarvis:forfait", function (e) {
+    var F = window.JarvisForfait, d = e.detail || {}; if (!F) return;
+    if (d.lieu) {
+      var o = F.lire(), data = document.querySelector("[data-lieux-data]"), L = {};
+      try { L = JSON.parse(data.textContent); } catch (x) {}
+      if (o.hub) { var h = $('input[name="hub"][value="' + o.hub + '"]'); if (h) h.checked = true; }
+      if (d.ajoute && L[d.lieu]) L[d.lieu].sols.forEach(function (x) { coche(x.slug, true); });
+    }
+    compute();
+  });
 })();

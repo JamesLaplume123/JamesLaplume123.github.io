@@ -226,48 +226,79 @@ def faq_section(faq, eyebrow, titre, ident="questions", toc=""):
 
 
 ETAPES = [
-    ("Visite et écoute", "Chez vous, gratuite et sans engagement."),
-    ("Plan et soumission écrite", "Le prix, ligne par ligne, avant toute décision."),
-    ("Installation", "Propre, essayée avec vous avant qu’on parte."),
-    ("Formation", "À votre rythme, sur votre propre téléphone."),
-    ("Suivi", "Entretien, mises à jour et réglages quand vos besoins changent."),
+    ("Visite et écoute",
+     "On se déplace chez vous. On regarde ce qui est déjà en place et on écoute ce qui vous dérange "
+     "vraiment. C’est gratuit et sans engagement."),
+    ("Plan et soumission écrite",
+     "Vous recevez un plan clair : ce qu’on relie, ce qu’on ajoute, ce qui peut attendre. Le prix est "
+     "écrit ligne par ligne, avant toute décision."),
+    ("Installation",
+     "Sur place, proprement, en réutilisant vos appareils quand c’est possible. Chaque règle est "
+     "essayée avec vous avant qu’on parte."),
+    ("Formation",
+     "Les personnes qui vivent ou travaillent dans le lieu apprennent à s’en servir, à leur rythme, "
+     "sur leur propre téléphone."),
+    ("Suivi",
+     "Entretien, mises à jour et réglages quand vos besoins changent, avec une personne qui connaît "
+     "votre installation."),
 ]
 
 
-def comment_on_travaille(ident="comment-on-travaille"):
+def comment_on_travaille(ident="comment-on-travaille", toc="Comment on travaille", alt=True):
     cartes = "".join(
-        f'<article class="card" data-rev><small>{i + 1}</small><h3>{t}</h3><p>{p}</p></article>'
+        f'<article class="card" data-rev><small>Étape {i + 1} sur 5</small><h3>{t}</h3><p>{p}</p></article>'
         for i, (t, p) in enumerate(ETAPES)
     )
-    return f"""<section class="sect alt" id="{ident}" aria-labelledby="{ident}-titre">
+    return f"""<section class="sect{' alt' if alt else ''}" id="{ident}" data-toc="{toc}" aria-labelledby="{ident}-titre">
   <div class="sect-head">
     <div data-rev>
-      <h2 id="{ident}-titre">Cinq étapes.<br><em>Aucune surprise.</em></h2>
+      <p class="eyebrow">Comment on travaille</p>
+      <h2 id="{ident}-titre" style="margin-top:1rem">Cinq étapes.<br><em>Aucune surprise.</em></h2>
     </div>
+    <p data-rev>De la première visite au suivi : vous savez toujours où on en est.</p>
   </div>
-  <div class="cards">{cartes}</div>
+  <div class="cards">{cartes}
+    <article class="card pro-go" data-rev><small>En phase de lancement</small><h3>On choisit quelques premiers projets.</h3>
+    <p>Décrivez votre lieu en quelques lignes, ou laissez simplement votre nom pour rester informé.</p>
+    <p class="pro-go-a"><a class="pill" href="/contact/">Parlons de votre projet</a></p></article>
+  </div>
 </section>"""
 
 
 ENGAGEMENTS = [
-    ("Vos données restent chez vous", "Rien n’est vendu, et rien ne sort sans votre accord."),
-    ("Soumission gratuite et écrite", "Vous décidez maintenant, plus tard ou pas du tout."),
-    ("Un système documenté", "Le plan, les règles et vos accès vous sont remis par écrit."),
-    ("La Loi 25 respectée", "Le minimum de renseignements, et vous savez où ils sont gardés."),
-    ("Vous gardez la décision", "Le système propose; vous approuvez."),
-    ("L’heure juste", "On vous dit clairement ce qui n’est pas encore prêt."),
+    ("Vos données restent chez vous",
+     "Le système fonctionne sur un boîtier installé dans votre lieu. Rien n’est vendu, et rien ne sort "
+     "sans votre accord."),
+    ("Soumission gratuite et écrite",
+     "Après la visite, le prix est détaillé ligne par ligne. Vous décidez maintenant, plus tard ou pas "
+     "du tout."),
+    ("Un système documenté, remis au client",
+     "Le plan, la liste des appareils, les règles et vos accès vous sont remis par écrit. Votre "
+     "installation vous appartient."),
+    ("La Loi 25 respectée",
+     "On recueille le minimum de renseignements personnels, on vous dit où ils sont gardés et qui y a "
+     "accès, comme l’exige la loi."),
+    ("Vous gardez la décision",
+     "Déverrouiller une porte ou ouvrir un garage demande toujours votre confirmation. Le système "
+     "propose; vous approuvez."),
+    ("L’heure juste",
+     "L’entreprise est en démarrage. On vous montre ce qui fonctionne aujourd’hui et on vous dit "
+     "clairement ce qui n’est pas encore prêt."),
 ]
 
 
-def engagements(ident="engagements"):
+def engagements(ident="engagements", toc="Nos engagements", alt=False):
     cartes = "".join(
-        f'<article class="card" data-rev><h3>{t}</h3><p>{p}</p></article>' for t, p in ENGAGEMENTS
+        f'<article class="card" data-rev><small>Engagement {i + 1:02d}</small><h3>{t}</h3><p>{p}</p></article>'
+        for i, (t, p) in enumerate(ENGAGEMENTS)
     )
-    return f"""<section class="sect" id="{ident}" aria-labelledby="{ident}-titre">
+    return f"""<section class="sect{' alt' if alt else ''}" id="{ident}" data-toc="{toc}" aria-labelledby="{ident}-titre">
   <div class="sect-head">
     <div data-rev>
-      <h2 id="{ident}-titre">Ce que vous pouvez<br><em>exiger de nous.</em></h2>
+      <p class="eyebrow">Nos engagements</p>
+      <h2 id="{ident}-titre" style="margin-top:1rem">Ce que vous pouvez<br><em>exiger de nous.</em></h2>
     </div>
+    <p data-rev>Six engagements concrets, écrits ici pour que vous puissiez nous les rappeler.</p>
   </div>
   <div class="cards">{cartes}</div>
 </section>"""

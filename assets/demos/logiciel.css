@@ -121,3 +121,7 @@ body.lg-full-open { overflow: hidden; }
 .lg-under a:hover { color: #fff; }
 .lg-under i { font-style: normal; }
 @media (max-width: 880px) { .lg-vs { grid-template-columns: minmax(0, 1fr); } }
+/* La visite guidée tient dans la fenêtre : défilement interne discret au-delà */
+@media (min-width: 1101px) {
+  .lg-guide { align-self: start; max-height: calc(100vh - 96px); overflow-y: auto; overscroll-behavior: contain; }
+}

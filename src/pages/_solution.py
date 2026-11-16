@@ -4,6 +4,10 @@
 # (avant / avec JARVIS en photos et en mots, ce que vous obtenez) → déploiement responsable → démo.
 
 from config import CAPABILITIES
+from pages import catalogue as CAT
+
+PRIX = {s["slug"]: ("Inclus avec chaque Hub" if s["prix"] == 0 else f"{s['prix']} $ par mois" + (" par véhicule" if s.get("unite") else "")) for s in CAT.SOLUTIONS}
+PRIX["automatisation-operations"] = f"Dès {CAT.ENT_SOCLE['prix']} $ par mois, puis 9 à 29 $ par automatisation"
 from demos import coquille
 import galerie
 
@@ -68,6 +72,7 @@ def solution_page(d):
       <a class="pill ghost" href="/solutions/">Toutes les solutions</a>
     </div>
     <p class="for-line" data-rev><span>Pour</span> {d['for']}</p>
+    <p class="for-line" data-rev><span>Prix</span> {PRIX.get(d['slug'], 'Voir le catalogue')} · <a href="/catalogue/#solutions" style="color:var(--gold-soft)">Ajouter au panier</a></p>
   </div>
 </section>
 

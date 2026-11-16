@@ -7,6 +7,22 @@
   "use strict";
   var doc = document.documentElement;
   var URL_GUIDE = (doc.getAttribute("data-guide") || "").replace(/\/$/, "");
+  var PONT = "https://jameslaplume.ca/pont-guide.html", PONT_ORIGINE = "https://jameslaplume.ca", pontP = null;
+  function pontPret() {
+    if (pontP) return pontP;
+    pontP = new Promise(function (resolve, reject) {
+      var f = document.createElement("iframe");
+      f.src = PONT; f.setAttribute("aria-hidden", "true"); f.tabIndex = -1;
+      f.style.cssText = "position:absolute;width:0;height:0;border:0;opacity:0;pointer-events:none";
+      var ok = false;
+      function h(e) { if (e.origin === PONT_ORIGINE && e.data && e.data.jv === "pont-pret") { ok = true; window.removeEventListener("message", h); resolve(f); } }
+      window.addEventListener("message", h);
+      f.onerror = function () { reject(new Error("pont")); };
+      document.body.appendChild(f);
+      setTimeout(function () { if (!ok) { pontP = null; reject(new Error("pont : pas de réponse")); } }, 15000);
+    });
+    return pontP;
+  }
   if (!URL_GUIDE || document.getElementById("jv-root")) return;
 
   var EN = (doc.lang || "").slice(0, 2) === "en";
@@ -245,37 +261,57 @@
     var ctl = window.AbortController ? new AbortController() : null;
     var minuteur = setTimeout(function () { if (ctl) ctl.abort(); }, 130000);
 
-    fetch(URL_GUIDE + "/chat", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: msgs.slice(-10).map(function (m) { return { role: m.role, content: m.content }; }), stream: true, lang: EN ? "en" : "fr" }),
-      signal: ctl ? ctl.signal : undefined
-    }).then(function (r) {
-      var type = r.headers.get("Content-Type") || "";
-      if (type.indexOf("text/event-stream") === -1 || !r.body || !r.body.getReader) {
-        return r.json().catch(function () { return {}; }).then(function (d) {
-          if (d && d.reply) ajoute(d.reply);
-          if (d && d.gestes) gestes = d.gestes;
-        });
-      }
-      var lecteur = r.body.getReader(), dec = new TextDecoder(), tampon = "";
-      function lis() {
-        return lecteur.read().then(function (res) {
-          if (res.done) return;
-          tampon += dec.decode(res.value, { stream: true });
-          var blocs = tampon.split("\n\n"); tampon = blocs.pop();
-          blocs.forEach(function (b) {
-            if (b.indexOf("data: ") !== 0) return;
-            try {
-              var j = JSON.parse(b.slice(6));
-              if (j.d) ajoute(j.d);
-              if (j.g) gestes.push(j.g);
-            } catch (e) {}
+    var corps = { messages: msgs.slice(-10).map(function (m) { return { role: m.role, content: m.content }; }), stream: true, lang: EN ? "en" : "fr" };
+    function traiteSSE(ligne) {
+      try { var j = JSON.parse(ligne); if (j.d) ajoute(j.d); if (j.g) gestes.push(j.g); } catch (e) {}
+    }
+    function directe() {
+      return fetch(URL_GUIDE + "/chat", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corps),
+        signal: ctl ? ctl.signal : undefined
+      }).then(function (r) {
+        var type = r.headers.get("Content-Type") || "";
+        if (type.indexOf("text/event-stream") === -1 || !r.body || !r.body.getReader) {
+          return r.json().catch(function () { return {}; }).then(function (d) {
+            if (d && d.reply) ajoute(d.reply);
+            if (d && d.gestes) gestes = d.gestes;
           });
-          return lis();
+        }
+        var lecteur = r.body.getReader(), dec = new TextDecoder(), tampon = "";
+        function lis() {
+          return lecteur.read().then(function (res) {
+            if (res.done) return;
+            tampon += dec.decode(res.value, { stream: true });
+            var blocs = tampon.split("\n\n"); tampon = blocs.pop();
+            blocs.forEach(function (b) { if (b.indexOf("data: ") === 0) traiteSSE(b.slice(6)); });
+            return lis();
+          });
+        }
+        return lis();
+      });
+    }
+    /* Pont : quand le portier refuse l'origine de cette page (autre domaine), la requête part
+       d'un cadre hébergé sur jameslaplume.ca, que le portier accepte. */
+    function parPont() {
+      return pontPret().then(function (cadre) {
+        return new Promise(function (resolve, reject) {
+          var id = String(Date.now()) + Math.random().toString(36).slice(2);
+          function fin() { window.removeEventListener("message", h); }
+          function h(e) {
+            if (e.origin !== PONT_ORIGINE || !e.data || e.data.jv !== "pont" || e.data.id !== id) return;
+            if (e.data.sse) traiteSSE(e.data.sse);
+            else if (e.data.json) { var d = e.data.json; if (d && d.reply) ajoute(d.reply); if (d && d.gestes) gestes = d.gestes; }
+            else if (e.data.fin) { fin(); resolve(); }
+            else if (e.data.err) { fin(); reject(new Error(e.data.err)); }
+          }
+          window.addEventListener("message", h);
+          cadre.contentWindow.postMessage({ jv: "chat", id: id, body: corps }, PONT_ORIGINE);
+          setTimeout(function () { fin(); reject(new Error("pont : délai")); }, 130000);
         });
-      }
-      return lis();
-    }).then(function () {
+      });
+    }
+    (PONT && location.origin !== PONT_ORIGINE ? directe().catch(function (e) { if (txt.trim()) throw e; return parPont(); }) : directe())
+      .then(function () {
       if (!txt.trim()) throw new Error("vide");
       if (live) { live.classList.remove("jv-cursor"); live.innerHTML = rich(txt.trim()); }
       gestes.forEach(geste);

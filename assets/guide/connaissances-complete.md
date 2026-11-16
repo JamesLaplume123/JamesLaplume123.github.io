@@ -154,7 +154,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Audit de sécurité résidentiel : 349 $. Tour complet de la maison ou du chalet : accès, caméras, réseau, habitudes. Rapport écrit avec priorités. Savoir par où on entrerait chez vous avant quelqu’un d’autre.
 - Audit de sécurité d’entreprise : 1 490 $. Accès, caméras, réseau, postes, sauvegardes, employés. Rapport pour la direction et plan sur 90 jours. Une journée d’expert vaut moins qu’une seule intrusion.
 - Test d’intrusion réseau : 2 990 $. Attaque autorisée de votre réseau et de vos services, puis correction avec vous. Rapport et nouvelle vérification. La seule façon de savoir si ça tient, c’est d’essayer.
-- Enquête OSINT : 890 $. Ce qu’Internet sait de vous, de votre entreprise ou d’un partenaire, à partir de sources ouvertes. Rapport et nettoyage. Ce qu’un fraudeur trouverait en une heure, retiré avant lui.
+- Revue de votre exposition en ligne : 890 $. Ce qu’Internet sait de vous et de votre entreprise, à partir de sources ouvertes. Rapport et nettoyage. Ce qu’un fraudeur trouverait en une heure, retiré avant lui.
 - Accompagnement Loi 25 : 1 990 $. Registre, politiques, incidents, consentements : votre entreprise conforme, avec JARVIS comme preuve. Les amendes montent à 25 M$. La conformité coûte 1 990 $.
 - Formation d’équipe (demi-journée) : 490 $. Vos employés apprennent JARVIS, la réceptionniste et les bons réflexes de sécurité. Un outil que personne n’utilise ne protège personne.
 

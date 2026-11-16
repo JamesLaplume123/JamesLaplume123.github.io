@@ -188,7 +188,7 @@ SERVICES = [
     ("audit_res", "Audit de sécurité résidentiel", 349, "Tour complet de la maison ou du chalet : accès, caméras, réseau, habitudes. Rapport écrit avec priorités.", "Savoir par où on entrerait chez vous avant quelqu’un d’autre."),
     ("audit_ent", "Audit de sécurité d’entreprise", 1490, "Accès, caméras, réseau, postes, sauvegardes, employés. Rapport pour la direction et plan sur 90 jours.", "Une journée d’expert vaut moins qu’une seule intrusion."),
     ("pentest", "Test d’intrusion réseau", 2990, "Attaque autorisée de votre réseau et de vos services, puis correction avec vous. Rapport et nouvelle vérification.", "La seule façon de savoir si ça tient, c’est d’essayer."),
-    ("osint", "Enquête OSINT", 890, "Ce qu’Internet sait de vous, de votre entreprise ou d’un partenaire, à partir de sources ouvertes. Rapport et nettoyage.", "Ce qu’un fraudeur trouverait en une heure, retiré avant lui."),
+    ("osint", "Revue de votre exposition en ligne", 890, "Ce qu’Internet sait de vous et de votre entreprise, à partir de sources ouvertes. Rapport et nettoyage.", "Ce qu’un fraudeur trouverait en une heure, retiré avant lui."),
     ("loi25", "Accompagnement Loi 25", 1990, "Registre, politiques, incidents, consentements : votre entreprise conforme, avec JARVIS comme preuve.", "Les amendes montent à 25 M$. La conformité coûte 1 990 $."),
     ("formation", "Formation d’équipe (demi-journée)", 490, "Vos employés apprennent JARVIS, la réceptionniste et les bons réflexes de sécurité.", "Un outil que personne n’utilise ne protège personne."),
 ]
@@ -485,7 +485,7 @@ PAGE = {
   </div>
   <h3 class="ct-sub" data-rev>Installation <em>· à vous de choisir</em></h3>
   <div class="cards ct-install">{_install()}</div>
-  <h3 class="ct-sub" data-rev>Sécurité privée et services <em>· quand il faut plus qu’un Hub</em></h3>
+  <h3 class="ct-sub" data-rev>Services professionnels <em>· quand il faut plus qu’un Hub</em></h3>
   {_services()}
   <h3 class="ct-sub" data-rev>Toujours inclus</h3>
   <ul class="ct-inclus">{_inclus()}</ul>

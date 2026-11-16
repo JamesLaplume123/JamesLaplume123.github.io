@@ -700,7 +700,7 @@ def ensemble():
 # 4. L'offre : ce que comprend le Hub et les services (affichés sur /offre/)
 # ---------------------------------------------------------------------------
 HUB_INCLUS = [
-    ("hub", "Le boîtier JARVIS Hub", "Un par lieu, installé et configuré sur place. Tous vos lieux dans la même application."),
+    ("hub", "Le boîtier JARVIS Hub", "Un par lieu, livré prêt à brancher ou installé par nous. Tous vos lieux dans la même application."),
     ("regles", "JARVIS Core", "Règles, comptes et droits, journal et bus d’événements."),
     ("iacore", "L’IA de JARVIS", "L’assistant local, en français, sur le Hub."),
     ("comptes", "JARVIS App pour chaque compte", "Ordinateur, tablette et téléphone, selon les droits de chacun."),

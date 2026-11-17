@@ -50,9 +50,12 @@ PAGE = {
       reconnus ne sont pas inscrits.</p>
       <p>Les pages de ce site n’installent aucun témoin (cookie). Les polices et la bibliothèque
       de carte sont hébergées sur le site lui-même. Quelques requêtes partent de votre navigateur
-      pour afficher des données en direct : la météo et le radar d’Environnement Canada, les fonds
-      de carte d’OpenFreeMap, et le service du site (batteries du laboratoire mobile, compteur et
-      journal des visites). Pour ne pas vous compter deux fois, votre navigateur retient « déjà
+      pour afficher des données en direct : la météo et le radar d’Environnement Canada, et le
+      service du site (batteries du laboratoire mobile, compteur et journal des visites). Quand
+      une carte s’ouvre (la Carte et « Mes lieux » du logiciel, le copilote de Mobilité), votre
+      navigateur demande les fonds de carte à OpenFreeMap et le relief à un jeu de données public
+      hébergé par Amazon Web Services : ces deux tiers voient alors votre adresse IP, comme tout
+      serveur. Rien ne leur est envoyé d’autre, et rien tant qu’aucune carte n’est ouverte. Pour ne pas vous compter deux fois, votre navigateur retient « déjà
       compté » jusqu’à la fermeture de l’onglet; cette marque n’est jamais transmise. Votre choix
       de mode (Base, Signature ou Platinum) est gardé dans votre navigateur et n’est jamais
       transmis.</p></div>
@@ -74,7 +77,8 @@ PAGE = {
       service ne répond pas, le formulaire passe par FormSubmit (formsubmit.co), qui conserve les
       soumissions 30 jours selon sa documentation. La météo et le radar proviennent
       d’Environnement et Changement climatique Canada; les fonds de carte, d’OpenFreeMap
-      (© OpenMapTiles, © contributeurs OpenStreetMap). Le site est hébergé par GitHub Pages.
+      (© OpenMapTiles, © contributeurs OpenStreetMap); le relief, du jeu public « Terrain Tiles »
+      hébergé par Amazon Web Services. Le site est hébergé par GitHub Pages.
       Le Guide JARVIS (la bulle de discussion) envoie vos questions, par Cloudflare, à une IA
       qui tourne sur le matériel de JARVIS Private Systems au Québec : aucune grande entreprise
       d’IA ne les reçoit. Les questions et réponses sont gardées dans un journal pour améliorer

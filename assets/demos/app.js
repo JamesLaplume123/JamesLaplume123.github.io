@@ -1018,7 +1018,7 @@
       function approche(k) {
         var b = $('.ap-env[data-env="' + k + '"]', big), large = big.clientWidth > 620;
         if (!b) return;
-        vol({ center: versLL(+b.getAttribute("data-x"), +b.getAttribute("data-y")), zoom: k === "bureau" ? 15.4 : k === "boulance" ? 12.4 : 13.6,
+        vol({ center: versLL(+b.getAttribute("data-x"), +b.getAttribute("data-y")), zoom: k === "bureau" ? 15.4 : 12.6,   // le bureau, en ville : bâtiments en 3D; ailleurs, assez large pour voir routes, rives et relief
               pitch: 62, bearing: carte.getBearing() + 60,
               padding: large ? { top: 0, bottom: 0, left: 300, right: 0 } : { top: 0, bottom: Math.round(big.clientHeight * .42), left: 0, right: 0 } },
             4200, function () { orbite(4); });
@@ -1036,7 +1036,7 @@
           if (j !== jeton || ou !== big) { big.classList.remove("is-globe"); return; }
           var p = carte.getCenter();
           carte.jumpTo({ center: [p.lng + Math.min(64, t - t0) * .011, p.lat] }); t0 = t;
-          if (t - debut < 2600) { anim = requestAnimationFrame(tourne); return; }
+          if (t - debut < 2600) { requestAnimationFrame(tourne); return; }   // boucle à part : seul le jeton l'arrête, et elle range l'état en sortant
           setTimeout(function () { big.classList.remove("is-globe"); }, 3600);
           cam.curve = 1.25;
           vol(cam, 5600, puis);
@@ -1050,7 +1050,7 @@
           if (j !== jeton) { trj.avance(1); trj.tete(false); return; }
           var k = D ? Math.min(1, (t - t0) / D) : 1;
           trj.avance(k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
-          if (k < 1) { anim = requestAnimationFrame(pas); return; }
+          if (k < 1) { requestAnimationFrame(pas); return; }
           trj.tete(false);
           if (puis) puis();
         })(t0);
@@ -1058,7 +1058,8 @@
       function vueTrajet(puis) {
         if (!trj) { if (puis) puis(); return; }
         var large = big.clientWidth > 620;
-        var cam = carte.cameraForBounds(trj.bornes, { bearing: -18, padding: { top: 60, bottom: 50, left: large && sel ? 320 : 40, right: 50 } });
+        if (!large) select(null);   // petit écran : la fiche couvrirait le trajet
+        var cam = carte.cameraForBounds(trj.bornes, { bearing: -18, padding: { top: 60, bottom: 50, left: large && sel ? 320 : 30, right: large ? 50 : 30 } });
         trj.avance(0);
         vol({ center: cam.center, zoom: cam.zoom - .45, pitch: 46, bearing: -18 }, 2400, function () { dessine(puis); });
       }
@@ -1072,7 +1073,7 @@
           tourT = [setTimeout(function () {
             if (stopped || !vraie()) return;
             select("boulance");
-            vueTrajet(function () { if (!stopped && vraie()) approche("boulance"); });
+            vueTrajet(function () { if (!stopped && vraie()) { select("boulance"); approche("boulance"); } });
           }, 900)];
         };
         if (!ouvert) { ouvert = true; globe(suite); return; }

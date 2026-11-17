@@ -19,22 +19,22 @@
   /* ---------------------------------------------------------------- Teintes des trois modes */
   var TONS = {
     signature: {
-      terre: "#100f0e", eau: "#000000", rive: "#e2c27a", bord: "#4d4230", riveOp: .5, bois: "#0f100c", ville: "#151514", glace: "#1b1a18",
-      rue: "#2c271d", route: "#55472d", grande: "#8a7242", auto: "#e2c27a", rail: "#2a2620", frontiere: "#6b5a3a",
+      terre: "#100f0e", eau: "#000000", rive: "#e2c27a", bord: "#4d4230", riveOp: .5, bois: "#0a0c09", champ: "#161513", ville: "#1a1917", glace: "#1b1a18",
+      rue: "#3b3323", route: "#6a5936", grande: "#8a7242", auto: "#e2c27a", rail: "#2a2620", frontiere: "#6b5a3a",
       bati0: "#0c0c0c", bati1: "#1b1a17", bati2: "#4a4028", batiOp: .94,
       ombre: "#000000", clair: "#e2c27a", clairOp: .16, trajet: "#f4d892", halo: "#e2c27a",
       ciel: "#000000", horizon: "#3b2c10", brume: "#0b0a09", lumiere: "#ffe3a6", atmo: .55
     },
     platinum: {
-      terre: "#10151c", eau: "#01040a", rive: "#bfe0ff", bord: "#4a6078", riveOp: .7, bois: "#0e141a", ville: "#151c25", glace: "#26313d",
-      rue: "#2c3743", route: "#4f6377", grande: "#8fa9c2", auto: "#d9ecff", rail: "#27303a", frontiere: "#6f879e",
+      terre: "#10151c", eau: "#01040a", rive: "#bfe0ff", bord: "#4a6078", riveOp: .7, bois: "#0a1016", champ: "#141a22", ville: "#18212b", glace: "#26313d",
+      rue: "#35424f", route: "#5b7188", grande: "#8fa9c2", auto: "#d9ecff", rail: "#27303a", frontiere: "#6f879e",
       bati0: "#111922", bati1: "#2b3b4c", bati2: "#6f8fae", batiOp: .82,
       ombre: "#00040a", clair: "#bfe0ff", clairOp: .26, trajet: "#f2f9ff", halo: "#9fd0ff",
       ciel: "#01050b", horizon: "#234a70", brume: "#0c1016", lumiere: "#dff0ff", atmo: 1
     },
     base: {
-      terre: "#0f0f0f", eau: "#000000", rive: "#ffffff", bord: "#3c3c3c", riveOp: .28, bois: "#0e0e0e", ville: "#141414", glace: "#1c1c1c",
-      rue: "#262626", route: "#444444", grande: "#6e6e6e", auto: "#a8a8a8", rail: "#242424", frontiere: "#5a5a5a",
+      terre: "#0f0f0f", eau: "#000000", rive: "#ffffff", bord: "#3c3c3c", riveOp: .28, bois: "#0a0a0a", champ: "#141414", ville: "#191919", glace: "#1c1c1c",
+      rue: "#303030", route: "#505050", grande: "#6e6e6e", auto: "#a8a8a8", rail: "#242424", frontiere: "#5a5a5a",
       bati0: "#0d0d0d", bati1: "#1e1e1e", bati2: "#444444", batiOp: .92,
       ombre: "#000000", clair: "#ffffff", clairOp: .1, trajet: "#ffffff", halo: "#ffffff",
       ciel: "#000000", horizon: "#1c1c1c", brume: "#0b0b0b", lumiere: "#ffffff", atmo: .3
@@ -56,6 +56,7 @@
     return [
       { id: "fond", type: "background", paint: { "background-color": t.terre } },
       { id: "glace", type: "fill", source: "omt", "source-layer": "landcover", filter: cls(["ice"]), paint: { "fill-color": t.glace, "fill-antialias": false } },
+      { id: "champ", type: "fill", source: "omt", "source-layer": "landcover", filter: cls(["farmland", "grass"]), minzoom: 9, paint: { "fill-color": t.champ, "fill-antialias": false, "fill-opacity": ["interpolate", ["linear"], ["zoom"], 9, 0, 11, .9] } },
       { id: "bois", type: "fill", source: "omt", "source-layer": "landcover", filter: cls(["wood", "forest"]), paint: { "fill-color": t.bois, "fill-antialias": false, "fill-opacity": .8 } },
       { id: "ville", type: "fill", source: "omt", "source-layer": "landuse", filter: cls(["residential", "commercial", "industrial", "retail"]), paint: { "fill-color": t.ville, "fill-antialias": false, "fill-opacity": ["interpolate", ["linear"], ["zoom"], 6, .9, 13, .45] } },
       { id: "relief", type: "hillshade", source: "relief", maxzoom: 15, paint: { "hillshade-shadow-color": t.ombre, "hillshade-highlight-color": t.clair, "hillshade-accent-color": t.ombre, "hillshade-exaggeration": ["interpolate", ["linear"], ["zoom"], 3, t.clairOp * 1.2, 9, t.clairOp * 2.4, 14, t.clairOp * 1.4], "hillshade-illumination-direction": 315 } },

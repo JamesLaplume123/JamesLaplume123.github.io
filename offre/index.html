@@ -18,11 +18,11 @@
 <meta name="geo.region" content="CA-QC">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="/favicon.svg?v=20261116r">
+<link rel="icon" href="/favicon.svg?v=20261116s">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script>try{var m=new URLSearchParams(location.search).get("mode")||localStorage.getItem("jarvis-mode");if(m==="base"||m==="signature"||m==="platinum")document.documentElement.dataset.mode=m}catch(e){}try{var f=JSON.parse(localStorage.getItem("jarvis-forfait")||"{}")||{};document.documentElement.dataset.public=(f.public==="entreprise"||f.public==="deux")?f.public:"moi"}catch(e){document.documentElement.dataset.public="moi"}</script>
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/wow.css?v=20261116r">
+<link rel="stylesheet" href="/assets/css/wow.css?v=20261116s">
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -43,8 +43,8 @@
  ]
 }
 </script>
-<link rel="stylesheet" href="/assets/demos/offre.css?v=20261116r">
-<link rel="stylesheet" href="/assets/demos/catalogue.css?v=20261116r">
+<link rel="stylesheet" href="/assets/demos/offre.css?v=20261116s">
+<link rel="stylesheet" href="/assets/demos/catalogue.css?v=20261116s">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -138,7 +138,7 @@
       <p class="ct-k ct-k-no">À savoir</p>
       <ul class="ct-no"><li>L’assistant passe par Internet. Idéal comme deuxième lieu, relié à votre maison.</li></ul>
     </label><label class="ct-hub" data-rev data-hub="signature">
-      <input type="radio" name="hub" value="signature" data-prix="1290" data-cam="6" data-app="100" data-autos="10" checked>
+      <input type="radio" name="hub" value="signature" data-prix="1290" data-cam="6" data-app="100" data-autos="10">
       <span class="ct-check" aria-hidden="true"></span>
       <span class="ct-tag">Le plus choisi</span>
       <figure class="ct-hub-ph"><img decoding="async" src="/media/product/jarvis-hub-v1.webp" alt="" loading="lazy" decoding="async"></figure>
@@ -659,11 +659,14 @@
 
 <aside class="ct-cart" aria-label="Votre panier">
   <div class="ct-cart-in">
-    <div class="ct-cart-h"><small>Votre JARVIS</small><b data-cart-nom>Hub Signature</b><button type="button" class="ct-cart-x" data-cart-close aria-label="Fermer le détail">×</button></div>
+    <div class="ct-cart-h"><small>Mon forfait</small><b data-cart-nom>Vide pour l’instant</b>
+      <button type="button" class="ct-cart-vider" data-cart-vider hidden>Tout retirer</button>
+      <button type="button" class="ct-cart-x" data-cart-close aria-label="Fermer le détail">×</button></div>
     <div class="ct-cart-body">
-      <section class="ct-cart-g"><h4>Une fois <span data-cart-once-sub></span></h4><ul data-cart-once></ul></section>
-      <section class="ct-cart-g"><h4>Par mois <span data-cart-month-sub></span></h4><ul data-cart-month></ul></section>
-      <div class="ct-cart-lieux" data-cart-lieux hidden></div>
+      <p class="ct-cart-vide" data-cart-vide>Commencez par votre lieu : le Hub conseillé et ses solutions s’ajoutent ici.</p>
+      <section class="ct-cart-g" data-cart-g="lieux" hidden><h4>Vos lieux</h4><ul data-cart-lieux></ul></section>
+      <section class="ct-cart-g" data-cart-g="month" hidden><h4>Vos solutions <i>par mois</i> <span data-cart-month-sub></span></h4><ul data-cart-month></ul></section>
+      <section class="ct-cart-g" data-cart-g="once" hidden><h4>Matériel et services <i>une fois</i> <span data-cart-once-sub></span></h4><ul data-cart-once></ul></section>
       <label class="ct-cart-sep" data-cart-sep hidden><input type="checkbox" name="separee" value="1"><span>Une soumission séparée pour l’entreprise, au nom de l’entreprise</span></label>
       <div class="ct-cart-tips" data-cart-tips hidden></div>
     </div>
@@ -672,7 +675,7 @@
       <div><small>Par mois</small><b data-total-month></b></div>
       <div class="ct-cart-an"><small>Première année</small><b data-total-year></b></div>
     </div>
-    <a class="pill" href="/contact/" data-total-link>Recevoir ma soumission</a>
+    <a class="pill" href="/contact/" data-total-link aria-disabled="true">Recevoir ma soumission</a>
     <p class="ct-cart-note">Prix confirmé dans votre soumission, ligne par ligne. Rien à payer ici.</p>
   </div>
 </aside>
@@ -698,9 +701,9 @@
   </div>
   <p class="foot-line"><span>© 2026 JARVIS Private Systems</span><span class="foot-count" hidden>Visites du site <b data-live="visits-foot">—</b></span></p>
 </footer>
-<script src="/assets/js/wow.js?v=20261116r" defer></script>
-<script src="/assets/demos/offre.js?v=20261116r" defer></script>
-<script src="/assets/demos/catalogue.js?v=20261116r" defer></script>
-<script src="/assets/js/guide.js?v=20261116r" defer></script>
+<script src="/assets/js/wow.js?v=20261116s" defer></script>
+<script src="/assets/demos/offre.js?v=20261116s" defer></script>
+<script src="/assets/demos/catalogue.js?v=20261116s" defer></script>
+<script src="/assets/js/guide.js?v=20261116s" defer></script>
 </body>
 </html>

@@ -479,7 +479,7 @@
       public: o.public === "entreprise" || o.public === "deux" ? o.public : "moi", separee: !!o.separee };
   }
   function ecrireF(o) { try { localStorage.setItem(CLE_F, JSON.stringify(o)); } catch (e) {} majF(); }
-  function compteF(o) { return o.n || (o.sols.length + (o.hub ? 1 : 0)); }
+  function compteF(o) { return o.n || (o.lieux.length + o.sols.length + (o.hub && o.manuel && !o.lieux.length ? 1 : 0)); }
   var LIEUX = null, boiteL = $("[data-lieux-data]");
   if (boiteL) { try { LIEUX = JSON.parse(boiteL.textContent); } catch (e) { LIEUX = null; } }
   function echap(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }

@@ -1,7 +1,7 @@
 /* Accueil (refonte « présence ») : héros vivant, bande des solutions, scène du logiciel, fin. Un seul accent par mode, traits d'un pixel, aucune lueur épaisse.
    Mouvement seulement sous html.fx; voir assets/demos/accueil.js. */
 :root, :root[data-mode="signature"] { --ac: #c7a476; --ac-hi: #eccb9c; --ac-line: #c7a47640; }
-:root[data-mode="platinum"] { --ac: #bccde7; --ac-hi: #eef4ff; --ac-line: #bccde74a; }
+:root[data-mode="platinum"] { --ac: #9fc6ff; --ac-hi: #d9e9ff; --ac-line: #a8c9ff5c; }
 :root[data-mode="base"] { --ac: #b4b4b6; --ac-hi: #ececee; --ac-line: #b4b4b63d; }
 .ac-hero, .ac-sect, .ac-fin { --ac-pad: clamp(1.2rem, 4.6vw, 4.2rem); background: #000; }
 

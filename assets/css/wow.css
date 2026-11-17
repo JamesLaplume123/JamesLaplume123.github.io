@@ -75,19 +75,21 @@
   --mode-rim-filter: sepia(1) saturate(2.6) hue-rotate(-10deg) brightness(1.08);
 }
 :root[data-mode="platinum"] {
-  /* Platine cristal : argent lumineux et reflets bleu glacier, jamais gris terne */
-  --gold-soft: #d3e1f5;
-  --mode-display: linear-gradient(110deg, #ffffff 0%, #e4eefb 32%, #a9c3e6 62%, #eef5ff 100%);
-  --mode-action: linear-gradient(145deg, #ffffff 0%, #dfe7f2 38%, #aebdd2 72%, #e9f0f9 100%);
-  --mode-on-action: #0b1220;
-  --mode-action-edge: inset 0 1px 0 #fff, inset 0 -1px 0 #7f93ad66, 0 0 0 1px #ffffff59;
-  --mode-panel: linear-gradient(130deg, #141922c4, #07090ddc);
-  --mode-panel-solid: linear-gradient(130deg, #141922f5, #07090dfa);
-  --mode-spec: inset 0 1px 1px #ffffff57, inset 0 -1px 1px #cfe0ff1f;
-  --mode-line: #c8daf442;
-  --mode-glow: #9ec2ff;
+  /* Platinum : le futur. Cristal irisé (blanc, bleu glacier, lilas, cyan), verre et lumière qui bouge.
+     Il ne doit jamais ressembler au mode Base : voir aussi le bloc « Platinum : matière et mouvement ». */
+  --gold: #8fb8ff;
+  --gold-soft: #cfe4ff;
+  --mode-display: linear-gradient(100deg, #ffffff 0%, #bfe0ff 20%, #c9b8ff 40%, #8fe9ff 60%, #bfe0ff 80%, #ffffff 100%);
+  --mode-action: linear-gradient(100deg, #ffffff 0%, #cfe6ff 25%, #d8cbff 50%, #aaf0ff 75%, #ffffff 100%);
+  --mode-on-action: #070b16;
+  --mode-action-edge: inset 0 1px 0 #fff, inset 0 0 0 1px #ffffff99, 0 0 30px #7fb6ff59;
+  --mode-panel: linear-gradient(140deg, #1c2942ad, #070a12d6);
+  --mode-panel-solid: linear-gradient(140deg, #141c2ef7, #070a12fb);
+  --mode-spec: inset 0 1px 0 #ffffff6b, inset 0 0 0 1px #b9d6ff33, 0 0 44px #5a9cff17;
+  --mode-line: #b9d6ff57;
+  --mode-glow: #7fb8ff;
   --mode-scene: url("/media/modes/scene-platinum.webp");
-  --mode-rim-filter: saturate(1.15) brightness(1.12);
+  --mode-rim-filter: saturate(1.25) brightness(1.15) hue-rotate(8deg);
 }
 :root[data-mode="base"] {
   --gold-soft: #dfdfdf;
@@ -1385,3 +1387,43 @@ html.fo-lock { overflow: hidden; }
 .fo-pied { position: sticky; bottom: 0; z-index: 2; background: linear-gradient(#0b0b0d00, #0b0b0d 18px); }
 .ct-cart .fo-pied { background: linear-gradient(#0c0c0e00, #0c0c0e 18px); }
 @media (max-height: 760px) { .fo-pied .fo-note { display: none; } .fo-pied .fo-res { padding: .7rem 0; margin-bottom: .8rem; } }
+
+/* ---------- Platinum : matière et mouvement ----------
+   Une aurore lente par-dessus toute la page, des titres et des boutons dont l'irisation glisse, des
+   cartes en verre. Tout s'arrête avec « mouvement réduit ». */
+:root[data-mode="platinum"] body::after {
+  content: ""; position: fixed; inset: -25%; z-index: 60; pointer-events: none; mix-blend-mode: screen;
+  background:
+    radial-gradient(36% 28% at 16% 14%, #4f93ff38, transparent 70%),
+    radial-gradient(32% 26% at 86% 20%, #9a7bff2e, transparent 70%),
+    radial-gradient(40% 32% at 60% 94%, #3fd9ff26, transparent 70%);
+  animation: ptAurore 28s ease-in-out infinite alternate;
+}
+@keyframes ptAurore {
+  0% { transform: translate3d(-3%, -2%, 0) rotate(0deg) scale(1); }
+  50% { transform: translate3d(3%, 2%, 0) rotate(7deg) scale(1.1); }
+  100% { transform: translate3d(-2%, 3%, 0) rotate(-6deg) scale(1.05); }
+}
+@keyframes ptIris { to { background-position: 200% 0; } }
+:root[data-mode="platinum"] :is(h1, h2, h3) em,
+:root[data-mode="platinum"] [data-split] em .w,
+:root[data-mode="platinum"] .cta h2 span,
+:root[data-mode="platinum"] .jv-lab b { background-size: 200% 100%; animation: ptIris 10s linear infinite; }
+:root[data-mode="platinum"] .pill:not(.ghost),
+:root[data-mode="platinum"] .ac-jouer,
+:root[data-mode="platinum"] .bar-cta { background-size: 200% 100%; animation: ptIris 8s linear infinite; }
+:root[data-mode="platinum"] .pill:not(.ghost):hover,
+:root[data-mode="platinum"] .ac-jouer:hover { animation-duration: 2.4s; box-shadow: var(--mode-action-edge), 0 0 54px #8fc4ff8c; }
+/* Les cartes : du verre, un liseré de lumière, et un halo au survol. */
+:root[data-mode="platinum"] :is(.of-h, .lx-g, .ct-hub, .ct-sol, .ct-cat, .ct-kit, .ct-cart-in, .ac-reel, .fo-panneau) {
+  background: var(--mode-panel); -webkit-backdrop-filter: blur(18px) saturate(1.35); backdrop-filter: blur(18px) saturate(1.35);
+  box-shadow: var(--mode-spec); transition: box-shadow .5s var(--ease), transform .5s var(--ease);
+}
+:root[data-mode="platinum"] :is(.of-h, .lx-g, .ct-hub, .ct-sol, .ct-kit):hover {
+  box-shadow: inset 0 1px 0 #ffffffa6, inset 0 0 0 1px #cfe4ff73, 0 0 60px #6fb0ff38, 0 24px 60px #000a;
+}
+:root[data-mode="platinum"] .of-h.is-conseil { box-shadow: inset 0 0 0 1.5px #dcebff, 0 0 70px #7fb8ff52, inset 0 1px 0 #fff; }
+@media (prefers-reduced-motion: reduce) {
+  :root[data-mode="platinum"] body::after, :root[data-mode="platinum"] :is(h1, h2, h3) em, :root[data-mode="platinum"] [data-split] em .w,
+  :root[data-mode="platinum"] .cta h2 span, :root[data-mode="platinum"] .pill, :root[data-mode="platinum"] .ac-jouer, :root[data-mode="platinum"] .bar-cta, :root[data-mode="platinum"] .jv-lab b { animation: none; }
+}

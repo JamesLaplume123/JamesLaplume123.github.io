@@ -595,8 +595,10 @@
     } else pose();
   }
   function vueEnsemble(ms) {
-    var c = VC.carte, cam = c.cameraForBounds(D.geo.co, { padding: 0, bearing: 0 });
+    var c = VC.carte;
     VC.suit = false; c.stop();
+    c.setPadding(ZERO);   // la marge du suivi fausserait le cadrage
+    var cam = c.cameraForBounds(D.geo.co, { padding: 0, bearing: 0 });
     vueBtn.setAttribute("aria-pressed", "false"); vueBtn.setAttribute("aria-label", "Suivre le véhicule");
     c.flyTo({ center: cam.center, zoom: cam.zoom, pitch: 0, bearing: 0, padding: ZERO, duration: fx() ? ms : 0, essential: true });
   }
@@ -623,14 +625,15 @@
     c.addSource("detours", { type: "geojson", data: { type: "Feature", geometry: { type: "MultiLineString", coordinates: [] } } });
     c.addLayer({ id: "detours", type: "line", source: "detours", layout: { "line-cap": "round" }, paint: { "line-color": VC.jc.ton().trajet, "line-width": 1.6, "line-dasharray": [2, 2] } });
     c.on("move", pose);
-    /* Le visiteur prend la main : le suivi s'arrête, le bouton « cible » le rend */
-    ["dragstart", "zoomstart", "rotatestart", "pitchstart"].forEach(function (ev) {
-      c.on(ev, function (e) {
-        if (!e.originalEvent) return;
-        VC.jeton++; VC.suit = false;
-        vueBtn.setAttribute("aria-pressed", "false"); vueBtn.setAttribute("aria-label", "Suivre le véhicule");
-      });
-    });
+    /* Le visiteur prend la main (souris, deux doigts, Ctrl + molette) : le suivi s'arrête, le bouton « cible » le rend.
+       On écoute l'appui lui-même : un glissement ne pourrait pas commencer tant que la caméra suit à chaque image. */
+    function geste() {
+      VC.jeton++; VC.suit = false;
+      vueBtn.setAttribute("aria-pressed", "false"); vueBtn.setAttribute("aria-label", "Suivre le véhicule");
+    }
+    c.on("mousedown", geste);
+    c.on("touchstart", function (e) { if (e.points && e.points.length > 1) geste(); });
+    c.on("wheel", function (e) { var o = e.originalEvent; if (o && (o.ctrlKey || o.metaKey)) geste(); });
     if ("ResizeObserver" in window) new ResizeObserver(function () { c.resize(); if (VC.suit === false && !c.isMoving()) pose(); }).observe(mapCo);
     mapCo.classList.add("has-ml");
     drawDetours();

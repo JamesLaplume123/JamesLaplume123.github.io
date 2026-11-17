@@ -1070,6 +1070,7 @@
         if (!trj) { if (puis) puis(); return; }
         var large = big.clientWidth > 620;
         if (!large) select(null);   // petit écran : la fiche couvrirait le trajet
+        carte.setPadding(ZERO);     // la marge laissée par une fiche fausserait le cadrage
         var cam = carte.cameraForBounds(trj.bornes, { bearing: -18, padding: { top: 60, bottom: 50, left: large && sel ? 320 : 30, right: large ? 50 : 30 } });
         trj.avance(0);
         vol({ center: cam.center, zoom: cam.zoom - .45, pitch: 46, bearing: -18 }, 2400, function () { dessine(puis); });
@@ -1117,10 +1118,13 @@
         var g = geo && (geo.geometry || (geo.features && geo.features[0] && geo.features[0].geometry));
         if (g && g.coordinates) { trj = JC.trajet(c, "trajet", g.coordinates); trj.avance(1); trj.tete(false); }
         c.on("move", function () { if (ou) fitMap(ou); });
-        /* La main du visiteur passe avant tout : son geste arrête le vol, la rotation et la visite automatique */
-        ["dragstart", "zoomstart", "rotatestart", "pitchstart"].forEach(function (ev) {
-          c.on(ev, function (e) { if (e.originalEvent) { jeton++; arreteOrbite(); big.classList.remove("is-globe"); stop(); } });
-        });
+        /* La main du visiteur passe avant tout : dès qu'il saisit la carte (souris, deux doigts, Ctrl + molette),
+           le vol, la rotation et la visite automatique s'arrêtent. On écoute l'appui lui-même : un glissement ne
+           pourrait pas commencer tant que la caméra est déplacée à chaque image. */
+        function geste() { jeton++; arreteOrbite(); big.classList.remove("is-globe"); stop(); }
+        c.on("mousedown", geste);
+        c.on("touchstart", function (e) { if (e.points && e.points.length > 1) geste(); });
+        c.on("wheel", function (e) { var o = e.originalEvent; if (o && (o.ctrlKey || o.metaKey)) geste(); });
         $$("[data-layer-t]").forEach(function (b) { var k = b.getAttribute("data-layer-t"); if (k !== "personnes") couche(k, b.getAttribute("aria-pressed") === "true"); });
         if ("ResizeObserver" in window) new ResizeObserver(function () { c.resize(); if (ou) fitMap(ou); }).observe(hote);
         place(lieuCourant());

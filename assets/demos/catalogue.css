@@ -21,7 +21,7 @@
   border: 1.5px solid #ffffff55; background: #0008; transition: all .25s var(--ease);
 }
 .ct-check::after { content: ""; position: absolute; left: 8px; top: 4px; width: 7px; height: 12px; border-right: 2.2px solid #111; border-bottom: 2.2px solid #111; transform: rotate(45deg) scale(0); transition: transform .2s var(--ease); }
-.ct input:checked ~ .ct-check { background: linear-gradient(135deg, #f3dc9c, #b98b3a); border-color: transparent; }
+.ct input:checked ~ .ct-check { background: var(--mode-display, linear-gradient(135deg, #f3dc9c, #b98b3a)); border-color: transparent; }
 .ct input:checked ~ .ct-check::after { transform: rotate(45deg) scale(1); }
 .ct input:focus-visible ~ .ct-check { outline: 2px solid var(--gold-soft); outline-offset: 3px; }
 .ct-check-sm { width: 20px; height: 20px; }
@@ -176,7 +176,10 @@
 
 /* Panier collant */
 .ct-cart { position: sticky; top: 112px; margin-top: 4rem; }
-.ct-cart-in { display: flex; flex-direction: column; max-height: calc(100vh - 128px); border-radius: 20px; background: #0c0c0e; box-shadow: 0 24px 60px #000a, inset 0 0 0 1px var(--gold); overflow: hidden; transition: box-shadow .4s; }
+.ct-cart { position: sticky; }
+.ct-cart-in { position: relative; }
+.ct-cart-in::after { content: ""; position: absolute; inset: -5px; pointer-events: none; z-index: 6; border: 18px solid transparent; border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch; filter: var(--mode-rim-filter); opacity: .85; }
+.ct-cart-in-ancien { display: flex; flex-direction: column; max-height: calc(100vh - 128px); border-radius: 20px; background: #0c0c0e; box-shadow: 0 24px 60px #000a, inset 0 0 0 1px var(--gold); overflow: hidden; transition: box-shadow .4s; }
 .ct-cart.is-flash .ct-cart-in { box-shadow: 0 24px 60px #000a, inset 0 0 0 2px var(--gold-soft), 0 0 60px #c9a35c55; }
 .ct-cart-h { position: relative; padding: 1.2rem 1.3rem .2rem; }
 .ct-cart-h b { display: block; font-size: 1.35rem; font-weight: 650; letter-spacing: -.02em; }

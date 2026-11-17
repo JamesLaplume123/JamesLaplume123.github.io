@@ -269,7 +269,7 @@
 .ac-choisir .of-choix { margin-top: 12px; }
 .ac-choisir .of-hs { max-width: none; margin-top: 0; gap: 12px; }
 .ac-choisir .of-h { border-radius: 6px; }
-.of-h-lieu { margin: .8rem 0 0; padding: .7rem .9rem; border-radius: 6px; background: #d8b46a14; box-shadow: inset 0 0 0 1px var(--gold-soft); font-size: .88rem; line-height: 1.45; color: #e9e4d8; }
+.of-h-lieu { margin: .8rem 0 0; padding: .7rem .9rem; border-radius: 6px; background: color-mix(in srgb, var(--mode-glow) 9%, #0a0c11); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mode-glow) 55%, transparent); font-size: .88rem; line-height: 1.45; color: #e6e6e2; }
 .of-h-lieu[hidden], .of-h-note[hidden] { display: none; }
 .of-h-lieu b { display: block; margin-bottom: .15rem; color: var(--gold-soft); font-weight: 600; }
 .of-h-note { margin: 12px 0 0; padding: .8rem 1rem; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--ac-line); font-size: .92rem; color: #d6d2ca; }

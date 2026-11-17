@@ -49,7 +49,7 @@
 
   /* ---------- Le cadre tient dans la fenêtre ----------
      Hauteur disponible : la fenêtre moins la barre du site (et le menu de sections s'il y en a un). Le cadre est
-     réduit d'un seul tenant (jamais sous 62 %, pour rester lisible); ce qui dépasse encore défile à l'intérieur. */
+     presque jamais réduit (94 % au plus petit, pour rester lisible); ce qui dépasse défile à l'intérieur. */
   var coques = Array.prototype.slice.call(document.querySelectorAll("[data-xs]"));
   function tient() {
     var toc = document.querySelector(".toc");
@@ -61,7 +61,8 @@
       xs.style.zoom = "";
       if (window.innerWidth <= 900) return;
       var nat = Math.max(main.scrollHeight, cote ? cote.scrollHeight : 0);
-      var z = Math.max(.62, Math.min(1, dispo / nat));
+      /* Taille réelle (ou presque) : le contenu défile à l'intérieur plutôt que d'être rapetissé. */
+      var z = Math.max(.94, Math.min(1, dispo / nat));
       if (z < 1) xs.style.zoom = z.toFixed(4);
       var max = Math.floor(dispo / z) + "px";
       [ecran, main, cote].forEach(function (e) { if (e) e.style.maxHeight = max; });

@@ -128,7 +128,7 @@ _TITRES = {c["slug"]: c["title"] for c in CAPABILITIES}
 def _solutions():
     cartes = ""
     for n, (slug, img, pos, ligne) in enumerate(SOLUTIONS, 1):
-        cartes += f"""<article class="ac-sol{'' if cartes else ' is-on'}" data-sol="{slug}"{lieux.public_sol(slug)}>
+        cartes += f"""<article class="ac-sol{'' if cartes else ' is-on'}" data-sol="{slug}">
       <img src="/media/accueil/{img}.webp" alt="" loading="lazy" style="object-position:{pos}">
       <span class="ac-sol-n" aria-hidden="true">{n:02d}</span>
       <span class="ac-sol-tag"><i aria-hidden="true"></i><b>Pour votre lieu</b></span>

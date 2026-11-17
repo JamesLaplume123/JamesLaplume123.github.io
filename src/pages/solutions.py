@@ -5,8 +5,10 @@ from config import CAPABILITIES
 import lieux
 
 CARTES = "".join(
-    f'<a class="card" href="/solutions/{c["slug"]}/" data-sol="{c["slug"]}"{lieux.public_sol(c["slug"])} data-rev><small>{c["num"]}</small>'
-    f'<h3>{c["title"]}</h3><p>{c["menu"]}</p></a>'
+    f'<a class="card" href="/solutions/{c["slug"]}/" data-sol="{c["slug"]}" data-rev><small>{c["num"]}</small>'
+    f'<h3>{c["title"]}</h3><p>{c["menu"]}</p>'
+    + ('<span class="card-ent">Pour l’entreprise</span>' if lieux.SOLUTIONS_PUBLIC.get(c["slug"]) == "entreprise" else "")
+    + "</a>"
     for c in CAPABILITIES
 )
 
@@ -40,7 +42,6 @@ PAGE = {
 </section>
 
 <section class="sect" id="sept" aria-label="Les sept solutions">
-  {lieux.selecteur("Filtrer par lieu.")}
   <div class="cards" data-sols>{CARTES}</div>
 </section>
 
@@ -52,8 +53,8 @@ PAGE = {
   </div>
   <div class="cards">
     <a class="card" href="/solutions/maison-intelligente-cle-en-main/" data-rev><small>Maison</small><h3>Maison intelligente clé en main</h3><p>De la visite à la formation, un seul système.</p></a>
-    <a class="card" href="/solutions/domotique-ferme-agricole/" data-public="entreprise" data-rev><small>Ferme</small><h3>Domotique pour ferme</h3><p>Tous les bâtiments sur un seul écran.</p></a>
-    <a class="card" href="/solutions/ia-privee-entreprise/" data-public="entreprise" data-rev><small>Entreprise</small><h3>IA privée pour entreprise</h3><p>Un assistant qui connaît vos documents, dans vos murs.</p></a>
+    <a class="card" href="/solutions/domotique-ferme-agricole/" data-rev><small>Ferme</small><h3>Domotique pour ferme</h3><p>Tous les bâtiments sur un seul écran.</p><span class="card-ent">Pour l’entreprise</span></a>
+    <a class="card" href="/solutions/ia-privee-entreprise/" data-rev><small>Entreprise</small><h3>IA privée pour entreprise</h3><p>Un assistant qui connaît vos documents, dans vos murs.</p><span class="card-ent">Pour l’entreprise</span></a>
   </div>
   <p class="pro-suite" data-rev><a href="/offre/">Voir l’offre <i aria-hidden="true">→</i></a></p>
 </section>

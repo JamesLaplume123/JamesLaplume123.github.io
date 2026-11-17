@@ -597,6 +597,11 @@ h1 em, h2 em, h3 em {
 .card .chip { justify-self: start; margin-bottom: 1rem; }
 a.card { display: block; color: inherit; text-decoration: none; }
 a.card:hover h3 { color: var(--gold-soft); }
+.card-ent {
+  display: inline-block; margin-top: 1rem; padding: .3rem .7rem; border-radius: 99px;
+  font: 600 .62rem/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase;
+  color: var(--gold-soft); border: 1px solid var(--mode-line); background: #ffffff0a;
+}
 
 /* Rangées numérotées */
 .rows { max-width: 76rem; margin: 0 auto; border-top: 1px solid var(--edge); }

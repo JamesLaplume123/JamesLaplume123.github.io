@@ -75,21 +75,21 @@
   --mode-rim-filter: sepia(1) saturate(2.6) hue-rotate(-10deg) brightness(1.08);
 }
 :root[data-mode="platinum"] {
-  /* Platinum : le futur. Cristal irisé (blanc, bleu glacier, lilas, cyan), verre et lumière qui bouge.
+  /* Platinum : le futur. Argent blanc, lumière pure — aucun bleu.
      Il ne doit jamais ressembler au mode Base : voir aussi le bloc « Platinum : matière et mouvement ». */
-  --gold: #8fb8ff;
-  --gold-soft: #cfe4ff;
-  --mode-display: linear-gradient(100deg, #ffffff 0%, #bfe0ff 20%, #c9b8ff 40%, #8fe9ff 60%, #bfe0ff 80%, #ffffff 100%);
-  --mode-action: linear-gradient(100deg, #ffffff 0%, #cfe6ff 25%, #d8cbff 50%, #aaf0ff 75%, #ffffff 100%);
-  --mode-on-action: #070b16;
-  --mode-action-edge: inset 0 1px 0 #fff, inset 0 0 0 1px #ffffff99, 0 0 30px #7fb6ff59;
-  --mode-panel: linear-gradient(140deg, #1c2942ad, #070a12d6);
-  --mode-panel-solid: linear-gradient(140deg, #141c2ef7, #070a12fb);
-  --mode-spec: inset 0 1px 0 #ffffff6b, inset 0 0 0 1px #b9d6ff33, 0 0 44px #5a9cff17;
-  --mode-line: #b9d6ff57;
-  --mode-glow: #7fb8ff;
+  --gold: #dfe1e8;
+  --gold-soft: #f0f1f5;
+  --mode-display: linear-gradient(100deg, #ffffff 0%, #e8e9ee 30%, #bfc2cc 55%, #f3f4f7 80%, #ffffff 100%);
+  --mode-action: linear-gradient(170deg, #ffffff 0%, #eef0f4 45%, #ced1da 100%);
+  --mode-on-action: #0b0c10;
+  --mode-action-edge: inset 0 1px 0 #fff, inset 0 0 0 1px #ffffff99, 0 0 30px #e6e8f059;
+  --mode-panel: linear-gradient(140deg, #202229ad, #08090dd6);
+  --mode-panel-solid: linear-gradient(140deg, #17191ff7, #08090dfb);
+  --mode-spec: inset 0 1px 0 #ffffff6b, inset 0 0 0 1px #dcdee833, 0 0 44px #d4d7e017;
+  --mode-line: #d8dbe457;
+  --mode-glow: #e2e4ec;
   --mode-scene: url("/media/modes/scene-platinum.webp");
-  --mode-rim-filter: saturate(1.25) brightness(1.15) hue-rotate(8deg);
+  --mode-rim-filter: grayscale(1) brightness(1.35) contrast(1.08);
 }
 :root[data-mode="base"] {
   --gold-soft: #dfdfdf;
@@ -597,6 +597,11 @@ h1 em, h2 em, h3 em {
 .card .chip { justify-self: start; margin-bottom: 1rem; }
 a.card { display: block; color: inherit; text-decoration: none; }
 a.card:hover h3 { color: var(--gold-soft); }
+.card-ent {
+  display: inline-block; margin-top: 1rem; padding: .3rem .7rem; border-radius: 99px;
+  font: 600 .62rem/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase;
+  color: var(--gold-soft); border: 1px solid var(--mode-line); background: #ffffff0a;
+}
 
 /* Rangées numérotées */
 .rows { max-width: 76rem; margin: 0 auto; border-top: 1px solid var(--edge); }
@@ -1270,7 +1275,10 @@ html:not(.fx) .progress { display: none; }
 .lx-sorte:first-child { margin-top: 0; }
 .lx-b { padding: .7rem 1.05rem; border-radius: 999px; border: 1px solid #ffffff2a; background: #0a0a0a; color: #fff; font: 600 .95rem/1.1 var(--sans); cursor: pointer; transition: border-color .25s, background .25s, color .25s; }
 .lx-b:hover { border-color: var(--gold-soft); }
-.lx-b[aria-pressed="true"] { background: var(--mode-action); color: var(--mode-on-action); border-color: transparent; }
+.lx-b[aria-pressed="true"] { position: relative; border-radius: 12px; background: linear-gradient(180deg, #16181f, #0a0b0f 60%, #0e1016); color: #fff; border-color: transparent;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--mode-glow) 22%, transparent), inset 0 1px 0 #ffffff26; }
+.lx-b[aria-pressed="true"]::after { content: ""; position: absolute; inset: -5px; pointer-events: none;
+  border: 10px solid transparent; border-image: url("/media/modes/rim.png") 50 / 10px / 0 stretch; filter: var(--mode-rim-filter); }
 .lx-res { margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 16px; }
 .lx-res[hidden] { display: none; }
 .lx-r { padding: 1.3rem 1.3rem 1.2rem; border-radius: 18px; background: var(--mode-panel-solid), #050505; box-shadow: inset 0 0 0 1px var(--gold-soft); }
@@ -1311,7 +1319,14 @@ html[data-public="moi"] .xs-ext[href*="automatisation-operations"] { display: no
 .pub button:hover, .bar-pub button:hover { color: #fff; }
 .pub button:focus-visible, .bar-pub button:focus-visible, .sheet-pub button:focus-visible { outline: 1px solid var(--gold-soft); outline-offset: 2px; }
 .pub button:focus:not(:focus-visible), .bar-pub button:focus:not(:focus-visible) { outline: none; }
-.pub button[aria-pressed="true"], .bar-pub button[aria-pressed="true"], .sheet-pub button[aria-pressed="true"] { background: var(--mode-action); color: var(--mode-on-action); }
+.pub button[aria-pressed="true"], .bar-pub button[aria-pressed="true"], .sheet-pub button[aria-pressed="true"] {
+  position: relative; border-radius: 12px; background: linear-gradient(180deg, #16181f, #0a0b0f 60%, #0e1016); color: #fff;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--mode-glow) 22%, transparent), inset 0 1px 0 #ffffff26; }
+.pub button[aria-pressed="true"]::after, .bar-pub button[aria-pressed="true"]::after, .sheet-pub button[aria-pressed="true"]::after {
+  content: ""; position: absolute; inset: -5px; pointer-events: none;
+  border: 10px solid transparent; border-image: url("/media/modes/rim.png") 50 / 10px / 0 stretch; filter: var(--mode-rim-filter); }
+.bar-pub button[aria-pressed="true"] { border-radius: 9px; }
+.bar-pub button[aria-pressed="true"]::after { inset: -4px; border-width: 8px; border-image-width: 8px; }
 /* Dans la barre : compact, à partir de 1280 px */
 .bar-pub { display: none; align-items: center; gap: .15rem; padding: .2rem; border-radius: 999px; box-shadow: inset 0 0 0 1px #ffffff24; }
 .bar-pub button { padding: .42rem .7rem; font: 600 .68rem/1 var(--sans); letter-spacing: .02em; white-space: nowrap; }
@@ -1324,6 +1339,9 @@ html[data-public="moi"] .xs-ext[href*="automatisation-operations"] { display: no
 .pub-avis button { border: 0; background: none; padding: 0; color: var(--gold-soft); font: 600 .92rem/1.3 var(--sans); cursor: pointer; }
 @media (max-width: 560px) { .pub { display: flex; border-radius: 22px; } .pub button { flex: 1 1 100%; } }
 .lx-gs { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+.lx-g { position: relative; }
+.lx-g::after { content: ""; position: absolute; inset: -6px; pointer-events: none;
+  border: 18px solid transparent; border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch; filter: var(--mode-rim-filter); opacity: .85; }
 
 /* ---------- Mon forfait : le tiroir et sa liste, comme un sac d'achats (assets/js/wow.js) ----------
    Vignette, nom, précision, quantité, « Retirer »; puis le résumé et la soumission. */
@@ -1334,6 +1352,8 @@ html.fo-lock { overflow: hidden; }
 .fo-panneau { position: absolute; top: 0; right: 0; bottom: 0; width: min(470px, 100vw); display: flex; flex-direction: column; background: #0b0b0d; box-shadow: -40px 0 90px #000d, inset 1px 0 0 var(--mode-line); transform: translateX(104%); transition: transform .55s var(--ease); }
 .fo-tiroir.is-on .fo-fond { opacity: 1; }
 .fo-tiroir.is-on .fo-panneau { transform: none; }
+.fo-panneau::after { content: ""; position: absolute; inset: 2px; pointer-events: none; z-index: 5;
+  border: 18px solid transparent; border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch; filter: var(--mode-rim-filter); opacity: .8; }
 .fo-tete { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 1.6rem .6rem; }
 .fo-tete h2 { margin: 0; font: 650 1.9rem/1 var(--sans); letter-spacing: -.035em; }
 .fo-x { width: 40px; height: 40px; border: 0; border-radius: 50%; background: #ffffff12; color: #fff; font-size: 1.4rem; line-height: 1; cursor: pointer; transition: background .25s; }
@@ -1394,9 +1414,9 @@ html.fo-lock { overflow: hidden; }
 :root[data-mode="platinum"] body::after {
   content: ""; position: fixed; inset: -25%; z-index: 60; pointer-events: none; mix-blend-mode: screen;
   background:
-    radial-gradient(36% 28% at 16% 14%, #4f93ff38, transparent 70%),
-    radial-gradient(32% 26% at 86% 20%, #9a7bff2e, transparent 70%),
-    radial-gradient(40% 32% at 60% 94%, #3fd9ff26, transparent 70%);
+    radial-gradient(36% 28% at 16% 14%, #ffffff2e, transparent 70%),
+    radial-gradient(32% 26% at 86% 20%, #d9dce622, transparent 70%),
+    radial-gradient(40% 32% at 60% 94%, #c9ccd81f, transparent 70%);
   animation: ptAurore 28s ease-in-out infinite alternate;
 }
 @keyframes ptAurore {
@@ -1413,16 +1433,16 @@ html.fo-lock { overflow: hidden; }
 :root[data-mode="platinum"] .ac-jouer,
 :root[data-mode="platinum"] .bar-cta { background-size: 200% 100%; animation: ptIris 8s linear infinite; }
 :root[data-mode="platinum"] .pill:not(.ghost):hover,
-:root[data-mode="platinum"] .ac-jouer:hover { animation-duration: 2.4s; box-shadow: var(--mode-action-edge), 0 0 54px #8fc4ff8c; }
+:root[data-mode="platinum"] .ac-jouer:hover { animation-duration: 2.4s; box-shadow: var(--mode-action-edge), 0 0 54px #eceef58c; }
 /* Les cartes : du verre, un liseré de lumière, et un halo au survol. */
 :root[data-mode="platinum"] :is(.of-h, .lx-g, .ct-hub, .ct-sol, .ct-cat, .ct-kit, .ct-cart-in, .ac-reel, .fo-panneau) {
   background: var(--mode-panel); -webkit-backdrop-filter: blur(18px) saturate(1.35); backdrop-filter: blur(18px) saturate(1.35);
   box-shadow: var(--mode-spec); transition: box-shadow .5s var(--ease), transform .5s var(--ease);
 }
 :root[data-mode="platinum"] :is(.of-h, .lx-g, .ct-hub, .ct-sol, .ct-kit):hover {
-  box-shadow: inset 0 1px 0 #ffffffa6, inset 0 0 0 1px #cfe4ff73, 0 0 60px #6fb0ff38, 0 24px 60px #000a;
+  box-shadow: inset 0 1px 0 #ffffffa6, inset 0 0 0 1px #eef0f473, 0 0 60px #dde0ea38, 0 24px 60px #000a;
 }
-:root[data-mode="platinum"] .of-h.is-conseil { box-shadow: inset 0 0 0 1.5px #dcebff, 0 0 70px #7fb8ff52, inset 0 1px 0 #fff; }
+:root[data-mode="platinum"] .of-h.is-conseil { box-shadow: inset 0 0 0 1.5px #f0f2f6, 0 0 70px #dcdfe84c, inset 0 1px 0 #fff; }
 @media (prefers-reduced-motion: reduce) {
   :root[data-mode="platinum"] body::after, :root[data-mode="platinum"] :is(h1, h2, h3) em, :root[data-mode="platinum"] [data-split] em .w,
   :root[data-mode="platinum"] .cta h2 span, :root[data-mode="platinum"] .pill, :root[data-mode="platinum"] .ac-jouer, :root[data-mode="platinum"] .bar-cta, :root[data-mode="platinum"] .jv-lab b { animation: none; }

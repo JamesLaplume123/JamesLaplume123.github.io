@@ -44,16 +44,16 @@ HEROS = {
 # Le film du héros : après la maison (scène 0, interactive), cinq autres lieux, chacun avec ce que
 # JARVIS y voit. (id, nom, photo, cadrage, [(libellé, état)])
 SCENES = [
-    ("domaine", "Domaine", "/media/vitrine/accueil/panorama-domaine-crepuscule.webp", "62% 55%",
-     [("Résidence", "Tout est calme", .60, .25), ("Piscine", "27 °C", .55, .44), ("Quai", "Éclairé", .44, .58)]),
-    ("garage", "Garage", "/media/vitrine/accueil/garage-lamborghini-ferrari.webp", "50% 60%",
-     [("Climat", "18 °C · 45 %", .30, .25), ("Place 1", "Présent · verrouillé", .33, .50), ("Place 2", "Présent · verrouillé", .78, .47)]),
-    ("hangar", "Hangar", "/media/vitrine/accueil/jet-hangar.webp", "55% 55%",
-     [("Appareil", "Branché", .33, .35), ("Accès", "Personnes autorisées", .655, .36), ("Véhicule", "Arrivé", .90, .51)]),
-    ("ferme", "Ferme", "/media/offre/ferme.webp", "50% 60%",
-     [("Ventilation", "Automatique", .89, .16), ("Porte", "Fermée", .36, .40), ("Troupeau", "Calme", .12, .50)]),
-    ("entreprise", "Entreprise", "/media/vitrine/accueil/commerce-pme.webp", "60% 50%",
-     [("Rideau", "Ouvert", .62, .22), ("Entrée", "Ouverte jusqu’à 21 h", .48, .52), ("Caméras", "6 sur 6", .82, .40)]),
+    ("domaine", "Domaine", "/media/accueil/film-domaine.webp", "50% 40%",
+     [("Résidence", "Tout est calme", .22, .22), ("Piscine", "27 °C", .46, .33), ("Quai", "Éclairé", .84, .42)]),
+    ("garage", "Garage", "/media/accueil/film-garage.webp", "50% 55%",
+     [("Climat", "18 °C · 45 %", .25, .22), ("Place 1", "Présent · verrouillé", .33, .52), ("Place 2", "Présent · verrouillé", .80, .50)]),
+    ("hangar", "Hangar", "/media/accueil/film-hangar.webp", "50% 55%",
+     [("Appareil", "Branché", .52, .50), ("Accès", "Personnes autorisées", .41, .60), ("Salon", "Éclairé", .10, .45)]),
+    ("ferme", "Ferme", "/media/accueil/film-ferme.webp", "50% 50%",
+     [("Ventilation", "Automatique", .50, .14), ("Porte", "Fermée", .47, .44), ("Troupeau", "Calme", .50, .56)]),
+    ("entreprise", "Entreprise", "/media/accueil/film-entreprise.webp", "50% 45%",
+     [("Rideau", "Ouvert", .50, .26), ("Entrée", "Ouverte jusqu’à 21 h", .30, .52), ("Caméras", "6 sur 6", .80, .42)]),
 ]
 
 
@@ -128,7 +128,7 @@ _TITRES = {c["slug"]: c["title"] for c in CAPABILITIES}
 def _solutions():
     cartes = ""
     for n, (slug, img, pos, ligne) in enumerate(SOLUTIONS, 1):
-        cartes += f"""<article class="ac-sol{'' if cartes else ' is-on'}" data-sol="{slug}"{lieux.public_sol(slug)}>
+        cartes += f"""<article class="ac-sol{'' if cartes else ' is-on'}" data-sol="{slug}">
       <img src="/media/accueil/{img}.webp" alt="" loading="lazy" style="object-position:{pos}">
       <span class="ac-sol-n" aria-hidden="true">{n:02d}</span>
       <span class="ac-sol-tag"><i aria-hidden="true"></i><b>Pour votre lieu</b></span>

@@ -126,6 +126,9 @@
     /* analyse */
     ".jv-think{align-self:flex-start;display:flex;align-items:center;gap:.5rem;font:500 .6rem/1 var(--mono,monospace);letter-spacing:.2em;text-transform:uppercase;color:var(--dim,#a8a8b0)}",
     ".jv-think em{display:flex;gap:3px}",
+    ".jv-think{flex-wrap:wrap}",
+    ".jv-trace{flex-basis:100%;max-width:100%;overflow:hidden;white-space:nowrap;font:400 .68rem/1.5 var(--mono,monospace);letter-spacing:.03em;text-transform:none;color:var(--gold-soft,#e9c98c)}",
+    ".jv-meta{display:block;margin-top:.55rem;font:400 .6rem/1.3 var(--mono,monospace);letter-spacing:.06em;color:var(--dim,#a8a8b0);opacity:.75}",
     ".jv-think em i{width:3px;height:11px;background:var(--gold-soft,#e9c98c);animation:jv-eq .9s ease-in-out infinite}",
     ".jv-think em i:nth-child(2){animation-delay:.15s}.jv-think em i:nth-child(3){animation-delay:.3s}.jv-think em i:nth-child(4){animation-delay:.45s}",
     "@keyframes jv-eq{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}",
@@ -387,14 +390,29 @@
 
     var attente = document.createElement("div");
     attente.className = "jv-think";
-    attente.innerHTML = '<em><i></i><i></i><i></i><i></i></em><span></span>';
+    attente.innerHTML = '<em><i></i><i></i><i></i><i></i></em><span></span><code class="jv-trace" aria-hidden="true"></code>';
     attente.querySelector("span").textContent = T.think;
     log.appendChild(attente); bas();
 
+    /* La trace : ce qui se passe vraiment pendant l'attente, rien d'inventé. La question telle qu'elle part
+       (ses octets UTF-8, en hexadécimal), la requête envoyée, le temps écoulé; puis, sous la réponse, sa
+       durée, le nombre de fragments reçus et de caractères. */
+    var debut = Date.now(), fragments = 0, trace = attente.querySelector(".jv-trace"), pas = 0, traceT = 0;
+    var octets = []; try { octets = Array.prototype.slice.call(new TextEncoder().encode(q)); } catch (e) {}
+    var hexa = octets.map(function (o) { return (o < 16 ? "0" : "") + o.toString(16).toUpperCase(); });
+    function ecrisTrace() {
+      var ms = Date.now() - debut, tour = Math.floor(pas / 4) % 3, l;
+      if (tour === 0) l = "> POST /chat  stream=true  lang=" + (EN ? "en" : "fr");
+      else if (tour === 1) { var d = hexa.length > 12 ? pas % (hexa.length - 11) : 0; l = "utf-8 > " + hexa.slice(d, d + 12).join(" "); }
+      else l = octets.length + (EN ? " bytes · " : " octets · ") + Math.min(msgs.length, 10) + " messages · " + ms + " ms";
+      trace.textContent = l; pas++;
+    }
+    if (trace && !calme) { ecrisTrace(); traceT = setInterval(ecrisTrace, 260); }
+
     var txt = "", live = null, gestes = [];
     function ajoute(bout) {
-      txt += bout;
-      if (!live) { attente.remove(); live = bulle("assistant", ""); live.classList.add("jv-cursor"); orbeEtat("parle"); }
+      txt += bout; fragments++;
+      if (!live) { clearInterval(traceT); attente.remove(); live = bulle("assistant", ""); live.classList.add("jv-cursor"); orbeEtat("parle"); }
       live.innerHTML = rich(txt); bas();
     }
     var ctl = window.AbortController ? new AbortController() : null;
@@ -452,7 +470,12 @@
     (PONT && location.origin !== PONT_ORIGINE ? directe().catch(function (e) { if (txt.trim()) throw e; return parPont(); }) : directe())
       .then(function () {
       if (!txt.trim()) throw new Error("vide");
-      if (live) { live.classList.remove("jv-cursor"); live.innerHTML = rich(txt.trim()); }
+      if (live) {
+        live.classList.remove("jv-cursor"); live.innerHTML = rich(txt.trim());
+        var meta = document.createElement("small"); meta.className = "jv-meta";
+        meta.textContent = ((Date.now() - debut) / 1000).toFixed(1).replace(".", EN ? "." : ",") + " s · " + fragments + (EN ? (fragments > 1 ? " chunks · " : " chunk · ") : (fragments > 1 ? " fragments · " : " fragment · ")) + txt.trim().length + (EN ? " characters" : " caractères");
+        live.appendChild(meta);
+      }
       gestes.forEach(geste);
       msgs.push({ role: "assistant", content: txt.trim(), gestes: gestes }); save();
     }).catch(function () {
@@ -465,7 +488,7 @@
       bulle("assistant", T.err + " " + location.origin + T.contact);
       msgs.pop(); save();
     }).then(function () {
-      clearTimeout(minuteur); occupe = false; send.disabled = false; orbeEtat("repos");
+      clearTimeout(minuteur); clearInterval(traceT); occupe = false; send.disabled = false; orbeEtat("repos");
       if (panel.offsetParent !== null) input.focus();
     });
   }

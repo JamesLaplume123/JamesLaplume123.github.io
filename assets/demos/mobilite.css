@@ -516,6 +516,39 @@ html.fx [data-demo="mobilite"] .mb-spin { animation: mb-rot .8s linear infinite;
 [data-demo="mobilite"] .mb-caps em.s-n { color: var(--mb-dim); border: 1px solid #ffffff12; }
 [data-demo="mobilite"] .mb-vnote { margin: auto 0 0; padding-top: 12px; font-size: 12.5px; line-height: 1.5; color: var(--mb-muted); }
 
+/* ---------- Vraie carte du copilote (assets/demos/carte.js), glissée sous les repères ---------- */
+[data-demo="mobilite"] .mb-ml { position: absolute; inset: 0; z-index: 0; background: #000; }
+[data-demo="mobilite"] .mb-ml .maplibregl-canvas { outline: 0; }
+[data-demo="mobilite"] .mb-map.has-ml .mb-svg { visibility: hidden; }
+[data-demo="mobilite"] .mb-map.has-ml .is-loin { visibility: hidden; }
+[data-demo="mobilite"] .mb-map.has-ml .mb-ov > * { transition: none; }
+[data-demo="mobilite"] .mb-attr { display: none; margin: 0; font: 500 10px/1.3 var(--mb-font); color: var(--mb-dim); }
+[data-demo="mobilite"] .mb-attr a { color: inherit; text-decoration: none; }
+[data-demo="mobilite"] .mb-attr a:hover { text-decoration: underline; }
+[data-demo="mobilite"] .mb-map.has-ml + .mb-attr { display: block; }
+[data-demo="mobilite"] .mb-map:not(.has-ml) .mb-btn-vue { display: none; }
+[data-demo="mobilite"] .mb-btn-vue[aria-pressed="true"] { color: var(--gold-soft); border-color: var(--gold-soft); }
+/* Copilote sur grand écran : les jauges passent en colonne à droite de la carte. La carte est moins haute,
+   et son bandeau (heure, vitesse, prochaine étape) reste visible sans défiler dans le cadre. */
+@container mb (min-width: 861px) {
+  [data-demo="mobilite"] .mb-co { grid-template-columns: minmax(0, 1.12fr) minmax(300px, 1fr); }
+  [data-demo="mobilite"] .mb-co .mb-mapwrap { grid-template-columns: minmax(0, 1fr) 84px; column-gap: 10px; row-gap: 6px; }
+  [data-demo="mobilite"] .mb-co .mb-gauges { grid-column: 2; grid-row: 1; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  [data-demo="mobilite"] .mb-co .mb-attr { grid-column: 1; grid-row: 2; }
+  [data-demo="mobilite"] .mb-co .mb-gauge { padding: 8px 2px 7px; gap: 5px; }
+  [data-demo="mobilite"] .mb-co .mb-gauge .mb-dz, [data-demo="mobilite"] .mb-co .mb-gauge .mb-dz-disc { width: 52px; }
+  [data-demo="mobilite"] .mb-co .mb-gauge .mb-dz-c b { font-size: 15px; }
+  [data-demo="mobilite"] .mb-co .mb-gauge > small { font-size: 8.5px; letter-spacing: .06em; }
+  [data-demo="mobilite"] .mb-co .mb-gauge > small .mb-i { display: none; }
+  [data-demo="mobilite"] .mb-co .mb-gauge-w .mb-dz-disc b { font-size: 8.5px; }
+  [data-demo="mobilite"] .mb-co .mb-hud-b { left: 12px; right: 12px; bottom: 12px; width: auto; gap: 12px; padding: 9px 12px; }
+  [data-demo="mobilite"] .mb-co .mb-hud-b b { font-size: 15px; }
+  [data-demo="mobilite"] .mb-co .mb-hud-b em { overflow: hidden; text-overflow: ellipsis; }
+  [data-demo="mobilite"] .mb-co .mb-sun em { display: none; }
+  [data-demo="mobilite"] .mb-co .mb-sun svg { width: 56px; height: 22px; }
+  [data-demo="mobilite"] .mb-co .mb-hud-t { right: 12px; top: 12px; width: min(250px, 52%); padding: 10px 12px; }
+}
+
 /* ---------- Largeurs de la démo (requêtes de conteneur) ---------- */
 @container mb (max-width: 1040px) {
   [data-demo="mobilite"] .mb-modes { grid-template-columns: repeat(3, minmax(0, 1fr)); }

@@ -3,8 +3,8 @@
 # lumières, eau, énergie); Mobilité = le mouvement : le trajet, le voyage, le véhicule.
 #
 # Trois onglets dans JARVIS App :
-#   1. Copilote de route : carte vectorielle noire (aucune tuile), le VR qui avance de
-#      de la Résidence au Chalet, et des suggestions calculées selon la distance, les
+#   1. Copilote de route : la vraie carte (assets/demos/carte.js) dès qu'elle est chargée, la caméra suit le
+#      VR qui avance de la Résidence au Chalet; sinon la carte dessinée ci-dessous reste en place, et des suggestions calculées selon la distance, les
 #      heures d'ouverture, le soleil et l'état du véhicule. Six modes de voyage replanifient.
 #   2. Journal de voyage : photos et points géolocalisés sur la carte, chronologie, « Mes voyages ».
 #   3. Véhicules : garage connecté pour un client au quotidien (VR, VUS électrique familial, vélo
@@ -22,7 +22,7 @@ import json
 import math
 import os
 
-from demos.app import icon as app_icon
+from demos.app import ATTRIBUTION, icon as app_icon
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 NB = " "
@@ -54,6 +54,7 @@ ICO = {
     "photo": '<path d="M4 8h3.2L9 5.5h6L16.8 8H20v11H4Z"/><circle cx="12" cy="13.3" r="3.3"/>',
     "pause": '<path d="M9 6v12M15 6v12"/>',
     "play": '<path d="M8 5.5v13L18.5 12Z"/>',
+    "cible": '<circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/>',
     "restart": '<path d="M5 12a7 7 0 1 0 2-4.9M5 4.5V8h3.5"/>',
     "check": '<path d="m5 12.5 4.3 4.3L19 7"/>',
     "x": '<path d="m6.5 6.5 11 11M17.5 6.5l-11 11"/>',
@@ -88,18 +89,48 @@ def ico(name, cls=""):
 
 
 # ---------------------------------------------------------------------------------------------
-# Projection : kilomètres, origine au coin nord-ouest de la carte (73,9° O · 48,95° N)
+# Projection : celle des cartes en ligne (Mercator), pour que la vraie carte se glisse exactement sous
+# le dessin. Unité : à peu près le kilomètre (exact à 47° N). Origine au coin nord-ouest (73,9° O · 48,95° N).
 # ---------------------------------------------------------------------------------------------
 LON0, LAT1, LAT0 = -73.9, 48.95, 45.15
 KX = 111.32 * math.cos(math.radians(47.05))
-KY = 111.13
-W = round((-68.4 - LON0) * KX, 1)
-H = round((LAT1 - LAT0) * KY, 1)
-ROAD = 1.16  # sinuosité : kilomètres de route par kilomètre à vol d’oiseau sur la carte
+
+
+def _merc(lat):
+    return math.degrees(math.log(math.tan(math.pi / 4 + math.radians(lat) / 2)))
 
 
 def P(lat, lon):
-    return ((lon - LON0) * KX, (LAT1 - lat) * KY)
+    return ((lon - LON0) * KX, (_merc(LAT1) - _merc(lat)) * KX)
+
+
+def LL(x, y):
+    """Inverse de P : (longitude, latitude), l'ordre attendu par la vraie carte."""
+    m = _merc(LAT1) - y / KX
+    return (round(LON0 + x / KX, 5), round(math.degrees(2 * math.atan(math.exp(math.radians(m))) - math.pi / 2), 5))
+
+
+def _dist(a, b):
+    """Distance réelle en kilomètres entre deux points (lat, lon)."""
+    la0, lo0, la1, lo1 = map(math.radians, (a[0], a[1], b[0], b[1]))
+    h = math.sin((la1 - la0) / 2) ** 2 + math.cos(la0) * math.cos(la1) * math.sin((lo1 - lo0) / 2) ** 2
+    return 2 * 6371 * math.asin(math.sqrt(h))
+
+
+W = round((-68.4 - LON0) * KX, 1)
+H = round(P(LAT0, LON0)[1], 1)
+
+# Tracés sur de vraies routes (calculés une fois, points lat/lon) : le trajet du copilote et les voyages passés.
+with open(os.path.join(os.path.dirname(__file__), "mobilite_trajet.json"), encoding="utf-8") as _f:
+    TRACES = json.load(_f)
+
+
+def _trace(nom):
+    ll = [tuple(p) for p in TRACES[nom]]
+    km = [0.0]
+    for a, b in zip(ll, ll[1:]):
+        km.append(km[-1] + _dist(a, b))
+    return [P(*p) for p in ll], km
 
 
 def _cr(pts, n=8, close=False):
@@ -202,14 +233,7 @@ def _relief():
     return out
 
 
-# --- Trajet du copilote : Résidence → Chalet --
-ROUTE_WP = [(45.63, -72.96), (45.76, -72.68), (45.88, -72.48), (46.05, -72.18), (46.22, -71.95), (46.40, -71.75),
-            (46.57, -71.54), (46.70, -71.36), (46.81, -71.21), (46.88, -71.16), (46.94, -71.02), (46.99, -70.90),
-            (47.06, -70.78), (47.20, -70.70), (47.34, -70.60), (47.44, -70.51), (47.53, -70.36), (47.65, -70.17),
-            (47.80, -70.00), (47.97, -69.86), (48.10, -69.74), (48.15, -69.73), (48.27, -69.93), (48.33, -70.25),
-            (48.38, -70.55), (48.43, -70.86), (48.42, -71.06), (48.47, -71.30), (48.52, -71.50), (48.55, -71.66),
-            (48.44, -71.84), (48.42, -72.00), (48.46, -72.16), (48.52, -72.26)]
-
+# --- Trajet du copilote : Résidence → Chalet, sur de vraies routes (TRACES["encours"]) --
 STOPS = [  # (nom, lat, lon, importance) — importance 2 : étape du trajet, 1 : repère discret. Noms neutres : aucun lieu réel.
     ("Résidence", 45.63, -72.96, 2), ("Première halte", 45.88, -72.48, 1), ("Vieille ville", 46.81, -71.21, 2),
     ("Village de la baie", 47.44, -70.50, 2), ("Le belvédère", 47.65, -70.15, 2), ("Le traversier", 48.14, -69.72, 2),
@@ -218,15 +242,7 @@ STOPS = [  # (nom, lat, lon, importance) — importance 2 : étape du trajet, 1 
 # Aucune étiquette d'eau, de région ni de coordonnées : la carte garde son dessin, sans nom de lieu.
 
 
-def _route():
-    pts = _cr(ROUTE_WP, 10)
-    km = [0.0]
-    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
-        km.append(km[-1] + math.hypot(x1 - x0, y1 - y0) * ROAD)
-    return pts, km
-
-
-ROUTE_PTS, ROUTE_KM = _route()
+ROUTE_PTS, ROUTE_KM = _trace("encours")
 ROUTE_LEN = ROUTE_KM[-1]
 
 
@@ -411,13 +427,11 @@ def ph(nom):
 # ---------------------------------------------------------------------------------------------
 TRIPS = [
     {"id": "encours", "nom": "Fleuve, fjord et grand lac", "quand": "En cours · 8 novembre 2026",
-     "jours": 3, "wp": None, "cover": "grand-lac", "live": True,
+     "jours": 3, "cover": "grand-lac", "live": True,
      "entries": [
          ("Résidence", 45.63, -72.96, "9 h 05", "Départ · plein d’essence fait, eau propre à 24 %", None),
      ]},
     {"id": "foret", "nom": "Lacs et forêt boréale", "quand": "Août 2026 · 4 jours", "jours": 4,
-     "wp": [(45.63, -72.96), (45.88, -72.48), (46.14, -72.52), (46.35, -72.55), (46.56, -72.74), (46.76, -72.82),
-            (46.86, -72.66), (47.16, -72.74), (47.44, -72.78)],
      "cover": "lac-matin",
      "entries": [
          ("Vieux quartier", 46.35, -72.55, "Jour 1 · 11 h 20", "Dîner dans le vieux quartier, vue sur le fleuve", "vieux-quartier"),
@@ -427,8 +441,6 @@ TRIPS = [
          ("Bivouac", 47.44, -72.78, "Jour 4 · 19 h 05", "Bivouac au bord de la rivière", "bivouac-riviere"),
      ]},
     {"id": "vignobles", "nom": "Route des vignobles", "quand": "Juin 2026 · 2 jours", "jours": 2,
-     "wp": [(45.63, -72.96), (45.48, -72.80), (45.40, -72.73), (45.30, -72.40), (45.27, -72.15), (45.24, -72.02),
-            (45.29, -71.96), (45.40, -71.89)],
      "cover": "lac-montagne",
      "entries": [
          ("Marché public", 45.40, -72.73, "Jour 1 · 10 h 15", "Café et marché public", None),
@@ -438,8 +450,6 @@ TRIPS = [
          ("La gorge", 45.40, -71.89, "Jour 2 · 18 h 10", "La gorge de la rivière", "gorge-riviere"),
      ]},
     {"id": "fleuve", "nom": "Route du fleuve et l’île", "quand": "Septembre 2026 · 2 jours", "jours": 2,
-     "wp": [(46.81, -71.21), (46.88, -71.16), (46.94, -71.02), (46.92, -70.95), (46.99, -70.86), (47.06, -70.78),
-            (47.07, -70.58)],
      "cover": "ile-produits",
      "entries": [
          ("Grande chute", 46.89, -71.15, "Jour 1 · 10 h 00", "Le pont suspendu au-dessus de la chute", "grande-chute"),
@@ -453,12 +463,8 @@ TRIPS = [
 
 
 def _trip_geo(t):
-    if t["wp"] is None:
-        pts = ROUTE_PTS
-    else:
-        pts = _cr(t["wp"], 8)
-    km = sum(math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in zip(pts, pts[1:])) * ROAD
-    return pts, km
+    pts, km = _trace(t["id"])
+    return pts, km[-1]
 
 
 TRIPS_JS = []
@@ -727,7 +733,8 @@ def _labels(route_only=False, vb=VB_CO):
             continue
         x, y = P(lat, lon)
         side = {"b": " is-b", "l": " is-l"}.get(pl[0], "") if pl else ""
-        out.append(f'<span class="mb-city{" is-major" if imp == 2 else ""}{side}" style="{_pct(x, y, vb)}"><i></i><b>{nom}</b></span>')
+        out.append(f'<span class="mb-city{" is-major" if imp == 2 else ""}{side}" data-x="{x:.2f}" data-y="{y:.2f}" '
+                   f'style="{_pct(x, y, vb)}"><i></i><b>{nom}</b></span>')
     return "".join(out)
 
 
@@ -821,9 +828,11 @@ def _copilote():
         <div class="mb-ctrl">
           <button type="button" class="mb-btn-r" data-mb-play aria-label="Pause">{ico("pause", "i-pause")}{ico("play", "i-play")}</button>
           <button type="button" class="mb-btn-r" data-mb-restart aria-label="Recommencer le trajet">{ico("restart")}</button>
+          <button type="button" class="mb-btn-r mb-btn-vue" data-mb-vue aria-pressed="true" aria-label="Suivre le véhicule" title="Suivre le véhicule ou voir tout le trajet">{ico("cible")}</button>
         </div>
         <p class="mb-toast" data-mb-toast role="status" aria-live="polite"></p>
       </div>
+      <p class="mb-attr">{ATTRIBUTION}</p>
       <ul class="mb-gauges" aria-label="État du VR BouLance">
         {_gauge("eau", "Eau propre", 22, "eau")}{_gauge("propane", "Propane", 31, "propane")}{_gauge("carb", "Carburant", 54, "bolt")}{_gauge("batt", "Batteries", 78, "bolt")}
         <li class="mb-gauge mb-gauge-w"><span class="mb-dz-disc">{ico("webasto")}<b data-mb-webasto>Dû · 450 h</b></span><small>Webasto</small></li>
@@ -979,7 +988,10 @@ def _vehicules():
 
 DATA = {
     "W": W, "H": H, "len": round(ROUTE_LEN, 1), "vbco": VB_CO, "vbjo": VB_JO,
+    "geo": {k: [LL(v[0], v[1] + v[3]), LL(v[0] + v[2], v[1])] for k, v in (("co", VB_CO), ("jo", VB_JO))},
     "route": [[round(x, 2), round(y, 2)] for x, y in ROUTE_PTS],
+    "ll": [[p[1], p[0]] for p in TRACES["encours"]],
+    "proj": {"lon0": LON0, "kx": round(KX, 5), "m1": round(_merc(LAT1), 6)},
     "km": [round(k, 2) for k in ROUTE_KM],
     "stops": [{"nom": n, "km": round(K[n], 1)} for n in ("Vieille ville", "Village de la baie", "Le belvédère", "Le traversier", "Le fjord", "La plage", "Chalet")],
     "pois": [{k: p[k] for k in ("id", "cat", "nom", "km", "off", "stop", "h", "why", "x", "y", "src", "val")} for p in POIS],

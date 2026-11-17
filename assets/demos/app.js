@@ -929,48 +929,242 @@
     function fitMap(m) {
       var W = m.clientWidth, H = m.clientHeight;
       if (!W || !H) return;
-      var a = W / H, c = m._cam;
-      if (m._fit) { c.w = Math.max(c.w, c.h * a); m._fit = false; }
-      var vw = c.w, vh = vw / a;
-      var b = m.getAttribute("data-box");
-      if (b) {
-        b = b.split(",").map(Number);
-        vw = Math.min(vw, b[2]); vh = vw / a;
-        if (vh > b[3]) { vh = b[3]; vw = vh * a; }
-        c.w = vw;
-        c.x = Math.max(b[0] + vw / 2, Math.min(b[0] + b[2] - vw / 2, c.x));
-        c.y = Math.max(b[1] + vh / 2, Math.min(b[1] + b[3] - vh / 2, c.y));
+      var ml = m._ml, vw, vh, vx = 0, vy = 0, cache = null;
+      if (ml) {
+        /* Vraie carte : elle tient la caméra (vol, inclinaison, rotation); les repères se posent sur ses coordonnées */
+        vw = window.JarvisCarte.largeurKm(ml); vh = vw * H / W;
+        var cc = ml.getCenter(), cap = ml.getBearing() * Math.PI / 180, kx = 111.32 * Math.cos(cc.lat * Math.PI / 180), tr = ml.transform;
+        cache = function (ll) {
+          // de l'autre côté du globe, ou derrière la caméra quand la vue est inclinée
+          if (tr && tr.isLocationOccluded && tr.isLocationOccluded(new window.maplibregl.LngLat(ll[0], ll[1]))) return true;
+          return (ll[0] - cc.lng) * kx * Math.sin(cap) + (ll[1] - cc.lat) * 111.13 * Math.cos(cap) < -1.2 * vh;
+        };
+      } else {
+        var a = W / H, c = m._cam;
+        if (m._fit) { c.w = Math.max(c.w, c.h * a); m._fit = false; }
+        vw = c.w; vh = vw / a;
+        var b = m.getAttribute("data-box");
+        if (b) {
+          b = b.split(",").map(Number);
+          vw = Math.min(vw, b[2]); vh = vw / a;
+          if (vh > b[3]) { vh = b[3]; vw = vh * a; }
+          c.w = vw;
+          c.x = Math.max(b[0] + vw / 2, Math.min(b[0] + b[2] - vw / 2, c.x));
+          c.y = Math.max(b[1] + vh / 2, Math.min(b[1] + b[3] - vh / 2, c.y));
+        }
+        vx = c.x - vw / 2; vy = c.y - vh / 2;
+        $(".ap-map-svg", m).setAttribute("viewBox", vx.toFixed(2) + " " + vy.toFixed(2) + " " + vw.toFixed(2) + " " + vh.toFixed(2));
       }
-      var vx = c.x - vw / 2, vy = c.y - vh / 2;
-      $(".ap-map-svg", m).setAttribute("viewBox", vx.toFixed(2) + " " + vy.toFixed(2) + " " + vw.toFixed(2) + " " + vh.toFixed(2));
       m.style.setProperty("--zk", Math.max(0, Math.min(1, (Math.log(700 / vw) / Math.log(700 / 25)))).toFixed(3));
       $$("[data-x]", m).forEach(function (o) {
-        var px = (+o.getAttribute("data-x") - vx) / vw * 100, py = (+o.getAttribute("data-y") - vy) / vh * 100;
+        var x = +o.getAttribute("data-x"), y = +o.getAttribute("data-y"), px, py, loin = false;
+        if (ml) { var ll = versLL(x, y), pt = ml.project(ll); px = pt.x / W * 100; py = pt.y / H * 100; loin = cache(ll); }
+        else { px = (x - vx) / vw * 100; py = (y - vy) / vh * 100; }
         var mn = +o.getAttribute("data-minw") || 0, mx = +o.getAttribute("data-maxw") || 1e9;
-        var show = vw > mn && vw <= mx && px > -6 && px < 106 && py > -6 && py < 106;
+        var show = !loin && vw > mn && vw <= mx && px > -6 && px < 106 && py > -6 && py < 106;
         o.style.left = px.toFixed(2) + "%";
         o.style.top = py.toFixed(2) + "%";
         o.classList.toggle("is-gone", !show);
-        if (show && o.classList.contains("ap-city")) {
-          var half = o.offsetWidth / 2 / W * 100;
-          o.classList.toggle("is-e", px + half > 97);
-          o.classList.toggle("is-w", px - half < 3);
-        }
       });
       var bar = $("[data-scale-bar]", m), st = $("[data-scale-t]", m);
       if (bar && st) {
-        var pxkm = W / vw, steps = [1, 2, 5, 10, 20, 50, 100, 200], d = steps[0];
+        var pxkm = W / vw, steps = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000], d = steps[0];
         steps.forEach(function (s) { if (s * pxkm <= 96) d = s; });
         bar.style.width = Math.round(d * pxkm) + "px";
         st.textContent = d + NB + "km";
       }
     }
+    /* Kilomètres de la carte dessinée (src/demos/app_geo.py) → longitude, latitude */
+    function versLL(x, y) { return [-72.957 + x / (111.32 * Math.cos(47 * Math.PI / 180)), 45.630 - y / 111.13]; }
     function fitAll() { maps.forEach(fitMap); }
     var big = $(".ap-map-big");
     var map = (function () {
       if (!big) return null;
       var anim = 0, sel = null, cards = $$("[data-envc]", big), envBtns = $$(".ap-env", big), listBtns = $$("[data-env-go]", root);
+      /* ------------------------------------------------------------ Vraie carte (assets/demos/carte.js)
+         Une seule carte MapLibre pour l'appareil : elle se glisse SOUS les repères de « Mes lieux » (accueil) ou
+         de l'écran Carte, selon l'écran ouvert. Chargée seulement quand l'un des deux est à l'écran. Tant qu'elle
+         n'est pas prête, ou si elle échoue (hors ligne, pas de WebGL), la carte dessinée reste en place.
+         Ouverture : le globe tourne, puis la caméra vole jusqu'aux lieux; un lieu choisi : survol en rotation lente;
+         le trajet de BouLance se dessine. Tout mouvement automatique reste sous html.fx. */
+      var mini = $(".ap-map-mini", root), JC = null, carte = null, hote = null, ou = null, etat = 0, enCours = false,
+          jeton = 0, orb = 0, trj = null, ouvert = false, ZERO = { top: 0, bottom: 0, left: 0, right: 0 };
+      function vraie() { return ou === big ? carte : null; }
+      /* Appareil trop lent pour ces mouvements (plusieurs images de suite à plus de 90 ms) : on le retient une fois,
+         et la carte passe en déplacements directs, sans rotation ni vol. La page reste fluide.
+         (data-carte-sans-garde sur la démo lève cette garde : sert aux captures faites en rendu logiciel.) */
+      var lentes = 0, lent = false;
+      function tropLent(dt) {
+        if (root.hasAttribute("data-carte-sans-garde")) return false;
+        lentes = dt > 90 ? lentes + 1 : 0;
+        if (lentes > 6) lent = true;
+        return lent;
+      }
+      function anime() { return fx && !reduce && !lent; }
+      function lieuCourant() { var k = keys[cur]; return k === "carte" ? big : k === "accueil" && mini && mini.clientWidth ? mini : null; }
+      function arreteOrbite() { cancelAnimationFrame(orb); orb = 0; }
+      function orbite(v) {
+        arreteOrbite();
+        if (!anime() || !carte || !ou) return;
+        var t0 = performance.now();
+        (function pas(t) {
+          if (!carte || !ou || tropLent(t - t0)) return;
+          carte.setBearing(carte.getBearing() + Math.min(64, t - t0) * v / 1000); t0 = t;
+          orb = requestAnimationFrame(pas);
+        })(t0);
+      }
+      function vol(cam, ms, puis) {
+        var j = ++jeton;
+        arreteOrbite(); cancelAnimationFrame(anim); carte.stop();
+        if (puis) carte.once("moveend", function () { if (j === jeton) puis(); });
+        cam.duration = anime() ? ms : 0; cam.essential = true; cam.curve = cam.curve || 1.42;
+        if (!cam.padding) cam.padding = ZERO;
+        carte.flyTo(cam);
+      }
+      function camLieux(m) {
+        var h = m._home, W = m.clientWidth, H = Math.max(1, m.clientHeight), ll = versLL(h[0], h[1]);
+        return { center: ll, zoom: JC.zoomPour(Math.max(h[2], h[3] * W / H), ll[1], W) - .15, pitch: m === big ? 52 : 46, bearing: -14, padding: ZERO };
+      }
+      function approche(k) {
+        var b = $('.ap-env[data-env="' + k + '"]', big), large = big.clientWidth > 620;
+        if (!b) return;
+        vol({ center: versLL(+b.getAttribute("data-x"), +b.getAttribute("data-y")), zoom: k === "bureau" ? 15.4 : 12.6,   // le bureau, en ville : bâtiments en 3D; ailleurs, assez large pour voir routes, rives et relief
+              pitch: 62, bearing: carte.getBearing() + 60,
+              padding: large ? { top: 0, bottom: 0, left: 300, right: 0 } : { top: 0, bottom: Math.round(big.clientHeight * .42), left: 0, right: 0 } },
+            4200, function () { orbite(4); });
+      }
+      /* Le globe tourne doucement, puis la caméra descend jusqu'aux lieux */
+      function camGlobe() {
+        return { center: [camLieux(big).center[0] - 30, 22], zoom: Math.log(big.clientHeight * .42 * 2 * Math.PI / 512) / Math.LN2, pitch: 0, bearing: 0, padding: ZERO };
+      }
+      function globe(puis) {
+        var j = ++jeton, cam = camLieux(big), t0 = performance.now(), debut = t0;
+        arreteOrbite(); carte.stop();
+        big.classList.add("is-globe");
+        carte.jumpTo(camGlobe());
+        (function tourne(t) {
+          if (j !== jeton || ou !== big) { big.classList.remove("is-globe"); return; }
+          if (tropLent(t - t0)) { big.classList.remove("is-globe"); carte.jumpTo(cam); fitMap(big); return; }
+          var p = carte.getCenter();
+          carte.jumpTo({ center: [p.lng + Math.min(64, t - t0) * .011, p.lat] }); t0 = t;
+          if (t - debut < 2600) { requestAnimationFrame(tourne); return; }   // boucle à part : seul le jeton l'arrête, et elle range l'état en sortant
+          setTimeout(function () { big.classList.remove("is-globe"); }, 3600);
+          cam.curve = 1.25;
+          vol(cam, 5600, puis);
+        })(t0);
+      }
+      /* Le trajet : vue d'ensemble, puis la ligne se dessine et le véhicule avance jusqu'à l'arrivée */
+      function dessine(puis) {
+        var j = jeton, t0 = performance.now(), D = anime() ? 3400 : 0;
+        trj.tete(true);
+        (function pas(t) {
+          if (j !== jeton) { trj.avance(1); trj.tete(false); return; }
+          var k = D ? Math.min(1, (t - t0) / D) : 1;
+          trj.avance(k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+          if (k < 1) { requestAnimationFrame(pas); return; }
+          trj.tete(false);
+          if (puis) puis();
+        })(t0);
+      }
+      function vueTrajet(puis) {
+        if (!trj) { if (puis) puis(); return; }
+        var large = big.clientWidth > 620;
+        if (!large) select(null);   // petit écran : la fiche couvrirait le trajet
+        carte.setPadding(ZERO);     // la marge laissée par une fiche fausserait le cadrage
+        var cam = carte.cameraForBounds(trj.bornes, { bearing: -18, padding: { top: 60, bottom: 50, left: large && sel ? 320 : 30, right: large ? 50 : 30 } });
+        trj.avance(0);
+        vol({ center: cam.center, zoom: cam.zoom - .45, pitch: 46, bearing: -18 }, 2400, function () { dessine(puis); });
+      }
+      function entreCarte() {
+        select(null);
+        if (trj) { trj.avance(1); trj.tete(false); }
+        var cam = camLieux(big);
+        if (!anime()) { carte.jumpTo(cam); fitMap(big); return; }
+        var suite = function () {
+          if (stopped || lent) return;
+          tourT = [setTimeout(function () {
+            if (stopped || !vraie()) return;
+            select("boulance");
+            vueTrajet(function () { if (!stopped && vraie()) { select("boulance"); approche("boulance"); } });
+          }, 900)];
+        };
+        if (!ouvert) { ouvert = true; globe(suite); return; }
+        carte.jumpTo({ center: cam.center, zoom: cam.zoom - 1.4, pitch: 20, bearing: -50, padding: ZERO });
+        vol(cam, 2600, suite);
+      }
+      /* La carte change de place : m = la grande carte, « Mes lieux », ou rien (autre écran) */
+      function place(m) {
+        if (!carte) { tente(); return; }
+        if (ou === m) return;
+        jeton++; arreteOrbite(); carte.stop();
+        tourT.forEach(clearTimeout); tourT = [];
+        var avant = ou;
+        if (avant) { avant._ml = null; avant.classList.remove("has-ml", "is-globe"); }
+        ou = m;
+        if (m) { m.insertBefore(hote, m.firstChild); m._ml = carte; m.classList.add("has-ml"); carte.resize(); }
+        if (avant) fitMap(avant);
+        if (m === big) entreCarte();
+        else if (m) { carte.jumpTo(camLieux(m)); fitMap(m); orbite(1.2); }
+      }
+      function couche(k, on) {
+        if (!carte) return;
+        if (k === "trajet") { if (trj) trj.visible(on); return; }
+        carte.getStyle().layers.forEach(function (l) {
+          if (/^(route-|rail|piste)/.test(l.id)) carte.setLayoutProperty(l.id, "visibility", on ? "visible" : "none");
+        });
+      }
+      function installe(c, geo) {
+        carte = c; etat = 2;
+        var g = geo && (geo.geometry || (geo.features && geo.features[0] && geo.features[0].geometry));
+        if (g && g.coordinates) { trj = JC.trajet(c, "trajet", g.coordinates); trj.avance(1); trj.tete(false); }
+        c.on("move", function () { if (ou) fitMap(ou); });
+        /* La main du visiteur passe avant tout : dès qu'il saisit la carte (souris, deux doigts, Ctrl + molette),
+           le vol, la rotation et la visite automatique s'arrêtent. On écoute l'appui lui-même : un glissement ne
+           pourrait pas commencer tant que la caméra est déplacée à chaque image. */
+        function geste() { jeton++; arreteOrbite(); big.classList.remove("is-globe"); stop(); }
+        c.on("mousedown", geste);
+        c.on("touchstart", function (e) { if (e.points && e.points.length > 1) geste(); });
+        c.on("wheel", function (e) { var o = e.originalEvent; if (o && (o.ctrlKey || o.metaKey)) geste(); });
+        $$("[data-layer-t]").forEach(function (b) { var k = b.getAttribute("data-layer-t"); if (k !== "personnes") couche(k, b.getAttribute("aria-pressed") === "true"); });
+        if ("ResizeObserver" in window) new ResizeObserver(function () { c.resize(); if (ou) fitMap(ou); }).observe(hote);
+        place(lieuCourant());
+      }
+      function tente() {
+        var m = lieuCourant();
+        if (etat !== 1 || !JC || enCours || !m) return;
+        enCours = true;
+        hote = document.createElement("div");
+        hote.className = "ap-ml"; hote.setAttribute("aria-hidden", "true");
+        m.insertBefore(hote, m.firstChild);
+        var cam = m === big && anime() ? camGlobe() : camLieux(m);   // la grande carte s'ouvre sur le globe : il charge en premier
+        Promise.all([
+          JC.ouvre(hote, { globe: true, cooperatif: true, center: cam.center, zoom: cam.zoom, pitch: cam.pitch, bearing: cam.bearing }),
+          fetch("/assets/demos/trajet.geojson").then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+        ]).then(function (res) { installe(res[0], res[1]); }, function () { etat = -1; if (hote) hote.remove(); hote = null; });
+      }
+      function charge() {
+        if (etat || single) return;
+        etat = 1;
+        var pret = function () { JC = window.JarvisCarte; if (JC) tente(); else etat = -1; };
+        if (window.JarvisCarte) { pret(); return; }
+        var sc = document.createElement("script");
+        sc.src = "/assets/demos/carte.js"; sc.onload = pret; sc.onerror = function () { etat = -1; };
+        document.head.appendChild(sc);
+      }
+      root.addEventListener("ap:screen", function () { if (lieuCourant()) charge(); place(lieuCourant()); });
+      if (mini && "IntersectionObserver" in window) {
+        new IntersectionObserver(function (es) {
+          var vu = es[0].isIntersecting;
+          if (vu) { charge(); if (ou === mini) orbite(1.2); } else if (ou === mini) arreteOrbite();
+        }, { threshold: .2 }).observe(mini);
+      }
+
       function flyTo(x, y, w, ms) {
+        if (vraie()) {
+          var ll = versLL(x, y);
+          vol({ center: ll, zoom: JC.zoomPour(w, ll[1], big.clientWidth) - .2, pitch: w > 200 ? 52 : 58, bearing: w > 200 ? -14 : carte.getBearing() }, ms || 2600);
+          return;
+        }
         cancelAnimationFrame(anim);
         var c = big._cam, x0 = c.x, y0 = c.y, w0 = c.w;
         if (!fx || reduce) { c.x = x; c.y = y; c.w = w; fitMap(big); return; }
@@ -984,7 +1178,7 @@
           if (k < 1) anim = requestAnimationFrame(step);
         })(t0);
       }
-      function home() { var h = big._home; flyTo(h[0], h[1], Math.max(h[2], h[3] * big.clientWidth / Math.max(1, big.clientHeight))); }
+      function home() { if (vraie()) { vol(camLieux(big), 2800); return; } var h = big._home; flyTo(h[0], h[1], Math.max(h[2], h[3] * big.clientWidth / Math.max(1, big.clientHeight))); }
       function select(k) {
         sel = k;
         cards.forEach(function (c) { c.hidden = c.getAttribute("data-envc") !== k; });
@@ -1003,6 +1197,7 @@
         var b = $('.ap-env[data-env="' + k + '"]', big);
         if (!b) return;
         select(k);
+        if (vraie()) { approche(k); return; }
         // la fiche couvre la gauche de la carte : le lieu se place au centre de ce qui reste visible
         var w = +b.getAttribute("data-w"), shift = big.clientWidth > 620 ? w * .17 : 0;
         flyTo(+b.getAttribute("data-x") - shift, +b.getAttribute("data-y") + (big.clientWidth > 620 ? 0 : w * .18), w);
@@ -1013,7 +1208,11 @@
         if (b) { stop(); focus(b.getAttribute("data-env")); return; }
         var cl = e.target.closest(".ap-cluster");
         if (cl) { stop(); select(null); flyTo(+cl.getAttribute("data-x"), +cl.getAttribute("data-y"), +cl.getAttribute("data-w")); return; }
-        if (e.target.closest("[data-envc-x]")) { select(null); return; }
+        if (e.target.closest("[data-envc-x]")) {
+          select(null);
+          if (vraie()) { jeton++; arreteOrbite(); carte.easeTo({ padding: ZERO, duration: anime() ? 600 : 0 }); }
+          return;
+        }
         if (e.target.closest("[data-envc-zoom]") && sel) { focus(sel); return; }
         var rt = e.target.closest("[data-route-t]");
         if (rt) {
@@ -1021,13 +1220,14 @@
           rt.setAttribute("aria-pressed", on ? "true" : "false");
           var lt = $('[data-layer-t="trajet"]');
           if (lt && (lt.getAttribute("aria-pressed") === "true") !== on) lt.click();
-          if (on) flyTo(24, -162, 390 * big.clientWidth / Math.max(1, big.clientHeight));
+          if (on) { if (vraie()) vueTrajet(); else flyTo(24, -162, 390 * big.clientWidth / Math.max(1, big.clientHeight)); }
           return;
         }
         var z = e.target.closest("[data-zoom]");
         if (z) {
           stop();
           var d = +z.getAttribute("data-zoom"), c = big._cam;
+          if (vraie() && d) { jeton++; arreteOrbite(); carte.easeTo({ zoom: carte.getZoom() + d, duration: anime() ? 520 : 0 }); return; }
           if (d === 0) { select(null); home(); } else flyTo(c.x, c.y, Math.max(14, Math.min(900, c.w * (d > 0 ? 1 / 1.9 : 1.9))), 520);
         }
       });
@@ -1038,7 +1238,7 @@
       // Glisser pour se déplacer (souris), molette pour rapprocher (Ctrl, ou après un clic dans la carte)
       var drag = null;
       big.addEventListener("pointerdown", function (e) {
-        if (e.pointerType === "touch" || e.button !== 0 || e.target.closest("button, a, .ap-envc")) return;
+        if (big._ml || e.pointerType === "touch" || e.button !== 0 || e.target.closest("button, a, .ap-envc")) return;
         cancelAnimationFrame(anim);
         drag = { x: e.clientX, y: e.clientY, cx: big._cam.x, cy: big._cam.y, moved: false };
         big.classList.add("is-active");
@@ -1062,7 +1262,7 @@
       });
       big.addEventListener("pointerleave", function () { if (!drag) big.classList.remove("is-active"); });
       big.addEventListener("wheel", function (e) {
-        if (!e.ctrlKey && !e.metaKey && !big.classList.contains("is-active")) return;
+        if (big._ml || (!e.ctrlKey && !e.metaKey && !big.classList.contains("is-active"))) return;
         e.preventDefault();
         cancelAnimationFrame(anim);
         var r = big.getBoundingClientRect(), c = big._cam, f = Math.exp(Math.max(-1, Math.min(1, e.deltaY * (e.ctrlKey ? .012 : .0025))));
@@ -1072,7 +1272,7 @@
         fitMap(big);
       }, { passive: false });
       big.addEventListener("dblclick", function (e) {
-        if (e.target.closest("button, a, .ap-envc")) return;
+        if (big._ml || e.target.closest("button, a, .ap-envc")) return;
         var r = big.getBoundingClientRect(), c = big._cam;
         flyTo(c.x + ((e.clientX - r.left) / r.width - .5) * c.w, c.y + ((e.clientY - r.top) / r.height - .5) * c.w * r.height / r.width, Math.max(14, c.w / 2), 480);
       });
@@ -1086,6 +1286,7 @@
             return;
           }
           big.classList.toggle("no-" + k, !on);
+          couche(k, on);
           $$('[data-layer="' + k + '"]', big).forEach(function (el) { el.classList.toggle("is-off", !on); });
           var rt = $("[data-route-t]", big);
           if (k === "trajet" && rt) rt.setAttribute("aria-pressed", on ? "true" : "false");
@@ -1121,12 +1322,14 @@
       var tourT = [];
       return {
         focus: focus, select: select, home: home, live: live,
+        prepare: charge,
         tour: function () {
           tourT.forEach(clearTimeout);
+          if (etat === 1 || etat === 2) return;   // la vraie carte arrive : elle enchaîne elle-même après son ouverture
           tourT = [setTimeout(function () { if (!stopped) focus("boulance"); }, 1400),
                    setTimeout(function () { if (!stopped) { select(null); var cl = $(".ap-cluster", big); if (cl) flyTo(+cl.getAttribute("data-x"), +cl.getAttribute("data-y"), 26); } }, 5600)];
         },
-        reset: function () { tourT.forEach(clearTimeout); tourT = []; cancelAnimationFrame(anim); select(null); camInit(big); fitMap(big); }
+        reset: function () { tourT.forEach(clearTimeout); tourT = []; cancelAnimationFrame(anim); select(null); camInit(big); if (!big._ml) fitMap(big); }
       };
     })();
     var toast = $('[data-ap="toast"]'), toastT = null;
@@ -1138,7 +1341,7 @@
       toastT = setTimeout(function () { toast.classList.remove("is-on"); }, 3200);
     }
     hooks.carte = {
-      enter: function () { fitAll(); if (map) { map.live(); if (!stopped && fx) map.tour(); } },
+      enter: function () { fitAll(); if (map) { map.live(); map.prepare(); if (!stopped && fx) map.tour(); } },
       leave: function () { if (map) map.reset(); }
     };
     hooks.accueil = { enter: fitAll };

@@ -1220,11 +1220,16 @@
    Mon espace : chaque tuile repose sur une photo
    ========================================================================== */
 [data-demo="app"] .ap-tile { position: relative; overflow: hidden; isolation: isolate; min-height: 88px; align-items: end; }
+/* La photo occupe le haut de la tuile, nette; le texte est dessous, sur fond sombre. */
+[data-demo="app"] .ap-tile { min-height: 200px; }
 [data-demo="app"] .ap-tile-ph {
-  position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; filter: var(--a-photo);
-  opacity: .82; transform: scale(1.03); transition: opacity .5s, transform 1.1s var(--ease);
+  position: absolute; left: 0; right: 0; top: 0; z-index: -2; width: 100%; height: 64%; object-fit: cover;
+  opacity: 1; transform: scale(1.02); transform-origin: 50% 0; transition: transform 1.1s var(--ease);
 }
-[data-demo="app"] .ap-tile::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, #080706f0 0%, #080706c4 46%, #08070640 100%), linear-gradient(0deg, #080706b3, transparent 60%); }
+[data-demo="app"] .ap-tile::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #08070600 0%, #08070600 40%, #080706f2 62%, #080706 72%); }
+[data-demo="app"] .ap-tile-call .ap-tile-ph { height: 100%; width: 62%; left: auto; }
+[data-demo="app"] .ap-tile-call::after { background: linear-gradient(90deg, #080706 38%, #080706cc 48%, #08070600 70%); }
+[data-demo="app"] .ap-tile-call { min-height: 150px; }
 [data-demo="app"] .ap-tile:hover .ap-tile-ph { opacity: 1; transform: scale(1.09); }
 [data-demo="app"] .ap-tile .ap-tile-i { width: 38px; height: 38px; border-radius: 12px; background: #080706a6; border: 1px solid var(--a-line-2); }
 [data-demo="app"] .ap-tile .ap-tile-i .ap-i { width: 21px; height: 21px; }
@@ -1705,7 +1710,7 @@
   [data-demo="app"] .ap-menu { overflow-y: auto; }
   [data-demo="app"] .ap-xh-g { grid-auto-columns: 180px; }
   [data-demo="app"] .ap-tile { min-height: 96px; align-items: end; }
-  [data-demo="app"] .ap-tile-ph { opacity: .7; }
+  [data-demo="app"] .ap-tile-ph { opacity: 1; }
   [data-demo="app"] .ap-tile .ap-tile-i { width: 32px; height: 32px; }
   [data-demo="app"] .ap-ext-go { height: 30px; padding: 0 8px 0 12px; font-size: 12px; }
   [data-demo="app"] .ap-exts { grid-auto-rows: auto; }

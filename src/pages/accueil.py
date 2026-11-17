@@ -23,20 +23,19 @@ import pro
 # La photo montre tout allumé; éteindre une lumière assombrit seulement ses zones (cx, cy, rx, ry
 # en fractions de la photo). La porte du garage remonte et laisse voir un intérieur (autre photo).
 HEROS = {
-    "img": "/media/vitrine/accueil/residence-prestige-soir.webp",
-    "ratio": [1672, 941],
+    "img": "/media/accueil/film-maison.webp",
+    "ratio": [2880, 1620],
     "inside": "/media/accueil/garage-interieur.webp",
-    "door": [0.088, 0.497, 0.293, 0.497, 0.728, 0.735],  # gauche, haut G, droite, haut D, bas D, bas G
-    "crop": [0.36, 0.30, 0.86, 0.80],
+    "door": [0.048, 0.345, 0.242, 0.345, 0.565, 0.575],  # gauche, haut G, droite, haut D, bas D, bas G
+    "crop": [0.28, 0.05, 0.95, 0.65],
     "spots": [
-        {"id": "etage", "label": "Étage", "on": "Allumé", "off": "Éteint", "x": 64.5, "y": 29,
-         "zones": [[0.655, 0.31, 0.105, 0.13], [0.40, 0.28, 0.075, 0.08]]},
-        {"id": "salon", "label": "Salon", "on": "Allumé", "off": "Éteint", "x": 61.5, "y": 56,
-         "zones": [[0.655, 0.545, 0.105, 0.12], [0.66, 0.69, 0.09, 0.03], [0.63, 0.83, 0.10, 0.09]]},
-        {"id": "entree", "label": "Entrée", "on": "Allumée", "off": "Éteinte", "x": 43.6, "y": 53,
-         "zones": [[0.41, 0.55, 0.07, 0.13], [0.44, 0.41, 0.11, 0.03], [0.32, 0.54, 0.025, 0.06],
-                   [0.42, 0.70, 0.09, 0.035], [0.42, 0.84, 0.10, 0.08], [0.50, 0.55, 0.035, 0.11]]},
-        {"id": "garage", "label": "Garage", "on": "Ouvert", "off": "Fermé", "x": 19, "y": 61, "door": True},
+        {"id": "etage", "label": "Étage", "on": "Allumé", "off": "Éteint", "x": 66, "y": 16,
+         "zones": [[0.66, 0.16, 0.15, 0.10], [0.45, 0.18, 0.05, 0.07]]},
+        {"id": "salon", "label": "Salon", "on": "Allumé", "off": "Éteint", "x": 70, "y": 38,
+         "zones": [[0.70, 0.38, 0.15, 0.09], [0.84, 0.36, 0.05, 0.06]]},
+        {"id": "entree", "label": "Entrée", "on": "Allumée", "off": "Éteinte", "x": 40, "y": 33,
+         "zones": [[0.40, 0.30, 0.05, 0.09], [0.42, 0.46, 0.08, 0.06], [0.47, 0.53, 0.07, 0.04]]},
+        {"id": "garage", "label": "Garage", "on": "Ouvert", "off": "Fermé", "x": 14, "y": 45, "door": True},
     ],
 }
 

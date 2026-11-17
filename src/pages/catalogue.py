@@ -394,6 +394,7 @@ def _materiel():
     out = []
     for cat, items in MATERIEL:
         rows = "".join(f"""<div class="ct-item" data-id="{i}" data-prix="{p}"{' data-cam="1"' if i in CAMERAS else ''}{_img_mat(i)}>
+        {f'<img class="ct-item-ph" src="/media/forfait/mat-{i}.webp" alt="" loading="lazy" decoding="async">' if _img_mat(i) else '<span class="ct-item-ph ct-item-ph-vide" aria-hidden="true"></span>'}
         <div class="ct-item-t"><b>{escape(n)}</b><span>{escape(d)}</span><em>{escape(w)}</em></div>
         <div class="ct-item-p">{_p(p)}</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>

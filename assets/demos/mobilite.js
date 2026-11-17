@@ -44,7 +44,7 @@
   var LVL0 = { eau: 24, propane: 31, carb: 56, batt: 76 };
   var pois = D.pois, byId = {};
   pois.forEach(function (p) { byId[p.id] = p; p.det = Math.max(1, Math.round(p.off * 2 / 45 * 60)); });
-  var S, VC = { carte: null, trj: null, jc: null, etat: 0, suit: false, cap: null, capGeo: 0, ll: null, t: 0, jeton: 0, pris: false };   // vraie carte : voir plus bas
+  var S, VC = { carte: null, trj: null, jc: null, etat: 0, suit: false, cap: null, capGeo: 0, ll: null, t: 0, jeton: 0, pris: false, lentes: 0, lent: false };   // vraie carte : voir plus bas
   function reset(km) {
     S = { km: km, mode: S ? S.mode : "decouverte", acc: {}, ign: {}, done: {}, shots: {}, ended: false, speed: 92 };
   }
@@ -569,6 +569,12 @@
   function suitVehicule(km) {
     var c = VC.carte, t = VC.trj.avance(km, true), now = performance.now(), dt = VC.t ? Math.min(.25, (now - VC.t) / 1000) : 0;
     VC.t = now; VC.ll = [t.lon, t.lat]; VC.capGeo = t.cap;
+    /* Appareil trop lent pour suivre (plusieurs images de suite à plus de 90 ms) : vue d'ensemble fixe, la page reste fluide.
+       (data-carte-sans-garde sur la démo lève cette garde : sert aux captures faites en rendu logiciel.) */
+    if (VC.suit && !root.hasAttribute("data-carte-sans-garde")) {
+      VC.lentes = dt > .09 ? VC.lentes + 1 : 0;
+      if (VC.lentes > 10) { VC.lent = true; vueEnsemble(0); }
+    }
     var a = versLL(posAt(km).x, posAt(km).y), b = versLL(posAt(Math.min(D.len, km + 7)).x, posAt(Math.min(D.len, km + 7)).y);
     if (a[0] !== b[0] || a[1] !== b[1]) {
       var cible = Math.atan2((b[0] - a[0]) * Math.cos(a[1] * RAD), b[1] - a[1]) / RAD;
@@ -629,7 +635,7 @@
     mapCo.classList.add("has-ml");
     drawDetours();
     paint();
-    if (fx()) setTimeout(function () { if (VC.suit === false && !VC.pris) suivre(3600); }, 900);
+    if (fx()) setTimeout(function () { if (VC.suit === false && !VC.pris && !VC.lent) suivre(3600); }, 900);
   }
   function chargeCarte() {
     if (VC.etat) return;
@@ -649,7 +655,7 @@
   }
   vueBtn.addEventListener("click", function () {
     if (!VC.carte) return;
-    VC.pris = true;
+    VC.pris = true; VC.lentes = 0;
     if (vueBtn.getAttribute("aria-pressed") === "true") vueEnsemble(2200); else suivre(2600);
   });
 

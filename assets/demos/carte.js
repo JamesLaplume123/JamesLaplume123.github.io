@@ -4,7 +4,8 @@
    - Tuiles vectorielles OpenFreeMap (données OpenStreetMap, schéma OpenMapTiles) et relief public
      (Terrain Tiles) : sans clé, sans compte. Ce sont les deux seuls tiers contactés, et seulement
      quand une carte s'ouvre (voir /confidentialite/).
-   - Style écrit ici, noir et or, décliné pour les trois modes (Base, Signature, Platinum).
+   - Style écrit ici, noir et or, décliné pour les trois modes (Base, Signature, Platinum). Le relief est rendu
+     par ombrage : essayé en vrai 3D, il n'apportait presque rien à ces échelles et chargeait six fois plus lentement.
    - RÈGLE « aucun lieu » : le style ne contient AUCUNE couche de texte. La géographie est réelle,
      mais aucun nom de ville, de région, de pays ni numéro de route n'est écrit.
    Ce fichier n'est chargé qu'à l'ouverture d'une carte. Si WebGL, la bibliothèque ou les tuiles
@@ -22,7 +23,7 @@
       terre: "#100f0e", eau: "#000000", rive: "#e2c27a", bord: "#4d4230", riveOp: .5, bois: "#0a0c09", champ: "#161513", ville: "#1a1917", glace: "#1b1a18",
       rue: "#3b3323", route: "#6a5936", grande: "#8a7242", auto: "#e2c27a", rail: "#2a2620", frontiere: "#6b5a3a",
       bati0: "#0c0c0c", bati1: "#1b1a17", bati2: "#4a4028", batiOp: .94,
-      ombre: "#000000", clair: "#e2c27a", clairOp: .16, trajet: "#f4d892", halo: "#e2c27a",
+      ombre: "#000000", clair: "#d6cfbf", clairOp: .15, trajet: "#f4d892", halo: "#e2c27a",
       ciel: "#000000", horizon: "#3b2c10", brume: "#0b0a09", lumiere: "#ffe3a6", atmo: .55
     },
     platinum: {
@@ -87,7 +88,7 @@
   }
   function lumiere(t) { return { anchor: "viewport", color: t.lumiere, intensity: .4, position: [1.4, 215, 38] }; }
   function style(t, opt) {
-    var s = {
+    return {
       version: 8,
       projection: { type: opt.globe ? "globe" : "mercator" },
       sources: {
@@ -96,11 +97,6 @@
       },
       layers: couches(t), sky: ciel(t), light: lumiere(t)
     };
-    if (opt.relief3d) {
-      s.sources.sol = { type: "raster-dem", tiles: [RELIEF], tileSize: 512, maxzoom: 11, encoding: "terrarium" };
-      s.terrain = { source: "sol", exaggeration: opt.relief3d };
-    }
-    return s;
   }
 
   /* ---------------------------------------------------------------- Chargement de la bibliothèque (une fois) */
@@ -128,7 +124,7 @@
     (carte._jvTrajets || []).forEach(function (tr) { tr.teinte(); });
   }
   /* hote : élément vide qui reçoit la carte. opt : center [lon, lat], zoom, pitch, bearing, ou bounds (cadre de
-     départ); globe (vrai ou faux); relief3d (exagération du relief en 3D, 0 = à plat); cooperatif (vrai : deux
+     départ); globe (vrai ou faux); cooperatif (vrai : deux
      doigts ou Ctrl + molette pour bouger la carte, afin de ne pas piéger le défilement de la page).
      Rend une promesse de carte prête. */
   var GESTES = {
@@ -147,12 +143,14 @@
           try { if (carte) carte.remove(); } catch (x) {}
           non(e instanceof Error ? e : new Error("carte"));
         }
-        var garde = setTimeout(function () { rate(new Error("délai")); }, opt.delai || 60000);
+        var garde = setTimeout(function () { rate(new Error("délai")); }, 60000);
         try {
           var reglages = {
             container: hote, style: style(ton(), opt), pitch: opt.pitch || 0, bearing: opt.bearing || 0, minZoom: .6, maxZoom: 16.8, maxPitch: 72,
             attributionControl: false, fadeDuration: 0, renderWorldCopies: true, dragRotate: true, pitchWithRotate: true, keyboard: false,
-            cooperativeGestures: !!opt.cooperatif, locale: GESTES, canvasContextAttributes: { antialias: true }
+            cooperativeGestures: !!opt.cooperatif, locale: GESTES,
+            /* Sans accélération graphique (rendu logiciel), la vraie carte saccaderait : on garde alors la carte dessinée */
+            canvasContextAttributes: { antialias: true, failIfMajorPerformanceCaveat: true }
           };
           if (opt.bounds) { reglages.bounds = opt.bounds; reglages.fitBoundsOptions = { padding: 0 }; }
           else { reglages.center = opt.center || [-72.9, 46.4]; reglages.zoom = opt.zoom == null ? 6 : opt.zoom; }

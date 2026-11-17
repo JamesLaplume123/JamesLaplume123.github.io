@@ -990,7 +990,17 @@
       var mini = $(".ap-map-mini", root), JC = null, carte = null, hote = null, ou = null, etat = 0, enCours = false,
           jeton = 0, orb = 0, trj = null, ouvert = false, ZERO = { top: 0, bottom: 0, left: 0, right: 0 };
       function vraie() { return ou === big ? carte : null; }
-      function anime() { return fx && !reduce; }
+      /* Appareil trop lent pour ces mouvements (plusieurs images de suite à plus de 90 ms) : on le retient une fois,
+         et la carte passe en déplacements directs, sans rotation ni vol. La page reste fluide.
+         (data-carte-sans-garde sur la démo lève cette garde : sert aux captures faites en rendu logiciel.) */
+      var lentes = 0, lent = false;
+      function tropLent(dt) {
+        if (root.hasAttribute("data-carte-sans-garde")) return false;
+        lentes = dt > 90 ? lentes + 1 : 0;
+        if (lentes > 6) lent = true;
+        return lent;
+      }
+      function anime() { return fx && !reduce && !lent; }
       function lieuCourant() { var k = keys[cur]; return k === "carte" ? big : k === "accueil" && mini && mini.clientWidth ? mini : null; }
       function arreteOrbite() { cancelAnimationFrame(orb); orb = 0; }
       function orbite(v) {
@@ -998,7 +1008,7 @@
         if (!anime() || !carte || !ou) return;
         var t0 = performance.now();
         (function pas(t) {
-          if (!carte || !ou) return;
+          if (!carte || !ou || tropLent(t - t0)) return;
           carte.setBearing(carte.getBearing() + Math.min(64, t - t0) * v / 1000); t0 = t;
           orb = requestAnimationFrame(pas);
         })(t0);
@@ -1034,6 +1044,7 @@
         carte.jumpTo(camGlobe());
         (function tourne(t) {
           if (j !== jeton || ou !== big) { big.classList.remove("is-globe"); return; }
+          if (tropLent(t - t0)) { big.classList.remove("is-globe"); carte.jumpTo(cam); fitMap(big); return; }
           var p = carte.getCenter();
           carte.jumpTo({ center: [p.lng + Math.min(64, t - t0) * .011, p.lat] }); t0 = t;
           if (t - debut < 2600) { requestAnimationFrame(tourne); return; }   // boucle à part : seul le jeton l'arrête, et elle range l'état en sortant
@@ -1069,7 +1080,7 @@
         var cam = camLieux(big);
         if (!anime()) { carte.jumpTo(cam); fitMap(big); return; }
         var suite = function () {
-          if (stopped) return;
+          if (stopped || lent) return;
           tourT = [setTimeout(function () {
             if (stopped || !vraie()) return;
             select("boulance");

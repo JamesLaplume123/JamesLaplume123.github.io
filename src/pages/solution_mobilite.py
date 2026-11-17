@@ -56,7 +56,7 @@ PAGE = {
       <a class="pill ghost" href="#jarvis">Prendre la route</a>
     </div>
     <p class="for-line" data-rev><span>Pour</span> VR · voitures familiales · voitures de collection · vélos électriques</p>
-    <p class="for-line" data-rev><span>Prix</span> 15 $ par mois par véhicule, données cellulaires comprises · <a href="/catalogue/#solutions" style="color:var(--gold-soft)">Ajouter au panier</a></p>
+    <p class="for-line" data-rev><span>Prix</span> 15 $ par mois par véhicule, données cellulaires comprises · <a href="/offre/#solutions" style="color:var(--gold-soft)">Ajouter au panier</a></p>
   </div>
 </section>
 

@@ -29,13 +29,13 @@ SITE = {
     ),
     # Prix publics (décision de James, novembre 2026) : False pendant le lancement. Aucun montant
     # n'est alors affiché nulle part (accueil, offre, solutions, questions, fiche de l'IA) et le
-    # configurateur (/catalogue/) reste public mais sans montant ni total : « une fois », « par mois »,
+    # configurateur (/offre/) reste public mais sans montant ni total : « une fois », « par mois »,
     # « prix confirmé dans votre soumission ». Remettre True rétablit tous les prix d'un seul coup.
     "prix_publics": False,
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
-    "asset_version": "20261116n",
+    "asset_version": "20261116p",
     # Adresse du service du site (formulaire → Resend → JARVIS, compteur). Vide tant
     # que le Worker Cloudflare n'est pas déployé : le formulaire passe alors par FormSubmit.
     "api": "https://jarvis-site-api.laplumejames.workers.dev",
@@ -72,7 +72,7 @@ NAV = [
 
 # Le parcours du visiteur (décision de James) : voir → tester → comprendre → composer son forfait.
 # Le bouton doré de la barre mène au configurateur; le contact vit dans À propos et dans le pied de page.
-FORFAIT = {"url": "/catalogue/", "label": "Composer mon forfait", "en": "Build my package"}
+FORFAIT = {"url": "/offre/#composer", "label": "Composer mon forfait", "en": "Build my package"}
 
 # Appel à l'action principal (chantier wow — vente du logiciel)
 CTA_V2 = {"url": "/contact/", "label": "Parlons de votre projet"}
@@ -89,7 +89,6 @@ BESOINS_PAGES = [
 FOOTER_COLUMNS = [
     ("Produit", [
         ("/logiciel/", "Le logiciel"), ("/plateforme/", "Le Hub"), ("/offre/", "L’offre"),
-        ("/catalogue/", "Composer mon forfait"),
     ]),
     ("Entreprise", [
         ("/a-propos/", "À propos"), ("/vision-roadmap/", "Vision"), ("/laboratoire-mobile/", "Laboratoire mobile"),
@@ -222,6 +221,7 @@ CAPABILITIES = [
 # Anciennes URL → nouvelles destinations. Le générateur produit un petit
 # fichier de redirection pour chacune afin de ne casser aucun lien externe.
 REDIRECTS = {
+    "catalogue/index.html": "/offre/",
     "about.html": "/a-propos/",
     "contact.html": "/contact/",
     "lab.html": "/laboratoire-mobile/",

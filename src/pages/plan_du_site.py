@@ -10,7 +10,6 @@ GROUPES = [
         ("/logiciel/", "Le logiciel"),
         ("/plateforme/", "Le Hub"),
         ("/offre/", "L’offre"),
-        ("/catalogue/", "Composer mon forfait"),
     ]),
     ("Solutions", [("/solutions/", "Les sept solutions")]
      + [(f"/solutions/{c['slug']}/", c["title"]) for c in CAPABILITIES]),

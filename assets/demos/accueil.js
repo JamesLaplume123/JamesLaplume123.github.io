@@ -11,6 +11,57 @@
   function fx() { return doc.classList.contains("fx") && !rm.matches; }
   function $$(s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); }
 
+  /* ================================================================ Le film du héros
+     Six lieux : la maison (scène 0, interactive) puis cinq photos qui se posent dessus, chacune avec ce
+     que JARVIS y voit. Le trait de l'onglet actif sert de minuterie; à la fin, on passe au lieu suivant.
+     Toucher la maison ou choisir un onglet met le film en pause un moment. Mouvement réduit : pas de
+     défilement automatique, les onglets restent utilisables. Les photos se chargent après la page. */
+  (function () {
+    var h = document.querySelector("[data-ac-hero]"); if (!h) return;
+    var scenes = $$("[data-ac-sc]", h), tabs = $$("[data-ac-tab]", h), n = 0, pauseT = 0, changeT = 0;
+    if (!tabs.length) return;
+    h.setAttribute("data-scene", "0");
+    function prete(i) { if (i === 0) return true; var im = scenes[i - 1].querySelector("img"); return !!(im && im.complete && im.naturalWidth); }
+    function va(i) {
+      if (i === n) return;
+      h.classList.toggle("vers-maison", i === 0);
+      n = i; h.setAttribute("data-scene", String(i));
+      scenes.forEach(function (s, k) { s.classList.toggle("is-on", k === i - 1); });
+      tabs.forEach(function (t, k) { t.setAttribute("aria-pressed", k === i ? "true" : "false"); });
+      h.classList.remove("is-change"); void h.offsetWidth; h.classList.add("is-change");
+      clearTimeout(changeT); changeT = setTimeout(function () { h.classList.remove("is-change"); }, 1600);
+    }
+    function relance() {   /* repart la minuterie de l'onglet actif */
+      var i = tabs[n].querySelector("i"); i.style.animation = "none"; void i.offsetWidth; i.style.animation = "";
+    }
+    function pause(ms) {
+      h.classList.add("is-pause"); clearTimeout(pauseT);
+      pauseT = setTimeout(function () { h.classList.remove("is-pause"); }, ms);
+    }
+    tabs.forEach(function (t, k) {
+      t.addEventListener("click", function () { va(k); relance(); pause(k === 0 ? 0 : 2500); });
+      t.querySelector("i").addEventListener("animationend", function () {
+        if (k !== n) return;
+        var s = (n + 1) % tabs.length;
+        if (!prete(s)) { relance(); return; }
+        va(s);
+      });
+    });
+    $$(".ac-spot", h).forEach(function (b) { b.addEventListener("click", function () { relance(); pause(14000); }); });
+    document.addEventListener("visibilitychange", function () { h.classList.toggle("is-pause", document.hidden); });
+    function charge() {
+      var k = 0;
+      (function suivant() {
+        if (k >= scenes.length) return;
+        var im = scenes[k++].querySelector("img"), src = im.getAttribute("data-src");
+        if (!src || im.getAttribute("src")) { suivant(); return; }
+        im.onload = im.onerror = suivant; im.src = src;
+      })();
+      if (fx()) h.classList.add("is-film");
+    }
+    if (document.readyState === "complete") charge(); else addEventListener("load", charge);
+  })();
+
   /* ================================================================ Héros vivant */
   var hero = document.querySelector("[data-ac-hero]");
   if (hero) (function () {

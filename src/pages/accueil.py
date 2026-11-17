@@ -1,12 +1,13 @@
 # Accueil — le parcours du visiteur (décision de James, novembre 2026) : voir, tester, comprendre,
 # composer son forfait.
-#   1. héros vivant : la photo de la résidence réagit (assets/demos/accueil.js, shader WebGL);
-#   2. « Quel est votre lieu? » (src/lieux.py) : met en avant les solutions concernées;
-#   3. voir : les sept solutions en bande de photos, une ligne chacune;
+#   1. héros vivant : un film de six lieux (maison, domaine, garage, hangar, ferme, entreprise); la
+#      maison réagit au toucher (assets/demos/accueil.js, shader WebGL);
+#   2. « Votre lieu, votre Hub » (src/lieux.py, src/pages/offre.py) : le lieu choisi allume le Hub
+#      conseillé, et mène au forfait (/offre/);
+#   3. voir : les solutions en bande de photos, une ligne chacune;
 #   4. tester : l'aperçu vivant de JARVIS App (démo complète sur /logiciel/);
-#   5. comprendre : l'offre, trois cartes par type de lieu (src/pages/offre.py), sans montant;
-#   6. composer son forfait (une bande et son bouton), puis l'exemple réel (le laboratoire mobile);
-#   7. fin : « Parlons de votre projet » et « Posez votre question à JARVIS » (ouvre la bulle).
+#   5. l'exemple réel (le laboratoire mobile);
+#   6. fin : « Parlons de votre projet » et « Posez votre question à JARVIS » (ouvre la bulle).
 # Styles et scripts : assets/demos/accueil.css et accueil.js.
 
 import json
@@ -40,6 +41,38 @@ HEROS = {
 }
 
 
+# Le film du héros : après la maison (scène 0, interactive), cinq autres lieux, chacun avec ce que
+# JARVIS y voit. (id, nom, photo, cadrage, [(libellé, état)])
+SCENES = [
+    ("domaine", "Domaine", "/media/vitrine/accueil/panorama-domaine-crepuscule.webp", "62% 55%",
+     [("Périmètre", "Calme"), ("Quai", "Éclairé"), ("Bâtiments", "4 en ligne")]),
+    ("garage", "Garage", "/media/vitrine/accueil/garage-lamborghini-ferrari.webp", "50% 60%",
+     [("Portes", "Verrouillées"), ("Véhicules", "2 présents"), ("Climat", "18 °C · 45 %")]),
+    ("hangar", "Hangar", "/media/vitrine/accueil/jet-hangar.webp", "55% 55%",
+     [("Hangar", "Sécurisé"), ("Appareil", "Branché"), ("Accès", "Personnes autorisées")]),
+    ("ferme", "Ferme", "/media/offre/ferme.webp", "50% 60%",
+     [("Ventilation", "Automatique"), ("Étable", "17 °C"), ("Eau", "Débit normal")]),
+    ("entreprise", "Entreprise", "/media/vitrine/accueil/commerce-pme.webp", "60% 50%",
+     [("Alarme", "Armée"), ("Caméras", "6 sur 6"), ("Fermeture", "Faite à 21 h")]),
+]
+
+
+def _scenes():
+    return "".join(
+        f'<figure class="ac-sc" data-ac-sc><img data-src="{img}" alt="" style="object-position:{pos}">'
+        f'<ul class="ac-hud">{"".join(f"<li><i></i><b>{a}</b><em>{b}</em></li>" for a, b in chips)}</ul></figure>'
+        for _id, _nom, img, pos, chips in SCENES
+    )
+
+
+def _onglets():
+    noms = ["Maison"] + [n for _id, n, *_ in SCENES]
+    return "".join(
+        f'<button type="button" data-ac-tab="{i}" aria-pressed="{"true" if i == 0 else "false"}"><i aria-hidden="true"></i><span>{n}</span></button>'
+        for i, n in enumerate(noms)
+    )
+
+
 def _heros():
     spots = "".join(
         f'<button type="button" class="ac-spot" data-ac-spot="{s["id"]}" aria-pressed="{"false" if s.get("door") else "true"}">'
@@ -53,6 +86,7 @@ def _heros():
          alt="Résidence contemporaine au crépuscule, fenêtres éclairées, dont les lumières et la porte de garage sont pilotées par JARVIS">
     <canvas class="ac-gl" data-ac-gl aria-hidden="true"></canvas>
     <div class="ac-spots" role="group" aria-label="Démonstration : commandes de la maison">{spots}</div>
+    <div class="ac-scenes" aria-hidden="true">{_scenes()}<span class="ac-balai"></span></div>
   </div>
   <div class="ac-hero-in">
     <p class="ac-sig"><b>JARVIS Private Systems</b><span>{SITE["signature"]}</span></p>
@@ -64,6 +98,7 @@ def _heros():
         <a class="pill ghost" href="/contact/">Parlons de votre projet</a>
       </div>
     </div>
+    <div class="ac-tabs" data-ac-tabs role="group" aria-label="Les lieux montrés">{_onglets()}</div>
     <p class="ac-lanc"><i aria-hidden="true"></i><span>{SITE["lancement"]}</span>
       <a href="/contact/">Rester informé</a></p>
   </div>
@@ -98,8 +133,8 @@ def _solutions():
     </article>"""
     return f"""<section class="ac-sect ac-faire" id="solutions" aria-labelledby="ac-faire-titre">
   <div class="ac-tete">
-    <h2 id="ac-faire-titre">Sept solutions, un seul système.</h2>
-    <a class="ac-lien" href="/solutions/">Comparer les sept solutions</a>
+    <h2 id="ac-faire-titre">Vos solutions, un seul système.</h2>
+    <a class="ac-lien" href="/solutions/">Comparer les solutions</a>
   </div>
   <div class="ac-sols" data-ac-sols data-sols>{cartes}</div>
 </section>"""
@@ -121,38 +156,27 @@ def _logiciel():
 </section>"""
 
 
-# --- 4. L'offre : les trois Hubs, prix lus dans le catalogue ------------------------------------
-def _offre():
-    return f"""<section class="ac-sect ac-offre" id="offre" aria-labelledby="ac-offre-titre">
-  <div class="ac-tete">
-    <h2 id="ac-offre-titre">Quel Hub est pour vous?</h2>
-    <a class="pill" href="/offre/">Voir l’offre</a>
+# --- 2. Votre lieu, votre Hub : un seul geste (décision de James : « ça devrait être ensemble ») ---
+# On choisit son lieu; la carte du Hub conseillé s'allume avec sa raison (assets/js/wow.js), puis on
+# compose son forfait. Les solutions utiles au lieu sont mises en avant dans la bande suivante.
+def _lieu():
+    return f"""<section class="ac-sect ac-choisir" id="lieu" aria-label="Votre lieu, votre Hub">
+  {lieux.selecteur("Votre lieu, votre Hub.", resultat=False)}
+  {offre.hubs(guide=False)}
+  <div class="ac-suite">
+    <a class="pill" href="/offre/#composer">Composer mon forfait</a>
+    <a class="ac-lien" href="/offre/">Comprendre l’offre</a>
   </div>
-  {offre.hubs()}
 </section>"""
 
 
-# --- 5. Composer son forfait, puis l'exemple réel ----------------------------------------------
-def _composer():
-    return """<section class="ac-sect ac-composer" id="forfait" aria-labelledby="ac-comp-titre">
-  <div class="ac-bande">
-    <div>
-      <h2 id="ac-comp-titre">Composez votre forfait.</h2>
-      <p>Votre lieu, le Hub conseillé, vos solutions, votre matériel. Un récapitulatif clair, puis votre soumission.</p>
-    </div>
-    <a class="pill" href="/catalogue/">Composer mon forfait</a>
-  </div>
+# --- 5. L'exemple réel : le laboratoire mobile ---------------------------------------------------
+def _reel():
+    return """<section class="ac-sect ac-composer" aria-label="L’exemple réel">
   <a class="ac-reel" href="/laboratoire-mobile/">
     <img src="/media/ambulance/ambulance-garage-lab-v1.webp" alt="" loading="lazy">
     <span><em>L’exemple réel</em><b>Un vrai JARVIS, qui tourne.</b><small>Le laboratoire mobile : une ambulance convertie, ses batteries en direct.</small></span>
   </a>
-</section>"""
-
-
-# --- Le lieu : on entre par son lieu (src/lieux.py) ---------------------------------------------
-def _lieu():
-    return f"""<section class="ac-sect ac-lieu" aria-label="Votre lieu">
-  {lieux.selecteur()}
 </section>"""
 
 
@@ -182,5 +206,5 @@ PAGE = {
         "JARVIS, un système privé qui gère et protège les maisons, les fermes, les entreprises "
         "et les véhicules. Domotique, réseau, caméras reliées et IA privée, chez vous."
     ),
-    "content": "\n".join([_heros(), _lieu(), _solutions(), _logiciel(), _offre(), _composer(), _fin()]) + "\n",
+    "content": "\n".join([_heros(), _lieu(), _solutions(), _logiciel(), _reel(), _fin()]) + "\n",
 }

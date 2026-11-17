@@ -24,8 +24,7 @@ from partials import document, redirect_document  # noqa: E402
 PAGE_MODULES = [
     "accueil",
     "logiciel",
-    "offre",
-    "catalogue",
+    "catalogue",  # la page /offre/ : explication et configurateur réunis
     "solutions",
     "solution_environnements_intelligents",
     "solution_ia_privee_connaissances",

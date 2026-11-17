@@ -41,7 +41,7 @@ def fiche(complet=True):
         ("/", "Accueil"), ("/solutions/", "Les sept solutions"), ("/logiciel/", "Le logiciel en démonstration"),
         ("/plateforme/", "Le Hub : le boîtier, son IA privée, le noyau"),
         ("/offre/", "L’offre : un Hub payé une fois (Base, Signature, Platinum), des solutions par mois, le matériel"),
-        ("/catalogue/", "Composer mon forfait : le configurateur (lieu, Hub conseillé, solutions, matériel, récapitulatif, soumission)"),
+        ("/offre/#composer", "Composer mon forfait : le configurateur (lieu, Hub conseillé, solutions, matériel, récapitulatif, soumission)"),
         ("/solutions/maison-intelligente-cle-en-main/", "Maison intelligente clé en main"),
         ("/solutions/domotique-ferme-agricole/", "Domotique pour ferme"), ("/solutions/ia-privee-entreprise/", "IA privée pour entreprise"),
         ("/a-propos/", "À propos de James"), ("/vision-roadmap/", "Vision et feuille de route"), ("/laboratoire-mobile/", "Laboratoire mobile (ambulance)"),
@@ -140,9 +140,9 @@ def fiche(complet=True):
         hub = C.HUB_BY_ID[k["hub"]]["nom"]
         pieces = ", ".join(f"{q} × {C.MAT_BY_ID[m][1]}" for m, q in k["mat"].items())
         if complet:
-            a(f"- {k['nom']} : {p(once)} une fois (au lieu de {p(plein)}) + {mois} $ par mois. Pour : {k['pour']}. Contenu : {hub}, {pieces}. {k['pourquoi']} Lien : {D}/catalogue/?kit={i}")
+            a(f"- {k['nom']} : {p(once)} une fois (au lieu de {p(plein)}) + {mois} $ par mois. Pour : {k['pour']}. Contenu : {hub}, {pieces}. {k['pourquoi']} Lien : {D}/offre/?kit={i}")
         else:
-            a(f"- {k['nom']} : {p(once)} + {mois} $/mois, {hub}, {1 + sum(k['mat'].values())} pièces. Pour : {k['pour']}. {D}/catalogue/?kit={i}")
+            a(f"- {k['nom']} : {p(once)} + {mois} $/mois, {hub}, {1 + sum(k['mat'].values())} pièces. Pour : {k['pour']}. {D}/offre/?kit={i}")
     a("")
     a("## Services professionnels (payés une fois)")
     for fam, items in C.SERVICES:

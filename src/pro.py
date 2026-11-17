@@ -24,13 +24,12 @@ ENT = D + "/#entreprise"
 PRIX = SITE["prix_publics"]
 SOUMISSION = "Prix sur soumission, confirmé par écrit avant tout achat."
 # Phrase des questions fréquentes qui renvoie au configurateur.
-VOIR_CATALOGUE = ' Vous pouvez déjà <a href="/catalogue/">composer votre forfait</a>.' 
+VOIR_CATALOGUE = ' Vous pouvez déjà <a href="/offre/#composer">composer votre forfait</a>.' 
 
 # Nom court de chaque page pour le fil d'Ariane (les autres : titre avant « | »).
 NOMS = {
     "/logiciel/": "Le logiciel",
     "/offre/": "L’offre",
-    "/catalogue/": "Composer mon forfait",
     "/solutions/": "Solutions",
     "/plateforme/": "Le Hub",
     "/laboratoire-mobile/": "Laboratoire mobile",
@@ -47,9 +46,8 @@ NOMS = {
 NOMS.update({f"/solutions/{c['slug']}/": c["title"] for c in CAPABILITIES})
 NOMS.update({f"/solutions/{k}/": n for k, n in BESOINS_PAGES})
 
-# Page mère de chaque page intérieure (fil d'Ariane) : les solutions sous Solutions, le catalogue sous
-# L'offre, les pages de l'entreprise sous À propos.
-MERES = {"/catalogue/": "/offre/", "/vision-roadmap/": "/a-propos/", "/laboratoire-mobile/": "/a-propos/",
+# Page mère de chaque page intérieure (fil d'Ariane) : les solutions sous Solutions, les pages de l'entreprise sous À propos.
+MERES = {"/vision-roadmap/": "/a-propos/", "/laboratoire-mobile/": "/a-propos/",
          "/plateforme/": "/a-propos/", "/confiance/": "/a-propos/", "/questions/": "/a-propos/",
          "/recherche/": "/a-propos/"}
 

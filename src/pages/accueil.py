@@ -45,22 +45,26 @@ HEROS = {
 # JARVIS y voit. (id, nom, photo, cadrage, [(libellé, état)])
 SCENES = [
     ("domaine", "Domaine", "/media/vitrine/accueil/panorama-domaine-crepuscule.webp", "62% 55%",
-     [("Périmètre", "Calme"), ("Quai", "Éclairé"), ("Bâtiments", "4 en ligne")]),
+     [("Résidence", "Tout est calme", .60, .25), ("Piscine", "27 °C", .55, .44), ("Quai", "Éclairé", .44, .58)]),
     ("garage", "Garage", "/media/vitrine/accueil/garage-lamborghini-ferrari.webp", "50% 60%",
-     [("Portes", "Verrouillées"), ("Véhicules", "2 présents"), ("Climat", "18 °C · 45 %")]),
+     [("Climat", "18 °C · 45 %", .30, .25), ("Place 1", "Présent · verrouillé", .33, .50), ("Place 2", "Présent · verrouillé", .78, .47)]),
     ("hangar", "Hangar", "/media/vitrine/accueil/jet-hangar.webp", "55% 55%",
-     [("Hangar", "Sécurisé"), ("Appareil", "Branché"), ("Accès", "Personnes autorisées")]),
+     [("Appareil", "Branché", .33, .35), ("Accès", "Personnes autorisées", .655, .36), ("Véhicule", "Arrivé", .90, .51)]),
     ("ferme", "Ferme", "/media/offre/ferme.webp", "50% 60%",
-     [("Ventilation", "Automatique"), ("Étable", "17 °C"), ("Eau", "Débit normal")]),
+     [("Ventilation", "Automatique", .89, .16), ("Porte", "Fermée", .36, .40), ("Troupeau", "Calme", .12, .50)]),
     ("entreprise", "Entreprise", "/media/vitrine/accueil/commerce-pme.webp", "60% 50%",
-     [("Alarme", "Armée"), ("Caméras", "6 sur 6"), ("Fermeture", "Faite à 21 h")]),
+     [("Rideau", "Ouvert", .62, .22), ("Entrée", "Ouverte jusqu’à 21 h", .48, .52), ("Caméras", "6 sur 6", .82, .40)]),
 ]
 
 
 def _scenes():
+    """Chaque scène : la photo et ses repères, posés sur l'objet (x, y en fractions de la photo; placés
+    par assets/demos/accueil.js selon le cadrage). Sur téléphone, les repères deviennent une courte liste."""
     return "".join(
-        f'<figure class="ac-sc" data-ac-sc><img data-src="{img}" alt="" style="object-position:{pos}">'
-        f'<ul class="ac-hud">{"".join(f"<li><i></i><b>{a}</b><em>{b}</em></li>" for a, b in chips)}</ul></figure>'
+        f'<figure class="ac-sc" data-ac-sc data-pos="{pos}"><div class="ac-sc-in"><img data-src="{img}" alt="" style="object-position:{pos}">'
+        + '<ul class="ac-hud">'
+        + "".join(f'<li data-x="{x}" data-y="{y}"><i></i><span><b>{a}</b><em>{b}</em></span></li>' for a, b, x, y in chips)
+        + "</ul></div></figure>"
         for _id, _nom, img, pos, chips in SCENES
     )
 
@@ -123,12 +127,15 @@ _TITRES = {c["slug"]: c["title"] for c in CAPABILITIES}
 
 def _solutions():
     cartes = ""
-    for slug, img, pos, ligne in SOLUTIONS:
+    for n, (slug, img, pos, ligne) in enumerate(SOLUTIONS, 1):
         cartes += f"""<article class="ac-sol{'' if cartes else ' is-on'}" data-sol="{slug}"{lieux.public_sol(slug)}>
       <img src="/media/accueil/{img}.webp" alt="" loading="lazy" style="object-position:{pos}">
+      <span class="ac-sol-n" aria-hidden="true">{n:02d}</span>
+      <span class="ac-sol-tag"><i aria-hidden="true"></i><b>Pour votre lieu</b></span>
       <div class="ac-sol-t">
         <h3><a class="ac-sol-a" href="/solutions/{slug}/">{_TITRES[slug]}</a></h3>
         <p>{ligne}</p>
+        <span class="ac-sol-go" aria-hidden="true">Découvrir <i>→</i></span>
       </div>
     </article>"""
     return f"""<section class="ac-sect ac-faire" id="solutions" aria-labelledby="ac-faire-titre">
@@ -141,16 +148,38 @@ def _solutions():
 
 
 # --- 3. Le logiciel ---------------------------------------------------------------------------
+# L'écran se redresse en arrivant; une visite guidée le parcourt seule (cadre doré et légende, voir
+# accueil.js); un grand bouton invite à l'essayer. Toute la scène mène à /logiciel/.
+TOUR = [
+    ("xc", "Vos extensions", "Maison, sécurité, réseau : tout au même endroit."),
+    ("tl", "Votre journée", "Agenda et tâches, déjà prêts."),
+    ("ask", "Assistant JARVIS", "Demandez en mots simples."),
+    ("map", "Vos lieux", "Maison, chalet, véhicules : une seule carte."),
+    ("search", "Recherche", "Trouvez ou commandez en un instant."),
+]
+
+
 def _logiciel():
     return f"""<section class="ac-sect ac-log" id="logiciel" aria-labelledby="ac-log-titre">
-  <div class="ac-tete">
-    <h2 id="ac-log-titre">Une seule application.</h2>
-    <a class="pill" href="/logiciel/">Essayer le logiciel</a>
-  </div>
-  <div class="ac-scene">
-    <div class="ac-ecran">
-      <div class="ac-dev" inert>{app.apercu()}</div>
-      <a class="ac-ecran-a" href="/logiciel/" aria-label="Essayer le logiciel JARVIS" tabindex="-1"></a>
+  <div class="ac-log-g">
+    <div class="ac-log-t">
+      <p class="ac-log-k">Démonstration en direct</p>
+      <h2 id="ac-log-titre">Essayez <br>le logiciel.</h2>
+      <p class="ac-log-p">La vraie interface, avec des données d’exemple. Cliquez : tout répond.</p>
+      <ul class="ac-log-l">
+        <li>Rien à installer</li>
+        <li>Aucun compte à créer</li>
+        <li>Ordinateur et téléphone</li>
+      </ul>
+      <a class="ac-jouer" href="/logiciel/"><i aria-hidden="true"></i>Essayer le logiciel</a>
+    </div>
+    <div class="ac-scene">
+      <div class="ac-ecran" data-ac-ecran>
+        <div class="ac-dev" inert>{app.apercu()}</div>
+        <div class="ac-tour" data-ac-tour aria-hidden="true"><i class="ac-tour-b"></i><p class="ac-tour-l"><b></b><span></span></p></div>
+        <a class="ac-ecran-a" href="/logiciel/" aria-label="Essayer le logiciel JARVIS" tabindex="-1"><span>Cliquez pour l’essayer</span></a>
+        <script type="application/json" data-ac-tour-data>{json.dumps(TOUR, ensure_ascii=False)}</script>
+      </div>
     </div>
   </div>
 </section>"""

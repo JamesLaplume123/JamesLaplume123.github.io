@@ -44,28 +44,41 @@
 .ac-spot:focus-visible { outline: none; }
 .ac-spot:focus-visible i { box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--ac-hi); }
 
-/* Le film : cinq autres lieux se posent sur la maison, chacun avec ce que JARVIS y voit. */
-.ac-scenes { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+/* Le film : cinq autres lieux se posent sur la maison, par un rideau en biais; chaque photo porte ses
+   repères, posés sur l'objet, et suit doucement le pointeur. */
+.ac-scenes { position: absolute; inset: -16px; z-index: 2; pointer-events: none; overflow: hidden; will-change: transform; }
 .ac-sc { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity .01s linear 1.4s; }
 .ac-sc.is-on { opacity: 1; z-index: 1; transition: opacity 1.4s cubic-bezier(.4, 0, .2, 1); }
+.fx .ac-sc.is-on { transition: none; animation: acRideau 1.25s cubic-bezier(.62, 0, .2, 1) both; }
 .ac-hero.vers-maison .ac-sc { transition: opacity 1.4s cubic-bezier(.4, 0, .2, 1); }
-.ac-sc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.03); }
-.fx .ac-sc.is-on img { animation: acFilm 10s cubic-bezier(.2, .6, .3, 1) both; }
-.ac-sc:nth-child(even).is-on img { animation-name: acFilmB; }
-@keyframes acFilm { from { transform: scale(1.14) translate3d(1.6%, 1%, 0); } to { transform: scale(1.03); } }
-@keyframes acFilmB { from { transform: scale(1.03) translate3d(-1%, 0, 0); } to { transform: scale(1.13) translate3d(1%, -1%, 0); } }
-.ac-sc::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #000000a6 0, #0000 17%, #0000 55%, #000000d6 80%, #000 100%), linear-gradient(90deg, #00000073 0, #0000 46%); }
-.ac-hud { position: absolute; z-index: 2; left: var(--ac-pad); top: clamp(5.6rem, 13vh, 8.4rem); margin: 0; padding: 0; list-style: none; display: grid; gap: .5rem; justify-items: start; }
-.ac-hud li { display: flex; align-items: center; gap: .6rem; padding: .55rem .85rem .55rem .7rem; font: 500 .82rem/1 var(--sans); color: #fff; background: #060606c7; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid var(--ac-line); border-radius: 4px; opacity: 0; transform: translateX(-10px); }
-.ac-hud i { width: 7px; height: 7px; border-radius: 50%; background: #5fd08a; box-shadow: 0 0 0 4px #5fd08a26; }
+@keyframes acRideau { from { clip-path: polygon(0 0, 0 0, -20% 100%, 0 100%); } to { clip-path: polygon(0 0, 140% 0, 120% 100%, 0 100%); } }
+.ac-sc-in { position: absolute; inset: 0; }
+.ac-sc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.fx .ac-sc.is-on .ac-sc-in { animation: acFilm 11s cubic-bezier(.2, .6, .3, 1) both; }
+.fx .ac-sc:nth-child(even).is-on .ac-sc-in { animation-name: acFilmB; }
+@keyframes acFilm { from { transform: scale(1.1) translate3d(1.2%, .8%, 0); } to { transform: scale(1.02); } }
+@keyframes acFilmB { from { transform: scale(1.02) translate3d(-.8%, 0, 0); } to { transform: scale(1.1) translate3d(.8%, -.8%, 0); } }
+.ac-sc::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #000000a6 0, #0000 17%, #0000 52%, #000000d6 80%, #000 100%), linear-gradient(90deg, #00000066 0, #0000 42%); }
+.ac-hud { position: absolute; inset: 0; z-index: 2; margin: 0; padding: 0; list-style: none; }
+.ac-hud li { position: absolute; left: var(--px, -99px); top: var(--py, -99px); width: 0; height: 0; opacity: 0; }
+.ac-hud li.is-out { display: none; }
+.ac-hud i { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px #0006, 0 0 0 7px #ffffff26; }
+.ac-hud i::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 1px solid #ffffffc0; opacity: 0; }
+.fx .ac-sc.is-on .ac-hud i::after { animation: acOnde 3.2s ease-out infinite; }
+.ac-hud li:nth-child(2) i::after { animation-delay: .8s; }
+.ac-hud li:nth-child(3) i::after { animation-delay: 1.6s; }
+.ac-hud span { position: absolute; left: 26px; top: 0; transform: translateY(-50%); display: flex; gap: .55rem; align-items: baseline; white-space: nowrap; padding: .55rem .85rem; font: 500 .82rem/1 var(--sans); color: #fff; background: #060606cf; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid var(--ac-line); border-radius: 4px; }
+.ac-hud span::before { content: ""; position: absolute; right: 100%; top: 50%; width: 14px; height: 1px; background: #ffffff8c; }
+.ac-hud li.is-left span { left: auto; right: 26px; }
+.ac-hud li.is-left span::before { right: auto; left: 100%; }
 .ac-hud b { font-weight: 600; }
 .ac-hud em { font-style: normal; color: var(--ac-hi); }
-.ac-sc.is-on .ac-hud li { opacity: 1; transform: none; transition: opacity .6s .9s, transform .6s .9s var(--ease); }
-.ac-sc.is-on .ac-hud li:nth-child(2) { transition-delay: 1.15s; }
-.ac-sc.is-on .ac-hud li:nth-child(3) { transition-delay: 1.4s; }
-.ac-balai { position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; width: 34%; opacity: 0; transform: translateX(-120%) skewX(-14deg); background: linear-gradient(90deg, #0000, color-mix(in srgb, var(--ac-hi) 20%, transparent) 55%, #0000); mix-blend-mode: screen; }
-.fx .ac-hero.is-change .ac-balai { animation: acBalai 1.5s cubic-bezier(.4, 0, .2, 1); }
-@keyframes acBalai { 0% { opacity: 0; transform: translateX(-120%) skewX(-14deg); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateX(340%) skewX(-14deg); } }
+.ac-sc.is-on .ac-hud li { opacity: 1; transition: opacity .7s 1s; }
+.ac-sc.is-on .ac-hud li:nth-child(2) { transition-delay: 1.35s; }
+.ac-sc.is-on .ac-hud li:nth-child(3) { transition-delay: 1.7s; }
+.ac-balai { position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; width: 26%; opacity: 0; transform: translateX(-120%) skewX(-12deg); background: linear-gradient(90deg, #0000, color-mix(in srgb, var(--ac-hi) 26%, transparent) 70%, color-mix(in srgb, var(--ac-hi) 70%, transparent) 99%, #0000); mix-blend-mode: screen; }
+.fx .ac-hero.is-change .ac-balai { animation: acBalai 1.25s cubic-bezier(.62, 0, .2, 1); }
+@keyframes acBalai { 0% { opacity: 0; transform: translateX(-120%) skewX(-12deg); } 12% { opacity: 1; } 88% { opacity: 1; } 100% { opacity: 0; transform: translateX(440%) skewX(-12deg); } }
 .ac-hero[data-scene]:not([data-scene="0"]) .ac-spots, .ac-hero.is-gl[data-scene]:not([data-scene="0"]) .ac-demo { opacity: 0; pointer-events: none; }
 .ac-spots, .ac-demo { transition: opacity .6s; }
 
@@ -84,9 +97,14 @@
   .ac-tabs { margin-top: 1.2rem; }
   .ac-tabs span { display: none; }
   .ac-tabs button { padding-top: .7rem; }
-  .ac-hud { top: 5rem; gap: .35rem; }
-  .ac-hud li { font-size: .74rem; padding: .45rem .65rem .45rem .55rem; }
+  .ac-hud { inset: calc(5rem + 16px) auto auto calc(var(--ac-pad) + 16px); display: grid; gap: .35rem; justify-items: start; }
+  .ac-hud li, .ac-hud li.is-out { position: static; display: block; width: auto; height: auto; }
   .ac-hud li:nth-child(3) { display: none; }
+  .ac-hud i { display: none; }
+  .ac-hud span { position: static; transform: none; font-size: .74rem; padding: .45rem .65rem; }
+  .ac-hud span::before { display: none; }
+  .fx .ac-sc.is-on .ac-sc-in { animation: none; }
+  .fx .ac-sc.is-on img { animation: acFilm 11s cubic-bezier(.2, .6, .3, 1) both; }
 }
 
 .ac-hero-in { position: relative; z-index: 3; padding: 0 var(--ac-pad); }
@@ -107,6 +125,7 @@
 .fx .ac-sig, .fx .ac-hero h1, .fx .ac-hero-bas, .fx .ac-lanc { animation: acMonte 1s var(--ease) both; }
 .fx .ac-hero-bas { animation-delay: .12s; }
 .fx .ac-lanc { animation-delay: .24s; }
+@keyframes acSolVie { from { transform: scale(1.12); } to { transform: scale(1.02); } }
 @keyframes acMonte { from { opacity: 0; transform: translateY(14px); } }
 
 @media (max-width: 1180px) { .ac-hero-bas { flex-direction: column; align-items: flex-start; } }
@@ -121,10 +140,23 @@
 
 /* ---------- 2. Les sept solutions : bande de photos ---------- */
 .ac-sols { max-width: 84rem; margin: 0 auto; display: flex; gap: 10px; height: clamp(430px, 40vw, 570px); }
-.ac-sol { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; border-radius: 6px; background: #080808; transition: flex-grow .8s var(--ease); }
-.ac-sol img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
-.ac-sol::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, #0000 52%, #000000e0 100%); }
+.ac-sol { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; border-radius: 6px; background: #080808; transition: flex-grow .9s var(--ease); }
+.ac-sol img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.6) saturate(.8); transition: transform 1.4s var(--ease), filter .9s var(--ease); }
+.ac-sol::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, #00000059 0, #0000 22%, #0000 50%, #000000e6 100%); }
 .ac-sol::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; border: 1px solid var(--ac-line); border-radius: inherit; transition: border-color .4s; }
+.ac-sol-n { position: absolute; z-index: 2; left: 1.05rem; top: 1rem; font: 600 .7rem/1 var(--mono); letter-spacing: .14em; color: #ffffffa6; transition: color .4s; }
+.ac-sol.is-on .ac-sol-n { color: var(--ac-hi); }
+.ac-sol-tag { position: absolute; z-index: 2; right: .9rem; top: .85rem; display: none; align-items: center; gap: .45rem; font: 600 .62rem/1 var(--mono); letter-spacing: .13em; text-transform: uppercase; color: var(--ac-hi); }
+.ac-sol-tag i { width: 7px; height: 7px; border-radius: 50%; background: var(--ac-hi); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ac-hi) 22%, transparent); }
+.ac-sol-tag b { display: none; font-weight: 600; }
+.ac-sol.is-lieu .ac-sol-tag { display: flex; }
+.ac-sol.is-lieu.is-on .ac-sol-tag b { display: inline; }
+.ac-sol.is-lieu::after { border-color: color-mix(in srgb, var(--ac-hi) 75%, transparent); }
+/* Le lieu choisi marque ses solutions; il n'éteint plus les autres. */
+.ac-faire .ac-sols.has-lieu .ac-sol { opacity: 1; box-shadow: none; }
+.ac-sol-go { display: none; margin-top: .8rem; font-size: .88rem; color: var(--ac-hi); }
+.ac-sol-go i { font-style: normal; display: inline-block; transition: transform .4s var(--ease); }
+.ac-sol:hover .ac-sol-go i { transform: translateX(5px); }
 .ac-sol-t { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; padding: 1.15rem 1.05rem 1.2rem; }
 .ac-sol h3 { margin: 0; font: 600 1.02rem/1.22 var(--sans); letter-spacing: -.01em; }
 .ac-sol-a { color: #fff; text-decoration: none; }
@@ -135,7 +167,10 @@
 @media (min-width: 1100px) and (hover: hover) {
   .ac-sol.is-on { flex-grow: 2.7; }
   .ac-sol.is-on::after { border-color: color-mix(in srgb, var(--ac) 70%, transparent); }
-  .ac-sol.is-on img { transform: scale(1.03); }
+  .ac-sol.is-on img { filter: none; transform: scale(1.03); }
+  .fx .ac-sol.is-on img { animation: acSolVie 9s cubic-bezier(.2, .6, .3, 1) both; }
+  .ac-sol.is-on .ac-sol-go { display: block; }
+  .fx .ac-sol.is-on .ac-sol-go { animation: acMonte .6s .3s var(--ease) both; }
   .ac-sol p { width: 19rem; max-height: 0; opacity: 0; visibility: hidden; margin-top: 0; transition: opacity .3s, max-height .6s var(--ease), margin .6s var(--ease), visibility 0s .3s; }
   .ac-sol.is-on p { max-height: 4rem; opacity: 1; visibility: visible; transition: opacity .5s .25s, max-height .6s var(--ease), margin .6s var(--ease); }
   .ac-sol.is-on p { margin-top: .45rem; }
@@ -148,23 +183,49 @@
   .ac-sols { height: auto; margin: 0 calc(var(--ac-pad) * -1); padding: 0 var(--ac-pad); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--ac-pad); scrollbar-width: none; }
   .ac-sols::-webkit-scrollbar { display: none; }
   .ac-sol { flex: 0 0 min(72vw, 290px); height: min(108vw, 420px); scroll-snap-align: start; }
+  .ac-sol img { filter: none; }
 }
 
 /* ---------- 3. Le logiciel : l'écran posé dans la scène du mode ---------- */
-.ac-log { padding-bottom: 0; position: relative; overflow: hidden; }
-.ac-log .ac-tete { position: relative; z-index: 1; }
-.ac-scene { position: relative; margin: 0 calc(var(--ac-pad) * -1); padding: 0 var(--ac-pad) clamp(4rem, 10vw, 9rem); }
-.ac-scene::before {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 68%;
-  background: linear-gradient(180deg, #000 0, #000000b8 34%, #00000073 72%, #000 100%), var(--mode-scene) center 78% / cover no-repeat;
-}
-.ac-ecran { position: relative; max-width: 1040px; margin: 0 auto; -webkit-box-reflect: below 10px linear-gradient(#0000 68%, #00000059); }
+.ac-log { position: relative; overflow: hidden; padding-bottom: clamp(3rem, 6vw, 5rem); }
+.ac-log::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #000 0, #000000a6 30%, #00000080 70%, #000 100%), var(--mode-scene) center 70% / cover no-repeat; opacity: .8; }
+.ac-log-g { position: relative; max-width: 84rem; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 23rem) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: center; }
+.ac-log-k { margin: 0 0 1rem; display: flex; align-items: center; gap: .6rem; font: 600 .68rem/1 var(--mono); letter-spacing: .15em; text-transform: uppercase; color: var(--ac-hi); }
+.ac-log-k::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #5fd08a; box-shadow: 0 0 0 4px #5fd08a26; }
+.fx .ac-log-k::before { animation: acPouls 2.2s ease-in-out infinite; }
+@keyframes acPouls { 50% { box-shadow: 0 0 0 8px #5fd08a00; opacity: .6; } }
+.ac-log h2 { margin: 0; font: 650 clamp(2.4rem, 4.4vw, 3.9rem)/1.02 var(--sans); letter-spacing: -.04em; color: #fff; }
+.ac-log-p { margin: 1.1rem 0 0; font-size: 1.08rem; line-height: 1.5; color: #dedad2; }
+.ac-log-l { margin: 1.4rem 0 0; padding: 0; list-style: none; display: grid; gap: .6rem; }
+.ac-log-l li { position: relative; padding-left: 1.7rem; font-size: .96rem; color: #e9e4d8; }
+.ac-log-l li::before { content: ""; position: absolute; left: .15rem; top: .2em; width: .42rem; height: .78rem; border: solid var(--ac-hi); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.ac-scene { position: relative; min-width: 0; }
+.ac-ecran { position: relative; max-width: 1040px; margin: 0 auto; transition: transform 1.3s var(--ease), opacity .9s; transform-origin: 50% 100%; }
+.fx .ac-ecran.a-anim:not(.is-vu) { opacity: 0; transform: perspective(1700px) rotateX(18deg) translateY(60px) scale(.9); }
 .ac-dev { pointer-events: none; user-select: none; }
-.ac-ecran-a { position: absolute; inset: 0; z-index: 20; border-radius: 28px; }
+/* La visite seule : un cadre se pose sur une zone, le reste s'assombrit, une légende la nomme. */
+.ac-tour { position: absolute; z-index: 10; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity .8s; }
+.ac-ecran.is-tour .ac-tour { opacity: 1; }
+.ac-tour-b { position: absolute; left: 0; top: 0; width: 0; height: 0; border-radius: 12px; box-shadow: 0 0 0 200vmax #00000094, 0 0 0 1.5px var(--ac-hi), 0 0 34px color-mix(in srgb, var(--ac-hi) 45%, transparent); transition: left .9s var(--ease), top .9s var(--ease), width .9s var(--ease), height .9s var(--ease); }
+.ac-tour-l { position: absolute; left: 0; top: 0; margin: 0; display: flex; gap: .6rem; align-items: baseline; white-space: nowrap; padding: .6rem .9rem; font: 500 .86rem/1 var(--sans); color: #fff; background: #050505f0; border: 1px solid var(--ac-line); border-radius: 4px; transition: left .9s var(--ease), top .9s var(--ease), opacity .3s; }
+.ac-tour-l b { color: var(--ac-hi); font-weight: 600; }
+.ac-tour-l.is-change { opacity: 0; }
+.ac-ecran-a { position: absolute; inset: 0; z-index: 20; border-radius: 28px; text-decoration: none; }
+.ac-ecran-a span { position: absolute; left: 50%; bottom: 5%; transform: translate(-50%, 8px); padding: .6rem 1rem; border-radius: 999px; background: #050505e6; border: 1px solid var(--ac-line); color: #fff; font: 600 .82rem/1 var(--sans); white-space: nowrap; opacity: 0; transition: opacity .3s, transform .3s; }
+.ac-ecran-a:hover span, .ac-ecran-a:focus-visible span { opacity: 1; transform: translate(-50%, 0); }
+.ac-jouer { position: relative; margin-top: 1.9rem; display: inline-flex; align-items: center; gap: .8rem; white-space: nowrap; padding: 1.05rem 2rem 1.05rem 1.2rem; border-radius: 999px; background: var(--mode-action); color: var(--mode-on-action); text-decoration: none; font: 700 1.1rem/1 var(--sans); letter-spacing: -.01em; box-shadow: 0 18px 50px #000c, 0 0 0 1px #ffffff40 inset; transition: transform .45s var(--ease), box-shadow .45s; }
+.ac-jouer i { position: relative; width: 36px; height: 36px; border-radius: 50%; background: #0000002b; }
+.ac-jouer i::before { content: ""; position: absolute; left: 14px; top: 11px; border: 7px solid #0000; border-left: 11px solid currentColor; border-right: 0; }
+.ac-jouer::after { content: ""; position: absolute; inset: 0; border-radius: inherit; border: 1px solid var(--ac-hi); opacity: 0; pointer-events: none; }
+.fx .ac-jouer::after { animation: acAppel 2.6s ease-out infinite; }
+@keyframes acAppel { 0% { opacity: .8; transform: scale(1); } 80%, 100% { opacity: 0; transform: scale(1.16, 1.5); } }
+.ac-jouer:hover, .ac-jouer:focus-visible { transform: scale(1.05); box-shadow: 0 24px 70px #000, 0 0 44px color-mix(in srgb, var(--ac-hi) 40%, transparent); }
+.ac-jouer:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.ac-ecran:has(.ac-ecran-a:hover) { transform: translateY(-8px); }
 @media (max-width: 720px) {
-  .ac-ecran { -webkit-box-reflect: unset; }
+  .ac-tour { display: none; }
   .ac-dev { max-height: 600px; overflow: hidden; -webkit-mask: linear-gradient(180deg, #000 72%, #0000); mask: linear-gradient(180deg, #000 72%, #0000); }
-  .ac-scene { padding-bottom: 1rem; }
+  .ac-ecran-a span { display: none; }
 }
 
 /* ---------- 4. Fin : l'appel ---------- */
@@ -190,6 +251,12 @@
   .ac-demo { top: 4.6rem; }
   .ac-spot span { font-size: .74rem; }
 }
+@media (max-width: 1000px) {
+  .ac-log-g { grid-template-columns: 1fr; }
+  .ac-log h2 br { display: none; }
+  .ac-log-l { grid-auto-flow: column; justify-content: start; gap: .6rem 1.6rem; }
+}
+@media (max-width: 640px) { .ac-log-l { grid-auto-flow: row; } }
 @media (prefers-reduced-motion: reduce) {
   .ac-sol, .ac-sol img, .ac-gl { transition: none; }
 }

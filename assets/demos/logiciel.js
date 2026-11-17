@@ -54,10 +54,31 @@
        aperçu téléphone), puis réduite. */
     var large = tel ? 400 : DESIGN;
     app.style.width = large + "px";
+    var ecran = app.querySelector(".ap-screen");
+    if (ecran) ecran.style.height = "";
+    /* Plein écran : l'app remplit la largeur de la fenêtre; l'écran prend la hauteur qui reste et son contenu
+       défile à l'intérieur. Tout devient plus gros, rien ne déborde. */
+    if (plein && !tel && ecran) {
+      var zp = Math.min(1.8, w / large), cible = (window.innerHeight - 56) / zp;
+      ecran.style.height = "600px";
+      var cadre = app.offsetHeight - ecran.offsetHeight;   /* barre du haut, légendes : tout sauf l'écran */
+      ecran.style.height = Math.max(420, Math.floor(cible - Math.max(cadre, 0))) + "px";
+      /* L'app se remet en page après coup (barre du haut, légendes) : on corrige l'écart une fois posée. */
+      [120, 450].forEach(function (t) {
+        setTimeout(function () {
+          if (!stage.classList.contains("is-full")) return;
+          var ecart = app.offsetHeight - cible;
+          if (Math.abs(ecart) > 2) ecran.style.height = Math.max(420, Math.floor(ecran.offsetHeight - ecart)) + "px";
+        }, t);
+      });
+      app.style.zoom = zp.toFixed(4);
+      return;
+    }
     var h = app.offsetHeight;
-    var dispo = window.innerHeight - (plein ? 84 : 96);
-    var z = Math.min(1, w / large, h ? dispo / h : 1);
-    if (z >= 1) { if (!tel && w >= DESIGN) app.style.width = ""; return; }
+    var dispo = window.innerHeight - (plein ? 56 : 96);
+    /* En plein écran, l'app grossit jusqu'à remplir la fenêtre (plus de plafond à 100 %). */
+    var z = Math.min(plein ? 2.2 : 1, w / large, h ? dispo / h : 1);
+    if (!plein && z >= 1) { if (!tel && w >= DESIGN) app.style.width = ""; return; }
     app.style.zoom = z.toFixed(4);
   }
   var fitT = 0;

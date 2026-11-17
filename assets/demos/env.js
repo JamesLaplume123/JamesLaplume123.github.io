@@ -1843,7 +1843,7 @@
       var e = E[k], x = siteOf(e), urgent = x.alerts.filter(function (a) { return a.tone === "err" || a.tone === "warn"; }).length;
       var col = batColor(x.soc);
       return '<button type="button" class="ev-brow" data-a="env" data-v="' + k + '">' +
-        '<span class="ev-b-site"><span class="ev-b-ic">' + ic(e.icon || "home") + '</span><span><b>' + esc(e.name) + "</b><small>" + esc(e.place) + "</small></span></span>" +
+        '<span class="ev-b-site"><span class="ev-b-ic is-ph">' + phLieu(e) + '</span><span><b>' + esc(e.name) + "</b><small>" + esc(e.place) + "</small></span></span>" +
         '<span class="ev-b-c" data-l="Sécurité"><span class="ev-b-arm' + (x.armed ? " is-on" : "") + '">' + ic(x.armed ? "shield" : "unlock") + (x.armed ? "Armé" : "Désarmé") + "</span></span>" +
         '<span class="ev-b-c" data-l="Intérieur"><b>' + (x.site.inside != null ? deg(x.site.inside, x.site.inside % 1 ? 1 : 0) : "—") + "</b></span>" +
         '<span class="ev-b-c is-wx" data-l="Extérieur">' + wxi(x.wx.code, x.wx.night) + "<b>" + deg(x.wx.t) + "</b></span>" +
@@ -1856,6 +1856,12 @@
     return head("grid", "Tous vos lieux, en direct", "Sécurité, températures, énergie, présence et entretien · cliquez pour ouvrir un tableau", '<span class="ev-tag is-live">en direct</span>') +
       '<div class="ev-board" role="list"><div class="ev-brow is-h" aria-hidden="true"><span>Lieu</span><span>Sécurité</span><span>Intérieur</span><span>Extérieur</span><span>Énergie</span><span>Présence</span><span>Prochain entretien</span><span>Alertes</span><span></span></div>' + rows + "</div>";
   };
+  /* La photo du lieu à la place de l'icône (vignettes des photos de lieux; repli : la bannière du lieu). */
+  var PH_LIEU = { boulance: "vr", maison: "maison", chalet: "chalet", entreprise: "bureau", garage: "garage", ferme: "ferme", bateau: "bateau", avion: "avion", jet: "avion" };
+  function phLieu(e, cls) {
+    var src = PH_LIEU[e.key] ? "/media/forfait/v-lieu-" + PH_LIEU[e.key] + ".webp" : (e.banner && e.banner.img);
+    return src ? '<img class="' + (cls || "ev-b-ph") + '" src="' + src + '" alt="" loading="lazy" decoding="async">' : ic(e.icon || "home");
+  }
   function enCell(x, col) {
     return '<span class="ev-b-en"><span class="ev-bar is-xs"><i style="width:' + clamp(x.soc, 2, 100).toFixed(0) + "%;background:" + col + '"></i></span><b>' + nf(x.soc) + NB + "%</b></span><small>" + (x.live ? "réel · " : "") + fmtW(x.load) + "</small>";
   }
@@ -1869,7 +1875,7 @@
       '<ul class="ev-hal">' + (H.alAll ? list : list.slice(0, 6)).map(function (a) {
         var e = E[a.env];
         return '<li><button type="button" class="ev-hali t-' + a.tone + '" data-a="hgo" data-v="' + a.env + "|" + esc(a.go) + '"><span class="ev-ri t-' + a.tone + '">' + ic(ICO[a.tone] || "info") + "</span>" +
-          '<span class="ev-hali-b"><b>' + esc(a.title) + "</b><small>" + esc(a.text) + '</small></span><span class="ev-sitec">' + ic(e.icon || "home", "is-sm") + esc(e.name) + "</span>" + ic("right", "ev-chev") + "</button></li>";
+          '<span class="ev-hali-b"><b>' + esc(a.title) + "</b><small>" + esc(a.text) + '</small></span><span class="ev-sitec">' + phLieu(e, "ev-sitec-ph") + esc(e.name) + "</span>" + ic("right", "ev-chev") + "</button></li>";
       }).join("") + "</ul>" + (list.length ? "" : '<p class="ev-fine">' + ic("check") + "Aucune alerte à traiter.</p>") +
       (list.length > 6 ? '<button type="button" class="ev-link ev-more" data-a="halall">' + (H.alAll ? "Afficher moins" : "Afficher les " + list.length + " alertes") + ic(H.alAll ? "up" : "down") + "</button>" : "");
   };
@@ -1883,7 +1889,7 @@
       if (on) n++;
       if (!L) return '<li class="is-na"><span class="ev-box"></span>' + ic(e.icon || "home") + "<span><b>" + esc(e.name) + "</b><small>Aucun mode équivalent · non modifié</small></span></li>";
       var crit = L.fx.filter(function (f) { return /crit/.test(f[4] || ""); }).length, act = (rt(e).mode || findCard(e, "modes").current) === L.k;
-      return '<li><button type="button" class="ev-mm-s' + (on ? " is-on" : "") + '" aria-pressed="' + on + '" data-a="hmms" data-v="' + k + '"><span class="ev-box">' + ic("check") + "</span>" + ic(e.icon || "home") +
+      return '<li><button type="button" class="ev-mm-s' + (on ? " is-on" : "") + '" aria-pressed="' + on + '" data-a="hmms" data-v="' + k + '"><span class="ev-box">' + ic("check") + "</span>" + phLieu(e, "ev-mm-ph") +
         "<span><b>" + esc(e.name) + "</b><small>Mode " + esc(L.label) + " · " + L.fx.length + " effets" + (crit ? " dont " + crit + " critique" + (crit > 1 ? "s" : "") : "") + "</small></span>" +
         (act ? '<em class="ev-flag t-ok">Déjà actif</em>' : (e.site || {}).n ? '<em class="ev-flag t-gold">Occupé</em>' : "") + "</button></li>";
     }).join("");
@@ -1913,7 +1919,7 @@
     return head("clock", "Journal de tous les lieux", "Une seule chronologie : sécurité, modes et commandes", "") + seg +
       '<ol class="ev-htl">' + shown.map(function (x) {
         var e = E[x.env];
-        return '<li class="t-' + x.tone + '"><time>' + stampS(x.m) + '</time><span class="ev-sitec">' + ic(e.icon || "home", "is-sm") + esc(e.name) + "</span><span><b>" + esc(x.text) + "</b>" +
+        return '<li class="t-' + x.tone + '"><time>' + stampS(x.m) + '</time><span class="ev-sitec">' + phLieu(e, "ev-sitec-ph") + esc(e.name) + "</span><span><b>" + esc(x.text) + "</b>" +
           ((x.who || x.sub) ? "<small>" + esc([x.who, x.sub].filter(Boolean).join(" · ")) + "</small>" : "") + "</span></li>";
       }).join("") + "</ol>" +
       (list.length > 7 ? '<button type="button" class="ev-link" data-a="htlall">' + (H.tlAll ? "Afficher moins" : "Afficher tout · " + list.length + " événements") + ic(H.tlAll ? "up" : "down") + "</button>" : "");

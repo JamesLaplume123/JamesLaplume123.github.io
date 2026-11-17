@@ -203,8 +203,9 @@
 
 
   /* ------------------------------------------------------------------ L'orbe vivante
-     Une sphère de verre avec une hélice d'ADN à l'intérieur, rendue en WebGL : le reflet suit le
-     pointeur, l'hélice accélère quand on approche et quand JARVIS réfléchit, et ondule quand il répond. Couleurs : celles du mode (Base, Signature, Platinum).
+     Le ruban de voix (choix de James, 17 novembre) : quatre rubans de lumière tressés dans une lentille
+     sombre. Calmes au repos, ils s'élèvent à l'approche, s'agitent quand JARVIS réfléchit et dansent
+     quand il répond — la même onde portera sa voix. Étincelles sur les crêtes, couleurs du mode. Couleurs : celles du mode (Base, Signature, Platinum).
      Sans WebGL : un noyau fixe. Mouvement réduit : une seule image. En pause hors écran. */
   var ORBES = [], etatOrbe = "repos", souris = { x: -9999, y: -9999 }, calme = false;
   try { calme = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
@@ -221,33 +222,25 @@
   var VS = "attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
   var FS = [
     "precision highp float;uniform vec2 res;uniform float t,e,w;uniform vec2 tilt;uniform vec3 ca;",
-    "vec3 iri(float x){return .5+.5*cos(6.2832*(x+vec3(0.,.33,.67)));}",
-    "void main(){vec2 p=(gl_FragCoord.xy-.5*res)/(.5*res.y);float R=.8,d=length(p);vec3 col=vec3(0.);float al=0.;",
-    " float halo=exp(-max(d-R,0.)*10.)*(.16+.3*e);",
-    " if(d<R){vec3 n=vec3(p/R,sqrt(max(0.,1.-dot(p,p)/(R*R))));",
-    "  vec2 q=p/R*(.6+.4*n.z)-tilt*.14*(1.-n.z);",
-    "  vec2 h=vec2(q.x*.914-q.y*.407,q.x*.407+q.y*.914);",
-    "  float ph=h.y*5.4+t*(1.+1.7*e),amp=.3*(1.+.2*w*sin(h.y*9.-t*6.)),env=smoothstep(1.,.5,abs(h.y));",
-    "  float x1=amp*sin(ph),z=cos(ph)*.5+.5;",
-    "  float s1=exp(-(h.x-x1)*(h.x-x1)/(.0014+.0026*z))*(.4+.6*z);",
-    "  float s2=exp(-(h.x+x1)*(h.x+x1)/(.0014+.0026*(1.-z)))*(.4+.6*(1.-z));",
-    "  float fr=abs(fract(h.y*8.)-.5);",
-    "  float rung=smoothstep(.13,.02,fr)*step(abs(h.x),abs(x1))*.4;",
-    "  float dna=((s1+s2)*(.55+.45*smoothstep(.3,0.,fr))+rung)*env;",
-    "  vec3 hot=mix(ca,vec3(1.),.78);",
-    "  vec3 inner=ca*dna*1.25+hot*dna*dna*dna*.9+ca*(.1+.3*e)*exp(-dot(q,q)*3.2);",
-    "  col=mix(vec3(.012,.014,.02),ca*.1,.5)*(.55+.45*n.z)+inner;",
-    "  vec3 V=vec3(0.,0.,1.),L=normalize(vec3(-.55+tilt.x*.9,.62-tilt.y*.9,.75));",
-    "  float sp=pow(max(dot(n,normalize(L+V)),0.),110.);",
-    "  float sp2=pow(max(dot(n,normalize(vec3(.5,-.62,.6)+V)),0.),20.)*.2;",
-    "  vec3 r=reflect(-V,n);float rx=r.x+tilt.x*.35;",
-    "  float win=smoothstep(.5,.7,r.y)*smoothstep(.97,.82,r.y)*smoothstep(-.75,-.2,rx)*smoothstep(.7,.15,rx);",
-    "  float fres=pow(1.-n.z,3.);",
-    "  col+=vec3(1.)*sp*1.4+hot*sp2+vec3(1.)*win*(.2+.25*fres);",
-    "  col+=mix(ca,iri(n.z*.9+t*.04+atan(p.y,p.x)*.09),.5)*fres*.95;",
-    "  col+=hot*pow(max(dot(n,normalize(vec3(.35,-.78,.5))),0.),7.)*.2*(1.+e);",
-    "  al=smoothstep(R,R-.025,d);}",
-    " gl_FragColor=vec4(col*al+ca*halo*(1.-al),al+(1.-al)*halo*.75);}"
+    "void main(){vec2 p=(gl_FragCoord.xy-.5*res)/(.5*res.y);float d=length(p);vec3 col=vec3(0.);",
+    " vec3 hot=mix(ca,vec3(1.),.75);",
+    " float x=p.x*1.75+tilt.x*.3;",
+    " float env=exp(-x*x*.72)*smoothstep(.99,.6,d);",
+    " float amp=env*(.05+.42*e)*(1.+.3*w*sin(x*8.-t*7.));",
+    " for(int k=0;k<4;k++){float fk=float(k);float ph=t*(1.15+.27*fk);",
+    "  float y=amp*sin(x*(2.1+.9*fk)+ph*2.1+fk*1.3)*sin(x*1.25-ph*1.4+fk*2.)+(fk-1.5)*.018+tilt.y*.1*(1.-d*.6);",
+    "  float dd=p.y-y;vec3 tint=mix(ca,hot,fk*.27);",
+    "  col+=tint*(exp(-dd*dd*2300.)*(.95-.16*fk)+exp(-dd*dd*50.)*.2);}",
+    " for(int i=0;i<3;i++){float fi=float(i);float xi=-.75+.75*fi+.12*sin(t*.9+fi*2.3);",
+    "  float ei=exp(-xi*xi*.6)*(.05+.42*e);float ph0=t*1.15;",
+    "  float yi=ei*sin(xi*2.1+ph0*2.1)*sin(xi*1.25-ph0*1.4)-.027;",
+    "  vec2 dpp=vec2(x-xi,p.y-yi);col+=hot*exp(-dot(dpp,dpp)*800.)*(.4+.4*sin(t*3.+fi*2.))*smoothstep(1.,.7,d)*(.3+.7*e);}",
+    " col+=ca*exp(-abs(d-.955)*42.)*.42;",
+    " vec3 base=vec3(.012,.012,.016)+ca*.03*smoothstep(1.,.1,d);",
+    " float al=smoothstep(1.02,.98,d);",
+    " float halo=exp(-max(d-1.,0.)*9.)*(.12+.28*e);",
+    " vec3 rgb=(base+col)*al+ca*halo*(1.-al);",
+    " gl_FragColor=vec4(rgb,al*.92+(1.-al)*halo*.8);}"
   ].join("\n");
   function Orbe(el) {
     var cv = el.querySelector("canvas"), gl = null;

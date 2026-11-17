@@ -283,7 +283,7 @@ def _hubs():
         peut = "".join(f"<li>{x}</li>" for x in c["peut"])
         tag = f'<span class="ct-tag">{escape(h["tag"])}</span>' if h["tag"] else ""
         out.append(f"""<label class="ct-hub" data-rev data-hub="{h['id']}">
-      <input type="radio" name="hub" value="{h['id']}" data-prix="{h['prix']}" data-cam="{h['cam']}" data-app="{h['app']}" data-autos="{h['autos']}"{' checked' if h['id'] == 'signature' else ''}>
+      <input type="radio" name="hub" value="{h['id']}" data-prix="{h['prix']}" data-cam="{h['cam']}" data-app="{h['app']}" data-autos="{h['autos']}">
       <span class="ct-check" aria-hidden="true"></span>
       {tag}
       <figure class="ct-hub-ph"><img src="/media/product/jarvis-hub-v1.webp" alt="" loading="lazy" decoding="async"></figure>
@@ -571,11 +571,14 @@ PAGE = {
 
 <aside class="ct-cart" aria-label="Votre panier">
   <div class="ct-cart-in">
-    <div class="ct-cart-h"><small>Votre JARVIS</small><b data-cart-nom>Hub Signature</b><button type="button" class="ct-cart-x" data-cart-close aria-label="Fermer le détail">×</button></div>
+    <div class="ct-cart-h"><small>Mon forfait</small><b data-cart-nom>Vide pour l’instant</b>
+      <button type="button" class="ct-cart-vider" data-cart-vider hidden>Tout retirer</button>
+      <button type="button" class="ct-cart-x" data-cart-close aria-label="Fermer le détail">×</button></div>
     <div class="ct-cart-body">
-      <section class="ct-cart-g"><h4>Une fois <span data-cart-once-sub></span></h4><ul data-cart-once></ul></section>
-      <section class="ct-cart-g"><h4>Par mois <span data-cart-month-sub></span></h4><ul data-cart-month></ul></section>
-      <div class="ct-cart-lieux" data-cart-lieux hidden></div>
+      <p class="ct-cart-vide" data-cart-vide>Commencez par votre lieu : le Hub conseillé et ses solutions s’ajoutent ici.</p>
+      <section class="ct-cart-g" data-cart-g="lieux" hidden><h4>Vos lieux</h4><ul data-cart-lieux></ul></section>
+      <section class="ct-cart-g" data-cart-g="month" hidden><h4>Vos solutions <i>par mois</i> <span data-cart-month-sub></span></h4><ul data-cart-month></ul></section>
+      <section class="ct-cart-g" data-cart-g="once" hidden><h4>Matériel et services <i>une fois</i> <span data-cart-once-sub></span></h4><ul data-cart-once></ul></section>
       <label class="ct-cart-sep" data-cart-sep hidden><input type="checkbox" name="separee" value="1"><span>Une soumission séparée pour l’entreprise, au nom de l’entreprise</span></label>
       <div class="ct-cart-tips" data-cart-tips hidden></div>
     </div>
@@ -584,7 +587,7 @@ PAGE = {
       <div><small>Par mois</small><b data-total-month>0 $</b></div>
       <div class="ct-cart-an"><small>Première année</small><b data-total-year>1 290 $</b></div>
     </div>
-    <a class="pill" href="/contact/" data-total-link>Recevoir ma soumission</a>
+    <a class="pill" href="/contact/" data-total-link aria-disabled="true">Recevoir ma soumission</a>
     <p class="ct-cart-note">Dollars canadiens, taxes en sus. Soumission confirmée par écrit, ligne par ligne. Rien à payer ici.</p>
   </div>
 </aside>

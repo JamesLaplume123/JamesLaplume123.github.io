@@ -6,6 +6,7 @@
 # Styles : assets/demos/catalogue.css · Script : assets/demos/catalogue.js
 
 from html import escape
+import os
 import lieux
 import pro
 import json
@@ -155,7 +156,7 @@ MATERIEL = [
         ("sec", "Boîtier Secours", 299, "Garde le Hub et le routeur allumés 8 h pendant une panne.", "Pendant la panne, c’est là que vous avez besoin d’alertes."),
     ]),
     ("Capteurs", [
-        ("fuite", "Fuite d’eau", 59, "Sous l’évier, près du chauffe-eau, au sous-sol. À pile.", "47 % des réclamations habitation au Québec sont des dégâts d’eau."),
+        ("fuite", "Fuite d’eau", 59, "Sous l’évier, près du chauffe-eau, au sous-sol. À pile.", "Les dégâts d’eau sont la première cause de réclamation en habitation."),
         ("vanne", "Vanne d’eau automatique", 349, "Se pose sur votre vanne d’entrée. Ferme l’eau dès qu’une fuite est détectée.", "Fermer l’eau en 10 secondes, c’est la différence entre une serviette et un sous-sol."),
         ("temp", "Température et humidité", 39, "Intérieur, extérieur, soute, frigo. Alerte de gel. À pile.", "Un tuyau gelé au chalet se découvre au printemps. Trop tard."),
         ("porte", "Porte et fenêtre", 49, "Ouvert ou fermé, alerte en votre absence. À pile.", "Savoir que la porte du garage est restée ouverte."),
@@ -383,10 +384,16 @@ def _entreprise():
     <div class="ct-ents ct-ents-veille">{veille}</div>"""
 
 
+def _img_mat(i):
+    """Vignette d'un article, si sa photo existe (media/forfait/mat-<id>.webp)."""
+    chemin = f"/media/forfait/mat-{i}.webp"
+    return f' data-img="{chemin}"' if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", chemin.lstrip("/"))) else ""
+
+
 def _materiel():
     out = []
     for cat, items in MATERIEL:
-        rows = "".join(f"""<div class="ct-item" data-id="{i}" data-prix="{p}"{' data-cam="1"' if i in CAMERAS else ''}>
+        rows = "".join(f"""<div class="ct-item" data-id="{i}" data-prix="{p}"{' data-cam="1"' if i in CAMERAS else ''}{_img_mat(i)}>
         <div class="ct-item-t"><b>{escape(n)}</b><span>{escape(d)}</span><em>{escape(w)}</em></div>
         <div class="ct-item-p">{_p(p)}</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
@@ -482,17 +489,11 @@ PAGE = {
     "assets": ["offre", "catalogue"],
     "content": f"""
 <section class="band top ct-top">
-  <div class="bg"><img src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" fetchpriority="high"></div>
+  <div class="bg"><img src="/media/offre/maison.webp" alt="Résidence au crépuscule, piscine éclairée et véhicules dans l’allée" fetchpriority="high"></div>
   <div class="band-inner">
     {pro.fil("/offre/")}
     <h1 data-rev>Un Hub. Vos solutions.<br><em>Votre forfait.</em></h1>
     <p class="lead" data-rev>Le Hub est le petit ordinateur que nous installons chez vous. JARVIS vit dedans; vos données y restent. Choisissez votre lieu : votre forfait se compose à droite.</p>
-    <ol class="of-trois" data-rev>
-      <li><a href="#hub"><i>1</i>Le Hub</a></li>
-      <li><a href="#solutions"><i>2</i>Vos solutions</a></li>
-      <li><a href="#materiel"><i>3</i>Le matériel</a></li>
-      <li><a href="#lieux"><i>4</i>Lieux, installation, services</a></li>
-    </ol>
   </div>
 </section>
 
@@ -569,26 +570,18 @@ PAGE = {
 
 </div>
 
-<aside class="ct-cart" aria-label="Votre panier">
+<aside class="ct-cart" aria-label="Mon forfait">
   <div class="ct-cart-in">
-    <div class="ct-cart-h"><small>Mon forfait</small><b data-cart-nom>Vide pour l’instant</b>
-      <button type="button" class="ct-cart-vider" data-cart-vider hidden>Tout retirer</button>
-      <button type="button" class="ct-cart-x" data-cart-close aria-label="Fermer le détail">×</button></div>
+    <div class="ct-cart-h"><b>Mon forfait</b></div>
     <div class="ct-cart-body">
-      <p class="ct-cart-vide" data-cart-vide>Commencez par votre lieu : le Hub conseillé et ses solutions s’ajoutent ici.</p>
-      <section class="ct-cart-g" data-cart-g="lieux" hidden><h4>Vos lieux</h4><ul data-cart-lieux></ul></section>
-      <section class="ct-cart-g" data-cart-g="month" hidden><h4>Vos solutions <i>par mois</i> <span data-cart-month-sub></span></h4><ul data-cart-month></ul></section>
-      <section class="ct-cart-g" data-cart-g="once" hidden><h4>Matériel et services <i>une fois</i> <span data-cart-once-sub></span></h4><ul data-cart-once></ul></section>
-      <label class="ct-cart-sep" data-cart-sep hidden><input type="checkbox" name="separee" value="1"><span>Une soumission séparée pour l’entreprise, au nom de l’entreprise</span></label>
+      <div class="ct-cart-tot">
+        <div><small>Aujourd’hui</small><b data-total-once>1 290 $</b></div>
+        <div><small>Par mois</small><b data-total-month>0 $</b></div>
+        <div class="ct-cart-an"><small>Première année</small><b data-total-year>1 290 $</b></div>
+      </div>
+      <div data-forfait-vue></div>
       <div class="ct-cart-tips" data-cart-tips hidden></div>
     </div>
-    <div class="ct-cart-tot">
-      <div><small>Aujourd’hui</small><b data-total-once>1 290 $</b></div>
-      <div><small>Par mois</small><b data-total-month>0 $</b></div>
-      <div class="ct-cart-an"><small>Première année</small><b data-total-year>1 290 $</b></div>
-    </div>
-    <a class="pill" href="/contact/" data-total-link aria-disabled="true">Recevoir ma soumission</a>
-    <p class="ct-cart-note">Dollars canadiens, taxes en sus. Soumission confirmée par écrit, ligne par ligne. Rien à payer ici.</p>
   </div>
 </aside>
 

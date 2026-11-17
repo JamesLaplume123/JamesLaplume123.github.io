@@ -78,7 +78,7 @@ def ext_icon(slug):
 def ext_links(cls):
     """Les sept extensions : icône, nom et une ligne. Sert au menu déroulant et au menu mobile."""
     return "".join(
-        f'<a class="{cls}" href="/solutions/{c["slug"]}/"{lieux.public_sol(c["slug"])}>{ext_icon(c["slug"])}'
+        f'<a class="{cls}" href="/solutions/{c["slug"]}/">{ext_icon(c["slug"])}'
         f'<span><b>{c["title"]}</b><small>{c["menu"]}</small></span></a>'
         for c in CAPABILITIES
     )
@@ -86,7 +86,7 @@ def ext_links(cls):
 
 def lieux_liens(cls, en):
     """Sous les sept solutions : les trois pages par type de lieu, sur une ligne."""
-    liens = "".join(f'<a href="{u}"{"" if n == "Maison" else PUB_ENT}>{e if en else n}</a>' for u, n, e in LIEUX_NAV)
+    liens = "".join(f'<a href="{u}">{e if en else n}</a>' for u, n, e in LIEUX_NAV)
     return f'<p class="{cls}"><span>{"By type of place" if en else "Par type de lieu"}</span>{liens}</p>'
 
 
@@ -209,7 +209,7 @@ def footer_v2(page):
         return f'<div><h2>{titre}</h2><nav aria-label="{titre}">' + "".join(f'<a href="{u}">{n}</a>' for u, n in liens) + "</nav></div>"
 
     cols = ('<div><h2>Solutions</h2><nav aria-label="Solutions">' + "".join(
-        f'<a href="/solutions/{c["slug"]}/"{lieux.public_sol(c["slug"])}>{c["title"]}</a>' for c in CAPABILITIES) + "</nav></div>")
+        f'<a href="/solutions/{c["slug"]}/">{c["title"]}</a>' for c in CAPABILITIES) + "</nav></div>")
     cols += "".join(col(t, liens) for t, liens in FOOTER_COLUMNS)
     return f"""<footer class="foot">
   <p class="foot-brand"><b>JARVIS <span>Private Systems</span></b><span>{SITE['signature']}</span></p>

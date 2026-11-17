@@ -98,7 +98,7 @@
   --mode-on-action: #171717;
   --mode-action-edge: none;
   --mode-panel: #0a0a0ae0;
-  --mode-panel-solid: #0a0a0a;
+  --mode-panel-solid: linear-gradient(#0f0f10, #0a0a0a);
   --mode-spec: inset 0 0 0 transparent;
   --mode-line: #bcbcbc2b;
   --mode-glow: #8a8a8a;

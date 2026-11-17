@@ -248,3 +248,5 @@
 /* Solution conseillée pour le lieu choisi : signalée, jamais cochée d'office */
 .ct-sol { position: relative; }
 .ct-sol.is-conseil::after { content: "Conseillée pour votre lieu"; position: absolute; left: 1.2rem; top: -.6rem; padding: .3rem .6rem; border-radius: 999px; background: #17120a; box-shadow: inset 0 0 0 1px var(--gold-soft); color: var(--gold-soft); font: 600 .58rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+
+.ct-trio { width: 100%; border-radius: 14px; margin: .9rem 0 1.1rem; display: block; }

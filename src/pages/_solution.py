@@ -38,7 +38,7 @@ def forfait_bouton(slug):
     """« Ajouter à mon forfait » : le choix suit le visiteur jusqu'au configurateur (assets/js/wow.js).
     Environnements intelligents vient avec chaque Hub : rien à ajouter, on va composer."""
     if slug == "environnements-intelligents":
-        return '<a class="pill" href="/catalogue/">Inclus avec chaque Hub · composer mon forfait</a>'
+        return '<a class="pill" href="/offre/#composer">Inclus avec chaque Hub · composer mon forfait</a>'
     return (f'<button type="button" class="pill" data-forfait-add="{slug}" aria-pressed="false">'
             '<span data-forfait-off>Ajouter à mon forfait</span><span data-forfait-on hidden>Dans mon forfait ✓</span></button>')
 

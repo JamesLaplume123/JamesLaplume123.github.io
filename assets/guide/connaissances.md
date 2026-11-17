@@ -17,7 +17,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - https://jarvisprivatesystems.com/logiciel/ : Le logiciel en démonstration
 - https://jarvisprivatesystems.com/plateforme/ : Le Hub : le boîtier, son IA privée, le noyau
 - https://jarvisprivatesystems.com/offre/ : L’offre : un Hub payé une fois (Base, Signature, Platinum), des solutions par mois, le matériel
-- https://jarvisprivatesystems.com/catalogue/ : Composer mon forfait : le configurateur (lieu, Hub conseillé, solutions, matériel, récapitulatif, soumission)
+- https://jarvisprivatesystems.com/offre/#composer : Composer mon forfait : le configurateur (lieu, Hub conseillé, solutions, matériel, récapitulatif, soumission)
 - https://jarvisprivatesystems.com/solutions/maison-intelligente-cle-en-main/ : Maison intelligente clé en main
 - https://jarvisprivatesystems.com/solutions/domotique-ferme-agricole/ : Domotique pour ferme
 - https://jarvisprivatesystems.com/solutions/ia-privee-entreprise/ : IA privée pour entreprise
@@ -119,14 +119,14 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Confort et réseau : Thermostat intelligent; Interrupteur ou gradateur; Prise intelligente; Ampoule couleur; Bande DEL (2 m); Moteur de store; Relais foyer ou garage; Switch PoE 8 ports; Routeur 4G/5G; Starlink Mini; Téléphone IP.
 - Les caméras s’enregistrent dans le Hub, jamais dans le nuage. Le Boîtier VR va dans un VR, une roulotte ou un bateau; le Boîtier Mobilité dans une voiture ou un camion. Le Hub Base n’a pas d’IA locale : les caméras y sont analysées par Internet.
 ## Les kits (prix des pièces moins 8 %, ajustables pièce par pièce)
-- Kit VR Essentiel, Hub Base, 6 pièces. Pour : Roulotte, petit VR, bateau de 25 pi. https://jarvisprivatesystems.com/catalogue/?kit=1
-- Kit VR Complet, Hub Signature, 12 pièces. Pour : VR de classe A ou C, cinquième roue. https://jarvisprivatesystems.com/catalogue/?kit=2
-- Kit Chalet, Hub Base, 10 pièces. Pour : Chalet fermé l’hiver, sans Internet. https://jarvisprivatesystems.com/catalogue/?kit=3
-- Kit Maison, Hub Signature, 12 pièces. Pour : Maison familiale, condo. https://jarvisprivatesystems.com/catalogue/?kit=4
-- Kit Maison Sécurité, Hub Signature, 18 pièces. Pour : Maison en coin de rue, absences fréquentes. https://jarvisprivatesystems.com/catalogue/?kit=5
-- Kit PME, Hub Signature, 8 pièces. Pour : Garage, clinique, bureau de 2 à 10 employés. https://jarvisprivatesystems.com/catalogue/?kit=6
-- Kit Domaine, Hub Platinum, 19 pièces. Pour : Grande propriété, terrain, dépendances. https://jarvisprivatesystems.com/catalogue/?kit=7
-- Kit Ferme, Hub Platinum, 18 pièces. Pour : Ferme laitière, érablière, serre. https://jarvisprivatesystems.com/catalogue/?kit=8
+- Kit VR Essentiel, Hub Base, 6 pièces. Pour : Roulotte, petit VR, bateau de 25 pi. https://jarvisprivatesystems.com/offre/?kit=1
+- Kit VR Complet, Hub Signature, 12 pièces. Pour : VR de classe A ou C, cinquième roue. https://jarvisprivatesystems.com/offre/?kit=2
+- Kit Chalet, Hub Base, 10 pièces. Pour : Chalet fermé l’hiver, sans Internet. https://jarvisprivatesystems.com/offre/?kit=3
+- Kit Maison, Hub Signature, 12 pièces. Pour : Maison familiale, condo. https://jarvisprivatesystems.com/offre/?kit=4
+- Kit Maison Sécurité, Hub Signature, 18 pièces. Pour : Maison en coin de rue, absences fréquentes. https://jarvisprivatesystems.com/offre/?kit=5
+- Kit PME, Hub Signature, 8 pièces. Pour : Garage, clinique, bureau de 2 à 10 employés. https://jarvisprivatesystems.com/offre/?kit=6
+- Kit Domaine, Hub Platinum, 19 pièces. Pour : Grande propriété, terrain, dépendances. https://jarvisprivatesystems.com/offre/?kit=7
+- Kit Ferme, Hub Platinum, 18 pièces. Pour : Ferme laitière, érablière, serre. https://jarvisprivatesystems.com/offre/?kit=8
 ## Services professionnels (payés une fois)
 - Vérifier · Vérification de vos systèmes (résidence). Caméras, accès, réseau, Wi-Fi, sauvegardes, habitudes : le tour complet de la maison ou du chalet. Rapport écrit avec priorités.
 - Vérifier · Vérification de vos systèmes (entreprise). Accès, caméras, réseau, postes, sauvegardes, comptes employés. Rapport pour la direction et plan sur 90 jours.

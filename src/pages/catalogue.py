@@ -450,20 +450,43 @@ def _inclus():
     return "".join(f'<li data-rev><b>{escape(n)}</b><span>{escape(d)}</span></li>' for n, d in INCLUS)
 
 
+# Comment ça se compose : trois étapes, en images (haut de la page /offre/).
+ETAPES = [
+    ("1", "Un Hub par lieu", "Le petit ordinateur installé chez vous. Il fait tourner JARVIS, même sans Internet.",
+     "/media/product/jarvis-hub-v1.webp", "62% 55%"),
+    ("2", "Les solutions que vous voulez", "Comme des apps : vous prenez seulement ce qui vous sert, et vous annulez quand vous voulez.",
+     "/media/accueil/sol-environnements.webp", "32% 50%"),
+    ("3", "Le matériel du lieu", "Capteurs, caméras, serrures. Ce que vous avez déjà est réutilisé.",
+     "/media/vitrine/plateforme/hub-armoire-technique.webp", "50% 50%"),
+]
+
+# Trois exemples complets : (titre, photo, Hub, solutions, pourquoi)
+
+
+def _etapes():
+    return "".join(
+        f"""<article class="of-e" data-rev>
+      <img src="{img}" alt="" style="object-position:{pos}">
+      <div><i>{n}</i><h3>{t}</h3><p>{p}</p></div>
+    </article>"""
+        for n, t, p, img, pos in ETAPES
+    )
+
+
 PAGE = {
-    "url": "/catalogue/",
+    "url": "/offre/",
     "v2": True,
-    "title": "Catalogue JARVIS | Hubs, solutions, matériel et prix",
-    "description": "Choisissez votre Hub, vos solutions et le matériel de votre lieu. Prix clairs, panier détaillé, kits prêts à partir.",
+    "title": "L’offre JARVIS | Hubs, solutions, matériel et prix",
+    "description": "Le Hub est le petit ordinateur que nous installons chez vous. Choisissez votre lieu, votre Hub, vos solutions et votre matériel : votre forfait se compose sous vos yeux.",
     "og_image": "/media/offre/maison.webp",
-    "assets": ["catalogue"],
+    "assets": ["offre", "catalogue"],
     "content": f"""
 <section class="band top ct-top">
   <div class="bg"><img src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    {pro.fil("/catalogue/")}
-    <h1 data-rev>Composez<br><em>votre système.</em></h1>
-    <p class="lead" data-rev>Votre lieu, le Hub conseillé, vos solutions, votre matériel. Chaque choix s’ajoute à votre forfait, à droite.</p>
+    {pro.fil("/offre/")}
+    <h1 data-rev>Un Hub. Vos solutions.<br><em>Votre forfait.</em></h1>
+    <p class="lead" data-rev>Le Hub est le petit ordinateur que nous installons chez vous. JARVIS vit dedans; vos données y restent. Choisissez votre lieu : votre forfait se compose à droite.</p>
     <ol class="of-trois" data-rev>
       <li><a href="#hub"><i>1</i>Le Hub</a></li>
       <li><a href="#solutions"><i>2</i>Vos solutions</a></li>
@@ -473,8 +496,14 @@ PAGE = {
   </div>
 </section>
 
+<section class="sect ct-comment" id="comment" aria-labelledby="comment-titre">
+  <div class="sect-head"><div data-rev><p class="eyebrow">Comment ça se compose</p>
+    <h2 id="comment-titre">Trois étapes.</h2></div></div>
+  <div class="of-es">{_etapes()}</div>
+</section>
+
 <form id="ct" class="ct" novalidate>
-<section class="ct-lieu-etape" aria-label="Votre lieu">
+<section class="ct-lieu-etape" id="composer" aria-label="Votre lieu">
   {lieux.selecteur("Commencez par votre lieu.", ident="lieu")}
 </section>
 <nav class="ct-lieux-nav" aria-label="Partir d’un kit" data-rev>
@@ -568,17 +597,6 @@ PAGE = {
 </div>
 </form>
 
-<section class="sect" id="pourquoi" data-toc="Pourquoi" aria-labelledby="pq-t">
-  <div class="sect-head"><div data-rev><p class="eyebrow">Pourquoi JARVIS</p>
-    <h2 id="pq-t">Vous prévient<br><em>avant que ça coûte cher.</em></h2></div>
-    <p data-rev>Au Québec, 47 % des réclamations d’assurance habitation sont des dégâts d’eau, à 12 000 $ en moyenne. Seulement 9 % des gens ont un système qui les prévient. JARVIS Diagnostic : 15 $ par mois.</p></div>
-  <div class="cards ct-faits">
-    <article class="card" data-rev><b class="ct-big">47 %</b><p>des réclamations d’assurance habitation au Québec sont des dégâts d’eau. (BAC)</p></article>
-    <article class="card" data-rev><b class="ct-big">12 000 $</b><p>coût moyen d’une réclamation pour dégât d’eau. (BAC)</p></article>
-    <article class="card" data-rev><b class="ct-big">9 %</b><p>des gens ont un système qui détecte les fuites et les prévient. (Chubb)</p></article>
-  </div>
-  <p class="ct-legal" data-rev>Prix en dollars canadiens, taxes en sus. Points de départ : chaque soumission est confirmée par écrit, ligne par ligne. Les capacités des Hubs sont des repères.</p>
-</section>
 """,
 }
 
@@ -615,5 +633,5 @@ def _sans_prix(html):
 
 if not pro.PRIX:
     PAGE["content"] = _sans_prix(PAGE["content"])
-    PAGE["title"] = "Composer mon forfait JARVIS | Hub, solutions et matériel"
+    PAGE["title"] = "L’offre JARVIS | Composez votre forfait : Hub, solutions, matériel"
 

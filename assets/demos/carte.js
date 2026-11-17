@@ -126,8 +126,15 @@
     try { carte.setSky(ciel(t)); carte.setLight(lumiere(t)); } catch (e) {}
     (carte._jvTrajets || []).forEach(function (tr) { tr.teinte(); });
   }
-  /* hote : élément vide qui reçoit la carte. opt : centre [lon, lat], zoom, pitch, bearing, globe (vrai ou faux),
-     relief3d (exagération du relief en 3D, 0 = à plat), interactive. Rend une promesse de carte prête. */
+  /* hote : élément vide qui reçoit la carte. opt : center [lon, lat], zoom, pitch, bearing, ou bounds (cadre de
+     départ); globe (vrai ou faux); relief3d (exagération du relief en 3D, 0 = à plat); cooperatif (vrai : deux
+     doigts ou Ctrl + molette pour bouger la carte, afin de ne pas piéger le défilement de la page).
+     Rend une promesse de carte prête. */
+  var GESTES = {
+    "CooperativeGesturesHandler.WindowsHelpText": "Ctrl + molette pour rapprocher la carte",
+    "CooperativeGesturesHandler.MacHelpText": "⌘ + défilement pour rapprocher la carte",
+    "CooperativeGesturesHandler.MobileHelpText": "Deux doigts pour déplacer la carte"
+  };
   function ouvre(hote, opt) {
     opt = opt || {};
     return bibliotheque().then(function () {
@@ -141,12 +148,14 @@
         }
         var garde = setTimeout(function () { rate(new Error("délai")); }, opt.delai || 60000);
         try {
-          carte = new window.maplibregl.Map({
-            container: hote, style: style(ton(), opt), center: opt.center || [-72.9, 46.4], zoom: opt.zoom == null ? 6 : opt.zoom,
-            pitch: opt.pitch || 0, bearing: opt.bearing || 0, minZoom: .6, maxZoom: 16.8, maxPitch: 72,
-            interactive: opt.interactive !== false, attributionControl: false, fadeDuration: 0, renderWorldCopies: true,
-            dragRotate: true, pitchWithRotate: true, keyboard: false, canvasContextAttributes: { antialias: true }
-          });
+          var reglages = {
+            container: hote, style: style(ton(), opt), pitch: opt.pitch || 0, bearing: opt.bearing || 0, minZoom: .6, maxZoom: 16.8, maxPitch: 72,
+            attributionControl: false, fadeDuration: 0, renderWorldCopies: true, dragRotate: true, pitchWithRotate: true, keyboard: false,
+            cooperativeGestures: !!opt.cooperatif, locale: GESTES, canvasContextAttributes: { antialias: true }
+          };
+          if (opt.bounds) { reglages.bounds = opt.bounds; reglages.fitBoundsOptions = { padding: 0 }; }
+          else { reglages.center = opt.center || [-72.9, 46.4]; reglages.zoom = opt.zoom == null ? 6 : opt.zoom; }
+          carte = new window.maplibregl.Map(reglages);
         } catch (e) { return rate(e); }
         /* Avant d'être prête : une erreur du style ou des tuiles de base annule tout; le relief seul n'est pas essentiel */
         carte.on("error", function (e) { if (!fini && !(e && e.sourceId && e.sourceId !== "omt")) rate(e && e.error); });

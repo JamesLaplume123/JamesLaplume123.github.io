@@ -3,8 +3,8 @@
 # lumières, eau, énergie); Mobilité = le mouvement : le trajet, le voyage, le véhicule.
 #
 # Trois onglets dans JARVIS App :
-#   1. Copilote de route : carte vectorielle noire (aucune tuile), le VR qui avance de
-#      de la Résidence au Chalet, et des suggestions calculées selon la distance, les
+#   1. Copilote de route : la vraie carte (assets/demos/carte.js) dès qu'elle est chargée, la caméra suit le
+#      VR qui avance de la Résidence au Chalet; sinon la carte dessinée ci-dessous reste en place, et des suggestions calculées selon la distance, les
 #      heures d'ouverture, le soleil et l'état du véhicule. Six modes de voyage replanifient.
 #   2. Journal de voyage : photos et points géolocalisés sur la carte, chronologie, « Mes voyages ».
 #   3. Véhicules : garage connecté pour un client au quotidien (VR, VUS électrique familial, vélo
@@ -22,7 +22,7 @@ import json
 import math
 import os
 
-from demos.app import icon as app_icon
+from demos.app import ATTRIBUTION, icon as app_icon
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 NB = " "
@@ -54,6 +54,7 @@ ICO = {
     "photo": '<path d="M4 8h3.2L9 5.5h6L16.8 8H20v11H4Z"/><circle cx="12" cy="13.3" r="3.3"/>',
     "pause": '<path d="M9 6v12M15 6v12"/>',
     "play": '<path d="M8 5.5v13L18.5 12Z"/>',
+    "cible": '<circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/>',
     "restart": '<path d="M5 12a7 7 0 1 0 2-4.9M5 4.5V8h3.5"/>',
     "check": '<path d="m5 12.5 4.3 4.3L19 7"/>',
     "x": '<path d="m6.5 6.5 11 11M17.5 6.5l-11 11"/>',
@@ -732,7 +733,8 @@ def _labels(route_only=False, vb=VB_CO):
             continue
         x, y = P(lat, lon)
         side = {"b": " is-b", "l": " is-l"}.get(pl[0], "") if pl else ""
-        out.append(f'<span class="mb-city{" is-major" if imp == 2 else ""}{side}" style="{_pct(x, y, vb)}"><i></i><b>{nom}</b></span>')
+        out.append(f'<span class="mb-city{" is-major" if imp == 2 else ""}{side}" data-x="{x:.2f}" data-y="{y:.2f}" '
+                   f'style="{_pct(x, y, vb)}"><i></i><b>{nom}</b></span>')
     return "".join(out)
 
 
@@ -826,9 +828,11 @@ def _copilote():
         <div class="mb-ctrl">
           <button type="button" class="mb-btn-r" data-mb-play aria-label="Pause">{ico("pause", "i-pause")}{ico("play", "i-play")}</button>
           <button type="button" class="mb-btn-r" data-mb-restart aria-label="Recommencer le trajet">{ico("restart")}</button>
+          <button type="button" class="mb-btn-r mb-btn-vue" data-mb-vue aria-pressed="true" aria-label="Suivre le véhicule" title="Suivre le véhicule ou voir tout le trajet">{ico("cible")}</button>
         </div>
         <p class="mb-toast" data-mb-toast role="status" aria-live="polite"></p>
       </div>
+      <p class="mb-attr">{ATTRIBUTION}</p>
       <ul class="mb-gauges" aria-label="État du VR BouLance">
         {_gauge("eau", "Eau propre", 22, "eau")}{_gauge("propane", "Propane", 31, "propane")}{_gauge("carb", "Carburant", 54, "bolt")}{_gauge("batt", "Batteries", 78, "bolt")}
         <li class="mb-gauge mb-gauge-w"><span class="mb-dz-disc">{ico("webasto")}<b data-mb-webasto>Dû · 450 h</b></span><small>Webasto</small></li>
@@ -986,6 +990,8 @@ DATA = {
     "W": W, "H": H, "len": round(ROUTE_LEN, 1), "vbco": VB_CO, "vbjo": VB_JO,
     "geo": {k: [LL(v[0], v[1] + v[3]), LL(v[0] + v[2], v[1])] for k, v in (("co", VB_CO), ("jo", VB_JO))},
     "route": [[round(x, 2), round(y, 2)] for x, y in ROUTE_PTS],
+    "ll": [[p[1], p[0]] for p in TRACES["encours"]],
+    "proj": {"lon0": LON0, "kx": round(KX, 5), "m1": round(_merc(LAT1), 6)},
     "km": [round(k, 2) for k in ROUTE_KM],
     "stops": [{"nom": n, "km": round(K[n], 1)} for n in ("Vieille ville", "Village de la baie", "Le belvédère", "Le traversier", "Le fjord", "La plage", "Chalet")],
     "pois": [{k: p[k] for k in ("id", "cat", "nom", "km", "off", "stop", "h", "why", "x", "y", "src", "val")} for p in POIS],

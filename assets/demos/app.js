@@ -1104,16 +1104,11 @@
         carte = c; etat = 2;
         var g = geo && (geo.geometry || (geo.features && geo.features[0] && geo.features[0].geometry));
         if (g && g.coordinates) { trj = JC.trajet(c, "trajet", g.coordinates); trj.avance(1); trj.tete(false); }
-        c.scrollZoom.disable();
         c.on("move", function () { if (ou) fitMap(ou); });
         /* La main du visiteur passe avant tout : son geste arrête le vol, la rotation et la visite automatique */
-        function geste() { jeton++; arreteOrbite(); big.classList.remove("is-globe"); stop(); }
-        ["mousedown", "touchstart", "dragstart"].forEach(function (ev) { c.on(ev, geste); });
-        c.on("wheel", function () { if (c.scrollZoom.isEnabled()) geste(); });
-        /* Molette : seulement après un clic dans la carte, ou avec Ctrl, pour ne pas piéger le défilement de la page */
-        hote.addEventListener("mousedown", function () { c.scrollZoom.enable(); });
-        big.addEventListener("pointerleave", function () { c.scrollZoom.disable(); });
-        big.addEventListener("wheel", function (e) { if (ou === big && (e.ctrlKey || e.metaKey)) c.scrollZoom.enable(); }, true);
+        ["dragstart", "zoomstart", "rotatestart", "pitchstart"].forEach(function (ev) {
+          c.on(ev, function (e) { if (e.originalEvent) { jeton++; arreteOrbite(); big.classList.remove("is-globe"); stop(); } });
+        });
         $$("[data-layer-t]").forEach(function (b) { var k = b.getAttribute("data-layer-t"); if (k !== "personnes") couche(k, b.getAttribute("aria-pressed") === "true"); });
         if ("ResizeObserver" in window) new ResizeObserver(function () { c.resize(); if (ou) fitMap(ou); }).observe(hote);
         place(lieuCourant());
@@ -1127,7 +1122,7 @@
         m.insertBefore(hote, m.firstChild);
         var cam = m === big && anime() ? camGlobe() : camLieux(m);   // la grande carte s'ouvre sur le globe : il charge en premier
         Promise.all([
-          JC.ouvre(hote, { globe: true, center: cam.center, zoom: cam.zoom, pitch: cam.pitch, bearing: cam.bearing }),
+          JC.ouvre(hote, { globe: true, cooperatif: true, center: cam.center, zoom: cam.zoom, pitch: cam.pitch, bearing: cam.bearing }),
           fetch("/assets/demos/trajet.geojson").then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
         ]).then(function (res) { installe(res[0], res[1]); }, function () { etat = -1; if (hote) hote.remove(); hote = null; });
       }

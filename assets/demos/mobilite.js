@@ -44,7 +44,7 @@
   var LVL0 = { eau: 24, propane: 31, carb: 56, batt: 76 };
   var pois = D.pois, byId = {};
   pois.forEach(function (p) { byId[p.id] = p; p.det = Math.max(1, Math.round(p.off * 2 / 45 * 60)); });
-  var S;
+  var S, VC = { carte: null, trj: null, jc: null, etat: 0, suit: false, cap: null, capGeo: 0, ll: null, t: 0, jeton: 0, pris: false };   // vraie carte : voir plus bas
   function reset(km) {
     S = { km: km, mode: S ? S.mode : "decouverte", acc: {}, ign: {}, done: {}, shots: {}, ended: false, speed: 92 };
   }
@@ -256,6 +256,11 @@
       html += '<path class="mb-detour" d="M' + a.x.toFixed(1) + " " + a.y.toFixed(1) + "L" + p.x + " " + p.y + '"/>';
     });
     if (detG._h !== html) { detG.innerHTML = html; detG._h = html; }
+    if (VC.carte) {
+      var lignes = [];
+      pois.forEach(function (p) { if (S.acc[p.id] && p.off >= .3) { var a = posAt(p.km); lignes.push([versLL(a.x, a.y), versLL(p.x, p.y)]); } });
+      VC.carte.getSource("detours").setData({ type: "Feature", geometry: { type: "MultiLineString", coordinates: lignes } });
+    }
   }
 
   cards.addEventListener("click", function (e) {
@@ -312,8 +317,11 @@
   var lastGauge = "";
   function paint() {
     var km = S.km, p = posAt(km), c = pct(p.x, p.y, vb), now = clockAt(km);
-    car.style.left = c.l + "%"; car.style.top = c.t + "%";
-    car.firstElementChild.nextElementSibling.style.setProperty("--a", p.ang + "deg");
+    if (VC.carte) suitVehicule(km);
+    else {
+      car.style.left = c.l + "%"; car.style.top = c.t + "%";
+      car.firstElementChild.nextElementSibling.style.setProperty("--a", p.ang + "deg");
+    }
     doneEls.forEach(function (el) { el.style.strokeDasharray = km.toFixed(1) + " " + (D.len + 10); });
     hud.clock.textContent = hm(now, true);
     hud.speed.textContent = S.speed;
@@ -394,6 +402,7 @@
   function restart(km) {
     clearTimeout(endT);
     var mode = S.mode; reset(km); S.mode = mode;
+    VC.cap = null;
     live = [];
     quiet = true; passages(-1, km); quiet = false;
     paint(); renderFeed(true); sync();
@@ -522,14 +531,136 @@
     });
   });
 
+  /* ================================================================
+     VRAIE CARTE DU COPILOTE (assets/demos/carte.js)
+     Chargée quand la carte du copilote arrive à l'écran. Elle se glisse sous les repères : le trajet s'allume
+     derrière le véhicule, la caméra le suit (inclinée, dans le sens de la route) tant que le visiteur ne prend
+     pas la main. Le bouton « cible » rend le suivi ou montre tout le trajet. Si elle ne charge pas, la carte
+     dessinée reste en place. Mouvement automatique sous html.fx seulement.
+     ================================================================ */
+  var G = D.proj, RAD = Math.PI / 180, ZERO = { top: 0, bottom: 0, left: 0, right: 0 };
+  var vueBtn = $("[data-mb-vue]"), reperes = $$(".mb-city[data-x], .mb-poi", mapCo);
+  function versLL(x, y) { return [G.lon0 + x / G.kx, (2 * Math.atan(Math.exp((G.m1 - y / G.kx) * RAD)) - Math.PI / 2) / RAD]; }
+  reperes.forEach(function (el) {
+    var p = byId[el.getAttribute("data-poi")];
+    el._ll = p ? versLL(p.x, p.y) : versLL(+el.getAttribute("data-x"), +el.getAttribute("data-y"));
+  });
+  /* Les repères (étapes, suggestions, véhicule) se posent sur la vraie carte, où que soit la caméra */
+  function pose() {
+    var c = VC.carte, W = mapCo.clientWidth, H = mapCo.clientHeight;
+    if (!c || !W || !H) return;
+    var cc = c.getCenter(), cap = c.getBearing() * RAD, kx = 111.32 * Math.cos(cc.lat * RAD), vh = VC.jc.largeurKm(c) * H / W;
+    function un(el, ll) {
+      var pt = c.project(ll);
+      var loin = (ll[0] - cc.lng) * kx * Math.sin(cap) + (ll[1] - cc.lat) * 111.13 * Math.cos(cap) < -1.2 * vh
+        || pt.x < -20 || pt.x > W + 20 || pt.y < -20 || pt.y > H + 20;
+      el.style.left = (pt.x / W * 100).toFixed(2) + "%"; el.style.top = (pt.y / H * 100).toFixed(2) + "%";
+      el.classList.toggle("is-loin", loin);
+    }
+    reperes.forEach(function (el) { un(el, el._ll); });
+    if (VC.ll) un(car, VC.ll);
+    car.firstElementChild.nextElementSibling.style.setProperty("--a", (VC.capGeo - c.getBearing() - 90) + "deg");
+  }
+  function camSuivi() {
+    return { center: VC.ll, bearing: VC.cap == null ? VC.capGeo : VC.cap, pitch: 60, zoom: mapCo.clientWidth < 420 ? 9.6 : 10,
+      padding: { top: Math.round(mapCo.clientHeight * .3), bottom: 0, left: 0, right: 0 } };
+  }
+  /* Appelée à chaque image : la partie parcourue s'allume, la caméra suit en regardant quelques kilomètres devant */
+  function suitVehicule(km) {
+    var c = VC.carte, t = VC.trj.avance(km, true), now = performance.now(), dt = VC.t ? Math.min(.25, (now - VC.t) / 1000) : 0;
+    VC.t = now; VC.ll = [t.lon, t.lat]; VC.capGeo = t.cap;
+    var a = versLL(posAt(km).x, posAt(km).y), b = versLL(posAt(Math.min(D.len, km + 7)).x, posAt(Math.min(D.len, km + 7)).y);
+    if (a[0] !== b[0] || a[1] !== b[1]) {
+      var cible = Math.atan2((b[0] - a[0]) * Math.cos(a[1] * RAD), b[1] - a[1]) / RAD;
+      if (VC.cap == null) VC.cap = cible;
+      else VC.cap += ((cible - VC.cap + 540) % 360 - 180) * Math.min(1, dt * 1.1);
+    }
+    if (VC.suit === true && fx()) c.jumpTo(camSuivi());
+    else if (VC.suit && VC.suit.de) {
+      /* Approche : la caméra glisse de la vue de départ vers le véhicule, qui continue d'avancer pendant ce temps */
+      var k = Math.min(1, (now - VC.suit.t0) / VC.suit.ms), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2, de = VC.suit.de, vers = camSuivi();
+      c.jumpTo({
+        center: [de.center[0] + (vers.center[0] - de.center[0]) * e, de.center[1] + (vers.center[1] - de.center[1]) * e],
+        zoom: de.zoom + (vers.zoom - de.zoom) * e, pitch: de.pitch + (vers.pitch - de.pitch) * e,
+        bearing: de.bearing + ((vers.bearing - de.bearing + 540) % 360 - 180) * e,
+        padding: { top: Math.round(vers.padding.top * e), bottom: 0, left: 0, right: 0 }
+      });
+      if (k >= 1) VC.suit = true;
+    } else pose();
+  }
+  function vueEnsemble(ms) {
+    var c = VC.carte, cam = c.cameraForBounds(D.geo.co, { padding: 0, bearing: 0 });
+    VC.suit = false; c.stop();
+    vueBtn.setAttribute("aria-pressed", "false"); vueBtn.setAttribute("aria-label", "Suivre le véhicule");
+    c.flyTo({ center: cam.center, zoom: cam.zoom, pitch: 0, bearing: 0, padding: ZERO, duration: fx() ? ms : 0, essential: true });
+  }
+  function suivre(ms) {
+    var c = VC.carte, j = ++VC.jeton;
+    vueBtn.setAttribute("aria-pressed", "true"); vueBtn.setAttribute("aria-label", "Voir tout le trajet");
+    c.stop();
+    if (!fx()) { VC.suit = true; c.jumpTo(camSuivi()); return; }
+    if (running()) {
+      var ce = c.getCenter();
+      VC.suit = { t0: performance.now(), ms: ms, de: { center: [ce.lng, ce.lat], zoom: c.getZoom(), pitch: c.getPitch(), bearing: c.getBearing() } };
+      return;
+    }
+    /* Véhicule à l'arrêt (pause) : un vol simple jusqu'à lui */
+    VC.suit = "vol";
+    c.once("moveend", function () { if (j === VC.jeton && VC.suit === "vol") VC.suit = true; });
+    var cam = camSuivi(); cam.duration = ms; cam.essential = true; cam.curve = 1.3;
+    c.flyTo(cam);
+  }
+  function installeCarte(c) {
+    VC.carte = c;
+    VC.trj = VC.jc.trajet(c, "voyage", D.ll, D.km);
+    VC.trj.tete(false);
+    c.addSource("detours", { type: "geojson", data: { type: "Feature", geometry: { type: "MultiLineString", coordinates: [] } } });
+    c.addLayer({ id: "detours", type: "line", source: "detours", layout: { "line-cap": "round" }, paint: { "line-color": VC.jc.ton().trajet, "line-width": 1.6, "line-dasharray": [2, 2] } });
+    c.on("move", pose);
+    /* Le visiteur prend la main : le suivi s'arrête, le bouton « cible » le rend */
+    ["dragstart", "zoomstart", "rotatestart", "pitchstart"].forEach(function (ev) {
+      c.on(ev, function (e) {
+        if (!e.originalEvent) return;
+        VC.jeton++; VC.suit = false;
+        vueBtn.setAttribute("aria-pressed", "false"); vueBtn.setAttribute("aria-label", "Suivre le véhicule");
+      });
+    });
+    if ("ResizeObserver" in window) new ResizeObserver(function () { c.resize(); if (VC.suit === false && !c.isMoving()) pose(); }).observe(mapCo);
+    mapCo.classList.add("has-ml");
+    drawDetours();
+    paint();
+    if (fx()) setTimeout(function () { if (VC.suit === false && !VC.pris) suivre(3600); }, 900);
+  }
+  function chargeCarte() {
+    if (VC.etat) return;
+    VC.etat = 1;
+    var pret = function () {
+      VC.jc = window.JarvisCarte;
+      if (!VC.jc) { VC.etat = -1; return; }
+      var h = document.createElement("div");
+      h.className = "mb-ml"; h.setAttribute("aria-hidden", "true");
+      mapCo.insertBefore(h, mapCo.firstChild);
+      VC.jc.ouvre(h, { bounds: D.geo.co, cooperatif: true }).then(function (c) { VC.etat = 2; installeCarte(c); }, function () { VC.etat = -1; h.remove(); });
+    };
+    if (window.JarvisCarte) { pret(); return; }
+    var sc = document.createElement("script");
+    sc.src = "/assets/demos/carte.js"; sc.onload = pret; sc.onerror = function () { VC.etat = -1; };
+    document.head.appendChild(sc);
+  }
+  vueBtn.addEventListener("click", function () {
+    if (!VC.carte) return;
+    VC.pris = true;
+    if (vueBtn.getAttribute("aria-pressed") === "true") vueEnsemble(2200); else suivre(2600);
+  });
+
   /* ---------------- Démarrage ---------------- */
   quiet = true; passages(-1, S.km); quiet = false;
   paint();
   renderFeed(true);
   booted = true;
   if ("IntersectionObserver" in window) {
-    new IntersectionObserver(function (es) { visible = es[0].isIntersecting; sync(); }, { threshold: 0.15 }).observe(mapCo);
-  } else { visible = true; sync(); }
+    new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) chargeCarte(); sync(); }, { threshold: 0.15 }).observe(mapCo);
+  } else { visible = true; chargeCarte(); sync(); }
   // html.fx est posé par wow.js : relancer une fois qu'il est en place.
   setTimeout(sync, 400);
 })();

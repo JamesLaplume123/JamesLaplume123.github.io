@@ -482,17 +482,11 @@ PAGE = {
     "assets": ["offre", "catalogue"],
     "content": f"""
 <section class="band top ct-top">
-  <div class="bg"><img src="/media/product/jarvis-hub-v1.webp" alt="Le boîtier JARVIS Hub posé sur un meuble, dans un salon" fetchpriority="high" style="object-position:70% 50%"></div>
+  <div class="bg"><img src="/media/offre/maison.webp" alt="Résidence au crépuscule, piscine éclairée et véhicules dans l’allée" fetchpriority="high"></div>
   <div class="band-inner">
     {pro.fil("/offre/")}
     <h1 data-rev>Un Hub. Vos solutions.<br><em>Votre forfait.</em></h1>
     <p class="lead" data-rev>Le Hub est le petit ordinateur que nous installons chez vous. JARVIS vit dedans; vos données y restent. Choisissez votre lieu : votre forfait se compose à droite.</p>
-    <ol class="of-trois" data-rev>
-      <li><a href="#hub"><i>1</i>Le Hub</a></li>
-      <li><a href="#solutions"><i>2</i>Vos solutions</a></li>
-      <li><a href="#materiel"><i>3</i>Le matériel</a></li>
-      <li><a href="#lieux"><i>4</i>Lieux, installation, services</a></li>
-    </ol>
   </div>
 </section>
 

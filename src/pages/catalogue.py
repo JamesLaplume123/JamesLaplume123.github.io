@@ -520,7 +520,7 @@ PAGE = {
     <h2 id="hub-t">Choisissez votre Hub.<br><em>Selon la taille de votre lieu.</em></h2></div>
     <p data-rev>Même logiciel, même app, mêmes solutions. Ce qui change : la puissance, le nombre d’appareils, l’IA et la sécurité. Payé une fois. Votre forfait vous dira si votre Hub devient trop petit.</p></div>
   <div class="ct-hubs">{_hubs()}</div>
-  <details class="ct-details" data-rev><summary>Comparer les trois Hubs en détail</summary>{_compare()}</details>
+  <details class="ct-details" data-rev><summary>Comparer les trois Hubs en détail</summary><img class="ct-trio" src="/media/offre/hub-trio.webp" alt="Les trois Hubs JARVIS côte à côte" loading="lazy" decoding="async">{_compare()}</details>
   <div class="ct-inclus-hub" data-rev><b>Dans chaque Hub :</b> la solution Environnements intelligents, l’app JARVIS, les comptes et droits, les mises à jour signées, les sauvegardes chiffrées.</div>
 </section>
 

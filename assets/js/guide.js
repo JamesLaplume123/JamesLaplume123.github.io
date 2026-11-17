@@ -63,7 +63,7 @@
     ".jv-fab:focus-visible{outline:none}",
     ".jv-fab:focus-visible .jv-orb{outline:2px solid var(--gold-soft,#e9c98c);outline-offset:2px}",
     ".jv-orb{position:relative;flex:none;display:block;width:96px;height:96px;border-radius:50%;transition:transform .5s var(--ease,cubic-bezier(.2,.8,.2,1))}",
-    ".jv-orb::before{content:\"\";position:absolute;inset:6%;border-radius:50%;background:radial-gradient(circle,#05050af2 0 52%,#05050a99 66%,transparent 76%)}",
+    ".jv-orb::before{content:\"\";position:absolute;left:14%;right:14%;bottom:-2%;height:16%;border-radius:50%;background:radial-gradient(ellipse,#000c,transparent 70%);filter:blur(4px)}",
     ".jv-orb::after{content:\"\";position:absolute;inset:20%;border-radius:50%;background:radial-gradient(circle,#fff 0 5%,color-mix(in srgb,var(--mode-glow,#c9a35c) 92%,#fff) 11%,color-mix(in srgb,var(--mode-glow,#c9a35c) 55%,transparent) 30%,color-mix(in srgb,var(--mode-glow,#c9a35c) 14%,transparent) 58%,transparent 74%);filter:blur(2.5px);animation:jv-souffle 4.4s ease-in-out infinite}",
     ".jv-gl{position:absolute;inset:0;width:100%;height:100%;z-index:1}",
     ".jv-hud{position:absolute;inset:0;width:100%;height:100%;z-index:2;overflow:visible;pointer-events:none}",
@@ -81,6 +81,7 @@
     ".jv-lab::after{content:\"\";position:absolute;top:0;bottom:0;left:-60px;width:60px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--mode-glow,#c9a35c) 30%,transparent),transparent);animation:jv-balaye 3.2s ease-in-out infinite}",
     "@keyframes jv-balaye{0%,35%{transform:translateX(0)}100%{transform:translateX(420px)}}",
     ".jv-lab b{display:block;font:650 .98rem/1 var(--sans,system-ui);letter-spacing:.06em;text-transform:uppercase;background:var(--mode-display,#e7c888);-webkit-background-clip:text;background-clip:text;color:transparent}",
+    ".jv-lab b.is-code{font:500 .82rem/1.2 var(--mono,monospace);letter-spacing:.04em;text-transform:none}",
     ".jv-lab small{display:flex;align-items:center;gap:.45rem;font:500 .6rem/1 var(--mono,monospace);letter-spacing:.2em;text-transform:uppercase;color:var(--dim,#a8a8b0)}",
     ".jv-eq{flex:none;display:inline-flex;align-items:flex-end;gap:2px;height:9px;margin-left:.3rem}",
     "#jv-root .jv-eq{display:inline-flex}#jv-root .jv-eq i{display:block;flex:none;width:2px;height:100%;background:var(--gold-soft,#e9c98c);transform-origin:50% 100%;animation:jv-eq 1.1s ease-in-out infinite}",
@@ -199,9 +200,8 @@
 
 
   /* ------------------------------------------------------------------ L'orbe vivante
-     Une sphère de particules (spirale de Fibonacci) et deux anneaux en orbite, rendus en WebGL :
-     elle respire au repos, se tourne vers le pointeur, s'anime quand on approche, tourbillonne quand
-     JARVIS réfléchit et ondule quand il répond. Couleurs : celles du mode (Base, Signature, Platinum).
+     Une sphère de verre avec une hélice d'ADN à l'intérieur, rendue en WebGL : le reflet suit le
+     pointeur, l'hélice accélère quand on approche et quand JARVIS réfléchit, et ondule quand il répond. Couleurs : celles du mode (Base, Signature, Platinum).
      Sans WebGL : un noyau fixe. Mouvement réduit : une seule image. En pause hors écran. */
   var ORBES = [], etatOrbe = "repos", souris = { x: -9999, y: -9999 }, calme = false;
   try { calme = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
@@ -212,22 +212,41 @@
     var k = c.indexOf("color(") === 0 ? 1 : 255;
     return [m[0] / k, m[1] / k, m[2] / k];
   }
-  var VS = [
-    "attribute vec3 p;attribute float s;attribute float k;uniform float t,e,w,px;uniform vec2 tilt;varying float va,vf;",
-    "mat3 ry(float a){float c=cos(a),d=sin(a);return mat3(c,0.,-d,0.,1.,0.,d,0.,c);}",
-    "mat3 rx(float a){float c=cos(a),d=sin(a);return mat3(1.,0.,0.,0.,c,d,0.,-d,c);}",
-    "mat3 rz(float a){float c=cos(a),d=sin(a);return mat3(c,d,0.,-d,c,0.,0.,0.,1.);}",
-    "void main(){vec3 q=p;float g=1.;",
-    " if(k<.5){float n=(sin(q.x*3.1+t*.9)+sin(q.y*4.3-t*.7)+sin(q.z*3.7+t*1.1)+.5*sin((q.x+q.y)*6.2+t*1.7))/3.5;",
-    "  float r=1.+(.045+.2*e)*n+w*.1*sin(9.*q.y-t*7.);q=ry(t*(.2+.55*e))*q*r;}",
-    " else if(k<1.5){q=q*1.36;q=ry(t*(.8+e)+s*.03)*q;q=rz(1.02)*q;q=rx(.38)*q;g=.95;}",
-    " else{q=q*1.52;q=ry(-t*(.55+.7*e))*q;q=rz(-.78)*q;q=rx(-.5)*q;g=.85;}",
-    " q=rx(tilt.y)*ry(tilt.x)*q;float f=1./(4.-q.z);",
-    " gl_Position=vec4(q.xy*f*2.,0.,1.);vf=smoothstep(-1.2,1.2,q.z);va=(.22+.78*vf)*(.45+.55*s);",
-    " gl_PointSize=max(1.,px*g*(.6+.8*s)*f*4.6*(1.+.45*e));}"
+  /* Une sphère de verre, calculée pixel par pixel (un seul fragment shader, sans bibliothèque) :
+     verre fumé luisant, point de lumière net qui suit le pointeur, reflet de fenêtre, bord irisé, et,
+     vue à travers la lentille, une double hélice d'ADN lumineuse qui tourne. */
+  var VS = "attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
+  var FS = [
+    "precision highp float;uniform vec2 res;uniform float t,e,w;uniform vec2 tilt;uniform vec3 ca;",
+    "vec3 iri(float x){return .5+.5*cos(6.2832*(x+vec3(0.,.33,.67)));}",
+    "void main(){vec2 p=(gl_FragCoord.xy-.5*res)/(.5*res.y);float R=.8,d=length(p);vec3 col=vec3(0.);float al=0.;",
+    " float halo=exp(-max(d-R,0.)*10.)*(.16+.3*e);",
+    " if(d<R){vec3 n=vec3(p/R,sqrt(max(0.,1.-dot(p,p)/(R*R))));",
+    "  vec2 q=p/R*(.6+.4*n.z)-tilt*.14*(1.-n.z);",
+    "  vec2 h=vec2(q.x*.914-q.y*.407,q.x*.407+q.y*.914);",
+    "  float ph=h.y*5.4+t*(1.+1.7*e),amp=.3*(1.+.2*w*sin(h.y*9.-t*6.)),env=smoothstep(1.,.5,abs(h.y));",
+    "  float x1=amp*sin(ph),z=cos(ph)*.5+.5;",
+    "  float s1=exp(-(h.x-x1)*(h.x-x1)/(.0014+.0026*z))*(.4+.6*z);",
+    "  float s2=exp(-(h.x+x1)*(h.x+x1)/(.0014+.0026*(1.-z)))*(.4+.6*(1.-z));",
+    "  float fr=abs(fract(h.y*8.)-.5);",
+    "  float rung=smoothstep(.13,.02,fr)*step(abs(h.x),abs(x1))*.4;",
+    "  float dna=((s1+s2)*(.55+.45*smoothstep(.3,0.,fr))+rung)*env;",
+    "  vec3 hot=mix(ca,vec3(1.),.78);",
+    "  vec3 inner=ca*dna*1.25+hot*dna*dna*dna*.9+ca*(.1+.3*e)*exp(-dot(q,q)*3.2);",
+    "  col=mix(vec3(.012,.014,.02),ca*.1,.5)*(.55+.45*n.z)+inner;",
+    "  vec3 V=vec3(0.,0.,1.),L=normalize(vec3(-.55+tilt.x*.9,.62-tilt.y*.9,.75));",
+    "  float sp=pow(max(dot(n,normalize(L+V)),0.),110.);",
+    "  float sp2=pow(max(dot(n,normalize(vec3(.5,-.62,.6)+V)),0.),20.)*.2;",
+    "  vec3 r=reflect(-V,n);float rx=r.x+tilt.x*.35;",
+    "  float win=smoothstep(.5,.7,r.y)*smoothstep(.97,.82,r.y)*smoothstep(-.75,-.2,rx)*smoothstep(.7,.15,rx);",
+    "  float fres=pow(1.-n.z,3.);",
+    "  col+=vec3(1.)*sp*1.4+hot*sp2+vec3(1.)*win*(.2+.25*fres);",
+    "  col+=mix(ca,iri(n.z*.9+t*.04+atan(p.y,p.x)*.09),.5)*fres*.95;",
+    "  col+=hot*pow(max(dot(n,normalize(vec3(.35,-.78,.5))),0.),7.)*.2*(1.+e);",
+    "  al=smoothstep(R,R-.025,d);}",
+    " gl_FragColor=vec4(col*al+ca*halo*(1.-al),al+(1.-al)*halo*.75);}"
   ].join("\n");
-  var FS = "precision mediump float;varying float va,vf;uniform vec3 ca,cb;void main(){float a=smoothstep(.5,.06,length(gl_PointCoord-.5))*va;gl_FragColor=vec4(mix(ca,cb,vf*vf)*a,a*.9);}";
-  function Orbe(el, n) {
+  function Orbe(el) {
     var cv = el.querySelector("canvas"), gl = null;
     try { gl = cv.getContext("webgl", { alpha: true, premultipliedAlpha: true, antialias: false, powerPreference: "low-power" }); } catch (e) { gl = null; }
     if (!gl) { el.classList.add("no-gl"); return; }
@@ -235,35 +254,29 @@
     var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
     if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { el.classList.add("no-gl"); return; }
     gl.useProgram(pr);
-    var r1 = Math.round(n * 0.24), r2 = Math.round(n * 0.18), tot = n + r1 + r2, d = new Float32Array(tot * 5), i, o = 0, or = Math.PI * (3 - Math.sqrt(5));
-    for (i = 0; i < n; i++) { var y = 1 - 2 * (i + 0.5) / n, rr = Math.sqrt(1 - y * y), a = i * or; d[o++] = Math.cos(a) * rr; d[o++] = y; d[o++] = Math.sin(a) * rr; d[o++] = Math.random(); d[o++] = 0; }
-    for (i = 0; i < r1 + r2; i++) { var b = Math.random() * 6.2832, j = (Math.random() - 0.5) * 0.035; d[o++] = Math.cos(b) * (1 + j); d[o++] = (Math.random() - 0.5) * 0.025; d[o++] = Math.sin(b) * (1 + j); d[o++] = Math.random(); d[o++] = i < r1 ? 1 : 2; }
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, d, gl.STATIC_DRAW);
-    var ap = gl.getAttribLocation(pr, "p"), as = gl.getAttribLocation(pr, "s"), ak = gl.getAttribLocation(pr, "k");
-    gl.enableVertexAttribArray(ap); gl.vertexAttribPointer(ap, 3, gl.FLOAT, false, 20, 0);
-    gl.enableVertexAttribArray(as); gl.vertexAttribPointer(as, 1, gl.FLOAT, false, 20, 12);
-    gl.enableVertexAttribArray(ak); gl.vertexAttribPointer(ak, 1, gl.FLOAT, false, 20, 16);
-    gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE); gl.clearColor(0, 0, 0, 0);
-    var U = {}; ["t", "e", "w", "px", "tilt", "ca", "cb"].forEach(function (u) { U[u] = gl.getUniformLocation(pr, u); });
-    var me = { el: el, e: 0.1, w: 0, tx: 0, ty: 0, t: Math.random() * 40, taille: 0 };
-    me.couleur = function () { var c = teinte(); gl.uniform3f(U.ca, c[0], c[1], c[2]); gl.uniform3f(U.cb, 0.35 * c[0] + 0.65, 0.35 * c[1] + 0.65, 0.35 * c[2] + 0.65); };
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    var ap = gl.getAttribLocation(pr, "p"); gl.enableVertexAttribArray(ap); gl.vertexAttribPointer(ap, 2, gl.FLOAT, false, 0, 0);
+    gl.disable(gl.DEPTH_TEST); gl.disable(gl.BLEND); gl.clearColor(0, 0, 0, 0);
+    var U = {}; ["t", "e", "w", "tilt", "ca", "res"].forEach(function (u) { U[u] = gl.getUniformLocation(pr, u); });
+    var me = { el: el, e: 0.1, w: 0, tx: 0, ty: 0, t: Math.random() * 40, taille: 0, coup: 0 };
+    me.couleur = function () { var c = teinte(); gl.uniform3f(U.ca, c[0], c[1], c[2]); };
     me.dessine = function (dt) {
       if (el.offsetParent === null) return;
       var css = el.clientWidth, dpr = Math.min(window.devicePixelRatio || 1, 2), px = Math.round(css * dpr);
-      if (px !== me.taille) { me.taille = px; cv.width = cv.height = px; gl.viewport(0, 0, px, px); gl.uniform1f(U.px, dpr * css / 96 * Math.sqrt(1500 / n)); }
+      if (px !== me.taille) { me.taille = px; cv.width = cv.height = px; gl.viewport(0, 0, px, px); gl.uniform2f(U.res, px, px); }
       var b = el.getBoundingClientRect(), dx = souris.x - (b.left + b.width / 2), dy = souris.y - (b.top + b.height / 2), dist = Math.sqrt(dx * dx + dy * dy);
-      var pres = Math.max(0, 1 - dist / 320), cible = etatOrbe === "pense" ? 1 : etatOrbe === "parle" ? 0.55 : 0.1 + 0.6 * pres * pres + (el.matches(":hover") || (el.parentNode.matches && el.parentNode.matches(":hover")) ? 0.25 : 0);
+      var pres = Math.max(0, 1 - dist / 320), cible = etatOrbe === "pense" ? 1 : etatOrbe === "parle" ? 0.55 : 0.08 + 0.55 * pres * pres + (el.parentNode.matches && el.parentNode.matches(":hover") ? 0.3 : 0);
       if (me.coup > 0) { cible = 1.6; me.coup -= dt; }
       me.e += (cible - me.e) * Math.min(1, dt * 4); me.w += ((etatOrbe === "parle" ? 1 : 0) - me.w) * Math.min(1, dt * 3);
-      me.tx += (Math.max(-1, Math.min(1, dx / 420)) * 0.6 - me.tx) * Math.min(1, dt * 3); me.ty += (Math.max(-1, Math.min(1, dy / 420)) * 0.5 - me.ty) * Math.min(1, dt * 3);
-      me.t += dt * (0.8 + 1.4 * me.e);
+      me.tx += (Math.max(-1, Math.min(1, dx / 420)) - me.tx) * Math.min(1, dt * 3); me.ty += (Math.max(-1, Math.min(1, dy / 420)) - me.ty) * Math.min(1, dt * 3);
+      me.t += dt * (0.8 + 1.2 * me.e);
       gl.uniform1f(U.t, me.t); gl.uniform1f(U.e, me.e); gl.uniform1f(U.w, me.w); gl.uniform2f(U.tilt, me.tx, me.ty);
-      gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.POINTS, 0, tot);
+      gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
     me.couleur(); ORBES.push(me);
   }
-  Orbe(root.querySelector(".jv-fab .jv-orb"), 1500);
-  Orbe(root.querySelector(".jv-head .jv-orb"), 800);
+  Orbe(root.querySelector(".jv-fab .jv-orb"));
+  Orbe(root.querySelector(".jv-head .jv-orb"));
   function orbeEtat(x) { etatOrbe = x; }
   if (ORBES.length) {
     var avant = 0;
@@ -278,20 +291,32 @@
   }
   /* L'étiquette se déchiffre lettre par lettre quand elle se déplie. */
   var etiq = fab.querySelector(".jv-lab b"), dechT = 0;
-  function dechiffre() {
+  function dechiffre(tout) {
+    clearInterval(dechT); etiq.classList.remove("is-code");
     if (calme) { etiq.textContent = T.open; return; }
-    var g = "01<>/\\#+=-", i = 0, txt = T.open;
-    clearInterval(dechT);
+    var txt = T.open, code = EN ? "jarvis.listen()" : "jarvis.ecoute()", hexa = "4A 41 52 56 49 53", i = 0, phase = tout ? 0 : 2, pause = 0;
+    etiq.classList.add("is-code");
     dechT = setInterval(function () {
-      i++; var o = "";
-      for (var k = 0; k < txt.length; k++) o += k < i || txt[k] === " " ? txt[k] : g[(Math.random() * g.length) | 0];
-      etiq.textContent = o; if (i >= txt.length) clearInterval(dechT);
-    }, 32);
+      if (pause > 0) { pause--; return; }
+      i++;
+      if (phase === 0) {            /* une vraie ligne de code s'écrit */
+        etiq.textContent = "> " + code.slice(0, i) + (i < code.length ? "_" : "");
+        if (i >= code.length) { phase = 1; i = 0; pause = 9; }
+      } else if (phase === 1) {     /* le mot JARVIS en code machine (hexadécimal) */
+        etiq.textContent = hexa.slice(0, i * 2);
+        if (i * 2 >= hexa.length) { phase = 2; i = 0; pause = 9; }
+      } else {                      /* il se déchiffre en clair */
+        if (i === 1) etiq.classList.remove("is-code");
+        var g = "01<>/\\#+=-", o = "";
+        for (var k = 0; k < txt.length; k++) o += k < i || txt[k] === " " ? txt[k] : g[(Math.random() * g.length) | 0];
+        etiq.textContent = o; if (i >= txt.length) clearInterval(dechT);
+      }
+    }, 34);
   }
-  fab.addEventListener("pointerenter", function (e) { if (e.pointerType !== "touch") dechiffre(); });
-  fab.addEventListener("focus", dechiffre);
+  fab.addEventListener("pointerenter", function (e) { if (e.pointerType !== "touch") dechiffre(false); });
+  fab.addEventListener("focus", function () { dechiffre(false); });
   /* À l'arrivée, l'étiquette se présente quelques secondes, puis laisse l'orbe seule. */
-  setTimeout(function () { if (root.classList.contains("is-open")) return; fab.classList.add("is-dit"); dechiffre(); setTimeout(function () { fab.classList.remove("is-dit"); }, 5200); }, 1400);
+  setTimeout(function () { if (root.classList.contains("is-open")) return; fab.classList.add("is-dit"); dechiffre(true); setTimeout(function () { fab.classList.remove("is-dit"); }, 6400); }, 1400);
 
   /* Texte sûr : on échappe tout, puis on rend cliquables les liens et [texte](lien). */
   function esc(s) { return s.replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }

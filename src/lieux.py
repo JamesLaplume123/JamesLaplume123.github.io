@@ -201,12 +201,13 @@ def donnees():
 
 
 PUBLICS = [("moi", "Pour chez moi"), ("entreprise", "Pour mon entreprise"), ("deux", "Les deux")]
+COURT = {"moi": "Chez moi", "entreprise": "Entreprise", "deux": "Les deux"}  # dans la barre du site
 
 
 def choix_public(cls="pub"):
     """Le choix de premier niveau : trois gros boutons. Retenu dans le navigateur avec le forfait."""
     return (f'<div class="{cls}" role="group" aria-label="Pour qui">'
-            + "".join(f'<button type="button" data-public-set="{k}" aria-pressed="false">{n}</button>' for k, n in PUBLICS)
+            + "".join(f'<button type="button" data-public-set="{k}" aria-pressed="false">{COURT[k] if cls == "bar-pub" else n}</button>' for k, n in PUBLICS)
             + "</div>")
 
 

@@ -160,7 +160,6 @@ def header_v2(page):
   <a class="bar-brand" href="{'/en/' if en else '/'}"><b>JARVIS</b> <span>Private Systems</span></a>
   <nav class="bar-nav" aria-label="{nav_label}">{"".join(bar_links)}</nav>
   <div class="bar-actions">
-    {"" if en else lieux.choix_public("bar-pub")}
     {bar_lang}
     <a class="bar-cta" href="{FORFAIT['url']}" data-forfait><span data-forfait-l data-plein="{'My package' if en else 'Mon forfait'}">{cta_label}</span><b data-forfait-n hidden></b></a>
     <button class="bar-menu" type="button" aria-expanded="false" aria-label="{menu_label}" data-menu>
@@ -170,7 +169,6 @@ def header_v2(page):
 </header>
 <nav class="sheet" aria-label="Menu">
   <div class="sheet-in">
-    {"" if en else lieux.choix_public("sheet-pub")}
     {sheet_links}
     <a class="sheet-cta" href="{FORFAIT['url']}" data-forfait><span data-forfait-l data-plein="{'My package' if en else 'Mon forfait'}">{cta_label}</span><b data-forfait-n hidden></b></a>
     {lang_link}

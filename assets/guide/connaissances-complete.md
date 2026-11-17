@@ -143,7 +143,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Écran JARVIS 7 po. Version compacte pour une chambre, un VR ou un bureau. Pourquoi : Le même contrôle, dans un petit espace.
 - Boîtier Secours. Garde le Hub et le routeur allumés 8 h pendant une panne. Pourquoi : Pendant la panne, c’est là que vous avez besoin d’alertes.
 ### Capteurs
-- Fuite d’eau. Sous l’évier, près du chauffe-eau, au sous-sol. À pile. Pourquoi : 47 % des réclamations habitation au Québec sont des dégâts d’eau.
+- Fuite d’eau. Sous l’évier, près du chauffe-eau, au sous-sol. À pile. Pourquoi : Les dégâts d’eau sont la première cause de réclamation en habitation.
 - Vanne d’eau automatique. Se pose sur votre vanne d’entrée. Ferme l’eau dès qu’une fuite est détectée. Pourquoi : Fermer l’eau en 10 secondes, c’est la différence entre une serviette et un sous-sol.
 - Température et humidité. Intérieur, extérieur, soute, frigo. Alerte de gel. À pile. Pourquoi : Un tuyau gelé au chalet se découvre au printemps. Trop tard.
 - Porte et fenêtre. Ouvert ou fermé, alerte en votre absence. À pile. Pourquoi : Savoir que la porte du garage est restée ouverte.

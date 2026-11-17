@@ -15,6 +15,7 @@
 # Aucun nom de lieu réel. Aucun prix ici.
 
 import json
+import os
 
 from config import CAPABILITIES
 
@@ -235,3 +236,56 @@ def selecteur(titre="Quel est votre lieu?", ident="lieux", resultat=True):
   {res}
   <script type="application/json" data-lieux-data>{donnees()}</script>
 </div>"""
+
+
+# ---------------------------------------------------------------------------------------------
+# Le forfait partout (tiroir « Mon forfait », assets/js/wow.js) : sur chaque page, un petit bloc JSON
+# donne le nom, le Hub conseillé et la vignette de chaque lieu, et le nom et la vignette de chaque
+# solution. Les vignettes sont produites par tools/vignettes.py (media/forfait/v-*.webp) à partir de
+# la photo dédiée si elle existe, sinon d'une photo de repli.
+# ---------------------------------------------------------------------------------------------
+_RACINE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+_REPLI_LIEU = {
+    "maison": "/media/accueil/lieu-maison.webp", "condo": "/media/vitrine/accueil/condo-urbain.webp",
+    "chalet": "/media/vitrine/accueil/chalet-lac.webp", "domaine": "/media/accueil/lieu-domaine.webp",
+    "bureau": "/media/vitrine/accueil/commerce-pme.webp", "atelier": "/media/accueil/lieu-entreprise.webp",
+    "ferme": "/media/accueil/lieu-ferme.webp", "garage": "/media/vitrine/accueil/garage-lamborghini-ferrari.webp",
+    "flotte": "/media/vitrine/accueil/allee-g63-escalade.webp", "vr": "/media/offre/vr.webp",
+    "roulotte": "/media/offre/vr.webp", "bateau": "/media/vitrine/accueil/yacht-quai.webp",
+    "auto": "/media/accueil/lieu-vehicule.webp", "moto": "/media/accueil/lieu-vehicule.webp",
+    "avion": "/media/vitrine/accueil/jet-hangar.webp",
+}
+_CLE_SOL = {ENV: "environnements", IA: "ia", SECU: "securite", AUTO: "automatisation", RES: "reseau", DIAG: "diagnostic", MOB: "mobilite"}
+
+
+def _existe(chemin):
+    return os.path.exists(os.path.join(_RACINE, chemin.lstrip("/")))
+
+
+def sources_vignettes():
+    """(nom de vignette, photo source) pour tools/vignettes.py : la photo dédiée d'abord."""
+    out = []
+    for l in LIEUX:
+        dedie = f"/media/forfait/lieu-{l['id']}.webp"
+        out.append((f"lieu-{l['id']}", dedie if _existe(dedie) else _REPLI_LIEU[l["id"]]))
+    for slug, cle in _CLE_SOL.items():
+        dedie = f"/media/forfait/sol-{cle}.webp"
+        out.append((f"sol-{cle}", dedie if _existe(dedie) else f"/media/accueil/sol-{cle}.webp"))
+    for h in HUB_NOM:
+        dedie = f"/media/offre/hub-{h}.webp"
+        out.append((f"hub-{h}", dedie if _existe(dedie) else "/media/product/jarvis-hub-v1.webp"))
+    return out
+
+
+def _v(nom):
+    chemin = f"/media/forfait/v-{nom}.webp"
+    return chemin if _existe(chemin) else ""
+
+
+def reference():
+    """Le bloc JSON de référence du forfait, placé sur chaque page (src/partials.py)."""
+    return json.dumps({
+        "lieux": {l["id"]: {"n": l["nom"], "h": l["hub"], "b": l.get("boitier"), "p": l["public"], "img": _v(f"lieu-{l['id']}")} for l in LIEUX},
+        "sols": {slug: {"n": _TITRE[slug], "img": _v(f"sol-{cle}")} for slug, cle in _CLE_SOL.items()},
+        "hubs": {h: {"n": n, "img": _v(f"hub-{h}")} for h, n in HUB_NOM.items()},
+    }, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")

@@ -468,29 +468,104 @@
     el.addEventListener("pointerleave", function () { el.style.transform = ""; });
   });
 
-  /* ---------- Mon forfait : il se bâtit en chemin ----------
-     Une seule clé (« jarvis-forfait ») partagée avec le configurateur (/offre/) : les lieux choisis,
-     le Hub conseillé, les solutions ajoutées et le nombre de lignes. Rien ne quitte le navigateur. */
+  /* ---------- Mon forfait : il se bâtit en chemin, et s'ouvre partout ----------
+     Une seule clé (« jarvis-forfait ») : les lieux choisis, le Hub, les solutions, et, écrits par le
+     configurateur (/offre/, assets/demos/catalogue.js), le matériel et les services (« autres ») et
+     l'état du formulaire (« etat »). Rien ne quitte le navigateur.
+     Le forfait se voit dans un tiroir (bouton de la barre) et dans la colonne de /offre/ : même rendu,
+     comme un sac d'achats : vignette, nom, quantité, « Retirer », puis le résumé et la soumission.
+     Les noms et vignettes viennent du bloc [data-forfait-ref] présent sur chaque page (src/lieux.py). */
   var CLE_F = "jarvis-forfait", RANG = { base: 1, signature: 2, platinum: 3 };
+  var REF = { lieux: {}, sols: {}, hubs: {} }, boiteR = $("[data-forfait-ref]");
+  if (boiteR) { try { REF = JSON.parse(boiteR.textContent) || REF; } catch (e) {} }
   function lireF() {
     var o = {};
     try { o = JSON.parse(localStorage.getItem(CLE_F) || "{}") || {}; } catch (e) { o = {}; }
-    return { lieux: o.lieux || [], sols: o.sols || [], hub: o.hub || "", manuel: !!o.manuel, n: o.n || 0,
-      public: o.public === "entreprise" || o.public === "deux" ? o.public : "moi", separee: !!o.separee };
+    return { lieux: o.lieux || [], sols: o.sols || [], hub: o.hub || "", manuel: !!o.manuel,
+      public: o.public === "entreprise" || o.public === "deux" ? o.public : "moi", separee: !!o.separee,
+      autres: o.autres || [], etat: o.etat || null, suffixe: o.suffixe || "" };
   }
   function ecrireF(o) { try { localStorage.setItem(CLE_F, JSON.stringify(o)); } catch (e) {} majF(); }
-  function compteF(o) { return o.n || (o.lieux.length + o.sols.length + (o.hub && o.manuel && !o.lieux.length ? 1 : 0)); }
   var LIEUX = null, boiteL = $("[data-lieux-data]");
   if (boiteL) { try { LIEUX = JSON.parse(boiteL.textContent); } catch (e) { LIEUX = null; } }
   function echap(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function hubDe(o) {   /* le Hub le plus exigeant parmi les lieux choisis */
+    var h = "";
+    o.lieux.forEach(function (x) { var r = REF.lieux[x] && REF.lieux[x].h; if (r && (RANG[r] || 0) > (RANG[h] || 0)) h = r; });
+    return h;
+  }
+  /* Ce que contient le forfait, prêt à afficher. */
+  function lignesF(o) {
+    var L = o.lieux.map(function (id) { var r = REF.lieux[id]; return r ? { id: id, n: r.n, h: r.h, b: r.b, p: r.p, img: r.img } : null; }).filter(Boolean);
+    var avec = L.filter(function (l) { return l.h; });
+    if (o.manuel && o.hub && avec.length) avec.reduce(function (a, c) { return (RANG[c.h] || 0) > (RANG[a.h] || 0) ? c : a; }).h = o.hub;
+    var hubSeul = o.hub && !avec.length ? o.hub : "";
+    var lot = o.autres.filter(function (a) { return a.k === "lot"; })[0] || null;
+    var S = lot ? [] : o.sols.map(function (s) { var r = REF.sols[s]; return r ? { slug: s, n: r.n, img: r.img } : null; }).filter(Boolean);
+    var A = o.autres.filter(function (a) { return a.k !== "lot"; });
+    return { L: L, hubSeul: hubSeul, lot: lot, S: S, A: A, n: L.length + (hubSeul ? 1 : 0) + (lot ? 1 : 0) + S.length + A.length };
+  }
+  function quoiLieu(l) { return (l.h && REF.hubs[l.h] ? REF.hubs[l.h].n : "") + (l.b ? (l.h ? " + " : "") + l.b : ""); }
+  function lienF(o, x) {   /* le message de soumission : les lieux d'abord, puis chaque ligne */
+    function dit(l) { var q = quoiLieu(l); return l.n + (q ? " (" + q + ")" : ""); }
+    var chez = x.L.filter(function (l) { return l.p !== "entreprise"; }).map(dit), ent = x.L.filter(function (l) { return l.p === "entreprise"; }).map(dit), t = [];
+    if (chez.length) t.push("Chez vous : " + chez.join(", "));
+    if (ent.length) t.push("Votre entreprise : " + ent.join(", "));
+    if (chez.length && ent.length && o.separee) t.push("Soumission séparée pour l’entreprise, au nom de l’entreprise");
+    if (x.hubSeul && REF.hubs[x.hubSeul]) t.push(REF.hubs[x.hubSeul].n);
+    if (x.lot) t.push(x.lot.n);
+    x.S.forEach(function (s) { t.push(s.n); });
+    x.A.forEach(function (a) { t.push((a.q > 1 ? a.q + "× " : "") + a.n); });
+    return "/contact/?config=" + encodeURIComponent(t.join(" + ") + (o.suffixe || ""));
+  }
+  function vig(img, nom) {
+    return img ? '<img class="fo-v" src="' + echap(img) + '" alt="" loading="lazy" width="64" height="64">'
+      : '<span class="fo-v fo-v0" aria-hidden="true">' + echap(String(nom).charAt(0)) + "</span>";
+  }
+  function rang(img, nom, sous, droite, prix) {
+    return '<li class="fo-l">' + vig(img, nom) + '<div class="fo-t"><b>' + echap(nom) + "</b>" + (sous ? "<span>" + echap(sous) + "</span>" : "") +
+      (prix ? "<em>" + echap(prix) + "</em>" : "") + '</div><div class="fo-a">' + droite + "</div></li>";
+  }
+  function retirer(cle, nom) { return '<button type="button" class="fo-rm" data-fo-rm="' + echap(cle) + '" aria-label="Retirer ' + echap(nom) + '">Retirer</button>'; }
+  function groupe(titre, n, lis) { return lis ? '<section class="fo-g"><h3>' + titre + " <i>" + n + "</i></h3><ul>" + lis + "</ul></section>" : ""; }
+  function renduF(o) {
+    var x = lignesF(o), surOffre = !!window.JarvisCatalogue;
+    if (!x.n) {
+      return '<div class="fo fo-vide"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 17h24l2 23H10l2-23Z"/><path d="M18 20v-5a6 6 0 0 1 12 0v5"/></svg>' +
+        "<b>Votre forfait est vide.</b><p>Choisissez votre lieu : le Hub conseillé s’y ajoute, puis vos solutions.</p>" +
+        '<a class="pill" href="/offre/#composer" data-fo-suite>Commencer par mon lieu</a></div>';
+    }
+    var lieux = x.L.map(function (l) { return rang(l.img, l.n, quoiLieu(l) || "Sans Hub à bord", retirer("lieu:" + l.id, l.n)); }).join("") +
+      (x.hubSeul && REF.hubs[x.hubSeul] ? rang(REF.hubs[x.hubSeul].img, REF.hubs[x.hubSeul].n, "Hub choisi, sans lieu précis", retirer("hub:", REF.hubs[x.hubSeul].n)) : "");
+    var sols = (x.lot ? rang("", x.lot.n, "Par mois", surOffre ? retirer("autre:" + x.lot.id, x.lot.n) : '<a class="fo-mod" href="/offre/#solutions" data-fo-suite>Modifier</a>', x.lot.px) : "") +
+      x.S.map(function (s) { return rang(s.img, s.n, "Par mois, annulable", retirer("sol:" + s.slug, s.n)); }).join("");
+    var autres = x.A.map(function (a) {
+      var droite = a.k === "mat"
+        ? '<span class="fo-q"><button type="button" data-fo-q="' + echap(a.id) + ':-1" aria-label="Un de moins">−</button><output>' + a.q + '</output><button type="button" data-fo-q="' + echap(a.id) + ':1" aria-label="Un de plus">+</button></span>' + retirer("mat:" + a.id, a.n)
+        : (surOffre ? retirer("autre:" + a.id, a.n) : '<a class="fo-mod" href="/offre/#lieux" data-fo-suite>Modifier</a>');
+      return rang(a.img, a.n, a.s || (a.q > 1 && a.k !== "mat" ? a.q + " " + (a.u || "") : ""), droite, a.px);
+    }).join("");
+    var deux = x.L.some(function (l) { return l.p === "entreprise"; }) && x.L.some(function (l) { return l.p !== "entreprise"; });
+    function ligne(k, v) { return v ? "<div><dt>" + k + "</dt><dd>" + v + "</dd></div>" : ""; }
+    return '<div class="fo">' +
+      '<p class="fo-haut"><span>' + x.n + (x.n > 1 ? " éléments" : " élément") + '</span><button type="button" class="fo-rm" data-fo-vider>Tout retirer</button></p>' +
+      groupe("Vos lieux", x.L.length + (x.hubSeul ? 1 : 0), lieux) + groupe("Vos solutions", x.S.length + (x.lot ? 1 : 0), sols) + groupe("Matériel et services", x.A.length, autres) +
+      '<div class="fo-pied">' +
+      (deux ? '<label class="fo-sep"><input type="checkbox" data-fo-sep' + (o.separee ? " checked" : "") + "><span>Une soumission séparée pour l’entreprise, au nom de l’entreprise</span></label>" : "") +
+      '<dl class="fo-res">' + ligne("Lieux", x.L.length) + ligne("Solutions, par mois", x.S.length + (x.lot ? 1 : 0)) + ligne("Matériel et services, une fois", x.A.length) + "</dl>" +
+      '<p class="fo-note">Prix confirmé par écrit dans votre soumission, ligne par ligne. Rien à payer ici.</p>' +
+      '<a class="pill fo-go" href="' + lienF(o, x) + '">Recevoir ma soumission</a>' +
+      '<a class="fo-suite" href="/offre/#composer" data-fo-suite>Continuer à composer</a></div></div>';
+  }
 
   function majF() {
-    var o = lireF(), n = compteF(o);
+    var o = lireF(), n = lignesF(o).n;
     $$("[data-forfait-n]").forEach(function (b) { b.hidden = !n; b.textContent = n ? " · " + n : ""; });
     $$("[data-forfait-l]").forEach(function (l) {
       if (!l.getAttribute("data-vide")) l.setAttribute("data-vide", l.textContent);
       l.textContent = n ? l.getAttribute("data-plein") : l.getAttribute("data-vide");
     });
+    $$("[data-cart-count]").forEach(function (c) { c.textContent = n ? " · " + n : ""; });
     $$("[data-forfait-add]").forEach(function (b) {
       var on = o.sols.indexOf(b.getAttribute("data-forfait-add")) >= 0;
       b.setAttribute("aria-pressed", on ? "true" : "false");
@@ -501,8 +576,10 @@
     /* Pour chez moi / Pour mon entreprise / Les deux : posé sur <html>, lu par la feuille de style */
     doc.setAttribute("data-public", o.public);
     $$("[data-public-set]").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-public-set") === o.public ? "true" : "false"); });
+    var html = renduF(o);
+    $$("[data-forfait-vue]").forEach(function (v) { v.innerHTML = html; });
     if (!LIEUX) return;
-    /* Les solutions qui comptent pour les lieux choisis : mises en avant, sans cacher les autres */
+    /* Les solutions qui comptent pour les lieux choisis : marquées, sans cacher les autres */
     var utiles = {};
     o.lieux.forEach(function (id) { if (LIEUX[id]) LIEUX[id].sols.forEach(function (x) { utiles[x.slug] = 1; }); });
     $$("[data-sol]").forEach(function (c) { c.classList.toggle("is-lieu", !!utiles[c.getAttribute("data-sol")]); });
@@ -542,43 +619,106 @@
       }).join("") + (/^\/offre\//.test(location.pathname) ? "" : '<p class="lx-go"><a class="pill" href="/offre/#composer">Composer mon forfait</a></p>');
     });
   }
-  document.addEventListener("click", function (e) {
-    var a = e.target.closest && e.target.closest("[data-forfait-add]");
-    if (a) {
-      var o = lireF(), s = a.getAttribute("data-forfait-add"), i = o.sols.indexOf(s);
-      if (i >= 0) o.sols.splice(i, 1); else o.sols.push(s);
-      o.n = 0; ecrireF(o);
-      document.dispatchEvent(new CustomEvent("jarvis:forfait", { detail: { sol: s, ajoute: i < 0 } }));
-      return;
+
+  /* Les gestes : chacun change la clé, prévient la page (événement « jarvis:forfait »), puis tout se redessine. */
+  function previent(d) { document.dispatchEvent(new CustomEvent("jarvis:forfait", { detail: d })); }
+  function basculeLieu(id) {
+    var f = lireF(), j = f.lieux.indexOf(id), r = REF.lieux[id];
+    if (j >= 0) f.lieux.splice(j, 1); else f.lieux.push(id);
+    /* Un lieu d'entreprise choisi côté particulier (ou l'inverse) : le choix devient « Les deux ». */
+    if (j < 0 && r) {
+      if (r.p === "entreprise" && f.public === "moi") f.public = f.lieux.length > 1 ? "deux" : "entreprise";
+      if (r.p === "particulier" && f.public === "entreprise") f.public = "deux";
     }
-    var pb = e.target.closest && e.target.closest("[data-public-set]");
+    if (!f.manuel) f.hub = hubDe(f);
+    ecrireF(f); previent({ lieu: id, ajoute: j < 0 });
+  }
+  function basculeSol(slug) {
+    var o = lireF(), i = o.sols.indexOf(slug);
+    if (i >= 0) o.sols.splice(i, 1); else o.sols.push(slug);
+    ecrireF(o); previent({ sol: slug, ajoute: i < 0 });
+    return i < 0;
+  }
+
+  /* Le tiroir « Mon forfait » */
+  var tiroir = null, retour = null;
+  function ouvreF() {
+    if (!tiroir) {
+      tiroir = document.createElement("div"); tiroir.className = "fo-tiroir"; tiroir.hidden = true;
+      tiroir.innerHTML = '<div class="fo-fond" data-fo-close></div><aside class="fo-panneau" role="dialog" aria-modal="true" aria-label="Mon forfait">' +
+        '<header class="fo-tete"><h2>Mon forfait</h2><button type="button" class="fo-x" data-fo-close aria-label="Fermer">×</button></header>' +
+        '<div class="fo-corps" data-forfait-vue></div></aside>';
+      document.body.appendChild(tiroir); majF();
+    }
+    retour = document.activeElement; tiroir.hidden = false; doc.classList.add("fo-lock");
+    requestAnimationFrame(function () { requestAnimationFrame(function () { tiroir.classList.add("is-on"); }); });
+    var x = $(".fo-x", tiroir); if (x) x.focus();
+  }
+  function fermeF() {
+    if (!tiroir || tiroir.hidden) return;
+    tiroir.classList.remove("is-on"); doc.classList.remove("fo-lock");
+    setTimeout(function () { tiroir.hidden = true; }, 460);
+    if (retour && retour.focus) retour.focus();
+  }
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") fermeF(); });
+
+  document.addEventListener("click", function (e) {
+    var t = e.target; if (!t.closest) return;
+    var ouv = t.closest("[data-forfait], [data-cart-open]");
+    if (ouv) { if (ouv.hasAttribute("data-cart-open") || lignesF(lireF()).n) { e.preventDefault(); ouvreF(); } return; }
+    if (t.closest("[data-fo-close]")) { fermeF(); return; }
+    if (t.closest("[data-fo-suite]")) { fermeF(); return; }
+    var a = t.closest("[data-forfait-add]");
+    if (a) { if (basculeSol(a.getAttribute("data-forfait-add"))) ouvreF(); return; }
+    var pb = t.closest("[data-public-set]");
     if (pb) {
       var g = lireF(); g.public = pb.getAttribute("data-public-set");
       /* Côté particulier, les lieux d'entreprise déjà choisis sortent de la sélection (ils restent choisissables). */
-      if (g.public === "moi" && LIEUX) g.lieux = g.lieux.filter(function (x) { return !LIEUX[x] || LIEUX[x].public !== "entreprise"; });
-      if (g.public === "entreprise" && LIEUX) g.lieux = g.lieux.filter(function (x) { return !LIEUX[x] || LIEUX[x].public !== "particulier"; });
-      g.n = 0; ecrireF(g);
-      document.dispatchEvent(new CustomEvent("jarvis:forfait", { detail: { public: g.public } }));
+      if (g.public === "moi") g.lieux = g.lieux.filter(function (x) { return !REF.lieux[x] || REF.lieux[x].p !== "entreprise"; });
+      if (g.public === "entreprise") g.lieux = g.lieux.filter(function (x) { return !REF.lieux[x] || REF.lieux[x].p !== "particulier"; });
+      if (!g.manuel) g.hub = hubDe(g);
+      ecrireF(g); previent({ public: g.public });
       return;
     }
-    var b = e.target.closest && e.target.closest("[data-lieu]");
-    if (b && LIEUX) {
-      var f = lireF(), id = b.getAttribute("data-lieu"), j = f.lieux.indexOf(id);
-      if (j >= 0) f.lieux.splice(j, 1); else f.lieux.push(id);
-      /* Un lieu d'entreprise choisi côté particulier (ou l'inverse) : le choix devient « Les deux ». */
-      if (j < 0 && LIEUX[id]) {
-        if (LIEUX[id].public === "entreprise" && f.public === "moi") f.public = f.lieux.length > 1 ? "deux" : "entreprise";
-        if (LIEUX[id].public === "particulier" && f.public === "entreprise") f.public = "deux";
+    var b = t.closest("[data-lieu]");
+    if (b) { basculeLieu(b.getAttribute("data-lieu")); return; }
+    var C = window.JarvisCatalogue, o;
+    var rm = t.closest("[data-fo-rm]");
+    if (rm) {
+      var k = rm.getAttribute("data-fo-rm").split(":"), id = k.slice(1).join(":");
+      if (k[0] === "lieu") basculeLieu(id);
+      else if (k[0] === "sol") basculeSol(id);
+      else if (k[0] === "hub") { if (C) C.retire("hub"); else { o = lireF(); o.manuel = false; o.hub = hubDe(o); ecrireF(o); } }
+      else if (C) C.retire(id);
+      else {   /* hors de /offre/ : le matériel se retire ici, et l'état du formulaire suit */
+        o = lireF(); o.autres = o.autres.filter(function (x) { return x.id !== id; });
+        if (o.etat && o.etat.q) delete o.etat.q[id];
+        ecrireF(o);
       }
-      if (!f.manuel) {
-        f.hub = "";
-        f.lieux.forEach(function (x) { var h = LIEUX[x] && LIEUX[x].hub; if (h && (RANG[h] || 0) > (RANG[f.hub] || 0)) f.hub = h; });
+      return;
+    }
+    var q = t.closest("[data-fo-q]");
+    if (q) {
+      var p = q.getAttribute("data-fo-q").split(":"), d = +p[p.length - 1], qid = p.slice(0, -1).join(":");
+      if (C) C.qte(qid, d);
+      else {
+        o = lireF();
+        o.autres.forEach(function (x) { if (x.id === qid) x.q = Math.max(0, (x.q || 0) + d); });
+        o.autres = o.autres.filter(function (x) { return x.q > 0 || x.k !== "mat"; });
+        if (o.etat && o.etat.q) { var v = Math.max(0, (o.etat.q[qid] || 0) + d); if (v) o.etat.q[qid] = v; else delete o.etat.q[qid]; }
+        ecrireF(o);
       }
-      f.n = 0; ecrireF(f);
-      document.dispatchEvent(new CustomEvent("jarvis:forfait", { detail: { lieu: id, ajoute: j < 0 } }));
+      return;
+    }
+    if (t.closest("[data-fo-vider]")) {
+      if (C) C.vider();
+      else { o = lireF(); ecrireF({ lieux: [], sols: [], hub: "", manuel: false, public: o.public, separee: false, autres: [], etat: null }); previent({ vide: true }); }
     }
   });
-  window.JarvisForfait = { lire: lireF, ecrire: ecrireF, maj: majF };
+  document.addEventListener("change", function (e) {
+    if (e.target.matches && e.target.matches("[data-fo-sep]")) { var o = lireF(); o.separee = e.target.checked; ecrireF(o); }
+  });
+  window.JarvisForfait = { lire: lireF, ecrire: ecrireF, maj: majF, ouvre: ouvreF, hubDe: hubDe };
   majF();
 
   /* ---------- Les cadres de démonstration tiennent dans la fenêtre ----------

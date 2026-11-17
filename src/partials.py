@@ -285,6 +285,7 @@ def document(page):
 {content}
 </main>
 {bottom}
+<script type="application/json" data-forfait-ref>{lieux.reference()}</script>
 {script}
 </body>
 </html>

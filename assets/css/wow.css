@@ -75,21 +75,21 @@
   --mode-rim-filter: sepia(1) saturate(2.6) hue-rotate(-10deg) brightness(1.08);
 }
 :root[data-mode="platinum"] {
-  /* Platinum : le futur. Cristal irisé (blanc, bleu glacier, lilas, cyan), verre et lumière qui bouge.
+  /* Platinum : le futur. Argent blanc, lumière pure — aucun bleu.
      Il ne doit jamais ressembler au mode Base : voir aussi le bloc « Platinum : matière et mouvement ». */
-  --gold: #8fb8ff;
-  --gold-soft: #cfe4ff;
-  --mode-display: linear-gradient(100deg, #ffffff 0%, #d5e7fb 30%, #9fc2e8 55%, #e8f1fb 80%, #ffffff 100%);
-  --mode-action: linear-gradient(170deg, #ffffff 0%, #e3edf8 45%, #b9cde5 100%);
-  --mode-on-action: #070b16;
-  --mode-action-edge: inset 0 1px 0 #fff, inset 0 0 0 1px #ffffff99, 0 0 30px #7fb6ff59;
-  --mode-panel: linear-gradient(140deg, #1c2942ad, #070a12d6);
-  --mode-panel-solid: linear-gradient(140deg, #141c2ef7, #070a12fb);
-  --mode-spec: inset 0 1px 0 #ffffff6b, inset 0 0 0 1px #b9d6ff33, 0 0 44px #5a9cff17;
-  --mode-line: #b9d6ff57;
-  --mode-glow: #7fb8ff;
+  --gold: #dfe1e8;
+  --gold-soft: #f0f1f5;
+  --mode-display: linear-gradient(100deg, #ffffff 0%, #e8e9ee 30%, #bfc2cc 55%, #f3f4f7 80%, #ffffff 100%);
+  --mode-action: linear-gradient(170deg, #ffffff 0%, #eef0f4 45%, #ced1da 100%);
+  --mode-on-action: #0b0c10;
+  --mode-action-edge: inset 0 1px 0 #fff, inset 0 0 0 1px #ffffff99, 0 0 30px #e6e8f059;
+  --mode-panel: linear-gradient(140deg, #202229ad, #08090dd6);
+  --mode-panel-solid: linear-gradient(140deg, #17191ff7, #08090dfb);
+  --mode-spec: inset 0 1px 0 #ffffff6b, inset 0 0 0 1px #dcdee833, 0 0 44px #d4d7e017;
+  --mode-line: #d8dbe457;
+  --mode-glow: #e2e4ec;
   --mode-scene: url("/media/modes/scene-platinum.webp");
-  --mode-rim-filter: saturate(1.25) brightness(1.15) hue-rotate(8deg);
+  --mode-rim-filter: grayscale(1) brightness(1.35) contrast(1.08);
 }
 :root[data-mode="base"] {
   --gold-soft: #dfdfdf;
@@ -1409,9 +1409,9 @@ html.fo-lock { overflow: hidden; }
 :root[data-mode="platinum"] body::after {
   content: ""; position: fixed; inset: -25%; z-index: 60; pointer-events: none; mix-blend-mode: screen;
   background:
-    radial-gradient(36% 28% at 16% 14%, #4f93ff38, transparent 70%),
-    radial-gradient(32% 26% at 86% 20%, #9a7bff2e, transparent 70%),
-    radial-gradient(40% 32% at 60% 94%, #3fd9ff26, transparent 70%);
+    radial-gradient(36% 28% at 16% 14%, #ffffff2e, transparent 70%),
+    radial-gradient(32% 26% at 86% 20%, #d9dce622, transparent 70%),
+    radial-gradient(40% 32% at 60% 94%, #c9ccd81f, transparent 70%);
   animation: ptAurore 28s ease-in-out infinite alternate;
 }
 @keyframes ptAurore {
@@ -1428,16 +1428,16 @@ html.fo-lock { overflow: hidden; }
 :root[data-mode="platinum"] .ac-jouer,
 :root[data-mode="platinum"] .bar-cta { background-size: 200% 100%; animation: ptIris 8s linear infinite; }
 :root[data-mode="platinum"] .pill:not(.ghost):hover,
-:root[data-mode="platinum"] .ac-jouer:hover { animation-duration: 2.4s; box-shadow: var(--mode-action-edge), 0 0 54px #8fc4ff8c; }
+:root[data-mode="platinum"] .ac-jouer:hover { animation-duration: 2.4s; box-shadow: var(--mode-action-edge), 0 0 54px #eceef58c; }
 /* Les cartes : du verre, un liseré de lumière, et un halo au survol. */
 :root[data-mode="platinum"] :is(.of-h, .lx-g, .ct-hub, .ct-sol, .ct-cat, .ct-kit, .ct-cart-in, .ac-reel, .fo-panneau) {
   background: var(--mode-panel); -webkit-backdrop-filter: blur(18px) saturate(1.35); backdrop-filter: blur(18px) saturate(1.35);
   box-shadow: var(--mode-spec); transition: box-shadow .5s var(--ease), transform .5s var(--ease);
 }
 :root[data-mode="platinum"] :is(.of-h, .lx-g, .ct-hub, .ct-sol, .ct-kit):hover {
-  box-shadow: inset 0 1px 0 #ffffffa6, inset 0 0 0 1px #cfe4ff73, 0 0 60px #6fb0ff38, 0 24px 60px #000a;
+  box-shadow: inset 0 1px 0 #ffffffa6, inset 0 0 0 1px #eef0f473, 0 0 60px #dde0ea38, 0 24px 60px #000a;
 }
-:root[data-mode="platinum"] .of-h.is-conseil { box-shadow: inset 0 0 0 1.5px #dcebff, 0 0 70px #7fb8ff52, inset 0 1px 0 #fff; }
+:root[data-mode="platinum"] .of-h.is-conseil { box-shadow: inset 0 0 0 1.5px #f0f2f6, 0 0 70px #dcdfe84c, inset 0 1px 0 #fff; }
 @media (prefers-reduced-motion: reduce) {
   :root[data-mode="platinum"] body::after, :root[data-mode="platinum"] :is(h1, h2, h3) em, :root[data-mode="platinum"] [data-split] em .w,
   :root[data-mode="platinum"] .cta h2 span, :root[data-mode="platinum"] .pill, :root[data-mode="platinum"] .ac-jouer, :root[data-mode="platinum"] .bar-cta, :root[data-mode="platinum"] .jv-lab b { animation: none; }

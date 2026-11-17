@@ -482,7 +482,7 @@ PAGE = {
     "assets": ["offre", "catalogue"],
     "content": f"""
 <section class="band top ct-top">
-  <div class="bg"><img src="/media/solutions/jarvis-spaces-property-v3.webp" alt="" fetchpriority="high"></div>
+  <div class="bg"><img src="/media/product/jarvis-hub-v1.webp" alt="Le boîtier JARVIS Hub posé sur un meuble, dans un salon" fetchpriority="high" style="object-position:70% 50%"></div>
   <div class="band-inner">
     {pro.fil("/offre/")}
     <h1 data-rev>Un Hub. Vos solutions.<br><em>Votre forfait.</em></h1>

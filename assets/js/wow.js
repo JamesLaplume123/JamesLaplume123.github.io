@@ -613,7 +613,7 @@
       res.innerHTML = o.lieux.filter(function (id) { return LIEUX[id]; }).map(function (id) {
         var l = LIEUX[id];
         var quoi = (l.hubNom ? l.hubNom : "") + (l.boitier ? (l.hubNom ? " + " : "") + l.boitier : "");
-        return '<article class="lx-r"><h3>' + echap(l.nom) + '</h3><p class="lx-r-h"><b>' + echap(quoi) + "</b> " + echap(l.raison) + "</p><ul>" +
+        return '<article class="lx-r"><img class="lx-r-ph" src="/media/forfait/lieu-' + id + '.webp" alt="" loading="lazy" decoding="async"><h3>' + echap(l.nom) + '</h3><p class="lx-r-h"><b>' + echap(quoi) + "</b> " + echap(l.raison) + "</p><ul>" +
           l.sols.map(function (x) { return '<li><a href="/solutions/' + x.slug + '/">' + echap(x.nom) + "</a><span>" + echap(x.raison) + "</span></li>"; }).join("") +
           '</ul><p class="lx-r-a"><a href="' + l.demo + '">Voir la démonstration <i aria-hidden="true">→</i></a></p></article>';
       }).join("") + (/^\/offre\//.test(location.pathname) ? "" : '<p class="lx-go"><a class="pill" href="/offre/#composer">Composer mon forfait</a></p>');

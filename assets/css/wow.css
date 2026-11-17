@@ -1447,3 +1447,7 @@ html.fo-lock { overflow: hidden; }
   :root[data-mode="platinum"] body::after, :root[data-mode="platinum"] :is(h1, h2, h3) em, :root[data-mode="platinum"] [data-split] em .w,
   :root[data-mode="platinum"] .cta h2 span, :root[data-mode="platinum"] .pill, :root[data-mode="platinum"] .ac-jouer, :root[data-mode="platinum"] .bar-cta, :root[data-mode="platinum"] .jv-lab b { animation: none; }
 }
+
+/* La photo du lieu choisi, en bandeau de son résultat. */
+.lx-r { overflow: hidden; }
+.lx-r-ph { width: calc(100% + 2 * 1.4rem); margin: -1.2rem -1.4rem .9rem; height: 130px; object-fit: cover; display: block; }

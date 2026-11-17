@@ -139,7 +139,9 @@
 .ct-mats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .ct-cat { padding: 1.1rem 1.2rem .4rem; border-radius: 18px; background: #0a0a0a; box-shadow: inset 0 0 0 1px #ffffff14; }
 .ct-cat h3 { margin: 0 0 .5rem; font-size: 1.05rem; font-weight: 650; color: var(--gold-soft); }
-.ct-item { display: grid; grid-template-columns: 1fr auto auto; gap: .9rem; align-items: center; padding: .75rem 0; border-top: 1px solid #ffffff10; }
+.ct-item { display: grid; grid-template-columns: auto 1fr auto auto; gap: .9rem; align-items: center; padding: .75rem 0; border-top: 1px solid #ffffff10; }
+.ct-item-ph { width: 54px; height: 54px; border-radius: 12px; object-fit: cover; background: #101014; box-shadow: inset 0 0 0 1px #ffffff14; }
+.ct-item-ph-vide { display: block; width: 54px; height: 54px; border-radius: 12px; background: #101014; box-shadow: inset 0 0 0 1px #ffffff14; }
 .ct-item.is-on .ct-item-t b { color: var(--gold-soft); }
 .ct-item-t b { display: block; font-size: .92rem; font-weight: 600; }
 .ct-item-t span { display: block; margin-top: .15rem; font-size: .78rem; color: #a9a9b2; line-height: 1.4; }
@@ -224,7 +226,7 @@
   .ct-hubs, .ct-sols, .ct-ents, .ct-install.cards { grid-template-columns: 1fr; }
   .ct-complet { flex-direction: column; align-items: flex-start; padding-right: 3.2rem; }
   .ct-complet .ct-check { top: 1.1rem; transform: none; }
-  .ct-item { grid-template-columns: 1fr auto; }
+  .ct-item { grid-template-columns: auto 1fr auto; }
   .ct-item-p { grid-column: 1; }
   .ct-qty { grid-column: 2; grid-row: 1 / span 2; }
   .ct-kit-d ul { grid-template-columns: 1fr; }

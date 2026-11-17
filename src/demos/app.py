@@ -173,7 +173,7 @@ SCREENS = [
      "Textes, documents, photos et messages vocaux. Un appel ou une visio part d’un seul geste, et tout passe par votre Hub."),
     ("appels", "espace", 8500, "JARVIS répond quand vous ne pouvez pas.",
      "Appels et visioconférences, en personnel comme en professionnel. Un numéro inconnu est filtré d’abord par JARVIS, et vous gardez le dernier mot."),
-    ("carte", "carte", 9500, "Tous vos lieux, d’un coup d’œil.",
+    ("carte", "carte", 17500, "Tous vos lieux, d’un coup d’œil.",
      "BouLance en voyage, la résidence, le chalet, le bureau, le garage de collection, la ferme et le hangar : chaque environnement en direct, à sa vraie place."),
     ("outils", "outils", 7000, "Toutes vos extensions, au même endroit.",
      "Domotique, IA, caméras, entreprise, réseau, diagnostic, mobilité : chacune s’ouvre d’un seul clic, directement dans JARVIS."),
@@ -367,6 +367,12 @@ def map_overlays(big=True):
 # ---------------------------------------------------------------------------------------------
 # Écrans
 # ---------------------------------------------------------------------------------------------
+# Crédits de la vraie carte (assets/demos/carte.js) : affichés seulement quand elle remplace la carte dessinée.
+ATTRIBUTION = ('<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a> · '
+               '<a href="https://openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> · '
+               '<a href="https://openfreemap.org/" target="_blank" rel="noopener">OpenFreeMap</a> · '
+               '<a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank" rel="noopener">relief</a>')
+
 _GEO = {"uid": "apgeo"}  # identifiant de la géographie de l'appareil en cours de rendu
 
 
@@ -487,6 +493,7 @@ def v_accueil():
     <button type="button" class="ap-map ap-map-mini" data-map data-go="carte" data-cam="{cam[0]:.1f},{cam[1]:.1f},{cam[2]:.1f},{cam[3]:.1f}" data-box="{",".join(str(v) for v in BOX)}" aria-label="Ouvrir la carte de vos lieux">
       {map_svg(_GEO["uid"], cam)}
       <span class="ap-ov">{map_overlays(big=False)}</span>
+      <span class="ap-attr">© OpenStreetMap</span>
     </button>
   </article>
   <article class="ap-card ap-favs" data-r>
@@ -1028,6 +1035,7 @@ def v_carte():
       <button type="button" data-zoom="0" aria-label="Voir tous mes lieux">{icon("expand")}</button></div>
     <p class="ap-scale" aria-hidden="true"><i data-scale-bar></i><span data-scale-t>100 km</span></p>
     <p class="ap-nopos">{icon("lock")}<span>Aucune position de personne sans permission</span></p>
+    <p class="ap-attr">{ATTRIBUTION}</p>
     <p class="ap-toast" data-ap="toast" role="status"></p>
   </div>
   <div class="ap-ct-side">

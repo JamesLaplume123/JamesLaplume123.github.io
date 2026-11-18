@@ -3,7 +3,7 @@
 :root, :root[data-mode="signature"] { --ac: #c7a476; --ac-hi: #eccb9c; --ac-line: #c7a47640; }
 :root[data-mode="platinum"] { --ac: #9fc6ff; --ac-hi: #d9e9ff; --ac-line: #a8c9ff5c; }
 :root[data-mode="base"] { --ac: #b4b4b6; --ac-hi: #ececee; --ac-line: #b4b4b63d; }
-.ac-hero, .ac-sect, .ac-fin { --ac-pad: clamp(1.2rem, 4.6vw, 4.2rem); background: #000; }
+.ac-hero, .ac-sect, .ac-fin, .ac-pro, .ac-gam { --ac-pad: clamp(1.2rem, 4.6vw, 4.2rem); background: #000; }
 
 /* ---------- 1. Héros vivant ---------- */
 .ac-hero { position: relative; height: max(100svh, 640px); max-height: 1040px; overflow: hidden; display: grid; align-items: end; }
@@ -284,3 +284,53 @@
 .ac-reel b { font: 650 clamp(1.3rem, 2.4vw, 1.9rem)/1.15 var(--sans); letter-spacing: -.02em; }
 .ac-reel small { font-size: .93rem; color: #d6d2ca; }
 .ac-reel:hover img { transform: scale(1.04); }
+
+/* =====================================================================================
+   Vitrine (18 novembre 2026) : comme Apple. Un produit, beaucoup d'espace, un bouton doré.
+   ===================================================================================== */
+.ac-hero h1 { font-size: clamp(2.8rem, 6.2vw, 5.6rem); line-height: .98; letter-spacing: -.045em; }
+.ac-lien-f {
+  display: inline-flex; align-items: center; gap: .35rem; color: var(--gold-soft); text-decoration: none;
+  font: 500 1.02rem/1 var(--sans); transition: gap .3s var(--ease), color .3s;
+}
+.ac-lien-f i { font-style: normal; font-size: 1.25em; line-height: 1; transform: translateY(-1px); }
+.ac-lien-f:hover { gap: .6rem; color: #fff; }
+.ac-acts { display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap; }
+
+/* Le produit */
+.ac-pro { padding: clamp(7rem, 13vw, 11rem) var(--ac-pad) 0; text-align: center; }
+.ac-pro-k { margin: 0 0 1rem; font: 600 .78rem/1 var(--mono); letter-spacing: .32em; text-transform: uppercase; color: var(--gold-soft); }
+.ac-pro h2 {
+  margin: 0 auto; max-width: 16ch; font: 650 clamp(3rem, 7.4vw, 6.6rem)/.96 var(--sans); letter-spacing: -.05em; color: #fff;
+}
+.ac-pro h2 span { color: #7d7a73; }
+.ac-pro-p { margin: 1.6rem auto 0; max-width: 34rem; font-size: clamp(1.08rem, 1.5vw, 1.3rem); line-height: 1.5; color: #b9b4ab; }
+.ac-pro-acts { margin-top: 2.2rem; display: flex; justify-content: center; align-items: center; gap: 1.8rem; flex-wrap: wrap; }
+.ac-pro-ph {
+  display: block; width: min(76rem, 100%); margin: clamp(3.5rem, 6vw, 5rem) auto 0; height: auto;
+  border-radius: 28px; aspect-ratio: 16 / 9; object-fit: cover; object-position: 50% 62%;
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent); mask-image: linear-gradient(180deg, #000 70%, transparent);
+}
+
+/* La gamme */
+.ac-gam { padding: clamp(6rem, 11vw, 9rem) var(--ac-pad) 0; text-align: center; }
+.ac-gam h2 { margin: 0 0 clamp(2.6rem, 5vw, 4rem); font: 650 clamp(2.4rem, 5vw, 4.2rem)/1 var(--sans); letter-spacing: -.045em; color: #fff; }
+.ac-gs { max-width: 84rem; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.2rem, 3vw, 3rem); }
+.ac-g { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; }
+.ac-g img {
+  width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 60%; border-radius: 22px;
+  transition: transform 1s var(--ease);
+}
+.ac-g:hover img { transform: scale(1.025); }
+.ac-g-k { margin-top: 1.6rem; min-height: 1em; font: 600 .7rem/1 var(--mono); letter-spacing: .26em; text-transform: uppercase; font-style: normal; color: var(--gold-soft); }
+.ac-g h3 { margin: .7rem 0 0; font: 650 clamp(1.7rem, 2.6vw, 2.3rem)/1 var(--sans); letter-spacing: -.035em; color: #fff; }
+.ac-g p { margin: .7rem 0 1.1rem; color: #a9a49b; font-size: 1.02rem; }
+
+/* Ce qu'il fait : plus d'air, plus de place aux photos */
+.ac-faire { padding-top: clamp(7rem, 12vw, 10rem); }
+.ac-faire .ac-tete h2 { font-size: clamp(2.4rem, 5vw, 4.2rem); letter-spacing: -.045em; }
+
+@media (max-width: 860px) {
+  .ac-gs { grid-template-columns: 1fr; max-width: 30rem; gap: 3.2rem; }
+  .ac-pro-ph { border-radius: 18px; aspect-ratio: 4 / 3; }
+}

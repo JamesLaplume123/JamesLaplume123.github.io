@@ -382,4 +382,17 @@
   window.addEventListener("resize", ajuste);
   window.addEventListener("load", ajuste);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuste);
+
+  /* La gamme : un clic sur Base / Signature / Platinum change la photo et la fiche. */
+  var gam = document.querySelector("[data-ac-gamme]");
+  if (gam) {
+    gam.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest("[data-g-go]");
+      if (!b) return;
+      var id = b.getAttribute("data-g-go");
+      gam.querySelectorAll("[data-g-go]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      gam.querySelectorAll("[data-g]").forEach(function (x) { x.classList.toggle("is-on", x.getAttribute("data-g") === id); });
+      gam.querySelectorAll("[data-g-f]").forEach(function (x) { x.classList.toggle("is-on", x.getAttribute("data-g-f") === id); });
+    });
+  }
 })();

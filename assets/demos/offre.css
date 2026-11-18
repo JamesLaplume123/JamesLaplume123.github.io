@@ -49,24 +49,9 @@
 @media (max-width: 880px) { .of-qs { grid-template-columns: 1fr; } }
 
 /* Comment ça se compose : trois étapes illustrées */
-.of-es, .of-exs { max-width: 76rem; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.of-e, .of-ex { overflow: hidden; border-radius: 20px; background: var(--mode-panel-solid), #050505; box-shadow: 0 18px 44px #0006, inset 0 0 0 1px var(--mode-line); display: flex; flex-direction: column; }
-.of-e img, .of-ex img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
-.of-e > div, .of-ex > div { padding: 1.3rem 1.4rem 1.5rem; }
-.of-e i { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--gold-soft); color: var(--gold-soft); font: 600 .8rem/1 var(--sans); font-style: normal; }
-.of-e h3, .of-ex h3 { margin: .8rem 0 .45rem; font-size: 1.15rem; font-weight: 650; letter-spacing: -.015em; }
-.of-ex h3 { margin-top: 0; }
-.of-e p, .of-ex p { margin: 0; font-size: .93rem; line-height: 1.55; color: #b9b9c2; }
-.of-ex .of-ex-h { color: var(--gold-soft); font-weight: 600; }
-.of-ex .of-ex-s { margin: .3rem 0 .7rem; color: #e9e9ee; font-size: .88rem; }
 
 @media (max-width: 1000px) {
-  .of-hs, .of-es, .of-exs { grid-template-columns: 1fr; }
-  .of-e, .of-ex { flex-direction: row; }
-  .of-e img, .of-ex img { width: 38%; aspect-ratio: auto; }
-  .of-e > div, .of-ex > div { flex: 1; }
+  .of-hs { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
-  .of-e, .of-ex { flex-direction: column; }
-  .of-e img, .of-ex img { width: 100%; aspect-ratio: 16 / 9; }
 }

@@ -121,10 +121,13 @@
       " float u=(p.x-uDoor[0])/(uDoor[2]-uDoor[0]);",
       " float top=mix(uDoor[1],uDoor[3],u),bot=mix(uDoor[5],uDoor[4],u);float w=(p.y-top)/(bot-top);",
       " if(u>0.&&u<1.&&w>0.&&w<1.){",   /* le panneau remonte, l'intérieur apparaît */
-      "  float e=1.-uOpen*.92;",
-      "  if(w>e){vec3 q=texture2D(uAux,vec2(mix(uCrop.x,uCrop.z,u),mix(uCrop.y,uCrop.w,w))).rgb;",
+      "  float e=1.-uOpen*(uCrop.x<0.?1.:.92);",   /* photo alignée : la porte disparaît entièrement au plafond */
+      "  if(w>e){",
+      /* uCrop.x < 0 : la photo « porte ouverte » est la même image, alignée au pixel : on la lit au même endroit. */
+      "   if(uCrop.x<0.){col=texture2D(uAux,p).rgb*(.12+.88*uInL)*(.35+.65*smoothstep(e,e+.12,w));inDoor=1.;}",
+      "   else{vec3 q=texture2D(uAux,vec2(mix(uCrop.x,uCrop.z,u),mix(uCrop.y,uCrop.w,w))).rgb;",
       "   float sh=smoothstep(e,e+.2,w);float side=smoothstep(0.,.06,u)*smoothstep(1.,.94,u);",
-      "   col=q*(.05+.8*uInL)*(.25+.75*sh)*(.5+.5*side);inDoor=1.;}",
+      "   col=q*(.05+.8*uInL)*(.25+.75*sh)*(.5+.5*side);inDoor=1.;}}",
       "  else{col=texture2D(uTex,vec2(p.x,mix(top,bot,w+(1.-e)))).rgb*(1.-.35*uOpen);col*=1.-.6*smoothstep(e-.04,e,w)*step(.002,uOpen);}",
       " }",
       " float sp=smoothstep(-.1,.12,u)*smoothstep(1.1,.88,u)*smoothstep(bot-.004,bot+.02,p.y)*smoothstep(bot+.2,bot,p.y);",

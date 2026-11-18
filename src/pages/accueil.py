@@ -23,9 +23,9 @@ import pro
 HEROS = {
     "img": "/media/accueil/film-maison.webp",
     "ratio": [2880, 1620],
-    "inside": "/media/accueil/garage-interieur.webp",
+    "inside": "/media/accueil/film-maison-ouvert.webp",   # la même photo, porte ouverte (alignée au pixel)
     "door": [0.048, 0.345, 0.242, 0.345, 0.565, 0.575],  # gauche, haut G, droite, haut D, bas D, bas G
-    "crop": [0.28, 0.05, 0.95, 0.65],
+    "crop": [-1, 0, 0, 0],   # -1 : lire la photo « porte ouverte » au même endroit
     "spots": [
         {"id": "etage", "label": "Étage", "on": "Allumé", "off": "Éteint", "x": 66, "y": 16,
          "zones": [[0.66, 0.16, 0.15, 0.10], [0.45, 0.18, 0.05, 0.07]]},

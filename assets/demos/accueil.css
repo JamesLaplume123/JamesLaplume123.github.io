@@ -318,25 +318,49 @@
   mask-image: radial-gradient(ellipse 58% 62% at 50% 56%, #000 46%, transparent 100%);
 }
 
-/* La gamme */
-.ac-gam { padding: clamp(6rem, 11vw, 9rem) var(--ac-pad) 0; text-align: center; }
-.ac-gam h2 { margin: 0 0 clamp(2.6rem, 5vw, 4rem); font: 650 clamp(2.4rem, 5vw, 4.2rem)/1 var(--sans); letter-spacing: -.045em; color: #fff; }
-.ac-gs { max-width: 84rem; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.2rem, 3vw, 3rem); }
-.ac-g { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; }
-.ac-g img {
-  width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 60%; border-radius: 22px;
-  transition: transform 1s var(--ease);
+/* La gamme : un grand Hub qui change selon le niveau choisi */
+.ac-gam { padding: clamp(7rem, 12vw, 10rem) var(--ac-pad) 0; text-align: center; overflow: hidden; }
+.ac-gam h2 { margin: 0; font: 650 clamp(2.6rem, 6vw, 5rem)/.98 var(--sans); letter-spacing: -.048em; color: #fff; }
+.ac-gam h2 span {
+  background: var(--mode-display, linear-gradient(100deg, #f6e2b5, #cfa45b)); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent; padding-bottom: .06em;
 }
-.ac-g:hover img { transform: scale(1.025); }
-.ac-g-k { margin-top: 1.6rem; min-height: 1em; font: 600 .7rem/1 var(--mono); letter-spacing: .26em; text-transform: uppercase; font-style: normal; color: var(--gold-soft); }
-.ac-g h3 { margin: .7rem 0 0; font: 650 clamp(1.7rem, 2.6vw, 2.3rem)/1 var(--sans); letter-spacing: -.035em; color: #fff; }
-.ac-g p { margin: .7rem 0 1.1rem; color: #a9a49b; font-size: 1.02rem; }
+.ac-gt-row {
+  display: inline-flex; gap: 4px; margin: 2.4rem auto 0; padding: 4px; border-radius: 999px;
+  background: #ffffff0d; box-shadow: inset 0 0 0 1px #ffffff17;
+}
+.ac-gt {
+  border: 0; cursor: pointer; padding: .7rem 1.5rem; border-radius: 999px; background: transparent;
+  font: 500 .98rem/1 var(--sans); color: #b9b4ab; transition: background .35s var(--ease), color .35s;
+}
+.ac-gt:hover { color: #fff; }
+.ac-gt[aria-pressed="true"] { background: #ffffff1f; color: #fff; box-shadow: inset 0 0 0 1px #ffffff26; }
+.ac-gv { position: relative; width: min(96rem, 112%); margin: 1.4rem 50% 0; translate: -50% 0; aspect-ratio: 16 / 8; }
+.ac-gv-i {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 64%;
+  opacity: 0; transform: scale(1.03); transition: opacity .9s var(--ease), transform 1.4s var(--ease);
+  -webkit-mask-image: radial-gradient(ellipse 58% 62% at 50% 56%, #000 46%, transparent 100%);
+  mask-image: radial-gradient(ellipse 58% 62% at 50% 56%, #000 46%, transparent 100%);
+}
+.ac-gv-i.is-on { opacity: 1; transform: none; }
+.ac-gfs { display: grid; margin-top: -1.5rem; }
+.ac-gf { grid-area: 1 / 1; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.ac-gf.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.ac-g-k { display: block; margin-bottom: .7rem; font: 600 .7rem/1 var(--mono); letter-spacing: .26em; text-transform: uppercase; font-style: normal; color: var(--gold-soft); }
+.ac-gf h3 { margin: 0; font: 650 clamp(1.8rem, 3vw, 2.5rem)/1 var(--sans); letter-spacing: -.035em; color: #fff; }
+.ac-gf p { margin: .7rem 0 0; color: #a9a49b; font-size: 1.08rem; }
+.ac-gf dl { display: flex; justify-content: center; gap: clamp(2rem, 6vw, 5rem); margin: 2.2rem 0 0; }
+.ac-gf dl div { display: flex; flex-direction: column; align-items: center; gap: .4rem; }
+.ac-gf dt { font: 650 clamp(1.6rem, 2.6vw, 2.2rem)/1 var(--sans); letter-spacing: -.03em; color: #fff; }
+.ac-gf dd { margin: 0; font-size: .9rem; color: #8f8a81; }
+.ac-gam .ac-pro-acts { margin-top: 2.6rem; }
 
 /* Ce qu'il fait : plus d'air, plus de place aux photos */
 .ac-faire { padding-top: clamp(7rem, 12vw, 10rem); }
 .ac-faire .ac-tete h2 { font-size: clamp(2.4rem, 5vw, 4.2rem); letter-spacing: -.045em; }
 
 @media (max-width: 860px) {
-  .ac-gs { grid-template-columns: 1fr; max-width: 30rem; gap: 3.2rem; }
+  .ac-gv { width: 140%; aspect-ratio: 4 / 3; }
+  .ac-gf dl { gap: 1.4rem; }
   .ac-pro-ph { width: 130%; aspect-ratio: 4 / 3; }
 }

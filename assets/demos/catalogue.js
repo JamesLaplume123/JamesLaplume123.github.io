@@ -304,4 +304,24 @@
     if (d.sol) coche(d.sol, !!d.ajoute);
     compute();
   });
+
+  /* Le Hub choisi, en grand à gauche : suit le choix (clic, lieu choisi, kit, forfait rechargé). */
+  var vis = document.querySelector("[data-ct-vis]");
+  if (vis) {
+    var visData = {};
+    try { visData = JSON.parse(vis.querySelector("[data-vis-data]").textContent); } catch (e) {}
+    var montre = function () {
+      var c = document.querySelector('input[name="hub"]:checked');
+      var id = c ? c.value : "signature";
+      vis.querySelectorAll("[data-v]").forEach(function (im) { im.classList.toggle("is-on", im.getAttribute("data-v") === id); });
+      if (visData[id]) {
+        vis.querySelector("[data-vis-nom]").textContent = visData[id][0];
+        vis.querySelector("[data-vis-ligne]").textContent = visData[id][1];
+      }
+    };
+    document.addEventListener("change", function (e) { if (e.target && e.target.name === "hub") montre(); });
+    document.addEventListener("jarvis:forfait", function () { setTimeout(montre, 0); });
+    document.addEventListener("click", function () { setTimeout(montre, 60); });
+    montre();
+  }
 })();

@@ -276,12 +276,11 @@ def _kit_totaux(k):
 
 
 def _hubs():
-    """Les trois Hubs, avec les mêmes mots que l'offre (src/lieux.py, HUBS_CHOIX) : situation, promesse,
-    trois « Vous pouvez… », une limite. Le comparatif détaillé reste dans le volet replié, dessous."""
+    """Les trois Hubs, à la manière d'une page d'achat : photo, nom, pour qui, la promesse (src/lieux.py,
+    HUBS_CHOIX). Le détail (capacités, limites) est dans le comparatif replié, dessous."""
     out = []
     for h in HUBS:
         c = lieux.HUBS_CHOIX[h["id"]]
-        peut = "".join(f"<li>{x}</li>" for x in c["peut"])
         tag = f'<span class="ct-tag">{escape(h["tag"])}</span>' if h["tag"] else ""
         out.append(f"""<label class="ct-hub" data-rev data-hub="{h['id']}">
       <input type="radio" name="hub" value="{h['id']}" data-prix="{h['prix']}" data-cam="{h['cam']}" data-app="{h['app']}" data-autos="{h['autos']}">
@@ -292,10 +291,6 @@ def _hubs():
       <p class="ct-prix">{_p(h['prix'])}<small>une fois</small></p>
       <p class="ct-pour">{c['situation']} · {c['pour']}</p>
       <p class="ct-why">{c['promesse']}</p>
-      <p class="ct-k">Vous pouvez</p>
-      <ul class="ct-oui">{peut}</ul>
-      <p class="ct-k ct-k-no">À savoir</p>
-      <ul class="ct-no"><li>{c['savoir']}</li></ul>
     </label>""")
     return "".join(out)
 
@@ -318,7 +313,6 @@ def _compare():
 def _solutions():
     out = []
     for s in SOLUTIONS:
-        pts = "".join(f"<li>{escape(p)}</li>" for p in s["pts"])
         inclus = s["prix"] == 0
         prix = "Inclus" if inclus else f"{s['prix']} $<small>/mois{' ' + s['unite'] if s.get('unite') else ''}</small>"
         if s.get("unite"):
@@ -331,8 +325,6 @@ def _solutions():
       {inp}<span class="ct-check" aria-hidden="true"></span>
       <div class="ct-sol-h"><h3>{escape(s['nom'])}</h3><p class="ct-prix">{prix}</p></div>
       <p class="ct-why">{escape(s['pourquoi'])}</p>
-      <ul class="ct-oui">{pts}</ul>
-      <ul class="ct-no ct-no-sol">{"".join(f"<li>{escape(x)}</li>" for x in s.get("non", []))}</ul>
       {qty}
       <a href="/solutions/{s['slug']}/">Voir la solution <i aria-hidden="true">→</i></a>
     </label>""")
@@ -458,54 +450,33 @@ def _inclus():
     return "".join(f'<li data-rev><b>{escape(n)}</b><span>{escape(d)}</span></li>' for n, d in INCLUS)
 
 
-# Comment ça se compose : trois étapes, en images (haut de la page /offre/).
-ETAPES = [
-    ("1", "Un Hub par lieu", "Le petit ordinateur installé chez vous. Il fait tourner JARVIS, même sans Internet.",
-     "/media/hubs/hub-signature.webp", "50% 60%"),
-    ("2", "Les solutions que vous voulez", "Comme des apps : vous prenez seulement ce qui vous sert, et vous annulez quand vous voulez.",
-     "/media/accueil/sol-environnements.webp", "32% 50%"),
-    ("3", "Le matériel du lieu", "Capteurs, caméras, serrures. Ce que vous avez déjà est réutilisé.",
-     "/media/vitrine/plateforme/hub-armoire-technique.webp", "50% 50%"),
-]
-
-# Trois exemples complets : (titre, photo, Hub, solutions, pourquoi)
-
-
-def _etapes():
-    return "".join(
-        f"""<article class="of-e" data-rev>
-      <img src="{img}" alt="" style="object-position:{pos}">
-      <div><i>{n}</i><h3>{t}</h3><p>{p}</p></div>
-    </article>"""
-        for n, t, p, img, pos in ETAPES
-    )
-
-
 PAGE = {
     "url": "/offre/",
     "v2": True,
     "title": "L’offre JARVIS | Hubs, solutions, matériel et prix",
     "description": "Le Hub est le petit ordinateur que nous installons chez vous. Choisissez votre lieu, votre Hub, vos solutions et votre matériel : votre forfait se compose sous vos yeux.",
-    "og_image": "/media/offre/maison.webp",
+    "og_image": "/media/hubs/hub-trio.webp",
     "assets": ["offre", "catalogue"],
     "content": f"""
-<section class="band top ct-top">
-  <div class="bg"><img src="/media/offre/maison.webp" alt="Résidence au crépuscule, piscine éclairée et véhicules dans l’allée" fetchpriority="high"></div>
-  <div class="band-inner">
-    {pro.fil("/offre/")}
-    <h1 data-rev>Un Hub. Vos solutions.<br><em>Votre forfait.</em></h1>
-    <p class="lead" data-rev>Le Hub est le petit ordinateur que nous installons chez vous. JARVIS vit dedans; vos données y restent. Choisissez votre lieu : votre forfait se compose à droite.</p>
-  </div>
-</section>
-
-<section class="sect ct-comment" id="comment" aria-labelledby="comment-titre">
-  <div class="sect-head"><div data-rev><p class="eyebrow">Comment ça se compose</p>
-    <h2 id="comment-titre">Trois étapes.</h2></div></div>
-  <div class="of-es">{_etapes()}</div>
+<section class="ct-tete" aria-labelledby="ct-titre">
+  {pro.fil("/offre/")}
+  <h1 id="ct-titre" data-rev>Composez<br><span>votre JARVIS.</span></h1>
+  <p data-rev>Un Hub pour votre lieu, les solutions que vous voulez, le matériel qu’il faut. La soumission suit, sans engagement.</p>
 </section>
 
 <form id="ct" class="ct" novalidate>
-<section class="ct-lieu-etape" id="composer" aria-label="Votre lieu">
+<section class="ct-qui" id="composer" aria-label="Pour qui">
+  <button type="button" class="ct-qui-t" data-public-set="moi" aria-pressed="false">
+    <img src="/media/forfait/lieu-maison.webp" alt="" loading="lazy" decoding="async">
+    <span><b>Pour chez moi</b><small>Maison, chalet, VR, véhicules.</small></span>
+  </button>
+  <button type="button" class="ct-qui-t" data-public-set="entreprise" aria-pressed="false">
+    <img src="/media/forfait/lieu-bureau.webp" alt="" loading="lazy" decoding="async">
+    <span><b>Pour mon entreprise</b><small>Bureau, atelier, ferme, flotte.</small></span>
+  </button>
+  <button type="button" class="ct-qui-deux" data-public-set="deux" aria-pressed="false">Les deux, sur une même soumission <i aria-hidden="true">›</i></button>
+</section>
+<section class="ct-lieu-etape" aria-label="Votre lieu">
   {lieux.selecteur("Commencez par votre lieu.", ident="lieu")}
 </section>
 <nav class="ct-lieux-nav" aria-label="Partir d’un kit" data-rev>
@@ -514,12 +485,19 @@ PAGE = {
   <a href="#hub">ou composez pièce par pièce →</a>
 </nav>
 <div class="ct-wrap">
+<div class="ct-vis" data-ct-vis aria-hidden="true">
+  <div class="ct-vis-in">
+    {"".join(f'<img class="ct-vis-i{" is-on" if h["id"] == "signature" else ""}" data-v="{h["id"]}" src="/media/hubs/hub-{h["id"]}.webp" alt="" loading="lazy" decoding="async">' for h in HUBS)}
+    <p class="ct-vis-t"><b data-vis-nom>Hub Signature</b><span data-vis-ligne>{lieux.HUBS_CHOIX["signature"]["promesse"]}</span></p>
+  </div>
+  <script type="application/json" data-vis-data>{json.dumps({h["id"]: [h["nom"], lieux.HUBS_CHOIX[h["id"]]["promesse"]] for h in HUBS}, ensure_ascii=False)}</script>
+</div>
 <div class="ct-main">
 
 <section class="sect" id="hub" data-toc="1 · Le Hub" aria-labelledby="hub-t">
   <div class="sect-head"><div data-rev><p class="of-num"><i>1</i><span>Étape 1 sur 4</span></p>
     <h2 id="hub-t">Choisissez votre Hub.<br><em>Selon la taille de votre lieu.</em></h2></div>
-    <p data-rev>Même logiciel, même app, mêmes solutions. Ce qui change : la puissance, le nombre d’appareils, l’IA et la sécurité. Payé une fois. Votre forfait vous dira si votre Hub devient trop petit.</p></div>
+    <p data-rev>Même logiciel, même app. Ce qui change : la puissance, l’IA et la sécurité. Payé une fois.</p></div>
   <div class="ct-hubs">{_hubs()}</div>
   <details class="ct-details" data-rev><summary>Comparer les trois Hubs en détail</summary><img class="ct-trio" src="/media/hubs/hub-trio.webp" alt="Les trois Hubs JARVIS côte à côte" loading="lazy" decoding="async">{_compare()}</details>
   <div class="ct-inclus-hub" data-rev><b>Dans chaque Hub :</b> la solution Environnements intelligents, l’app JARVIS, les comptes et droits, les mises à jour signées, les sauvegardes chiffrées.</div>
@@ -528,7 +506,7 @@ PAGE = {
 <section class="sect alt" id="solutions" data-toc="2 · Vos solutions" aria-labelledby="sol-t">
   <div class="sect-head"><div data-rev><p class="of-num"><i>2</i><span>Étape 2 sur 4</span></p>
     <h2 id="sol-t">Choisissez vos solutions.<br><em>Comme des apps.</em></h2></div>
-    <p data-rev>Par mois, annulables en tout temps. Chaque solution payante inclut l’accès de partout et les alertes sur votre téléphone. Sans elles, JARVIS fonctionne quand même chez vous.</p></div>
+    <p data-rev>Par mois, annulables en tout temps.</p></div>
   <div class="ct-sols">{_solutions()}</div>
   <label class="ct-complet" data-rev>
     <input type="checkbox" name="complet" value="complet" data-prix="{COMPLET['prix']}"><span class="ct-check" aria-hidden="true"></span>
@@ -545,11 +523,11 @@ PAGE = {
 <section class="sect" id="materiel" data-toc="3 · Le matériel" aria-labelledby="mat-t">
   <div class="sect-head"><div data-rev><p class="of-num"><i>3</i><span>Étape 3 sur 4</span></p>
     <h2 id="mat-t">Ajoutez le matériel<br><em>de votre lieu.</em></h2></div>
-    <p data-rev>Payé une fois. Prêt à brancher : chaque appareil apparaît tout seul dans l’app. Déjà du Victron, de l’UniFi, des caméras ONVIF, un NAS ou Starlink? JARVIS s’y branche au lieu de les remplacer.</p></div>
+    <p data-rev>Payé une fois. Ce que vous avez déjà est réutilisé.</p></div>
   <div class="ct-kits-h" data-rev><h3 class="ct-sub">Pressé? <em>Partez d’un kit (−8 %), puis ajustez pièce par pièce.</em></h3></div>
   <div class="ct-kits">{_kits()}</div>
-  <h3 class="ct-sub" data-rev>À la pièce <em>· la raison d’être de chaque appareil est écrite dessous</em></h3>
-  <div class="ct-mats">{_materiel()}</div>
+  <details class="ct-details ct-piece" data-rev><summary>Ajouter des appareils à la pièce</summary>
+  <div class="ct-mats">{_materiel()}</div></details>
 </section>
 
 <section class="sect alt" id="lieux" data-toc="4 · Lieux et services" aria-labelledby="lieux-t">
@@ -589,7 +567,7 @@ PAGE = {
 <div class="ct-bar" aria-live="polite">
   <div><small>Aujourd’hui</small><b data-total-once>1 290 $</b></div>
   <div><small>Par mois</small><b data-total-month>0 $</b></div>
-  <button type="button" class="pill ghost" data-cart-open>Voir mon forfait<span data-cart-count></span></button>
+  <button type="button" class="pill" data-cart-open>Mon forfait<span data-cart-count></span> · Recevoir ma soumission</button>
 </div>
 </div>
 </form>

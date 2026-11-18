@@ -13,7 +13,7 @@
 <meta property="og:description" content="Comment se compose une installation JARVIS : le Hub, les extensions choisies, puis l’installation, la formation et le soutien. Soumission gratuite après une visite.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://jarvisprivatesystems.com/offre/">
-<meta property="og:image" content="https://jarvisprivatesystems.com/media/offre/maison.webp">
+<meta property="og:image" content="https://jarvisprivatesystems.com/media/hubs/hub-trio.webp">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="geo.region" content="CA-QC">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -71,33 +71,26 @@
 </nav>
 <main id="contenu">
 
-<section class="band top ct-top">
-  <div class="bg"><img decoding="async" src="/media/offre/maison.webp" alt="Résidence au crépuscule, piscine éclairée et véhicules dans l’allée" fetchpriority="high"></div>
-  <div class="band-inner">
-    <nav class="fil" aria-label="Fil d’Ariane" data-rev><a href="/">Accueil</a><i aria-hidden="true">›</i><span aria-current="page">L’offre</span></nav>
-    <h1 data-rev>Un Hub. Vos solutions.<br><em>Votre forfait.</em></h1>
-    <p class="lead" data-rev>Le Hub est le petit ordinateur que nous installons chez vous. JARVIS vit dedans; vos données y restent. Choisissez votre lieu : votre forfait se compose à droite.</p>
-  </div>
+<section class="ct-tete" aria-labelledby="ct-titre">
+  <nav class="fil" aria-label="Fil d’Ariane" data-rev><a href="/">Accueil</a><i aria-hidden="true">›</i><span aria-current="page">L’offre</span></nav>
+  <h1 id="ct-titre" data-rev>Composez<br><span>votre JARVIS.</span></h1>
+  <p data-rev>Un Hub pour votre lieu, les solutions que vous voulez, le matériel qu’il faut. La soumission suit, sans engagement.</p>
 </section>
 <nav class="toc" aria-label="Sections de la page" data-toc-nav><div class="toc-in"><a href="#hub">1 · Le Hub</a><a href="#solutions">2 · Vos solutions</a><a href="#materiel">3 · Le matériel</a><a href="#lieux">4 · Lieux et services</a></div><a class="toc-cta" href="/contact/">Parlons de votre projet</a></nav>
 
-<section class="sect ct-comment" id="comment" aria-labelledby="comment-titre">
-  <div class="sect-head"><div data-rev><p class="eyebrow">Comment ça se compose</p>
-    <h2 id="comment-titre">Trois étapes.</h2></div></div>
-  <div class="of-es"><article class="of-e" data-rev>
-      <img decoding="async" src="/media/hubs/hub-signature.webp" alt="" style="object-position:50% 60%">
-      <div><i>1</i><h3>Un Hub par lieu</h3><p>Le petit ordinateur installé chez vous. Il fait tourner JARVIS, même sans Internet.</p></div>
-    </article><article class="of-e" data-rev>
-      <img decoding="async" src="/media/accueil/sol-environnements.webp" alt="" style="object-position:32% 50%">
-      <div><i>2</i><h3>Les solutions que vous voulez</h3><p>Comme des apps : vous prenez seulement ce qui vous sert, et vous annulez quand vous voulez.</p></div>
-    </article><article class="of-e" data-rev>
-      <img decoding="async" src="/media/vitrine/plateforme/hub-armoire-technique.webp" alt="" style="object-position:50% 50%">
-      <div><i>3</i><h3>Le matériel du lieu</h3><p>Capteurs, caméras, serrures. Ce que vous avez déjà est réutilisé.</p></div>
-    </article></div>
-</section>
-
 <form id="ct" class="ct" data-sansprix novalidate>
-<section class="ct-lieu-etape" id="composer" aria-label="Votre lieu">
+<section class="ct-qui" id="composer" aria-label="Pour qui">
+  <button type="button" class="ct-qui-t" data-public-set="moi" aria-pressed="false">
+    <img decoding="async" src="/media/forfait/lieu-maison.webp" alt="" loading="lazy" decoding="async">
+    <span><b>Pour chez moi</b><small>Maison, chalet, VR, véhicules.</small></span>
+  </button>
+  <button type="button" class="ct-qui-t" data-public-set="entreprise" aria-pressed="false">
+    <img decoding="async" src="/media/forfait/lieu-bureau.webp" alt="" loading="lazy" decoding="async">
+    <span><b>Pour mon entreprise</b><small>Bureau, atelier, ferme, flotte.</small></span>
+  </button>
+  <button type="button" class="ct-qui-deux" data-public-set="deux" aria-pressed="false">Les deux, sur une même soumission <i aria-hidden="true">›</i></button>
+</section>
+<section class="ct-lieu-etape" aria-label="Votre lieu">
   <div class="lx" id="lieu" data-lieux>
   <h2 class="lx-t">Commencez par votre lieu.</h2>
   <div class="pub" role="group" aria-label="Pour qui"><button type="button" data-public-set="moi" aria-pressed="false">Pour chez moi</button><button type="button" data-public-set="entreprise" aria-pressed="false">Pour mon entreprise</button><button type="button" data-public-set="deux" aria-pressed="false">Les deux</button></div>
@@ -112,12 +105,19 @@
   <a href="#hub">ou composez pièce par pièce →</a>
 </nav>
 <div class="ct-wrap">
+<div class="ct-vis" data-ct-vis aria-hidden="true">
+  <div class="ct-vis-in">
+    <img class="ct-vis-i" data-v="base" src="/media/hubs/hub-base.webp" alt="" loading="lazy" decoding="async"><img class="ct-vis-i is-on" data-v="signature" src="/media/hubs/hub-signature.webp" alt="" loading="lazy" decoding="async"><img class="ct-vis-i" data-v="platinum" src="/media/hubs/hub-platinum.webp" alt="" loading="lazy" decoding="async">
+    <p class="ct-vis-t"><b data-vis-nom>Hub Signature</b><span data-vis-ligne>Tout le lieu, et une IA qui reste chez vous.</span></p>
+  </div>
+  <script type="application/json" data-vis-data>{"base": ["Hub Base", "Savoir que tout va bien, et agir à distance."], "signature": ["Hub Signature", "Tout le lieu, et une IA qui reste chez vous."], "platinum": ["Hub Platinum", "Plusieurs bâtiments, beaucoup de caméras, aucune coupure."]}</script>
+</div>
 <div class="ct-main">
 
 <section class="sect" id="hub" data-toc="1 · Le Hub" aria-labelledby="hub-t">
   <div class="sect-head"><div data-rev><p class="of-num"><i>1</i><span>Étape 1 sur 4</span></p>
     <h2 id="hub-t">Choisissez votre Hub.<br><em>Selon la taille de votre lieu.</em></h2></div>
-    <p data-rev>Même logiciel, même app, mêmes solutions. Ce qui change : la puissance, le nombre d’appareils, l’IA et la sécurité. Payé une fois. Votre forfait vous dira si votre Hub devient trop petit.</p></div>
+    <p data-rev>Même logiciel, même app. Ce qui change : la puissance, l’IA et la sécurité. Payé une fois.</p></div>
   <div class="ct-hubs"><label class="ct-hub" data-rev data-hub="base">
       <input type="radio" name="hub" value="base" data-prix="590" data-cam="2" data-app="30" data-autos="0">
       <span class="ct-check" aria-hidden="true"></span>
@@ -127,10 +127,6 @@
       <p class="ct-prix"><small>une fois</small></p>
       <p class="ct-pour">Un petit lieu à surveiller · Chalet, condo, petit VR</p>
       <p class="ct-why">Savoir que tout va bien, et agir à distance.</p>
-      <p class="ct-k">Vous pouvez</p>
-      <ul class="ct-oui"><li>Être prévenu d’une fuite, du gel ou d’une porte ouverte</li><li>Régler le chauffage et les lumières de partout</li><li>Voir jusqu’à deux caméras</li></ul>
-      <p class="ct-k ct-k-no">À savoir</p>
-      <ul class="ct-no"><li>L’assistant passe par Internet. Idéal comme deuxième lieu, relié à votre maison.</li></ul>
     </label><label class="ct-hub" data-rev data-hub="signature">
       <input type="radio" name="hub" value="signature" data-prix="1290" data-cam="6" data-app="100" data-autos="10">
       <span class="ct-check" aria-hidden="true"></span>
@@ -140,10 +136,6 @@
       <p class="ct-prix"><small>une fois</small></p>
       <p class="ct-pour">La maison où vous vivez · Maison, VR complet, petite entreprise</p>
       <p class="ct-why">Tout le lieu, et une IA qui reste chez vous.</p>
-      <p class="ct-k">Vous pouvez</p>
-      <ul class="ct-oui"><li>Tout gérer dans une seule application</li><li>Parler à JARVIS, même sans Internet</li><li>Relier jusqu’à trois lieux : maison, chalet, VR</li></ul>
-      <p class="ct-k ct-k-no">À savoir</p>
-      <ul class="ct-no"><li>Jusqu’à six caméras analysées.</li></ul>
     </label><label class="ct-hub" data-rev data-hub="platinum">
       <input type="radio" name="hub" value="platinum" data-prix="3490" data-cam="16" data-app="1000000" data-autos="1000000">
       <span class="ct-check" aria-hidden="true"></span>
@@ -153,10 +145,6 @@
       <p class="ct-prix"><small>une fois</small></p>
       <p class="ct-pour">Un lieu qui ne doit jamais s’arrêter · Domaine, ferme, entreprise</p>
       <p class="ct-why">Plusieurs bâtiments, beaucoup de caméras, aucune coupure.</p>
-      <p class="ct-k">Vous pouvez</p>
-      <ul class="ct-oui"><li>Continuer pendant une panne de courant ou d’Internet</li><li>Suivre tous vos bâtiments et vos lieux, sans limite</li><li>Recevoir des rapports et automatiser le travail</li></ul>
-      <p class="ct-k ct-k-no">À savoir</p>
-      <ul class="ct-no"><li>Pensé pour les grands lieux : trop pour une maison ordinaire.</li></ul>
     </label></div>
   <details class="ct-details" data-rev><summary>Comparer les trois Hubs en détail</summary><img class="ct-trio" src="/media/hubs/hub-trio.webp" alt="Les trois Hubs JARVIS côte à côte" loading="lazy" decoding="async"><div class="ct-cmp-w"><table class="ct-cmp">
       <thead><tr><th></th><th>Hub Base</th><th class=is-mid>Hub Signature</th><th>Hub Platinum</th></tr></thead>
@@ -168,53 +156,41 @@
 <section class="sect alt" id="solutions" data-toc="2 · Vos solutions" aria-labelledby="sol-t">
   <div class="sect-head"><div data-rev><p class="of-num"><i>2</i><span>Étape 2 sur 4</span></p>
     <h2 id="sol-t">Choisissez vos solutions.<br><em>Comme des apps.</em></h2></div>
-    <p data-rev>Par mois, annulables en tout temps. Chaque solution payante inclut l’accès de partout et les alertes sur votre téléphone. Sans elles, JARVIS fonctionne quand même chez vous.</p></div>
+    <p data-rev>Par mois, annulables en tout temps.</p></div>
   <div class="ct-sols"><label class="ct-sol is-inclus" data-rev data-sol="env">
       <input type="checkbox" name="sol" value="env" data-slug="environnements-intelligents" data-prix="0" checked disabled><span class="ct-check" aria-hidden="true"></span>
       <div class="ct-sol-h"><h3>Environnements intelligents</h3><p class="ct-prix">Inclus</p></div>
       <p class="ct-why">Inclus avec chaque Hub : c’est la base de JARVIS.</p>
-      <ul class="ct-oui"><li>Lumières, chauffage, stores, foyer, serrures</li><li>Scènes : Matin, Soir, Nuit, Absent</li><li>Énergie pièce par pièce</li><li>Fonctionne sans Internet</li></ul>
-      <ul class="ct-no ct-no-sol"><li>Pas d’accès de partout ni d’alertes sans une solution payante</li></ul>
       
       <a href="/solutions/environnements-intelligents/">Voir la solution <i aria-hidden="true">→</i></a>
     </label><label class="ct-sol" data-rev data-sol="diag">
       <input type="checkbox" name="sol" value="diag" data-slug="diagnostic-care" data-prix="15"><span class="ct-check" aria-hidden="true"></span>
       <div class="ct-sol-h"><h3>Diagnostic &amp; continuité</h3><p class="ct-prix"><small>par mois</small></p></div>
       <p class="ct-why"> Ici, vous êtes prévenu à la première goutte.</p>
-      <ul class="ct-oui"><li>Veille 24/7 : fuite, gel, batterie, panne</li><li>Alertes de partout, avec la cause probable</li><li>Dossier prêt pour le technicien</li><li>Rapport mensuel de santé du lieu</li></ul>
-      <ul class="ct-no ct-no-sol"><li>Ne ferme pas l’eau sans la vanne automatique</li><li>Ne remplace pas un plombier ou un électricien</li></ul>
       
       <a href="/solutions/diagnostic-care/">Voir la solution <i aria-hidden="true">→</i></a>
     </label><label class="ct-sol" data-rev data-sol="secu">
       <input type="checkbox" name="sol" value="secu" data-slug="securite-intelligente" data-prix="20"><span class="ct-check" aria-hidden="true"></span>
       <div class="ct-sol-h"><h3>Sécurité intelligente</h3><p class="ct-prix"><small>par mois</small></p></div>
       <p class="ct-why">Vos caméras comprennent ce qu’elles voient. Une alerte utile, pas cent notifications.</p>
-      <ul class="ct-oui"><li>Enregistrement local, rien dans le nuage</li><li>Reconnaît personne, véhicule, animal, colis</li><li>Alertes regroupées en une phrase</li><li>Mode urgence et accès temporaires</li></ul>
-      <ul class="ct-no ct-no-sol"><li>Pas de centrale d’alarme ni d’agents : c’est vous qu’on prévient</li><li>Demande au moins une caméra ou une sonnette</li></ul>
       
       <a href="/solutions/securite-intelligente/">Voir la solution <i aria-hidden="true">→</i></a>
     </label><label class="ct-sol" data-rev data-sol="ia">
       <input type="checkbox" name="sol" value="ia" data-slug="ia-privee-connaissances" data-prix="15"><span class="ct-check" aria-hidden="true"></span>
       <div class="ct-sol-h"><h3>IA privée et connaissances</h3><p class="ct-prix"><small>par mois</small></p></div>
       <p class="ct-why">Posez une question sur votre lieu ou vos documents. La réponse ne sort jamais de chez vous.</p>
-      <ul class="ct-oui"><li>Assistant qui connaît votre lieu</li><li>Répond à partir de vos documents, source citée</li><li>Assistant vocal (Signature et Platinum)</li><li>Option IA par Internet avec votre clé</li></ul>
-      <ul class="ct-no ct-no-sol"><li>Sur un Hub Base, l’IA passe par Internet</li><li>N’envoie jamais vos documents à un service externe sans votre clé</li></ul>
       
       <a href="/solutions/ia-privee-connaissances/">Voir la solution <i aria-hidden="true">→</i></a>
     </label><label class="ct-sol" data-rev data-sol="res">
       <input type="checkbox" name="sol" value="res" data-slug="reseau-resilience" data-prix="10"><span class="ct-check" aria-hidden="true"></span>
       <div class="ct-sol-h"><h3>Réseau et cybersécurité</h3><p class="ct-prix"><small>par mois</small></p></div>
       <p class="ct-why">Un appareil inconnu sur votre réseau est bloqué avant de faire des dégâts.</p>
-      <ul class="ct-oui"><li>Carte du réseau en direct</li><li>Appareils inconnus détectés et bloqués</li><li>Zones séparées : invités, caméras, travail</li><li>Lien de secours géré automatiquement</li></ul>
-      <ul class="ct-no ct-no-sol"><li>Ne fournit pas Internet : routeur 4G ou Starlink à part</li><li>Pas un antivirus pour vos ordinateurs</li></ul>
       
       <a href="/solutions/reseau-resilience/">Voir la solution <i aria-hidden="true">→</i></a>
     </label><label class="ct-sol" data-rev data-sol="mob">
       <input type="checkbox" name="sol" value="mob" data-slug="mobilite" data-prix="15" data-qty="1"><span class="ct-check" aria-hidden="true"></span>
       <div class="ct-sol-h"><h3>Mobilité</h3><p class="ct-prix"><small>par mois par véhicule</small></p></div>
       <p class="ct-why">Position, diagnostic et antivol de chaque véhicule. Les données cellulaires sont comprises.</p>
-      <ul class="ct-oui"><li>Position en direct, historique des trajets</li><li>Diagnostic moteur, pression des pneus</li><li>Alerte de mouvement (antivol)</li><li>Données cellulaires incluses</li></ul>
-      <ul class="ct-no ct-no-sol"><li>Demande un Boîtier Mobilité ou un Boîtier VR Signature/Platinum</li><li>Ne bloque pas le véhicule à distance</li></ul>
       <div class="ct-qty ct-qty-sol"><button type="button" data-q="-1" aria-label="Un véhicule de moins">−</button><output>0</output><button type="button" data-q="1" aria-label="Un véhicule de plus">+</button><span>véhicule(s)</span></div>
       <a href="/solutions/mobilite/">Voir la solution <i aria-hidden="true">→</i></a>
     </label></div>
@@ -361,7 +337,7 @@
 <section class="sect" id="materiel" data-toc="3 · Le matériel" aria-labelledby="mat-t">
   <div class="sect-head"><div data-rev><p class="of-num"><i>3</i><span>Étape 3 sur 4</span></p>
     <h2 id="mat-t">Ajoutez le matériel<br><em>de votre lieu.</em></h2></div>
-    <p data-rev>Payé une fois. Prêt à brancher : chaque appareil apparaît tout seul dans l’app. Déjà du Victron, de l’UniFi, des caméras ONVIF, un NAS ou Starlink? JARVIS s’y branche au lieu de les remplacer.</p></div>
+    <p data-rev>Payé une fois. Ce que vous avez déjà est réutilisé.</p></div>
   <div class="ct-kits-h" data-rev><h3 class="ct-sub">Pressé? <em>Partez d’un kit (−8 %), puis ajustez pièce par pièce.</em></h3></div>
   <div class="ct-kits"><article class="ct-kit" data-rev id="kit-1">
       <div class="ct-kit-h"><h3>Kit VR Essentiel</h3><p class="ct-pour">Roulotte, petit VR, bateau de 25 pi</p></div>
@@ -428,7 +404,7 @@
       <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (18 pièces)</summary><ul><li><b>1×</b> Hub Platinum</li><li><b>1×</b> Routeur 4G/5G</li><li><b>4×</b> Caméra extérieure</li><li><b>6×</b> Température et humidité</li><li><b>4×</b> Capteur universel</li><li><b>1×</b> Boîtier Secours</li><li><b>1×</b> Compteur d’énergie</li></ul></details>
       <button type="button" class="pill" data-kit='{"nom": "Kit Ferme", "rabais": 493, "hub": "platinum", "mat": {"r4g": 1, "camext": 4, "temp": 6, "univ": 4, "sec": 1, "energie": 1}, "sol": ["complet"], "ent": {"socle": true, "autos": ["a_frigo", "a_silo", "a_pompe"]}}'>Partir de ce kit</button>
     </article></div>
-  <h3 class="ct-sub" data-rev>À la pièce <em>· la raison d’être de chaque appareil est écrite dessous</em></h3>
+  <details class="ct-details ct-piece" data-rev><summary>Ajouter des appareils à la pièce</summary>
   <div class="ct-mats"><section class="ct-cat" data-rev><h3>Boîtiers JARVIS</h3><div class="ct-item" data-id="vrb" data-prix="490" data-img="/media/forfait/mat-vrb.webp">
         <img class="ct-item-ph" src="/media/forfait/mat-vrb.webp" alt="" loading="lazy" decoding="async">
         <div class="ct-item-t"><b>Boîtier VR Base</b><span>12 V. Batteries (shunt), 2 réservoirs, batterie moteur. VR, roulotte, bateau.</span><em>Sans lui, le Hub ne voit ni vos batteries ni vos réservoirs.</em></div>
@@ -624,7 +600,7 @@
         <div class="ct-item-t"><b>Téléphone IP</b><span>Pour la réceptionniste IA et les transferts.</span><em>La réceptionniste vous passe l’appel sur un vrai téléphone.</em></div>
         <div class="ct-item-p">une fois</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
-      </div></section></div>
+      </div></section></div></details>
 </section>
 
 <section class="sect alt" id="lieux" data-toc="4 · Lieux et services" aria-labelledby="lieux-t">
@@ -708,7 +684,7 @@
 <div class="ct-bar" aria-live="polite">
   <div><small>Aujourd’hui</small><b data-total-once></b></div>
   <div><small>Par mois</small><b data-total-month></b></div>
-  <button type="button" class="pill ghost" data-cart-open>Voir mon forfait<span data-cart-count></span></button>
+  <button type="button" class="pill" data-cart-open>Mon forfait<span data-cart-count></span> · Recevoir ma soumission</button>
 </div>
 </div>
 </form>

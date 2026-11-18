@@ -2,7 +2,7 @@
 # très prestigieux, que les gens veulent acheter »). Peu de mots, beaucoup d'espace, un bouton doré.
 #   1. héros vivant : un film de six lieux; la maison réagit au toucher (accueil.js, shader WebGL);
 #   2. le produit : le Hub, en grand, presque seul;
-#   3. la gamme : Base, Signature, Platinum, une ligne chacun;
+#   3. la gamme : un grand Hub qui change (Base, Signature, Platinum), trois chiffres clés;
 #   4. ce qu'il fait : les solutions en bande de photos, une ligne chacune;
 #   5. tester : l'aperçu vivant de JARVIS App (démo complète sur /logiciel/);
 #   6. l'exemple réel (le laboratoire mobile);
@@ -114,7 +114,7 @@ def _heros():
 def _produit():
     return """<section class="ac-pro" aria-labelledby="ac-pro-titre">
   <p class="ac-pro-k">Hub JARVIS</p>
-  <h2 id="ac-pro-titre">Un boîtier.<br><span>Tout votre lieu.</span></h2>
+  <h2 id="ac-pro-titre">JARVIS.<br><span>Tout votre lieu.</span></h2>
   <p class="ac-pro-p">Lumières, caméras, réseau et intelligence privée, réunis dans un seul appareil, chez vous.</p>
   <div class="ac-pro-acts">
     <a class="pill" href="/offre/#composer">Composer mon forfait</a>
@@ -124,23 +124,39 @@ def _produit():
 </section>"""
 
 
-# --- 3. La gamme : trois Hubs, une ligne chacun -------------------------------------------------
+# --- 3. La gamme : un seul grand Hub qui change selon le niveau choisi (comme une page produit Apple) ---
+# (id, nom, une ligne, étiquette, trois chiffres clés tirés du comparatif de l'offre)
 GAMME = [
-    ("base", "Base", "L’essentiel, pour un petit lieu.", ""),
-    ("signature", "Signature", "La maison où vous vivez.", "Le plus choisi"),
-    ("platinum", "Platinum", "Un lieu qui ne s’arrête jamais.", ""),
+    ("base", "Base", "L’essentiel, pour un petit lieu.", "",
+     [("30", "appareils reliés"), ("2", "caméras analysées"), ("Internet", "pour l’IA")]),
+    ("signature", "Signature", "La maison où vous vivez.", "Le plus choisi",
+     [("100", "appareils reliés"), ("6", "caméras analysées"), ("Locale", "l’IA reste chez vous")]),
+    ("platinum", "Platinum", "Un lieu qui ne s’arrête jamais.", "",
+     [("Illimité", "appareils reliés"), ("16+", "caméras analysées"), ("2 h", "de batterie de secours")]),
 ]
 
 
 def _gamme():
-    cartes = "".join(f"""<a class="ac-g" href="/offre/#hub">
-      <img src="/media/hubs/hub-{i}.webp" alt="Hub JARVIS {n}" loading="lazy" width="1600" height="1200">
-      {f'<em class="ac-g-k">{k}</em>' if k else '<em class="ac-g-k" aria-hidden="true">&nbsp;</em>'}
-      <h3>{n}</h3><p>{l}</p><span class="ac-lien-f">En savoir plus <i aria-hidden="true">›</i></span>
-    </a>""" for i, n, l, k in GAMME)
-    return f"""<section class="ac-gam" aria-labelledby="ac-gam-titre">
-  <h2 id="ac-gam-titre">Choisissez votre Hub.</h2>
-  <div class="ac-gs">{cartes}</div>
+    photos = "".join(
+        f'<img class="ac-gv-i{" is-on" if i == "signature" else ""}" data-g="{i}" src="/media/hubs/hub-{i}.webp" '
+        f'alt="Hub JARVIS {n}" loading="lazy" width="1600" height="1200">'
+        for i, n, *_ in GAMME)
+    onglets = "".join(
+        f'<button type="button" class="ac-gt" data-g-go="{i}" aria-pressed="{"true" if i == "signature" else "false"}">{n}</button>'
+        for i, n, *_ in GAMME)
+    fiches = "".join(f"""<div class="ac-gf{' is-on' if i == 'signature' else ''}" data-g-f="{i}">
+      {f'<em class="ac-g-k">{k}</em>' if k else ''}<h3>Hub {n}</h3><p>{l}</p>
+      <dl>{"".join(f'<div><dt>{v}</dt><dd>{d}</dd></div>' for v, d in chiffres)}</dl>
+    </div>""" for i, n, l, k, chiffres in GAMME)
+    return f"""<section class="ac-gam" data-ac-gamme aria-labelledby="ac-gam-titre">
+  <h2 id="ac-gam-titre">Trois Hubs.<br><span>Un seul JARVIS.</span></h2>
+  <div class="ac-gt-row" role="group" aria-label="Choisir un Hub">{onglets}</div>
+  <div class="ac-gv">{photos}</div>
+  <div class="ac-gfs">{fiches}</div>
+  <div class="ac-pro-acts">
+    <a class="pill" href="/offre/#hub">Composer mon forfait</a>
+    <a class="ac-lien-f" href="/offre/#hub">Comparer les trois <i aria-hidden="true">›</i></a>
+  </div>
 </section>"""
 
 

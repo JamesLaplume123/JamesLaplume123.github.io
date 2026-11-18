@@ -252,3 +252,113 @@
 .ct-sol.is-conseil::after { content: "Conseillée pour votre lieu"; position: absolute; left: 1.2rem; top: -.6rem; padding: .3rem .6rem; border-radius: 999px; background: #17120a; box-shadow: inset 0 0 0 1px var(--gold-soft); color: var(--gold-soft); font: 600 .58rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
 
 .ct-trio { width: 100%; border-radius: 14px; margin: .9rem 0 1.1rem; display: block; }
+
+/* =====================================================================================
+   Page d'achat épurée (18 novembre 2026, « comme Apple ») : un titre, des choix simples,
+   peu de mots, pas de cadres dorés partout. Le comparatif et la pièce par pièce sont repliés.
+   ===================================================================================== */
+.ct-tete { padding: calc(var(--bar-h) + clamp(3rem, 7vw, 6rem)) 1.5rem clamp(2.5rem, 5vw, 4rem); text-align: center; }
+.ct-tete .fil { justify-content: center; }
+.ct-tete h1 { margin: 1.2rem 0 0; font: 650 clamp(3rem, 7vw, 6rem)/.95 var(--sans); letter-spacing: -.05em; color: #fff; }
+.ct-tete h1 span {
+  background: var(--mode-display, linear-gradient(100deg, #f6e2b5, #cfa45b)); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent; padding-bottom: .06em;
+}
+.ct-tete p { margin: 1.5rem auto 0; max-width: 34rem; font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.5; color: #b9b4ab; }
+
+/* Le choix du lieu : sans cadres de vitre */
+.ct-lieu-etape .lx-g::after, .ct-lieu-etape .lx-b::after, .ct-lieu-etape .pub::after { display: none; }
+.ct-lieu-etape .lx-g { background: #0b0b0d; box-shadow: inset 0 0 0 1px #ffffff12; border-radius: 22px; }
+.ct-lieu-etape .lx-b[aria-pressed="true"], .ct-lieu-etape .pub[aria-pressed="true"] {
+  background: #ffffff14; color: #fff; box-shadow: inset 0 0 0 1.5px var(--gold-soft);
+}
+
+/* Cartes : la phrase sans trait doré, plus calme */
+.ct-hub .ct-why, .ct-sol .ct-why { padding-left: 0; border-left: 0; color: #a9a49b; font-size: .95rem; }
+.ct-hub h3 { font-size: 1.35rem; letter-spacing: -.02em; }
+.ct-hub-ph { margin: 1.6rem 0 1rem; aspect-ratio: 4 / 3; border-radius: 16px; }
+.ct-hub-ph img { object-position: 50% 62%; }
+
+/* Les appareils à la pièce, repliés */
+.ct-piece { margin-top: 2rem; }
+.ct-piece[open] .ct-mats { padding: 0 1rem 1rem; }
+.ct-lieu-etape .pub button::after { display: none; }
+.ct-lieu-etape .pub button[aria-pressed="true"] { background: #ffffff14; color: #fff; box-shadow: inset 0 0 0 1.5px var(--gold-soft); }
+/* Plus d'air sur les côtés, comme le reste du site */
+.ct-lieu-etape, .ct-lieux-nav { padding-left: clamp(1.4rem, 4.6vw, 4.2rem); padding-right: clamp(1.4rem, 4.6vw, 4.2rem); }
+.ct-wrap { padding-left: clamp(1.4rem, 4.6vw, 4.2rem); padding-right: clamp(1.4rem, 4.6vw, 4.2rem); }
+/* Installation : des cartes calmes, la sélection en filet doré */
+.ct-install .card::before, .ct-install .card::after { display: none; }
+.ct-install .card { border-radius: 18px; background: #0a0a0a; box-shadow: inset 0 0 0 1px #ffffff14; }
+.ct-install .card:has(input:checked) { box-shadow: inset 0 0 0 1.5px var(--gold-soft); }
+
+/* =====================================================================================
+   Parcours d'achat façon Apple : « Pour qui », puis le Hub en grand à gauche et les choix
+   en liste à droite; le forfait est dans une barre fixe en bas (elle ouvre le tiroir).
+   ===================================================================================== */
+.ct-qui {
+  max-width: 76rem; margin: 0 auto; padding: 0 clamp(1.4rem, 4.6vw, 4.2rem);
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.8rem, 2vw, 1.4rem);
+}
+.ct-qui-t {
+  position: relative; overflow: hidden; border: 0; padding: 0; cursor: pointer; text-align: left; color: #fff;
+  border-radius: 26px; aspect-ratio: 16 / 10; background: #0a0a0a; box-shadow: inset 0 0 0 1px #ffffff14;
+  transition: box-shadow .35s var(--ease), transform .35s var(--ease);
+}
+.ct-qui-t img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+.ct-qui-t::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #000d 0%, #0006 38%, #0000 66%); }
+.ct-qui-t span { position: absolute; z-index: 1; left: clamp(1.2rem, 2.4vw, 2rem); bottom: clamp(1.1rem, 2.2vw, 1.8rem); display: flex; flex-direction: column; gap: .4rem; }
+.ct-qui-t b { font: 650 clamp(1.5rem, 2.6vw, 2.2rem)/1 var(--sans); letter-spacing: -.035em; }
+.ct-qui-t small { font-size: 1rem; color: #d7d2c8; }
+.ct-qui-t:hover img { transform: scale(1.03); }
+.ct-qui-t[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--gold-soft), 0 20px 60px -20px #000; }
+.ct-qui-deux {
+  grid-column: 1 / -1; justify-self: center; margin-top: .6rem; border: 0; background: none; cursor: pointer;
+  font: 500 1rem/1 var(--sans); color: var(--gold-soft); padding: .6rem 1rem; border-radius: 999px;
+}
+.ct-qui-deux[aria-pressed="true"] { background: #ffffff12; color: #fff; }
+.ct-lieu-etape .pub { display: none; }
+.ct-lieu-etape .lx-h, .ct-lieu-etape h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+
+.ct-vis { display: none; }
+@media (min-width: 1100px) {
+  .ct-wrap { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 0 clamp(2rem, 4vw, 4.5rem); max-width: 96rem; }
+  .ct-cart { display: none; }
+  .ct-vis { display: block; position: sticky; top: calc(var(--bar-h) + 70px); align-self: start; padding-top: 4.2rem; }
+  .ct-vis-in { position: relative; aspect-ratio: 4 / 3.4; }
+  .ct-vis-i {
+    position: absolute; inset: 0 0 4.5rem; width: 100%; height: calc(100% - 4.5rem); object-fit: cover; object-position: 50% 62%;
+    opacity: 0; transform: scale(1.03); transition: opacity .8s var(--ease), transform 1.2s var(--ease); border-radius: 28px;
+    -webkit-mask-image: radial-gradient(ellipse 62% 66% at 50% 56%, #000 50%, transparent 100%);
+    mask-image: radial-gradient(ellipse 62% 66% at 50% 56%, #000 50%, transparent 100%);
+  }
+  .ct-vis-i.is-on { opacity: 1; transform: none; }
+  .ct-vis-t { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; text-align: center; display: flex; flex-direction: column; gap: .35rem; }
+  .ct-vis-t b { font: 650 1.6rem/1 var(--sans); letter-spacing: -.03em; color: #fff; }
+  .ct-vis-t span { color: #a9a49b; font-size: .98rem; }
+
+  /* À droite : des listes, pas des grilles de cartes */
+  .ct-hubs, .ct-sols, .ct-kits, .ct-install.cards, .ct-ents { grid-template-columns: 1fr !important; }
+  .ct-hub { display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 1.3rem 1.4rem; }
+  .ct-hub .ct-hub-ph { display: none; }
+  .ct-hub h3 { margin: 0; }
+  .ct-hub .ct-pour, .ct-hub .ct-why, .ct-hub .ct-prix { grid-column: 1 / -1; }
+  .ct-hub .ct-tag { position: static; justify-self: start; grid-row: 1; grid-column: 2; margin-right: 2.4rem; }
+  .ct-main .sect-head { display: block; }
+  .ct-main .sect-head > p { margin-top: .8rem; max-width: none; }
+}
+/* La barre du forfait, en bas, sur tous les écrans : pleine largeur, discrète */
+.ct-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; translate: none; z-index: 90; display: flex; align-items: center; justify-content: flex-end; gap: 1rem;
+  padding: .7rem clamp(1.4rem, 4.6vw, 4.2rem); border-radius: 0; border: 0; background: #08080ae0;
+  box-shadow: inset 0 1px 0 #ffffff17; -webkit-backdrop-filter: saturate(1.4) blur(18px); backdrop-filter: saturate(1.4) blur(18px);
+}
+.ct-bar .pill { margin: 0; padding: .7rem 1.3rem; font-size: .92rem; }
+.ct { padding-bottom: 5rem; }
+@media (max-width: 760px) {
+  .ct-qui { grid-template-columns: 1fr; }
+  .ct-qui-t { aspect-ratio: 16 / 9; }
+  .ct-bar { justify-content: center; }
+}
+.ct[data-sansprix] .ct-bar { justify-content: flex-end; }
+@media (max-width: 760px) { .ct[data-sansprix] .ct-bar { justify-content: center; } }

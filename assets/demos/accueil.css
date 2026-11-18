@@ -298,10 +298,10 @@
 .ac-acts { display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap; }
 
 /* Le produit */
-.ac-pro { padding: clamp(7rem, 13vw, 11rem) var(--ac-pad) 0; text-align: center; overflow: hidden; }
+.ac-pro { padding: clamp(5rem, 9vw, 8rem) var(--ac-pad) 0; text-align: center; overflow: hidden; }
 .ac-pro-k { margin: 0 0 1rem; font: 600 .78rem/1 var(--mono); letter-spacing: .32em; text-transform: uppercase; color: var(--gold-soft); }
 .ac-pro h2 {
-  margin: 0 auto; max-width: 16ch; font: 650 clamp(3rem, 7.4vw, 6.6rem)/.96 var(--sans); letter-spacing: -.05em; color: #fff;
+  margin: 0 auto; max-width: 16ch; font: 650 clamp(2.8rem, 6.2vw, 5.6rem)/.96 var(--sans); letter-spacing: -.05em; color: #fff;
 }
 /* La deuxième ligne prend la matière du mode (or champagne, titane, acier), pas un gris terne. */
 .ac-pro h2 span {
@@ -312,21 +312,21 @@
 .ac-pro-acts { margin-top: 2.2rem; display: flex; justify-content: center; align-items: center; gap: 1.8rem; flex-wrap: wrap; }
 /* Le produit flotte dans le noir : pas de boîte, les bords de la photo se fondent dans la page. */
 .ac-pro-ph {
-  display: block; width: min(96rem, 112%); max-width: none; margin: clamp(2rem, 4vw, 3.5rem) 50% 0; translate: -50% 0; height: auto;
-  border-radius: 0; aspect-ratio: 16 / 8; object-fit: cover; object-position: 50% 64%;
-  -webkit-mask-image: radial-gradient(ellipse 58% 62% at 50% 56%, #000 46%, transparent 100%);
-  mask-image: radial-gradient(ellipse 58% 62% at 50% 56%, #000 46%, transparent 100%);
+  display: block; max-width: 100%; margin: clamp(1.2rem, 2.5vw, 2.2rem) auto 0; translate: none;
+  height: clamp(17rem, 54vh, 38rem); width: auto; aspect-ratio: 16 / 10; border-radius: 0; object-fit: cover; object-position: 50% 62%;
+  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 58%, #000 48%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 70% at 50% 58%, #000 48%, transparent 100%);
 }
 
 /* La gamme : un grand Hub qui change selon le niveau choisi */
-.ac-gam { padding: clamp(7rem, 12vw, 10rem) var(--ac-pad) 0; text-align: center; overflow: hidden; }
-.ac-gam h2 { margin: 0; font: 650 clamp(2.6rem, 6vw, 5rem)/.98 var(--sans); letter-spacing: -.048em; color: #fff; }
+.ac-gam { padding: clamp(5rem, 9vw, 8rem) var(--ac-pad) 0; text-align: center; overflow: hidden; }
+.ac-gam h2 { margin: 0; font: 650 clamp(2.4rem, 5vw, 4.4rem)/.98 var(--sans); letter-spacing: -.048em; color: #fff; }
 .ac-gam h2 span {
   background: var(--mode-display, linear-gradient(100deg, #f6e2b5, #cfa45b)); -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent; padding-bottom: .06em;
 }
 .ac-gt-row {
-  display: inline-flex; gap: 4px; margin: 2.4rem auto 0; padding: 4px; border-radius: 999px;
+  display: inline-flex; gap: 4px; margin: 1.8rem auto 0; padding: 4px; border-radius: 999px;
   background: #ffffff0d; box-shadow: inset 0 0 0 1px #ffffff17;
 }
 .ac-gt {
@@ -335,32 +335,52 @@
 }
 .ac-gt:hover { color: #fff; }
 .ac-gt[aria-pressed="true"] { background: #ffffff1f; color: #fff; box-shadow: inset 0 0 0 1px #ffffff26; }
-.ac-gv { position: relative; width: min(96rem, 112%); margin: 1.4rem 50% 0; translate: -50% 0; aspect-ratio: 16 / 8; }
+.ac-gv { position: relative; max-width: 100%; margin: 1rem auto 0; translate: none; height: clamp(15rem, 40vh, 30rem); width: auto; aspect-ratio: 16 / 10; }
 .ac-gv-i {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 64%;
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%;
   opacity: 0; transform: scale(1.03); transition: opacity .9s var(--ease), transform 1.4s var(--ease);
   -webkit-mask-image: radial-gradient(ellipse 58% 62% at 50% 56%, #000 46%, transparent 100%);
   mask-image: radial-gradient(ellipse 58% 62% at 50% 56%, #000 46%, transparent 100%);
 }
 .ac-gv-i.is-on { opacity: 1; transform: none; }
-.ac-gfs { display: grid; margin-top: -1.5rem; }
+.ac-gfs { display: grid; margin-top: .4rem; }
 .ac-gf { grid-area: 1 / 1; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .ac-gf.is-on { opacity: 1; transform: none; pointer-events: auto; }
 .ac-g-k { display: block; margin-bottom: .7rem; font: 600 .7rem/1 var(--mono); letter-spacing: .26em; text-transform: uppercase; font-style: normal; color: var(--gold-soft); }
 .ac-gf h3 { margin: 0; font: 650 clamp(1.8rem, 3vw, 2.5rem)/1 var(--sans); letter-spacing: -.035em; color: #fff; }
 .ac-gf p { margin: .7rem 0 0; color: #a9a49b; font-size: 1.08rem; }
-.ac-gf dl { display: flex; justify-content: center; gap: clamp(2rem, 6vw, 5rem); margin: 2.2rem 0 0; }
+.ac-gf dl { display: flex; justify-content: center; gap: clamp(2rem, 6vw, 5rem); margin: 1.5rem 0 0; }
 .ac-gf dl div { display: flex; flex-direction: column; align-items: center; gap: .4rem; }
 .ac-gf dt { font: 650 clamp(1.6rem, 2.6vw, 2.2rem)/1 var(--sans); letter-spacing: -.03em; color: #fff; }
 .ac-gf dd { margin: 0; font-size: .9rem; color: #8f8a81; }
-.ac-gam .ac-pro-acts { margin-top: 2.6rem; }
+.ac-gam .ac-pro-acts { margin-top: 2rem; }
 
 /* Ce qu'il fait : plus d'air, plus de place aux photos */
 .ac-faire { padding-top: clamp(7rem, 12vw, 10rem); }
 .ac-faire .ac-tete h2 { font-size: clamp(2.4rem, 5vw, 4.2rem); letter-spacing: -.045em; }
 
 @media (max-width: 860px) {
-  .ac-gv { width: 140%; aspect-ratio: 4 / 3; }
+  .ac-gv { height: 15rem; }
   .ac-gf dl { gap: 1.4rem; }
-  .ac-pro-ph { width: 130%; aspect-ratio: 4 / 3; }
+  .ac-pro-ph { height: 16rem; }
+}
+
+/* Gamme sur grand écran : la photo à gauche, la fiche à droite — tout tient dans un écran. */
+@media (min-width: 1000px) {
+  .ac-gam {
+    display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); column-gap: clamp(2rem, 5vw, 5rem);
+    grid-template-areas: "t t" "v o" "v f" "v a"; grid-template-rows: auto auto auto 1fr;
+    max-width: 92rem; margin: 0 auto; text-align: left; align-items: start;
+  }
+  .ac-gam h2 { grid-area: t; text-align: center; margin-bottom: clamp(2rem, 4vw, 3.2rem); }
+  .ac-gt-row { grid-area: o; justify-self: start; margin: clamp(1rem, 4vh, 3rem) 0 0; }
+  .ac-gv { grid-area: v; width: 100%; height: auto; aspect-ratio: 4 / 3; margin: 0; max-height: 72vh; }
+  .ac-gv-i { object-position: 50% 60%;
+    -webkit-mask-image: radial-gradient(ellipse 66% 70% at 50% 56%, #000 55%, transparent 100%);
+    mask-image: radial-gradient(ellipse 66% 70% at 50% 56%, #000 55%, transparent 100%); }
+  .ac-gfs { grid-area: f; margin-top: 2rem; }
+  .ac-gf dl { justify-content: flex-start; gap: clamp(1.6rem, 3vw, 3rem); }
+  .ac-gf dl div { align-items: flex-start; }
+  .ac-gf h3 { font-size: clamp(2.2rem, 3.4vw, 3rem); }
+  .ac-gam .ac-pro-acts { grid-area: a; justify-content: flex-start; margin-top: 2.2rem; }
 }

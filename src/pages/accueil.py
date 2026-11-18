@@ -1,21 +1,19 @@
-# Accueil — le parcours du visiteur (décision de James, novembre 2026) : voir, tester, comprendre,
-# composer son forfait.
-#   1. héros vivant : un film de six lieux (maison, domaine, garage, hangar, ferme, entreprise); la
-#      maison réagit au toucher (assets/demos/accueil.js, shader WebGL);
-#   2. « Votre lieu, votre Hub » (src/lieux.py, src/pages/offre.py) : le lieu choisi allume le Hub
-#      conseillé, et mène au forfait (/offre/);
-#   3. voir : les solutions en bande de photos, une ligne chacune;
-#   4. tester : l'aperçu vivant de JARVIS App (démo complète sur /logiciel/);
-#   5. l'exemple réel (le laboratoire mobile);
-#   6. fin : « Parlons de votre projet » et « Posez votre question à JARVIS » (ouvre la bulle).
+# Accueil — une vitrine, pas un formulaire (décision de James, 18 novembre 2026 : « comme Apple,
+# très prestigieux, que les gens veulent acheter »). Peu de mots, beaucoup d'espace, un bouton doré.
+#   1. héros vivant : un film de six lieux; la maison réagit au toucher (accueil.js, shader WebGL);
+#   2. le produit : le Hub, en grand, presque seul;
+#   3. la gamme : Base, Signature, Platinum, une ligne chacun;
+#   4. ce qu'il fait : les solutions en bande de photos, une ligne chacune;
+#   5. tester : l'aperçu vivant de JARVIS App (démo complète sur /logiciel/);
+#   6. l'exemple réel (le laboratoire mobile);
+#   7. fin : « Parlons de votre projet » et « Posez votre question à JARVIS » (ouvre la bulle).
+# Le choix du lieu se fait en composant son forfait (/offre/#composer), plus sur l'accueil.
 # Styles et scripts : assets/demos/accueil.css et accueil.js.
 
 import json
 
 from config import SITE, CAPABILITIES
 from demos import app
-from pages import offre
-import lieux
 import pro
 
 
@@ -93,12 +91,12 @@ def _heros():
   </div>
   <div class="ac-hero-in">
     <p class="ac-sig"><b>JARVIS Private Systems</b><span>{SITE["signature"]}</span></p>
-    <h1 id="ac-titre">Des lieux intelligents et sécurisés.</h1>
+    <h1 id="ac-titre">Votre lieu.<br>Sous contrôle.</h1>
     <div class="ac-hero-bas">
       <p class="ac-phrase">{SITE["phrase"]}</p>
       <div class="ac-acts">
-        <a class="pill" href="/logiciel/">Voir le logiciel</a>
-        <a class="pill ghost" href="/contact/">Parlons de votre projet</a>
+        <a class="pill" href="/offre/#composer">Composer mon forfait</a>
+        <a class="ac-lien-f" href="/logiciel/">Essayer le logiciel <i aria-hidden="true">›</i></a>
       </div>
     </div>
     <div class="ac-tabs" data-ac-tabs role="group" aria-label="Les lieux montrés">{_onglets()}</div>
@@ -110,7 +108,43 @@ def _heros():
 </section>"""
 
 
-# --- 2. Ce que nous faisons : les sept solutions, dans l'ordre officiel -----------------------
+# --- 2. Le produit : le Hub, en grand, presque seul -------------------------------------------
+# Décision de James (18 novembre 2026) : un site qui donne envie, comme Apple. On montre d'abord le
+# produit; le choix du lieu ne se fait qu'en composant son forfait (/offre/#composer).
+def _produit():
+    return """<section class="ac-pro" aria-labelledby="ac-pro-titre">
+  <p class="ac-pro-k">Hub JARVIS</p>
+  <h2 id="ac-pro-titre">Un boîtier.<br><span>Tout votre lieu.</span></h2>
+  <p class="ac-pro-p">Lumières, caméras, réseau et intelligence privée, réunis dans un seul appareil, chez vous.</p>
+  <div class="ac-pro-acts">
+    <a class="pill" href="/offre/#composer">Composer mon forfait</a>
+    <a class="ac-lien-f" href="/offre/">Découvrir l’offre <i aria-hidden="true">›</i></a>
+  </div>
+  <img class="ac-pro-ph" src="/media/offre/hub-signature.webp" alt="Le Hub JARVIS Signature posé dans un salon" loading="lazy" width="1600" height="1200">
+</section>"""
+
+
+# --- 3. La gamme : trois Hubs, une ligne chacun -------------------------------------------------
+GAMME = [
+    ("base", "Base", "L’essentiel, pour un petit lieu.", ""),
+    ("signature", "Signature", "La maison où vous vivez.", "Le plus choisi"),
+    ("platinum", "Platinum", "Un lieu qui ne s’arrête jamais.", ""),
+]
+
+
+def _gamme():
+    cartes = "".join(f"""<a class="ac-g" href="/offre/#hub">
+      <img src="/media/offre/hub-{i}.webp" alt="Hub JARVIS {n}" loading="lazy" width="1600" height="1200">
+      {f'<em class="ac-g-k">{k}</em>' if k else '<em class="ac-g-k" aria-hidden="true">&nbsp;</em>'}
+      <h3>{n}</h3><p>{l}</p><span class="ac-lien-f">En savoir plus <i aria-hidden="true">›</i></span>
+    </a>""" for i, n, l, k in GAMME)
+    return f"""<section class="ac-gam" aria-labelledby="ac-gam-titre">
+  <h2 id="ac-gam-titre">Choisissez votre Hub.</h2>
+  <div class="ac-gs">{cartes}</div>
+</section>"""
+
+
+# --- 4. Ce que nous faisons : les sept solutions, dans l'ordre officiel -----------------------
 # (solution, photo, cadrage, une ligne)
 SOLUTIONS = [
     ("environnements-intelligents", "sol-environnements", "32% 50%", "Lumières, chauffage et énergie sur un seul écran."),
@@ -129,8 +163,6 @@ def _solutions():
     for n, (slug, img, pos, ligne) in enumerate(SOLUTIONS, 1):
         cartes += f"""<article class="ac-sol{'' if cartes else ' is-on'}" data-sol="{slug}">
       <img src="/media/accueil/{img}.webp" alt="" loading="lazy" style="object-position:{pos}">
-      <span class="ac-sol-n" aria-hidden="true">{n:02d}</span>
-      <span class="ac-sol-tag"><i aria-hidden="true"></i><b>Pour votre lieu</b></span>
       <div class="ac-sol-t">
         <h3><a class="ac-sol-a" href="/solutions/{slug}/">{_TITRES[slug]}</a></h3>
         <p>{ligne}</p>
@@ -139,8 +171,8 @@ def _solutions():
     </article>"""
     return f"""<section class="ac-sect ac-faire" id="solutions" aria-labelledby="ac-faire-titre">
   <div class="ac-tete">
-    <h2 id="ac-faire-titre">Vos solutions, un seul système.</h2>
-    <a class="ac-lien" href="/solutions/">Comparer les solutions</a>
+    <h2 id="ac-faire-titre">Ce qu’il fait.</h2>
+    <a class="ac-lien-f" href="/solutions/">Toutes les solutions <i aria-hidden="true">›</i></a>
   </div>
   <div class="ac-sols" data-ac-sols data-sols>{cartes}</div>
 </section>"""
@@ -184,20 +216,6 @@ def _logiciel():
 </section>"""
 
 
-# --- 2. Votre lieu, votre Hub : un seul geste (décision de James : « ça devrait être ensemble ») ---
-# On choisit son lieu; la carte du Hub conseillé s'allume avec sa raison (assets/js/wow.js), puis on
-# compose son forfait. Les solutions utiles au lieu sont mises en avant dans la bande suivante.
-def _lieu():
-    return f"""<section class="ac-sect ac-choisir" id="lieu" aria-label="Votre lieu, votre Hub">
-  {lieux.selecteur("Votre lieu, votre Hub.", resultat=False)}
-  {offre.hubs(guide=False)}
-  <div class="ac-suite">
-    <a class="pill" href="/offre/#composer">Composer mon forfait</a>
-    <a class="ac-lien" href="/offre/">Comprendre l’offre</a>
-  </div>
-</section>"""
-
-
 # --- 5. L'exemple réel : le laboratoire mobile ---------------------------------------------------
 def _reel():
     return """<section class="ac-sect ac-composer" aria-label="L’exemple réel">
@@ -228,11 +246,11 @@ PAGE = {
     "v2": True,
     "title": "JARVIS Private Systems | Technologies de sécurité et intelligence privée",
     "schema": [pro.ld_entreprise(), pro.ld_site()],
-    "assets": ["app", "offre", "accueil"],
+    "assets": ["app", "accueil"],
     "lancement_integre": True,  # l'avis de lancement est dans le héros, pas sous la première section
     "description": (
         "JARVIS, un système privé qui gère et protège les maisons, les fermes, les entreprises "
         "et les véhicules. Domotique, réseau, caméras reliées et IA privée, chez vous."
     ),
-    "content": "\n".join([_heros(), _lieu(), _solutions(), _logiciel(), _reel(), _fin()]) + "\n",
+    "content": "\n".join([_heros(), _produit(), _gamme(), _solutions(), _logiciel(), _reel(), _fin()]) + "\n",
 }

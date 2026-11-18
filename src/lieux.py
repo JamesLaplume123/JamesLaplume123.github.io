@@ -272,8 +272,8 @@ def sources_vignettes():
         dedie = f"/media/forfait/sol-{cle}.webp"
         out.append((f"sol-{cle}", dedie if _existe(dedie) else f"/media/accueil/sol-{cle}.webp"))
     for h in HUB_NOM:
-        dedie = f"/media/offre/hub-{h}.webp"
-        out.append((f"hub-{h}", dedie if _existe(dedie) else "/media/product/jarvis-hub-v1.webp"))
+        dedie = f"/media/hubs/hub-{h}.webp"
+        out.append((f"hub-{h}", dedie if _existe(dedie) else "/media/hubs/hub-signature.webp"))
     return out
 
 

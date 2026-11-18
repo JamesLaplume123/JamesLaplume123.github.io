@@ -298,18 +298,24 @@
 .ac-acts { display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap; }
 
 /* Le produit */
-.ac-pro { padding: clamp(7rem, 13vw, 11rem) var(--ac-pad) 0; text-align: center; }
+.ac-pro { padding: clamp(7rem, 13vw, 11rem) var(--ac-pad) 0; text-align: center; overflow: hidden; }
 .ac-pro-k { margin: 0 0 1rem; font: 600 .78rem/1 var(--mono); letter-spacing: .32em; text-transform: uppercase; color: var(--gold-soft); }
 .ac-pro h2 {
   margin: 0 auto; max-width: 16ch; font: 650 clamp(3rem, 7.4vw, 6.6rem)/.96 var(--sans); letter-spacing: -.05em; color: #fff;
 }
-.ac-pro h2 span { color: #7d7a73; }
+/* La deuxième ligne prend la matière du mode (or champagne, titane, acier), pas un gris terne. */
+.ac-pro h2 span {
+  background: var(--mode-display, linear-gradient(100deg, #f6e2b5, #cfa45b)); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent; padding-bottom: .06em;
+}
 .ac-pro-p { margin: 1.6rem auto 0; max-width: 34rem; font-size: clamp(1.08rem, 1.5vw, 1.3rem); line-height: 1.5; color: #b9b4ab; }
 .ac-pro-acts { margin-top: 2.2rem; display: flex; justify-content: center; align-items: center; gap: 1.8rem; flex-wrap: wrap; }
+/* Le produit flotte dans le noir : pas de boîte, les bords de la photo se fondent dans la page. */
 .ac-pro-ph {
-  display: block; width: min(76rem, 100%); margin: clamp(3.5rem, 6vw, 5rem) auto 0; height: auto;
-  border-radius: 28px; aspect-ratio: 16 / 9; object-fit: cover; object-position: 50% 62%;
-  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent); mask-image: linear-gradient(180deg, #000 70%, transparent);
+  display: block; width: min(96rem, 112%); max-width: none; margin: clamp(2rem, 4vw, 3.5rem) 50% 0; translate: -50% 0; height: auto;
+  border-radius: 0; aspect-ratio: 16 / 8; object-fit: cover; object-position: 50% 64%;
+  -webkit-mask-image: radial-gradient(ellipse 58% 62% at 50% 56%, #000 46%, transparent 100%);
+  mask-image: radial-gradient(ellipse 58% 62% at 50% 56%, #000 46%, transparent 100%);
 }
 
 /* La gamme */
@@ -332,5 +338,5 @@
 
 @media (max-width: 860px) {
   .ac-gs { grid-template-columns: 1fr; max-width: 30rem; gap: 3.2rem; }
-  .ac-pro-ph { border-radius: 18px; aspect-ratio: 4 / 3; }
+  .ac-pro-ph { width: 130%; aspect-ratio: 4 / 3; }
 }

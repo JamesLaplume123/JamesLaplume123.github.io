@@ -20,8 +20,8 @@ def _p(n):
 
 
 def _photo_hub(hid):
-    """La photo du boîtier, si elle existe : media/offre/hub-<id>.webp. Sinon rien (jamais un dessin)."""
-    chemin = f"/media/offre/hub-{hid}.webp"
+    """La photo du boîtier, si elle existe : media/hubs/hub-<id>.webp. Sinon rien (jamais un dessin)."""
+    chemin = f"/media/hubs/hub-{hid}.webp"
     if os.path.exists(os.path.join(_RACINE, chemin.lstrip("/"))):
         return f'<img class="of-h-ph" src="{chemin}" alt="" loading="lazy" decoding="async">'
     return ""

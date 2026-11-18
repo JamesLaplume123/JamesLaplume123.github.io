@@ -577,7 +577,7 @@ def v_espace():
          'data-toast="Mes documents : vos fichiers, depuis les sources que vous avez autorisées."', PH_DOCS, "40% 45%"),
         ("devices", "Mes appareils", "Vos appareils personnels.",
          'data-toast="Mes appareils : chaque appareil connecté à votre compte, et ses sessions."',
-         "/media/offre/hub-signature.webp", "50% 55%"),
+         "/media/hubs/hub-signature.webp", "50% 55%"),
         ("link", "Mes connexions", "Vos services autorisés.",
          'data-toast="Mes connexions : agenda, documents, messagerie. Vous choisissez ce que JARVIS peut lire."',
          "/media/forfait/sol-reseau.webp", "50% 40%"),

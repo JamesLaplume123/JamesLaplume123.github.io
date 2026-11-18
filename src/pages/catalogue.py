@@ -287,7 +287,7 @@ def _hubs():
       <input type="radio" name="hub" value="{h['id']}" data-prix="{h['prix']}" data-cam="{h['cam']}" data-app="{h['app']}" data-autos="{h['autos']}">
       <span class="ct-check" aria-hidden="true"></span>
       {tag}
-      <figure class="ct-hub-ph"><img src="/media/product/jarvis-hub-v1.webp" alt="" loading="lazy" decoding="async"></figure>
+      <figure class="ct-hub-ph"><img src="/media/hubs/hub-{h['id']}.webp" alt="Hub JARVIS {escape(h['nom'])}" loading="lazy" decoding="async"></figure>
       <h3>{escape(h['nom'])}</h3>
       <p class="ct-prix">{_p(h['prix'])}<small>une fois</small></p>
       <p class="ct-pour">{c['situation']} · {c['pour']}</p>
@@ -461,7 +461,7 @@ def _inclus():
 # Comment ça se compose : trois étapes, en images (haut de la page /offre/).
 ETAPES = [
     ("1", "Un Hub par lieu", "Le petit ordinateur installé chez vous. Il fait tourner JARVIS, même sans Internet.",
-     "/media/product/jarvis-hub-v1.webp", "62% 55%"),
+     "/media/hubs/hub-signature.webp", "50% 60%"),
     ("2", "Les solutions que vous voulez", "Comme des apps : vous prenez seulement ce qui vous sert, et vous annulez quand vous voulez.",
      "/media/accueil/sol-environnements.webp", "32% 50%"),
     ("3", "Le matériel du lieu", "Capteurs, caméras, serrures. Ce que vous avez déjà est réutilisé.",
@@ -521,7 +521,7 @@ PAGE = {
     <h2 id="hub-t">Choisissez votre Hub.<br><em>Selon la taille de votre lieu.</em></h2></div>
     <p data-rev>Même logiciel, même app, mêmes solutions. Ce qui change : la puissance, le nombre d’appareils, l’IA et la sécurité. Payé une fois. Votre forfait vous dira si votre Hub devient trop petit.</p></div>
   <div class="ct-hubs">{_hubs()}</div>
-  <details class="ct-details" data-rev><summary>Comparer les trois Hubs en détail</summary><img class="ct-trio" src="/media/offre/hub-trio.webp" alt="Les trois Hubs JARVIS côte à côte" loading="lazy" decoding="async">{_compare()}</details>
+  <details class="ct-details" data-rev><summary>Comparer les trois Hubs en détail</summary><img class="ct-trio" src="/media/hubs/hub-trio.webp" alt="Les trois Hubs JARVIS côte à côte" loading="lazy" decoding="async">{_compare()}</details>
   <div class="ct-inclus-hub" data-rev><b>Dans chaque Hub :</b> la solution Environnements intelligents, l’app JARVIS, les comptes et droits, les mises à jour signées, les sauvegardes chiffrées.</div>
 </section>
 

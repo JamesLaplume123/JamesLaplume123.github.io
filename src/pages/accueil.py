@@ -120,7 +120,7 @@ def _produit():
     <a class="pill" href="/offre/#composer">Composer mon forfait</a>
     <a class="ac-lien-f" href="/offre/">Découvrir l’offre <i aria-hidden="true">›</i></a>
   </div>
-  <img class="ac-pro-ph" src="/media/offre/hub-signature.webp" alt="Le Hub JARVIS Signature posé dans un salon" loading="lazy" width="1600" height="1200">
+  <img class="ac-pro-ph" src="/media/hubs/hub-signature.webp" alt="Le Hub JARVIS Signature posé dans un salon" loading="lazy" width="1600" height="1200">
 </section>"""
 
 
@@ -134,7 +134,7 @@ GAMME = [
 
 def _gamme():
     cartes = "".join(f"""<a class="ac-g" href="/offre/#hub">
-      <img src="/media/offre/hub-{i}.webp" alt="Hub JARVIS {n}" loading="lazy" width="1600" height="1200">
+      <img src="/media/hubs/hub-{i}.webp" alt="Hub JARVIS {n}" loading="lazy" width="1600" height="1200">
       {f'<em class="ac-g-k">{k}</em>' if k else '<em class="ac-g-k" aria-hidden="true">&nbsp;</em>'}
       <h3>{n}</h3><p>{l}</p><span class="ac-lien-f">En savoir plus <i aria-hidden="true">›</i></span>
     </a>""" for i, n, l, k in GAMME)

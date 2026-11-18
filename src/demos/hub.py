@@ -144,7 +144,7 @@ def _chip_ext(k, extra=""):
 
 # Photo du boîtier : les positions (en % de l'image 16:9) de la lumière avant et du boîtier servent aux
 # fils de lumière et au halo. Changer de photo demande de revoir HUB_LED et HUB_HALO.
-HUB_PHOTO = "/media/product/jarvis-hub-v1.webp"
+HUB_PHOTO = "/media/hubs/hub-signature.webp"
 HUB_LED = (44.0, 56.0)
 HUB_HALO = (34.0, 55.0)
 
@@ -203,7 +203,7 @@ def _scene():
     return f"""
   <div class="hb-scene hb-frame" data-rev style="--led-x:{HUB_LED[0]}%;--led-y:{HUB_LED[1]}%;--halo-x:{HUB_HALO[0]}%;--halo-y:{HUB_HALO[1]}%">
     <div class="hb-sc-photo">
-      <img src="{HUB_PHOTO}" width="1672" height="941" loading="lazy" decoding="async"
+      <img src="{HUB_PHOTO}" width="1600" height="1200" loading="lazy" decoding="async"
            alt="Le boîtier JARVIS Hub, posé sur un meuble dans un salon, sa petite lumière avant allumée">
       <span class="hb-sc-veil" aria-hidden="true"></span>
       <span class="hb-sc-halo" aria-hidden="true"></span>

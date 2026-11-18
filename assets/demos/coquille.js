@@ -53,7 +53,8 @@
   var coques = Array.prototype.slice.call(document.querySelectorAll("[data-xs]"));
   function tient() {
     var toc = document.querySelector(".toc");
-    var dispo = window.innerHeight - 96 - (toc ? toc.offsetHeight : 0);
+    /* Sous la barre du site et la barre des sections, avec de l'air en haut et en bas. */
+    var dispo = window.innerHeight - 66 - (toc ? toc.offsetHeight : 0) - 52;
     coques.forEach(function (xs) {
       var ecran = xs.querySelector(".xs-screen"), main = xs.querySelector(".xs-main"), cote = xs.querySelector(".xs-side");
       if (!ecran || !main) return;
@@ -68,9 +69,32 @@
       [ecran, main, cote].forEach(function (e) { if (e) e.style.maxHeight = max; });
     });
   }
+  /* Arrivée propre sur la démo (« Essayer », #jarvis) : le cadre se pose juste sous les barres, en entier. */
+  function pose(xs, doux) {
+    var toc = document.querySelector(".toc"), bar = document.querySelector(".bar");
+    var haut = (bar ? bar.offsetHeight : 66) + (toc ? toc.offsetHeight : 0) + 16;
+    var y = xs.getBoundingClientRect().top + window.scrollY - haut;
+    window.scrollTo({ top: Math.max(0, y), behavior: doux ? "smooth" : "auto" });
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var cible = document.getElementById(a.getAttribute("href").slice(1));
+    if (!cible || !cible.hasAttribute("data-xs")) return;
+    e.preventDefault();
+    tient();
+    var doux = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+    pose(cible, doux);
+    setTimeout(function () { pose(cible, false); }, doux ? 700 : 50);   /* rattrape un réajustement de la page */
+    if (history.replaceState) history.replaceState(null, "", "#" + cible.id);
+  });
   if (coques.length) {
     tient();
     window.addEventListener("resize", tient);
-    window.addEventListener("load", tient);
+    window.addEventListener("load", function () {
+      tient();
+      var c = location.hash && document.getElementById(location.hash.slice(1));
+      if (c && c.hasAttribute("data-xs")) pose(c, false);
+    });
   }
 })();

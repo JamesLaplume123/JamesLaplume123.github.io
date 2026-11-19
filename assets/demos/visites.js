@@ -20,6 +20,9 @@
   var keep = "";         // durée de conservation annoncée par le service
   var busy = false;
   var LIMIT = 200;
+  var chats = [];        // échanges avec JARVIS (GET /chats), les plus récents d'abord
+  var cCursor = null, cBusy = false, cState = "";
+  var tab = "visiteurs";
   /* Robots : ceux que le service a reconnus, et les centres de données (pas des gens chez eux). */
   var HOSTS = /anthropic|amazon|aws|google cloud|google llc|microsoft|azure|digitalocean|ovh|hetzner|linode|akamai|gthost|datacamp|m247|leaseweb|vultr|contabo|oracle|alibaba|tencent|scaleway|cloudflare/i;
   function isBot(v) { return v.robot === true || v.appareil === "Robot" || HOSTS.test(v.fournisseur || ""); }
@@ -96,6 +99,7 @@
           keep = j.conservation_jours ? (j.conservation_jours % 365 === 0 ? (j.conservation_jours / 365 * 12) + " mois" : j.conservation_jours + " jours") : "";
           archive(Array.isArray(j.archives) ? j.archives : []);
         }
+        root.classList.add("is-ouvert");
         fillFilters();
         render();
         status("Journal à jour à " + clock() + " · " + plural(all.length, "entrée chargée", "entrées chargées") +
@@ -110,6 +114,28 @@
       .then(function () { busy = false; $("more").disabled = false; });
   }
 
+  /* ---------- Conversations avec JARVIS (GET /chats, même jeton) ---------- */
+  function loadChats(more) {
+    var t = token();
+    if (!API || !t || cBusy || (more && !cCursor)) return;
+    cBusy = true;
+    fetch(API + "/chats?limit=300" + (more ? "&cursor=" + encodeURIComponent(cCursor) : ""), { headers: { Authorization: "Bearer " + t }, cache: "no-store" })
+      .then(function (r) {
+        if (r.status === 404) throw new Error("Le service ne connaît pas encore les conversations.");
+        if (!r.ok) throw new Error("Le service ne répond pas (" + r.status + ").");
+        return r.json();
+      })
+      .then(function (d) {
+        if (!d || !Array.isArray(d.echanges)) throw new Error("Le service ne connaît pas encore les conversations.");
+        chats = (more ? chats.concat(d.echanges) : d.echanges).filter(function (x) { return x && x.t && x.q; });
+        chats.sort(function (a, b) { return a.t < b.t ? 1 : -1; });
+        cCursor = typeof d.cursor === "string" && d.cursor ? d.cursor : null;
+        cState = "";
+      })
+      .catch(function (e) { cState = e.message || "Les conversations ne se chargent pas."; })
+      .then(function () { cBusy = false; render(); });
+  }
+
   $("form").addEventListener("submit", function (ev) {
     ev.preventDefault();
     var input = root.querySelector("#av-jeton");
@@ -117,18 +143,34 @@
     input.value = "";
     if (!t) { status("Le champ est vide : collez le jeton.", "warn"); return; }
     set(session, KEY, t);
-    load(false);
+    load(false); loadChats(false);
   });
-  $("refresh").addEventListener("click", function () { load(false); });
+  $("refresh").addEventListener("click", function () { load(false); loadChats(false); });
   $("forget").addEventListener("click", function () {
     set(session, KEY, null);
-    all = []; cursor = null; stats = null; archive([]); fillFilters(); render();
+    root.classList.remove("is-ouvert");
+    all = []; cursor = null; stats = null; chats = []; cCursor = null; archive([]); fillFilters(); fermeFiche(); render();
     status("Jeton oublié dans cet onglet.", "");
   });
   $("f-pays").addEventListener("change", render);
   $("f-page").addEventListener("change", render);
   $("f-bots").addEventListener("change", render);
+  $("f-parle").addEventListener("change", render);
+  $("q").addEventListener("input", render);
   $("more").addEventListener("click", function () { load(true); });
+  $("c-more").addEventListener("click", function () { loadChats(true); });
+  Array.prototype.forEach.call(root.querySelectorAll(".av-tab"), function (b) {
+    b.addEventListener("click", function () { montre(b.getAttribute("data-tab")); });
+  });
+  function montre(t) {
+    tab = t;
+    Array.prototype.forEach.call(root.querySelectorAll(".av-tab"), function (b) {
+      var on = b.getAttribute("data-tab") === t;
+      b.classList.toggle("is-on", on); b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    Array.prototype.forEach.call(root.querySelectorAll("[data-pane]"), function (p) { p.hidden = p.getAttribute("data-pane") !== t; });
+    root.classList.toggle("is-journal", t === "journal");
+  }
 
   /* ---------- Export CSV de ce qui est chargé (fabriqué dans le navigateur, rien n'est envoyé) ---------- */
   function csvCell(v) {
@@ -263,10 +305,20 @@
     w.appendChild(document.createTextNode(place(v) || "Lieu inconnu"));
     return w;
   }
+  function cherche() { return ($("q").value || "").trim().toLowerCase(); }
+  function trouve(q, champs) { return !q || champs.join(" ").toLowerCase().indexOf(q) >= 0; }
+  function lienIp(ip) {
+    if (!ip) return "—";
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "av-ip"; b.textContent = ip; b.setAttribute("data-ip", ip);
+    b.title = "Ouvrir la fiche de ce visiteur";
+    return b;
+  }
   function render() {
-    var fp = $("f-pays").value, fg = $("f-page").value, hide = $("f-bots").checked, bots = 0;
+    var fp = $("f-pays").value, fg = $("f-page").value, hide = $("f-bots").checked, bots = 0, q = cherche();
     var list = all.filter(function (v) {
       if (!((!fp || (v.pays || "") === fp) && (!fg || (v.page || "") === fg))) return false;
+      if (!trouve(q, [v.ip, v.ville, v.region, countryName(v.pays), v.fournisseur, v.page, v.ref])) return false;
       if (isBot(v)) { bots++; return !hide; }
       return true;
     });
@@ -284,7 +336,7 @@
       cell(row, timeFmt.format(new Date(v.t)), v.type === "page" ? "page suivante" : "arrivée", "av-mono");
       cell(row, where(v), v.fuseau || "");
       cell(row, v.fournisseur || "Fournisseur inconnu", v.asn ? "AS" + v.asn : "");
-      cell(row, v.ip || "—", "", "av-mono");
+      cell(row, lienIp(v.ip), "", "av-mono");
       cell(row, v.page || "—", "", "av-mono");
       var dev = document.createElement("span");
       var tag = document.createElement("span"); tag.className = "av-tag" + (bot ? " is-bot" : ""); tag.textContent = bot && v.appareil !== "Robot" ? "Centre de données" : v.appareil || "—";
@@ -300,7 +352,203 @@
     $("more").hidden = !cursor;
     $("empty").hidden = list.length > 0;
     $("empty").textContent = all.length && !list.length ? "Aucune visite ne correspond aux filtres." : "Aucune visite à afficher.";
+    $("n-journal").textContent = fmt(list.length);
+    var vs = visiteurs();
+    renderVisiteurs(vs);
+    renderConversations();
+    if (ficheIp) remplisFiche(ficheIp);
   }
+
+  /* ---------- Visiteurs : une ligne par adresse IP (visites et conversations réunies) ---------- */
+  function visiteurs() {
+    var par = {}, liste = [];
+    function fiche(ip, x) {
+      if (!par[ip]) { par[ip] = { ip: ip, visites: 0, pages: 0, questions: 0, premier: x.t, dernier: x.t, info: x, vus: [], chats: [] }; liste.push(par[ip]); }
+      var f = par[ip];
+      if (x.t < f.premier) f.premier = x.t;
+      if (x.t > f.dernier) { f.dernier = x.t; }
+      if (x.lat != null || !f.info.ville) f.info = Object.assign({}, f.info, x);
+      return f;
+    }
+    all.forEach(function (v) {
+      if (!v.ip) return;
+      var f = fiche(v.ip, v);
+      f.pages++; if (v.type !== "page") f.visites++;
+      f.vus.push(v);
+      if (isBot(v)) f.bot = true;
+    });
+    chats.forEach(function (c) {
+      if (!c.ip) return;
+      var f = fiche(c.ip, c);
+      f.questions++; f.chats.push(c);
+    });
+    liste.forEach(function (f) { if (!f.visites && f.pages) f.visites = 1; });
+    liste.sort(function (a, b) { return a.dernier < b.dernier ? 1 : -1; });
+    return liste;
+  }
+  var depuis = new Intl.DateTimeFormat("fr-CA", { timeZone: TZ, day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  function ilYa(t) {
+    var m = Math.round((Date.now() - Date.parse(t)) / 60000);
+    if (m < 1) return "à l’instant";
+    if (m < 60) return "il y a " + m + " min";
+    if (m < 1440) return "il y a " + Math.round(m / 60) + " h";
+    return depuis.format(new Date(t));
+  }
+  function renderVisiteurs(vs) {
+    var hide = $("f-bots").checked, parle = $("f-parle").checked, q = cherche();
+    var liste = vs.filter(function (f) {
+      if (hide && f.bot) return false;
+      if (parle && !f.questions) return false;
+      return trouve(q, [f.ip, f.info.ville, f.info.region, countryName(f.info.pays), f.info.fournisseur,
+        f.vus.map(function (v) { return v.page; }).join(" "), f.chats.map(function (c) { return c.q + " " + c.r; }).join(" ")]);
+    });
+    var box = $("v-rows"); box.textContent = "";
+    var frag = document.createDocumentFragment();
+    liste.forEach(function (f) {
+      var row = document.createElement("div");
+      row.className = "av-row av-vrow" + (f.bot ? " is-bot" : "") + (f.questions ? " a-parle" : "");
+      row.setAttribute("role", "row"); row.setAttribute("data-ip", f.ip); row.tabIndex = 0;
+      cell(row, where(f.info), f.info.fournisseur || "Fournisseur inconnu", "av-qui");
+      cell(row, f.ip, "", "av-mono");
+      var dev = document.createElement("span");
+      var tag = document.createElement("span"); tag.className = "av-tag" + (f.bot ? " is-bot" : ""); tag.textContent = f.bot && f.info.appareil !== "Robot" ? "Centre de données" : f.info.appareil || "—";
+      dev.appendChild(tag);
+      cell(row, dev, [f.info.systeme, f.info.navigateur].filter(Boolean).join(" · "));
+      cell(row, fmt(f.visites), "", "av-mono");
+      cell(row, fmt(f.pages), "", "av-mono");
+      var j = document.createElement("span");
+      if (f.questions) { j.className = "av-jarvis"; j.textContent = plural(f.questions, "question", "questions"); }
+      else { j.className = "av-jarvis is-vide"; j.textContent = "—"; }
+      cell(row, j, "");
+      cell(row, ilYa(f.dernier), "", "av-mono");
+      frag.appendChild(row);
+    });
+    box.appendChild(frag);
+    var humains = vs.filter(function (f) { return !f.bot; }).length;
+    $("n-visiteurs").textContent = fmt(liste.length);
+    $("v-count").textContent = plural(liste.length, "visiteur", "visiteurs") + " · " +
+      plural(vs.filter(function (f) { return f.questions; }).length, "a parlé à JARVIS", "ont parlé à JARVIS") +
+      (hide && vs.length > humains ? " · " + plural(vs.length - humains, "robot masqué", "robots masqués") : "");
+    $("v-empty").hidden = liste.length > 0;
+    $("v-empty").textContent = vs.length ? "Aucun visiteur ne correspond." : (token() ? "Aucun visiteur pour l’instant." : "Collez le jeton en haut pour voir les visiteurs.");
+  }
+
+  /* ---------- Conversations : un fil par conversation (un onglet de visiteur) ---------- */
+  function groupes(liste) {
+    var par = {}, ordre = [];
+    liste.forEach(function (x) { var k = x.s || x.t; if (!par[k]) { par[k] = []; ordre.push(k); } par[k].push(x); });
+    return ordre.map(function (k) { return par[k].slice().sort(function (a, b) { return a.t < b.t ? -1 : 1; }); });
+  }
+  function el(tag, cls, txt) { var n = document.createElement(tag); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; }
+  function bulles(box, x) {
+    box.appendChild(el("p", "cv-q", x.q));
+    if (x.r) box.appendChild(el("p", "cv-r" + (/^\(aucune réponse/.test(x.r) ? " is-rate" : ""), x.r));
+    else box.appendChild(el("p", "cv-r is-attente", "En attente de la réponse de JARVIS…"));
+  }
+  function renderConversations() {
+    var q = cherche();
+    var convs = groupes(chats).filter(function (c) {
+      return c.some(function (x) { return trouve(q, [x.q, x.r, x.page, x.ville, x.region, x.ip, x.fournisseur]); });
+    });
+    var box = $("c-rows"); box.textContent = "";
+    $("n-conversations").textContent = fmt(convs.length);
+    $("c-count").textContent = plural(convs.length, "conversation", "conversations") + " · " + plural(chats.length, "question", "questions");
+    $("c-state").textContent = cState || (token() ? (chats.length ? "" : "Aucune conversation pour l’instant. Chaque question posée à JARVIS sur le site apparaîtra ici, même s’il ne répond pas.") : "Collez le jeton en haut pour voir les conversations.");
+    $("c-state").hidden = !$("c-state").textContent;
+    $("c-more").hidden = !cCursor;
+    convs.forEach(function (c, n) {
+      var d = el("details", "cv-c");
+      var s = el("summary");
+      var premier = c[0], dernier = c[c.length - 1];
+      var tete = el("div", "cv-tete");
+      tete.appendChild(el("b", "", premier.q.length > 110 ? premier.q.slice(0, 110) + "…" : premier.q));
+      tete.appendChild(el("span", "cv-quand", ilYa(dernier.t)));
+      s.appendChild(tete);
+      var meta = el("div", "cv-meta");
+      meta.appendChild(where(premier));
+      meta.appendChild(el("span", "", plural(c.length, "question", "questions") + " · " + (premier.appareil || "Appareil inconnu") + " · " + (premier.page || "/")));
+      if (premier.ip) meta.appendChild(lienIp(premier.ip));
+      s.appendChild(meta);
+      d.appendChild(s);
+      c.forEach(function (x) {
+        var m = el("div", "cv-m");
+        bulles(m, x);
+        m.appendChild(el("small", "", timeFmt.format(new Date(x.t)) + " · " + (x.page || "/") + (x.lang === "en" ? " · anglais" : "")));
+        d.appendChild(m);
+      });
+      if (n === 0 && convs.length < 4) d.open = true;
+      box.appendChild(d);
+    });
+  }
+
+  /* ---------- Fiche d'un visiteur : son parcours et ses questions, dans un seul fil ---------- */
+  var ficheIp = "";
+  function remplisFiche(ip) {
+    var f = visiteurs().filter(function (x) { return x.ip === ip; })[0];
+    var corps = $("fiche-corps"); corps.textContent = "";
+    if (!f) { corps.appendChild(el("p", "av-hint", "Ce visiteur n’est plus dans ce qui est chargé.")); return; }
+    var tete = el("div", "av-f-tete");
+    var lieu = el("h3", "", ""); lieu.appendChild(where(f.info)); tete.appendChild(lieu);
+    var ipl = el("p", "av-f-ip");
+    ipl.appendChild(el("span", "", f.ip));
+    var copie = el("button", "av-copie", "Copier");
+    copie.type = "button";
+    copie.addEventListener("click", function () {
+      try { navigator.clipboard.writeText(f.ip).then(function () { copie.textContent = "Copié"; }, function () {}); } catch (e) {}
+    });
+    ipl.appendChild(copie);
+    tete.appendChild(ipl);
+    tete.appendChild(el("p", "av-f-sous", [f.info.fournisseur, f.info.appareil, [f.info.systeme, f.info.navigateur].filter(Boolean).join(" · ")].filter(Boolean).join(" · ")));
+    corps.appendChild(tete);
+    var ch = el("div", "av-f-chiffres");
+    [[f.visites, f.visites > 1 ? "visites" : "visite"], [f.pages, f.pages > 1 ? "pages vues" : "page vue"], [f.questions, f.questions > 1 ? "questions à JARVIS" : "question à JARVIS"]].forEach(function (k) {
+      var b = el("div"); b.appendChild(el("b", "", fmt(k[0]))); b.appendChild(el("span", "", k[1])); ch.appendChild(b);
+    });
+    corps.appendChild(ch);
+    corps.appendChild(el("p", "av-f-sous", "Première visite " + depuis.format(new Date(f.premier)) + " · dernière " + ilYa(f.dernier)));
+    corps.appendChild(el("h4", "", "Son parcours"));
+    var fil = el("ol", "av-fil");
+    var evts = f.vus.map(function (v) { return { t: v.t, v: v }; }).concat(f.chats.map(function (c) { return { t: c.t, c: c }; }));
+    evts.sort(function (a, b) { return a.t < b.t ? -1 : 1; });
+    var jour = "";
+    var jf = new Intl.DateTimeFormat("fr-CA", { timeZone: TZ, weekday: "long", day: "numeric", month: "long" });
+    var hf = new Intl.DateTimeFormat("fr-CA", { timeZone: TZ, hour: "2-digit", minute: "2-digit" });
+    evts.forEach(function (e) {
+      var j = jf.format(new Date(e.t));
+      if (j !== jour) { jour = j; fil.appendChild(el("li", "av-fil-jour", j)); }
+      var li = el("li", e.c ? "av-fil-q" : "av-fil-p");
+      li.appendChild(el("time", "", hf.format(new Date(e.t))));
+      var c = el("div");
+      if (e.c) { bulles(c, e.c); }
+      else {
+        c.appendChild(el("span", "av-fil-page", e.v.page || "/"));
+        if (e.v.type !== "page") c.appendChild(el("small", "", "Arrivée" + (e.v.ref ? " depuis " + e.v.ref : " directe")));
+      }
+      li.appendChild(c);
+      fil.appendChild(li);
+    });
+    corps.appendChild(fil);
+  }
+  function ouvreFiche(ip) {
+    ficheIp = ip; remplisFiche(ip);
+    $("fiche").hidden = false; $("voile").hidden = false;
+    document.documentElement.classList.add("av-fiche-ouverte");
+    $("fiche").scrollTop = 0; $("fermer").focus();
+  }
+  function fermeFiche() {
+    ficheIp = ""; $("fiche").hidden = true; $("voile").hidden = true;
+    document.documentElement.classList.remove("av-fiche-ouverte");
+  }
+  $("fermer").addEventListener("click", fermeFiche);
+  $("voile").addEventListener("click", fermeFiche);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && ficheIp) fermeFiche(); });
+  root.addEventListener("click", function (e) {
+    var t = e.target.closest && e.target.closest("[data-ip]");
+    if (t && root.contains(t) && !e.target.closest(".av-fiche")) { e.preventDefault(); ouvreFiche(t.getAttribute("data-ip")); }
+  });
+  root.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && e.target.classList && e.target.classList.contains("av-vrow")) ouvreFiche(e.target.getAttribute("data-ip"));
+  });
 
   /* ---------- Relevé d'avant la mise en service (clés « archive:… » du service) ---------- */
   function archive(items) {
@@ -337,4 +585,5 @@
 
   render();
   load(false);
+  loadChats(false);
 })();

@@ -494,21 +494,34 @@
     o.lieux.forEach(function (x) { var r = REF.lieux[x] && REF.lieux[x].h; if (r && (RANG[r] || 0) > (RANG[h] || 0)) h = r; });
     return h;
   }
+  /* Les règles de l'offre (docs/OFFRE.md) : un seul niveau pour tous les lieux; le lieu principal (celui
+     qui demande le plus gros Hub) porte le niveau; aucun autre Hub ne dépasse le niveau. */
+  function cerveaux(o) {
+    var N = o.hub || hubDe(o), prin = "", hub = {};
+    o.lieux.forEach(function (id) { var r = REF.lieux[id]; if (r && r.h && (!prin || (RANG[r.h] || 0) > (RANG[REF.lieux[prin].h] || 0))) prin = id; });
+    o.lieux.forEach(function (id) {
+      var r = REF.lieux[id]; if (!r) return;
+      hub[id] = !r.h ? "" : id === prin ? (N || r.h) : (N && (RANG[r.h] || 0) > (RANG[N] || 0) ? N : r.h);
+    });
+    return { niveau: N, principal: prin, hub: hub };
+  }
   /* Ce que contient le forfait, prêt à afficher. */
   function lignesF(o) {
-    var L = o.lieux.map(function (id) { var r = REF.lieux[id]; return r ? { id: id, n: r.n, h: r.h, b: r.b, p: r.p, img: r.img } : null; }).filter(Boolean);
+    var c = cerveaux(o);
+    var L = o.lieux.map(function (id) { var r = REF.lieux[id]; return r ? { id: id, n: r.n, h: c.hub[id], b: r.b, p: r.p, img: r.img } : null; }).filter(Boolean);
     var avec = L.filter(function (l) { return l.h; });
-    if (o.manuel && o.hub && avec.length) avec.reduce(function (a, c) { return (RANG[c.h] || 0) > (RANG[a.h] || 0) ? c : a; }).h = o.hub;
     var hubSeul = o.hub && !avec.length ? o.hub : "";
     var lot = o.autres.filter(function (a) { return a.k === "lot"; })[0] || null;
     var S = lot ? [] : o.sols.map(function (s) { var r = REF.sols[s]; return r ? { slug: s, n: r.n, img: r.img } : null; }).filter(Boolean);
     var A = o.autres.filter(function (a) { return a.k !== "lot"; });
-    return { L: L, hubSeul: hubSeul, lot: lot, S: S, A: A, n: L.length + (hubSeul ? 1 : 0) + (lot ? 1 : 0) + S.length + A.length };
+    return { L: L, hubSeul: hubSeul, lot: lot, S: S, A: A, niveau: c.niveau, n: L.length + (hubSeul ? 1 : 0) + (lot ? 1 : 0) + S.length + A.length };
   }
+  function nomNiveau(h) { return h ? h.charAt(0).toUpperCase() + h.slice(1) : ""; }
   function quoiLieu(l) { return (l.h && REF.hubs[l.h] ? REF.hubs[l.h].n : "") + (l.b ? (l.h ? " + " : "") + l.b : ""); }
   function lienF(o, x) {   /* le message de soumission : les lieux d'abord, puis chaque ligne */
     function dit(l) { var q = quoiLieu(l); return l.n + (q ? " (" + q + ")" : ""); }
     var chez = x.L.filter(function (l) { return l.p !== "entreprise"; }).map(dit), ent = x.L.filter(function (l) { return l.p === "entreprise"; }).map(dit), t = [];
+    if (x.niveau && x.L.length) t.push("Niveau " + nomNiveau(x.niveau));
     if (chez.length) t.push("Chez vous : " + chez.join(", "));
     if (ent.length) t.push("Votre entreprise : " + ent.join(", "));
     if (chez.length && ent.length && o.separee) t.push("Soumission séparée pour l’entreprise, au nom de l’entreprise");
@@ -532,7 +545,7 @@
     var x = lignesF(o), surOffre = !!window.JarvisCatalogue;
     if (!x.n) {
       return '<div class="fo fo-vide"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 17h24l2 23H10l2-23Z"/><path d="M18 20v-5a6 6 0 0 1 12 0v5"/></svg>' +
-        "<b>Votre forfait est vide.</b><p>Choisissez votre lieu : le Hub conseillé s’y ajoute, puis vos solutions.</p>" +
+        "<b>Votre forfait est vide.</b><p>Choisissez vos lieux : JARVIS propose le cerveau de chacun, puis votre niveau.</p>" +
         '<a class="pill" href="/offre/#composer" data-fo-suite>Commencer par mon lieu</a></div>';
     }
     var lieux = x.L.map(function (l) { return rang(l.img, l.n, quoiLieu(l) || "Sans Hub à bord", retirer("lieu:" + l.id, l.n)); }).join("") +
@@ -542,17 +555,17 @@
     var autres = x.A.map(function (a) {
       var droite = a.k === "mat"
         ? '<span class="fo-q"><button type="button" data-fo-q="' + echap(a.id) + ':-1" aria-label="Un de moins">−</button><output>' + a.q + '</output><button type="button" data-fo-q="' + echap(a.id) + ':1" aria-label="Un de plus">+</button></span>' + retirer("mat:" + a.id, a.n)
-        : (surOffre ? retirer("autre:" + a.id, a.n) : '<a class="fo-mod" href="/offre/#lieux" data-fo-suite>Modifier</a>');
+        : (surOffre ? retirer("autre:" + a.id, a.n) : '<a class="fo-mod" href="/offre/#projet" data-fo-suite>Modifier</a>');
       return rang(a.img, a.n, a.s || (a.q > 1 && a.k !== "mat" ? a.q + " " + (a.u || "") : ""), droite, a.px);
     }).join("");
     var deux = x.L.some(function (l) { return l.p === "entreprise"; }) && x.L.some(function (l) { return l.p !== "entreprise"; });
     function ligne(k, v) { return v ? "<div><dt>" + k + "</dt><dd>" + v + "</dd></div>" : ""; }
     return '<div class="fo">' +
       '<p class="fo-haut"><span>' + x.n + (x.n > 1 ? " éléments" : " élément") + '</span><button type="button" class="fo-rm" data-fo-vider>Tout retirer</button></p>' +
-      groupe("Vos lieux", x.L.length + (x.hubSeul ? 1 : 0), lieux) + groupe("Vos solutions", x.S.length + (x.lot ? 1 : 0), sols) + groupe("Matériel et services", x.A.length, autres) +
+      groupe("Vos lieux", x.L.length + (x.hubSeul ? 1 : 0), lieux) + groupe("Extensions ajoutées", x.S.length + (x.lot ? 1 : 0), sols) + groupe("Matériel et services", x.A.length, autres) +
       '<div class="fo-pied">' +
       (deux ? '<label class="fo-sep"><input type="checkbox" data-fo-sep' + (o.separee ? " checked" : "") + "><span>Une soumission séparée pour l’entreprise, au nom de l’entreprise</span></label>" : "") +
-      '<dl class="fo-res">' + ligne("Lieux", x.L.length) + ligne("Solutions, par mois", x.S.length + (x.lot ? 1 : 0)) + ligne("Matériel et services, une fois", x.A.length) + "</dl>" +
+      '<dl class="fo-res">' + ligne("Niveau", x.L.length ? nomNiveau(x.niveau) : "") + ligne("Lieux", x.L.length) + ligne("Extensions ajoutées, par mois", x.S.length + (x.lot ? 1 : 0)) + ligne("Matériel et services, une fois", x.A.length) + "</dl>" +
       '<p class="fo-note">Prix confirmé par écrit dans votre soumission, ligne par ligne. Rien à payer ici.</p>' +
       '<a class="pill fo-go" href="' + lienF(o, x) + '">Recevoir ma soumission</a>' +
       '<a class="fo-suite" href="/offre/#composer" data-fo-suite>Continuer à composer</a></div></div>';
@@ -584,61 +597,35 @@
     o.lieux.forEach(function (id) { if (LIEUX[id]) LIEUX[id].sols.forEach(function (x) { utiles[x.slug] = 1; }); });
     $$("[data-sol]").forEach(function (c) { c.classList.toggle("is-lieu", !!utiles[c.getAttribute("data-sol")]); });
     $$("[data-sols]").forEach(function (g) { g.classList.toggle("has-lieu", o.lieux.length > 0); });
-    /* Accueil : « Votre lieu, votre Hub ». Chaque lieu choisi allume la carte de son Hub, avec la raison. */
-    $$("[data-of-lieux]").forEach(function (bloc) {
-      var par = {}, sans = [];
-      o.lieux.forEach(function (id) {
-        var l = LIEUX[id]; if (!l) return;
-        if (l.hub) (par[l.hub] = par[l.hub] || []).push(l); else sans.push(l);
-      });
-      var un = Object.keys(par).length > 0;
-      $$("[data-hub]", bloc).forEach(function (c) {
-        var ls = par[c.getAttribute("data-hub")] || [], out = $("[data-hub-pour]", c);
-        c.classList.toggle("is-conseil", ls.length > 0);
-        c.classList.toggle("is-autre", un && !ls.length);
-        if (out) {
-          out.hidden = !ls.length;
-          out.innerHTML = ls.length ? "<b>Conseillé pour : " + echap(ls.map(function (l) { return l.nom; }).join(", ")) + "</b>" + echap(ls[ls.length - 1].raison) : "";
-        }
-      });
-      var note = $("[data-hub-note]", bloc);
-      if (note) {
-        note.hidden = !sans.length;
-        note.textContent = sans.length ? sans.map(function (l) { return l.nom; }).join(", ") + " : pas de Hub à bord. " + (sans[0].boitier || "Un petit boîtier") + " suffit, relié à votre application." : "";
-      }
-    });
+    /* Votre écosystème (page L'offre) : les lieux reliés, le principal en premier, un cerveau chacun. */
     $$("[data-lieux-res]").forEach(function (res) {
-      if (!o.lieux.length) { res.hidden = true; res.innerHTML = ""; return; }
+      var ids = o.lieux.filter(function (id) { return LIEUX[id]; });
+      if (!ids.length) { res.hidden = true; res.innerHTML = ""; return; }
       res.hidden = false;
-      var cartes = o.lieux.filter(function (id) { return LIEUX[id]; }).map(function (id) {
-        var l = LIEUX[id];
-        var quoi = (l.hubNom ? l.hubNom : "") + (l.boitier ? (l.hubNom ? " + " : "") + l.boitier : "");
-        return '<article class="lx-r"><img class="lx-r-ph" src="/media/forfait/lieu-' + id + '.webp" alt="" loading="lazy" decoding="async"><h3>' + echap(l.nom) + '</h3><p class="lx-r-h"><b>' + echap(quoi) + "</b> " + echap(l.raison) + "</p><ul>" +
-          l.sols.map(function (x) { return '<li><a href="/solutions/' + x.slug + '/">' + echap(x.nom) + "</a><span>" + echap(x.raison) + "</span></li>"; }).join("") +
-          '</ul><p class="lx-r-a"><a href="' + l.demo + '">Voir la démonstration <i aria-hidden="true">→</i></a></p></article>';
-      }).join("");
-      if (!res.hasAttribute("data-eco")) {
-        res.innerHTML = cartes + (/^\/offre\//.test(location.pathname) ? "" : '<p class="lx-go"><a class="pill" href="/offre/#composer">Composer mon forfait</a></p>');
-        return;
-      }
-      /* Votre écosystème : les lieux reliés, le principal (le plus gros Hub) en premier. */
-      var ids = o.lieux.filter(function (id) { return LIEUX[id]; }), prin = "";
-      ids.forEach(function (id) { var h = LIEUX[id].hub; if (h && (!prin || (RANG[h] || 0) > (RANG[LIEUX[prin].hub] || 0))) prin = id; });
+      var c = cerveaux(o), prin = c.principal;
       if (prin) ids = [prin].concat(ids.filter(function (id) { return id !== prin; }));
-      var nHub = ids.filter(function (id) { return LIEUX[id].hub; }).length;
+      var nHub = ids.filter(function (id) { return c.hub[id]; }).length;
+      function cerveau(id) { var l = LIEUX[id], h = c.hub[id]; return (h && REF.hubs[h] ? REF.hubs[h].n : "") + (l.boitier ? (h ? " + " : "") + l.boitier : ""); }
       var noeuds = ids.map(function (id) {
         var l = LIEUX[id], role;
-        if (id === prin) role = "Lieu principal · " + l.hubNom + (l.boitier ? " + " + l.boitier : "");
-        else if (l.hub) role = l.hubNom + (l.boitier ? " + " + l.boitier : "") + (prin ? " · relié au principal" : "");
+        if (id === prin) role = "Lieu principal · " + cerveau(id);
+        else if (c.hub[id]) role = cerveau(id) + " · relié au principal";
         else role = (l.boitier || "Un petit boîtier") + " · sans Hub à bord";
         return '<li class="eco-n' + (id === prin ? " is-prin" : "") + '"><button type="button" class="eco-x" data-lieu="' + id + '" aria-label="Retirer ' + echap(l.nom) + '">×</button>' +
           '<img src="/media/forfait/lieu-' + id + '.webp" alt="" loading="lazy" decoding="async"><b>' + echap(l.nom) + "</b><span>" + echap(role) + "</span></li>";
       }).join("");
+      var pourquoi = ids.map(function (id) {
+        var l = LIEUX[id];
+        return '<article class="lx-r"><h3>' + echap(l.nom) + '</h3><p class="lx-r-h"><b>' + echap(cerveau(id)) + "</b> " + echap(l.raison) + "</p><ul>" +
+          l.sols.map(function (x) { return '<li><a href="/solutions/' + x.slug + '/">' + echap(x.nom) + "</a><span>" + echap(x.raison) + "</span></li>"; }).join("") +
+          '</ul><p class="lx-r-a"><a href="' + l.demo + '">Voir la démonstration <i aria-hidden="true">→</i></a></p></article>';
+      }).join("");
       res.innerHTML = '<div class="eco"><div class="eco-t"><h3>Votre écosystème.</h3><p>' +
-        ids.length + (ids.length > 1 ? " lieux" : " lieu") + " · une seule app · une seule soumission" + "</p></div>" +
-        '<ol class="eco-l">' + noeuds + '<li class="eco-n eco-plus"><a href="#' + (res.closest("[data-lieux]") || {}).id + '"><i aria-hidden="true">+</i><b>Ajouter un lieu</b><span>Chalet, VR, bureau, véhicule…</span></a></li></ol>' +
-        (nHub > 1 ? '<p class="eco-note">Vos lieux se parlent par un lien privé et chiffré. Les plus petits empruntent l’intelligence du principal. Si Internet tombe, chacun continue seul.</p>' : "") +
-        '<details class="eco-d"><summary>Ce que JARVIS fera dans chaque lieu</summary><div class="eco-cartes">' + cartes + "</div></details></div>";
+        (c.niveau && nHub ? "Niveau " + nomNiveau(c.niveau) + " · " : "") + ids.length + (ids.length > 1 ? " lieux" : " lieu") + " · une seule app</p></div>" +
+        '<ol class="eco-l">' + noeuds + '<li class="eco-n eco-plus"><a href="#' + echap((res.closest("[data-lieux]") || {}).id || "") + '"><i aria-hidden="true">+</i><b>Ajouter un lieu</b><span>Chalet, VR, bureau, véhicule…</span></a></li></ol>' +
+        '<p class="eco-note">' + (nHub > 1 ? "Vos lieux se parlent par un lien privé et chiffré. Les plus petits s’appuient sur l’intelligence du principal. Si Internet tombe, chacun continue seul."
+          : nHub ? "Un cerveau par lieu, choisi par JARVIS selon la taille du lieu et votre niveau." : "Un véhicule n’a pas de Hub à bord : son boîtier parle à votre application, et à votre Hub si vous en avez un.") + "</p>" +
+        '<details class="eco-d"><summary>Pourquoi ce cerveau, lieu par lieu</summary><div class="eco-cartes">' + pourquoi + "</div></details></div>";
     });
   }
 
@@ -740,7 +727,7 @@
   document.addEventListener("change", function (e) {
     if (e.target.matches && e.target.matches("[data-fo-sep]")) { var o = lireF(); o.separee = e.target.checked; ecrireF(o); }
   });
-  window.JarvisForfait = { lire: lireF, ecrire: ecrireF, maj: majF, ouvre: ouvreF, hubDe: hubDe };
+  window.JarvisForfait = { lire: lireF, ecrire: ecrireF, maj: majF, ouvre: ouvreF, hubDe: hubDe, cerveaux: cerveaux };
   majF();
 
   /* ---------- Les cadres de démonstration tiennent dans la fenêtre ----------

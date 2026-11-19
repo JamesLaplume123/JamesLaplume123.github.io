@@ -4,7 +4,7 @@
 #              par lieu, une seule app; en petit, ce qu'il héberge et les extensions branchées.
 #   ia()       L'IA au cœur : une conversation qui comprend, vérifie, propose, demande, explique.
 #   ensemble() Comment les extensions travaillent ensemble : rôles, règle du bus, trois chaînes de bout en bout.
-# Données de l'offre (HUB_INCLUS, SERVICES) : source unique, affichées sur /offre/ (src/pages/offre.py).
+# Données de l'offre (HUB_INCLUS, SERVICES) : source unique.
 # Sans JavaScript, chaque bloc montre un état complet et lisible; assets/demos/hub.js anime le reste.
 # Toutes les situations sont des données d'exemple.
 

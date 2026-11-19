@@ -1,5 +1,12 @@
-/* Catalogue : panier détaillé (une fois / par mois), quantités, kits, conseils de Hub, lien de soumission prérempli. */
+/* L'offre en trois étapes (docs/OFFRE.md) : 1) vos lieux, 2) votre niveau, 3) votre projet.
+   L'étape 1 (« Votre écosystème ») est dessinée par assets/js/wow.js, qui tient aussi le forfait (clé
+   « jarvis-forfait ») et son tiroir. Ce fichier tient le formulaire :
+     - le niveau choisi et les extensions qu'il comprend (cochées d'office, « Incluse »);
+     - l'ensemble de départ de chaque lieu (ajouté ou retiré d'un geste; le Boîtier VR suit le niveau);
+     - les quantités, les « À prévoir », et ce qui part dans le forfait pour la soumission.
+   Le client ne décide que ses lieux et son niveau; tout le reste est proposé, puis ajusté. */
 (function () {
+  "use strict";
   var form = document.getElementById("ct");
   if (!form) return;
   var $ = function (s, r) { return (r || form).querySelector(s); };
@@ -7,27 +14,36 @@
   /* Sans prix publics (data-sansprix sur le formulaire) : aucun montant ni total; « une fois » / « par mois » suffisent. */
   var SANS = form.hasAttribute("data-sansprix");
   var fmt = function (n) { return SANS ? "" : String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " $"; };
-  var txt = function (el, s) { if (el) el.textContent = s; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var maj = function (s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ""; };
 
-  var kit = null; /* kit appliqué : son rabais tient tant que ses pièces et son Hub sont là */
+  var OFFRE = { niveaux: {}, ensembles: {} }, LIEUX = {};
+  try { OFFRE = JSON.parse($("[data-offre]").textContent); } catch (e) {}
+  try { LIEUX = JSON.parse(document.querySelector("[data-lieux-data]").textContent); } catch (e) {}
+  var RANG = { base: 0, signature: 1, platinum: 2 }, PAR_RANG = ["base", "signature", "platinum"];
+  var BOITIER_VR = { base: "vrb", signature: "vrs", platinum: "vrp" };   /* le Boîtier VR suit le niveau */
+  var VEHICULES = { vehicules: 1, aerien: 1 };                           /* familles sans Hub à bord */
+  function forfait() { return window.JarvisForfait; }
+
   function qtyOf(el) { var o = el && el.querySelector("output"); return o ? (+o.value || 0) : 0; }
   function setQty(el, v) { var o = el && el.querySelector("output"); if (o) o.value = Math.max(0, v); }
-  function h3(el) { var h = el && el.querySelector("h3, b"); return h ? h.textContent.trim() : ""; }
+  function titre(el) { var h = el && el.querySelector("h3, b"); return h ? h.textContent.trim() : ""; }
+  function piece(id) { return $('.ct-item[data-id="' + id + '"]'); }
+  function niveau() { var c = $('input[name="hub"]:checked'); return c ? c.value : ""; }
 
   var pret = false;
-  /* Le formulaire écrit dans le forfait (clé « jarvis-forfait », assets/js/wow.js) : le Hub, les solutions,
-     les lignes de matériel et de services (« autres ») et son propre état (« etat »), pour le retrouver tel
-     quel au retour. L'affichage du forfait (colonne et tiroir) est fait par wow.js, le même partout. */
+  var ens = {};   /* ensembles de départ ajoutés : lieu → { pièce: quantité }, tels qu'ajoutés */
+
+  /* ---------- L'état du formulaire, gardé dans le forfait pour le retrouver tel quel ---------- */
+  var QTES = [["sol:mob", '.ct-sol[data-sol="mob"]'], ["recep", ".ct-ent-recep"], ["mesure", ".ct-ent-mesure"]];
   function etatForm() {
     var c = $$('input[type="checkbox"]:checked:not(:disabled), input[type="radio"]:checked')
       .filter(function (i) { return i.name && ["hub", "sol"].indexOf(i.name) < 0; }).map(function (i) { return i.name + "=" + i.value; });
     var q = {};
     $$(".ct-item[data-id]").forEach(function (it) { var v = qtyOf(it); if (v) q[it.dataset.id] = v; });
     QTES.forEach(function (p) { var v = qtyOf($(p[1])); if (v) q[p[0]] = v; });
-    return { c: c, q: q };
+    return { c: c, q: q, e: ens };
   }
-  var QTES = [["sol:mob", '.ct-sol[data-sol="mob"]'], ["recep", ".ct-ent-recep"], ["mesure", ".ct-ent-mesure"]];
   function poseEtat(e) {
     if (!e || !e.c) return;
     $$('input[type="checkbox"], input[type="radio"]').forEach(function (i) {
@@ -37,52 +53,41 @@
     if (!$('input[name="install"]:checked')) { var ia = $('input[name="install"][value="auto"]'); if (ia) ia.checked = true; }
     $$(".ct-item[data-id]").forEach(function (it) { setQty(it, (e.q || {})[it.dataset.id] || 0); });
     QTES.forEach(function (p) { setQty($(p[1]), (e.q || {})[p[0]] || 0); });
+    ens = e.e && typeof e.e === "object" ? e.e : {};
   }
-  function garde(hubId, autres, suffixe) {
-    var F = window.JarvisForfait; if (!F || !pret) return;
-    var o = F.lire();
-    o.sols = $$('input[name="sol"]:checked:not(:disabled)').map(function (c) { return c.getAttribute("data-slug"); }).filter(Boolean);
-    o.hub = hubId; o.autres = autres; o.etat = etatForm(); o.suffixe = suffixe;
-    F.ecrire(o);
+  function garde(autres, suffixe) {
+    var f = forfait(); if (!f || !pret) return;
+    var o = f.lire();
+    /* Seules les extensions ajoutées en plus du niveau sont des lignes du forfait. */
+    o.sols = $$('.ct-sol:not(.is-niveau) input[name="sol"]:checked:not(:disabled)').map(function (c) { return c.getAttribute("data-slug"); }).filter(Boolean);
+    o.autres = autres; o.etat = etatForm(); o.suffixe = suffixe;
+    f.ecrire(o);
   }
+
+  /* ---------- Le calcul : lignes « une fois » et « par mois », et ce qu'il faut prévoir ---------- */
   function compute() {
     var once = [], month = [], tips = [];
-    var hubIn = $('input[name="hub"]:checked');
-    var hub = hubIn ? hubIn.closest(".ct-hub") : null;
-    var hubNom = hub ? h3(hub) : "Hub";
-    var hubId = hubIn ? hubIn.value : "";
+    var hubIn = $('input[name="hub"]:checked'), hubId = hubIn ? hubIn.value : "";
+    var hubNom = hubIn ? "Le Hub " + maj(hubId) : "Le Hub";
     var camMax = hubIn ? +hubIn.dataset.cam : 99, appMax = hubIn ? +hubIn.dataset.app : 1e6, autoMax = hubIn ? +hubIn.dataset.autos : 1e6;
-    if (hubIn) once.push({ id: "hub", n: hubNom, q: 1, p: +hubIn.dataset.prix, fixed: true });
+    if (hubIn) once.push({ id: "hub", n: "Hub " + maj(hubId), q: 1, p: +hubIn.dataset.prix, fixed: true });
 
-    /* Solutions */
-    var complet = $('input[name="complet"]');
-    var sols = $$('input[name="sol"]:not(:disabled)');
-    var mobLab = $('.ct-sol[data-sol="mob"]');
-    var nVeh = qtyOf(mobLab);
+    /* Extensions : celles du niveau sont comprises; les autres sont des lignes par mois */
+    var mobLab = $('.ct-sol[data-sol="mob"]'), nVeh = qtyOf(mobLab);
     var hasSecu = false, hasDiag = false, hasMob = false;
-    if (complet && complet.checked) {
-      month.push({ id: "complet", n: "JARVIS Complet (5 solutions)", q: 1, p: +complet.dataset.prix, kind: "sol" });
-      sols.forEach(function (s) { s.checked = true; s.closest(".ct-sol").classList.add("is-locked"); });
-      if (mobLab && nVeh < 1) { setQty(mobLab, 1); nVeh = 1; }
-      if (nVeh > 1) month.push({ id: "mob", n: "Mobilité, véhicules supplémentaires", q: nVeh - 1, p: +mobLab.querySelector('input[name="sol"]').dataset.prix, kind: "sol" });
-      hasSecu = hasDiag = hasMob = true;
-    } else {
-      sols.forEach(function (s) {
-        var lab = s.closest(".ct-sol");
-        lab.classList.remove("is-locked");
-        if (s.value === "mob") {
-          if (s.checked && nVeh < 1) { setQty(lab, 1); nVeh = 1; }
-          if (!s.checked && nVeh > 0) { setQty(lab, 0); nVeh = 0; }
-          if (s.checked) { month.push({ id: "mob", n: "Mobilité", q: nVeh, p: +s.dataset.prix, unit: "véhicule", kind: "sol" }); hasMob = true; }
-          return;
-        }
-        if (s.checked) {
-          month.push({ id: s.value, n: h3(lab), q: 1, p: +s.dataset.prix, kind: "sol" });
-          if (s.value === "secu") hasSecu = true;
-          if (s.value === "diag") hasDiag = true;
-        }
-      });
-    }
+    $$('input[name="sol"]:not(:disabled)').forEach(function (s) {
+      var lab = s.closest(".ct-sol");
+      if (s.value === "mob") {
+        if (s.checked && nVeh < 1) { setQty(lab, 1); nVeh = 1; }
+        if (!s.checked && nVeh > 0) { setQty(lab, 0); nVeh = 0; }
+        if (s.checked) { month.push({ id: "mob", n: "Mobilité", q: nVeh, p: +s.dataset.prix, unit: "véhicule", kind: "sol" }); hasMob = true; }
+        return;
+      }
+      if (!s.checked) return;
+      if (s.value === "secu") hasSecu = true;
+      if (s.value === "diag") hasDiag = true;
+      if (!lab.classList.contains("is-niveau")) month.push({ id: s.value, n: titre(lab), q: 1, p: +s.dataset.prix, kind: "sol" });
+    });
     if (mobLab) mobLab.classList.toggle("is-on", nVeh > 0);
 
     /* Entreprise */
@@ -114,281 +119,278 @@
     if (recep) recep.classList.toggle("is-on", nRecep > 0);
     if (mesure) mesure.classList.toggle("is-on", nMesure > 0);
     var veilleSeule = entActif && nAutos === 0 && nRecep === 0 && nMesure === 0;
-    if (entActif && !veilleSeule && socle && !socle.checked) { socle.checked = true; }
-    if (socle && socle.checked) month.unshift({ id: "socle", n: "Socle Entreprise", q: 1, p: +socle.dataset.prix, kind: "ent" });
-    var socleOn = socle && socle.checked;
+    if (entActif && !veilleSeule && socle && !socle.checked) socle.checked = true;
+    var socleOn = !!(socle && socle.checked);
+    if (socleOn) month.unshift({ id: "socle", n: "Socle Entreprise", q: 1, p: +socle.dataset.prix, kind: "ent" });
 
-    /* Matériel */
+    /* Le nuage : seulement ce que le client coche */
+    $$('input[name="nuage"]:checked').forEach(function (v) {
+      month.push({ id: v.value, n: v.closest(".ct-opt").querySelector("b").textContent, q: 1, p: 0, kind: "nuage" });
+    });
+
+    /* Équipement et services */
     var nApp = 0, nCam = 0, nCapt = 0, hasBoitierVR = false, hasBoitierMob = false;
     $$(".ct-item").forEach(function (it) {
       var q = qtyOf(it);
       it.classList.toggle("is-on", q > 0);
-      if (q > 0) {
-        once.push({ id: it.dataset.id, n: it.querySelector("b").textContent, q: q, p: +it.dataset.prix });
-        if (it.dataset.svc) return;
-        nApp += q;
-        if (it.dataset.cam) nCam += q;
-        if (it.closest(".ct-cat").querySelector("h3").textContent === "Capteurs") nCapt += q;
-        if (/^vr[bsp]$/.test(it.dataset.id)) hasBoitierVR = true;
-        if (it.dataset.id === "mobb") hasBoitierMob = true;
-      }
+      if (!q) return;
+      once.push({ id: it.dataset.id, n: it.querySelector("b").textContent, q: q, p: +it.dataset.prix });
+      if (it.dataset.svc) return;
+      nApp += q;
+      if (it.dataset.cam) nCam += q;
+      if (it.closest(".ct-cat").querySelector("h3").textContent === "Capteurs") nCapt += q;
+      if (/^vr[bsp]$/.test(it.dataset.id)) hasBoitierVR = true;
+      if (it.dataset.id === "mobb") hasBoitierMob = true;
     });
-
-    /* Rabais du kit */
-    if (kit) {
-      var ok = hubId === kit.hub && Object.keys(kit.mat).every(function (id) { return qtyOf($('.ct-item[data-id="' + id + '"]')) >= kit.mat[id]; });
-      if (ok) once.push({ id: "kit", n: "Rabais " + kit.nom + " (−8 %)", q: 1, p: -kit.rabais, fixed: true });
-      else kit = null;
-    }
 
     /* Installation */
     var inst = $('input[name="install"]:checked');
-    if (inst && +inst.dataset.prix > 0) once.push({ id: "install", n: h3(inst.closest(".ct-inst")) + (inst.value === "place" ? " (3 h, estimation)" : ""), q: 1, p: +inst.dataset.prix, fixed: true });
+    if (inst && +inst.dataset.prix > 0) once.push({ id: "install", n: titre(inst.closest(".ct-inst")) + (inst.value === "place" ? " (3 h, estimation)" : ""), q: 1, p: +inst.dataset.prix, fixed: true });
 
-    /* Deuxième lieu */
-    var rang = $('select[name="rang"]');
-    var rabais = rang && rang.value === "2" ? 0.3 : 0;
-    var monthBrut = month.reduce(function (s, l) { return s + l.q * l.p; }, 0);
-    var monthRab = 0;
-    if (rabais) {
-      monthRab = month.filter(function (l) { return l.kind === "sol"; }).reduce(function (s, l) { return s + l.q * l.p; }, 0) * rabais;
-    }
     var totOnce = once.reduce(function (s, l) { return s + l.q * l.p; }, 0);
-    var totMonth = monthBrut - monthRab;
+    var totMonth = month.reduce(function (s, l) { return s + l.q * l.p; }, 0);
 
-    /* Conseils */
-    if (nCam > camMax) tips.push({ t: hubNom + " analyse " + camMax + " caméras; vous en avez " + nCam + ".", up: hubId === "base" ? "signature" : "platinum" });
-    if (nApp > appMax) tips.push({ t: hubNom + " relie " + appMax + " appareils; vous en avez " + nApp + ".", up: hubId === "base" ? "signature" : "platinum" });
-    if (hubId === "base" && (socleOn || entActif)) tips.push({ t: "Les automatisations d’entreprise et la réceptionniste demandent un Hub Signature ou Platinum.", up: "signature" });
+    /* À prévoir : ce qui ne tient pas ensemble, dit simplement, avec le geste qui le règle */
+    var plusHaut = hubId === "base" ? "signature" : "platinum";
+    if (nCam > camMax) tips.push({ t: hubNom + " analyse " + camMax + " caméras; vous en avez " + nCam + ".", up: plusHaut });
+    if (nApp > appMax) tips.push({ t: hubNom + " relie " + appMax + " appareils; vous en avez " + nApp + ".", up: plusHaut });
+    if (hubId === "base" && (socleOn || entActif)) tips.push({ t: "La réceptionniste et les automatisations d’entreprise demandent le niveau Signature ou Platinum.", up: "signature" });
     else if (nAutos > autoMax) tips.push({ t: hubNom + " fait tourner " + autoMax + " automatisations; vous en avez " + nAutos + ".", up: "platinum" });
     if (hasSecu && nCam === 0) tips.push({ t: "Sécurité intelligente sans caméra : ajoutez au moins une caméra ou une sonnette." });
     if (hasDiag && nCapt === 0 && !hasBoitierVR) tips.push({ t: "Diagnostic sans capteur : ajoutez au moins un capteur (fuite, température, porte)." });
-    if (hasMob && !hasBoitierMob && !hasBoitierVR) tips.push({ t: complet && complet.checked
-      ? "JARVIS Complet comprend Mobilité pour un véhicule : ajoutez un Boîtier Mobilité pour en profiter."
-      : "Mobilité a besoin d’un Boîtier Mobilité (voiture) ou d’un Boîtier VR Signature ou Platinum (GPS)." });
-    if (hubId === "base" && once.some(function (l) { return l.id === "vrs" || l.id === "vrp"; })) tips.push({ t: "Le Boîtier VR Signature ou Platinum donne tout son sens avec un Hub Signature (IA locale, 4G).", up: "signature" });
+    if (hasMob && !hasBoitierMob && !hasBoitierVR) tips.push({ t: "Mobilité a besoin d’un Boîtier Mobilité (véhicule) ou d’un Boîtier VR Signature ou Platinum (GPS)." });
+    if (hubId === "base" && once.some(function (l) { return l.id === "vrs" || l.id === "vrp"; })) tips.push({ t: "Le Boîtier VR Signature ou Platinum prend tout son sens avec le niveau Signature (IA chez vous, 4G).", up: "signature" });
 
-    render(month, monthRab, totOnce, totMonth, tips);
-    /* Les lignes hors lieux et hors solutions à l'unité : matériel (quantité réglable), services, entreprise. */
+    affiche(totOnce, totMonth, tips);
+
+    /* Ce qui part dans le forfait : équipement (quantité réglable), services, entreprise, nuage. */
     var autres = [];
     once.forEach(function (l) {
-      if (l.id === "hub" || (SANS && l.p < 0)) return;
-      var it = $('.ct-item[data-id="' + l.id + '"]'), mat = !!it && !it.hasAttribute("data-svc");
+      if (l.id === "hub") return;
+      var it = piece(l.id), mat = !!it && !it.hasAttribute("data-svc");
       autres.push({ id: l.id, n: l.n, q: l.q, k: mat ? "mat" : l.fixed ? "fixe" : "autre", s: "Une fois", px: fmt(l.q * l.p), img: it ? it.getAttribute("data-img") || "" : "" });
     });
     month.forEach(function (l) {
-      if (l.kind === "sol") { if (l.id === "complet") autres.push({ id: "complet", n: l.n, q: 1, k: "lot", px: fmt(l.p) }); return; }
-      autres.push({ id: l.id, n: l.n, q: l.q, k: "autre", s: (l.q > 1 ? l.q + " " + (l.unit ? l.unit + "s" : "") + " · " : "") + "Par mois", px: fmt(l.q * l.p) });
+      if (l.kind === "sol") return;   /* les extensions ajoutées sont déjà des lignes du forfait (o.sols) */
+      autres.push({ id: l.id, n: l.n, q: l.q, k: "autre", px: l.kind === "nuage" ? "" : fmt(l.q * l.p),
+        s: l.kind === "nuage" ? "Option, sur votre accord" : (l.q > 1 ? l.q + " " + (l.unit ? l.unit + "s" : "") + " · " : "") + "Par mois" });
     });
-    garde(hubId, autres, (rabais ? " | 2e lieu" : "") + (SANS ? "" : " | " + fmt(totOnce) + " une fois, " + fmt(totMonth) + " par mois"));
+    garde(autres, SANS ? "" : " | " + fmt(totOnce) + " une fois, " + fmt(totMonth) + " par mois");
   }
 
-  /* Sur la page : les totaux (quand les prix sont publics), les « À prévoir », et les solutions utiles aux
-     lieux choisis, signalées sans jamais être cochées d'office. La liste du forfait, elle, est dessinée par wow.js. */
-  function render(month, monthRab, totOnce, totMonth, tips) {
-    var Fo = window.JarvisForfait && window.JarvisForfait.lire(), Ld = {};
-    try { Ld = JSON.parse(document.querySelector("[data-lieux-data]").textContent); } catch (x) {}
-    var utiles = {};
-    (Fo ? Fo.lieux : []).forEach(function (id) { if (Ld[id]) Ld[id].sols.forEach(function (x) { utiles[x.slug] = 1; }); });
-    $$('input[name="sol"][data-slug]').forEach(function (c) { var bx = c.closest(".ct-sol"); if (bx) bx.classList.toggle("is-conseil", !!utiles[c.getAttribute("data-slug")] && !c.disabled); });
+  function affiche(totOnce, totMonth, tips) {
     $$("[data-total-once]", document).forEach(function (e) { e.textContent = fmt(totOnce); });
     $$("[data-total-month]", document).forEach(function (e) { e.textContent = fmt(totMonth); });
-    txt($("[data-total-year]"), fmt(totOnce + 12 * totMonth));
-    var tb = $("[data-cart-tips]");
-    if (tips.length) {
-      tb.hidden = false;
-      tb.innerHTML = "<h4>À prévoir</h4>" + tips.map(function (t) {
-        return "<p>" + esc(t.t) + (t.up ? ' <button type="button" data-up="' + t.up + '">Passer au Hub ' + t.up.charAt(0).toUpperCase() + t.up.slice(1) + "</button>" : "") + "</p>";
-      }).join("");
-    } else { tb.hidden = true; tb.innerHTML = ""; }
+    var tb = $("[data-cart-tips]"); if (!tb) return;
+    tb.hidden = !tips.length;
+    tb.innerHTML = tips.length ? "<h4>À prévoir</h4>" + tips.map(function (t) {
+      return "<p>" + esc(t.t) + (t.up ? ' <button type="button" data-up="' + t.up + '">Passer au niveau ' + maj(t.up) + "</button>" : "") + "</p>";
+    }).join("") : "";
   }
 
-  /* Retirer une ligne du panier */
-  function remove(id) {
-    var el;
-    if (id === "hub") { $$('input[name="hub"]').forEach(function (h) { h.checked = false; }); var Fh = window.JarvisForfait; if (Fh) { var oh = Fh.lire(); oh.manuel = false; oh.hub = ""; Fh.ecrire(oh); } }
-    else if (id === "complet") { $('input[name="complet"]').checked = false; $$('input[name="sol"]:not(:disabled)').forEach(function (s) { s.checked = false; }); setQty($('.ct-sol[data-sol="mob"]'), 0); }
-    else if (id === "mob") { setQty($('.ct-sol[data-sol="mob"]'), 0); el = $('input[name="sol"][value="mob"]'); if (el) el.checked = false; }
-    else if ((el = $('input[name="sol"][value="' + id + '"]'))) el.checked = false;
+  /* ---------- Retirer une ligne (demandé par le tiroir du forfait) ---------- */
+  function retire(id) {
+    var el, f = forfait();
+    if (id === "hub") { if (f) { var o = f.lire(); o.manuel = false; o.hub = f.hubDe(o); f.ecrire(o); } poseNiveau(); appliqueNiveau(); return; }
+    if (id === "mob") { setQty($('.ct-sol[data-sol="mob"]'), 0); el = $('input[name="sol"][value="mob"]'); if (el) el.checked = false; }
+    else if ((el = $('input[name="sol"][value="' + id + '"]'))) { if (!el.closest(".ct-sol").classList.contains("is-niveau")) el.checked = false; }
     else if (id === "toutes") { $('input[name="toutes"]').checked = false; $$('input[name="auto"]').forEach(function (a) { a.checked = false; }); }
     else if (id === "socle") { $('input[name="socle"]').checked = false; $('input[name="toutes"]').checked = false; $$('input[name="auto"]').forEach(function (a) { a.checked = false; }); setQty($(".ct-ent-recep"), 0); setQty($(".ct-ent-mesure"), 0); }
     else if ((el = $('input[name="auto"][value="' + id + '"]'))) el.checked = false;
     else if ((el = $('input[name="veille"][value="' + id + '"]'))) el.checked = false;
+    else if ((el = $('input[name="nuage"][value="' + id + '"]'))) el.checked = false;
     else if (id === "recep") setQty($(".ct-ent-recep"), 0);
     else if (id === "mesure" || id === "mesure-m") setQty($(".ct-ent-mesure"), 0);
-    else if ((el = $('.ct-item[data-id="' + id + '"]'))) setQty(el, 0);
-    compute();
+    else if ((el = piece(id))) setQty(el, 0);
+    compute(); dessineEnsembles();
   }
 
-  function applyKit(cfg) {
-    kit = cfg;
-    var hub = $('input[name="hub"][value="' + cfg.hub + '"]'); if (hub) hub.checked = true;
-    $$(".ct-item").forEach(function (it) { setQty(it, 0); });
-    Object.keys(cfg.mat || {}).forEach(function (id) { var it = $('.ct-item[data-id="' + id + '"]'); if (it) setQty(it, cfg.mat[id]); });
-    var complet = $('input[name="complet"]'); if (complet) complet.checked = (cfg.sol || []).indexOf("complet") >= 0;
-    $$('input[name="sol"]:not(:disabled)').forEach(function (s) { s.checked = (cfg.sol || []).indexOf(s.value) >= 0; });
-    setQty($('.ct-sol[data-sol="mob"]'), (cfg.sol || []).indexOf("mob") >= 0 || complet.checked ? 1 : 0);
-    var e = cfg.ent || {};
-    $('input[name="socle"]').checked = !!e.socle;
-    $('input[name="toutes"]').checked = !!e.toutes;
-    setQty($(".ct-ent-recep"), e.recep || 0);
-    setQty($(".ct-ent-mesure"), 0);
-    $$('input[name="auto"]').forEach(function (a) { a.checked = (e.autos || []).indexOf(a.value) >= 0; });
-    $$('input[name="veille"]').forEach(function (v) { v.checked = (e.veille || []).indexOf(v.value) >= 0; });
-    $('input[name="install"][value="auto"]').checked = true;
-    compute();
-    var cart = $(".ct-cart");
-    if (cart) { cart.classList.add("is-flash"); setTimeout(function () { cart.classList.remove("is-flash"); }, 900); }
-    if (window.JarvisForfait && window.matchMedia("(max-width: 960px)").matches) window.JarvisForfait.ouvre();
-  }
-
-  form.addEventListener("change", function (e) {
-    if (e.target.name === "toutes" && e.target.checked) $('input[name="socle"]').checked = true;
-    if (e.target.name === "hub") { var Fm = window.JarvisForfait; if (Fm) { var om = Fm.lire(); om.manuel = true; om.hub = e.target.value; Fm.ecrire(om); } }
-    compute();
-  });
-  form.addEventListener("click", function (e) {
-    var b = e.target.closest("[data-q]");
-    if (b) {
-      var box = b.closest(".ct-item, .ct-ent, .ct-sol"); setQty(box, qtyOf(box) + (+b.dataset.q));
-      var cb = box.querySelector('input[name="sol"]'); if (cb) cb.checked = qtyOf(box) > 0;
-      compute(); e.preventDefault(); return;
-    }
-    var up = e.target.closest("[data-up]");
-    if (up) { var h = $('input[name="hub"][value="' + up.dataset.up + '"]'); if (h) { h.checked = true; compute(); } return; }
-    var kg = e.target.closest("[data-kit-go]");
-    if (kg) { var kb2 = $$("[data-kit]")[+kg.dataset.kitGo - 1]; if (kb2) { applyKit(JSON.parse(kb2.dataset.kit)); kb2.closest(".ct-kit").scrollIntoView({ behavior: "smooth", block: "center" }); } return; }
-    var k = e.target.closest("[data-kit]");
-    if (k) { e.preventDefault(); applyKit(JSON.parse(k.dataset.kit)); return; }
-  });
-  /* Arrivée avec ?kit=N (depuis L'offre) : le kit est appliqué et la page s'ouvre dessus. */
-  var kq = +(new URLSearchParams(location.search).get("kit") || 0);
-  var kb = kq ? $$("[data-kit]")[kq - 1] : null;
-  if (kb) { applyKit(JSON.parse(kb.dataset.kit)); setTimeout(function () { kb.closest(".ct-kit").scrollIntoView({ block: "center" }); }, 60); }
-  else { depuisForfait(); compute(); }
-  function vider() {
-    var F = window.JarvisForfait, o = F ? F.lire() : null;
-    kit = null; form.reset();
-    $$('input[name="hub"]').forEach(function (h) { h.checked = false; });
-    $$(".ct-item, .ct-ent, .ct-sol").forEach(function (x) { setQty(x, 0); });
-    if (F) F.ecrire({ lieux: [], sols: [], hub: "", manuel: false, public: o.public, separee: false, autres: [], etat: null });
-    compute();
-  }
-  /* Ce que le tiroir du forfait (wow.js) peut demander au formulaire. */
-  window.JarvisCatalogue = {
-    retire: remove,
-    qte: function (id, d) { var it = $('.ct-item[data-id="' + id + '"]'); if (it) { setQty(it, qtyOf(it) + d); compute(); } },
-    vider: vider
-  };
-  pret = true; compute();
-
-  /* Le forfait bâti en chemin (clé « jarvis-forfait », assets/js/wow.js) : le Hub conseillé pour le lieu et
-     les solutions ajoutées sont déjà cochés à l'arrivée; chaque changement ici est gardé de la même façon. */
-  function depuisForfait() {
-    var F = window.JarvisForfait; if (!F) return;
-    var o = F.lire();
-    poseEtat(o.etat);
+  /* ---------- Étape 2 : le niveau, et les extensions qu'il comprend ---------- */
+  function poseNiveau() {
+    var f = forfait(), o = f ? f.lire() : {};
     $$('input[name="hub"]').forEach(function (r) { r.checked = r.value === o.hub; });
-    /* Les solutions du forfait font foi (elles peuvent avoir changé ailleurs sur le site). */
-    if (!$('input[name="complet"]:checked')) $$('input[name="sol"][data-slug]:not(:disabled)').forEach(function (c) { coche(c.getAttribute("data-slug"), o.sols.indexOf(c.getAttribute("data-slug")) >= 0); });
+  }
+  function appliqueNiveau() {
+    var inclus = OFFRE.niveaux[niveau()] || [];
+    $$(".ct-sol[data-sol]").forEach(function (box) {
+      var cb = box.querySelector('input[name="sol"]'), dedans = inclus.indexOf(box.getAttribute("data-sol")) >= 0;
+      box.classList.toggle("is-niveau", dedans);
+      if (cb && !cb.disabled) {
+        if (dedans) cb.checked = true;
+        else if (box.dataset.niveauAvant === "1") cb.checked = false;   /* comprise avant, plus maintenant */
+      }
+      box.dataset.niveauAvant = dedans ? "1" : "";
+    });
+    reapplique();
+    compute(); montre(); dessineEnsembles();
   }
   function coche(slug, oui) {
     var cb = $('input[name="sol"][data-slug="' + slug + '"]'); if (!cb || cb.disabled) return;
     cb.checked = oui;
     var box = cb.closest(".ct-sol"); if (box && cb.hasAttribute("data-qty")) setQty(box, oui ? Math.max(1, qtyOf(box)) : 0);
   }
-  document.addEventListener("jarvis:forfait", function (e) {
-    var F = window.JarvisForfait, d = e.detail || {}; if (!F) return;
-    var o = F.lire();
-    if (d.lieu || d.public) $$('input[name="hub"]').forEach(function (r) { r.checked = r.value === o.hub; });
-    if (d.sol) coche(d.sol, !!d.ajoute);
+
+  /* ---------- Étape 3 : l'ensemble de départ de chaque lieu ---------- */
+  function resolu(lieu) {   /* les pièces de l'ensemble; « vr* » devient le Boîtier VR du niveau */
+    var e = OFFRE.ensembles[lieu], out = {};
+    if (!e) return out;
+    var n = niveau() || (LIEUX[lieu] && LIEUX[lieu].hub) || "base";
+    Object.keys(e.mat).forEach(function (id) { out[id === "vr*" ? BOITIER_VR[n] : id] = e.mat[id]; });
+    return out;
+  }
+  function bouge(pieces, signe) {
+    Object.keys(pieces).forEach(function (id) { var it = piece(id); if (it) setQty(it, qtyOf(it) + signe * pieces[id]); });
+  }
+  function ajouteEnsemble(lieu) {
+    if (ens[lieu] || !OFFRE.ensembles[lieu]) return;
+    var p = resolu(lieu), e = OFFRE.ensembles[lieu].ent;
+    bouge(p, 1); ens[lieu] = p;
+    if (!e) return;
+    if (e.socle) $('input[name="socle"]').checked = true;
+    if (e.recep) setQty($(".ct-ent-recep"), Math.max(qtyOf($(".ct-ent-recep")), e.recep));
+    (e.autos || []).forEach(function (a) { var c = $('input[name="auto"][value="' + a + '"]'); if (c) c.checked = true; });
+  }
+  function retireEnsemble(lieu) {
+    if (!ens[lieu]) return;
+    bouge(ens[lieu], -1); delete ens[lieu];
+    var e = (OFFRE.ensembles[lieu] || {}).ent;
+    if (!e) return;
+    if (e.recep) setQty($(".ct-ent-recep"), qtyOf($(".ct-ent-recep")) - e.recep);
+    (e.autos || []).forEach(function (a) { var c = $('input[name="auto"][value="' + a + '"]'); if (c) c.checked = false; });
+    var reste = $$('input[name="auto"]:checked').length || qtyOf($(".ct-ent-recep")) || qtyOf($(".ct-ent-mesure")) || $$('input[name="veille"]:checked').length;
+    if (!reste) { $('input[name="socle"]').checked = false; $('input[name="toutes"]').checked = false; }
+  }
+  function reapplique() {   /* après un changement de niveau : le Boîtier VR des ensembles ajoutés suit */
+    Object.keys(ens).forEach(function (lieu) {
+      var neuf = resolu(lieu);
+      if (JSON.stringify(neuf) === JSON.stringify(ens[lieu])) return;
+      bouge(ens[lieu], -1); bouge(neuf, 1); ens[lieu] = neuf;
+    });
+  }
+  var boiteEns = $("[data-ensembles]"), videEns = boiteEns ? boiteEns.innerHTML : "";
+  function dessineEnsembles() {
+    if (!boiteEns) return;
+    var f = forfait(), o = f ? f.lire() : { lieux: [] };
+    var ids = o.lieux.filter(function (id) { return OFFRE.ensembles[id] && LIEUX[id]; });
+    if (!ids.length) { boiteEns.innerHTML = videEns; return; }
+    boiteEns.innerHTML = ids.map(function (id) {
+      var on = !!ens[id], p = on ? ens[id] : resolu(id), e = OFFRE.ensembles[id], ent = e.ent || {};
+      var lis = Object.keys(p).map(function (k) { var it = piece(k); return "<li><b>" + p[k] + "×</b> " + esc(it ? it.querySelector("b").textContent : k) + "</li>"; });
+      if (ent.recep) lis.push("<li><b>" + ent.recep + "×</b> Réceptionniste IA</li>");
+      if (ent.autos && ent.autos.length) lis.push("<li><b>" + ent.autos.length + "×</b> automatisations pour commencer</li>");
+      return '<article class="ct-en' + (on ? " is-on" : "") + '">' +
+        '<img src="/media/forfait/lieu-' + id + '.webp" alt="" loading="lazy" decoding="async">' +
+        '<div class="ct-en-t"><h4>' + esc(LIEUX[id].nom) + "</h4><p>" + esc(e.pourquoi) + "</p><ul>" + lis.join("") + "</ul></div>" +
+        '<button type="button" class="ct-en-b" data-ens="' + id + '" aria-pressed="' + (on ? "true" : "false") + '">' + (on ? "Ajouté · retirer" : "Ajouter à mon projet") + "</button></article>";
+    }).join("");
+  }
+
+  /* ---------- Le Hub du niveau choisi, en grand à gauche ---------- */
+  var vis = document.querySelector("[data-ct-vis]"), visData = {};
+  if (vis) { try { visData = JSON.parse(vis.querySelector("[data-vis-data]").textContent); } catch (e) {} }
+  function montre() {
+    if (!vis) return;
+    var id = niveau() || "signature";
+    $$("[data-v]", vis).forEach(function (im) { im.classList.toggle("is-on", im.getAttribute("data-v") === id); });
+    if (visData[id]) { vis.querySelector("[data-vis-nom]").textContent = visData[id][0]; vis.querySelector("[data-vis-ligne]").textContent = visData[id][1]; }
+  }
+
+  /* ---------- « Vous hésitez? » : les lieux et trois réponses donnent le niveau conseillé ---------- */
+  var guide = $("[data-guide]"), rep = {}, res = guide ? $("[data-guide-res]", guide) : null;
+  function conseil() {
+    if (!guide) return;
+    var f = forfait(), o = f ? f.lire() : { lieux: [] }, r = -1, why = "";
+    var rec = f ? f.hubDe(o) : "";
+    if (rec && RANG[rec] !== undefined) { r = RANG[rec]; why = o.lieux.length > 1 ? "La bonne taille pour votre lieu principal." : "La bonne taille pour votre lieu."; }
+    if (rep.cam !== undefined && rep.cam > r) { r = rep.cam; why = rep.cam === 2 ? "Plus de six caméras à analyser." : "Jusqu’à six caméras analysées par l’IA."; }
+    if (rep.ia === 1 && r < 1) { r = 1; why = "L’IA reste chez vous, même sans Internet."; }
+    if (rep.coupure === 2 && r < 2) { r = 2; why = "Une coupure serait grave : batterie et Internet de secours."; }
+    if (r < 0 && Object.keys(rep).length) { r = 0; why = "L’essentiel, pour un petit lieu."; }
+    $$(".ct-hub").forEach(function (h) { h.classList.toggle("is-reco", r >= 0 && h.getAttribute("data-hub") === PAR_RANG[r]); });
+    res.hidden = r < 0;
+    if (r < 0) return;
+    res.dataset.id = PAR_RANG[r];
+    $("[data-guide-nom]", res).textContent = "Niveau " + maj(PAR_RANG[r]);
+    $("[data-guide-why]", res).textContent = why;
+  }
+  function choisit(id) {
+    var radio = $('input[name="hub"][value="' + id + '"]');
+    if (radio && !radio.checked) { radio.checked = true; radio.dispatchEvent(new Event("change", { bubbles: true })); }
+  }
+
+  /* ---------- Les gestes ---------- */
+  form.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.name === "toutes" && t.checked) $('input[name="socle"]').checked = true;
+    if (t.name === "hub") {   /* le niveau choisi à la main vaut pour tous les lieux (wow.js redessine l'écosystème) */
+      var f = forfait(); if (f) { var o = f.lire(); o.manuel = true; o.hub = t.value; f.ecrire(o); }
+      appliqueNiveau(); return;
+    }
     compute();
   });
-
-  /* Le Hub choisi, en grand à gauche : suit le choix (clic, lieu choisi, kit, forfait rechargé). */
-  var vis = document.querySelector("[data-ct-vis]");
-  if (vis) {
-    var visData = {};
-    try { visData = JSON.parse(vis.querySelector("[data-vis-data]").textContent); } catch (e) {}
-    var montre = function () {
-      var c = document.querySelector('input[name="hub"]:checked');
-      var id = c ? c.value : "signature";
-      vis.querySelectorAll("[data-v]").forEach(function (im) { im.classList.toggle("is-on", im.getAttribute("data-v") === id); });
-      if (visData[id]) {
-        vis.querySelector("[data-vis-nom]").textContent = visData[id][0];
-        vis.querySelector("[data-vis-ligne]").textContent = visData[id][1];
-      }
-    };
-    document.addEventListener("change", function (e) { if (e.target && e.target.name === "hub") montre(); });
-    document.addEventListener("jarvis:forfait", function () { setTimeout(montre, 0); });
-    document.addEventListener("click", function () { setTimeout(montre, 60); });
-    montre();
-  }
-
-  /* Niveaux tout compris : les solutions du niveau choisi sont cochées d'office (« Inclus ») et ne se
-     décochent pas; les autres restent des options. */
-  var NIV = {};
-  try { NIV = JSON.parse(document.querySelector("[data-niveaux]").textContent); } catch (e) {}
-  var RANG = { base: 0, signature: 1, platinum: 2 }, PAR_RANG = ["base", "signature", "platinum"];
-  function appliqueNiveau() {
-    var c = document.querySelector('input[name="hub"]:checked');
-    var inclus = c && NIV[c.value] ? NIV[c.value] : [];
-    var cp = document.querySelector('input[name="complet"]'); if (cp && cp.checked) cp.checked = false;
-    $$(".ct-sol[data-sol]").forEach(function (box) {
-      var id = box.getAttribute("data-sol"), cb = box.querySelector('input[name="sol"]');
-      var dedans = inclus.indexOf(id) >= 0;
-      box.classList.toggle("is-niveau", dedans);
-      if (cb && dedans && !cb.checked) cb.checked = true;
-      if (cb && !dedans && box.dataset.niveauAvant === "1") cb.checked = false;   /* inclus avant, plus maintenant */
-      box.dataset.niveauAvant = dedans ? "1" : "";
-    });
-    compute();
-  }
   form.addEventListener("click", function (e) {
-    var box = e.target.closest && e.target.closest(".ct-sol.is-niveau");
-    if (box && e.target.matches('input[name="sol"]')) e.preventDefault();   /* « Inclus » : pas d'option à retirer */
+    var t = e.target;
+    if (t.matches && t.matches('.ct-sol.is-niveau input[name="sol"]')) { e.preventDefault(); return; }   /* comprise dans le niveau : rien à retirer */
+    var b = t.closest("[data-q]");
+    if (b) {
+      var box = b.closest(".ct-item, .ct-ent, .ct-sol"); setQty(box, qtyOf(box) + (+b.dataset.q));
+      var cb = box.querySelector('input[name="sol"]'); if (cb) cb.checked = qtyOf(box) > 0;
+      compute(); e.preventDefault(); return;
+    }
+    var up = t.closest("[data-up]");
+    if (up) { choisit(up.dataset.up); return; }
+    var en = t.closest("[data-ens]");
+    if (en) { var lieu = en.dataset.ens; if (ens[lieu]) retireEnsemble(lieu); else ajouteEnsemble(lieu); compute(); dessineEnsembles(); return; }
+    var q = t.closest("[data-gq] button[data-v]");
+    if (q) {
+      var bloc = q.closest("[data-gq]");
+      $$("button", bloc).forEach(function (x) { x.setAttribute("aria-pressed", x === q ? "true" : "false"); });
+      rep[bloc.getAttribute("data-gq")] = +q.getAttribute("data-v");
+      conseil(); return;
+    }
+    if (t.closest("[data-guide-go]") && res && res.dataset.id) { choisit(res.dataset.id); return; }
+    if (t.closest("[data-jv-ouvre]")) { var fab = document.querySelector("#jv-root .jv-fab"); if (fab) fab.click(); }   /* JARVIS, la bulle du site (guide.js) */
   });
-  document.addEventListener("change", function (e) { if (e.target && e.target.name === "hub") appliqueNiveau(); });
-  document.addEventListener("jarvis:forfait", function () { setTimeout(appliqueNiveau, 0); });
+  /* Le forfait a changé ailleurs (un lieu ajouté ou retiré à l'étape 1, une ligne retirée dans le tiroir). */
+  document.addEventListener("jarvis:forfait", function (e) {
+    var d = e.detail || {};
+    if (d.lieu) {
+      var l = LIEUX[d.lieu], mob = $('.ct-sol[data-sol="mob"]');
+      if (l && VEHICULES[l.famille] && mob) {   /* Mobilité suit les véhicules : une par véhicule */
+        var n = Math.max(0, qtyOf(mob) + (d.ajoute ? 1 : -1) * ((OFFRE.ensembles[d.lieu] || { mat: {} }).mat.mobb || 1));
+        setQty(mob, n); mob.querySelector('input[name="sol"]').checked = n > 0;
+      }
+      if (!d.ajoute) retireEnsemble(d.lieu);
+    }
+    if (d.lieu || d.public) poseNiveau();
+    if (d.sol) coche(d.sol, !!d.ajoute);
+    appliqueNiveau(); conseil();
+  });
 
-  /* Le guide : le lieu + trois réponses donnent le niveau conseillé, avec la raison. */
-  var guide = document.querySelector("[data-guide]");
-  if (guide) {
-    var rep = {};
-    var res = guide.querySelector("[data-guide-res]");
-    var conseil = function () {
-      var F = window.JarvisForfait, o = F ? F.lire() : {};
-      var r = -1, why = "";
-      if (o.lieux && o.lieux.length && RANG[o.hub] !== undefined) { r = RANG[o.hub]; why = "La bonne taille pour votre lieu."; }
-      if (rep.cam !== undefined && rep.cam > r) { r = rep.cam; why = rep.cam === 2 ? "Plus de six caméras à analyser." : "Jusqu’à six caméras analysées par l’IA."; }
-      if (rep.ia === 1 && r < 1) { r = 1; why = "L’IA reste chez vous, même sans Internet."; }
-      if (rep.coupure === 2 && r < 2) { r = 2; why = "Une coupure serait grave : batterie et Internet de secours."; }
-      if (r < 0 && Object.keys(rep).length) { r = 0; why = "L’essentiel, pour un petit lieu."; }
-      $$(".ct-hub").forEach(function (h) { h.classList.toggle("is-reco", r >= 0 && h.getAttribute("data-hub") === PAR_RANG[r]); });
-      if (r < 0) { res.hidden = true; return; }
-      var id = PAR_RANG[r];
-      res.hidden = false;
-      res.querySelector("[data-guide-nom]").textContent = "JARVIS " + id.charAt(0).toUpperCase() + id.slice(1);
-      res.querySelector("[data-guide-why]").textContent = why;
-      res.dataset.id = id;
-    };
-    guide.addEventListener("click", function (e) {
-      var b = e.target.closest("button[data-v]");
-      if (b) {
-        var q = b.closest("[data-gq]");
-        q.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-        rep[q.getAttribute("data-gq")] = +b.getAttribute("data-v");
-        conseil();
-        return;
-      }
-      var go = e.target.closest("[data-guide-go]");
-      if (go && res.dataset.id) {
-        var radio = document.querySelector('input[name="hub"][value="' + res.dataset.id + '"]');
-        if (radio) { radio.checked = true; radio.dispatchEvent(new Event("change", { bubbles: true })); }
-      }
-    });
-    document.addEventListener("jarvis:forfait", function () { setTimeout(conseil, 0); });
-    conseil();
+  function vider() {
+    var f = forfait(), o = f ? f.lire() : null;
+    ens = {}; rep = {}; form.reset();
+    $$('input[name="hub"]').forEach(function (h) { h.checked = false; });
+    $$(".ct-item, .ct-ent, .ct-sol").forEach(function (x) { setQty(x, 0); });
+    $$("[data-gq] button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
+    if (f) f.ecrire({ lieux: [], sols: [], hub: "", manuel: false, public: o.public, separee: false, autres: [], etat: null });
+    appliqueNiveau(); conseil();
   }
-  appliqueNiveau();
+  /* Ce que le tiroir du forfait (wow.js) peut demander au formulaire. */
+  window.JarvisCatalogue = {
+    retire: retire,
+    qte: function (id, d) { var it = piece(id); if (it) { setQty(it, qtyOf(it) + d); compute(); } },
+    vider: vider
+  };
+
+  /* ---------- Arrivée : le forfait bâti en chemin est repris tel quel ---------- */
+  (function () {
+    var f = forfait(); if (!f) return;
+    var o = f.lire();
+    poseEtat(o.etat); poseNiveau();
+    Object.keys(ens).forEach(function (lieu) { if (o.lieux.indexOf(lieu) < 0) retireEnsemble(lieu); });   /* lieu retiré ailleurs */
+    $$('input[name="sol"][data-slug]:not(:disabled)').forEach(function (c) { coche(c.getAttribute("data-slug"), o.sols.indexOf(c.getAttribute("data-slug")) >= 0); });
+  })();
+  pret = true;
+  appliqueNiveau(); conseil();
 })();

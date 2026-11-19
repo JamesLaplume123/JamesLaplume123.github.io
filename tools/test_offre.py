@@ -77,6 +77,13 @@ async def main():
         await pg.goto('http://localhost:4173/offre/?lieux=ferme&ens=tout'); await pg.wait_for_timeout(900)
         plan=await pg.evaluate(f"[{F}.hub, {F}.manuel, document.documentElement.dataset.public, document.querySelector('input[name=socle]').checked]")
         verifie("plan sans niveau : niveau conseillé (ferme -> platinum), entreprise", plan==["platinum",False,"entreprise",True], str(plan))
+        # 12. plusieurs lieux : le niveau dit combien se relient
+        await pg.goto('http://localhost:4173/offre/?lieux=maison,condo,chalet,garage&niveau=signature'); await pg.wait_for_timeout(900)
+        tips=await pg.evaluate("document.querySelector('[data-cart-tips]').innerText")
+        verifie("4 lieux au niveau Signature : À prévoir, passer à Platinum", "jusqu’à trois lieux; vous en avez 4" in tips, tips)
+        await pg.goto('http://localhost:4173/offre/?lieux=condo,chalet&niveau=base'); await pg.wait_for_timeout(900)
+        tips=await pg.evaluate("document.querySelector('[data-cart-tips]').innerText"); eco=await pg.evaluate("document.querySelector('.eco-note').innerText")
+        verifie("2 lieux au niveau Base : chacun veille seul", "chaque lieu veille seul" in tips and "chaque lieu veille seul" in eco, tips+" | "+eco)
         verifie("aucune erreur JavaScript", not errs, str(errs))
         await b.close()
     print("RÉSULTAT :", "tout passe" if ok else "à corriger")

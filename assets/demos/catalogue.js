@@ -156,6 +156,11 @@
     if (nApp > appMax) tips.push({ t: hubNom + " relie " + appMax + " appareils; vous en avez " + nApp + ".", up: plusHaut });
     if (hubId === "base" && (socleOn || entActif)) tips.push({ t: "La réceptionniste et les automatisations d’entreprise demandent le niveau Signature ou Platinum.", up: "signature" });
     else if (nAutos > autoMax) tips.push({ t: hubNom + " fait tourner " + autoMax + " automatisations; vous en avez " + nAutos + ".", up: "platinum" });
+    /* Plusieurs lieux : le niveau dit combien se relient entre eux (fiche technique : « Lieux reliés ») */
+    var f = forfait(), nLieux = 0;
+    if (f) { var cz = f.cerveaux(f.lire()).hub; Object.keys(cz).forEach(function (id) { if (cz[id]) nLieux++; }); }
+    if (hubId === "base" && nLieux > 1) tips.push({ t: "Au niveau Base, chaque lieu veille seul. Pour relier vos lieux entre eux, il faut le niveau Signature (jusqu’à trois lieux) ou Platinum.", up: "signature" });
+    if (hubId === "signature" && nLieux > 3) tips.push({ t: "Le niveau Signature relie jusqu’à trois lieux; vous en avez " + nLieux + ".", up: "platinum" });
     if (hasSecu && nCam === 0) tips.push({ t: "Sécurité intelligente sans caméra : ajoutez au moins une caméra ou une sonnette." });
     if (hasDiag && nCapt === 0 && !hasBoitierVR) tips.push({ t: "Diagnostic sans capteur : ajoutez au moins un capteur (fuite, température, porte)." });
     if (hasMob && !hasBoitierMob && !hasBoitierVR) tips.push({ t: "Mobilité a besoin d’un Boîtier Mobilité (véhicule) ou d’un Boîtier VR Signature ou Platinum (GPS)." });

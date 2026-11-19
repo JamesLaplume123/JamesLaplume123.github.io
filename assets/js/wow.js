@@ -623,7 +623,8 @@
       res.innerHTML = '<div class="eco"><div class="eco-t"><h3>Votre écosystème.</h3><p>' +
         (c.niveau && nHub ? "Niveau " + nomNiveau(c.niveau) + " · " : "") + ids.length + (ids.length > 1 ? " lieux" : " lieu") + " · une seule app</p></div>" +
         '<ol class="eco-l">' + noeuds + '<li class="eco-n eco-plus"><a href="#' + echap((res.closest("[data-lieux]") || {}).id || "") + '"><i aria-hidden="true">+</i><b>Ajouter un lieu</b><span>Chalet, VR, bureau, véhicule…</span></a></li></ol>' +
-        '<p class="eco-note">' + (nHub > 1 ? "Vos lieux se parlent par un lien privé et chiffré. Les plus petits s’appuient sur l’intelligence du principal. Si Internet tombe, chacun continue seul."
+        '<p class="eco-note">' + (nHub > 1 && c.niveau === "base" ? "Au niveau Base, chaque lieu veille seul. Pour les relier entre eux, choisissez le niveau Signature ou Platinum."
+          : nHub > 1 ? "Vos lieux se parlent par un lien privé et chiffré. Les plus petits s’appuient sur l’intelligence du principal. Si le lien tombe, chacun continue seul : règles, alertes, enregistrements."
           : nHub ? "Un cerveau par lieu, choisi par JARVIS selon la taille du lieu et votre niveau." : "Un véhicule n’a pas de Hub à bord : son boîtier parle à votre application, et à votre Hub si vous en avez un.") + "</p>" +
         '<details class="eco-d"><summary>Pourquoi ce cerveau, lieu par lieu</summary><div class="eco-cartes">' + pourquoi + "</div></details></div>";
     });

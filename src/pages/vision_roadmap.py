@@ -55,7 +55,7 @@ PAGE = {
     </div>
     <div class="vn-hero-n" data-rev>
       <span><b>7</b>extensions reliées</span>
-      <span><b>1</b>Hub, chez vous</span>
+      <span><b>1</b>appareil, chez vous</span>
       <span><b>0</b>donnée vendue</span>
       <span><b>4</b>horizons, de maintenant à 10 ans</span>
     </div>

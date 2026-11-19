@@ -31,7 +31,7 @@ NOMS = {
     "/logiciel/": "Le logiciel",
     "/offre/": "L’offre",
     "/solutions/": "Solutions",
-    "/plateforme/": "Le Hub",
+    "/plateforme/": "L’appareil",
     "/laboratoire-mobile/": "Laboratoire mobile",
     "/vision-roadmap/": "Vision",
     "/recherche/": "Recherche",
@@ -326,7 +326,7 @@ SOLUTIONS_FAQ = {
          "MQTT. La plupart des thermostats, interrupteurs, prises, capteurs et serrures connectés du "
          "marché peuvent donc être reliés. On vérifie vos appareils un par un pendant la visite."),
         ("La domotique fonctionne-t-elle sans Internet?",
-         "Oui. Les règles et l’application tournent sur le Hub, dans votre maison : une panne "
+         "Oui. Les règles et l’application tournent sur votre JARVIS, dans votre maison : une panne "
          "d’Internet n’arrête ni l’éclairage, ni le chauffage, ni vos ambiances. Pendant une panne de "
          "courant, seuls les appareils alimentés par une batterie ou une génératrice continuent."),
         ("Peut-on rendre intelligente une maison existante sans ouvrir les murs?",
@@ -336,19 +336,19 @@ SOLUTIONS_FAQ = {
     ],
     "ia-privee-connaissances": [
         ("Mes documents sont-ils envoyés à un service d’IA en ligne?",
-         "Pas par défaut. L’IA fonctionne sur le Hub, chez vous. Un service externe n’est utilisé que "
+         "Pas par défaut. L’IA fonctionne sur votre JARVIS, chez vous. Un service externe n’est utilisé que "
          "si vous l’autorisez, pour une tâche précise."),
         ("L’IA peut-elle se tromper?",
          "Oui, comme toute IA. C’est pourquoi chaque réponse montre le passage du document qui la "
          "justifie : vous vérifiez en un clic au lieu de croire sur parole."),
         ("Quel matériel faut-il?",
-         "L’IA tourne sur le Hub. Sa puissance se choisit selon le nombre de personnes et la quantité "
+         "L’IA tourne sur votre JARVIS. Sa puissance se choisit selon le nombre de personnes et la quantité "
          "de documents; on le détermine avec vous pendant la visite."),
     ],
     "securite-intelligente": [
         ("JARVIS Private Systems est-il une agence de sécurité?", _PAS_AGENCE),
         ("Où sont gardées les images de mes caméras?",
-         "Sur place, sur votre Hub ou sur un enregistreur dans votre bâtiment, aussi longtemps que vous "
+         "Sur place, sur votre JARVIS ou sur un enregistreur dans votre bâtiment, aussi longtemps que vous "
          "le décidez. Aucune image n’est envoyée à un service en ligne sans votre accord, et personne "
          "chez nous ne les regarde."),
         ("Qui installe les caméras, l’alarme et les serrures?", _PERMIS),
@@ -382,8 +382,8 @@ SOLUTIONS_FAQ = {
         ("Quels équipements peut-on suivre?",
          "Ceux qu’on peut mesurer : température, consommation électrique, débit d’eau, batteries, "
          "pompes, réfrigération, chauffage. Un capteur s’ajoute quand l’équipement n’en a pas."),
-        ("Faut-il déjà avoir un Hub JARVIS?",
-         "Oui. Le diagnostic s’appuie sur les mesures que le Hub garde jour après jour; c’est une "
+        ("Faut-il déjà avoir un appareil JARVIS?",
+         "Oui. Le diagnostic s’appuie sur les mesures que votre JARVIS garde jour après jour; c’est une "
          "extension qui s’ajoute à une installation."),
     ],
     "mobilite": [
@@ -392,7 +392,7 @@ SOLUTIONS_FAQ = {
          "les véhicules électriques et les vélos électriques. Chaque commande à distance demande "
          "votre confirmation."),
         ("Le système fonctionne-t-il sans réseau cellulaire?",
-         "À bord, oui : le tableau du véhicule (batteries, eau, chauffage) tourne sur le Hub du "
+         "À bord, oui : le tableau du véhicule (batteries, eau, chauffage) tourne sur le JARVIS du "
          "véhicule. Les suggestions de route et la météo demandent une connexion."),
         ("Reliez-vous les batteries et le solaire d’un VR?",
          "Oui : batteries, panneaux solaires, réservoirs et chauffage sont réunis sur le tableau "

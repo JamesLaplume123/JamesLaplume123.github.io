@@ -308,7 +308,7 @@ def render():
     <div class="ia-chat">
       <div class="ia-head">
         <p class="ia-k">Conversation<span> · Atelier Démo</span></p>
-        <p class="ia-lock">{ICON_LOCK}Rien ne quitte le Hub</p>
+        <p class="ia-lock">{ICON_LOCK}Rien ne quitte votre JARVIS</p>
       </div>
       <div class="ia-log" data-log>
         {WELCOME}

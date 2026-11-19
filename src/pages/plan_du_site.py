@@ -8,7 +8,7 @@ GROUPES = [
     ("Produit", [
         ("/", "Accueil"),
         ("/logiciel/", "Le logiciel"),
-        ("/plateforme/", "Le Hub"),
+        ("/plateforme/", "L’appareil"),
         ("/offre/", "L’offre"),
     ]),
     ("Solutions", [("/solutions/", "Les sept solutions")]

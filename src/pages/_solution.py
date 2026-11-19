@@ -8,7 +8,7 @@
 from config import CAPABILITIES
 from pages import catalogue as CAT
 
-PRIX = {s["slug"]: ("Inclus avec chaque Hub" if s["prix"] == 0 else f"{s['prix']} $ par mois" + (" par véhicule" if s.get("unite") else "")) for s in CAT.SOLUTIONS}
+PRIX = {s["slug"]: ("Inclus à tous les niveaux" if s["prix"] == 0 else f"{s['prix']} $ par mois" + (" par véhicule" if s.get("unite") else "")) for s in CAT.SOLUTIONS}
 PRIX["automatisation-operations"] = f"Dès {CAT.ENT_SOCLE['prix']} $ par mois, puis 9 à 29 $ par automatisation"
 from demos import coquille
 import galerie
@@ -36,9 +36,9 @@ def prix_ligne(slug):
 
 def forfait_bouton(slug):
     """« Ajouter à mon forfait » : le choix suit le visiteur jusqu'au configurateur (assets/js/wow.js).
-    Environnements intelligents vient avec chaque Hub : rien à ajouter, on va composer."""
+    Environnements intelligents vient avec tous les niveaux : rien à ajouter, on va composer."""
     if slug == "environnements-intelligents":
-        return '<a class="pill" href="/offre/#composer">Inclus avec chaque Hub · composer mon forfait</a>'
+        return '<a class="pill" href="/offre/#composer">Inclus à tous les niveaux · composer mon forfait</a>'
     return (f'<button type="button" class="pill" data-forfait-add="{slug}" aria-pressed="false">'
             '<span data-forfait-off>Ajouter à mon forfait</span><span data-forfait-on hidden>Dans mon forfait ✓</span></button>')
 

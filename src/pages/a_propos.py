@@ -58,7 +58,7 @@ PAGE = {
     <a class="card" href="/vision-roadmap/" data-rev><small>Notre vision</small><h3>Rendre les gens libres.</h3><p>Les horizons de JARVIS et l’état réel du projet, jalon par jalon.</p></a>
     <a class="card" href="/laboratoire-mobile/" data-rev><small>Laboratoire mobile</small><h3>Une ambulance devenue laboratoire.</h3><p>Le premier JARVIS sur la route, avec ses batteries en direct.</p></a>
     <a class="card" href="/confiance/" data-rev><small>Confiance et sécurité</small><h3>Vos données restent à vous.</h3><p>Comment JARVIS protège vos informations, vos accès et vos décisions.</p></a>
-    <a class="card" href="/plateforme/" data-rev><small>Sous le capot</small><h3>Le Hub.</h3><p>Le Hub, son IA locale, le noyau en Rust, les comptes et les droits.</p></a>
+    <a class="card" href="/plateforme/" data-rev><small>Sous le capot</small><h3>L’appareil.</h3><p>L’appareil JARVIS, son IA locale, le noyau en Rust, les comptes et les droits.</p></a>
     <a class="card" href="/recherche/" data-rev><small>Recherche</small><h3>Une preuve avant chaque promesse.</h3><p>La méthode de recherche appliquée derrière chaque solution.</p></a>
     <a class="card" href="/confidentialite/" data-rev><small>Confidentialité</small><h3>Ce que le site recueille.</h3><p>Notre politique de confidentialité, en mots simples.</p></a>
   </div>

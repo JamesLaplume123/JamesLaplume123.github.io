@@ -1,6 +1,6 @@
 # Les lieux du client : source unique (décision de James, novembre 2026).
 # Les gens pensent « j'ai une ferme », pas « je veux Diagnostic & continuité ». Pour chaque lieu :
-# les solutions qui comptent (une raison d'une ligne chacune), la démonstration à ouvrir, le Hub
+# les solutions qui comptent (une raison d'une ligne chacune), la démonstration à ouvrir, l'appareil
 # conseillé et pourquoi. Sert à l'accueil (sélecteur), à la page Solutions (filtre), à l'offre
 # (« lequel choisir »), au configurateur (première étape) et à la fiche de l'IA.
 #
@@ -10,9 +10,9 @@
 # Le contenu reste dans le HTML : le filtrage se fait par l'attribut data-public (CSS et assets/js/wow.js).
 #
 # Cinq familles (docs/OFFRE.md, règle 1 : un cerveau par lieu) :
-#   - chez vous, votre entreprise : un Hub;
-#   - lieux mobiles (on y vit) : un Hub et un Boîtier VR;
-#   - véhicules, aérien (on s'y déplace) : un Boîtier Mobilité, sans Hub à bord.
+#   - chez vous, votre entreprise : un appareil JARVIS;
+#   - lieux mobiles (on y vit) : un appareil JARVIS et un Boîtier VR;
+#   - véhicules, aérien (on s'y déplace) : un Boîtier Mobilité, rien d'autre à bord.
 # Aucun nom de lieu réel. Aucun prix ici.
 
 import json
@@ -46,7 +46,7 @@ def public_sol(slug):
 # Le client choisit un niveau (Base, Signature, Platinum); JARVIS choisit l'appareil de chaque lieu.
 HUB_NOM = {"base": "JARVIS Mini", "signature": "JARVIS", "platinum": "JARVIS Pro"}
 
-# id, nom, famille, hub conseillé (None : aucun Hub à bord), raison, solutions [(slug, raison)], démonstration
+# id, nom, famille, appareil conseillé (clé « hub »; None : rien à bord), raison, solutions [(slug, raison)], démonstration
 LIEUX = [
     # ---------------- Chez vous
     {"id": "maison", "nom": "Maison", "famille": "chez-vous", "hub": "signature",
@@ -141,7 +141,7 @@ LIEUX = [
      "demo": f"/solutions/{ENV}/#essayer"},
 ]
 
-# Quel Hub choisir : des bénéfices, pas des spécifications (décision de James). Chaque carte répond à
+# Quel niveau choisir : des bénéfices, pas des spécifications (décision de James). Chaque carte répond à
 # « est-ce pour moi? » : une situation, une promesse, trois « Vous pouvez… », une limite honnête.
 # Les faits restent ceux du comparatif du catalogue (C.COMPARE) : caméras analysées, IA locale ou par
 # Internet, lieux reliés, batterie et Internet de secours.
@@ -177,6 +177,22 @@ for _l in LIEUX:
     _l.setdefault("public", "entreprise" if _l["famille"] == "entreprise" else "particulier" if _l["famille"] == "chez-vous" else "les deux")
 
 PAR_ID = {l["id"]: l for l in LIEUX}
+RANG = {"base": 1, "signature": 2, "platinum": 3}
+
+
+def cerveaux(ids, niveau=None):
+    """Les règles de l'offre (docs/OFFRE.md), comme « cerveaux » dans assets/js/wow.js : un seul niveau
+    pour tous les lieux; le lieu principal (le premier qui demande le plus gros appareil) porte le
+    niveau; aucun autre appareil ne dépasse le niveau. Un véhicule n'a pas d'appareil (None).
+    Rend (niveau, lieu principal, {lieu: clé de l'appareil ou None})."""
+    avec = [i for i in ids if PAR_ID[i]["hub"]]
+    principal = max(avec, key=lambda i: RANG[PAR_ID[i]["hub"]], default=None)
+    niveau = niveau or (PAR_ID[principal]["hub"] if principal else None)
+    appareil = {}
+    for i in ids:
+        h = PAR_ID[i]["hub"]
+        appareil[i] = None if not h else niveau if i == principal or RANG[h] > RANG[niveau] else h
+    return niveau, principal, appareil
 _TITRE = {c["slug"]: c["title"] for c in CAPABILITIES}
 
 
@@ -212,7 +228,7 @@ def selecteur(titre="Vos lieux.", sous="", ident="lieux"):
 
 # ---------------------------------------------------------------------------------------------
 # Le forfait partout (tiroir « Mon forfait », assets/js/wow.js) : sur chaque page, un petit bloc JSON
-# donne le nom, le Hub conseillé et la vignette de chaque lieu, et le nom et la vignette de chaque
+# donne le nom, l'appareil conseillé et la vignette de chaque lieu, et le nom et la vignette de chaque
 # solution. Les vignettes sont produites par tools/vignettes.py (media/forfait/v-*.webp) à partir de
 # la photo dédiée si elle existe, sinon d'une photo de repli.
 # ---------------------------------------------------------------------------------------------

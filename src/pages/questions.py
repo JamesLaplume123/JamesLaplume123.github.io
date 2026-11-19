@@ -39,7 +39,7 @@ GROUPES = [
     ]),
     ("Le système", "systeme", [
         ("Mes données sortent-elles de chez moi?",
-         "Pas par défaut. Le système fonctionne sur le Hub, un petit boîtier installé chez vous. Rien "
+         "Pas par défaut. Le système fonctionne sur votre JARVIS, un petit boîtier installé chez vous. Rien "
          "n’est vendu, et rien ne sort sans votre accord. Le détail : "
          "<a href=\"/confiance/\">confiance</a> et <a href=\"/confidentialite/\">confidentialité</a>."),
         ("Est-ce que ça fonctionne sans Internet, ou pendant une panne de courant?",

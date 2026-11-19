@@ -2,8 +2,11 @@
 # Demande Playwright et le site servi sur http://localhost:4173 :
 #   python3 tools/build.py && python3 -m http.server 4173 &   puis   python3 tools/test_offre.py
 # Sort avec le code 1 si une règle n'est pas respectée.
-import asyncio, json
+import asyncio, json, os, sys
 from playwright.async_api import async_playwright
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
+import lieux
+from demos import hub as page_appareil
 ok=True
 def verifie(nom, cond, detail=""):
     global ok
@@ -29,7 +32,7 @@ async def main():
         eco=await pg.evaluate("document.querySelector('.eco').innerText")
         verifie("écosystème : niveau Platinum, VR principal JARVIS Pro", "NIVEAU PLATINUM" in eco.upper() and "Lieu principal · JARVIS Pro + Boîtier VR" in eco, eco[:300])
         verifie("roulotte : JARVIS Mini relié", "JARVIS Mini + Boîtier VR · relié au principal" in eco, eco[:400])
-        # 3. redescendre à Base : aucun Hub ne dépasse le niveau; extensions 2; option ajoutée reste possible
+        # 3. redescendre à Base : aucun appareil ne dépasse le niveau; extensions 2; option ajoutée reste possible
         await pg.evaluate("document.querySelector('input[name=hub][value=base]').click()"); await pg.wait_for_timeout(200)
         eco=await pg.evaluate("document.querySelector('.eco').innerText")
         verifie("Base : VR principal JARVIS Mini", "Lieu principal · JARVIS Mini + Boîtier VR" in eco, eco[:300])
@@ -99,6 +102,23 @@ async def main():
             verifie(f"{nom} : toucher un lieu l'ajoute", "vr" in await pm.evaluate(f"{F}.lieux"))
             verifie(f"{nom} : aucune erreur JavaScript", not em, str(em))
             await ctx.close()
+        # 14. une seule règle, deux endroits : cerveaux() du site (wow.js) et de la construction (src/lieux.py)
+        #     doivent donner le même appareil à chaque lieu; la page /plateforme/ affiche ce résultat.
+        await pg.goto('http://localhost:4173/offre/'); await pg.wait_for_timeout(600)
+        cas = [(["maison", "chalet", "garage", "ferme", "bateau", "vr"], ""), (["maison", "chalet", "auto"], "signature"), (["condo", "chalet"], "base"),
+               (["vr", "roulotte"], "platinum"), (["auto", "moto"], ""), (["chalet", "maison", "domaine"], ""), (["ferme", "maison"], "base"), (["bureau", "avion", "flotte"], "")]
+        for ids, niv in cas:
+            js = await pg.evaluate("o => window.JarvisForfait.cerveaux(o)", {"lieux": ids, "hub": niv})
+            n, prin, app = lieux.cerveaux(ids, niv or None)
+            py = {"niveau": n or "", "principal": prin or "", "hub": {i: app[i] or "" for i in ids}}
+            verifie(f"même règle des deux côtés : {', '.join(ids)}" + (f" au niveau {niv}" if niv else ""), js == py, f"site {js} | construction {py}")
+        ids = [l[1] for l in page_appareil.LIEUX]
+        js = await pg.evaluate("o => window.JarvisForfait.cerveaux(o)", {"lieux": ids, "hub": ""})
+        await pg.goto('http://localhost:4173/plateforme/'); await pg.wait_for_timeout(600)
+        vus = await pg.evaluate("[...document.querySelectorAll('.hb-lx-t')].map(t => [...t.querySelectorAll('.hb-lx-hub')].map(x => x.textContent.trim()))")
+        attendu = [[lieux.HUB_NOM[js["hub"][i]]] + ([lieux.PAR_ID[i]["boitier"]] if lieux.PAR_ID[i].get("boitier") else []) + (["Lieu principal"] if i == js["principal"] else []) for i in ids]
+        verifie("page L'appareil : chaque lieu d'exemple porte l'appareil que donne la règle", vus == attendu, f"{vus} | {attendu}")
+        verifie("page L'appareil : aucune erreur JavaScript", not errs, str(errs))
         await b.close()
     print("RÉSULTAT :", "tout passe" if ok else "à corriger")
 asyncio.run(main())

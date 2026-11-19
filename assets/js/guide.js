@@ -47,7 +47,7 @@
     note: "JARVIS is an artificial intelligence and can be wrong. Conversations are kept to improve it; please don't share sensitive information.",
     err: "I can't reach my node right now. The team is here:", contact: "/en/contact/",
     close: "Close", reset: "New conversation", openPage: "Open the page",
-    chips: ["What is the Hub?", "How much does it cost?", "What do I need for my RV?", "Security for my business"]
+    chips: ["What is JARVIS?", "How much does it cost?", "What do I need for my RV?", "Security for my business"]
   } : {
     open: "Parler à JARVIS", state: "En ligne", title: "JARVIS",
     sub: "Intelligence privée",
@@ -57,7 +57,7 @@
     note: "JARVIS est une intelligence artificielle : il peut se tromper. Les conversations sont conservées pour l’améliorer; ne partagez pas d’information sensible.",
     err: "Je n'arrive pas à joindre mon nœud en ce moment. L'équipe, elle, est joignable :", contact: "/contact/",
     close: "Fermer", reset: "Nouvelle conversation", openPage: "Ouvrir la page",
-    chips: ["C'est quoi le Hub?", "Combien ça coûte?", "Qu'est-ce qu'il me faut pour mon VR?", "Une réceptionniste pour mon entreprise"]
+    chips: ["C'est quoi, JARVIS?", "Combien ça coûte?", "Qu'est-ce qu'il me faut pour mon VR?", "Une réceptionniste pour mon entreprise"]
   };
 
   var KEY = "jv-conversation", TKEY = "jv-teaser-vu";

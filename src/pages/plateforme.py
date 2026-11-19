@@ -1,5 +1,5 @@
-# Le Hub et l'IA privée (/plateforme/) — ce qu'il y a sous le capot (refonte « essentiel »,
-# novembre 2026) : le Hub, son IA, les extensions ensemble, le noyau en Rust, les comptes et les droits. /logiciel/ montre l'application; /offre/ dit
+# L'appareil JARVIS et l'IA privée (/plateforme/) — ce qu'il y a sous le capot (refonte « essentiel »,
+# novembre 2026) : l'appareil, son IA, les extensions ensemble, le noyau en Rust, les comptes et les droits. /logiciel/ montre l'application; /offre/ dit
 # comment ça se compose.
 
 from demos import hub, rust
@@ -8,9 +8,9 @@ import pro
 PAGE = {
     "url": "/plateforme/",
     "v2": True,
-    "title": "Le Hub JARVIS | Sous le capot",
+    "title": "L’appareil JARVIS | Sous le capot",
     "description": (
-        "Le Hub installé chez vous, son IA locale en français et sept extensions qui "
+        "L’appareil JARVIS installé chez vous, son IA locale en français et sept extensions qui "
         "travaillent ensemble : un système privé, local et contrôlé."
     ),
     "og_image": "/media/product/user/accueil-og.jpg",
@@ -25,7 +25,7 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect hb-sect" id="hub" data-toc="Le Hub" aria-label="Le Hub, cœur de JARVIS">
+<section class="sect hb-sect" id="hub" data-toc="L’appareil" aria-label="L’appareil, cœur de JARVIS">
   """ + hub.coeur() + """
 </section>
 
@@ -43,9 +43,9 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Comment les extensions travaillent ensemble</p>
-      <h2 id="ensemble-titre">Chacune son rôle.<br><em>Toutes reliées par le Hub.</em></h2>
+      <h2 id="ensemble-titre">Chacune son rôle.<br><em>Toutes reliées par votre JARVIS.</em></h2>
     </div>
-    <p data-rev>Chaque extension garde son domaine; le Hub fait respecter les droits et garde la trace.</p>
+    <p data-rev>Chaque extension garde son domaine; votre JARVIS fait respecter les droits et garde la trace.</p>
   </div>
   """ + hub.ensemble() + """
 </section>
@@ -85,7 +85,7 @@ PAGE = {
     </article>
     <article class="card" data-rev>
       <small>Où tout fonctionne</small>
-      <h3>Hub, vos machines, fournisseurs — affichés séparément.</h3>
+      <h3>Votre JARVIS, vos machines, vos fournisseurs — affichés séparément.</h3>
       <p>L’administrateur voit où chaque logiciel fonctionne et ce que chaque connexion autorise.
       On teste la connexion, puis on accorde seulement le nécessaire.</p>
     </article>

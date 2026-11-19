@@ -299,7 +299,7 @@ EXT_COURT = {"env": "Environnements", "diag": "Diagnostic", "secu": "Sécurité"
 
 
 def _stats(h):
-    """Les trois repères d'un niveau, tirés des faits du Hub (HUBS) : caméras, appareils, où vit l'IA."""
+    """Les trois repères d'un niveau, tirés des faits de l'appareil (HUBS) : caméras, appareils, où vit l'IA."""
     cam = f"{h['cam']}+" if h["id"] == "platinum" else str(h["cam"])
     app = "Illimité" if h["app"] >= 10 ** 6 else str(h["app"])
     trio = [(cam, "caméras analysées"), (app, "appareils reliés"), (NIVEAUX[h["id"]]["ia_court"], "où vit l’IA")]
@@ -308,7 +308,7 @@ def _stats(h):
 
 def _hubs():
     """Les trois niveaux : nom, pour qui, trois repères (caméras, appareils, IA), puis, sur le niveau choisi,
-    les extensions incluses et ce qu'il apporte. La fiche technique des Hubs est repliée dessous."""
+    les extensions incluses et ce qu'il apporte. La fiche technique des appareils est repliée dessous."""
     out = []
     for h in HUBS:
         c, n = lieux.HUBS_CHOIX[h["id"]], NIVEAUX[h["id"]]

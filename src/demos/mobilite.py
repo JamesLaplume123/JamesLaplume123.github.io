@@ -532,7 +532,7 @@ VEHICLES = [
     # ---------------- Au quotidien ----------------
     {"id": "vr", "grp": "q", "nom": "VR BouLance", "type": "Ambulance Ford 2017 convertie", "ico": "vr",
      "img": "/media/ambulance/ambulance-ford-2017-hd.jpg", "pos": "50% 62%", "real_photo": True,
-     "conn": "Boîtier JARVIS + Hub de la cellule", "connk": "b",
+     "conn": "Boîtier VR + JARVIS de la cellule", "connk": "b",
      "where": "En route · sur l’autoroute", "lvl": ("Carburant", 54),
      "caps": {"loc": "b", "lock": None, "clim": None, "nrj": "b", "pneus": "b", "diag": "b", "garde": "b", "zone": "b"},
      "stats": [("Carburant", "54 % · 410 km", 54), ("Batterie du moteur", "12,7 V", 92), ("Eau propre · cellule", "22 %", 22), ("Propane · cellule", "31 %", 31)],

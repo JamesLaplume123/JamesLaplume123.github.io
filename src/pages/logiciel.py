@@ -14,7 +14,7 @@ GAIN = {
     "espace": "Tout ce qui vous concerne est rangé au même endroit, en personnel comme en professionnel.",
     "journee": "Plus besoin d’ouvrir cinq applications pour savoir ce qui s’en vient.",
     "partage": "Vous gardez la main sur qui voit quoi, et jusqu’à quand.",
-    "messages": "Vos conversations restent chez vous, sur votre Hub.",
+    "messages": "Vos conversations restent chez vous, sur votre JARVIS.",
     "appels": "Les numéros inconnus sont filtrés; vous ne manquez plus un appel important.",
     "carte": "Tous vos lieux et vos véhicules en direct, d’un seul regard.",
     "outils": "Chaque extension s’ouvre d’un clic, dans la même application.",
@@ -41,13 +41,13 @@ def _maintenant():
 
 
 PREVU = """<ul class="feats">
-    <li data-rev><small>Accès</small><h3>Sur invitation seulement.</h3><p>Aucune inscription publique : chaque compte est créé par l’administrateur du Hub. Clés d’accès prévues — votre biométrie reste sur votre appareil.</p></li>
+    <li data-rev><small>Accès</small><h3>Sur invitation seulement.</h3><p>Aucune inscription publique : chaque compte est créé par l’administrateur de votre système. Clés d’accès prévues — votre biométrie reste sur votre appareil.</p></li>
     <li data-rev><small>Ma journée</small><h3>Agenda et tâches, enfin ensemble.</h3><p>Tous vos calendriers et vos listes, de toutes vos sources, dans une seule vue. Un calendrier en lecture seule le reste.</p></li>
-    <li data-rev><small>Messages</small><h3>Vos conversations, chez vous.</h3><p>Texte, photos, documents, vocaux et appels sur le Hub. Micro et caméra ne s’activent jamais sans votre permission.</p></li>
+    <li data-rev><small>Messages</small><h3>Vos conversations, chez vous.</h3><p>Texte, photos, documents, vocaux et appels sur votre JARVIS. Micro et caméra ne s’activent jamais sans votre permission.</p></li>
     <li data-rev><small>Assistant</small><h3>Il propose. Vous décidez.</h3><p>En texte ou en voix, il prépare l’action puis attend votre confirmation. Jamais de succès affiché sans résultat réel.</p></li>
     <li data-rev><small>Recommandations</small><h3>Chaque suggestion montre d’où elle vient.</h3><p>Provenance et raison visibles. Une suggestion n’agit jamais à votre place.</p></li>
     <li data-rev><small>Partage</small><h3>Je choisis ce que je partage.</h3><p>Avec qui, pour combien de temps, révocable en tout temps. Un accès retiré disparaît partout.</p></li>
-    <li data-rev><small>Carte</small><h3>Voir votre monde, pas celui des autres.</h3><p>Le Hub, vos appareils, et seulement les personnes qui ont choisi de partager. Jamais de fausse position.</p></li>
+    <li data-rev><small>Carte</small><h3>Voir votre monde, pas celui des autres.</h3><p>Votre JARVIS, vos appareils, et seulement les personnes qui ont choisi de partager. Jamais de fausse position.</p></li>
     <li data-rev><small>Personnalisation</small><h3>Votre accueil vous ressemble.</h3><p>Affichez, ordonnez et dimensionnez vos cartes. Vos préférences suivent votre compte, sans changer vos droits.</p></li>
   </ul>"""
 
@@ -135,7 +135,7 @@ PAGE = {
     </div>
   </div>
   <div class="lg-vs">{_vrai()}</div>
-  <p class="lg-under" data-rev><a href="/plateforme/">Le Hub, sous le capot <i aria-hidden="true">→</i></a></p>
+  <p class="lg-under" data-rev><a href="/plateforme/">L’appareil, sous le capot <i aria-hidden="true">→</i></a></p>
 </section>
 
 <section class="cta">

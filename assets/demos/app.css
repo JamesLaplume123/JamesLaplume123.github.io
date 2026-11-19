@@ -662,7 +662,7 @@
 .fx [data-demo="app"] .ap-log-new:not([hidden]) { animation: apIn .6s var(--ease); }
 @keyframes apIn { from { opacity: 0; transform: translateY(-6px); } }
 
-/* ---------- Mes appels : appels récents, visioconférence, téléphonie du Hub ---------- */
+/* ---------- Mes appels : appels récents, visioconférence, téléphonie de l'appareil ---------- */
 [data-demo="app"] .ap-top-call {
   display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border-radius: 50%; cursor: pointer;
   border: 1px solid var(--a-line); background: #0807068c; color: var(--a-text); transition: border-color .3s, color .3s;

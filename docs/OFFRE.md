@@ -9,8 +9,8 @@ Aucun prix ici. Les prix vivent dans `src/pages/catalogue.py` et restent cachés
 
 ## Les trois règles
 
-1. **Un cerveau par lieu.** Un lieu (fixe ou habitable) reçoit un Hub. Un véhicule reçoit un boîtier,
-   sans Hub à bord. JARVIS choisit le cerveau selon la taille du lieu.
+1. **Un cerveau par lieu.** Un lieu (fixe ou habitable) reçoit un appareil JARVIS. Un véhicule reçoit un
+   boîtier, rien d'autre à bord. JARVIS choisit le cerveau selon la taille du lieu.
 2. **Un seul niveau pour tout.** Base, Signature ou Platinum s'applique à tous les lieux du client.
    Le niveau décide des extensions incluses, d'où vit l'IA et du soutien.
 3. **L'équipement suit le lieu.** Chaque type de lieu a son ensemble de départ (boîtier, capteurs).
@@ -23,12 +23,12 @@ proposé par JARVIS, puis ajusté.
 
 | Chose | Règle | Où c'est écrit |
 |---|---|---|
-| Le cerveau d'un lieu | Hub conseillé du lieu; le lieu principal (le plus gros Hub conseillé) porte le niveau; aucun autre Hub ne dépasse le niveau | `cerveaux()` dans `assets/js/wow.js` |
+| Le cerveau d'un lieu | Appareil conseillé du lieu; le lieu principal (le plus gros appareil conseillé) porte le niveau; aucun autre appareil ne dépasse le niveau | `cerveaux()` dans `assets/js/wow.js` et dans `src/lieux.py` |
 | Le Boîtier VR | Lieux mobiles (VR, roulotte, bateau) : il suit le niveau (Base, Signature, Platinum) | `BOITIER_VR` dans `assets/demos/catalogue.js` |
 | Les extensions incluses | Base : 2 · Signature : 4 · Platinum : 5 | `NIVEAUX` dans `src/pages/catalogue.py` |
 | Mobilité | S'ajoute avec chaque véhicule (une par véhicule) | `catalogue.js`, familles `vehicules` et `aerien` |
 | Entreprise | Proposée dès qu'il y a un lieu d'entreprise; demande Signature ou Platinum | `data-public="entreprise"`, « À prévoir » |
-| Où vit l'IA | Base : par Internet, avec accord · Signature : dans le Hub · Platinum : dans le Hub, renforcée | `NIVEAUX[...]["ia"]` |
+| Où vit l'IA | Base : par Internet, avec accord · Signature : dans l'appareil · Platinum : dans l'appareil, renforcée | `NIVEAUX[...]["ia"]` |
 | L'équipement proposé | Un ensemble de départ par lieu, ajouté d'un geste | `ENSEMBLES` dans `src/pages/catalogue.py` |
 | Pour qui (particulier, entreprise) | Déduit des lieux choisis; il n'y a plus de question « pour qui » | `basculeLieu()` dans `wow.js` |
 
@@ -60,9 +60,9 @@ proposé par JARVIS, puis ajusté.
 
 ## Changer de niveau
 
-- Monter : si le Hub suffit, activation à distance. Sinon, échange du Hub avec un crédit.
-- Un autre lieu : l'ancien Hub part dans le nouveau lieu, relié au principal.
-- Redescendre : le client garde son Hub; on retire des fonctions.
+- Monter : si l'appareil suffit, activation à distance. Sinon, échange de l'appareil avec un crédit.
+- Un autre lieu : l'ancien appareil part dans le nouveau lieu, relié au principal.
+- Redescendre : le client garde son appareil; on retire des fonctions.
 - Le matériel installé reste toujours.
 
 ## Vérifié automatiquement
@@ -70,14 +70,16 @@ proposé par JARVIS, puis ajusté.
 - `src/pages/catalogue.py` refuse de se bâtir s'il manque un ensemble de départ pour un lieu, ou si
   un ensemble nomme une pièce ou une automatisation qui n'existe pas.
 - `tools/test_offre.py` joue le parcours dans un vrai navigateur : niveau conseillé, Boîtier VR qui
-  suit le niveau, aucun Hub au-dessus du niveau, ensembles ajoutés et retirés, entreprise, flotte,
+  suit le niveau, aucun appareil au-dessus du niveau, ensembles ajoutés et retirés, entreprise, flotte,
   nuage, soumission, rechargement.
+- `tools/verifier_seo.py` refuse la publication si l'ancien nom « Hub » revient dans ce qu'un visiteur
+  peut lire, sur n'importe quelle page (retiré de tout le site le 19 novembre 2026).
+- La page `/plateforme/` ne nomme aucun appareil à la main : ses lieux d'exemple passent par
+  `cerveaux()` (`src/lieux.py`), la même règle que la page L'offre.
 
 ## À décider par James
 
-- Le montant du crédit quand on échange un Hub (rien n'est chiffré sur le site d'ici là).
+- Le montant du crédit quand on échange un appareil (rien n'est chiffré sur le site d'ici là).
 - Les prix : le niveau par mois, le coût d'un lieu de plus (auparavant −30 % sur les solutions dès
   le deuxième lieu), un rabais sur les ensembles de départ (auparavant −8 % sur les kits).
-- Le mot « Hub » reste sur les pages qui expliquent l'appareil (`/plateforme/`, questions, démos) :
-  à remplacer par « JARVIS » dans une prochaine étape, montrée à James avant la mise en ligne.
 - Le nom « JARVIS » sur un appareil : à faire vérifier par un agent de marques.

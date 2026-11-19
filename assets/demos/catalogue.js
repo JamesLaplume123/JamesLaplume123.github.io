@@ -68,9 +68,9 @@
   function compute() {
     var once = [], month = [], tips = [];
     var hubIn = $('input[name="hub"]:checked'), hubId = hubIn ? hubIn.value : "";
-    var hubNom = hubIn ? "Le Hub " + maj(hubId) : "Le Hub";
+    var hubNom = hubIn ? "Le niveau " + maj(hubId) : "Votre niveau";
     var camMax = hubIn ? +hubIn.dataset.cam : 99, appMax = hubIn ? +hubIn.dataset.app : 1e6, autoMax = hubIn ? +hubIn.dataset.autos : 1e6;
-    if (hubIn) once.push({ id: "hub", n: "Hub " + maj(hubId), q: 1, p: +hubIn.dataset.prix, fixed: true });
+    if (hubIn) once.push({ id: "hub", n: (visData[hubId] || [maj(hubId)])[0], q: 1, p: +hubIn.dataset.prix, fixed: true });
 
     /* Extensions : celles du niveau sont comprises; les autres sont des lignes par mois */
     var mobLab = $('.ct-sol[data-sol="mob"]'), nVeh = qtyOf(mobLab);
@@ -290,7 +290,7 @@
     }).join("");
   }
 
-  /* ---------- Le Hub du niveau choisi, en grand à gauche ---------- */
+  /* ---------- L'appareil du niveau choisi (JARVIS Mini, JARVIS, JARVIS Pro), en grand à gauche ---------- */
   var vis = document.querySelector("[data-ct-vis]"), visData = {};
   if (vis) { try { visData = JSON.parse(vis.querySelector("[data-vis-data]").textContent); } catch (e) {} }
   function montre() {

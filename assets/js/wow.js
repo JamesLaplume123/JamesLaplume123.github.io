@@ -553,8 +553,8 @@
         "<b>Votre forfait est vide.</b><p>Choisissez vos lieux : JARVIS propose le cerveau de chacun, puis votre niveau.</p>" +
         '<a class="pill" href="/offre/#composer" data-fo-suite>Commencer par mon lieu</a></div>';
     }
-    var lieux = x.L.map(function (l) { return rang(l.img, l.n, quoiLieu(l) || "Sans Hub à bord", retirer("lieu:" + l.id, l.n)); }).join("") +
-      (x.hubSeul && REF.hubs[x.hubSeul] ? rang(REF.hubs[x.hubSeul].img, REF.hubs[x.hubSeul].n, "Hub choisi, sans lieu précis", retirer("hub:", REF.hubs[x.hubSeul].n)) : "");
+    var lieux = x.L.map(function (l) { return rang(l.img, l.n, quoiLieu(l) || "Un boîtier à bord", retirer("lieu:" + l.id, l.n)); }).join("") +
+      (x.hubSeul && REF.hubs[x.hubSeul] ? rang(REF.hubs[x.hubSeul].img, REF.hubs[x.hubSeul].n, "Choisi, sans lieu précis", retirer("hub:", REF.hubs[x.hubSeul].n)) : "");
     var sols = (x.lot ? rang("", x.lot.n, "Par mois", surOffre ? retirer("autre:" + x.lot.id, x.lot.n) : '<a class="fo-mod" href="/offre/#solutions" data-fo-suite>Modifier</a>', x.lot.px) : "") +
       x.S.map(function (s) { return rang(s.img, s.n, "Par mois, annulable", retirer("sol:" + s.slug, s.n)); }).join("");
     var autres = x.A.map(function (a) {
@@ -615,7 +615,7 @@
         var l = LIEUX[id], role;
         if (id === prin) role = "Lieu principal · " + cerveau(id);
         else if (c.hub[id]) role = cerveau(id) + " · relié au principal";
-        else role = (l.boitier || "Un petit boîtier") + " · sans Hub à bord";
+        else role = (l.boitier || "Un petit boîtier") + " · rien d’autre à bord";
         return '<li class="eco-n' + (id === prin ? " is-prin" : "") + '"><button type="button" class="eco-x" data-lieu="' + id + '" aria-label="Retirer ' + echap(l.nom) + '">×</button>' +
           '<img src="/media/forfait/lieu-' + id + '.webp" alt="" loading="lazy" decoding="async"><b>' + echap(l.nom) + "</b><span>" + echap(role) + "</span></li>";
       }).join("");
@@ -630,7 +630,7 @@
         '<ol class="eco-l">' + noeuds + '<li class="eco-n eco-plus"><a href="#' + echap((res.closest("[data-lieux]") || {}).id || "") + '"><i aria-hidden="true">+</i><b>Ajouter un lieu</b><span>Chalet, VR, bureau, véhicule…</span></a></li></ol>' +
         '<p class="eco-note">' + (nHub > 1 && c.niveau === "base" ? "Au niveau Base, chaque lieu veille seul. Pour les relier entre eux, choisissez le niveau Signature ou Platinum."
           : nHub > 1 ? "Vos lieux se parlent par un lien privé et chiffré. Les plus petits s’appuient sur l’intelligence du principal. Si le lien tombe, chacun continue seul : règles, alertes, enregistrements."
-          : nHub ? "Un cerveau par lieu, choisi par JARVIS selon la taille du lieu et votre niveau." : "Un véhicule n’a pas de Hub à bord : son boîtier parle à votre application, et à votre Hub si vous en avez un.") + "</p>" +
+          : nHub ? "Un cerveau par lieu, choisi par JARVIS selon la taille du lieu et votre niveau." : "Un véhicule ne reçoit qu’un boîtier : il parle à votre application, et à votre JARVIS si vous en avez un.") + "</p>" +
         '<details class="eco-d"><summary>Pourquoi ce cerveau, lieu par lieu</summary><div class="eco-cartes">' + pourquoi + "</div></details></div>";
       if (res.__html !== html) { res.innerHTML = html; res.__html = html; }   /* redessiné seulement s'il a changé : pas de clignotement */
     });

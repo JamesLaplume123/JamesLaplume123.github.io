@@ -301,9 +301,9 @@ SEO = {
         "lieux et extensions. Une visite guidée, sans rien installer.",
     ),
     "/offre/": (
-        "L’offre JARVIS : le Hub, vos extensions, l’installation",
-        "Comment se compose une installation JARVIS : le Hub, les extensions choisies, puis "
-        "l’installation, la formation et le soutien. Soumission gratuite après une visite.",
+        "L’offre JARVIS : vos lieux, votre niveau, votre projet",
+        "Composez votre JARVIS en trois étapes : vos lieux, votre niveau, votre projet. JARVIS propose "
+        "l’appareil de chaque lieu et son équipement; vous recevez une soumission écrite.",
     ),
     "/plateforme/": (
         "Le Hub JARVIS et son IA privée : sous le capot",

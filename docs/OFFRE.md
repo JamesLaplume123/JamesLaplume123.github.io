@@ -36,8 +36,10 @@ proposé par JARVIS, puis ajusté.
 
 - **Les lieux** : cinq familles, quinze lieux (`src/lieux.py`). Chez vous · Votre entreprise ·
   Lieux mobiles · Véhicules · Aérien.
-- **Les Hubs** : Base, Signature, Platinum (`HUBS`, fiche technique `COMPARE`). Un Hub plus puissant
-  peut toujours faire un niveau plus bas, jamais l'inverse.
+- **Les appareils** : JARVIS Mini, JARVIS, JARVIS Pro (`HUBS`, fiche technique `COMPARE`; dans le
+  code, la clé reste `base`, `signature`, `platinum`). Ils ne portent plus le nom des niveaux
+  (décision de James, 19 novembre 2026) : le client choisit un niveau, JARVIS choisit l'appareil.
+  Un appareil plus puissant peut toujours faire un niveau plus bas, jamais l'inverse.
 - **Les niveaux** : Base, Signature, Platinum (`NIVEAUX`). Chacun comprend le précédent.
 - **Les sept extensions** : Environnements, Diagnostic, Sécurité, IA privée, Réseau (avec le niveau);
   Mobilité (avec les véhicules); Entreprise (avec un lieu d'entreprise).
@@ -76,5 +78,6 @@ proposé par JARVIS, puis ajusté.
 - Le montant du crédit quand on échange un Hub (rien n'est chiffré sur le site d'ici là).
 - Les prix : le niveau par mois, le coût d'un lieu de plus (auparavant −30 % sur les solutions dès
   le deuxième lieu), un rabais sur les ensembles de départ (auparavant −8 % sur les kits).
-- Les Hubs et les niveaux portent les mêmes noms (Base, Signature, Platinum). C'est simple tant que
-  « le niveau » est le seul choix; à revoir si les Hubs se vendent un jour séparément.
+- Le mot « Hub » reste sur les pages qui expliquent l'appareil (`/plateforme/`, questions, démos) :
+  à remplacer par « JARVIS » dans une prochaine étape, montrée à James avant la mise en ligne.
+- Le nom « JARVIS » sur un appareil : à faire vérifier par un agent de marques.

@@ -32,14 +32,14 @@ def fiche(complet=True):
     a("- En phase de lancement : nous prenons les noms des personnes intéressées et nous choisissons quelques premiers projets.")
     a("- Aucune zone desservie n’est publiée et aucun lieu n’est nommé (ni ville, ni région, ni province). Pour savoir si un projet est possible à un endroit donné, la réponse se donne par la page Contact.")
     a("- L’entreprise parle toujours au « nous ». JARVIS, l’assistant, parle au « je » seulement de lui-même.")
-    a("- Tout tourne chez le client, dans un Hub. Les données restent sur place. Un relais chiffré sert à l’accès de partout et à relier plusieurs lieux; il ne garde rien. En option seulement : une sauvegarde chiffrée et une copie des vidéos hors du lieu.")
+    a("- Tout tourne chez le client, dans un JARVIS. Les données restent sur place. Un relais chiffré sert à l’accès de partout et à relier plusieurs lieux; il ne garde rien. En option seulement : une sauvegarde chiffrée et une copie des vidéos hors du lieu.")
     a("- JARVIS continue de fonctionner sans Internet (règles, IA locale, caméras, journal). Les mises à jour sont signées, la nuit, avec retour arrière.")
     a("- Le logiciel est en construction : le site montre des démonstrations; le premier JARVIS tourne dans le laboratoire mobile (une ambulance convertie). La démo et la visite sont offertes dès maintenant.")
     a("")
     a("## Les pages du site (donner le lien complet quand c’est utile)")
     pages = [
         ("/", "Accueil"), ("/solutions/", "Les sept solutions"), ("/logiciel/", "Le logiciel en démonstration"),
-        ("/plateforme/", "Le Hub : le boîtier, son IA privée, le noyau"),
+        ("/plateforme/", "Le Hub (l’appareil JARVIS) : son IA privée, le noyau"),
         ("/offre/", "L’offre : trois niveaux tout compris (Base, Signature, Platinum), des options, le projet sur mesure"),
         ("/offre/#composer", "Composer mon JARVIS : pour qui, le lieu, le guide de trois questions, le niveau, les options, le projet, la soumission"),
         ("/solutions/maison-intelligente-cle-en-main/", "Maison intelligente clé en main"),
@@ -62,12 +62,12 @@ def fiche(complet=True):
     a("")
     a("## Pour chez moi, pour mon entreprise, ou les deux")
     a("- Le site demande d’abord pour qui : « Pour chez moi », « Pour mon entreprise » ou « Les deux ». Côté « Pour chez moi », il ne montre pas ce qui est propre à l’entreprise.")
-    a("- Propre à l’entreprise : " + ", ".join(lieux._TITRE[s] for s in lieux.SOLUTIONS_PUBLIC) + " (réceptionniste IA, lignes téléphoniques, automatisations), les services professionnels, les rapports et la base de données du Hub Platinum, et les lieux d’entreprise (" + ", ".join(l["nom"].lower() for l in lieux.LIEUX if l["public"] == "entreprise") + ").")
+    a("- Propre à l’entreprise : " + ", ".join(lieux._TITRE[s] for s in lieux.SOLUTIONS_PUBLIC) + " (réceptionniste IA, lignes téléphoniques, automatisations), les services professionnels, les rapports et la base de données du JARVIS Pro, et les lieux d’entreprise (" + ", ".join(l["nom"].lower() for l in lieux.LIEUX if l["public"] == "entreprise") + ").")
     a("- Les six autres solutions servent aux deux publics.")
     a("- Un propriétaire d’entreprise a souvent aussi une maison : un seul compte, une seule application, plusieurs lieux personnels et d’entreprise possibles. La soumission se fait ensemble ou séparément pour l’entreprise (au nom de l’entreprise), au choix. Ne donner aucun conseil fiscal.")
     a("")
     a("## Les trois règles de l’offre (à dire simplement)")
-    a("- 1. Un cerveau par lieu : un lieu reçoit un Hub, un véhicule reçoit un boîtier. JARVIS le choisit selon la taille du lieu.")
+    a("- 1. Un cerveau par lieu : un lieu reçoit un JARVIS (JARVIS Mini, JARVIS ou JARVIS Pro), un véhicule reçoit un boîtier. Nous le choisissons selon la taille du lieu et le niveau.")
     a("- 2. Un seul niveau pour tout : Base, Signature ou Platinum s’applique à tous les lieux du client. Il décide des extensions incluses, d’où vit l’IA et du soutien. Le lieu principal porte le niveau; les plus petits s’appuient sur lui.")
     a("- 3. L’équipement suit le lieu : chaque type de lieu a son ensemble de départ (boîtier, capteurs). Le reste est sur mesure, et ce qui existe déjà est réutilisé.")
     a("- Le client ne décide donc que deux choses : ses lieux et son niveau. Le reste est proposé, puis ajusté.")
@@ -81,7 +81,7 @@ def fiche(complet=True):
             quoi = " + ".join(x for x in (lieux.HUB_NOM.get(l["hub"]), l.get("boitier")) if x)
             sols = "; ".join(f"{lieux._TITRE[s]} ({r.rstrip('.')})" for s, r in l["solutions"])
             a(f"- {l['nom']} : {quoi}. {l['raison']} Solutions qui comptent : {sols}.")
-    a("- Un lieu mobile (VR, roulotte, bateau, yacht) se traite comme une maison qui roule : Hub et Boîtier VR. Un véhicule (auto, camion, moto) ou un appareil (avion, hélicoptère) reçoit un Boîtier Mobilité, sans Hub à bord. Une flotte : un boîtier par véhicule, le tableau de la flotte au bureau.")
+    a("- Un lieu mobile (VR, roulotte, bateau, yacht) se traite comme une maison qui roule : JARVIS et Boîtier VR. Un véhicule (auto, camion, moto) ou un appareil (avion, hélicoptère) reçoit un Boîtier Mobilité, sans JARVIS à bord. Une flotte : un boîtier par véhicule, le tableau de la flotte au bureau.")
     a("- Aérien : suivi au sol seulement (position, batterie, alertes, hangar). JARVIS ne touche jamais aux commandes ni à l’avionique.")
     a("")
     a("## L’offre : trois niveaux tout compris (même source que la page L’offre)")
@@ -94,29 +94,30 @@ def fiche(complet=True):
     a("- La page L’offre se fait en trois étapes : 1) vos lieux (l’écosystème se dessine, un cerveau par lieu), 2) votre niveau (trois questions conseillent si on hésite), 3) votre projet (extensions, ensemble de départ de chaque lieu, données, installation), puis « Recevoir ma soumission ».")
     a("- Où vit l’IA : " + " ".join(f"{nom} : {C.NIVEAUX[k]['ia']}" for k, nom in (("base", "Base"), ("signature", "Signature"), ("platinum", "Platinum"))))
     a("- Extensions : cinq viennent avec le niveau (Base 2, Signature 4, Platinum 5). Mobilité s’ajoute avec chaque véhicule. Entreprise s’ajoute pour un lieu d’entreprise, dès le niveau Signature.")
-    a("- Règle simple : un Hub plus puissant peut toujours faire un niveau plus bas, jamais l’inverse.")
+    a("- Règle simple : un JARVIS plus puissant peut toujours faire un niveau plus bas, jamais l’inverse.")
     a("")
     a("## Monter ou descendre de niveau")
-    a("- Monter : si le Hub suffit, on active le niveau à distance, le jour même. S’il faut plus de puissance, on échange le Hub avec un crédit; la configuration est restaurée telle quelle.")
-    a("- Un autre lieu : l’ancien Hub part au chalet ou dans le VR, relié au nouveau.")
-    a("- Redescendre : le client garde son Hub; on retire des fonctions et il paie moins.")
+    a("- Monter : si le JARVIS suffit, on active le niveau à distance, le jour même. S’il faut plus de puissance, on échange le JARVIS avec un crédit; la configuration est restaurée telle quelle.")
+    a("- Un autre lieu : l’ancien JARVIS part au chalet ou dans le VR, relié au nouveau.")
+    a("- Redescendre : le client garde son JARVIS; on retire des fonctions et il paie moins.")
     a("- Le matériel installé reste toujours. Rien ne se perd.")
     a("")
     a("## Bâtir son écosystème (plusieurs lieux, une seule app)")
     a("- Un écosystème JARVIS, c’est tous les lieux d’une personne ou d’une entreprise reliés : maison, chalet, VR, bateau, garage, bureau, ferme, et les véhicules.")
-    a("- Méthode à proposer, une question à la fois : 1) quels sont vos lieux; 2) lequel est le principal (il reçoit le plus gros Hub, qui prête son IA aux autres); 3) pour chaque autre lieu, un Hub plus petit suffit souvent; 4) les véhicules reçoivent un Boîtier Mobilité, sans Hub; 5) une seule app et un seul compte pour tout, une soumission pour l’ensemble.")
+    a("- Méthode à proposer, une question à la fois : 1) quels sont vos lieux; 2) lequel est le principal (il reçoit le plus gros JARVIS, qui prête son IA aux autres); 3) pour chaque autre lieu, un JARVIS plus petit suffit souvent; 4) les véhicules reçoivent un Boîtier Mobilité, sans JARVIS; 5) une seule app et un seul compte pour tout, une soumission pour l’ensemble.")
     a("- Les lieux se parlent par un lien privé et chiffré. Si Internet tombe, chaque lieu continue seul.")
     a("")
     a("## Le nuage : seulement ce qui est utile")
-    a("- Tout tourne chez le client. La sauvegarde chiffrée est incluse (illisible pour nous). L’accès de partout passe par un relais chiffré qui ne garde rien. En option seulement, et sur accord explicite : une copie chiffrée des vidéos hors du lieu (au cas où le Hub serait volé ou détruit) et un renfort d’IA par le nuage pour les grosses tâches.")
+    a("- Tout tourne chez le client. La sauvegarde chiffrée est incluse (illisible pour nous). L’accès de partout passe par un relais chiffré qui ne garde rien. En option seulement, et sur accord explicite : une copie chiffrée des vidéos hors du lieu (au cas où le JARVIS serait volé ou détruit) et un renfort d’IA par le nuage pour les grosses tâches.")
     a("")
-    a("## Quel Hub pour quel niveau (en mots de tous les jours)")
+    a("## Quel appareil pour quel niveau (en mots de tous les jours)")
     for h in C.HUBS:
         c = lieux.HUBS_CHOIX[h["id"]]
         a(f"- {h['nom']} — {c['situation']} ({c['pour']}). {c['promesse']} Vous pouvez : " + "; ".join(x[0].lower() + x[1:] for x in c["peut"]) + f". À savoir : {c['savoir']}")
     a("- Pour aider quelqu’un qui hésite, poser les trois questions de la page L’offre : combien de caméras; l’intelligence doit-elle rester chez vous, même sans Internet; une coupure serait-elle grave. Platinum si une coupure serait grave ou 7 caméras et plus; Signature si l’IA doit rester chez soi ou 3 à 6 caméras; sinon Base.")
     a("")
-    a("## Les trois Hubs")
+    a("## Les trois appareils : JARVIS Mini, JARVIS, JARVIS Pro")
+    a("- Anciens noms : Hub Base, Hub Signature, Hub Platinum. Sur quelques pages du site, l’appareil s’appelle encore « le Hub » : c’est la même chose.")
     for h in C.HUBS:
         a(f"### {h['nom']} : {p(h['prix'])}, une fois. Pour : {h['pour']}.")
         if not complet:
@@ -130,21 +131,21 @@ def fiche(complet=True):
     a("### Comparatif précis (Base | Signature | Platinum)")
     for lab, *v in (C.COMPARE if complet else C.COMPARE[3:12]):
         a(f"- {lab} : " + " | ".join("non" if x == "—" else x for x in v))
-    a("- Dans chaque Hub : Environnements intelligents, l’app JARVIS, les comptes et droits, les mises à jour signées, les sauvegardes chiffrées.")
+    a("- Dans chaque JARVIS : Environnements intelligents, l’app JARVIS, les comptes et droits, les mises à jour signées, les sauvegardes chiffrées.")
     a("")
     a("## Les solutions (incluses selon le niveau, ou en option au mois)")
     for s in C.SOLUTIONS:
-        prix = "incluse avec chaque Hub" if s["prix"] == 0 else f"{s['prix']} $ par mois" + (f" {s['unite']}" if s.get("unite") else "")
+        prix = "incluse avec chaque JARVIS" if s["prix"] == 0 else f"{s['prix']} $ par mois" + (f" {s['unite']}" if s.get("unite") else "")
         a(f"- {s['nom']} : {prix}. {s['pourquoi']}" + (" Comprend : " + "; ".join(s["pts"]) + "." if complet else ""))
     a("- Chaque solution payante inclut l’accès de partout et les alertes sur le téléphone. Sans solution payante, JARVIS fonctionne quand même chez le client, sur place.")
     a("")
-    a("## Pour une entreprise (à la carte, par mois; demande un Hub Signature ou Platinum)")
+    a("## Pour une entreprise (à la carte, par mois; demande le niveau Signature ou Platinum)")
     a(f"- {C.ENT_SOCLE['nom']} : {C.ENT_SOCLE['prix']} $ par mois, obligatoire pour toute automatisation. {C.ENT_SOCLE['d']}")
     a(f"- {C.ENT_RECEP['nom']} : {C.ENT_RECEP['prix']} $ par mois {C.ENT_RECEP['unite']}. {C.ENT_RECEP['d']}")
     a(f"- {C.ENT_TOUTES['nom']} : {C.ENT_TOUTES['prix']} $ par mois. {C.ENT_TOUTES['pourquoi']}")
     a(f"- {C.ENT_MESURE['nom']} : {C.ENT_MESURE['prix']} $ une fois puis {C.ENT_MESURE['mois']} $ par mois. {C.ENT_MESURE['d']}")
     a(f"- {C.ENT_USAGE}")
-    a("- Prix des automatisations : 9 $ (un déclencheur, une action), 19 $ (reliée à un outil du client), 29 $ (veille 24/7 avec escalade). Hub Signature : jusqu’à 10 automatisations; Platinum : illimité.")
+    a("- Prix des automatisations : 9 $ (un déclencheur, une action), 19 $ (reliée à un outil du client), 29 $ (veille 24/7 avec escalade). Niveau Signature : jusqu’à 10 automatisations; niveau Platinum : illimité.")
     a("### Bibliothèque d’automatisations")
     for cat, items in C.AUTOMATISATIONS:
         a(f"- {cat} : " + "; ".join(f"{n} ({pr} $/mois)" + (f" — {w}" if complet else "") for _, n, pr, w in items) + ".")
@@ -157,7 +158,7 @@ def fiche(complet=True):
                 a(f"- {n} : {p(pr)}. {d} Pourquoi : {w}")
         else:
             a(f"- {cat} : " + "; ".join(f"{n} {p(pr)}" for _, n, pr, _, _ in items) + ".")
-    a("- Les caméras s’enregistrent dans le Hub, jamais dans le nuage. Le Boîtier VR va dans un VR, une roulotte ou un bateau; le Boîtier Mobilité dans une voiture ou un camion. Le Hub Base n’a pas d’IA locale : les caméras y sont analysées par Internet.")
+    a("- Les caméras s’enregistrent dans le JARVIS, jamais dans le nuage. Le Boîtier VR va dans un VR, une roulotte ou un bateau; le Boîtier Mobilité dans une voiture ou un camion. Le JARVIS Mini n’a pas d’IA locale : les caméras y sont analysées par Internet.")
     a("")
     a("## Ouvrir un plan tout composé (un seul lien)")
     a(f"- Adresse : {D}/offre/?lieux=<lieux>&niveau=<niveau>&ens=tout#composer. La page s’ouvre avec l’écosystème dessiné, le niveau choisi et l’ensemble de départ de chaque lieu ajouté. Le visiteur ajuste, puis demande sa soumission.")
@@ -190,21 +191,21 @@ def fiche(complet=True):
     a("- Toujours inclus : " + "; ".join(f"{n} ({d.rstrip('.')})" for n, d in C.INCLUS) + ".")
     a("")
     a("## Plusieurs lieux")
-    a("- Un Hub par lieu (maison, chalet, VR, bateau, entreprise, ferme, garage, hangar). Les lieux se parlent par un lien privé et chiffré; les petits lieux empruntent l’IA du plus gros Hub. Les solutions sont à −30 % dès le deuxième lieu; l’Entreprise et le matériel ne sont pas réduits.")
-    a("- Un Hub Base suit un Hub principal; un Signature relie jusqu’à 3 lieux; un Platinum, sans limite.")
+    a("- Un JARVIS par lieu (maison, chalet, VR, bateau, entreprise, ferme, garage, hangar). Les lieux se parlent par un lien privé et chiffré; les petits lieux empruntent l’IA du plus gros JARVIS. Les solutions sont à −30 % dès le deuxième lieu; l’Entreprise et le matériel ne sont pas réduits.")
+    a("- Niveau Base : chaque lieu veille seul. Niveau Signature : jusqu’à 3 lieux reliés entre eux. Niveau Platinum : sans limite.")
     a("")
     a("## Chiffres utiles (sources : Bureau d’assurance du Canada, Chubb)")
     a("- 47 % des réclamations d’assurance habitation sont des dégâts d’eau, 12 000 $ en moyenne. Seulement 9 % des gens ont un système qui détecte les fuites. Diagnostic & continuité coûte 15 $ par mois; un capteur de fuite, 59 $; la vanne d’eau automatique, 349 $.")
     a("")
     a("## Ce qu’on ne promet pas")
     a("- Pas de téléphone à donner : le contact passe par la page Contact. Pas de délai de livraison précis. Pas de « sans engagement » : les solutions sont annulables en tout temps, le matériel non installé est remboursable 30 jours, moins la configuration.")
-    a("- Les capacités des Hubs sont des repères; elles dépendent aussi des caméras et des solutions actives. Les prix sont confirmés par écrit avant tout achat.")
+    a("- Les capacités des JARVIS sont des repères; elles dépendent aussi des caméras et des solutions actives. Les prix sont confirmés par écrit avant tout achat.")
     texte = "\n".join(L) + "\n"
     return texte if SITE["prix_publics"] else sans_prix(texte)
 
 
 def sans_prix(texte):
-    """Prix non publics (SITE["prix_publics"] = False) : la fiche garde tout (Hubs, différences, solutions,
+    """Prix non publics (SITE["prix_publics"] = False) : la fiche garde tout (JARVIS, différences, solutions,
     ce que chacune ne fait pas) mais aucun montant. Une phrase dit pourquoi."""
     import re
     m = r"\d[\d\u00a0\u202f ]*[,.]?\d*\s?\$"

@@ -42,13 +42,15 @@ def public_sol(slug):
     return ' data-public="entreprise"' if SOLUTIONS_PUBLIC.get(slug) == "entreprise" else ""
 
 
-HUB_NOM = {"base": "Hub Base", "signature": "Hub Signature", "platinum": "Hub Platinum"}
+# Les trois appareils (décision de James, 19 novembre 2026) : ils ne portent plus le nom des niveaux.
+# Le client choisit un niveau (Base, Signature, Platinum); JARVIS choisit l'appareil de chaque lieu.
+HUB_NOM = {"base": "JARVIS Mini", "signature": "JARVIS", "platinum": "JARVIS Pro"}
 
 # id, nom, famille, hub conseillé (None : aucun Hub à bord), raison, solutions [(slug, raison)], démonstration
 LIEUX = [
     # ---------------- Chez vous
     {"id": "maison", "nom": "Maison", "famille": "chez-vous", "hub": "signature",
-     "raison": "L’IA tourne dans le Hub, sans Internet, et relie jusqu’à 100 appareils.",
+     "raison": "L’IA tourne chez vous, sans Internet, et relie jusqu’à 100 appareils.",
      "solutions": [(ENV, "Lumières, chauffage et énergie sur un seul écran."),
                    (SECU, "Caméras, portes et alarme dans un seul fil."),
                    (RES, "Un Wi-Fi solide dans toute la maison.")],
@@ -100,7 +102,7 @@ LIEUX = [
      "demo": f"/solutions/{SECU}/#essayer"},
     # ---------------- Lieux mobiles (on y vit)
     {"id": "vr", "nom": "VR", "famille": "mobile", "hub": "signature", "boitier": "Boîtier VR",
-     "raison": "Une maison qui roule : le Hub et le Boîtier VR gèrent batteries, eau, chauffage et sécurité.",
+     "raison": "Une maison qui roule : JARVIS et son Boîtier VR gèrent batteries, eau, chauffage et sécurité.",
      "solutions": [(ENV, "Batteries, eau, chauffage et lumières à bord."),
                    (MOB, "Un copilote qui propose le bon arrêt."),
                    (SECU, "Le véhicule surveillé quand vous êtes ailleurs."),
@@ -120,11 +122,11 @@ LIEUX = [
      "demo": f"/solutions/{ENV}/#essayer"},
     # ---------------- Véhicules (on s'y déplace)
     {"id": "auto", "nom": "Auto ou camion", "famille": "vehicules", "hub": None, "boitier": "Boîtier Mobilité",
-     "raison": "Aucun Hub à bord : le Boîtier Mobilité donne la position, le diagnostic et l’antivol.",
+     "raison": "Un seul boîtier à bord : il donne la position, le diagnostic et l’antivol.",
      "solutions": [(MOB, "Position, diagnostic et antivol, de partout.")],
      "demo": f"/solutions/{MOB}/#essayer"},
     {"id": "moto", "nom": "Moto", "famille": "vehicules", "hub": None, "boitier": "Boîtier Mobilité",
-     "raison": "Aucun Hub à bord : le Boîtier Mobilité suffit.",
+     "raison": "Un seul boîtier à bord : le Boîtier Mobilité suffit.",
      "solutions": [(MOB, "Position et antivol, de partout.")],
      "demo": f"/solutions/{MOB}/#essayer"},
     {"id": "flotte", "nom": "Flotte de véhicules", "famille": "vehicules", "public": "entreprise", "hub": None, "boitier": "Boîtier Mobilité",
@@ -134,7 +136,7 @@ LIEUX = [
      "demo": f"/solutions/{MOB}/#essayer"},
     # ---------------- Aérien : suivi au sol seulement, jamais l'avionique
     {"id": "avion", "nom": "Avion ou hélicoptère", "famille": "aerien", "hub": None, "boitier": "Boîtier Mobilité",
-     "raison": "Suivi au sol par son boîtier : position, batterie, alertes. Le hangar, lui, reçoit un Hub. JARVIS ne touche jamais à l’avionique.",
+     "raison": "Suivi au sol par son boîtier : position, batterie, alertes. Le hangar, lui, reçoit son propre JARVIS. Rien ne touche jamais à l’avionique.",
      "solutions": [(MOB, "L’appareil, sa position et son état au sol, au même endroit.")],
      "demo": f"/solutions/{ENV}/#essayer"},
 ]

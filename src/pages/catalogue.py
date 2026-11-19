@@ -13,25 +13,25 @@ import pro
 import json
 
 HUBS = [
-    {"id": "base", "nom": "Hub Base", "prix": 590, "pour": "Chalet, condo, petit VR",
+    {"id": "base", "nom": "JARVIS Mini", "prix": 590, "pour": "Chalet, condo, petit VR",
      "tag": "", "cam": 2, "app": 30, "autos": 0,
      "pourquoi": "Pour veiller sur un lieu simple : fuite, gel, porte, batterie. L’IA passe par Internet.",
      "pts": ["Jusqu’à 30 appareils", "2 caméras analysées, 7 jours d’enregistrement", "IA par Internet seulement",
              "Wi-Fi, Bluetooth, Zigbee", "Garantie 1 an, soutien par courriel"],
-     "manque": ["Pas d’IA dans le Hub", "Pas d’assistant vocal ni de réceptionniste", "Pas d’automatisations d’entreprise", "Pas de batterie de secours"]},
-    {"id": "signature", "nom": "Hub Signature", "prix": 1290, "pour": "Maison, VR complet, PME",
+     "manque": ["Pas d’IA dans l’appareil", "Pas d’assistant vocal ni de réceptionniste", "Pas d’automatisations d’entreprise", "Pas de batterie de secours"]},
+    {"id": "signature", "nom": "JARVIS", "prix": 1290, "pour": "Maison, VR complet, PME",
      "tag": "Pour la plupart des maisons", "cam": 6, "app": 100, "autos": 10,
      "pourquoi": "L’IA tourne chez vous, sans Internet : assistant vocal, caméras analysées sur place, réceptionniste.",
-     "pts": ["Jusqu’à 100 appareils", "6 caméras analysées, 30 jours d’enregistrement", "IA locale, dans le Hub",
+     "pts": ["Jusqu’à 100 appareils", "6 caméras analysées, 30 jours d’enregistrement", "IA locale, chez vous",
              "Assistant vocal « Jarvis » et réceptionniste IA", "Z-Wave et Matter, 3 lieux reliés",
              "Garantie 2 ans, soutien téléphone"],
      "manque": ["Pas de base de données ni de rapports", "Pas de batterie de secours", "Automatisations limitées à 10"]},
-    {"id": "platinum", "nom": "Hub Platinum", "prix": 3490, "pour": "Domaine, entreprise, ferme",
+    {"id": "platinum", "nom": "JARVIS Pro", "prix": 3490, "pour": "Domaine, entreprise, ferme",
      "tag": "Rien ne manque", "cam": 16, "app": 10 ** 6, "autos": 10 ** 6,
      "pourquoi": "Pour un lieu qui ne doit jamais s’arrêter : carte IA dédiée, batterie, Internet de secours, rapports.",
      "pts": ["Appareils illimités", "16 caméras et plus, 90 jours d’enregistrement", "IA forte, 100 % locale, carte IA dédiée",
              "Base de données, rapports, automatisations illimitées", "Batterie interne 2 h, Internet de secours intégré",
-             "Hub principal de tous vos lieux", "Garantie 3 ans, remplacement express, personne dédiée"],
+             "Cerveau principal de tous vos lieux", "Garantie 3 ans, remplacement express, personne dédiée"],
      "manque": []},
 ]
 HUB_BY_ID = {h["id"]: h for h in HUBS}
@@ -44,12 +44,12 @@ COMPARE = [
     ("Appareils reliés", "30", "100", "Illimité"),
     ("Caméras analysées par l’IA", "2", "6", "16 et plus"),
     ("Enregistrement vidéo", "7 jours", "30 jours", "90 jours et plus"),
-    ("IA privée", "Par Internet seulement", "Locale, dans le Hub", "Forte, 100 % locale"),
+    ("IA privée", "Par Internet seulement", "Locale, chez vous", "Forte, 100 % locale"),
     ("Assistant vocal « Jarvis »", "—", "Oui", "Oui, plusieurs pièces"),
     ("Réceptionniste IA", "—", "Oui", "Oui, plusieurs lignes"),
     ("Automatisations d’entreprise", "—", "Jusqu’à 10", "Illimitées"),
     ("Base de données et rapports", "—", "—", "Oui"),
-    ("Lieux reliés (multi-Hubs)", "Suit un Hub principal", "Jusqu’à 3", "Illimité"),
+    ("Lieux reliés", "Suit un JARVIS principal", "Jusqu’à 3", "Illimité"),
     ("Réseau", "Wi-Fi, Bluetooth, Zigbee", "+ Z-Wave, Matter", "+ 2 ports 2,5 Gb"),
     ("Internet de secours", "—", "Prêt pour 4G", "4G ou Starlink intégré"),
     ("Alimentation de secours", "—", "—", "Batterie interne 2 h"),
@@ -61,7 +61,7 @@ COMPARE = [
 
 SOLUTIONS = [
     {"id": "env", "nom": "Environnements intelligents", "prix": 0, "slug": "environnements-intelligents",
-     "pourquoi": "Inclus avec chaque Hub : c’est la base de JARVIS.",
+     "pourquoi": "Incluse partout : c’est la base de JARVIS.",
      "pts": ["Lumières, chauffage, stores, foyer, serrures", "Scènes : Matin, Soir, Nuit, Absent", "Énergie pièce par pièce", "Fonctionne sans Internet"],
      "non": ["Pas d’accès de partout ni d’alertes sans une solution payante"]},
     {"id": "diag", "nom": "Diagnostic & continuité", "prix": 15, "slug": "diagnostic-care",
@@ -75,7 +75,7 @@ SOLUTIONS = [
     {"id": "ia", "nom": "IA privée et connaissances", "prix": 15, "slug": "ia-privee-connaissances",
      "pourquoi": "Posez une question sur votre lieu ou vos documents. La réponse ne sort jamais de chez vous.",
      "pts": ["Assistant qui connaît votre lieu", "Répond à partir de vos documents, source citée", "Assistant vocal (Signature et Platinum)", "Option IA par Internet avec votre clé"],
-     "non": ["Sur un Hub Base, l’IA passe par Internet", "N’envoie jamais vos documents à un service externe sans votre clé"]},
+     "non": ["Sur un JARVIS Mini, l’IA passe par Internet", "N’envoie jamais vos documents à un service externe sans votre clé"]},
     {"id": "res", "nom": "Réseau et cybersécurité", "prix": 10, "slug": "reseau-resilience",
      "pourquoi": "Un appareil inconnu sur votre réseau est bloqué avant de faire des dégâts.",
      "pts": ["Carte du réseau en direct", "Appareils inconnus détectés et bloqués", "Zones séparées : invités, caméras, travail", "Lien de secours géré automatiquement"],
@@ -94,7 +94,7 @@ ENT_RECEP = {"id": "recep", "nom": "Réceptionniste IA", "prix": 59, "unite": "p
              "d": "Répond 24/7 à votre nom, prend les messages et les rendez-vous, transfère les urgences. 300 minutes par ligne comprises, 0,15 $ la minute ensuite.",
              "pourquoi": "Un appel manqué est souvent un client perdu. Elle ne manque jamais un appel."}
 ENT_TOUTES = {"id": "toutes", "nom": "Toutes les automatisations", "prix": 149,
-              "pourquoi": "Toute la bibliothèque, activée au besoin. Hub Platinum recommandé."}
+              "pourquoi": "Toute la bibliothèque, activée au besoin. JARVIS Pro recommandé."}
 ENT_MESURE = {"id": "mesure", "nom": "Automatisation sur mesure", "prix": 295, "mois": 19,
               "d": "Vous décrivez le besoin, nous la construisons et la testons. 295 $ une fois, puis 19 $ par mois."}
 # Entretien et veille : le contrat mensuel des entreprises (mises à jour, surveillance, soutien, rapport).
@@ -147,13 +147,13 @@ AUTOS_BY_ID = {a[0]: a for _, items in AUTOMATISATIONS for a in items}
 # Matériel : (catégorie, [(id, nom, prix, description, pourquoi, compte_camera)])
 MATERIEL = [
     ("Boîtiers JARVIS", [
-        ("vrb", "Boîtier VR Base", 490, "12 V. Batteries (shunt), 2 réservoirs, batterie moteur. VR, roulotte, bateau.", "Sans lui, le Hub ne voit ni vos batteries ni vos réservoirs."),
+        ("vrb", "Boîtier VR Base", 490, "12 V. Batteries (shunt), 2 réservoirs, batterie moteur. VR, roulotte, bateau.", "Sans lui, JARVIS ne voit ni vos batteries ni vos réservoirs."),
         ("vrs", "Boîtier VR Signature", 890, "Base + 16 sorties (lumières, pompe, chauffage) + 3e réservoir + 4G et GPS.", "Contrôlez le VR de partout, même sur la route."),
         ("vrp", "Boîtier VR Platinum", 1290, "Signature + 2 ports caméras + bus du véhicule (RV-C, NMEA 2000) + secours.", "Le VR ou le bateau au complet, jusqu’au moteur."),
-        ("mobb", "Boîtier Mobilité", 249, "Port OBD-II, GPS, LTE. Pour voiture ou camion, sans Hub dans l’auto.", "Position, antivol et diagnostic de chaque véhicule."),
+        ("mobb", "Boîtier Mobilité", 249, "Port OBD-II, GPS, LTE. Pour voiture ou camion. Rien d’autre à installer à bord.", "Position, antivol et diagnostic de chaque véhicule."),
         ("ecr10", "Écran JARVIS 10 po", 549, "Tactile, micro et haut-parleur : contrôle sur place, assistant vocal, interphone.", "Pour la famille ou les employés, sans sortir le téléphone."),
         ("ecr7", "Écran JARVIS 7 po", 349, "Version compacte pour une chambre, un VR ou un bureau.", "Le même contrôle, dans un petit espace."),
-        ("sec", "Boîtier Secours", 299, "Garde le Hub et le routeur allumés 8 h pendant une panne.", "Pendant la panne, c’est là que vous avez besoin d’alertes."),
+        ("sec", "Boîtier Secours", 299, "Garde JARVIS et le routeur allumés 8 h pendant une panne.", "Pendant la panne, c’est là que vous avez besoin d’alertes."),
     ]),
     ("Capteurs", [
         ("fuite", "Fuite d’eau", 59, "Sous l’évier, près du chauffe-eau, au sous-sol. À pile.", "Les dégâts d’eau sont la première cause de réclamation en habitation."),
@@ -226,7 +226,7 @@ INCLUS = [
     ("Configuration pour votre lieu", "Vos appareils déjà jumelés, vos scènes de base prêtes."),
     ("Test d’une heure", "Chaque kit tourne une heure sur banc avant l’envoi."),
     ("Mises à jour automatiques", "Signées, la nuit, avec retour arrière."),
-    ("Sauvegarde chiffrée", "Si le Hub brise, le nouveau repart comme avant."),
+    ("Sauvegarde chiffrée", "Si l’appareil brise, le nouveau repart comme avant."),
     ("Garantie", "1 an Base, 2 ans Signature, 3 ans Platinum. Garantie légale en plus."),
     ("Retour 30 jours", "Matériel non installé : remboursé, moins la configuration."),
 ]
@@ -260,8 +260,8 @@ ENSEMBLES = {
                  "pourquoi": "Batteries, réservoirs, gel et porte : les quatre choses qui gâchent un voyage."},
     "bateau": {"mat": {"vr*": 1, "temp": 2, "porte": 1, "fuite": 1},
                "pourquoi": "Batteries, cale et accès : l’essentiel, à quai comme en route."},
-    "auto": {"mat": {"mobb": 1}, "pourquoi": "Position, diagnostic et antivol, sans Hub à bord."},
-    "moto": {"mat": {"mobb": 1}, "pourquoi": "Position et antivol, sans Hub à bord."},
+    "auto": {"mat": {"mobb": 1}, "pourquoi": "Position, diagnostic et antivol, avec un seul boîtier à bord."},
+    "moto": {"mat": {"mobb": 1}, "pourquoi": "Position et antivol, avec un seul boîtier à bord."},
     "flotte": {"mat": {"mobb": 2}, "pourquoi": "Un boîtier par véhicule : ajustez le nombre à votre flotte."},
     "avion": {"mat": {"mobb": 1}, "pourquoi": "Suivi au sol : position, batterie et alertes. Jamais l’avionique."},
 }
@@ -278,14 +278,15 @@ def _p(n):
 # Les trois niveaux, tout compris (décisions de James, 18 novembre 2026; règles dans docs/OFFRE.md) :
 # un seul niveau pour tous les lieux du client. Il dit ce que JARVIS fait (les extensions de SOLS, cochées
 # d'office par catalogue.js), où vit l'IA et le soutien. Les autres extensions restent des options.
-# Le Hub du lieu principal porte le niveau; un Hub plus puissant peut toujours faire un niveau plus bas.
+# L'appareil du lieu principal porte le niveau; un appareil plus puissant peut toujours faire un niveau plus bas.
+# Les appareils (HUBS) s'appellent JARVIS Mini, JARVIS et JARVIS Pro; les niveaux gardent Base, Signature, Platinum.
 NIVEAUX = {
     "base": {"sols": ["env", "diag"], "plus": "", "ia_court": "Par Internet",
              "ia": "L’IA passe par Internet, avec votre accord.",
              "inclus": ["Lumières, chauffage, serrures et énergie", "Alertes : fuites, pannes, entretien",
                         "L’app JARVIS, de partout", "Soutien par courriel"]},
     "signature": {"sols": ["env", "diag", "secu", "ia"], "plus": "Tout Base, plus :", "ia_court": "Chez vous",
-                  "ia": "L’IA tourne dans votre Hub, même sans Internet.",
+                  "ia": "L’IA tourne chez vous, dans votre JARVIS, même sans Internet.",
                   "inclus": ["Caméras qui comprennent ce qu’elles voient", "Une IA privée qui reste chez vous",
                              "Assistant vocal et réceptionniste", "Soutien par courriel et téléphone"]},
     "platinum": {"sols": ["env", "diag", "secu", "ia", "res"], "plus": "Tout Signature, plus :", "ia_court": "Chez vous, renforcée",
@@ -293,6 +294,7 @@ NIVEAUX = {
                  "inclus": ["Réseau et cybersécurité", "Plusieurs lieux reliés, sans limite",
                             "Batterie et Internet de secours", "Soutien prioritaire, une personne dédiée"]},
 }
+NIVEAU_NOM = {"base": "Base", "signature": "Signature", "platinum": "Platinum"}
 EXT_COURT = {"env": "Environnements", "diag": "Diagnostic", "secu": "Sécurité", "ia": "IA privée", "res": "Réseau", "mob": "Mobilité"}
 
 
@@ -316,15 +318,15 @@ def _hubs():
       <input type="radio" name="hub" value="{h['id']}" data-prix="{h['prix']}" data-cam="{h['cam']}" data-app="{h['app']}" data-autos="{h['autos']}">
       <span class="ct-check" aria-hidden="true"></span>
       {tag}
-      <figure class="ct-hub-ph"><img src="/media/hubs/hub-{h['id']}.webp" alt="Hub JARVIS {escape(h['nom'])}" loading="lazy" decoding="async"></figure>
-      <h3>{escape(h['nom'].replace("Hub ", ""))}</h3>
+      <figure class="ct-hub-ph"><img src="/media/hubs/hub-{h['id']}.webp" alt="{escape(h['nom'])}" loading="lazy" decoding="async"></figure>
+      <h3>{NIVEAU_NOM[h['id']]}</h3>
       <p class="ct-prix">{_p(h['prix'])}<small>une fois</small></p>
       <p class="ct-pour">{c['situation']} · {c['pour']}</p>
       {_stats(h)}
       <div class="ct-niv">
         <p class="ct-niv-ext"><b>{len(n["sols"])} extensions incluses</b>{ext}</p>
         <ul>{f'<li class="ct-niv-plus">{n["plus"]}</li>' if n["plus"] else ''}{"".join(f"<li>{x}</li>" for x in n["inclus"])}</ul>
-        <p class="ct-niv-ia">{n["ia"]}</p>
+        <p class="ct-niv-ia">Au lieu principal : un {escape(h['nom'])}. {n["ia"]}</p>
       </div>
       <span class="ct-reco" aria-hidden="true">Conseillé pour vous</span>
     </label>""")
@@ -343,7 +345,7 @@ def _compare():
     return f"""<div class="ct-cmp-w"><table class="ct-cmp">
       <thead><tr><th></th>{heads}</tr></thead>
       <tbody>{"".join(rows)}</tbody></table></div>
-    <p class="ct-note"><i class="ct-dot"></i> Non disponible sur ce Hub. Les capacités sont des repères; elles dépendent aussi des caméras et des solutions actives.</p>"""
+    <p class="ct-note"><i class="ct-dot"></i> Non disponible sur ce modèle. Les capacités sont des repères; elles dépendent aussi des caméras et des solutions actives.</p>"""
 
 
 def _solutions():
@@ -404,7 +406,7 @@ def _entreprise():
         cats.append(f'<section class="ct-autocat" data-rev><h4>{escape(cat)}</h4>{rows}</section>')
     return f"""<div class="ct-ents">{socle}{recep}{toutes}</div>
     <h3 class="ct-sub" data-rev>La bibliothèque d’automatisations <em>cochez celles qu’il vous faut, elles s’ajoutent au panier</em></h3>
-    <p class="ct-note ct-note-prix" data-rev><b>9 $</b> un déclencheur, une action · <b>19 $</b> reliée à un de vos outils · <b>29 $</b> veille 24/7 avec escalade. Toutes demandent le Socle Entreprise et un Hub Signature ou Platinum.</p>
+    <p class="ct-note ct-note-prix" data-rev><b>9 $</b> un déclencheur, une action · <b>19 $</b> reliée à un de vos outils · <b>29 $</b> veille 24/7 avec escalade. Toutes demandent le Socle Entreprise et le niveau Signature ou Platinum.</p>
     <div class="ct-autos">{"".join(cats)}</div>
     <div class="ct-ents ct-ents-bas">{mesure}</div>
     <p class="ct-note">{escape(ENT_USAGE)}</p>
@@ -483,14 +485,14 @@ PAGE = {
 <script type="application/json" data-offre>{_donnees_offre()}</script>
 <section class="ct-lieu-etape" id="composer" data-toc="1 · Vos lieux" aria-label="Vos lieux">
   <p class="ct-etape" data-rev>Étape 1 sur 3</p>
-  {lieux.selecteur("Vos lieux.", "Choisissez-en un ou plusieurs. Chaque lieu reçoit son cerveau : un Hub pour un lieu, un boîtier pour un véhicule.", ident="lieu")}
+  {lieux.selecteur("Vos lieux.", "Choisissez-en un ou plusieurs. Chaque lieu reçoit son cerveau : un JARVIS pour un lieu, un boîtier pour un véhicule.", ident="lieu")}
 </section>
 
 <div class="ct-wrap">
 <div class="ct-vis" data-ct-vis aria-hidden="true">
   <div class="ct-vis-in">
     {"".join(f'<img class="ct-vis-i{" is-on" if h["id"] == "signature" else ""}" data-v="{h["id"]}" src="/media/hubs/hub-{h["id"]}.webp" alt="" loading="lazy" decoding="async">' for h in HUBS)}
-    <p class="ct-vis-t"><b data-vis-nom>Hub Signature</b><span data-vis-ligne>{lieux.HUBS_CHOIX["signature"]["promesse"]}</span></p>
+    <p class="ct-vis-t"><b data-vis-nom>JARVIS</b><span data-vis-ligne>{lieux.HUBS_CHOIX["signature"]["promesse"]}</span></p>
   </div>
   <script type="application/json" data-vis-data>{json.dumps({h["id"]: [h["nom"], lieux.HUBS_CHOIX[h["id"]]["promesse"]] for h in HUBS}, ensure_ascii=False)}</script>
 </div>
@@ -499,7 +501,7 @@ PAGE = {
 <section class="sect" id="hub" data-toc="2 · Votre niveau" aria-labelledby="hub-t">
   <div class="sect-head"><div data-rev><p class="ct-etape">Étape 2 sur 3</p>
     <h2 id="hub-t">Votre niveau.<br><em>Un seul, pour tous vos lieux.</em></h2></div>
-    <p data-rev>Le niveau dit ce que JARVIS fait, où vit son intelligence et le soutien que vous recevez. Le Hub de chaque lieu suit, tout seul.</p></div>
+    <p data-rev>Le niveau dit ce que JARVIS fait, où vit son intelligence et le soutien que vous recevez. L’appareil de chaque lieu suit, tout seul.</p></div>
   <div class="ct-hubs">{_hubs()}</div>
   <details class="ct-details ct-guide" data-guide data-rev>
     <summary>Vous hésitez? <em>· trois questions, et JARVIS conseille</em></summary>
@@ -516,16 +518,16 @@ PAGE = {
       </div>
     </div>
   </details>
-  <details class="ct-details" data-rev><summary>Fiche technique <em>· les trois Hubs, ligne par ligne</em></summary><img class="ct-trio" src="/media/hubs/hub-trio.webp" alt="Les trois Hubs JARVIS côte à côte" loading="lazy" decoding="async">{_compare()}</details>
+  <details class="ct-details" data-rev><summary>Fiche technique <em>· JARVIS Mini, JARVIS et JARVIS Pro, ligne par ligne</em></summary><img class="ct-trio" src="/media/hubs/hub-trio.webp" alt="JARVIS Mini, JARVIS et JARVIS Pro côte à côte" loading="lazy" decoding="async">{_compare()}</details>
   <details class="ct-details" data-rev><summary>Changer de niveau plus tard <em>· rien ne se perd</em></summary>
     <div class="ct-details-in">
     <ul class="ct-grandit">
-      <li><b>Monter de niveau</b>Si votre Hub suffit, on l’active à distance, le jour même.</li>
-      <li><b>Plus de puissance</b>On échange votre Hub, avec un crédit. Votre lieu est restauré tel quel.</li>
-      <li><b>Un autre lieu</b>Votre ancien Hub part au chalet ou dans le VR, relié au nouveau.</li>
-      <li><b>Redescendre</b>Vous gardez votre Hub; on retire des fonctions et vous payez moins.</li>
+      <li><b>Monter de niveau</b>Si votre JARVIS suffit, on l’active à distance, le jour même.</li>
+      <li><b>Plus de puissance</b>On échange votre JARVIS, avec un crédit. Votre lieu est restauré tel quel.</li>
+      <li><b>Un autre lieu</b>Votre ancien JARVIS part au chalet ou dans le VR, relié au nouveau.</li>
+      <li><b>Redescendre</b>Vous gardez votre JARVIS; on retire des fonctions et vous payez moins.</li>
     </ul>
-    <p class="ct-note">Un Hub plus puissant peut toujours faire un niveau plus bas, jamais l’inverse. Tout le matériel installé reste.</p>
+    <p class="ct-note">Un JARVIS plus puissant peut toujours faire un niveau plus bas, jamais l’inverse. Tout le matériel installé reste.</p>
     </div>
   </details>
 </section>
@@ -555,13 +557,13 @@ PAGE = {
   <h3 class="ct-sub" id="donnees" data-rev>Vos données et l’IA <em>chez vous d’abord</em></h3>
   <div class="ct-don" data-rev>
     <ul class="ct-don-l">
-      <li><b>Chez vous</b>Vos images, vos documents et votre historique restent dans votre Hub.</li>
+      <li><b>Chez vous</b>Vos images, vos documents et votre historique restent chez vous, dans votre JARVIS.</li>
       <li><b>De partout</b>L’accès à distance passe par un relais chiffré, qui ne garde rien.</li>
-      <li><b>Sauvegarde chiffrée</b>Incluse. Illisible pour nous : si le Hub brise, le nouveau repart comme avant.</li>
+      <li><b>Sauvegarde chiffrée</b>Incluse. Illisible pour nous : si l’appareil brise, le nouveau repart comme avant.</li>
     </ul>
     <p class="ct-don-t">Le nuage, seulement si vous le voulez :</p>
     <label class="ct-opt"><input type="checkbox" name="nuage" value="n_video"><span class="ct-check ct-check-sm" aria-hidden="true"></span>
-      <span><b>Copie des vidéos hors du lieu</b><em>Chiffrée. Si le Hub est volé ou détruit, les images restent.</em></span></label>
+      <span><b>Copie des vidéos hors du lieu</b><em>Chiffrée. Si l’appareil est volé ou détruit, les images restent.</em></span></label>
     <label class="ct-opt"><input type="checkbox" name="nuage" value="n_ia"><span class="ct-check ct-check-sm" aria-hidden="true"></span>
       <span><b>Renfort d’IA par le nuage</b><em>Pour les grosses tâches seulement, et jamais sans votre accord explicite.</em></span></label>
   </div>

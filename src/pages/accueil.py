@@ -15,6 +15,7 @@ import json
 from config import SITE, CAPABILITIES
 from demos import app
 import pro
+import lieux
 
 
 # --- 1. Héros vivant --------------------------------------------------------------------------
@@ -108,23 +109,23 @@ def _heros():
 </section>"""
 
 
-# --- 2. Le produit : le Hub, en grand, presque seul -------------------------------------------
+# --- 2. Le produit : l'appareil, en grand, presque seul -------------------------------------------
 # Décision de James (18 novembre 2026) : un site qui donne envie, comme Apple. On montre d'abord le
 # produit; le choix du lieu ne se fait qu'en composant son forfait (/offre/#composer).
 def _produit():
     return """<section class="ac-pro" aria-labelledby="ac-pro-titre">
-  <p class="ac-pro-k">Hub JARVIS</p>
+  <p class="ac-pro-k">Le cerveau de votre lieu</p>
   <h2 id="ac-pro-titre">JARVIS.<br><span>Tout votre lieu.</span></h2>
   <p class="ac-pro-p">Lumières, caméras, réseau et intelligence privée, réunis dans un seul appareil, chez vous.</p>
   <div class="ac-pro-acts">
     <a class="pill" href="/offre/#composer">Composer mon forfait</a>
     <a class="ac-lien-f" href="/offre/">Découvrir l’offre <i aria-hidden="true">›</i></a>
   </div>
-  <img class="ac-pro-ph" src="/media/hubs/hub-signature.webp" alt="Le Hub JARVIS Signature posé dans un salon" loading="lazy" width="1600" height="1200">
+  <img class="ac-pro-ph" src="/media/hubs/hub-signature.webp" alt="JARVIS posé dans un salon" loading="lazy" width="1600" height="1200">
 </section>"""
 
 
-# --- 3. La gamme : un seul grand Hub qui change selon le niveau choisi (comme une page produit Apple) ---
+# --- 3. La gamme : un seul grand appareil qui change (JARVIS Mini, JARVIS, JARVIS Pro) (comme une page produit Apple) ---
 # (id, nom, une ligne, étiquette, trois chiffres clés tirés du comparatif de l'offre)
 GAMME = [
     ("base", "Base", "L’essentiel, pour un petit lieu.", "",
@@ -139,18 +140,18 @@ GAMME = [
 def _gamme():
     photos = "".join(
         f'<img class="ac-gv-i{" is-on" if i == "signature" else ""}" data-g="{i}" src="/media/hubs/hub-{i}.webp" '
-        f'alt="Hub JARVIS {n}" loading="lazy" width="1600" height="1200">'
+        f'alt="{lieux.HUB_NOM[i]}" loading="lazy" width="1600" height="1200">'
         for i, n, *_ in GAMME)
     onglets = "".join(
-        f'<button type="button" class="ac-gt" data-g-go="{i}" aria-pressed="{"true" if i == "signature" else "false"}">{n}</button>'
+        f'<button type="button" class="ac-gt" data-g-go="{i}" aria-pressed="{"true" if i == "signature" else "false"}">{lieux.HUB_NOM[i]}</button>'
         for i, n, *_ in GAMME)
     fiches = "".join(f"""<div class="ac-gf{' is-on' if i == 'signature' else ''}" data-g-f="{i}">
-      {f'<em class="ac-g-k">{k}</em>' if k else ''}<h3>Hub {n}</h3><p>{l}</p>
+      <em class="ac-g-k">Niveau {n}{" · " + k[0].lower() + k[1:] if k else ""}</em><h3>{lieux.HUB_NOM[i]}</h3><p>{l}</p>
       <dl>{"".join(f'<div><dt>{v}</dt><dd>{d}</dd></div>' for v, d in chiffres)}</dl>
     </div>""" for i, n, l, k, chiffres in GAMME)
     return f"""<section class="ac-gam" data-ac-gamme aria-labelledby="ac-gam-titre">
-  <h2 id="ac-gam-titre">Trois Hubs.<br><span>Un seul JARVIS.</span></h2>
-  <div class="ac-gt-row" role="group" aria-label="Choisir un Hub">{onglets}</div>
+  <h2 id="ac-gam-titre">Trois tailles.<br><span>Un seul JARVIS.</span></h2>
+  <div class="ac-gt-row" role="group" aria-label="Choisir un modèle">{onglets}</div>
   <div class="ac-gv">{photos}</div>
   <div class="ac-gfs">{fiches}</div>
   <div class="ac-pro-acts">

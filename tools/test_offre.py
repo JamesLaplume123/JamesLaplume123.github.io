@@ -85,6 +85,20 @@ async def main():
         tips=await pg.evaluate("document.querySelector('[data-cart-tips]').innerText"); eco=await pg.evaluate("document.querySelector('.eco-note').innerText")
         verifie("2 lieux au niveau Base : chacun veille seul", "chaque lieu veille seul" in tips and "chaque lieu veille seul" in eco, tips+" | "+eco)
         verifie("aucune erreur JavaScript", not errs, str(errs))
+        # 13. sur un téléphone (écran tactile) et avec « réduire les animations » : le forfait doit tourner aussi.
+        #     (Le 19 novembre 2026, deux sorties hâtives de wow.js coupaient tout le forfait sur les téléphones.)
+        for nom, options in (("téléphone tactile", dict(p.devices["iPhone 13"])), ("animations réduites", dict(viewport={"width": 1280, "height": 800}, reduced_motion="reduce"))):
+            ctx = await b.new_context(**options); pm = await ctx.new_page(); em = []
+            pm.on('pageerror', lambda e: em.append(str(e)))
+            await pm.goto('http://localhost:4173/offre/?lieux=maison,chalet,auto&niveau=signature&ens=tout#composer'); await pm.wait_for_timeout(1200)
+            etat = await pm.evaluate(f"[!!window.JarvisForfait, ({F}.lieux||[]).length, {F}.hub, !!document.querySelector('.eco'), location.search]")
+            verifie(f"{nom} : le plan s'ouvre et l'écosystème se dessine", etat == [True, 3, "signature", True, ""], str(etat))
+            el = pm.locator('#lieu .lx-b[data-lieu="vr"]')
+            await el.scroll_into_view_if_needed()
+            await (el.tap() if options.get("has_touch") else el.click()); await pm.wait_for_timeout(300)
+            verifie(f"{nom} : toucher un lieu l'ajoute", "vr" in await pm.evaluate(f"{F}.lieux"))
+            verifie(f"{nom} : aucune erreur JavaScript", not em, str(em))
+            await ctx.close()
         await b.close()
     print("RÉSULTAT :", "tout passe" if ok else "à corriger")
 asyncio.run(main())

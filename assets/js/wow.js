@@ -344,129 +344,134 @@
     });
   });
 
-  if (reduce) return;
-  doc.classList.add("fx");
+  /* ---------- Effets : seulement si le mouvement est permis, puis seulement avec un pointeur fin ----------
+     Dans leur propre bloc : sur un téléphone (pointeur tactile) ou avec « réduire les animations », on sort
+     de ce bloc seulement. Le forfait, plus bas, doit tourner partout. */
+  (function () {
+    if (reduce) return;
+    doc.classList.add("fx");
 
-  /* Filet de sécurité : tout redevient visible (impression) */
-  function defuse() {
-    doc.classList.remove("fx");
-  }
-  addEventListener("beforeprint", defuse);
+    /* Filet de sécurité : tout redevient visible (impression) */
+    function defuse() {
+      doc.classList.remove("fx");
+    }
+    addEventListener("beforeprint", defuse);
 
-  /* Barre de progression de lecture */
-  var progress = document.createElement("div");
-  progress.className = "progress";
-  progress.setAttribute("aria-hidden", "true");
-  document.body.appendChild(progress);
+    /* Barre de progression de lecture */
+    var progress = document.createElement("div");
+    progress.className = "progress";
+    progress.setAttribute("aria-hidden", "true");
+    document.body.appendChild(progress);
 
-  /* Titres découpés en mots (dévoilement en cascade) */
-  $$("[data-split]").forEach(function (h) {
-    var i = 0;
-    (function walk(node) {
-      [].slice.call(node.childNodes).forEach(function (n) {
-        if (n.nodeType === 3) {
-          var parts = n.textContent.split(/(\s+)/);
-          var frag = document.createDocumentFragment();
-          parts.forEach(function (p) {
-            if (!p) return;
-            if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(p)); return; }
-            var s = document.createElement("span");
-            s.className = "w";
-            s.style.setProperty("--i", i++);
-            s.textContent = p;
-            frag.appendChild(s);
-          });
-          node.replaceChild(frag, n);
-        } else if (n.nodeType === 1 && n.tagName !== "BR") {
-          walk(n);
-        }
+    /* Titres découpés en mots (dévoilement en cascade) */
+    $$("[data-split]").forEach(function (h) {
+      var i = 0;
+      (function walk(node) {
+        [].slice.call(node.childNodes).forEach(function (n) {
+          if (n.nodeType === 3) {
+            var parts = n.textContent.split(/(\s+)/);
+            var frag = document.createDocumentFragment();
+            parts.forEach(function (p) {
+              if (!p) return;
+              if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(p)); return; }
+              var s = document.createElement("span");
+              s.className = "w";
+              s.style.setProperty("--i", i++);
+              s.textContent = p;
+              frag.appendChild(s);
+            });
+            node.replaceChild(frag, n);
+          } else if (n.nodeType === 1 && n.tagName !== "BR") {
+            walk(n);
+          }
+        });
+      })(h);
+    });
+
+    function frame() {
+      var vh = innerHeight;
+      var max = Math.max(1, document.documentElement.scrollHeight - vh);
+      progress.style.transform = "scaleX(" + c01(scrollY / max).toFixed(4) + ")";
+    }
+    var queued = false;
+    function schedule() {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; frame(); });
+    }
+    addEventListener("scroll", schedule, { passive: true });
+    addEventListener("resize", schedule);
+    schedule();
+
+    /* Révélations à l'entrée dans la fenêtre */
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
       });
-    })(h);
-  });
+    }, { threshold: .18 });
+    $$("[data-rev]").forEach(function (el) { io.observe(el); });
 
-  function frame() {
-    var vh = innerHeight;
-    var max = Math.max(1, document.documentElement.scrollHeight - vh);
-    progress.style.transform = "scaleX(" + c01(scrollY / max).toFixed(4) + ")";
-  }
-  var queued = false;
-  function schedule() {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(function () { queued = false; frame(); });
-  }
-  addEventListener("scroll", schedule, { passive: true });
-  addEventListener("resize", schedule);
-  schedule();
+    /* Patrouille : aucun élément dans la fenêtre ne reste caché */
+    setInterval(function () {
+      $$("[data-rev]:not(.in)").forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.top < innerHeight * 1.05 && r.bottom > 0) el.classList.add("in");
+      });
+    }, 800);
 
-  /* Révélations à l'entrée dans la fenêtre */
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+    /* Compteurs animés */
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        cio.unobserve(e.target);
+        var b = e.target, end = +b.getAttribute("data-n"), t0 = performance.now();
+        (function tickN(t) {
+          var k = c01((t - t0) / 1400), v = Math.round(end * easeOut(k));
+          b.textContent = v;
+          if (k < 1) requestAnimationFrame(tickN);
+        })(t0);
+      });
+    }, { threshold: .5 });
+    $$("[data-n]").forEach(function (el) { cio.observe(el); });
+
+    if (!finePointer) return;
+
+    /* Halo qui suit le pointeur sur les cartes */
+    $$(".card, .plan, .stat").forEach(function (el) {
+      el.classList.add("spot");
+      el.addEventListener("pointermove", function (e) {
+        var r = el.getBoundingClientRect();
+        el.style.setProperty("--px", (e.clientX - r.left) + "px");
+        el.style.setProperty("--py", (e.clientY - r.top) + "px");
+        el.style.setProperty("--spot", "1");
+      });
+      el.addEventListener("pointerleave", function () { el.style.setProperty("--spot", "0"); });
     });
-  }, { threshold: .18 });
-  $$("[data-rev]").forEach(function (el) { io.observe(el); });
 
-  /* Patrouille : aucun élément dans la fenêtre ne reste caché */
-  setInterval(function () {
-    $$("[data-rev]:not(.in)").forEach(function (el) {
-      var r = el.getBoundingClientRect();
-      if (r.top < innerHeight * 1.05 && r.bottom > 0) el.classList.add("in");
+    /* Inclinaison 3D des tuiles */
+    $$("[data-tilt]").forEach(function (el) {
+      el.addEventListener("pointermove", function (e) {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+        el.classList.add("is-tilting");
+        el.style.transform = "perspective(900px) rotateY(" + (x * 7).toFixed(2) + "deg) rotateX(" + (-y * 7).toFixed(2) + "deg) translateZ(0)";
+      });
+      el.addEventListener("pointerleave", function () {
+        el.classList.remove("is-tilting");
+        el.style.transform = "";
+      });
     });
-  }, 800);
 
-  /* Compteurs animés */
-  var cio = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (!e.isIntersecting) return;
-      cio.unobserve(e.target);
-      var b = e.target, end = +b.getAttribute("data-n"), t0 = performance.now();
-      (function tickN(t) {
-        var k = c01((t - t0) / 1400), v = Math.round(end * easeOut(k));
-        b.textContent = v;
-        if (k < 1) requestAnimationFrame(tickN);
-      })(t0);
+    /* Boutons magnétiques */
+    $$("[data-magnet]").forEach(function (el) {
+      el.addEventListener("pointermove", function (e) {
+        var r = el.getBoundingClientRect();
+        var x = e.clientX - (r.left + r.width / 2), y = e.clientY - (r.top + r.height / 2);
+        el.style.transform = "translate(" + (x * .18).toFixed(1) + "px," + (y * .28).toFixed(1) + "px)";
+      });
+      el.addEventListener("pointerleave", function () { el.style.transform = ""; });
     });
-  }, { threshold: .5 });
-  $$("[data-n]").forEach(function (el) { cio.observe(el); });
-
-  if (!finePointer) return;
-
-  /* Halo qui suit le pointeur sur les cartes */
-  $$(".card, .plan, .stat").forEach(function (el) {
-    el.classList.add("spot");
-    el.addEventListener("pointermove", function (e) {
-      var r = el.getBoundingClientRect();
-      el.style.setProperty("--px", (e.clientX - r.left) + "px");
-      el.style.setProperty("--py", (e.clientY - r.top) + "px");
-      el.style.setProperty("--spot", "1");
-    });
-    el.addEventListener("pointerleave", function () { el.style.setProperty("--spot", "0"); });
-  });
-
-  /* Inclinaison 3D des tuiles */
-  $$("[data-tilt]").forEach(function (el) {
-    el.addEventListener("pointermove", function (e) {
-      var r = el.getBoundingClientRect();
-      var x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
-      el.classList.add("is-tilting");
-      el.style.transform = "perspective(900px) rotateY(" + (x * 7).toFixed(2) + "deg) rotateX(" + (-y * 7).toFixed(2) + "deg) translateZ(0)";
-    });
-    el.addEventListener("pointerleave", function () {
-      el.classList.remove("is-tilting");
-      el.style.transform = "";
-    });
-  });
-
-  /* Boutons magnétiques */
-  $$("[data-magnet]").forEach(function (el) {
-    el.addEventListener("pointermove", function (e) {
-      var r = el.getBoundingClientRect();
-      var x = e.clientX - (r.left + r.width / 2), y = e.clientY - (r.top + r.height / 2);
-      el.style.transform = "translate(" + (x * .18).toFixed(1) + "px," + (y * .28).toFixed(1) + "px)";
-    });
-    el.addEventListener("pointerleave", function () { el.style.transform = ""; });
-  });
+  })();
 
   /* ---------- Mon forfait : il se bâtit en chemin, et s'ouvre partout ----------
      Une seule clé (« jarvis-forfait ») : les lieux choisis, le Hub, les solutions, et, écrits par le
@@ -600,7 +605,7 @@
     /* Votre écosystème (page L'offre) : les lieux reliés, le principal en premier, un cerveau chacun. */
     $$("[data-lieux-res]").forEach(function (res) {
       var ids = o.lieux.filter(function (id) { return LIEUX[id]; });
-      if (!ids.length) { res.hidden = true; res.innerHTML = ""; return; }
+      if (!ids.length) { res.hidden = true; res.innerHTML = ""; res.__html = ""; return; }
       res.hidden = false;
       var c = cerveaux(o), prin = c.principal;
       if (prin) ids = [prin].concat(ids.filter(function (id) { return id !== prin; }));
@@ -620,13 +625,14 @@
           l.sols.map(function (x) { return '<li><a href="/solutions/' + x.slug + '/">' + echap(x.nom) + "</a><span>" + echap(x.raison) + "</span></li>"; }).join("") +
           '</ul><p class="lx-r-a"><a href="' + l.demo + '">Voir la démonstration <i aria-hidden="true">→</i></a></p></article>';
       }).join("");
-      res.innerHTML = '<div class="eco"><div class="eco-t"><h3>Votre écosystème.</h3><p>' +
+      var html = '<div class="eco"><div class="eco-t"><h3>Votre écosystème.</h3><p>' +
         (c.niveau && nHub ? "Niveau " + nomNiveau(c.niveau) + " · " : "") + ids.length + (ids.length > 1 ? " lieux" : " lieu") + " · une seule app</p></div>" +
         '<ol class="eco-l">' + noeuds + '<li class="eco-n eco-plus"><a href="#' + echap((res.closest("[data-lieux]") || {}).id || "") + '"><i aria-hidden="true">+</i><b>Ajouter un lieu</b><span>Chalet, VR, bureau, véhicule…</span></a></li></ol>' +
         '<p class="eco-note">' + (nHub > 1 && c.niveau === "base" ? "Au niveau Base, chaque lieu veille seul. Pour les relier entre eux, choisissez le niveau Signature ou Platinum."
           : nHub > 1 ? "Vos lieux se parlent par un lien privé et chiffré. Les plus petits s’appuient sur l’intelligence du principal. Si le lien tombe, chacun continue seul : règles, alertes, enregistrements."
           : nHub ? "Un cerveau par lieu, choisi par JARVIS selon la taille du lieu et votre niveau." : "Un véhicule n’a pas de Hub à bord : son boîtier parle à votre application, et à votre Hub si vous en avez un.") + "</p>" +
         '<details class="eco-d"><summary>Pourquoi ce cerveau, lieu par lieu</summary><div class="eco-cartes">' + pourquoi + "</div></details></div>";
+      if (res.__html !== html) { res.innerHTML = html; res.__html = html; }   /* redessiné seulement s'il a changé : pas de clignotement */
     });
   }
 

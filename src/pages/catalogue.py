@@ -495,7 +495,7 @@ PAGE = {
   <button type="button" class="ct-qui-deux" data-public-set="deux" aria-pressed="false">Les deux, sur une même soumission <i aria-hidden="true">›</i></button>
 </section>
 <section class="ct-lieu-etape" aria-label="Votre lieu">
-  {lieux.selecteur("Commencez par votre lieu.", ident="lieu")}
+  {lieux.selecteur("Commencez par vos lieux.", ident="lieu", eco=True)}
 </section>
 <script type="application/json" data-niveaux>{json.dumps({k: v["sols"] for k, v in NIVEAUX.items()})}</script>
 <section class="ct-guide" data-guide aria-labelledby="guide-t">
@@ -554,6 +554,13 @@ PAGE = {
     <span class="ct-tag">Meilleure valeur</span>
     <div><h3>{COMPLET['nom']} · {COMPLET['prix']} $/mois</h3><p>Les cinq solutions payantes, Mobilité pour un véhicule comprise. Valeur à la carte : {COMPLET['valeur']} $/mois. Vous économisez {COMPLET['valeur'] - COMPLET['prix']} $ par mois.</p></div>
   </label>
+  <div class="ct-nuage" data-rev>
+    <h3>Le nuage, <span>seulement si vous le voulez.</span></h3>
+    <p>Tout tourne chez vous. Le nuage ne sert qu’à trois choses, en option :</p>
+    <ul><li><b>Sauvegarde chiffrée</b>Illisible pour nous. Votre JARVIS se restaure tel quel.</li>
+      <li><b>Accès de partout</b>Par un lien privé et chiffré, qui ne garde rien.</li>
+      <li><b>Copie des vidéos hors du lieu</b>Si le Hub est volé ou détruit, les images restent.</li></ul>
+  </div>
   <div data-public="entreprise">
   <h3 class="ct-sub" id="entreprise" data-rev>Pour une entreprise <em>· une réceptionniste IA et des automatisations à la carte</em></h3>
   <p class="ct-intro" data-rev>Tout est à l’unité et payable par mois. Vous commencez avec le Socle et une automatisation; vous en ajoutez quand vous en voyez le gain. Demande un Hub Signature ou Platinum.</p>

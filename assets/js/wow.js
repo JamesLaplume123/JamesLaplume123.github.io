@@ -610,13 +610,35 @@
     $$("[data-lieux-res]").forEach(function (res) {
       if (!o.lieux.length) { res.hidden = true; res.innerHTML = ""; return; }
       res.hidden = false;
-      res.innerHTML = o.lieux.filter(function (id) { return LIEUX[id]; }).map(function (id) {
+      var cartes = o.lieux.filter(function (id) { return LIEUX[id]; }).map(function (id) {
         var l = LIEUX[id];
         var quoi = (l.hubNom ? l.hubNom : "") + (l.boitier ? (l.hubNom ? " + " : "") + l.boitier : "");
         return '<article class="lx-r"><img class="lx-r-ph" src="/media/forfait/lieu-' + id + '.webp" alt="" loading="lazy" decoding="async"><h3>' + echap(l.nom) + '</h3><p class="lx-r-h"><b>' + echap(quoi) + "</b> " + echap(l.raison) + "</p><ul>" +
           l.sols.map(function (x) { return '<li><a href="/solutions/' + x.slug + '/">' + echap(x.nom) + "</a><span>" + echap(x.raison) + "</span></li>"; }).join("") +
           '</ul><p class="lx-r-a"><a href="' + l.demo + '">Voir la démonstration <i aria-hidden="true">→</i></a></p></article>';
-      }).join("") + (/^\/offre\//.test(location.pathname) ? "" : '<p class="lx-go"><a class="pill" href="/offre/#composer">Composer mon forfait</a></p>');
+      }).join("");
+      if (!res.hasAttribute("data-eco")) {
+        res.innerHTML = cartes + (/^\/offre\//.test(location.pathname) ? "" : '<p class="lx-go"><a class="pill" href="/offre/#composer">Composer mon forfait</a></p>');
+        return;
+      }
+      /* Votre écosystème : les lieux reliés, le principal (le plus gros Hub) en premier. */
+      var ids = o.lieux.filter(function (id) { return LIEUX[id]; }), prin = "";
+      ids.forEach(function (id) { var h = LIEUX[id].hub; if (h && (!prin || (RANG[h] || 0) > (RANG[LIEUX[prin].hub] || 0))) prin = id; });
+      if (prin) ids = [prin].concat(ids.filter(function (id) { return id !== prin; }));
+      var nHub = ids.filter(function (id) { return LIEUX[id].hub; }).length;
+      var noeuds = ids.map(function (id) {
+        var l = LIEUX[id], role;
+        if (id === prin) role = "Lieu principal · " + l.hubNom + (l.boitier ? " + " + l.boitier : "");
+        else if (l.hub) role = l.hubNom + (l.boitier ? " + " + l.boitier : "") + (prin ? " · relié au principal" : "");
+        else role = (l.boitier || "Un petit boîtier") + " · sans Hub à bord";
+        return '<li class="eco-n' + (id === prin ? " is-prin" : "") + '"><button type="button" class="eco-x" data-lieu="' + id + '" aria-label="Retirer ' + echap(l.nom) + '">×</button>' +
+          '<img src="/media/forfait/lieu-' + id + '.webp" alt="" loading="lazy" decoding="async"><b>' + echap(l.nom) + "</b><span>" + echap(role) + "</span></li>";
+      }).join("");
+      res.innerHTML = '<div class="eco"><div class="eco-t"><h3>Votre écosystème.</h3><p>' +
+        ids.length + (ids.length > 1 ? " lieux" : " lieu") + " · une seule app · une seule soumission" + "</p></div>" +
+        '<ol class="eco-l">' + noeuds + '<li class="eco-n eco-plus"><a href="#' + (res.closest("[data-lieux]") || {}).id + '"><i aria-hidden="true">+</i><b>Ajouter un lieu</b><span>Chalet, VR, bureau, véhicule…</span></a></li></ol>' +
+        (nHub > 1 ? '<p class="eco-note">Vos lieux se parlent par un lien privé et chiffré. Les plus petits empruntent l’intelligence du principal. Si Internet tombe, chacun continue seul.</p>' : "") +
+        '<details class="eco-d"><summary>Ce que JARVIS fera dans chaque lieu</summary><div class="eco-cartes">' + cartes + "</div></details></div>";
     });
   }
 

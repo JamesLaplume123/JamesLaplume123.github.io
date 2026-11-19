@@ -212,7 +212,7 @@ def choix_public(cls="pub"):
             + "</div>")
 
 
-def selecteur(titre="Quel est votre lieu?", ident="lieux", resultat=True):
+def selecteur(titre="Quel est votre lieu?", ident="lieux", resultat=True, eco=False):
     """Le sélecteur de lieu : d'abord « Pour chez moi / Pour mon entreprise / Les deux », puis trois familles,
     gros boutons, plusieurs choix possibles. Les lieux d'entreprise ne s'affichent pas côté particulier.
     Le choix est gardé dans le navigateur (clé « jarvis-forfait ») et suit le visiteur jusqu'au configurateur."""
@@ -228,7 +228,7 @@ def selecteur(titre="Quel est votre lieu?", ident="lieux", resultat=True):
             boutons += f'<button type="button" class="lx-b" data-lieu="{l["id"]}" aria-pressed="false">{l["nom"]}</button>'
         pub = ' data-public="entreprise"' if fid == "entreprise" else ' data-public="particulier"' if fid == "chez-vous" else ""
         groupes.append(f'<div class="lx-g"{pub}><p>{fnom}</p><div class="lx-bs">{boutons}</div></div>')
-    res = '<div class="lx-res" data-lieux-res hidden aria-live="polite"></div>' if resultat else ""
+    res = f'<div class="lx-res{" lx-eco" if eco else ""}" data-lieux-res{" data-eco" if eco else ""} hidden aria-live="polite"></div>' if resultat else ""
     return f"""<div class="lx" id="{ident}" data-lieux>
   <h2 class="lx-t">{titre}</h2>
   {choix_public()}

@@ -38,7 +38,12 @@ PAGE = {
       approximative que Cloudflare tire de cette adresse (pays, région, ville, coordonnées
       approximatives, fuseau horaire); votre fournisseur Internet; la page consultée et, s’il
       y a lieu, le nom du site d’où vous arrivez (le domaine seulement); le type d’appareil,
-      le système et le navigateur; l’heure de la visite.</p></div>
+      le système et le navigateur; l’heure de la visite.</p>
+      <p>Si vous parlez à JARVIS (la bulle du site) : vos questions et ses réponses, la page où
+      vous étiez, l’heure, votre adresse IP et la localisation approximative qu’on en tire, et le
+      type d’appareil.
+      Elles servent à améliorer JARVIS et l’offre, sont lues seulement par le responsable,
+      conservées 24 mois puis effacées automatiquement. N’y écrivez pas d’information sensible.</p></div>
     </div>
     <div class="row" data-rev>
       <i>03 · Journal des visites</i>
@@ -57,7 +62,7 @@ PAGE = {
       hébergé par Amazon Web Services : ces deux tiers voient alors votre adresse IP, comme tout
       serveur. Rien ne leur est envoyé d’autre, et rien tant qu’aucune carte n’est ouverte. Pour ne pas vous compter deux fois, votre navigateur retient « déjà
       compté » jusqu’à la fermeture de l’onglet; cette marque n’est jamais transmise. Votre choix
-      de mode (Base, Signature ou Platinum) est gardé dans votre navigateur et n’est jamais
+      de thème (Graphite, Or ou Titane) est gardé dans votre navigateur et n’est jamais
       transmis.</p></div>
     </div>
     <div class="row" data-rev>
@@ -66,14 +71,14 @@ PAGE = {
       <p>Les renseignements transmis ne sont ni vendus, ni loués, ni partagés à des
       fins commerciales. Votre message sert uniquement à comprendre votre demande et à y
       répondre personnellement; le journal des visites, uniquement à la sécurité et aux
-      statistiques du site.</p></div>
+      statistiques du site; vos échanges avec JARVIS, uniquement à l’améliorer.</p></div>
     </div>
     <div class="row" data-rev>
       <i>05 · Prestataires</i>
       <div><h3>Des services techniques, clairement identifiés.</h3>
       <p>Le service du site fonctionne sur Cloudflare : il reçoit le formulaire, le garde pour
       qu’il ne soit jamais perdu et le transmet au responsable par courriel avec Resend; il tient
-      aussi le journal des visites, dans un espace de stockage Cloudflare. Si ce
+      aussi le journal des visites et les échanges avec JARVIS, dans un espace de stockage Cloudflare. Si ce
       service ne répond pas, le formulaire passe par FormSubmit (formsubmit.co), qui conserve les
       soumissions 30 jours selon sa documentation. La météo et le radar proviennent
       d’Environnement et Changement climatique Canada; les fonds de carte, d’OpenFreeMap

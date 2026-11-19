@@ -1,7 +1,8 @@
 # Page privée « Visites du site » : le journal des visites, réservé à James.
 # Hors menu, hors sitemap, robots noindex/nofollow, /admin/ refusé dans robots.txt.
 # Le jeton LEADS_TOKEN est collé par James et gardé seulement dans sessionStorage (onglet ouvert);
-# il n'est envoyé qu'au service du site (GET /visits/log). Rien de secret n'est écrit ici.
+# il n'est envoyé qu'au service du site (GET /visits/log, GET /chats). Rien de secret n'est écrit ici.
+# En bas : les conversations des visiteurs avec JARVIS (assets/demos/conversations.js), même jeton.
 # Les chiffres viennent des compteurs par jour du service; le journal se charge par tranches
 # (« Charger plus »); le relevé d'avant la mise en service vient d'une clé d'archive du service,
 # jamais du dépôt (il contient des adresses IP).
@@ -68,7 +69,7 @@ PAGE = {
     "v2": True,
     "noindex": True,
     "robots": "noindex,nofollow",
-    "assets": ["visites"],
+    "assets": ["visites", "conversations"],
     "title": "Visites du site | JARVIS Private Systems",
     "description": "Page privée : journal des visites du site.",
     "content": f"""
@@ -147,6 +148,18 @@ PAGE = {
     </div>
     <p class="av-note" data-av="a-note"></p>
   </div>
+</section>
+
+<section class="cv" data-cv-root aria-labelledby="cv-titre">
+  <h2 id="cv-titre" class="cv-titre">Conversations <span>avec JARVIS.</span></h2>
+  <p class="cv-etat" data-cv="etat" role="status" aria-live="polite">Ouvrez le journal ci-dessus : les conversations suivent.</p>
+  <div class="cv-outils">
+    <input type="search" data-cv="cherche" placeholder="Chercher un mot, une ville ou une adresse IP" aria-label="Chercher dans les conversations">
+    <button type="button" class="pill ghost" data-cv="maj">Actualiser</button>
+  </div>
+  <div class="cv-chiffres" data-cv="chiffres" hidden></div>
+  <div class="cv-liste" data-cv="liste"></div>
+  <button type="button" class="pill ghost cv-plus" data-cv="plus" hidden>Charger plus</button>
 </section>
 """,
 }

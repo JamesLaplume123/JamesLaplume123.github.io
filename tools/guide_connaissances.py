@@ -66,7 +66,13 @@ def fiche(complet=True):
     a("- Les six autres solutions servent aux deux publics.")
     a("- Un propriétaire d’entreprise a souvent aussi une maison : un seul compte, une seule application, plusieurs lieux personnels et d’entreprise possibles. La soumission se fait ensemble ou séparément pour l’entreprise (au nom de l’entreprise), au choix. Ne donner aucun conseil fiscal.")
     a("")
-    a("## Entrer par son lieu (même source que le site : src/lieux.py)")
+    a("## Les trois règles de l’offre (à dire simplement)")
+    a("- 1. Un cerveau par lieu : un lieu reçoit un Hub, un véhicule reçoit un boîtier. JARVIS le choisit selon la taille du lieu.")
+    a("- 2. Un seul niveau pour tout : Base, Signature ou Platinum s’applique à tous les lieux du client. Il décide des extensions incluses, d’où vit l’IA et du soutien. Le lieu principal porte le niveau; les plus petits s’appuient sur lui.")
+    a("- 3. L’équipement suit le lieu : chaque type de lieu a son ensemble de départ (boîtier, capteurs). Le reste est sur mesure, et ce qui existe déjà est réutilisé.")
+    a("- Le client ne décide donc que deux choses : ses lieux et son niveau. Le reste est proposé, puis ajusté.")
+    a("")
+    a("## Entrer par son lieu : cinq familles (même source que le site : src/lieux.py)")
     for fid, fnom in lieux.FAMILLES:
         a(f"### {fnom}")
         for l in lieux.LIEUX:
@@ -74,8 +80,9 @@ def fiche(complet=True):
                 continue
             quoi = " + ".join(x for x in (lieux.HUB_NOM.get(l["hub"]), l.get("boitier")) if x)
             sols = "; ".join(f"{lieux._TITRE[s]} ({r.rstrip('.')})" for s, r in l["solutions"])
-            a(f"- {l['nom']}" + (f" ({l['sorte'].lower()})" if l.get("sorte") else "") + f" : {quoi}. {l['raison']} Solutions qui comptent : {sols}.")
-    a("- Un lieu mobile (VR, roulotte, bateau habitable) se traite comme une maison qui roule : Hub et Boîtier VR. Un véhicule (auto, camion, moto, avion) reçoit un Boîtier Mobilité, sans Hub à bord.")
+            a(f"- {l['nom']} : {quoi}. {l['raison']} Solutions qui comptent : {sols}.")
+    a("- Un lieu mobile (VR, roulotte, bateau, yacht) se traite comme une maison qui roule : Hub et Boîtier VR. Un véhicule (auto, camion, moto) ou un appareil (avion, hélicoptère) reçoit un Boîtier Mobilité, sans Hub à bord. Une flotte : un boîtier par véhicule, le tableau de la flotte au bureau.")
+    a("- Aérien : suivi au sol seulement (position, batterie, alertes, hangar). JARVIS ne touche jamais aux commandes ni à l’avionique.")
     a("")
     a("## L’offre : trois niveaux tout compris (même source que la page L’offre)")
     a("- Le client choisit un niveau : Base, Signature ou Platinum. Le niveau dit ce que JARVIS fait et le soutien inclus. Chaque niveau comprend tout le précédent.")
@@ -84,7 +91,9 @@ def fiche(complet=True):
         a(f"- {nom} : " + (n["plus"] + " " if n["plus"] else "") + "; ".join(x[0].lower() + x[1:] for x in n["inclus"]) + ". Solutions incluses : " + ", ".join({s["id"]: s["nom"] for s in C.SOLUTIONS}[x] for x in n["sols"]) + ".")
     a("- Le projet (le matériel du lieu et l’installation) est sur mesure : chaque lieu est différent. On réutilise ce qui existe déjà (Victron, UniFi, caméras ONVIF, NAS, Starlink).")
     a("- Les options s’ajoutent au mois, annulables en tout temps : ce qui n’est pas déjà dans le niveau (par exemple Mobilité pour un véhicule, ou l’Entreprise).")
-    a("- La page L’offre se fait en trois étapes : 1) choisir son niveau (un guide de trois questions conseille), 2) ajouter des options, 3) son projet (matériel, installation, lieux), puis « Recevoir ma soumission ».")
+    a("- La page L’offre se fait en trois étapes : 1) vos lieux (l’écosystème se dessine, un cerveau par lieu), 2) votre niveau (trois questions conseillent si on hésite), 3) votre projet (extensions, ensemble de départ de chaque lieu, données, installation), puis « Recevoir ma soumission ».")
+    a("- Où vit l’IA : " + " ".join(f"{nom} : {C.NIVEAUX[k]['ia']}" for k, nom in (("base", "Base"), ("signature", "Signature"), ("platinum", "Platinum"))))
+    a("- Extensions : cinq viennent avec le niveau (Base 2, Signature 4, Platinum 5). Mobilité s’ajoute avec chaque véhicule. Entreprise s’ajoute pour un lieu d’entreprise, dès le niveau Signature.")
     a("- Règle simple : un Hub plus puissant peut toujours faire un niveau plus bas, jamais l’inverse.")
     a("")
     a("## Monter ou descendre de niveau")
@@ -99,7 +108,7 @@ def fiche(complet=True):
     a("- Les lieux se parlent par un lien privé et chiffré. Si Internet tombe, chaque lieu continue seul.")
     a("")
     a("## Le nuage : seulement ce qui est utile")
-    a("- Tout tourne chez le client. Le nuage ne sert qu’à trois choses, en option : la sauvegarde chiffrée (illisible pour nous), l’accès de partout, et une copie des vidéos hors du lieu (au cas où le Hub serait volé ou détruit).")
+    a("- Tout tourne chez le client. La sauvegarde chiffrée est incluse (illisible pour nous). L’accès de partout passe par un relais chiffré qui ne garde rien. En option seulement, et sur accord explicite : une copie chiffrée des vidéos hors du lieu (au cas où le Hub serait volé ou détruit) et un renfort d’IA par le nuage pour les grosses tâches.")
     a("")
     a("## Quel Hub pour quel niveau (en mots de tous les jours)")
     for h in C.HUBS:
@@ -127,7 +136,6 @@ def fiche(complet=True):
     for s in C.SOLUTIONS:
         prix = "incluse avec chaque Hub" if s["prix"] == 0 else f"{s['prix']} $ par mois" + (f" {s['unite']}" if s.get("unite") else "")
         a(f"- {s['nom']} : {prix}. {s['pourquoi']}" + (" Comprend : " + "; ".join(s["pts"]) + "." if complet else ""))
-    a(f"- {C.COMPLET['nom']} : {C.COMPLET['prix']} $ par mois pour les cinq solutions payantes, Mobilité pour un véhicule comprise (valeur à la carte {C.COMPLET['valeur']} $).")
     a("- Chaque solution payante inclut l’accès de partout et les alertes sur le téléphone. Sans solution payante, JARVIS fonctionne quand même chez le client, sur place.")
     a("")
     a("## Pour une entreprise (à la carte, par mois; demande un Hub Signature ou Platinum)")
@@ -151,15 +159,21 @@ def fiche(complet=True):
             a(f"- {cat} : " + "; ".join(f"{n} {p(pr)}" for _, n, pr, _, _ in items) + ".")
     a("- Les caméras s’enregistrent dans le Hub, jamais dans le nuage. Le Boîtier VR va dans un VR, une roulotte ou un bateau; le Boîtier Mobilité dans une voiture ou un camion. Le Hub Base n’a pas d’IA locale : les caméras y sont analysées par Internet.")
     a("")
-    a("## Les kits (prix des pièces moins 8 %, ajustables pièce par pièce)")
-    for i, k in enumerate(C.KITS, 1):
-        plein, once, mois = C._kit_totaux(k)
-        hub = C.HUB_BY_ID[k["hub"]]["nom"]
-        pieces = ", ".join(f"{q} × {C.MAT_BY_ID[m][1]}" for m, q in k["mat"].items())
-        if complet:
-            a(f"- {k['nom']} : {p(once)} une fois (au lieu de {p(plein)}) + {mois} $ par mois. Pour : {k['pour']}. Contenu : {hub}, {pieces}. {k['pourquoi']} Lien : {D}/offre/?kit={i}")
-        else:
-            a(f"- {k['nom']} : {p(once)} + {mois} $/mois, {hub}, {1 + sum(k['mat'].values())} pièces. Pour : {k['pour']}. {D}/offre/?kit={i}")
+    a("## Ouvrir un plan tout composé (un seul lien)")
+    a(f"- Adresse : {D}/offre/?lieux=<lieux>&niveau=<niveau>&ens=tout#composer. La page s’ouvre avec l’écosystème dessiné, le niveau choisi et l’ensemble de départ de chaque lieu ajouté. Le visiteur ajuste, puis demande sa soumission.")
+    a("- lieux : identifiants séparés par des virgules, parmi : " + ", ".join(f"{l['id']} ({l['nom']})" for l in lieux.LIEUX) + ".")
+    a("- niveau : base, signature ou platinum. Sans niveau, la page prend le niveau conseillé pour ces lieux.")
+    a(f"- Exemple : maison, chalet et une auto, niveau Signature : {D}/offre/?lieux=maison,chalet,auto&niveau=signature&ens=tout#composer")
+    a("- Un lieu ne se met qu’une fois dans le lien; le nombre de véhicules ou de pièces s’ajuste sur la page.")
+    a("")
+    a("## Les ensembles de départ (un par lieu, ajustables pièce par pièce)")
+    for l in lieux.LIEUX:
+        e = C.ENSEMBLES[l["id"]]
+        pieces = ", ".join(f"{q} × " + ("Boîtier VR (celui du niveau)" if i == "vr*" else C.MAT_BY_ID[i][1]) for i, q in e["mat"].items())
+        ent = e.get("ent") or {}
+        plus = (", réceptionniste IA" if ent.get("recep") else "") + (f", {len(ent['autos'])} automatisations pour commencer" if ent.get("autos") else "")
+        a(f"- {l['nom']} : {pieces}{plus}. {e['pourquoi']}")
+    a("- Ce sont des points de départ proposés à l’étape 3 de la page L’offre. Le Boîtier VR suit le niveau choisi.")
     a("")
     a("## Services professionnels (payés une fois)")
     for fam, items in C.SERVICES:

@@ -1,13 +1,10 @@
-/* Catalogue : configurateur à deux colonnes (étapes à gauche, panier collant à droite).
-   Même langage que /offre/ (noir et or). Dépend de parcours.css pour .of-trois / .of-num. */
-@import url("/assets/demos/parcours.css");
+/* L'offre en trois étapes (page /offre/, src/pages/catalogue.py; règles dans docs/OFFRE.md).
+   Étape 1 pleine largeur (vos lieux, votre écosystème); étapes 2 et 3 dans une colonne à droite d'un
+   grand visuel collant (le Hub du niveau choisi). Le forfait vit dans le tiroir du site (wow.js),
+   ouvert par la barre du bas. */
 
-/* Le compagnon JARVIS (coin droit) cacherait le panier : on le retire sur cette page. */
-#jv-root { display: none !important; }
-
-.ct-top { min-height: 66vh; }
 .ct { padding-bottom: 2rem; }
-.ct-wrap { max-width: 92rem; margin: 0 auto; padding: 0 1.4rem; display: grid; grid-template-columns: minmax(0, 1fr) 344px; gap: 0 2.4rem; align-items: start; }
+.ct-wrap { max-width: 92rem; margin: 0 auto; padding: 0 1.4rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 2.4rem; align-items: start; }
 .ct-main { min-width: 0; }
 .ct-main .sect { padding: 4rem 0; }
 .ct-main .sect.alt { background: none; border-top: 1px solid #ffffff10; }
@@ -33,11 +30,10 @@
 .ct-why { margin: .7rem 0 0; padding-left: .9rem; border-left: 2px solid var(--gold); color: #e9dcc2; font-size: .88rem; line-height: 1.5; }
 .ct-k { margin: 1.1rem 0 .4rem; font: 600 .6rem/1 var(--mono); letter-spacing: .15em; text-transform: uppercase; color: #8fd3a5; }
 .ct-k-no { color: #ff8a80; }
-.ct-oui, .ct-no { margin: 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
-.ct-oui li, .ct-no li { position: relative; padding-left: 1.2rem; font-size: .84rem; line-height: 1.45; color: #d6d2ca; }
+.ct-oui { margin: 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
+.ct-oui li { position: relative; padding-left: 1.2rem; font-size: .84rem; line-height: 1.45; color: #d6d2ca; }
 .ct-oui li::before { content: ""; position: absolute; left: 0; top: .5em; width: 7px; height: 7px; border-radius: 50%; background: #8fd3a5; }
-.ct-no li::before { content: ""; position: absolute; left: 0; top: .5em; width: 7px; height: 7px; border-radius: 50%; background: #ff6f61; }
-.ct-no li { color: #b9b4ab; }
+
 .ct-intro { margin: -.2rem 0 1.2rem; color: var(--dim); font-size: .95rem; max-width: 60rem; }
 
 /* Hubs */
@@ -68,27 +64,19 @@
 .ct-note { margin: .9rem 0 0; color: #8f8f98; font-size: .8rem; line-height: 1.5; }
 .ct-note-prix { margin: 0 0 1rem; color: #c6c1b8; font-size: .88rem; }
 .ct-note-prix b { color: var(--gold-soft); }
-.ct-inclus-hub { margin: 1.2rem 0 0; padding: 1rem 1.3rem; border-radius: 14px; background: #0a0a0a; border: 1px solid var(--mode-line); color: #c4c4cc; font-size: .9rem; }
-.ct-inclus-hub b { color: var(--gold-soft); }
 
 /* Solutions */
 .ct-sols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .ct-sol { position: relative; display: flex; flex-direction: column; gap: .7rem; padding: 1.3rem; border-radius: 18px; cursor: pointer; background: #0a0a0a; box-shadow: inset 0 0 0 1px #ffffff14; transition: box-shadow .3s var(--ease); }
 .ct-sol:has(input:checked) { box-shadow: inset 0 0 0 2px var(--gold); }
-.ct-sol.is-inclus { cursor: default; background: #0e0d0a; }
-.ct-sol.is-inclus .ct-check { opacity: .55; }
+
 .ct-sol.is-locked { opacity: .92; }
 .ct-sol-h { padding-right: 2.4rem; }
 .ct-sol h3 { margin: 0; font-size: 1.08rem; font-weight: 650; letter-spacing: -.015em; line-height: 1.3; }
 .ct-sol .ct-prix { font-size: 1.25rem; }
 .ct-sol .ct-why { margin-top: 0; }
 .ct-sol > a { margin-top: auto; color: var(--gold-soft); text-decoration: none; font-size: .84rem; font-weight: 600; }
-.ct-complet { position: relative; display: flex; gap: 1.2rem; align-items: center; margin: 14px 0 0; padding: 1.4rem 3.4rem 1.4rem 1.5rem; border-radius: 18px; cursor: pointer; background: radial-gradient(120% 100% at 0 50%, color-mix(in srgb, var(--mode-glow) 16%, transparent), transparent 60%), #0a0a0a; box-shadow: inset 0 0 0 1px var(--gold); }
-.ct-complet:has(input:checked) { box-shadow: inset 0 0 0 2px var(--gold), 0 0 40px #c9a35c33; }
-.ct-complet .ct-tag { position: static; flex: none; }
-.ct-complet h3 { margin: 0; font-size: 1.2rem; font-weight: 650; }
-.ct-complet p { margin: .25rem 0 0; color: #c6c1b8; font-size: .9rem; }
-.ct-complet .ct-check { top: 50%; transform: translateY(-50%); }
+
 .ct-sub { margin: 3rem 0 1rem; font-size: 1.35rem; font-weight: 650; letter-spacing: -.02em; }
 .ct-sub em { font-style: normal; font-weight: 500; color: #a9a9b2; font-size: 1rem; }
 
@@ -115,26 +103,6 @@
 .ct-auto-p { font-weight: 600; font-size: .9rem; white-space: nowrap; }
 .ct-auto-p small { font-weight: 500; color: #a9a9b2; font-size: .72rem; }
 
-/* Kits */
-.ct-kits-h .ct-sub { margin-top: 0; }
-.ct-kits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 1rem; }
-.ct-kit { display: flex; flex-direction: column; padding: 1.3rem 1.3rem 1.4rem; border-radius: 18px; background: var(--mode-panel-solid), #050505; box-shadow: inset 0 0 0 1px #ffffff14; }
-.ct-kit-h { margin-bottom: .4rem; }
-.ct-kit h3 { margin: 0; font-size: 1.15rem; font-weight: 650; }
-.ct-kit .ct-prix { font-size: 1.5rem; }
-.ct-econ { margin: .2rem 0 0; font-size: .82rem; color: #8fd3a5; }
-.ct-econ s { color: #8f8f98; }
-.ct-mois { margin: .7rem 0 0; color: var(--gold-soft); font-size: 1rem; font-weight: 650; }
-.ct-mois small { display: block; margin-top: .15rem; font-weight: 500; font-size: .78rem; color: #b9b4ab; line-height: 1.4; }
-.ct-kit .ct-why { margin: .8rem 0 0; }
-.ct-kit-d { margin: .9rem 0 1rem; font-size: .84rem; }
-.ct-kit-d summary { cursor: pointer; color: var(--gold-soft); font-weight: 600; list-style: none; }
-.ct-kit-d summary::before { content: "+ "; }
-.ct-kit-d[open] summary::before { content: "− "; }
-.ct-kit-d ul { margin: .6rem 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: .3rem .8rem; color: #d6d2ca; }
-.ct-kit-d li b { color: var(--gold-soft); font-weight: 600; margin-right: .2rem; }
-.ct-kit .pill { align-self: flex-start; margin-top: auto; padding: .6rem 1.1rem; font-size: .86rem; }
-
 /* Matériel */
 .ct-mats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .ct-cat { padding: 1.1rem 1.2rem .4rem; border-radius: 18px; background: #0a0a0a; box-shadow: inset 0 0 0 1px #ffffff14; }
@@ -158,16 +126,7 @@
 .ct-ents-veille { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .ct-no-sol { margin-top: .2rem; }
 .ct-no-sol li { font-size: .8rem; }
-.ct-lieux-nav { max-width: 92rem; margin: 0 auto 1rem; padding: 1rem 1.4rem; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .6rem; }
-.ct-lieux-nav p { margin: 0 .4rem 0 0; font: 600 .62rem/1 var(--mono); letter-spacing: .15em; text-transform: uppercase; color: var(--gold-soft); }
-.ct-lieux-nav button { padding: .55rem 1rem; border-radius: 999px; border: 1px solid #ffffff2a; background: #0a0a0a; color: #fff; font: 600 .86rem/1 var(--sans); cursor: pointer; transition: border-color .25s, background .25s; }
-.ct-lieux-nav button:hover { border-color: var(--gold); background: #141208; }
-.ct-lieux-nav a { margin-left: .4rem; color: #a9a9b2; font-size: .84rem; text-decoration: none; }
-.ct-lieux-nav a:hover { color: var(--gold-soft); }
 
-/* Lieux, installation, inclus */
-.ct-lieux { margin: 0 0 1rem; padding: 1.2rem 1.4rem; border-radius: 16px; background: #0a0a0a; border: 1px solid var(--mode-line); font-size: .95rem; }
-.ct-lieux select { margin-left: .4rem; padding: .45rem .7rem; border-radius: 10px; background: #000; color: #fff; border: 1px solid #ffffff33; font: inherit; }
 .ct-install.cards { grid-template-columns: repeat(2, 1fr); max-width: none; }
 .ct-inst { cursor: pointer; padding-right: 3.2rem; }
 .ct-inst:has(input:checked) { box-shadow: inset 0 0 0 2px var(--gold), 0 18px 44px #0006; }
@@ -176,68 +135,31 @@
 .ct-inclus b { display: block; font-size: .92rem; }
 .ct-inclus span { display: block; margin-top: .25rem; font-size: .82rem; color: #a9a9b2; line-height: 1.45; }
 
-/* Panier collant */
-.ct-cart { position: sticky; top: 112px; margin-top: 4rem; }
-.ct-cart { position: sticky; }
-.ct-cart-in { position: relative; }
-.ct-cart-in::after { content: ""; position: absolute; inset: -5px; pointer-events: none; z-index: 6; border: 18px solid transparent; border-image: url("/media/modes/rim.png") 50 / 18px / 0 stretch; filter: var(--mode-rim-filter); opacity: .85; }
-.ct-cart-in-ancien { display: flex; flex-direction: column; max-height: calc(100vh - 128px); border-radius: 20px; background: #0c0c0e; box-shadow: 0 24px 60px #000a, inset 0 0 0 1px var(--gold); overflow: hidden; transition: box-shadow .4s; }
-.ct-cart.is-flash .ct-cart-in { box-shadow: 0 24px 60px #000a, inset 0 0 0 2px var(--gold-soft), 0 0 60px #c9a35c55; }
-.ct-cart-h { position: relative; padding: 1.2rem 1.3rem .2rem; }
-.ct-cart-h b { display: block; font-size: 1.35rem; font-weight: 650; letter-spacing: -.02em; }
-.ct-cart-tot small { display: block; font: 600 .58rem/1 var(--mono); letter-spacing: .15em; text-transform: uppercase; color: var(--gold-soft); }
-.ct-cart-body { flex: 1; overflow-y: auto; padding: 0 1.3rem 1.2rem; scrollbar-width: thin; }
-/* La liste du forfait est dessinée par wow.js (classes .fo-*), en plus compact dans cette colonne. */
-.ct-cart .fo-l { grid-template-columns: 48px minmax(0, 1fr) auto; gap: .7rem; padding: .7rem 0; }
-.ct-cart .fo-v { width: 48px; height: 48px; border-radius: 11px; }
-.ct-cart .fo-t b { font-size: .9rem; }
-.ct-cart .fo-suite { display: none; }
-.ct-cart .fo-vide { padding: 1.6rem 0 1rem; }
-.ct-cart .fo-vide .pill { display: none; }
-.ct-cart-tips { margin: 1rem 0 .4rem; padding: .8rem 1rem; border-radius: 12px; background: #1a1308; border: 1px solid #c9a35c55; }
-.ct-cart-tips h4 { margin: 0 0 .4rem; font: 600 .58rem/1 var(--mono); letter-spacing: .15em; text-transform: uppercase; color: var(--gold-soft); }
-.ct-cart-tips p { margin: .35rem 0 0; font-size: .8rem; line-height: 1.45; color: #e9dcc2; }
-.ct-cart-tips button { display: inline-block; margin-top: .3rem; padding: .3rem .7rem; border: 1px solid var(--gold); border-radius: 999px; background: transparent; color: var(--gold-soft); font: 600 .74rem/1 var(--sans); cursor: pointer; }
-.ct-cart-tips button:hover { background: var(--gold); color: #111; }
-.ct-cart-tot { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem 1rem; padding: .8rem 0 .9rem; border-bottom: 1px solid #ffffff12; }
-.ct-cart-tot b { display: block; margin-top: .25rem; font-size: 1.35rem; font-weight: 650; letter-spacing: -.02em; white-space: nowrap; }
-.ct-cart-an { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: baseline; padding-top: .4rem; border-top: 1px dashed #ffffff1a; }
-.ct-cart-an b { font-size: 1rem; margin: 0; color: #d6d2ca; }
-
 /* Barre mobile (le panier devient une feuille) */
 .ct-bar { display: none; }
 
-.ct-faits.cards { max-width: 76rem; }
-.ct-big { display: block; font-size: 2.2rem; font-weight: 650; letter-spacing: -.03em; margin-bottom: .4rem; }
-.ct-legal { max-width: 76rem; margin: 1.5rem auto 0; color: #8f8f98; font-size: .8rem; line-height: 1.5; }
-
 @media (max-width: 1180px) {
   .ct-hubs, .ct-sols, .ct-ents { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ct-autos, .ct-mats, .ct-kits, .ct-inclus, .ct-svcs, .ct-ents-veille { grid-template-columns: 1fr; }
+  .ct-autos, .ct-mats, .ct-inclus, .ct-svcs, .ct-ents-veille { grid-template-columns: 1fr; }
 }
 @media (max-width: 960px) {
   .ct-wrap { grid-template-columns: 1fr; }
-  .ct-cart { display: none; }
+
   .ct { padding-bottom: 6rem; }
   .ct-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .7rem 1.2rem; background: #0c0c0ef2; border-top: 1px solid var(--gold); backdrop-filter: blur(14px); }
   .ct-bar small { display: block; font: 600 .56rem/1 var(--mono); letter-spacing: .15em; text-transform: uppercase; color: var(--gold-soft); }
   .ct-bar b { display: block; margin-top: .2rem; font-size: 1.1rem; font-weight: 650; }
   .ct-bar .pill { margin-left: auto; padding: .6rem 1rem; font-size: .84rem; }
   .ct-hubs, .ct-sols, .ct-ents, .ct-install.cards { grid-template-columns: 1fr; }
-  .ct-complet { flex-direction: column; align-items: flex-start; padding-right: 3.2rem; }
-  .ct-complet .ct-check { top: 1.1rem; transform: none; }
+
   .ct-item { grid-template-columns: auto 1fr auto; }
   .ct-item-p { grid-column: 1; }
   .ct-qty { grid-column: 2; grid-row: 1 / span 2; }
-  .ct-kit-d ul { grid-template-columns: 1fr; }
+
 }
 
-/* Sélecteur de lieux : ne dépasse jamais l'écran */
-.ct-lieux select { max-width: 100%; }
-@media (max-width: 560px) { .ct-lieux select { display: block; width: 100%; margin: .6rem 0 0; } }
-
 /* Sans prix publics : ni total ni montant; le récapitulatif garde ses lignes, « une fois » et « par mois » */
-.ct[data-sansprix] .ct-cart-tot, .ct[data-sansprix] .ct-bar > div { display: none; }
+.ct[data-sansprix] .ct-bar > div { display: none; }
 .ct[data-sansprix] .ct-bar { justify-content: center; }
 .ct[data-sansprix] .ct-prix small, .ct[data-sansprix] .ct-auto-p small { margin-left: 0; }
 
@@ -245,11 +167,8 @@
 .ct-lieu-etape { max-width: 92rem; margin: 0 auto; padding: 1.6rem 1.4rem .4rem; }
 .ct-lieu-etape .lx { max-width: none; }
 
-/* Récapitulatif : les lieux en deux blocs, et la soumission séparée pour l'entreprise */
-
 /* Solution conseillée pour le lieu choisi : signalée, jamais cochée d'office */
 .ct-sol { position: relative; }
-.ct-sol.is-conseil::after { content: "Conseillée pour votre lieu"; position: absolute; left: 1.2rem; top: -.6rem; padding: .3rem .6rem; border-radius: 999px; background: #17120a; box-shadow: inset 0 0 0 1px var(--gold-soft); color: var(--gold-soft); font: 600 .58rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
 
 .ct-trio { width: 100%; border-radius: 14px; margin: .9rem 0 1.1rem; display: block; }
 
@@ -267,9 +186,9 @@
 .ct-tete p { margin: 1.5rem auto 0; max-width: 34rem; font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.5; color: #b9b4ab; }
 
 /* Le choix du lieu : sans cadres de vitre */
-.ct-lieu-etape .lx-g::after, .ct-lieu-etape .lx-b::after, .ct-lieu-etape .pub::after { display: none; }
+.ct-lieu-etape .lx-g::after, .ct-lieu-etape .lx-b::after { display: none; }
 .ct-lieu-etape .lx-g { background: #0b0b0d; box-shadow: inset 0 0 0 1px #ffffff12; border-radius: 22px; }
-.ct-lieu-etape .lx-b[aria-pressed="true"], .ct-lieu-etape .pub[aria-pressed="true"] {
+.ct-lieu-etape .lx-b[aria-pressed="true"] {
   background: #ffffff14; color: #fff; box-shadow: inset 0 0 0 1.5px var(--gold-soft);
 }
 
@@ -282,10 +201,9 @@
 /* Les appareils à la pièce, repliés */
 .ct-piece { margin-top: 2rem; }
 .ct-piece[open] .ct-mats { padding: 0 1rem 1rem; }
-.ct-lieu-etape .pub button::after { display: none; }
-.ct-lieu-etape .pub button[aria-pressed="true"] { background: #ffffff14; color: #fff; box-shadow: inset 0 0 0 1.5px var(--gold-soft); }
+
 /* Plus d'air sur les côtés, comme le reste du site */
-.ct-lieu-etape, .ct-lieux-nav { padding-left: clamp(1.4rem, 4.6vw, 4.2rem); padding-right: clamp(1.4rem, 4.6vw, 4.2rem); }
+.ct-lieu-etape { padding-left: clamp(1.4rem, 4.6vw, 4.2rem); padding-right: clamp(1.4rem, 4.6vw, 4.2rem); }
 .ct-wrap { padding-left: clamp(1.4rem, 4.6vw, 4.2rem); padding-right: clamp(1.4rem, 4.6vw, 4.2rem); }
 /* Installation : des cartes calmes, la sélection en filet doré */
 .ct-install .card::before, .ct-install .card::after { display: none; }
@@ -296,34 +214,13 @@
    Parcours d'achat façon Apple : « Pour qui », puis le Hub en grand à gauche et les choix
    en liste à droite; le forfait est dans une barre fixe en bas (elle ouvre le tiroir).
    ===================================================================================== */
-.ct-qui {
-  max-width: 76rem; margin: 0 auto; padding: 0 clamp(1.4rem, 4.6vw, 4.2rem);
-  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.8rem, 2vw, 1.4rem);
-}
-.ct-qui-t {
-  position: relative; overflow: hidden; border: 0; padding: 0; cursor: pointer; text-align: left; color: #fff;
-  border-radius: 26px; aspect-ratio: 16 / 10; background: #0a0a0a; box-shadow: inset 0 0 0 1px #ffffff14;
-  transition: box-shadow .35s var(--ease), transform .35s var(--ease);
-}
-.ct-qui-t img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
-.ct-qui-t::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #000d 0%, #0006 38%, #0000 66%); }
-.ct-qui-t span { position: absolute; z-index: 1; left: clamp(1.2rem, 2.4vw, 2rem); bottom: clamp(1.1rem, 2.2vw, 1.8rem); display: flex; flex-direction: column; gap: .4rem; }
-.ct-qui-t b { font: 650 clamp(1.5rem, 2.6vw, 2.2rem)/1 var(--sans); letter-spacing: -.035em; }
-.ct-qui-t small { font-size: 1rem; color: #d7d2c8; }
-.ct-qui-t:hover img { transform: scale(1.03); }
-.ct-qui-t[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--gold-soft), 0 20px 60px -20px #000; }
-.ct-qui-deux {
-  grid-column: 1 / -1; justify-self: center; margin-top: .6rem; border: 0; background: none; cursor: pointer;
-  font: 500 1rem/1 var(--sans); color: var(--gold-soft); padding: .6rem 1rem; border-radius: 999px;
-}
-.ct-qui-deux[aria-pressed="true"] { background: #ffffff12; color: #fff; }
-.ct-lieu-etape .pub { display: none; }
-.ct-lieu-etape .lx-h, .ct-lieu-etape h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+
+.ct-lieu-etape h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); }
 
 .ct-vis { display: none; }
 @media (min-width: 1100px) {
   .ct-wrap { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 0 clamp(2rem, 4vw, 4.5rem); max-width: 96rem; }
-  .ct-cart { display: none; }
+
   .ct-vis { display: block; position: sticky; top: calc(var(--bar-h) + 70px); align-self: start; padding-top: 4.2rem; }
   .ct-vis-in { position: relative; aspect-ratio: 4 / 3.4; }
   .ct-vis-i {
@@ -338,7 +235,7 @@
   .ct-vis-t span { color: #a9a49b; font-size: .98rem; }
 
   /* À droite : des listes, pas des grilles de cartes */
-  .ct-hubs, .ct-sols, .ct-kits, .ct-install.cards, .ct-ents { grid-template-columns: 1fr !important; }
+  .ct-hubs, .ct-sols, .ct-install.cards, .ct-ents { grid-template-columns: 1fr !important; }
   .ct-hub { display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 1.3rem 1.4rem; }
   .ct-hub .ct-hub-ph { display: none; }
   .ct-hub h3 { margin: 0; }
@@ -356,8 +253,7 @@
 .ct-bar .pill { margin: 0; padding: .7rem 1.3rem; font-size: .92rem; }
 .ct { padding-bottom: 5rem; }
 @media (max-width: 760px) {
-  .ct-qui { grid-template-columns: 1fr; }
-  .ct-qui-t { aspect-ratio: 16 / 9; }
+
   .ct-bar { justify-content: center; }
 }
 .ct[data-sansprix] .ct-bar { justify-content: flex-end; }
@@ -367,9 +263,7 @@
    Niveaux tout compris (18 novembre 2026) : guide de trois questions, niveaux avec ce qui
    est inclus, options marquées « Inclus », « Votre lieu grandit? ».
    ===================================================================================== */
-.ct-guide { max-width: 76rem; margin: clamp(2.5rem, 5vw, 4rem) auto 0; padding: 0 clamp(1.4rem, 4.6vw, 4.2rem); }
-.ct-guide h2 { margin: 0 0 1.6rem; font: 650 clamp(1.6rem, 2.6vw, 2.2rem)/1.05 var(--sans); letter-spacing: -.03em; color: #fff; }
-.ct-guide h2 span { color: #8f8a81; }
+
 .ct-gq { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap; padding: 1.1rem 0; border-top: 1px solid #ffffff12; }
 .ct-gq p { margin: 0; font-size: 1.05rem; color: #eae6de; }
 .ct-gq small { display: block; margin-top: .25rem; color: #8f8a81; font-size: .85rem; }
@@ -388,12 +282,6 @@
 .ct-gres b { font: 650 1.7rem/1 var(--sans); letter-spacing: -.03em; color: #fff; }
 .ct-gres span { color: #b9b4ab; }
 
-/* Ce que contient chaque niveau */
-.ct-niv { grid-column: 1 / -1; list-style: none; margin: .9rem 0 0; padding: 0; display: grid; gap: .45rem; }
-.ct-niv li { position: relative; padding-left: 1.3rem; color: #c9c4ba; font-size: .95rem; }
-.ct-niv li::before { content: ""; position: absolute; left: .15rem; top: .55em; width: .42rem; height: .42rem; border-radius: 50%; background: var(--gold-soft); }
-.ct-niv .ct-niv-plus { padding-left: 0; color: #8f8a81; font-size: .85rem; }
-.ct-niv .ct-niv-plus::before { display: none; }
 .ct-reco { display: none; }
 .ct-hub.is-reco .ct-reco {
   display: inline-block; grid-column: 1 / -1; justify-self: start; margin-top: 1rem; padding: .35rem .7rem; border-radius: 999px;
@@ -401,25 +289,9 @@
 }
 .ct-hub.is-reco { box-shadow: inset 0 0 0 1.5px var(--gold-soft); }
 
-/* Options : ce qui est déjà dans le niveau */
-.ct-sol.is-niveau { opacity: .72; }
-.ct-sol.is-niveau .ct-check { opacity: 0; }
-.ct-sol.is-niveau::before {
-  content: "Inclus"; position: absolute; top: 1rem; right: 1rem; z-index: 2; padding: .3rem .6rem; border-radius: 999px;
-  font: 600 .62rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft); background: #ffffff10;
-}
 .ct-sol { position: relative; }
-.ct-complet { display: none !important; }
 
-/* Votre lieu grandit? */
-.ct-grandit { margin-top: 2.4rem; padding: clamp(1.4rem, 3vw, 2rem); border-radius: 22px; background: #0a0a0a; box-shadow: inset 0 0 0 1px #ffffff12; }
-.ct-grandit h3 { margin: 0 0 1.3rem; font: 650 clamp(1.4rem, 2.2vw, 1.8rem)/1.1 var(--sans); letter-spacing: -.025em; color: #fff; }
-.ct-grandit h3 span { color: var(--gold-soft); }
-.ct-grandit ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1.6rem; }
-.ct-grandit li { color: #a9a49b; font-size: .93rem; line-height: 1.45; }
-.ct-grandit b { display: block; margin-bottom: .25rem; color: #fff; font-weight: 600; }
-.ct-grandit > p { margin: 1.3rem 0 0; color: #8f8a81; font-size: .9rem; }
-@media (max-width: 760px) { .ct-grandit ul { grid-template-columns: 1fr; } .ct-gq { flex-direction: column; align-items: flex-start; } }
+@media (max-width: 760px) { .ct-gq { flex-direction: column; align-items: flex-start; } }
 .ct[data-sansprix] .ct-prix { display: none; }
 
 /* =====================================================================================
@@ -428,8 +300,7 @@
    ===================================================================================== */
 body:has(#ct)::before { display: none; }
 body:has(#ct) { background: #000; }
-.ct .of-num { display: none; }
-.ct-lieux-nav { display: none; }
+
 .ct-main .sect { padding-top: clamp(3rem, 6vw, 4.5rem); padding-bottom: 0; background: none; border: 0; }
 .ct-main .sect.alt { background: none; }
 .ct-main .sect-head h2 { font: 650 clamp(1.7rem, 2.4vw, 2.2rem)/1.08 var(--sans); letter-spacing: -.03em; }
@@ -449,9 +320,9 @@ body:has(#ct) { background: #000; }
   .ct-hub { padding: 1.15rem 1.3rem; border-radius: 14px; background: transparent; box-shadow: inset 0 0 0 1px #ffffff26; }
   .ct-hub h3 { font-size: 1.15rem; }
   .ct-hub .ct-pour { color: #8f8a81; font-size: .88rem; margin-top: .3rem; }
-  .ct-hub .ct-niv { display: none; }
+
   .ct-hub:has(input:checked) { box-shadow: inset 0 0 0 2px var(--gold-soft); background: #ffffff06; }
-  .ct-hub:has(input:checked) .ct-niv { display: grid; }
+
   .ct-hub .ct-tag { margin-right: 0; }
   .ct-hub .ct-check { display: none; }
   .ct-hub.is-reco { box-shadow: inset 0 0 0 1px #ffffff26; }
@@ -460,15 +331,178 @@ body:has(#ct) { background: #000; }
 }
 
 /* Options : rangées fines, sans cartes lourdes */
-.ct-sol, .ct-kit, .ct-install .card, .ct-ent, .ct-auto { border-radius: 14px; background: transparent; box-shadow: inset 0 0 0 1px #ffffff1f; }
-.ct-sol:has(input:checked):not(.is-niveau), .ct-kit.is-on { box-shadow: inset 0 0 0 2px var(--gold-soft); }
-.ct-sol.is-niveau { opacity: .55; box-shadow: inset 0 0 0 1px #ffffff14; }
+.ct-sol, .ct-install .card, .ct-ent, .ct-auto { border-radius: 14px; background: transparent; box-shadow: inset 0 0 0 1px #ffffff1f; }
+.ct-sol:has(input:checked):not(.is-niveau) { box-shadow: inset 0 0 0 2px var(--gold-soft); }
+
 .ct-sol .ct-why { font-size: .9rem; }
-.ct-guide { max-width: 64rem; }
-.ct-grandit { background: transparent; box-shadow: inset 0 0 0 1px #ffffff1a; }
-.ct-sol.is-niveau, .ct-sol.is-niveau:has(input:checked) { opacity: .55; box-shadow: inset 0 0 0 1px #ffffff14 !important; background: transparent !important; }
-.ct-sol.is-niveau.is-conseil::after, .ct-sol.is-niveau .ct-conseil { display: none; }
+
 @media (min-width: 1100px) {
   .ct-vis-i { border-radius: 28px; -webkit-mask-image: none; mask-image: none; object-position: 50% 62%; box-shadow: 0 40px 80px -40px #000; }
 }
 @media (min-width: 1100px) { .ct-vis { height: calc(100vh - var(--bar-h) - 120px); } }
+
+/* ---------- Votre écosystème : les lieux reliés, en une ligne ---------- */
+.lx-res.lx-eco { display: block; margin-top: 22px; }
+.eco { padding: clamp(1.3rem, 3vw, 2.2rem); border-radius: 26px; background: linear-gradient(180deg, #0c0b09, #050505); box-shadow: inset 0 0 0 1px #ffffff14; }
+.eco-t { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; align-items: baseline; justify-content: space-between; margin-bottom: 1.4rem; }
+.eco-t h3 { margin: 0; font: 650 clamp(1.5rem, 2.6vw, 2.1rem)/1.05 var(--sans); letter-spacing: -.03em; color: #fff; }
+.eco-t p { margin: 0; font: 500 .72rem/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--gold-soft); }
+.eco-l { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(12.5rem, 1fr); gap: 1.1rem; overflow-x: auto; scrollbar-width: none; padding-bottom: .2rem; }
+.eco-l::-webkit-scrollbar { display: none; }
+/* le fil doré qui relie les lieux, à la hauteur des photos */
+.eco-l::before { content: ""; position: absolute; left: 2rem; right: 2rem; top: calc(var(--eco-ph, 7.6rem) / 2); height: 1px; background: linear-gradient(90deg, transparent, var(--gold-soft) 12%, var(--gold-soft) 88%, transparent); opacity: .55; }
+.eco-n { position: relative; display: grid; gap: .3rem; align-content: start; }
+.eco-n img { width: 100%; height: var(--eco-ph, 7.6rem); object-fit: cover; border-radius: 16px; box-shadow: 0 0 0 1px #ffffff1c, 0 18px 40px #000c; position: relative; }
+.eco-n.is-prin img { box-shadow: 0 0 0 2px var(--gold-soft), 0 0 40px #d9b46a33, 0 18px 40px #000c; }
+.eco-n b { margin-top: .45rem; font: 600 1rem/1.2 var(--sans); color: #fff; }
+.eco-n span { font-size: .8rem; line-height: 1.4; color: #a9a49b; }
+.eco-n.is-prin span { color: var(--gold-soft); }
+.eco-x { position: absolute; z-index: 2; top: .45rem; right: .45rem; width: 1.8rem; height: 1.8rem; border-radius: 50%; border: 0; cursor: pointer; background: #000b; color: #fff; font-size: 1.1rem; line-height: 1; opacity: 0; transition: opacity .2s; }
+.eco-n:hover .eco-x, .eco-x:focus-visible { opacity: 1; }
+@media (hover: none) { .eco-x { opacity: .85; } }
+.eco-plus a { display: grid; gap: .3rem; align-content: start; text-decoration: none; }
+.eco-plus i { display: grid; place-items: center; height: var(--eco-ph, 7.6rem); border-radius: 16px; border: 1px dashed #ffffff33; background: #050505; font: 300 2.4rem/1 var(--sans); color: var(--gold-soft); font-style: normal; position: relative; transition: border-color .2s, background .2s; }
+.eco-plus a:hover i { border-color: var(--gold-soft); background: #0d0b07; }
+.eco-note { margin: 1.2rem 0 0; max-width: 46rem; color: #a9a49b; font-size: .9rem; line-height: 1.55; }
+.eco-d { margin-top: 1.2rem; border-top: 1px solid #ffffff12; padding-top: 1rem; }
+.eco-d summary { cursor: pointer; list-style: none; color: var(--gold-soft); font: 600 .92rem var(--sans); }
+.eco-d summary::-webkit-details-marker { display: none; }
+.eco-d summary::after { content: " ›"; display: inline-block; transition: transform .2s; }
+.eco-d[open] summary::after { transform: rotate(90deg); }
+.eco-cartes { margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 16px; }
+@media (max-width: 700px) {
+  .eco-l { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: 1fr; gap: .8rem; overflow: visible; }
+  .eco-l::before { left: calc(2.6rem); right: auto; top: 1.5rem; bottom: 1.5rem; width: 1px; height: auto; background: linear-gradient(180deg, transparent, var(--gold-soft) 10%, var(--gold-soft) 90%, transparent); }
+  .eco-plus { display: block; }
+  .eco-n, .eco-plus a { grid-template-columns: 5.2rem minmax(0, 1fr); column-gap: 1rem; align-items: center; }
+  .eco-plus b { align-self: end; }
+  .eco-n img, .eco-plus i { grid-row: span 2; height: 4rem; border-radius: 12px; font-size: 1.6rem; }
+  .eco-n b { margin: 0; align-self: end; }
+  .eco-n span { align-self: start; }
+  .eco-x { left: 3.6rem; right: auto; top: -.3rem; width: 1.5rem; height: 1.5rem; font-size: .9rem; }
+}
+
+/* =====================================================================================
+   Les trois étapes (docs/OFFRE.md) : repères, niveaux, extensions, ensembles de départ, données
+   ===================================================================================== */
+/* JARVIS reste là pour aider, sans couvrir la colonne : on l'appelle depuis la barre du bas, et sa
+   fenêtre s'ouvre juste au-dessus (la bulle flottante est masquée sur cette page). */
+body:has(#ct) #jv-root { bottom: 4.4rem; }
+body:has(#ct) #jv-root:not(.is-open) { display: none; }
+.ct-bar .ct-jv { margin-right: auto; display: inline-flex; align-items: center; gap: .7rem; padding: .35rem .9rem .35rem .4rem; border: 0; border-radius: 999px; cursor: pointer; background: #ffffff0d; color: #b9b4ab; font: 500 .88rem/1.2 var(--sans); box-shadow: inset 0 0 0 1px #ffffff1a; transition: box-shadow .25s, color .25s; }
+.ct-bar .ct-jv:hover { color: #fff; box-shadow: inset 0 0 0 1px var(--gold-soft); }
+.ct-bar .ct-jv b { display: inline; margin: 0; font-size: inherit; color: #fff; font-weight: 600; }
+.ct-bar .ct-jv i { position: relative; flex: none; width: 2.1rem; height: 2.1rem; border-radius: 50%; background: radial-gradient(circle at 50% 50%, #1a1408, #000 70%); box-shadow: inset 0 0 0 1px #e9c98c66, 0 0 14px #c9a35c44; }
+.ct-bar .ct-jv i::after { content: ""; position: absolute; left: 14%; right: 14%; top: 50%; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, #fff3d1, transparent); box-shadow: 0 0 8px #f3dc9c; animation: ctJv 2.4s ease-in-out infinite; }
+@keyframes ctJv { 50% { transform: scaleX(.55); opacity: .7; } }
+@media (prefers-reduced-motion: reduce) { .ct-bar .ct-jv i::after { animation: none; } }
+@media (max-width: 760px) { .ct-bar { gap: .6rem; } .ct-bar .ct-jv { margin-right: 0; padding: .3rem; } .ct-bar .ct-jv span { display: none; } }
+.lx-sous { margin: -.7rem 0 1.4rem; color: #8f8a81; font-size: .95rem; }
+
+/* Les trois étapes, sous le titre */
+.ct-pas { list-style: none; margin: 2.6rem auto 0; padding: 0; max-width: 50rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
+.ct-pas a { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: .85rem; align-items: center; text-align: left; padding: .95rem 1.1rem; border-radius: 16px; text-decoration: none; box-shadow: inset 0 0 0 1px #ffffff1a; transition: box-shadow .25s, background .25s; }
+.ct-pas a:hover { box-shadow: inset 0 0 0 1px var(--gold-soft); background: #ffffff07; }
+.ct-pas i { grid-row: span 2; display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 50%; font: 600 .9rem/1 var(--mono); font-style: normal; color: #120d04; background: var(--gold-soft); }
+.ct-pas b { font: 600 1rem/1.2 var(--sans); color: #fff; }
+.ct-pas span { font-size: .8rem; color: #8f8a81; }
+.ct-etape { margin: 0 0 .7rem; font: 600 .66rem/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--gold-soft); }
+
+/* Étape 1 : cinq familles sur deux rangées (2 larges, puis 3) */
+@media (min-width: 900px) {
+  .ct-lieu-etape .lx-gs { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+  .ct-lieu-etape .lx-g { grid-column: span 2; }
+  .ct-lieu-etape .lx-g:nth-child(-n+2) { grid-column: span 3; }
+}
+
+/* Étape 2 : chaque niveau montre ses trois repères; le détail s'ouvre sur le niveau choisi */
+.ct-stats { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin: .9rem 0 0; }
+.ct-stats div { padding: .7rem .8rem; border-radius: 12px; background: #ffffff08; }
+.ct-stats dd { margin: 0; font: 650 1.2rem/1.15 var(--sans); letter-spacing: -.02em; color: #fff; }
+.ct-stats dt { margin-top: .3rem; font-size: .74rem; line-height: 1.3; color: #8f8a81; }
+.ct-hub:has(input:checked) .ct-stats div { background: #ffffff0d; }
+.ct-niv { grid-column: 1 / -1; display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ffffff14; }
+.ct-hub:has(input:checked) .ct-niv { display: block; }
+.ct-niv-ext { margin: 0 0 .9rem; color: #eae6de; font-size: .92rem; }
+.ct-niv-ext b { display: block; margin-bottom: .3rem; font: 600 .62rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft); }
+.ct-niv ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+.ct-niv li { position: relative; padding-left: 1.3rem; color: #c9c4ba; font-size: .95rem; }
+.ct-niv li::before { content: ""; position: absolute; left: .15rem; top: .55em; width: .42rem; height: .42rem; border-radius: 50%; background: var(--gold-soft); }
+.ct-niv .ct-niv-plus { padding-left: 0; color: #8f8a81; font-size: .85rem; }
+.ct-niv .ct-niv-plus::before { display: none; }
+.ct-niv-ia { margin: .9rem 0 0; color: #8f8a81; font-size: .88rem; }
+
+/* Blocs repliés : « Vous hésitez? », fiche technique, changer de niveau, entreprise, à la pièce */
+.ct-details + .ct-details { margin-top: .6rem; }
+.ct-details summary em { font-style: normal; font-weight: 500; color: #8f8a81; }
+.ct-details-in { padding: 0 1.3rem 1.3rem; }
+.ct-details-in > .ct-intro { margin-top: 0; }
+.ct-gres .pill { border: 0; cursor: pointer; }
+.ct-grandit { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1.6rem; }
+.ct-grandit li { color: #a9a49b; font-size: .92rem; line-height: 1.45; }
+.ct-grandit b { display: block; margin-bottom: .2rem; color: #fff; font-weight: 600; }
+
+/* Étape 3 : les extensions. Celles du niveau sont « Incluses »; les autres se cochent */
+.ct-sols { gap: 8px; }
+.ct-sol { padding: 1rem 1.1rem; gap: .35rem; }
+.ct-sol h3 { font-size: 1rem; }
+.ct-sol > a { margin-top: .3rem; font-size: .8rem; }
+.ct-sol.is-niveau, .ct-sol.is-inclus, .ct-sol.is-niveau:has(input:checked), .ct-sol.is-inclus:has(input:checked) { cursor: default; background: #ffffff05; box-shadow: inset 0 0 0 1px #ffffff14; }
+.ct-sol.is-niveau .ct-check, .ct-sol.is-inclus .ct-check, .ct-sol.is-niveau .ct-prix, .ct-sol.is-inclus .ct-prix { display: none; }
+.ct-sol.is-niveau::before, .ct-sol.is-inclus::before {
+  content: "Incluse"; position: absolute; top: .95rem; right: 1rem; padding: .32rem .6rem; border-radius: 999px;
+  font: 600 .62rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: #120d04; background: var(--gold-soft);
+}
+
+/* Étape 3 : l'ensemble de départ de chaque lieu */
+.ct-ens { display: grid; gap: 10px; }
+.ct-ens-vide { margin: 0; padding: 1.2rem 1.3rem; border-radius: 14px; box-shadow: inset 0 0 0 1px #ffffff14; color: #8f8a81; font-size: .92rem; }
+.ct-en { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: .9rem 1.1rem; align-items: start; padding: 1rem; border-radius: 16px; box-shadow: inset 0 0 0 1px #ffffff1f; transition: box-shadow .25s, background .25s; }
+.ct-en.is-on { box-shadow: inset 0 0 0 2px var(--gold-soft); background: #ffffff06; }
+.ct-en img { width: 6.5rem; height: 5rem; object-fit: cover; border-radius: 12px; }
+.ct-en h4 { margin: 0; font: 650 1.05rem/1.2 var(--sans); color: #fff; }
+.ct-en p { margin: .25rem 0 .65rem; color: #a9a49b; font-size: .88rem; line-height: 1.45; }
+.ct-en ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .35rem; }
+.ct-en li { padding: .32rem .6rem; border-radius: 999px; background: #ffffff0b; font-size: .78rem; color: #d6d2ca; }
+.ct-en li b { margin-right: .15rem; color: var(--gold-soft); font-weight: 600; }
+.ct-en-b { grid-column: 1 / -1; justify-self: start; border: 0; cursor: pointer; padding: .62rem 1.15rem; border-radius: 999px; font: 600 .86rem/1 var(--sans); color: #120d04; background: var(--gold-soft); transition: background .2s, color .2s; }
+.ct-en-b[aria-pressed="true"] { background: transparent; color: var(--gold-soft); box-shadow: inset 0 0 0 1px var(--gold-soft); }
+.ct-piece { margin-top: .6rem; }
+.ct-main .ct-sub { margin: 3rem 0 .9rem; }
+.ct-main .ct-sub em { display: block; margin-top: .3rem; font-size: .92rem; color: #8f8a81; }
+
+/* Étape 3 : vos données et l'IA */
+.ct-don { padding: clamp(1.1rem, 2.4vw, 1.5rem); border-radius: 18px; box-shadow: inset 0 0 0 1px #ffffff14; }
+.ct-don-l { list-style: none; margin: 0; padding: 0; display: grid; gap: .85rem; }
+.ct-don-l li { position: relative; padding-left: 1.3rem; color: #a9a49b; font-size: .9rem; line-height: 1.45; }
+.ct-don-l li::before { content: ""; position: absolute; left: .15rem; top: .5em; width: .42rem; height: .42rem; border-radius: 50%; background: var(--gold-soft); }
+.ct-don-l b { display: block; color: #fff; font-weight: 600; }
+.ct-don-t { margin: 1.2rem 0 .4rem; padding-top: 1.1rem; border-top: 1px solid #ffffff12; font: 600 .66rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft); }
+.ct-opt { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: .7rem; align-items: start; padding: .6rem 0; cursor: pointer; }
+.ct-opt .ct-check { position: static; margin-top: .1rem; }
+.ct-opt b { display: block; font-size: .92rem; font-weight: 600; color: #fff; }
+.ct-opt em { display: block; margin-top: .15rem; font-style: normal; font-size: .8rem; line-height: 1.4; color: #a9a49b; }
+
+/* Ce qui ne tient pas ensemble, dit simplement, juste avant l'envoi */
+.ct-prevoir { margin: 2.2rem 0 0; padding: 1rem 1.2rem; border-radius: 14px; background: #1a1308; box-shadow: inset 0 0 0 1px #c9a35c55; }
+.ct-prevoir[hidden] { display: none; }
+.ct-prevoir h4 { margin: 0 0 .4rem; font: 600 .62rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft); }
+.ct-prevoir p { margin: .45rem 0 0; font-size: .88rem; line-height: 1.5; color: #e9dcc2; }
+.ct-prevoir button { margin-left: .3rem; padding: .3rem .7rem; border: 1px solid var(--gold-soft); border-radius: 999px; background: transparent; color: var(--gold-soft); font: 600 .78rem/1.2 var(--sans); cursor: pointer; }
+.ct-prevoir button:hover { background: var(--gold-soft); color: #120d04; }
+
+/* La fin : un seul geste */
+.ct-fin { margin: 3rem 0 1rem; padding: clamp(1.6rem, 4vw, 2.6rem); border-radius: 24px; text-align: center; background: #0b0a08; box-shadow: inset 0 0 0 1px #ffffff14; }
+.ct-fin h3 { margin: 0; font: 650 clamp(1.5rem, 2.6vw, 2rem)/1.1 var(--sans); letter-spacing: -.03em; color: #fff; }
+.ct-fin p { margin: .6rem 0 1.4rem; color: #a9a49b; }
+.ct-fin .pill { border: 0; cursor: pointer; }
+
+@media (max-width: 760px) {
+  .ct-pas { grid-template-columns: 1fr; max-width: 22rem; }
+  .ct-grandit { grid-template-columns: 1fr; }
+  .ct-gq { flex-direction: column; align-items: flex-start; }
+  .ct-en { grid-template-columns: 4.6rem minmax(0, 1fr); }
+  .ct-en img { width: 4.6rem; height: 4rem; }
+  .ct-stats dd { font-size: 1.05rem; }
+}
+@media (max-width: 760px) { .ct-bar .pill { padding: .7rem 1rem; font-size: .8rem; white-space: nowrap; } }

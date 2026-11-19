@@ -1,0 +1,80 @@
+# L'offre JARVIS : les règles
+
+Source de vérité de l'offre (19 novembre 2026). La page `/offre/`, la fiche de connaissances de
+JARVIS (`assets/guide/connaissances.md`) et le tiroir « Mon forfait » suivent ces règles. Si une
+règle change, on change ce document d'abord, puis le code.
+
+Aucun prix ici. Les prix vivent dans `src/pages/catalogue.py` et restent cachés tant que
+`SITE["prix_publics"]` est faux.
+
+## Les trois règles
+
+1. **Un cerveau par lieu.** Un lieu (fixe ou habitable) reçoit un Hub. Un véhicule reçoit un boîtier,
+   sans Hub à bord. JARVIS choisit le cerveau selon la taille du lieu.
+2. **Un seul niveau pour tout.** Base, Signature ou Platinum s'applique à tous les lieux du client.
+   Le niveau décide des extensions incluses, d'où vit l'IA et du soutien.
+3. **L'équipement suit le lieu.** Chaque type de lieu a son ensemble de départ (boîtier, capteurs).
+   Le reste est sur mesure; ce qui existe déjà chez le client est réutilisé.
+
+Conséquence : **le client ne décide que deux choses, ses lieux et son niveau.** Tout le reste est
+proposé par JARVIS, puis ajusté.
+
+## Ce qui se déduit, et comment
+
+| Chose | Règle | Où c'est écrit |
+|---|---|---|
+| Le cerveau d'un lieu | Hub conseillé du lieu; le lieu principal (le plus gros Hub conseillé) porte le niveau; aucun autre Hub ne dépasse le niveau | `cerveaux()` dans `assets/js/wow.js` |
+| Le Boîtier VR | Lieux mobiles (VR, roulotte, bateau) : il suit le niveau (Base, Signature, Platinum) | `BOITIER_VR` dans `assets/demos/catalogue.js` |
+| Les extensions incluses | Base : 2 · Signature : 4 · Platinum : 5 | `NIVEAUX` dans `src/pages/catalogue.py` |
+| Mobilité | S'ajoute avec chaque véhicule (une par véhicule) | `catalogue.js`, familles `vehicules` et `aerien` |
+| Entreprise | Proposée dès qu'il y a un lieu d'entreprise; demande Signature ou Platinum | `data-public="entreprise"`, « À prévoir » |
+| Où vit l'IA | Base : par Internet, avec accord · Signature : dans le Hub · Platinum : dans le Hub, renforcée | `NIVEAUX[...]["ia"]` |
+| L'équipement proposé | Un ensemble de départ par lieu, ajouté d'un geste | `ENSEMBLES` dans `src/pages/catalogue.py` |
+| Pour qui (particulier, entreprise) | Déduit des lieux choisis; il n'y a plus de question « pour qui » | `basculeLieu()` dans `wow.js` |
+
+## Les pièces de l'offre, et leur place
+
+- **Les lieux** : cinq familles, quinze lieux (`src/lieux.py`). Chez vous · Votre entreprise ·
+  Lieux mobiles · Véhicules · Aérien.
+- **Les Hubs** : Base, Signature, Platinum (`HUBS`, fiche technique `COMPARE`). Un Hub plus puissant
+  peut toujours faire un niveau plus bas, jamais l'inverse.
+- **Les niveaux** : Base, Signature, Platinum (`NIVEAUX`). Chacun comprend le précédent.
+- **Les sept extensions** : Environnements, Diagnostic, Sécurité, IA privée, Réseau (avec le niveau);
+  Mobilité (avec les véhicules); Entreprise (avec un lieu d'entreprise).
+- **L'équipement** : boîtiers, capteurs, caméras et accès, confort et réseau (`MATERIEL`).
+- **Les données** : tout reste chez le client. Sauvegarde chiffrée incluse. Accès de partout par un
+  relais chiffré qui ne garde rien. En option, sur accord explicite : copie chiffrée des vidéos hors
+  du lieu, renfort d'IA par le nuage.
+- **L'aérien** : suivi au sol seulement (position, batterie, alertes, hangar). JARVIS ne touche
+  jamais aux commandes ni à l'avionique.
+
+## La page `/offre/` : trois étapes
+
+1. **Vos lieux.** On choisit; « Votre écosystème » se dessine, un cerveau par lieu.
+2. **Votre niveau.** Trois niveaux, trois repères chacun (caméras, appareils, où vit l'IA). Repliés :
+   « Vous hésitez? », la fiche technique, changer de niveau plus tard.
+3. **Votre projet.** Les extensions, l'ensemble de départ de chaque lieu, les données, l'installation,
+   puis « Recevoir ma soumission ».
+
+## Changer de niveau
+
+- Monter : si le Hub suffit, activation à distance. Sinon, échange du Hub avec un crédit.
+- Un autre lieu : l'ancien Hub part dans le nouveau lieu, relié au principal.
+- Redescendre : le client garde son Hub; on retire des fonctions.
+- Le matériel installé reste toujours.
+
+## Vérifié automatiquement
+
+- `src/pages/catalogue.py` refuse de se bâtir s'il manque un ensemble de départ pour un lieu, ou si
+  un ensemble nomme une pièce ou une automatisation qui n'existe pas.
+- `tools/test_offre.py` joue le parcours dans un vrai navigateur : niveau conseillé, Boîtier VR qui
+  suit le niveau, aucun Hub au-dessus du niveau, ensembles ajoutés et retirés, entreprise, flotte,
+  nuage, soumission, rechargement.
+
+## À décider par James
+
+- Le montant du crédit quand on échange un Hub (rien n'est chiffré sur le site d'ici là).
+- Les prix : le niveau par mois, le coût d'un lieu de plus (auparavant −30 % sur les solutions dès
+  le deuxième lieu), un rabais sur les ensembles de départ (auparavant −8 % sur les kits).
+- Les Hubs et les niveaux portent les mêmes noms (Base, Signature, Platinum). C'est simple tant que
+  « le niveau » est le seul choix; à revoir si les Hubs se vendent un jour séparément.

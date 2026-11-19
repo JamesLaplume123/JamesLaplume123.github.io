@@ -129,7 +129,7 @@ def _produit():
 GAMME = [
     ("base", "Base", "L’essentiel, pour un petit lieu.", "",
      [("30", "appareils reliés"), ("2", "caméras analysées"), ("Internet", "pour l’IA")]),
-    ("signature", "Signature", "La maison où vous vivez.", "Le plus choisi",
+    ("signature", "Signature", "La maison où vous vivez.", "Pour la plupart des maisons",
      [("100", "appareils reliés"), ("6", "caméras analysées"), ("Locale", "l’IA reste chez vous")]),
     ("platinum", "Platinum", "Un lieu qui ne s’arrête jamais.", "",
      [("Illimité", "appareils reliés"), ("16+", "caméras analysées"), ("2 h", "de batterie de secours")]),

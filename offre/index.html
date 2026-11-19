@@ -43,7 +43,6 @@
  ]
 }
 </script>
-<link rel="stylesheet" href="/assets/demos/offre.css?v=20261118f">
 <link rel="stylesheet" href="/assets/demos/catalogue.css?v=20261118f">
 </head>
 <body class="">
@@ -74,49 +73,27 @@
 <section class="ct-tete" aria-labelledby="ct-titre">
   <nav class="fil" aria-label="Fil d’Ariane" data-rev><a href="/">Accueil</a><i aria-hidden="true">›</i><span aria-current="page">L’offre</span></nav>
   <h1 id="ct-titre" data-rev>Composez<br><span>votre JARVIS.</span></h1>
-  <p data-rev>Un Hub pour votre lieu, les solutions que vous voulez, le matériel qu’il faut. La soumission suit, sans engagement.</p>
+  <p data-rev>Dites-nous vos lieux et choisissez un niveau. JARVIS propose le reste : le cerveau de chaque lieu et son équipement.</p>
+  <ol class="ct-pas" data-rev>
+    <li><a href="#composer"><i>1</i><b>Vos lieux</b><span>Maison, entreprise, véhicules</span></a></li>
+    <li><a href="#hub"><i>2</i><b>Votre niveau</b><span>Un seul, pour tout</span></a></li>
+    <li><a href="#projet"><i>3</i><b>Votre projet</b><span>Proposé, puis ajusté</span></a></li>
+  </ol>
 </section>
 
 <form id="ct" class="ct" data-sansprix novalidate>
-<section class="ct-qui" id="composer" aria-label="Pour qui">
-  <button type="button" class="ct-qui-t" data-public-set="moi" aria-pressed="false">
-    <img decoding="async" src="/media/forfait/lieu-maison.webp" alt="" loading="lazy" decoding="async">
-    <span><b>Pour chez moi</b><small>Maison, chalet, VR, véhicules.</small></span>
-  </button>
-  <button type="button" class="ct-qui-t" data-public-set="entreprise" aria-pressed="false">
-    <img decoding="async" src="/media/forfait/lieu-bureau.webp" alt="" loading="lazy" decoding="async">
-    <span><b>Pour mon entreprise</b><small>Bureau, atelier, ferme, flotte.</small></span>
-  </button>
-  <button type="button" class="ct-qui-deux" data-public-set="deux" aria-pressed="false">Les deux, sur une même soumission <i aria-hidden="true">›</i></button>
-</section>
-<section class="ct-lieu-etape" aria-label="Votre lieu">
+<script type="application/json" data-offre>{"niveaux":{"base":["env","diag"],"signature":["env","diag","secu","ia"],"platinum":["env","diag","secu","ia","res"]},"ensembles":{"maison":{"mat":{"fuite":3,"vanne":1,"porte":3,"radar":2,"sonnette":1,"thermo":1},"pourquoi":"L’eau coupée toute seule, la sonnette qui reconnaît, le chauffage par pièce."},"condo":{"mat":{"fuite":2,"porte":1,"radar":1,"thermo":1},"pourquoi":"L’essentiel d’un condo : l’eau, la porte, le chauffage."},"chalet":{"mat":{"temp":3,"fuite":2,"porte":2,"r4g":1,"prise":1},"pourquoi":"Gel, fuite, intrusion : prévenu avant que le plancher lève au printemps."},"domaine":{"mat":{"camext":6,"plaques":1,"serrure":2,"inter":1,"fuite":4,"vanne":1,"poe":1,"sec":1,"ecr10":1},"pourquoi":"Caméras, plaques, serrures, eau et secours : rien n’entre, rien ne coule, rien ne s’arrête."},"bureau":{"mat":{"telip":2,"camext":2,"camint":1,"poe":1,"clavier":1},"ent":{"socle":true,"recep":1,"autos":["a_rdv","a_rappel","a_faq"]},"pourquoi":"Une réceptionniste qui ne manque aucun appel, et trois automatisations pour commencer."},"atelier":{"mat":{"camext":2,"cam360":1,"clavier":1,"porte":2,"univ":2,"poe":1},"pourquoi":"Qui entre et par quelle porte; une machine qui dérive se voit avant le bris."},"ferme":{"mat":{"r4g":1,"camext":4,"temp":6,"univ":4,"sec":1,"energie":1},"ent":{"socle":true,"autos":["a_frigo","a_silo","a_pompe"]},"pourquoi":"Frigo, réservoir à lait, pompes, silo : les alertes qui sauvent une récolte ou un troupeau."},"garage":{"mat":{"camext":2,"clavier":1,"porte":2,"temp":1,"poe":1},"pourquoi":"Chaque entrée avec l’image; l’humidité et la température du bâtiment suivies."},"vr":{"mat":{"vr*":1,"temp":4,"porte":2,"fuite":1,"propane":1,"camint":1,"ecr7":1},"pourquoi":"Le VR au complet dans la poche : batteries, réservoirs, propane, caméra et écran à bord."},"roulotte":{"mat":{"vr*":1,"temp":2,"porte":1,"fuite":1},"pourquoi":"Batteries, réservoirs, gel et porte : les quatre choses qui gâchent un voyage."},"bateau":{"mat":{"vr*":1,"temp":2,"porte":1,"fuite":1},"pourquoi":"Batteries, cale et accès : l’essentiel, à quai comme en route."},"auto":{"mat":{"mobb":1},"pourquoi":"Position, diagnostic et antivol, sans Hub à bord."},"moto":{"mat":{"mobb":1},"pourquoi":"Position et antivol, sans Hub à bord."},"flotte":{"mat":{"mobb":2},"pourquoi":"Un boîtier par véhicule : ajustez le nombre à votre flotte."},"avion":{"mat":{"mobb":1},"pourquoi":"Suivi au sol : position, batterie et alertes. Jamais l’avionique."}}}</script>
+<section class="ct-lieu-etape" id="composer" data-toc="1 · Vos lieux" aria-label="Vos lieux">
+  <p class="ct-etape" data-rev>Étape 1 sur 3</p>
   <div class="lx" id="lieu" data-lieux>
-  <h2 class="lx-t">Commencez par votre lieu.</h2>
-  <div class="pub" role="group" aria-label="Pour qui"><button type="button" data-public-set="moi" aria-pressed="false">Pour chez moi</button><button type="button" data-public-set="entreprise" aria-pressed="false">Pour mon entreprise</button><button type="button" data-public-set="deux" aria-pressed="false">Les deux</button></div>
-  <div class="lx-gs"><div class="lx-g" data-public="particulier"><p>Chez vous</p><div class="lx-bs"><button type="button" class="lx-b" data-lieu="maison" aria-pressed="false">Maison</button><button type="button" class="lx-b" data-lieu="condo" aria-pressed="false">Condo</button><button type="button" class="lx-b" data-lieu="chalet" aria-pressed="false">Chalet</button><button type="button" class="lx-b" data-lieu="domaine" aria-pressed="false">Domaine</button></div></div><div class="lx-g" data-public="entreprise"><p>Votre entreprise</p><div class="lx-bs"><button type="button" class="lx-b" data-lieu="bureau" aria-pressed="false">Bureau ou commerce</button><button type="button" class="lx-b" data-lieu="atelier" aria-pressed="false">Atelier, entrepôt ou usine</button><button type="button" class="lx-b" data-lieu="ferme" aria-pressed="false">Ferme</button><button type="button" class="lx-b" data-lieu="garage" aria-pressed="false">Garage ou hangar</button><button type="button" class="lx-b" data-lieu="flotte" aria-pressed="false">Flotte de véhicules</button></div></div><div class="lx-g"><p>En déplacement</p><div class="lx-bs"><span class="lx-sorte">Lieux mobiles</span><button type="button" class="lx-b" data-lieu="vr" aria-pressed="false">VR</button><button type="button" class="lx-b" data-lieu="roulotte" aria-pressed="false">Roulotte</button><button type="button" class="lx-b" data-lieu="bateau" aria-pressed="false">Bateau habitable</button><span class="lx-sorte">Véhicules</span><button type="button" class="lx-b" data-lieu="auto" aria-pressed="false">Auto ou camion</button><button type="button" class="lx-b" data-lieu="moto" aria-pressed="false">Moto</button><button type="button" class="lx-b" data-lieu="avion" aria-pressed="false">Avion</button></div></div></div>
-  <div class="lx-res" data-lieux-res hidden aria-live="polite"></div>
-  <script type="application/json" data-lieux-data>{"maison":{"nom":"Maison","famille":"chez-vous","public":"particulier","hub":"signature","hubNom":"Hub Signature","boitier":null,"raison":"L’IA tourne dans le Hub, sans Internet, et relie jusqu’à 100 appareils.","demo":"/solutions/environnements-intelligents/#essayer","sols":[{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Lumières, chauffage et énergie sur un seul écran."},{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Caméras, portes et alarme dans un seul fil."},{"slug":"reseau-resilience","nom":"Réseau et cybersécurité","raison":"Un Wi-Fi solide dans toute la maison."}]},"condo":{"nom":"Condo","famille":"chez-vous","public":"particulier","hub":"base","hubNom":"Hub Base","boitier":null,"raison":"Un lieu simple : quelques appareils, une fuite ou une porte à surveiller.","demo":"/solutions/environnements-intelligents/#essayer","sols":[{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Chauffage et éclairage réglés selon votre journée."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Une fuite d’eau repérée avant le dégât."}]},"chalet":{"nom":"Chalet","famille":"chez-vous","public":"particulier","hub":"base","hubNom":"Hub Base","boitier":null,"raison":"Il veille sur un lieu fermé : gel, fuite, porte, batterie.","demo":"/solutions/diagnostic-care/#essayer","sols":[{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Gel, fuite, panne : prévenu avant le dégât."},{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Une porte ouverte ou un mouvement, vous le savez."},{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Le chauffage monté avant votre arrivée."}]},"domaine":{"nom":"Domaine","famille":"chez-vous","public":"particulier","hub":"platinum","hubNom":"Hub Platinum","boitier":null,"raison":"Plusieurs bâtiments, beaucoup de caméras, rien ne doit s’arrêter.","demo":"/solutions/securite-intelligente/#essayer","sols":[{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Caméras, plaques et accès de toute la propriété."},{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Maison, garage et dépendances sur un seul écran."},{"slug":"reseau-resilience","nom":"Réseau et cybersécurité","raison":"Un réseau qui relie chaque bâtiment."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Eau, énergie et équipements suivis jour après jour."}]},"bureau":{"nom":"Bureau ou commerce","famille":"entreprise","public":"entreprise","hub":"signature","hubNom":"Hub Signature","boitier":null,"raison":"Réceptionniste IA et jusqu’à dix automatisations, traitées sur place.","demo":"/solutions/automatisation-operations/#essayer","sols":[{"slug":"automatisation-operations","nom":"Automatisation d’entreprise","raison":"La réception ne manque plus un appel."},{"slug":"ia-privee-connaissances","nom":"IA privée et connaissances","raison":"Vos documents répondent aux questions de l’équipe."},{"slug":"reseau-resilience","nom":"Réseau et cybersécurité","raison":"Un réseau séparé pour les clients, les postes et les caméras."}]},"atelier":{"nom":"Atelier, entrepôt ou usine","famille":"entreprise","public":"entreprise","hub":"signature","hubNom":"Hub Signature","boitier":null,"raison":"Accès, caméras et machines suivis au même endroit.","demo":"/solutions/securite-intelligente/#essayer","sols":[{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Qui entre, quand, et par quelle porte."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Une machine qui dérive se voit avant le bris."},{"slug":"reseau-resilience","nom":"Réseau et cybersécurité","raison":"Un réseau séparé pour les machines."},{"slug":"automatisation-operations","nom":"Automatisation d’entreprise","raison":"Commandes et bons qui circulent sans ressaisie."}]},"ferme":{"nom":"Ferme","famille":"entreprise","public":"entreprise","hub":"platinum","hubNom":"Hub Platinum","boitier":null,"raison":"Des bâtiments et des animaux qui ne peuvent pas attendre : batterie et Internet de secours.","demo":"/solutions/domotique-ferme-agricole/","sols":[{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Température, courant, eau : l’alerte avant la perte."},{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Tous les bâtiments sur un seul écran."},{"slug":"reseau-resilience","nom":"Réseau et cybersécurité","raison":"Internet dans chaque bâtiment."},{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Portes, barrières et visiteurs."}]},"garage":{"nom":"Garage ou hangar","famille":"entreprise","public":"entreprise","hub":"signature","hubNom":"Hub Signature","boitier":null,"raison":"Des biens de valeur : caméras analysées sur place, accès contrôlés.","demo":"/solutions/securite-intelligente/#essayer","sols":[{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Chaque entrée et chaque sortie, avec l’image."},{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Portes, humidité et température du bâtiment."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Batteries et équipements suivis."}]},"flotte":{"nom":"Flotte de véhicules","famille":"entreprise","public":"entreprise","hub":null,"hubNom":null,"boitier":"Boîtier Mobilité","raison":"Un Boîtier Mobilité par véhicule : position, diagnostic et antivol pour toute la flotte.","demo":"/solutions/mobilite/#essayer","sols":[{"slug":"mobilite","nom":"Mobilité","raison":"Chaque véhicule, son état et ses trajets au même endroit."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"L’entretien prévu avant la panne."}]},"vr":{"nom":"VR","famille":"deplacement","public":"les deux","hub":"signature","hubNom":"Hub Signature","boitier":"Boîtier VR","raison":"Une maison qui roule : le Hub et le Boîtier VR gèrent batteries, eau, chauffage et sécurité.","demo":"/solutions/mobilite/#essayer","sols":[{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Batteries, eau, chauffage et lumières à bord."},{"slug":"mobilite","nom":"Mobilité","raison":"Un copilote qui propose le bon arrêt."},{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Le véhicule surveillé quand vous êtes ailleurs."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Une batterie ou une pompe qui faiblit se voit tôt."}]},"roulotte":{"nom":"Roulotte","famille":"deplacement","public":"les deux","hub":"base","hubNom":"Hub Base","boitier":"Boîtier VR","raison":"Batteries, réservoirs, gel et porte : l’essentiel d’un petit lieu mobile.","demo":"/solutions/environnements-intelligents/#essayer","sols":[{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Batteries et réservoirs d’un coup d’œil."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Le gel et les fuites signalés."},{"slug":"mobilite","nom":"Mobilité","raison":"Le trajet et les arrêts gardés sur la carte."}]},"bateau":{"nom":"Bateau habitable","famille":"deplacement","public":"les deux","hub":"base","hubNom":"Hub Base","boitier":"Boîtier VR","raison":"À quai comme en route : énergie, cale et accès surveillés.","demo":"/solutions/environnements-intelligents/#essayer","sols":[{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Énergie, réservoirs et confort à bord."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Pompe de cale et batteries suivies."},{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Une présence à bord, vous le savez."}]},"auto":{"nom":"Auto ou camion","famille":"deplacement","public":"les deux","hub":null,"hubNom":null,"boitier":"Boîtier Mobilité","raison":"Aucun Hub à bord : le Boîtier Mobilité donne la position, le diagnostic et l’antivol.","demo":"/solutions/mobilite/#essayer","sols":[{"slug":"mobilite","nom":"Mobilité","raison":"Position, diagnostic et antivol, de partout."}]},"moto":{"nom":"Moto","famille":"deplacement","public":"les deux","hub":null,"hubNom":null,"boitier":"Boîtier Mobilité","raison":"Aucun Hub à bord : le Boîtier Mobilité suffit.","demo":"/solutions/mobilite/#essayer","sols":[{"slug":"mobilite","nom":"Mobilité","raison":"Position et antivol, de partout."}]},"avion":{"nom":"Avion","famille":"deplacement","public":"les deux","hub":null,"hubNom":null,"boitier":"Boîtier Mobilité","raison":"L’appareil est suivi par son boîtier; le hangar, lui, reçoit un Hub.","demo":"/solutions/environnements-intelligents/#essayer","sols":[{"slug":"mobilite","nom":"Mobilité","raison":"L’appareil, son état et ses vols au même endroit."}]}}</script>
+  <h2 class="lx-t">Vos lieux.</h2>
+  <p class="lx-sous">Choisissez-en un ou plusieurs. Chaque lieu reçoit son cerveau : un Hub pour un lieu, un boîtier pour un véhicule.</p>
+  <div class="lx-gs"><div class="lx-g"><p>Chez vous</p><div class="lx-bs"><button type="button" class="lx-b" data-lieu="maison" aria-pressed="false">Maison</button><button type="button" class="lx-b" data-lieu="condo" aria-pressed="false">Condo</button><button type="button" class="lx-b" data-lieu="chalet" aria-pressed="false">Chalet</button><button type="button" class="lx-b" data-lieu="domaine" aria-pressed="false">Domaine</button></div></div><div class="lx-g"><p>Votre entreprise</p><div class="lx-bs"><button type="button" class="lx-b" data-lieu="bureau" aria-pressed="false">Bureau ou commerce</button><button type="button" class="lx-b" data-lieu="atelier" aria-pressed="false">Atelier, entrepôt ou usine</button><button type="button" class="lx-b" data-lieu="ferme" aria-pressed="false">Ferme</button><button type="button" class="lx-b" data-lieu="garage" aria-pressed="false">Garage ou hangar</button></div></div><div class="lx-g"><p>Lieux mobiles</p><div class="lx-bs"><button type="button" class="lx-b" data-lieu="vr" aria-pressed="false">VR</button><button type="button" class="lx-b" data-lieu="roulotte" aria-pressed="false">Roulotte</button><button type="button" class="lx-b" data-lieu="bateau" aria-pressed="false">Bateau ou yacht</button></div></div><div class="lx-g"><p>Véhicules</p><div class="lx-bs"><button type="button" class="lx-b" data-lieu="auto" aria-pressed="false">Auto ou camion</button><button type="button" class="lx-b" data-lieu="moto" aria-pressed="false">Moto</button><button type="button" class="lx-b" data-lieu="flotte" aria-pressed="false">Flotte de véhicules</button></div></div><div class="lx-g"><p>Aérien</p><div class="lx-bs"><button type="button" class="lx-b" data-lieu="avion" aria-pressed="false">Avion ou hélicoptère</button></div></div></div>
+  <div class="lx-res lx-eco" data-lieux-res hidden aria-live="polite"></div>
+  <script type="application/json" data-lieux-data>{"maison":{"nom":"Maison","famille":"chez-vous","public":"particulier","hub":"signature","hubNom":"Hub Signature","boitier":null,"raison":"L’IA tourne dans le Hub, sans Internet, et relie jusqu’à 100 appareils.","demo":"/solutions/environnements-intelligents/#essayer","sols":[{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Lumières, chauffage et énergie sur un seul écran."},{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Caméras, portes et alarme dans un seul fil."},{"slug":"reseau-resilience","nom":"Réseau et cybersécurité","raison":"Un Wi-Fi solide dans toute la maison."}]},"condo":{"nom":"Condo","famille":"chez-vous","public":"particulier","hub":"base","hubNom":"Hub Base","boitier":null,"raison":"Un lieu simple : quelques appareils, une fuite ou une porte à surveiller.","demo":"/solutions/environnements-intelligents/#essayer","sols":[{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Chauffage et éclairage réglés selon votre journée."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Une fuite d’eau repérée avant le dégât."}]},"chalet":{"nom":"Chalet","famille":"chez-vous","public":"particulier","hub":"base","hubNom":"Hub Base","boitier":null,"raison":"Il veille sur un lieu fermé : gel, fuite, porte, batterie.","demo":"/solutions/diagnostic-care/#essayer","sols":[{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Gel, fuite, panne : prévenu avant le dégât."},{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Une porte ouverte ou un mouvement, vous le savez."},{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Le chauffage monté avant votre arrivée."}]},"domaine":{"nom":"Domaine","famille":"chez-vous","public":"particulier","hub":"platinum","hubNom":"Hub Platinum","boitier":null,"raison":"Plusieurs bâtiments, beaucoup de caméras, rien ne doit s’arrêter.","demo":"/solutions/securite-intelligente/#essayer","sols":[{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Caméras, plaques et accès de toute la propriété."},{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Maison, garage et dépendances sur un seul écran."},{"slug":"reseau-resilience","nom":"Réseau et cybersécurité","raison":"Un réseau qui relie chaque bâtiment."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Eau, énergie et équipements suivis jour après jour."}]},"bureau":{"nom":"Bureau ou commerce","famille":"entreprise","public":"entreprise","hub":"signature","hubNom":"Hub Signature","boitier":null,"raison":"Réceptionniste IA et jusqu’à dix automatisations, traitées sur place.","demo":"/solutions/automatisation-operations/#essayer","sols":[{"slug":"automatisation-operations","nom":"Automatisation d’entreprise","raison":"La réception ne manque plus un appel."},{"slug":"ia-privee-connaissances","nom":"IA privée et connaissances","raison":"Vos documents répondent aux questions de l’équipe."},{"slug":"reseau-resilience","nom":"Réseau et cybersécurité","raison":"Un réseau séparé pour les clients, les postes et les caméras."}]},"atelier":{"nom":"Atelier, entrepôt ou usine","famille":"entreprise","public":"entreprise","hub":"signature","hubNom":"Hub Signature","boitier":null,"raison":"Accès, caméras et machines suivis au même endroit.","demo":"/solutions/securite-intelligente/#essayer","sols":[{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Qui entre, quand, et par quelle porte."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Une machine qui dérive se voit avant le bris."},{"slug":"reseau-resilience","nom":"Réseau et cybersécurité","raison":"Un réseau séparé pour les machines."},{"slug":"automatisation-operations","nom":"Automatisation d’entreprise","raison":"Commandes et bons qui circulent sans ressaisie."}]},"ferme":{"nom":"Ferme","famille":"entreprise","public":"entreprise","hub":"platinum","hubNom":"Hub Platinum","boitier":null,"raison":"Des bâtiments et des animaux qui ne peuvent pas attendre : batterie et Internet de secours.","demo":"/solutions/domotique-ferme-agricole/","sols":[{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Température, courant, eau : l’alerte avant la perte."},{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Tous les bâtiments sur un seul écran."},{"slug":"reseau-resilience","nom":"Réseau et cybersécurité","raison":"Internet dans chaque bâtiment."},{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Portes, barrières et visiteurs."}]},"garage":{"nom":"Garage ou hangar","famille":"entreprise","public":"entreprise","hub":"signature","hubNom":"Hub Signature","boitier":null,"raison":"Des biens de valeur : caméras analysées sur place, accès contrôlés.","demo":"/solutions/securite-intelligente/#essayer","sols":[{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Chaque entrée et chaque sortie, avec l’image."},{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Portes, humidité et température du bâtiment."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Batteries et équipements suivis."}]},"vr":{"nom":"VR","famille":"mobile","public":"les deux","hub":"signature","hubNom":"Hub Signature","boitier":"Boîtier VR","raison":"Une maison qui roule : le Hub et le Boîtier VR gèrent batteries, eau, chauffage et sécurité.","demo":"/solutions/mobilite/#essayer","sols":[{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Batteries, eau, chauffage et lumières à bord."},{"slug":"mobilite","nom":"Mobilité","raison":"Un copilote qui propose le bon arrêt."},{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Le véhicule surveillé quand vous êtes ailleurs."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Une batterie ou une pompe qui faiblit se voit tôt."}]},"roulotte":{"nom":"Roulotte","famille":"mobile","public":"les deux","hub":"base","hubNom":"Hub Base","boitier":"Boîtier VR","raison":"Batteries, réservoirs, gel et porte : l’essentiel d’un petit lieu mobile.","demo":"/solutions/environnements-intelligents/#essayer","sols":[{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Batteries et réservoirs d’un coup d’œil."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Le gel et les fuites signalés."},{"slug":"mobilite","nom":"Mobilité","raison":"Le trajet et les arrêts gardés sur la carte."}]},"bateau":{"nom":"Bateau ou yacht","famille":"mobile","public":"les deux","hub":"base","hubNom":"Hub Base","boitier":"Boîtier VR","raison":"À quai comme en route : énergie, cale et accès surveillés.","demo":"/solutions/environnements-intelligents/#essayer","sols":[{"slug":"environnements-intelligents","nom":"Environnements intelligents","raison":"Énergie, réservoirs et confort à bord."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"Pompe de cale et batteries suivies."},{"slug":"securite-intelligente","nom":"Sécurité intelligente","raison":"Une présence à bord, vous le savez."}]},"auto":{"nom":"Auto ou camion","famille":"vehicules","public":"les deux","hub":null,"hubNom":null,"boitier":"Boîtier Mobilité","raison":"Aucun Hub à bord : le Boîtier Mobilité donne la position, le diagnostic et l’antivol.","demo":"/solutions/mobilite/#essayer","sols":[{"slug":"mobilite","nom":"Mobilité","raison":"Position, diagnostic et antivol, de partout."}]},"moto":{"nom":"Moto","famille":"vehicules","public":"les deux","hub":null,"hubNom":null,"boitier":"Boîtier Mobilité","raison":"Aucun Hub à bord : le Boîtier Mobilité suffit.","demo":"/solutions/mobilite/#essayer","sols":[{"slug":"mobilite","nom":"Mobilité","raison":"Position et antivol, de partout."}]},"flotte":{"nom":"Flotte de véhicules","famille":"vehicules","public":"entreprise","hub":null,"hubNom":null,"boitier":"Boîtier Mobilité","raison":"Un Boîtier Mobilité par véhicule : position, diagnostic et antivol pour toute la flotte.","demo":"/solutions/mobilite/#essayer","sols":[{"slug":"mobilite","nom":"Mobilité","raison":"Chaque véhicule, son état et ses trajets au même endroit."},{"slug":"diagnostic-care","nom":"Diagnostic & continuité","raison":"L’entretien prévu avant la panne."}]},"avion":{"nom":"Avion ou hélicoptère","famille":"aerien","public":"les deux","hub":null,"hubNom":null,"boitier":"Boîtier Mobilité","raison":"Suivi au sol par son boîtier : position, batterie, alertes. Le hangar, lui, reçoit un Hub. JARVIS ne touche jamais à l’avionique.","demo":"/solutions/environnements-intelligents/#essayer","sols":[{"slug":"mobilite","nom":"Mobilité","raison":"L’appareil, sa position et son état au sol, au même endroit."}]}}</script>
 </div>
 </section>
-<script type="application/json" data-niveaux>{"base": ["env", "diag"], "signature": ["env", "diag", "secu", "ia"], "platinum": ["env", "diag", "secu", "ia", "res"]}</script>
-<section class="ct-guide" data-guide aria-labelledby="guide-t">
-  <h2 id="guide-t">Trois questions, <span>et on vous conseille.</span></h2>
-  <div class="ct-gq" data-gq="cam"><p>Combien de caméras environ?</p>
-    <div><button type="button" data-v="0">Aucune à 2</button><button type="button" data-v="1">3 à 6</button><button type="button" data-v="2">7 et plus</button></div></div>
-  <div class="ct-gq" data-gq="ia"><p>L’intelligence doit-elle rester chez vous, même sans Internet?</p>
-    <div><button type="button" data-v="1">Oui</button><button type="button" data-v="0">Peu importe</button></div></div>
-  <div class="ct-gq" data-gq="coupure"><p>Une coupure serait-elle grave? <small>Animaux, entreprise, objets de valeur</small></p>
-    <div><button type="button" data-v="2">Oui</button><button type="button" data-v="0">Non</button></div></div>
-  <div class="ct-gres" data-guide-res hidden>
-    <p><small>Conseillé pour vous</small><b data-guide-nom></b><span data-guide-why></span></p>
-    <a class="pill" href="#hub" data-guide-go>Voir ce niveau</a>
-  </div>
-</section>
-<nav class="ct-lieux-nav" aria-label="Partir d’un kit" data-rev>
-  <p>Ou partez d’un kit :</p>
-  <button type="button" data-kit-go="1">VR Essentiel</button><button type="button" data-kit-go="2">VR Complet</button><button type="button" data-kit-go="3">Chalet</button><button type="button" data-kit-go="4">Maison</button><button type="button" data-kit-go="5">Maison Sécurité</button><button type="button" data-kit-go="6" data-public="entreprise">PME</button><button type="button" data-kit-go="7">Domaine</button><button type="button" data-kit-go="8" data-public="entreprise">Ferme</button>
-  <a href="#hub">ou composez pièce par pièce →</a>
-</nav>
+
 <div class="ct-wrap">
 <div class="ct-vis" data-ct-vis aria-hidden="true">
   <div class="ct-vis-in">
@@ -127,10 +104,10 @@
 </div>
 <div class="ct-main">
 
-<section class="sect" id="hub" data-toc="1 · Le niveau" aria-labelledby="hub-t">
-  <div class="sect-head"><div data-rev><p class="of-num"><i>1</i><span>Étape 1 sur 3</span></p>
-    <h2 id="hub-t">Choisissez votre niveau.<br><em>Tout compris.</em></h2></div>
-    <p data-rev>Le Hub, les solutions et le soutien, déjà assortis. Le matériel de votre lieu se chiffre à part, sur mesure.</p></div>
+<section class="sect" id="hub" data-toc="2 · Votre niveau" aria-labelledby="hub-t">
+  <div class="sect-head"><div data-rev><p class="ct-etape">Étape 2 sur 3</p>
+    <h2 id="hub-t">Votre niveau.<br><em>Un seul, pour tous vos lieux.</em></h2></div>
+    <p data-rev>Le niveau dit ce que JARVIS fait, où vit son intelligence et le soutien que vous recevez. Le Hub de chaque lieu suit, tout seul.</p></div>
   <div class="ct-hubs"><label class="ct-hub" data-rev data-hub="base">
       <input type="radio" name="hub" value="base" data-prix="590" data-cam="2" data-app="30" data-autos="0">
       <span class="ct-check" aria-hidden="true"></span>
@@ -139,17 +116,27 @@
       <h3>Base</h3>
       <p class="ct-prix"><small>une fois</small></p>
       <p class="ct-pour">Un petit lieu à surveiller · Chalet, condo, petit VR</p>
-      <ul class="ct-niv"><li>Lumières, chauffage, serrures et énergie</li><li>Alertes : fuites, pannes, entretien</li><li>L’app JARVIS, de partout</li><li>Soutien par courriel</li></ul>
+      <dl class="ct-stats"><div><dd>2</dd><dt>caméras analysées</dt></div><div><dd>30</dd><dt>appareils reliés</dt></div><div><dd>Par Internet</dd><dt>où vit l’IA</dt></div></dl>
+      <div class="ct-niv">
+        <p class="ct-niv-ext"><b>2 extensions incluses</b>Environnements · Diagnostic</p>
+        <ul><li>Lumières, chauffage, serrures et énergie</li><li>Alertes : fuites, pannes, entretien</li><li>L’app JARVIS, de partout</li><li>Soutien par courriel</li></ul>
+        <p class="ct-niv-ia">L’IA passe par Internet, avec votre accord.</p>
+      </div>
       <span class="ct-reco" aria-hidden="true">Conseillé pour vous</span>
     </label><label class="ct-hub" data-rev data-hub="signature">
       <input type="radio" name="hub" value="signature" data-prix="1290" data-cam="6" data-app="100" data-autos="10">
       <span class="ct-check" aria-hidden="true"></span>
-      <span class="ct-tag">Le plus choisi</span>
+      <span class="ct-tag">Pour la plupart des maisons</span>
       <figure class="ct-hub-ph"><img decoding="async" src="/media/hubs/hub-signature.webp" alt="Hub JARVIS Hub Signature" loading="lazy" decoding="async"></figure>
       <h3>Signature</h3>
       <p class="ct-prix"><small>une fois</small></p>
       <p class="ct-pour">La maison où vous vivez · Maison, VR complet, petite entreprise</p>
-      <ul class="ct-niv"><li class="ct-niv-plus">Tout Base, plus :</li><li>Caméras qui comprennent ce qu’elles voient</li><li>Une IA privée qui reste chez vous</li><li>Assistant vocal et réceptionniste</li><li>Soutien par courriel et téléphone</li></ul>
+      <dl class="ct-stats"><div><dd>6</dd><dt>caméras analysées</dt></div><div><dd>100</dd><dt>appareils reliés</dt></div><div><dd>Chez vous</dd><dt>où vit l’IA</dt></div></dl>
+      <div class="ct-niv">
+        <p class="ct-niv-ext"><b>4 extensions incluses</b>Environnements · Diagnostic · Sécurité · IA privée</p>
+        <ul><li class="ct-niv-plus">Tout Base, plus :</li><li>Caméras qui comprennent ce qu’elles voient</li><li>Une IA privée qui reste chez vous</li><li>Assistant vocal et réceptionniste</li><li>Soutien par courriel et téléphone</li></ul>
+        <p class="ct-niv-ia">L’IA tourne dans votre Hub, même sans Internet.</p>
+      </div>
       <span class="ct-reco" aria-hidden="true">Conseillé pour vous</span>
     </label><label class="ct-hub" data-rev data-hub="platinum">
       <input type="radio" name="hub" value="platinum" data-prix="3490" data-cam="16" data-app="1000000" data-autos="1000000">
@@ -159,29 +146,53 @@
       <h3>Platinum</h3>
       <p class="ct-prix"><small>une fois</small></p>
       <p class="ct-pour">Un lieu qui ne doit jamais s’arrêter · Domaine, ferme, entreprise</p>
-      <ul class="ct-niv"><li class="ct-niv-plus">Tout Signature, plus :</li><li>Réseau et cybersécurité</li><li>Plusieurs lieux reliés, sans limite</li><li>Batterie et Internet de secours</li><li>Soutien prioritaire, une personne dédiée</li></ul>
+      <dl class="ct-stats"><div><dd>16+</dd><dt>caméras analysées</dt></div><div><dd>Illimité</dd><dt>appareils reliés</dt></div><div><dd>Chez vous, renforcée</dd><dt>où vit l’IA</dt></div></dl>
+      <div class="ct-niv">
+        <p class="ct-niv-ext"><b>5 extensions incluses</b>Environnements · Diagnostic · Sécurité · IA privée · Réseau</p>
+        <ul><li class="ct-niv-plus">Tout Signature, plus :</li><li>Réseau et cybersécurité</li><li>Plusieurs lieux reliés, sans limite</li><li>Batterie et Internet de secours</li><li>Soutien prioritaire, une personne dédiée</li></ul>
+        <p class="ct-niv-ia">IA renforcée, 100 % chez vous : elle continue pendant une panne.</p>
+      </div>
       <span class="ct-reco" aria-hidden="true">Conseillé pour vous</span>
     </label></div>
-  <details class="ct-details" data-rev><summary>Comparer les trois Hubs en détail</summary><img class="ct-trio" src="/media/hubs/hub-trio.webp" alt="Les trois Hubs JARVIS côte à côte" loading="lazy" decoding="async"><div class="ct-cmp-w"><table class="ct-cmp">
+  <details class="ct-details ct-guide" data-guide data-rev>
+    <summary>Vous hésitez? <em>· trois questions, et JARVIS conseille</em></summary>
+    <div class="ct-details-in">
+      <div class="ct-gq" data-gq="cam"><p>Combien de caméras environ?</p>
+        <div><button type="button" data-v="0">Aucune à 2</button><button type="button" data-v="1">3 à 6</button><button type="button" data-v="2">7 et plus</button></div></div>
+      <div class="ct-gq" data-gq="ia"><p>L’intelligence doit-elle rester chez vous, même sans Internet?</p>
+        <div><button type="button" data-v="1">Oui</button><button type="button" data-v="0">Peu importe</button></div></div>
+      <div class="ct-gq" data-gq="coupure"><p>Une coupure serait-elle grave? <small>Animaux, entreprise, objets de valeur</small></p>
+        <div><button type="button" data-v="2">Oui</button><button type="button" data-v="0">Non</button></div></div>
+      <div class="ct-gres" data-guide-res hidden>
+        <p><small>Conseillé pour vous</small><b data-guide-nom></b><span data-guide-why></span></p>
+        <button type="button" class="pill" data-guide-go>Choisir ce niveau</button>
+      </div>
+    </div>
+  </details>
+  <details class="ct-details" data-rev><summary>Fiche technique <em>· les trois Hubs, ligne par ligne</em></summary><img class="ct-trio" src="/media/hubs/hub-trio.webp" alt="Les trois Hubs JARVIS côte à côte" loading="lazy" decoding="async"><div class="ct-cmp-w"><table class="ct-cmp">
       <thead><tr><th></th><th>Hub Base</th><th class=is-mid>Hub Signature</th><th>Hub Platinum</th></tr></thead>
       <tbody><tr><th scope="row">Processeur</th><td>Standard</td><td>4× plus rapide</td><td>16× plus rapide + carte IA</td></tr><tr><th scope="row">Mémoire</th><td>8 Go</td><td>16 Go</td><td>32 Go</td></tr><tr><th scope="row">Stockage</th><td>128 Go SSD</td><td>512 Go SSD</td><td>2 To SSD</td></tr><tr><th scope="row">Appareils reliés</th><td>30</td><td>100</td><td>Illimité</td></tr><tr><th scope="row">Caméras analysées par l’IA</th><td>2</td><td>6</td><td>16 et plus</td></tr><tr><th scope="row">Enregistrement vidéo</th><td>7 jours</td><td>30 jours</td><td>90 jours et plus</td></tr><tr><th scope="row">IA privée</th><td>Par Internet seulement</td><td>Locale, dans le Hub</td><td>Forte, 100 % locale</td></tr><tr><th scope="row">Assistant vocal « Jarvis »</th><td><i class="ct-dot" aria-label="Non disponible"></i></td><td>Oui</td><td>Oui, plusieurs pièces</td></tr><tr><th scope="row">Réceptionniste IA</th><td><i class="ct-dot" aria-label="Non disponible"></i></td><td>Oui</td><td>Oui, plusieurs lignes</td></tr><tr><th scope="row">Automatisations d’entreprise</th><td><i class="ct-dot" aria-label="Non disponible"></i></td><td>Jusqu’à 10</td><td>Illimitées</td></tr><tr><th scope="row">Base de données et rapports</th><td><i class="ct-dot" aria-label="Non disponible"></i></td><td><i class="ct-dot" aria-label="Non disponible"></i></td><td>Oui</td></tr><tr><th scope="row">Lieux reliés (multi-Hubs)</th><td>Suit un Hub principal</td><td>Jusqu’à 3</td><td>Illimité</td></tr><tr><th scope="row">Réseau</th><td>Wi-Fi, Bluetooth, Zigbee</td><td>+ Z-Wave, Matter</td><td>+ 2 ports 2,5 Gb</td></tr><tr><th scope="row">Internet de secours</th><td><i class="ct-dot" aria-label="Non disponible"></i></td><td>Prêt pour 4G</td><td>4G ou Starlink intégré</td></tr><tr><th scope="row">Alimentation de secours</th><td><i class="ct-dot" aria-label="Non disponible"></i></td><td><i class="ct-dot" aria-label="Non disponible"></i></td><td>Batterie interne 2 h</td></tr><tr><th scope="row">Puce de sécurité</th><td><i class="ct-dot" aria-label="Non disponible"></i></td><td>Oui</td><td>Oui, certifiée</td></tr><tr><th scope="row">Boîtier</th><td>Plastique</td><td>Aluminium</td><td>Aluminium, refroidissement silencieux</td></tr><tr><th scope="row">Garantie</th><td>1 an</td><td>2 ans</td><td>3 ans + remplacement express</td></tr><tr><th scope="row">Soutien</th><td>Courriel</td><td>Courriel et téléphone</td><td>Prioritaire, personne dédiée</td></tr></tbody></table></div>
     <p class="ct-note"><i class="ct-dot"></i> Non disponible sur ce Hub. Les capacités sont des repères; elles dépendent aussi des caméras et des solutions actives.</p></details>
-  <div class="ct-grandit" data-rev>
-    <h3>Votre lieu grandit? <span>JARVIS aussi.</span></h3>
-    <ul>
+  <details class="ct-details" data-rev><summary>Changer de niveau plus tard <em>· rien ne se perd</em></summary>
+    <div class="ct-details-in">
+    <ul class="ct-grandit">
       <li><b>Monter de niveau</b>Si votre Hub suffit, on l’active à distance, le jour même.</li>
-      <li><b>Plus de puissance</b>On échange votre Hub, avec un crédit. Votre maison est restaurée telle quelle.</li>
+      <li><b>Plus de puissance</b>On échange votre Hub, avec un crédit. Votre lieu est restauré tel quel.</li>
       <li><b>Un autre lieu</b>Votre ancien Hub part au chalet ou dans le VR, relié au nouveau.</li>
       <li><b>Redescendre</b>Vous gardez votre Hub; on retire des fonctions et vous payez moins.</li>
     </ul>
-    <p>Tout le matériel installé reste. Rien ne se perd.</p>
-  </div>
+    <p class="ct-note">Un Hub plus puissant peut toujours faire un niveau plus bas, jamais l’inverse. Tout le matériel installé reste.</p>
+    </div>
+  </details>
 </section>
 
-<section class="sect alt" id="solutions" data-toc="2 · Les options" aria-labelledby="sol-t">
-  <div class="sect-head"><div data-rev><p class="of-num"><i>2</i><span>Étape 2 sur 3</span></p>
-    <h2 id="sol-t">Ajoutez des options.<br><em>Si vous en avez besoin.</em></h2></div>
-    <p data-rev>Ce qui est déjà dans votre niveau est marqué « Inclus ». Le reste s’ajoute au mois, annulable en tout temps.</p></div>
+<section class="sect" id="projet" data-toc="3 · Votre projet" aria-labelledby="proj-t">
+  <div class="sect-head"><div data-rev><p class="ct-etape">Étape 3 sur 3</p>
+    <h2 id="proj-t">Votre projet.<br><em>JARVIS propose, vous ajustez.</em></h2></div>
+    <p data-rev>Tout est déjà assorti à vos lieux et à votre niveau. Ajustez ce que vous voulez, ou envoyez tel quel : chaque ligne est confirmée par écrit.</p></div>
+
+  <h3 class="ct-sub" id="solutions" data-rev>Vos extensions <em>ce que JARVIS sait faire</em></h3>
+  <p class="ct-intro" data-rev>Celles de votre niveau sont déjà là. Les autres s’ajoutent au mois, annulables en tout temps.</p>
   <div class="ct-sols"><label class="ct-sol is-inclus" data-rev data-sol="env">
       <input type="checkbox" name="sol" value="env" data-slug="environnements-intelligents" data-prix="0" checked disabled><span class="ct-check" aria-hidden="true"></span>
       <div class="ct-sol-h"><h3>Environnements intelligents</h3><p class="ct-prix">Inclus</p></div>
@@ -219,15 +230,11 @@
       <div class="ct-qty ct-qty-sol"><button type="button" data-q="-1" aria-label="Un véhicule de moins">−</button><output>0</output><button type="button" data-q="1" aria-label="Un véhicule de plus">+</button><span>véhicule(s)</span></div>
       <a href="/solutions/mobilite/">Voir la solution <i aria-hidden="true">→</i></a>
     </label></div>
-  <label class="ct-complet" data-rev>
-    <input type="checkbox" name="complet" value="complet" data-prix="59"><span class="ct-check" aria-hidden="true"></span>
-    <span class="ct-tag">Meilleure valeur</span>
-    <div><h3>JARVIS Complet</h3><p>Les cinq solutions payantes, Mobilité pour un véhicule comprise.</p></div>
-  </label>
   <div data-public="entreprise">
-  <h3 class="ct-sub" id="entreprise" data-rev>Pour une entreprise <em>· une réceptionniste IA et des automatisations à la carte</em></h3>
-  <p class="ct-intro" data-rev>Tout est à l’unité et payable par mois. Vous commencez avec le Socle et une automatisation; vous en ajoutez quand vous en voyez le gain. Demande un Hub Signature ou Platinum.</p>
-  <div class="ct-ents"><label class="ct-ent ct-ent-socle" data-rev>
+  <details class="ct-details" id="entreprise" data-rev><summary>Entreprise <em>· réceptionniste IA et automatisations, à la carte</em></summary>
+    <div class="ct-details-in">
+    <p class="ct-intro">Tout est à l’unité et payable par mois. Vous commencez avec le Socle et une automatisation; vous en ajoutez quand vous en voyez le gain. Demande le niveau Signature ou Platinum.</p>
+    <div class="ct-ents"><label class="ct-ent ct-ent-socle" data-rev>
       <input type="checkbox" name="socle" value="socle" data-prix="29"><span class="ct-check" aria-hidden="true"></span>
       <h3>Socle Entreprise</h3><p class="ct-prix"><small>par mois</small></p>
       <p class="ct-why">Obligatoire pour toute automatisation : c’est ce qui relie JARVIS à votre entreprise.</p><p class="ct-d">Comptes employés, journal de tout ce que JARVIS fait, rapport hebdomadaire, connexions à vos outils (courriel, texto, calendrier, comptabilité). 300 textos par mois compris.</p>
@@ -241,7 +248,7 @@
       <h3>Toutes les automatisations</h3><p class="ct-prix"><small>par mois</small></p>
       <p class="ct-why">Toute la bibliothèque, activée au besoin. Hub Platinum recommandé.</p><p class="ct-d">Les 24 automatisations de la bibliothèque, plus celles qui s’ajoutent chaque mois.</p>
     </label></div>
-    <h3 class="ct-sub" data-rev>La bibliothèque d’automatisations <em>· cochez celles qu’il vous faut, elles s’ajoutent au panier</em></h3>
+    <h3 class="ct-sub" data-rev>La bibliothèque d’automatisations <em>cochez celles qu’il vous faut, elles s’ajoutent au panier</em></h3>
     
     <div class="ct-autos"><section class="ct-autocat" data-rev><h4>Réception</h4><label class="ct-auto" data-id="a_rdv">
           <input type="checkbox" name="auto" value="a_rdv" data-prix="19"><span class="ct-check ct-check-sm" aria-hidden="true"></span>
@@ -346,7 +353,7 @@
       <div class="ct-qty"><button type="button" data-q="-1" aria-label="Une de moins">−</button><output>0</output><button type="button" data-q="1" aria-label="Une de plus">+</button></div>
     </div></div>
     <p class="ct-note"></p>
-    <h3 class="ct-sub" data-rev>Entretien et veille <em>· pour que ça continue de protéger, mois après mois</em></h3>
+    <h3 class="ct-sub" data-rev>Entretien et veille <em>pour que ça continue de protéger, mois après mois</em></h3>
     <div class="ct-ents ct-ents-veille"><label class="ct-ent ct-ent-veille" data-rev>
       <input type="checkbox" name="veille" value="veille_pme" data-prix="149"><span class="ct-check" aria-hidden="true"></span>
       <h3>Entretien et veille PME</h3><p class="ct-prix"><small>par mois</small></p>
@@ -356,80 +363,13 @@
       <h3>Entretien et veille Pro</h3><p class="ct-prix"><small>par mois</small></p>
       <p class="ct-why">Pour une entreprise qui ne peut pas attendre à demain.</p><p class="ct-d">PME + réponse en 4 heures, 6 heures de soutien par mois, revue trimestrielle sur place, personne dédiée.</p>
     </label></div>
+    </div>
+  </details>
   </div>
-</section>
 
-<section class="sect" id="materiel" data-toc="3 · Votre projet" aria-labelledby="mat-t">
-  <div class="sect-head"><div data-rev><p class="of-num"><i>3</i><span>Étape 3 sur 3</span></p>
-    <h2 id="mat-t">Votre projet.<br><em>Sur mesure.</em></h2></div>
-    <p data-rev>Chaque lieu est différent : le matériel et l’installation sont chiffrés pour le vôtre. Partez d’un kit ou dites-nous ce que vous avez; ce qui existe déjà est réutilisé.</p></div>
-  <div class="ct-kits-h" data-rev><h3 class="ct-sub">Pressé? <em>Partez d’un kit (−8 %), puis ajustez pièce par pièce.</em></h3></div>
-  <div class="ct-kits"><article class="ct-kit" data-rev id="kit-1">
-      <div class="ct-kit-h"><h3>Kit VR Essentiel</h3><p class="ct-pour">Roulotte, petit VR, bateau de 25 pi</p></div>
-      <p class="ct-prix"><small>une fois</small></p>
-      
-      <p class="ct-mois"><small>Par mois : Diagnostic &amp; continuité + Mobilité</small></p>
-      <p class="ct-why">Batteries, réservoirs, gel et porte : les quatre choses qui gâchent un voyage.</p>
-      <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (6 pièces)</summary><ul><li><b>1×</b> Hub Base</li><li><b>1×</b> Boîtier VR Base</li><li><b>2×</b> Température et humidité</li><li><b>1×</b> Porte et fenêtre</li><li><b>1×</b> Fuite d’eau</li></ul></details>
-      <button type="button" class="pill" data-kit='{"nom": "Kit VR Essentiel", "rabais": 106, "hub": "base", "mat": {"vrb": 1, "temp": 2, "porte": 1, "fuite": 1}, "sol": ["diag", "mob"], "ent": {}}'>Partir de ce kit</button>
-    </article><article class="ct-kit" data-rev id="kit-2">
-      <div class="ct-kit-h"><h3>Kit VR Complet</h3><p class="ct-pour">VR de classe A ou C, cinquième roue</p></div>
-      <p class="ct-prix"><small>une fois</small></p>
-      
-      <p class="ct-mois"><small>Par mois : JARVIS Complet</small></p>
-      <p class="ct-why">Le VR au complet dans la poche : contrôle, caméra, écran, propane, et JARVIS Complet.</p>
-      <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (12 pièces)</summary><ul><li><b>1×</b> Hub Signature</li><li><b>1×</b> Boîtier VR Signature</li><li><b>4×</b> Température et humidité</li><li><b>2×</b> Porte et fenêtre</li><li><b>1×</b> Fuite d’eau</li><li><b>1×</b> Propane</li><li><b>1×</b> Caméra intérieure</li><li><b>1×</b> Écran JARVIS 7 po</li></ul></details>
-      <button type="button" class="pill" data-kit='{"nom": "Kit VR Complet", "rabais": 250, "hub": "signature", "mat": {"vrs": 1, "temp": 4, "porte": 2, "fuite": 1, "propane": 1, "camint": 1, "ecr7": 1}, "sol": ["complet"], "ent": {}}'>Partir de ce kit</button>
-    </article><article class="ct-kit" data-rev id="kit-3">
-      <div class="ct-kit-h"><h3>Kit Chalet</h3><p class="ct-pour">Chalet fermé l’hiver, sans Internet</p></div>
-      <p class="ct-prix"><small>une fois</small></p>
-      
-      <p class="ct-mois"><small>Par mois : Diagnostic &amp; continuité</small></p>
-      <p class="ct-why">Gel, fuite, intrusion : prévenu avant que le plancher lève au printemps.</p>
-      <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (10 pièces)</summary><ul><li><b>1×</b> Hub Base</li><li><b>3×</b> Température et humidité</li><li><b>2×</b> Fuite d’eau</li><li><b>2×</b> Porte et fenêtre</li><li><b>1×</b> Routeur 4G/5G</li><li><b>1×</b> Prise intelligente</li></ul></details>
-      <button type="button" class="pill" data-kit='{"nom": "Kit Chalet", "rabais": 107, "hub": "base", "mat": {"temp": 3, "fuite": 2, "porte": 2, "r4g": 1, "prise": 1}, "sol": ["diag"], "ent": {}}'>Partir de ce kit</button>
-    </article><article class="ct-kit" data-rev id="kit-4">
-      <div class="ct-kit-h"><h3>Kit Maison</h3><p class="ct-pour">Maison familiale, condo</p></div>
-      <p class="ct-prix"><small>une fois</small></p>
-      
-      <p class="ct-mois"><small>Par mois : JARVIS Complet</small></p>
-      <p class="ct-why">L’eau coupée toute seule, la sonnette qui reconnaît, l’IA chez vous.</p>
-      <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (12 pièces)</summary><ul><li><b>1×</b> Hub Signature</li><li><b>3×</b> Fuite d’eau</li><li><b>1×</b> Vanne d’eau automatique</li><li><b>3×</b> Porte et fenêtre</li><li><b>2×</b> Présence (radar)</li><li><b>1×</b> Sonnette vidéo</li><li><b>1×</b> Thermostat intelligent</li></ul></details>
-      <button type="button" class="pill" data-kit='{"nom": "Kit Maison", "rabais": 209, "hub": "signature", "mat": {"fuite": 3, "vanne": 1, "porte": 3, "radar": 2, "sonnette": 1, "thermo": 1}, "sol": ["complet"], "ent": {}}'>Partir de ce kit</button>
-    </article><article class="ct-kit" data-rev id="kit-5">
-      <div class="ct-kit-h"><h3>Kit Maison Sécurité</h3><p class="ct-pour">Maison en coin de rue, absences fréquentes</p></div>
-      <p class="ct-prix"><small>une fois</small></p>
-      
-      <p class="ct-mois"><small>Par mois : JARVIS Complet</small></p>
-      <p class="ct-why">Le Kit Maison, plus trois caméras qui comprennent ce qu’elles voient et une serrure.</p>
-      <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (18 pièces)</summary><ul><li><b>1×</b> Hub Signature</li><li><b>3×</b> Fuite d’eau</li><li><b>1×</b> Vanne d’eau automatique</li><li><b>3×</b> Porte et fenêtre</li><li><b>2×</b> Présence (radar)</li><li><b>1×</b> Sonnette vidéo</li><li><b>1×</b> Thermostat intelligent</li><li><b>3×</b> Caméra extérieure</li><li><b>1×</b> Switch PoE 8 ports</li><li><b>1×</b> Sirène et stroboscope</li><li><b>1×</b> Serrure intelligente</li></ul></details>
-      <button type="button" class="pill" data-kit='{"nom": "Kit Maison Sécurité", "rabais": 333, "hub": "signature", "mat": {"fuite": 3, "vanne": 1, "porte": 3, "radar": 2, "sonnette": 1, "thermo": 1, "camext": 3, "poe": 1, "sirene": 1, "serrure": 1}, "sol": ["complet"], "ent": {}}'>Partir de ce kit</button>
-    </article><article class="ct-kit" data-public="entreprise" data-rev id="kit-6">
-      <div class="ct-kit-h"><h3>Kit PME</h3><p class="ct-pour">Garage, clinique, bureau de 2 à 10 employés</p></div>
-      <p class="ct-prix"><small>une fois</small></p>
-      
-      <p class="ct-mois"><small>Par mois : Réseau et cybersécurité + Socle Entreprise + Réceptionniste IA × 1 + Prendre et confirmer un rendez-vous + Texter le rappel la veille + Répondre aux questions fréquentes</small></p>
-      <p class="ct-why">Une réceptionniste qui ne manque aucun appel et trois automatisations qui font gagner une heure par jour.</p>
-      <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (8 pièces)</summary><ul><li><b>1×</b> Hub Signature</li><li><b>2×</b> Téléphone IP</li><li><b>2×</b> Caméra extérieure</li><li><b>1×</b> Caméra intérieure</li><li><b>1×</b> Switch PoE 8 ports</li><li><b>1×</b> Clavier et lecteur de badges</li></ul></details>
-      <button type="button" class="pill" data-kit='{"nom": "Kit PME", "rabais": 233, "hub": "signature", "mat": {"telip": 2, "camext": 2, "camint": 1, "poe": 1, "clavier": 1}, "sol": ["res"], "ent": {"socle": true, "recep": 1, "autos": ["a_rdv", "a_rappel", "a_faq"]}}'>Partir de ce kit</button>
-    </article><article class="ct-kit" data-rev id="kit-7">
-      <div class="ct-kit-h"><h3>Kit Domaine</h3><p class="ct-pour">Grande propriété, terrain, dépendances</p></div>
-      <p class="ct-prix"><small>une fois</small></p>
-      
-      <p class="ct-mois"><small>Par mois : JARVIS Complet</small></p>
-      <p class="ct-why">Caméras, plaques, serrures, eau et secours : rien n’entre, rien ne coule, rien ne s’arrête.</p>
-      <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (19 pièces)</summary><ul><li><b>1×</b> Hub Platinum</li><li><b>6×</b> Caméra extérieure</li><li><b>1×</b> Lecteur de plaques</li><li><b>2×</b> Serrure intelligente</li><li><b>1×</b> Interphone vidéo</li><li><b>4×</b> Fuite d’eau</li><li><b>1×</b> Vanne d’eau automatique</li><li><b>1×</b> Switch PoE 8 ports</li><li><b>1×</b> Boîtier Secours</li><li><b>1×</b> Écran JARVIS 10 po</li></ul></details>
-      <button type="button" class="pill" data-kit='{"nom": "Kit Domaine", "rabais": 692, "hub": "platinum", "mat": {"camext": 6, "plaques": 1, "serrure": 2, "inter": 1, "fuite": 4, "vanne": 1, "poe": 1, "sec": 1, "ecr10": 1}, "sol": ["complet"], "ent": {}}'>Partir de ce kit</button>
-    </article><article class="ct-kit" data-public="entreprise" data-rev id="kit-8">
-      <div class="ct-kit-h"><h3>Kit Ferme</h3><p class="ct-pour">Ferme laitière, érablière, serre</p></div>
-      <p class="ct-prix"><small>une fois</small></p>
-      
-      <p class="ct-mois"><small>Par mois : JARVIS Complet + Socle Entreprise + Alerte de température : frigo, réservoir à lait, étable + Commande de moulée quand le silo est bas + Veille d’une pompe ou d’un abreuvoir</small></p>
-      <p class="ct-why">Frigo, réservoir à lait, pompes, silo : les alertes qui sauvent une récolte ou un troupeau.</p>
-      <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte (18 pièces)</summary><ul><li><b>1×</b> Hub Platinum</li><li><b>1×</b> Routeur 4G/5G</li><li><b>4×</b> Caméra extérieure</li><li><b>6×</b> Température et humidité</li><li><b>4×</b> Capteur universel</li><li><b>1×</b> Boîtier Secours</li><li><b>1×</b> Compteur d’énergie</li></ul></details>
-      <button type="button" class="pill" data-kit='{"nom": "Kit Ferme", "rabais": 493, "hub": "platinum", "mat": {"r4g": 1, "camext": 4, "temp": 6, "univ": 4, "sec": 1, "energie": 1}, "sol": ["complet"], "ent": {"socle": true, "autos": ["a_frigo", "a_silo", "a_pompe"]}}'>Partir de ce kit</button>
-    </article></div>
-  <details class="ct-details ct-piece" data-rev><summary>Ajouter des appareils à la pièce</summary>
+  <h3 class="ct-sub" id="materiel" data-rev>L’équipement de vos lieux <em>un ensemble de départ par lieu</em></h3>
+  <div class="ct-ens" data-ensembles aria-live="polite"><p class="ct-ens-vide">Choisissez vos lieux à l’étape 1 : JARVIS propose ici l’ensemble de départ de chacun.</p></div>
+  <details class="ct-details ct-piece" data-rev><summary>Ajuster à la pièce <em>· boîtiers, capteurs, caméras, réseau</em></summary>
   <div class="ct-mats"><section class="ct-cat" data-rev><h3>Boîtiers JARVIS</h3><div class="ct-item" data-id="vrb" data-prix="490" data-img="/media/forfait/mat-vrb.webp">
         <img class="ct-item-ph" src="/media/forfait/mat-vrb.webp" alt="" loading="lazy" decoding="async">
         <div class="ct-item-t"><b>Boîtier VR Base</b><span>12 V. Batteries (shunt), 2 réservoirs, batterie moteur. VR, roulotte, bateau.</span><em>Sans lui, le Hub ne voit ni vos batteries ni vos réservoirs.</em></div>
@@ -626,16 +566,22 @@
         <div class="ct-item-p">une fois</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
       </div></section></div></details>
-</section>
 
-<section class="sect alt" id="lieux" aria-labelledby="lieux-t">
-  <div class="sect-head"><div data-rev>
-    <h2 id="lieux-t">Installation<br><em>et lieux.</em></h2></div>
-    <p data-rev>Un Hub par lieu. Les lieux se parlent par un lien privé et chiffré. Les petits lieux empruntent l’IA de votre plus gros Hub. Les solutions sont à 30 % de rabais dès le deuxième lieu.</p></div>
-  <div class="ct-lieux" data-rev>
-    <label>Ce lieu est mon <select name="rang"><option value="1">premier lieu JARVIS</option><option value="2">deuxième lieu ou plus (−30 % sur les solutions)</option></select></label>
+  <h3 class="ct-sub" id="donnees" data-rev>Vos données et l’IA <em>chez vous d’abord</em></h3>
+  <div class="ct-don" data-rev>
+    <ul class="ct-don-l">
+      <li><b>Chez vous</b>Vos images, vos documents et votre historique restent dans votre Hub.</li>
+      <li><b>De partout</b>L’accès à distance passe par un relais chiffré, qui ne garde rien.</li>
+      <li><b>Sauvegarde chiffrée</b>Incluse. Illisible pour nous : si le Hub brise, le nouveau repart comme avant.</li>
+    </ul>
+    <p class="ct-don-t">Le nuage, seulement si vous le voulez :</p>
+    <label class="ct-opt"><input type="checkbox" name="nuage" value="n_video"><span class="ct-check ct-check-sm" aria-hidden="true"></span>
+      <span><b>Copie des vidéos hors du lieu</b><em>Chiffrée. Si le Hub est volé ou détruit, les images restent.</em></span></label>
+    <label class="ct-opt"><input type="checkbox" name="nuage" value="n_ia"><span class="ct-check ct-check-sm" aria-hidden="true"></span>
+      <span><b>Renfort d’IA par le nuage</b><em>Pour les grosses tâches seulement, et jamais sans votre accord explicite.</em></span></label>
   </div>
-  <h3 class="ct-sub" data-rev>Installation <em>· à vous de choisir</em></h3>
+
+  <h3 class="ct-sub" id="installation" data-rev>L’installation <em>à vous de choisir</em></h3>
   <div class="cards ct-install"><label class="ct-inst card" data-rev>
       <input type="radio" name="install" value="auto" data-prix="0" checked><span class="ct-check" aria-hidden="true"></span>
       <small>Inclus</small><h3>Je l’installe moi-même</h3><p>Prises identifiées, aucun fil à couper. Plan, vidéo et mise en service à distance (30 min).</p>
@@ -650,8 +596,8 @@
       <small>Gratuite</small><h3>Visite de planification</h3><p>Domaine, entreprise, ferme : inventaire, plan écrit, soumission ligne par ligne.</p>
     </label></div>
   <div data-public="entreprise">
-  <h3 class="ct-sub" data-rev>Services professionnels <em>· vérifier, protéger, former</em></h3>
-  <div class="ct-mats ct-svcs"><section class="ct-cat ct-cat-svc" data-rev><h3>Vérifier</h3><div class="ct-item" data-id="audit_res" data-prix="349" data-svc="1">
+  <details class="ct-details" data-rev><summary>Services professionnels <em>· vérifier, protéger, former</em></summary>
+    <div class="ct-details-in"><div class="ct-mats ct-svcs"><section class="ct-cat ct-cat-svc" data-rev><h3>Vérifier</h3><div class="ct-item" data-id="audit_res" data-prix="349" data-svc="1">
         <div class="ct-item-t"><b>Vérification de vos systèmes (résidence)</b><span>Caméras, accès, réseau, Wi-Fi, sauvegardes, habitudes : le tour complet de la maison ou du chalet. Rapport écrit avec priorités.</span><em>Savoir ce qui est faible avant que quelqu’un d’autre le trouve.</em></div>
         <div class="ct-item-p">une fois</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
@@ -683,30 +629,25 @@
         <div class="ct-item-t"><b>Prise en main à la maison (2 h)</b><span>Toute la famille apprend JARVIS : scènes, alertes, caméras, codes invités.</span><em>Le système sert seulement si tout le monde s’en sert.</em></div>
         <div class="ct-item-p">une fois</div>
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
-      </div></section></div><p class="ct-note">Payés une fois, sur soumission confirmée. Déplacement selon la distance. Nous vérifions et protégeons vos systèmes; nous ne sommes pas une agence de gardiennage ni d’enquête.</p>
+      </div></section></div><p class="ct-note">Payés une fois, sur soumission confirmée. Déplacement selon la distance. Nous vérifions et protégeons vos systèmes; nous ne sommes pas une agence de gardiennage ni d’enquête.</p></div></details>
   </div>
+
   <h3 class="ct-sub" data-rev>Toujours inclus</h3>
   <ul class="ct-inclus"><li data-rev><b>Configuration pour votre lieu</b><span>Vos appareils déjà jumelés, vos scènes de base prêtes.</span></li><li data-rev><b>Test d’une heure</b><span>Chaque kit tourne une heure sur banc avant l’envoi.</span></li><li data-rev><b>Mises à jour automatiques</b><span>Signées, la nuit, avec retour arrière.</span></li><li data-rev><b>Sauvegarde chiffrée</b><span>Si le Hub brise, le nouveau repart comme avant.</span></li><li data-rev><b>Garantie</b><span>1 an Base, 2 ans Signature, 3 ans Platinum. Garantie légale en plus.</span></li><li data-rev><b>Retour 30 jours</b><span>Matériel non installé : remboursé, moins la configuration.</span></li></ul>
+
+  <div class="ct-prevoir" data-cart-tips hidden aria-live="polite"></div>
+
+  <div class="ct-fin" data-rev>
+    <h3>Votre JARVIS est prêt.</h3>
+    <p>Vous recevez une soumission écrite, ligne par ligne. Rien à payer ici.</p>
+    <button type="button" class="pill" data-cart-open>Voir mon JARVIS et recevoir ma soumission</button>
+  </div>
 </section>
 
 </div>
 
-<aside class="ct-cart" aria-label="Mon forfait">
-  <div class="ct-cart-in">
-    <div class="ct-cart-h"><b>Mon forfait</b></div>
-    <div class="ct-cart-body">
-      <div class="ct-cart-tot">
-        <div><small>Aujourd’hui</small><b data-total-once></b></div>
-        <div><small>Par mois</small><b data-total-month></b></div>
-        <div class="ct-cart-an"><small>Première année</small><b data-total-year></b></div>
-      </div>
-      <div data-forfait-vue></div>
-      <div class="ct-cart-tips" data-cart-tips hidden></div>
-    </div>
-  </div>
-</aside>
-
 <div class="ct-bar" aria-live="polite">
+  <button type="button" class="ct-jv" data-jv-ouvre><i aria-hidden="true"></i><span>Une question? <b>Demandez à JARVIS</b></span></button>
   <div><small>Aujourd’hui</small><b data-total-once></b></div>
   <div><small>Par mois</small><b data-total-month></b></div>
   <button type="button" class="pill" data-cart-open>Mon forfait<span data-cart-count></span> · Recevoir ma soumission</button>
@@ -727,9 +668,8 @@
   </div>
   <p class="foot-line"><span>© 2026 JARVIS Private Systems</span><span class="foot-count" hidden>Visites du site <b data-live="visits-foot">—</b></span></p>
 </footer>
-<script type="application/json" data-forfait-ref>{"lieux":{"maison":{"n":"Maison","h":"signature","b":null,"p":"particulier","img":"/media/forfait/v-lieu-maison.webp"},"condo":{"n":"Condo","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-condo.webp"},"chalet":{"n":"Chalet","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-chalet.webp"},"domaine":{"n":"Domaine","h":"platinum","b":null,"p":"particulier","img":"/media/forfait/v-lieu-domaine.webp"},"bureau":{"n":"Bureau ou commerce","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-bureau.webp"},"atelier":{"n":"Atelier, entrepôt ou usine","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-atelier.webp"},"ferme":{"n":"Ferme","h":"platinum","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-ferme.webp"},"garage":{"n":"Garage ou hangar","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-garage.webp"},"flotte":{"n":"Flotte de véhicules","h":null,"b":"Boîtier Mobilité","p":"entreprise","img":"/media/forfait/v-lieu-flotte.webp"},"vr":{"n":"VR","h":"signature","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-vr.webp"},"roulotte":{"n":"Roulotte","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-roulotte.webp"},"bateau":{"n":"Bateau habitable","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-bateau.webp"},"auto":{"n":"Auto ou camion","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-auto.webp"},"moto":{"n":"Moto","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-moto.webp"},"avion":{"n":"Avion","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-avion.webp"}},"sols":{"environnements-intelligents":{"n":"Environnements intelligents","img":"/media/forfait/v-sol-environnements.webp"},"ia-privee-connaissances":{"n":"IA privée et connaissances","img":"/media/forfait/v-sol-ia.webp"},"securite-intelligente":{"n":"Sécurité intelligente","img":"/media/forfait/v-sol-securite.webp"},"automatisation-operations":{"n":"Automatisation d’entreprise","img":"/media/forfait/v-sol-automatisation.webp"},"reseau-resilience":{"n":"Réseau et cybersécurité","img":"/media/forfait/v-sol-reseau.webp"},"diagnostic-care":{"n":"Diagnostic & continuité","img":"/media/forfait/v-sol-diagnostic.webp"},"mobilite":{"n":"Mobilité","img":"/media/forfait/v-sol-mobilite.webp"}},"hubs":{"base":{"n":"Hub Base","img":"/media/forfait/v-hub-base.webp"},"signature":{"n":"Hub Signature","img":"/media/forfait/v-hub-signature.webp"},"platinum":{"n":"Hub Platinum","img":"/media/forfait/v-hub-platinum.webp"}}}</script>
+<script type="application/json" data-forfait-ref>{"lieux":{"maison":{"n":"Maison","h":"signature","b":null,"p":"particulier","img":"/media/forfait/v-lieu-maison.webp"},"condo":{"n":"Condo","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-condo.webp"},"chalet":{"n":"Chalet","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-chalet.webp"},"domaine":{"n":"Domaine","h":"platinum","b":null,"p":"particulier","img":"/media/forfait/v-lieu-domaine.webp"},"bureau":{"n":"Bureau ou commerce","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-bureau.webp"},"atelier":{"n":"Atelier, entrepôt ou usine","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-atelier.webp"},"ferme":{"n":"Ferme","h":"platinum","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-ferme.webp"},"garage":{"n":"Garage ou hangar","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-garage.webp"},"vr":{"n":"VR","h":"signature","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-vr.webp"},"roulotte":{"n":"Roulotte","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-roulotte.webp"},"bateau":{"n":"Bateau ou yacht","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-bateau.webp"},"auto":{"n":"Auto ou camion","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-auto.webp"},"moto":{"n":"Moto","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-moto.webp"},"flotte":{"n":"Flotte de véhicules","h":null,"b":"Boîtier Mobilité","p":"entreprise","img":"/media/forfait/v-lieu-flotte.webp"},"avion":{"n":"Avion ou hélicoptère","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-avion.webp"}},"sols":{"environnements-intelligents":{"n":"Environnements intelligents","img":"/media/forfait/v-sol-environnements.webp"},"ia-privee-connaissances":{"n":"IA privée et connaissances","img":"/media/forfait/v-sol-ia.webp"},"securite-intelligente":{"n":"Sécurité intelligente","img":"/media/forfait/v-sol-securite.webp"},"automatisation-operations":{"n":"Automatisation d’entreprise","img":"/media/forfait/v-sol-automatisation.webp"},"reseau-resilience":{"n":"Réseau et cybersécurité","img":"/media/forfait/v-sol-reseau.webp"},"diagnostic-care":{"n":"Diagnostic & continuité","img":"/media/forfait/v-sol-diagnostic.webp"},"mobilite":{"n":"Mobilité","img":"/media/forfait/v-sol-mobilite.webp"}},"hubs":{"base":{"n":"Hub Base","img":"/media/forfait/v-hub-base.webp"},"signature":{"n":"Hub Signature","img":"/media/forfait/v-hub-signature.webp"},"platinum":{"n":"Hub Platinum","img":"/media/forfait/v-hub-platinum.webp"}}}</script>
 <script src="/assets/js/wow.js?v=20261118f" defer></script>
-<script src="/assets/demos/offre.js?v=20261118f" defer></script>
 <script src="/assets/demos/catalogue.js?v=20261118f" defer></script>
 <script src="/assets/js/guide.js?v=20261118f" defer></script>
 </body>

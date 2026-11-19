@@ -1,8 +1,9 @@
-# Catalogue — l'offre complète, à la façon d'une boutique (novembre 2026).
-# Quatre étapes : 1) le Hub (Base, Signature, Platinum), 2) les solutions (par mois) et
-# l'Entreprise à la carte, 3) le matériel du lieu (une fois), 4) lieux et installation.
-# Un panier collant à droite détaille chaque ligne et fait le total.
-# Tous les prix vivent ici. Les kits sont calculés à partir de leurs pièces (−8 %).
+# L'offre JARVIS (page /offre/) : trois étapes, selon docs/OFFRE.md.
+#   1) Vos lieux : cinq familles (src/lieux.py); « Votre écosystème » montre un cerveau par lieu.
+#   2) Votre niveau : Base, Signature ou Platinum, un seul pour tous les lieux (NIVEAUX).
+#   3) Votre projet : les extensions, l'équipement proposé par lieu (ENSEMBLES), les données, l'installation.
+# Le client ne décide que ses lieux et son niveau; le reste est proposé, puis ajusté.
+# Tous les prix vivent ici (cachés tant que SITE["prix_publics"] est faux).
 # Styles : assets/demos/catalogue.css · Script : assets/demos/catalogue.js
 
 from html import escape
@@ -19,7 +20,7 @@ HUBS = [
              "Wi-Fi, Bluetooth, Zigbee", "Garantie 1 an, soutien par courriel"],
      "manque": ["Pas d’IA dans le Hub", "Pas d’assistant vocal ni de réceptionniste", "Pas d’automatisations d’entreprise", "Pas de batterie de secours"]},
     {"id": "signature", "nom": "Hub Signature", "prix": 1290, "pour": "Maison, VR complet, PME",
-     "tag": "Le plus choisi", "cam": 6, "app": 100, "autos": 10,
+     "tag": "Pour la plupart des maisons", "cam": 6, "app": 100, "autos": 10,
      "pourquoi": "L’IA tourne chez vous, sans Internet : assistant vocal, caméras analysées sur place, réceptionniste.",
      "pts": ["Jusqu’à 100 appareils", "6 caméras analysées, 30 jours d’enregistrement", "IA locale, dans le Hub",
              "Assistant vocal « Jarvis » et réceptionniste IA", "Z-Wave et Matter, 3 lieux reliés",
@@ -84,7 +85,6 @@ SOLUTIONS = [
      "pts": ["Position en direct, historique des trajets", "Diagnostic moteur, pression des pneus", "Alerte de mouvement (antivol)", "Données cellulaires incluses"],
      "non": ["Demande un Boîtier Mobilité ou un Boîtier VR Signature/Platinum", "Ne bloque pas le véhicule à distance"]},
 ]
-COMPLET = {"id": "complet", "nom": "JARVIS Complet", "prix": 59, "valeur": sum(s["prix"] for s in SOLUTIONS)}
 
 # Entreprise à la carte : socle, réceptionniste par ligne, automatisations une par une.
 ENT_SOCLE = {"id": "socle", "nom": "Socle Entreprise", "prix": 29,
@@ -231,74 +231,87 @@ INCLUS = [
     ("Retour 30 jours", "Matériel non installé : remboursé, moins la configuration."),
 ]
 
-# Kits : prix calculé à partir des pièces, moins 8 %. "sol" = solutions ; "ent" = socle, recep (nb lignes), autos.
-KIT_RABAIS = 0.08
-KITS = [
-    {"nom": "Kit VR Essentiel", "pour": "Roulotte, petit VR, bateau de 25 pi", "pourquoi": "Batteries, réservoirs, gel et porte : les quatre choses qui gâchent un voyage.",
-     "hub": "base", "mat": {"vrb": 1, "temp": 2, "porte": 1, "fuite": 1}, "sol": ["diag", "mob"]},
-    {"nom": "Kit VR Complet", "pour": "VR de classe A ou C, cinquième roue", "pourquoi": "Le VR au complet dans la poche : contrôle, caméra, écran, propane, et JARVIS Complet.",
-     "hub": "signature", "mat": {"vrs": 1, "temp": 4, "porte": 2, "fuite": 1, "propane": 1, "camint": 1, "ecr7": 1}, "sol": ["complet"]},
-    {"nom": "Kit Chalet", "pour": "Chalet fermé l’hiver, sans Internet", "pourquoi": "Gel, fuite, intrusion : prévenu avant que le plancher lève au printemps.",
-     "hub": "base", "mat": {"temp": 3, "fuite": 2, "porte": 2, "r4g": 1, "prise": 1}, "sol": ["diag"]},
-    {"nom": "Kit Maison", "pour": "Maison familiale, condo", "pourquoi": "L’eau coupée toute seule, la sonnette qui reconnaît, l’IA chez vous.",
-     "hub": "signature", "mat": {"fuite": 3, "vanne": 1, "porte": 3, "radar": 2, "sonnette": 1, "thermo": 1}, "sol": ["complet"]},
-    {"nom": "Kit Maison Sécurité", "pour": "Maison en coin de rue, absences fréquentes", "pourquoi": "Le Kit Maison, plus trois caméras qui comprennent ce qu’elles voient et une serrure.",
-     "hub": "signature", "mat": {"fuite": 3, "vanne": 1, "porte": 3, "radar": 2, "sonnette": 1, "thermo": 1, "camext": 3, "poe": 1, "sirene": 1, "serrure": 1}, "sol": ["complet"]},
-    {"nom": "Kit PME", "pour": "Garage, clinique, bureau de 2 à 10 employés", "pourquoi": "Une réceptionniste qui ne manque aucun appel et trois automatisations qui font gagner une heure par jour.",
-     "hub": "signature", "mat": {"telip": 2, "camext": 2, "camint": 1, "poe": 1, "clavier": 1}, "sol": ["res"],
-     "ent": {"socle": True, "recep": 1, "autos": ["a_rdv", "a_rappel", "a_faq"]}},
-    {"nom": "Kit Domaine", "pour": "Grande propriété, terrain, dépendances", "pourquoi": "Caméras, plaques, serrures, eau et secours : rien n’entre, rien ne coule, rien ne s’arrête.",
-     "hub": "platinum", "mat": {"camext": 6, "plaques": 1, "serrure": 2, "inter": 1, "fuite": 4, "vanne": 1, "poe": 1, "sec": 1, "ecr10": 1}, "sol": ["complet"]},
-    {"nom": "Kit Ferme", "pour": "Ferme laitière, érablière, serre", "pourquoi": "Frigo, réservoir à lait, pompes, silo : les alertes qui sauvent une récolte ou un troupeau.",
-     "hub": "platinum", "mat": {"r4g": 1, "camext": 4, "temp": 6, "univ": 4, "sec": 1, "energie": 1}, "sol": ["complet"],
-     "ent": {"socle": True, "autos": ["a_frigo", "a_silo", "a_pompe"]}},
-]
+# Ensembles de départ : ce que JARVIS propose pour chaque lieu (règle 3 de docs/OFFRE.md). Une clé par lieu
+# de src/lieux.py. "mat" = pièces du matériel; "ent" = ce qui s'active pour un lieu d'entreprise.
+# « vr* » : le Boîtier VR suit le niveau choisi (Base, Signature ou Platinum); résolu par catalogue.js.
+# Ce sont des points de départ : chaque pièce s'ajuste, et ce qui existe déjà est réutilisé.
+ENSEMBLES = {
+    "maison": {"mat": {"fuite": 3, "vanne": 1, "porte": 3, "radar": 2, "sonnette": 1, "thermo": 1},
+               "pourquoi": "L’eau coupée toute seule, la sonnette qui reconnaît, le chauffage par pièce."},
+    "condo": {"mat": {"fuite": 2, "porte": 1, "radar": 1, "thermo": 1},
+              "pourquoi": "L’essentiel d’un condo : l’eau, la porte, le chauffage."},
+    "chalet": {"mat": {"temp": 3, "fuite": 2, "porte": 2, "r4g": 1, "prise": 1},
+               "pourquoi": "Gel, fuite, intrusion : prévenu avant que le plancher lève au printemps."},
+    "domaine": {"mat": {"camext": 6, "plaques": 1, "serrure": 2, "inter": 1, "fuite": 4, "vanne": 1, "poe": 1, "sec": 1, "ecr10": 1},
+                "pourquoi": "Caméras, plaques, serrures, eau et secours : rien n’entre, rien ne coule, rien ne s’arrête."},
+    "bureau": {"mat": {"telip": 2, "camext": 2, "camint": 1, "poe": 1, "clavier": 1},
+               "ent": {"socle": True, "recep": 1, "autos": ["a_rdv", "a_rappel", "a_faq"]},
+               "pourquoi": "Une réceptionniste qui ne manque aucun appel, et trois automatisations pour commencer."},
+    "atelier": {"mat": {"camext": 2, "cam360": 1, "clavier": 1, "porte": 2, "univ": 2, "poe": 1},
+                "pourquoi": "Qui entre et par quelle porte; une machine qui dérive se voit avant le bris."},
+    "ferme": {"mat": {"r4g": 1, "camext": 4, "temp": 6, "univ": 4, "sec": 1, "energie": 1},
+              "ent": {"socle": True, "autos": ["a_frigo", "a_silo", "a_pompe"]},
+              "pourquoi": "Frigo, réservoir à lait, pompes, silo : les alertes qui sauvent une récolte ou un troupeau."},
+    "garage": {"mat": {"camext": 2, "clavier": 1, "porte": 2, "temp": 1, "poe": 1},
+               "pourquoi": "Chaque entrée avec l’image; l’humidité et la température du bâtiment suivies."},
+    "vr": {"mat": {"vr*": 1, "temp": 4, "porte": 2, "fuite": 1, "propane": 1, "camint": 1, "ecr7": 1},
+           "pourquoi": "Le VR au complet dans la poche : batteries, réservoirs, propane, caméra et écran à bord."},
+    "roulotte": {"mat": {"vr*": 1, "temp": 2, "porte": 1, "fuite": 1},
+                 "pourquoi": "Batteries, réservoirs, gel et porte : les quatre choses qui gâchent un voyage."},
+    "bateau": {"mat": {"vr*": 1, "temp": 2, "porte": 1, "fuite": 1},
+               "pourquoi": "Batteries, cale et accès : l’essentiel, à quai comme en route."},
+    "auto": {"mat": {"mobb": 1}, "pourquoi": "Position, diagnostic et antivol, sans Hub à bord."},
+    "moto": {"mat": {"mobb": 1}, "pourquoi": "Position et antivol, sans Hub à bord."},
+    "flotte": {"mat": {"mobb": 2}, "pourquoi": "Un boîtier par véhicule : ajustez le nombre à votre flotte."},
+    "avion": {"mat": {"mobb": 1}, "pourquoi": "Suivi au sol : position, batterie et alertes. Jamais l’avionique."},
+}
+assert set(ENSEMBLES) == {l["id"] for l in lieux.LIEUX}, "Un ensemble de départ par lieu, ni plus ni moins."
+for _e in ENSEMBLES.values():
+    assert all(i == "vr*" or i in MAT_BY_ID for i in _e["mat"]), "Pièce inconnue dans un ensemble."
+    assert all(a in AUTOS_BY_ID for a in (_e.get("ent") or {}).get("autos", [])), "Automatisation inconnue dans un ensemble."
 
 
 def _p(n):
     return f"{n:,}".replace(",", " ") + " $"
 
 
-def _kit_totaux(k):
-    once_plein = HUB_BY_ID[k["hub"]]["prix"] + sum(MAT_BY_ID[i][2] * q for i, q in k["mat"].items())
-    once = int(round(once_plein * (1 - KIT_RABAIS) / 10.0) * 10)
-    mois = 0
-    if "complet" in k["sol"]:
-        mois += COMPLET["prix"]
-    else:
-        mois += sum(s["prix"] for s in SOLUTIONS if s["id"] in k["sol"])
-    e = k.get("ent") or {}
-    if e.get("socle"):
-        mois += ENT_SOCLE["prix"]
-    mois += ENT_RECEP["prix"] * e.get("recep", 0)
-    mois += sum(AUTOS_BY_ID[a][2] for a in e.get("autos", []))
-    return once_plein, once, mois
-
-
-# Les trois niveaux, tout compris (décision de James, 18 novembre 2026) : le niveau, c'est ce que JARVIS
-# sait faire et le soutien, pareil dans chaque maison; le matériel et l'installation sont sur mesure.
-# Chaque niveau inclut les solutions de la colonne SOLS (cochées d'office par catalogue.js); les autres
-# restent des options. Un Hub plus puissant peut toujours faire un niveau plus bas, jamais l'inverse.
+# Les trois niveaux, tout compris (décisions de James, 18 novembre 2026; règles dans docs/OFFRE.md) :
+# un seul niveau pour tous les lieux du client. Il dit ce que JARVIS fait (les extensions de SOLS, cochées
+# d'office par catalogue.js), où vit l'IA et le soutien. Les autres extensions restent des options.
+# Le Hub du lieu principal porte le niveau; un Hub plus puissant peut toujours faire un niveau plus bas.
 NIVEAUX = {
-    "base": {"sols": ["env", "diag"], "plus": "",
+    "base": {"sols": ["env", "diag"], "plus": "", "ia_court": "Par Internet",
+             "ia": "L’IA passe par Internet, avec votre accord.",
              "inclus": ["Lumières, chauffage, serrures et énergie", "Alertes : fuites, pannes, entretien",
                         "L’app JARVIS, de partout", "Soutien par courriel"]},
-    "signature": {"sols": ["env", "diag", "secu", "ia"], "plus": "Tout Base, plus :",
+    "signature": {"sols": ["env", "diag", "secu", "ia"], "plus": "Tout Base, plus :", "ia_court": "Chez vous",
+                  "ia": "L’IA tourne dans votre Hub, même sans Internet.",
                   "inclus": ["Caméras qui comprennent ce qu’elles voient", "Une IA privée qui reste chez vous",
                              "Assistant vocal et réceptionniste", "Soutien par courriel et téléphone"]},
-    "platinum": {"sols": ["env", "diag", "secu", "ia", "res"], "plus": "Tout Signature, plus :",
+    "platinum": {"sols": ["env", "diag", "secu", "ia", "res"], "plus": "Tout Signature, plus :", "ia_court": "Chez vous, renforcée",
+                 "ia": "IA renforcée, 100 % chez vous : elle continue pendant une panne.",
                  "inclus": ["Réseau et cybersécurité", "Plusieurs lieux reliés, sans limite",
                             "Batterie et Internet de secours", "Soutien prioritaire, une personne dédiée"]},
 }
+EXT_COURT = {"env": "Environnements", "diag": "Diagnostic", "secu": "Sécurité", "ia": "IA privée", "res": "Réseau", "mob": "Mobilité"}
+
+
+def _stats(h):
+    """Les trois repères d'un niveau, tirés des faits du Hub (HUBS) : caméras, appareils, où vit l'IA."""
+    cam = f"{h['cam']}+" if h["id"] == "platinum" else str(h["cam"])
+    app = "Illimité" if h["app"] >= 10 ** 6 else str(h["app"])
+    trio = [(cam, "caméras analysées"), (app, "appareils reliés"), (NIVEAUX[h["id"]]["ia_court"], "où vit l’IA")]
+    return '<dl class="ct-stats">' + "".join(f"<div><dd>{escape(v)}</dd><dt>{escape(k)}</dt></div>" for v, k in trio) + "</dl>"
 
 
 def _hubs():
-    """Les trois niveaux tout compris : photo, nom, pour qui, ce qui est inclus (NIVEAUX). Le détail
-    technique des Hubs est dans le comparatif replié, dessous."""
+    """Les trois niveaux : nom, pour qui, trois repères (caméras, appareils, IA), puis, sur le niveau choisi,
+    les extensions incluses et ce qu'il apporte. La fiche technique des Hubs est repliée dessous."""
     out = []
     for h in HUBS:
-        c = lieux.HUBS_CHOIX[h["id"]]
+        c, n = lieux.HUBS_CHOIX[h["id"]], NIVEAUX[h["id"]]
         tag = f'<span class="ct-tag">{escape(h["tag"])}</span>' if h["tag"] else ""
+        ext = " · ".join(EXT_COURT[x] for x in n["sols"])
         out.append(f"""<label class="ct-hub" data-rev data-hub="{h['id']}">
       <input type="radio" name="hub" value="{h['id']}" data-prix="{h['prix']}" data-cam="{h['cam']}" data-app="{h['app']}" data-autos="{h['autos']}">
       <span class="ct-check" aria-hidden="true"></span>
@@ -307,7 +320,12 @@ def _hubs():
       <h3>{escape(h['nom'].replace("Hub ", ""))}</h3>
       <p class="ct-prix">{_p(h['prix'])}<small>une fois</small></p>
       <p class="ct-pour">{c['situation']} · {c['pour']}</p>
-      <ul class="ct-niv">{f'<li class="ct-niv-plus">{NIVEAUX[h["id"]]["plus"]}</li>' if NIVEAUX[h["id"]]["plus"] else ''}{"".join(f"<li>{x}</li>" for x in NIVEAUX[h["id"]]["inclus"])}</ul>
+      {_stats(h)}
+      <div class="ct-niv">
+        <p class="ct-niv-ext"><b>{len(n["sols"])} extensions incluses</b>{ext}</p>
+        <ul>{f'<li class="ct-niv-plus">{n["plus"]}</li>' if n["plus"] else ''}{"".join(f"<li>{x}</li>" for x in n["inclus"])}</ul>
+        <p class="ct-niv-ia">{n["ia"]}</p>
+      </div>
       <span class="ct-reco" aria-hidden="true">Conseillé pour vous</span>
     </label>""")
     return "".join(out)
@@ -385,12 +403,12 @@ def _entreprise():
         </label>""" for i, n, p, w in items)
         cats.append(f'<section class="ct-autocat" data-rev><h4>{escape(cat)}</h4>{rows}</section>')
     return f"""<div class="ct-ents">{socle}{recep}{toutes}</div>
-    <h3 class="ct-sub" data-rev>La bibliothèque d’automatisations <em>· cochez celles qu’il vous faut, elles s’ajoutent au panier</em></h3>
+    <h3 class="ct-sub" data-rev>La bibliothèque d’automatisations <em>cochez celles qu’il vous faut, elles s’ajoutent au panier</em></h3>
     <p class="ct-note ct-note-prix" data-rev><b>9 $</b> un déclencheur, une action · <b>19 $</b> reliée à un de vos outils · <b>29 $</b> veille 24/7 avec escalade. Toutes demandent le Socle Entreprise et un Hub Signature ou Platinum.</p>
     <div class="ct-autos">{"".join(cats)}</div>
     <div class="ct-ents ct-ents-bas">{mesure}</div>
     <p class="ct-note">{escape(ENT_USAGE)}</p>
-    <h3 class="ct-sub" data-rev>Entretien et veille <em>· pour que ça continue de protéger, mois après mois</em></h3>
+    <h3 class="ct-sub" data-rev>Entretien et veille <em>pour que ça continue de protéger, mois après mois</em></h3>
     <div class="ct-ents ct-ents-veille">{veille}</div>"""
 
 
@@ -410,38 +428,6 @@ def _materiel():
         <div class="ct-qty"><button type="button" data-q="-1" aria-label="Retirer">−</button><output>0</output><button type="button" data-q="1" aria-label="Ajouter">+</button></div>
       </div>""" for i, n, p, d, w in items)
         out.append(f'<section class="ct-cat" data-rev><h3>{escape(cat)}</h3>{rows}</section>')
-    return "".join(out)
-
-
-def _kits():
-    out = []
-    for idx, k in enumerate(KITS):
-        plein, once, mois = _kit_totaux(k)
-        hub = HUB_BY_ID[k["hub"]]
-        pieces = [f"<li><b>1×</b> {escape(hub['nom'])}</li>"] + [
-            f"<li><b>{q}×</b> {escape(MAT_BY_ID[i][1])}</li>" for i, q in k["mat"].items()]
-        mens = []
-        if "complet" in k["sol"]:
-            mens.append(f"JARVIS Complet ({COMPLET['prix']} $)")
-        else:
-            mens += [f"{s['nom']} ({s['prix']} $)" for s in SOLUTIONS if s["id"] in k["sol"]]
-        e = k.get("ent") or {}
-        if e.get("socle"):
-            mens.append(f"Socle Entreprise ({ENT_SOCLE['prix']} $)")
-        if e.get("recep"):
-            mens.append(f"Réceptionniste IA × {e['recep']} ({ENT_RECEP['prix'] * e['recep']} $)")
-        for a in e.get("autos", []):
-            mens.append(f"{AUTOS_BY_ID[a][1]} ({AUTOS_BY_ID[a][2]} $)")
-        cfg = {"nom": k["nom"], "rabais": plein - once, "hub": k["hub"], "mat": k["mat"], "sol": k["sol"], "ent": e}
-        out.append(f"""<article class="ct-kit"{' data-public="entreprise"' if k.get("ent") else ''} data-rev id="kit-{idx + 1}">
-      <div class="ct-kit-h"><h3>{escape(k['nom'])}</h3><p class="ct-pour">{escape(k['pour'])}</p></div>
-      <p class="ct-prix">{_p(once)}<small>une fois</small></p>
-      <p class="ct-econ"><s>{_p(plein)}</s> à la pièce · vous économisez {_p(plein - once)}</p>
-      <p class="ct-mois">{mois} $/mois<small> · {escape(" + ".join(mens))}</small></p>
-      <p class="ct-why">{escape(k['pourquoi'])}</p>
-      <details class="ct-kit-d"><summary>Ce qu’il y a dans la boîte ({1 + sum(k['mat'].values())} pièces)</summary><ul>{"".join(pieces)}</ul></details>
-      <button type="button" class="pill" data-kit='{json.dumps(cfg, ensure_ascii=False)}'>Partir de ce kit</button>
-    </article>""")
     return "".join(out)
 
 
@@ -468,54 +454,38 @@ def _inclus():
     return "".join(f'<li data-rev><b>{escape(n)}</b><span>{escape(d)}</span></li>' for n, d in INCLUS)
 
 
+def _donnees_offre():
+    """Ce que catalogue.js lit : les extensions de chaque niveau et l'ensemble de départ de chaque lieu."""
+    return json.dumps({"niveaux": {k: v["sols"] for k, v in NIVEAUX.items()}, "ensembles": ENSEMBLES},
+                      ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+
+
 PAGE = {
     "url": "/offre/",
     "v2": True,
-    "title": "L’offre JARVIS | Hubs, solutions, matériel et prix",
-    "description": "Le Hub est le petit ordinateur que nous installons chez vous. Choisissez votre lieu, votre Hub, vos solutions et votre matériel : votre forfait se compose sous vos yeux.",
+    "title": "L’offre JARVIS | Vos lieux, votre niveau, votre projet",
+    "description": "Composez votre JARVIS en trois étapes : choisissez vos lieux, puis votre niveau. JARVIS propose le cerveau de chaque lieu et l’équipement; vous recevez une soumission écrite.",
     "og_image": "/media/hubs/hub-trio.webp",
-    "assets": ["offre", "catalogue"],
+    "assets": ["catalogue"],
     "content": f"""
 <section class="ct-tete" aria-labelledby="ct-titre">
   {pro.fil("/offre/")}
   <h1 id="ct-titre" data-rev>Composez<br><span>votre JARVIS.</span></h1>
-  <p data-rev>Un Hub pour votre lieu, les solutions que vous voulez, le matériel qu’il faut. La soumission suit, sans engagement.</p>
+  <p data-rev>Dites-nous vos lieux et choisissez un niveau. JARVIS propose le reste : le cerveau de chaque lieu et son équipement.</p>
+  <ol class="ct-pas" data-rev>
+    <li><a href="#composer"><i>1</i><b>Vos lieux</b><span>Maison, entreprise, véhicules</span></a></li>
+    <li><a href="#hub"><i>2</i><b>Votre niveau</b><span>Un seul, pour tout</span></a></li>
+    <li><a href="#projet"><i>3</i><b>Votre projet</b><span>Proposé, puis ajusté</span></a></li>
+  </ol>
 </section>
 
 <form id="ct" class="ct" novalidate>
-<section class="ct-qui" id="composer" aria-label="Pour qui">
-  <button type="button" class="ct-qui-t" data-public-set="moi" aria-pressed="false">
-    <img src="/media/forfait/lieu-maison.webp" alt="" loading="lazy" decoding="async">
-    <span><b>Pour chez moi</b><small>Maison, chalet, VR, véhicules.</small></span>
-  </button>
-  <button type="button" class="ct-qui-t" data-public-set="entreprise" aria-pressed="false">
-    <img src="/media/forfait/lieu-bureau.webp" alt="" loading="lazy" decoding="async">
-    <span><b>Pour mon entreprise</b><small>Bureau, atelier, ferme, flotte.</small></span>
-  </button>
-  <button type="button" class="ct-qui-deux" data-public-set="deux" aria-pressed="false">Les deux, sur une même soumission <i aria-hidden="true">›</i></button>
+<script type="application/json" data-offre>{_donnees_offre()}</script>
+<section class="ct-lieu-etape" id="composer" data-toc="1 · Vos lieux" aria-label="Vos lieux">
+  <p class="ct-etape" data-rev>Étape 1 sur 3</p>
+  {lieux.selecteur("Vos lieux.", "Choisissez-en un ou plusieurs. Chaque lieu reçoit son cerveau : un Hub pour un lieu, un boîtier pour un véhicule.", ident="lieu")}
 </section>
-<section class="ct-lieu-etape" aria-label="Votre lieu">
-  {lieux.selecteur("Commencez par votre lieu.", ident="lieu")}
-</section>
-<script type="application/json" data-niveaux>{json.dumps({k: v["sols"] for k, v in NIVEAUX.items()})}</script>
-<section class="ct-guide" data-guide aria-labelledby="guide-t">
-  <h2 id="guide-t">Trois questions, <span>et on vous conseille.</span></h2>
-  <div class="ct-gq" data-gq="cam"><p>Combien de caméras environ?</p>
-    <div><button type="button" data-v="0">Aucune à 2</button><button type="button" data-v="1">3 à 6</button><button type="button" data-v="2">7 et plus</button></div></div>
-  <div class="ct-gq" data-gq="ia"><p>L’intelligence doit-elle rester chez vous, même sans Internet?</p>
-    <div><button type="button" data-v="1">Oui</button><button type="button" data-v="0">Peu importe</button></div></div>
-  <div class="ct-gq" data-gq="coupure"><p>Une coupure serait-elle grave? <small>Animaux, entreprise, objets de valeur</small></p>
-    <div><button type="button" data-v="2">Oui</button><button type="button" data-v="0">Non</button></div></div>
-  <div class="ct-gres" data-guide-res hidden>
-    <p><small>Conseillé pour vous</small><b data-guide-nom></b><span data-guide-why></span></p>
-    <a class="pill" href="#hub" data-guide-go>Voir ce niveau</a>
-  </div>
-</section>
-<nav class="ct-lieux-nav" aria-label="Partir d’un kit" data-rev>
-  <p>Ou partez d’un kit :</p>
-  {"".join(f'<button type="button" data-kit-go="{i + 1}"{" data-public=" + chr(34) + "entreprise" + chr(34) if k.get("ent") else ""}>{escape(k["nom"].replace("Kit ", ""))}</button>' for i, k in enumerate(KITS))}
-  <a href="#hub">ou composez pièce par pièce →</a>
-</nav>
+
 <div class="ct-wrap">
 <div class="ct-vis" data-ct-vis aria-hidden="true">
   <div class="ct-vis-in">
@@ -526,86 +496,99 @@ PAGE = {
 </div>
 <div class="ct-main">
 
-<section class="sect" id="hub" data-toc="1 · Le niveau" aria-labelledby="hub-t">
-  <div class="sect-head"><div data-rev><p class="of-num"><i>1</i><span>Étape 1 sur 3</span></p>
-    <h2 id="hub-t">Choisissez votre niveau.<br><em>Tout compris.</em></h2></div>
-    <p data-rev>Le Hub, les solutions et le soutien, déjà assortis. Le matériel de votre lieu se chiffre à part, sur mesure.</p></div>
+<section class="sect" id="hub" data-toc="2 · Votre niveau" aria-labelledby="hub-t">
+  <div class="sect-head"><div data-rev><p class="ct-etape">Étape 2 sur 3</p>
+    <h2 id="hub-t">Votre niveau.<br><em>Un seul, pour tous vos lieux.</em></h2></div>
+    <p data-rev>Le niveau dit ce que JARVIS fait, où vit son intelligence et le soutien que vous recevez. Le Hub de chaque lieu suit, tout seul.</p></div>
   <div class="ct-hubs">{_hubs()}</div>
-  <details class="ct-details" data-rev><summary>Comparer les trois Hubs en détail</summary><img class="ct-trio" src="/media/hubs/hub-trio.webp" alt="Les trois Hubs JARVIS côte à côte" loading="lazy" decoding="async">{_compare()}</details>
-  <div class="ct-grandit" data-rev>
-    <h3>Votre lieu grandit? <span>JARVIS aussi.</span></h3>
-    <ul>
+  <details class="ct-details ct-guide" data-guide data-rev>
+    <summary>Vous hésitez? <em>· trois questions, et JARVIS conseille</em></summary>
+    <div class="ct-details-in">
+      <div class="ct-gq" data-gq="cam"><p>Combien de caméras environ?</p>
+        <div><button type="button" data-v="0">Aucune à 2</button><button type="button" data-v="1">3 à 6</button><button type="button" data-v="2">7 et plus</button></div></div>
+      <div class="ct-gq" data-gq="ia"><p>L’intelligence doit-elle rester chez vous, même sans Internet?</p>
+        <div><button type="button" data-v="1">Oui</button><button type="button" data-v="0">Peu importe</button></div></div>
+      <div class="ct-gq" data-gq="coupure"><p>Une coupure serait-elle grave? <small>Animaux, entreprise, objets de valeur</small></p>
+        <div><button type="button" data-v="2">Oui</button><button type="button" data-v="0">Non</button></div></div>
+      <div class="ct-gres" data-guide-res hidden>
+        <p><small>Conseillé pour vous</small><b data-guide-nom></b><span data-guide-why></span></p>
+        <button type="button" class="pill" data-guide-go>Choisir ce niveau</button>
+      </div>
+    </div>
+  </details>
+  <details class="ct-details" data-rev><summary>Fiche technique <em>· les trois Hubs, ligne par ligne</em></summary><img class="ct-trio" src="/media/hubs/hub-trio.webp" alt="Les trois Hubs JARVIS côte à côte" loading="lazy" decoding="async">{_compare()}</details>
+  <details class="ct-details" data-rev><summary>Changer de niveau plus tard <em>· rien ne se perd</em></summary>
+    <div class="ct-details-in">
+    <ul class="ct-grandit">
       <li><b>Monter de niveau</b>Si votre Hub suffit, on l’active à distance, le jour même.</li>
-      <li><b>Plus de puissance</b>On échange votre Hub, avec un crédit. Votre maison est restaurée telle quelle.</li>
+      <li><b>Plus de puissance</b>On échange votre Hub, avec un crédit. Votre lieu est restauré tel quel.</li>
       <li><b>Un autre lieu</b>Votre ancien Hub part au chalet ou dans le VR, relié au nouveau.</li>
       <li><b>Redescendre</b>Vous gardez votre Hub; on retire des fonctions et vous payez moins.</li>
     </ul>
-    <p>Tout le matériel installé reste. Rien ne se perd.</p>
-  </div>
+    <p class="ct-note">Un Hub plus puissant peut toujours faire un niveau plus bas, jamais l’inverse. Tout le matériel installé reste.</p>
+    </div>
+  </details>
 </section>
 
-<section class="sect alt" id="solutions" data-toc="2 · Les options" aria-labelledby="sol-t">
-  <div class="sect-head"><div data-rev><p class="of-num"><i>2</i><span>Étape 2 sur 3</span></p>
-    <h2 id="sol-t">Ajoutez des options.<br><em>Si vous en avez besoin.</em></h2></div>
-    <p data-rev>Ce qui est déjà dans votre niveau est marqué « Inclus ». Le reste s’ajoute au mois, annulable en tout temps.</p></div>
+<section class="sect" id="projet" data-toc="3 · Votre projet" aria-labelledby="proj-t">
+  <div class="sect-head"><div data-rev><p class="ct-etape">Étape 3 sur 3</p>
+    <h2 id="proj-t">Votre projet.<br><em>JARVIS propose, vous ajustez.</em></h2></div>
+    <p data-rev>Tout est déjà assorti à vos lieux et à votre niveau. Ajustez ce que vous voulez, ou envoyez tel quel : chaque ligne est confirmée par écrit.</p></div>
+
+  <h3 class="ct-sub" id="solutions" data-rev>Vos extensions <em>ce que JARVIS sait faire</em></h3>
+  <p class="ct-intro" data-rev>Celles de votre niveau sont déjà là. Les autres s’ajoutent au mois, annulables en tout temps.</p>
   <div class="ct-sols">{_solutions()}</div>
-  <label class="ct-complet" data-rev>
-    <input type="checkbox" name="complet" value="complet" data-prix="{COMPLET['prix']}"><span class="ct-check" aria-hidden="true"></span>
-    <span class="ct-tag">Meilleure valeur</span>
-    <div><h3>{COMPLET['nom']} · {COMPLET['prix']} $/mois</h3><p>Les cinq solutions payantes, Mobilité pour un véhicule comprise. Valeur à la carte : {COMPLET['valeur']} $/mois. Vous économisez {COMPLET['valeur'] - COMPLET['prix']} $ par mois.</p></div>
-  </label>
   <div data-public="entreprise">
-  <h3 class="ct-sub" id="entreprise" data-rev>Pour une entreprise <em>· une réceptionniste IA et des automatisations à la carte</em></h3>
-  <p class="ct-intro" data-rev>Tout est à l’unité et payable par mois. Vous commencez avec le Socle et une automatisation; vous en ajoutez quand vous en voyez le gain. Demande un Hub Signature ou Platinum.</p>
-  {_entreprise()}
+  <details class="ct-details" id="entreprise" data-rev><summary>Entreprise <em>· réceptionniste IA et automatisations, à la carte</em></summary>
+    <div class="ct-details-in">
+    <p class="ct-intro">Tout est à l’unité et payable par mois. Vous commencez avec le Socle et une automatisation; vous en ajoutez quand vous en voyez le gain. Demande le niveau Signature ou Platinum.</p>
+    {_entreprise()}
+    </div>
+  </details>
   </div>
-</section>
 
-<section class="sect" id="materiel" data-toc="3 · Votre projet" aria-labelledby="mat-t">
-  <div class="sect-head"><div data-rev><p class="of-num"><i>3</i><span>Étape 3 sur 3</span></p>
-    <h2 id="mat-t">Votre projet.<br><em>Sur mesure.</em></h2></div>
-    <p data-rev>Chaque lieu est différent : le matériel et l’installation sont chiffrés pour le vôtre. Partez d’un kit ou dites-nous ce que vous avez; ce qui existe déjà est réutilisé.</p></div>
-  <div class="ct-kits-h" data-rev><h3 class="ct-sub">Pressé? <em>Partez d’un kit (−8 %), puis ajustez pièce par pièce.</em></h3></div>
-  <div class="ct-kits">{_kits()}</div>
-  <details class="ct-details ct-piece" data-rev><summary>Ajouter des appareils à la pièce</summary>
+  <h3 class="ct-sub" id="materiel" data-rev>L’équipement de vos lieux <em>un ensemble de départ par lieu</em></h3>
+  <div class="ct-ens" data-ensembles aria-live="polite"><p class="ct-ens-vide">Choisissez vos lieux à l’étape 1 : JARVIS propose ici l’ensemble de départ de chacun.</p></div>
+  <details class="ct-details ct-piece" data-rev><summary>Ajuster à la pièce <em>· boîtiers, capteurs, caméras, réseau</em></summary>
   <div class="ct-mats">{_materiel()}</div></details>
-</section>
 
-<section class="sect alt" id="lieux" aria-labelledby="lieux-t">
-  <div class="sect-head"><div data-rev>
-    <h2 id="lieux-t">Installation<br><em>et lieux.</em></h2></div>
-    <p data-rev>Un Hub par lieu. Les lieux se parlent par un lien privé et chiffré. Les petits lieux empruntent l’IA de votre plus gros Hub. Les solutions sont à 30 % de rabais dès le deuxième lieu.</p></div>
-  <div class="ct-lieux" data-rev>
-    <label>Ce lieu est mon <select name="rang"><option value="1">premier lieu JARVIS</option><option value="2">deuxième lieu ou plus (−30 % sur les solutions)</option></select></label>
+  <h3 class="ct-sub" id="donnees" data-rev>Vos données et l’IA <em>chez vous d’abord</em></h3>
+  <div class="ct-don" data-rev>
+    <ul class="ct-don-l">
+      <li><b>Chez vous</b>Vos images, vos documents et votre historique restent dans votre Hub.</li>
+      <li><b>De partout</b>L’accès à distance passe par un relais chiffré, qui ne garde rien.</li>
+      <li><b>Sauvegarde chiffrée</b>Incluse. Illisible pour nous : si le Hub brise, le nouveau repart comme avant.</li>
+    </ul>
+    <p class="ct-don-t">Le nuage, seulement si vous le voulez :</p>
+    <label class="ct-opt"><input type="checkbox" name="nuage" value="n_video"><span class="ct-check ct-check-sm" aria-hidden="true"></span>
+      <span><b>Copie des vidéos hors du lieu</b><em>Chiffrée. Si le Hub est volé ou détruit, les images restent.</em></span></label>
+    <label class="ct-opt"><input type="checkbox" name="nuage" value="n_ia"><span class="ct-check ct-check-sm" aria-hidden="true"></span>
+      <span><b>Renfort d’IA par le nuage</b><em>Pour les grosses tâches seulement, et jamais sans votre accord explicite.</em></span></label>
   </div>
-  <h3 class="ct-sub" data-rev>Installation <em>· à vous de choisir</em></h3>
+
+  <h3 class="ct-sub" id="installation" data-rev>L’installation <em>à vous de choisir</em></h3>
   <div class="cards ct-install">{_install()}</div>
   <div data-public="entreprise">
-  <h3 class="ct-sub" data-rev>Services professionnels <em>· vérifier, protéger, former</em></h3>
-  {_services()}
+  <details class="ct-details" data-rev><summary>Services professionnels <em>· vérifier, protéger, former</em></summary>
+    <div class="ct-details-in">{_services()}</div></details>
   </div>
+
   <h3 class="ct-sub" data-rev>Toujours inclus</h3>
   <ul class="ct-inclus">{_inclus()}</ul>
+
+  <div class="ct-prevoir" data-cart-tips hidden aria-live="polite"></div>
+
+  <div class="ct-fin" data-rev>
+    <h3>Votre JARVIS est prêt.</h3>
+    <p>Vous recevez une soumission écrite, ligne par ligne. Rien à payer ici.</p>
+    <button type="button" class="pill" data-cart-open>Voir mon JARVIS et recevoir ma soumission</button>
+  </div>
 </section>
 
 </div>
 
-<aside class="ct-cart" aria-label="Mon forfait">
-  <div class="ct-cart-in">
-    <div class="ct-cart-h"><b>Mon forfait</b></div>
-    <div class="ct-cart-body">
-      <div class="ct-cart-tot">
-        <div><small>Aujourd’hui</small><b data-total-once>1 290 $</b></div>
-        <div><small>Par mois</small><b data-total-month>0 $</b></div>
-        <div class="ct-cart-an"><small>Première année</small><b data-total-year>1 290 $</b></div>
-      </div>
-      <div data-forfait-vue></div>
-      <div class="ct-cart-tips" data-cart-tips hidden></div>
-    </div>
-  </div>
-</aside>
-
 <div class="ct-bar" aria-live="polite">
+  <button type="button" class="ct-jv" data-jv-ouvre><i aria-hidden="true"></i><span>Une question? <b>Demandez à JARVIS</b></span></button>
   <div><small>Aujourd’hui</small><b data-total-once>1 290 $</b></div>
   <div><small>Par mois</small><b data-total-month>0 $</b></div>
   <button type="button" class="pill" data-cart-open>Mon forfait<span data-cart-count></span> · Recevoir ma soumission</button>
@@ -626,9 +609,7 @@ def _sans_prix(html):
     import re
     M = r"\d[\d\u00a0\u202f ]*[,.]?\d*\s?\$"          # un montant : « 1 290 $ », « 59 $ »
     html = html.replace('<form id="ct" class="ct"', '<form id="ct" class="ct" data-sansprix')
-    html = re.sub(r'<p class="ct-econ">.*?</p>', "", html, flags=re.S)
     html = re.sub(r'<p class="ct-note ct-note-prix"[^>]*>.*?</p>', "", html, flags=re.S)
-    html = re.sub(r'<p class="ct-mois">' + M + r"/mois<small> · ", '<p class="ct-mois"><small>Par mois : ', html)
     html = re.sub(M + r"<small>/mois", "<small>par mois", html)
     html = re.sub(M + r"<small>une fois \+ " + M + r"/mois</small>", "<small>une fois, puis par mois</small>", html)
     html = re.sub(M + r"<small>une fois", "<small>une fois", html)
@@ -636,7 +617,6 @@ def _sans_prix(html):
     html = re.sub(r"<small>" + M + "</small>", "", html)
     html = re.sub(r"(<b data-total-[a-z]+>)" + M + "</b>", r"\1</b>", html)
     html = re.sub(r" \(" + M + r"\)", "", html)
-    html = re.sub(r" · " + M + r"/mois</h3>", "</h3>", html)
     # Phrases entières qui ne parlent que d'un montant
     html = re.sub(r"[^.<>]*" + M + r"[^.<>]*\.", "", html)
     html = re.sub(r"[^.<>;:]*" + M + r"[^.<>]*(?=<)", "", html)
@@ -649,5 +629,5 @@ def _sans_prix(html):
 
 if not pro.PRIX:
     PAGE["content"] = _sans_prix(PAGE["content"])
-    PAGE["title"] = "L’offre JARVIS | Composez votre forfait : Hub, solutions, matériel"
+    PAGE["title"] = "L’offre JARVIS | Vos lieux, votre niveau, votre projet"
 

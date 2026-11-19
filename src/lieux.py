@@ -9,9 +9,10 @@
 # montre pas ce qui est propre à l'entreprise (SOLUTIONS_PUBLIC, lieux de la famille « entreprise »).
 # Le contenu reste dans le HTML : le filtrage se fait par l'attribut data-public (CSS et assets/js/wow.js).
 #
-# Trois familles. « En déplacement » distingue deux sortes, comme le catalogue :
-#   - lieux mobiles (on y vit) : Hub + Boîtier VR, presque toutes les solutions d'un lieu, plus Mobilité;
-#   - véhicules (on s'y déplace) : Boîtier Mobilité, sans Hub à bord.
+# Cinq familles (docs/OFFRE.md, règle 1 : un cerveau par lieu) :
+#   - chez vous, votre entreprise : un Hub;
+#   - lieux mobiles (on y vit) : un Hub et un Boîtier VR;
+#   - véhicules, aérien (on s'y déplace) : un Boîtier Mobilité, sans Hub à bord.
 # Aucun nom de lieu réel. Aucun prix ici.
 
 import json
@@ -27,7 +28,9 @@ ENV, IA, SECU, AUTO, RES, DIAG, MOB = (
 FAMILLES = [
     ("chez-vous", "Chez vous"),
     ("entreprise", "Votre entreprise"),
-    ("deplacement", "En déplacement"),
+    ("mobile", "Lieux mobiles"),
+    ("vehicules", "Véhicules"),
+    ("aerien", "Aérien"),
 ]
 
 # Les solutions propres à l'entreprise (les autres servent aux deux publics)
@@ -41,7 +44,7 @@ def public_sol(slug):
 
 HUB_NOM = {"base": "Hub Base", "signature": "Hub Signature", "platinum": "Hub Platinum"}
 
-# id, nom, famille, sorte, hub conseillé (None : aucun Hub à bord), raison, solutions [(slug, raison)], démonstration
+# id, nom, famille, hub conseillé (None : aucun Hub à bord), raison, solutions [(slug, raison)], démonstration
 LIEUX = [
     # ---------------- Chez vous
     {"id": "maison", "nom": "Maison", "famille": "chez-vous", "hub": "signature",
@@ -95,43 +98,44 @@ LIEUX = [
                    (ENV, "Portes, humidité et température du bâtiment."),
                    (DIAG, "Batteries et équipements suivis.")],
      "demo": f"/solutions/{SECU}/#essayer"},
-    {"id": "flotte", "nom": "Flotte de véhicules", "famille": "entreprise", "hub": None, "boitier": "Boîtier Mobilité",
-     "raison": "Un Boîtier Mobilité par véhicule : position, diagnostic et antivol pour toute la flotte.",
-     "solutions": [(MOB, "Chaque véhicule, son état et ses trajets au même endroit."),
-                   (DIAG, "L’entretien prévu avant la panne.")],
-     "demo": f"/solutions/{MOB}/#essayer"},
-    # ---------------- En déplacement : lieux mobiles (on y vit)
-    {"id": "vr", "nom": "VR", "famille": "deplacement", "sorte": "Lieu mobile", "hub": "signature", "boitier": "Boîtier VR",
+    # ---------------- Lieux mobiles (on y vit)
+    {"id": "vr", "nom": "VR", "famille": "mobile", "hub": "signature", "boitier": "Boîtier VR",
      "raison": "Une maison qui roule : le Hub et le Boîtier VR gèrent batteries, eau, chauffage et sécurité.",
      "solutions": [(ENV, "Batteries, eau, chauffage et lumières à bord."),
                    (MOB, "Un copilote qui propose le bon arrêt."),
                    (SECU, "Le véhicule surveillé quand vous êtes ailleurs."),
                    (DIAG, "Une batterie ou une pompe qui faiblit se voit tôt.")],
      "demo": f"/solutions/{MOB}/#essayer"},
-    {"id": "roulotte", "nom": "Roulotte", "famille": "deplacement", "sorte": "Lieu mobile", "hub": "base", "boitier": "Boîtier VR",
+    {"id": "roulotte", "nom": "Roulotte", "famille": "mobile", "hub": "base", "boitier": "Boîtier VR",
      "raison": "Batteries, réservoirs, gel et porte : l’essentiel d’un petit lieu mobile.",
      "solutions": [(ENV, "Batteries et réservoirs d’un coup d’œil."),
                    (DIAG, "Le gel et les fuites signalés."),
                    (MOB, "Le trajet et les arrêts gardés sur la carte.")],
      "demo": f"/solutions/{ENV}/#essayer"},
-    {"id": "bateau", "nom": "Bateau habitable", "famille": "deplacement", "sorte": "Lieu mobile", "hub": "base", "boitier": "Boîtier VR",
+    {"id": "bateau", "nom": "Bateau ou yacht", "famille": "mobile", "hub": "base", "boitier": "Boîtier VR",
      "raison": "À quai comme en route : énergie, cale et accès surveillés.",
      "solutions": [(ENV, "Énergie, réservoirs et confort à bord."),
                    (DIAG, "Pompe de cale et batteries suivies."),
                    (SECU, "Une présence à bord, vous le savez.")],
      "demo": f"/solutions/{ENV}/#essayer"},
-    # ---------------- En déplacement : véhicules (on s'y déplace)
-    {"id": "auto", "nom": "Auto ou camion", "famille": "deplacement", "sorte": "Véhicule", "hub": None, "boitier": "Boîtier Mobilité",
+    # ---------------- Véhicules (on s'y déplace)
+    {"id": "auto", "nom": "Auto ou camion", "famille": "vehicules", "hub": None, "boitier": "Boîtier Mobilité",
      "raison": "Aucun Hub à bord : le Boîtier Mobilité donne la position, le diagnostic et l’antivol.",
      "solutions": [(MOB, "Position, diagnostic et antivol, de partout.")],
      "demo": f"/solutions/{MOB}/#essayer"},
-    {"id": "moto", "nom": "Moto", "famille": "deplacement", "sorte": "Véhicule", "hub": None, "boitier": "Boîtier Mobilité",
+    {"id": "moto", "nom": "Moto", "famille": "vehicules", "hub": None, "boitier": "Boîtier Mobilité",
      "raison": "Aucun Hub à bord : le Boîtier Mobilité suffit.",
      "solutions": [(MOB, "Position et antivol, de partout.")],
      "demo": f"/solutions/{MOB}/#essayer"},
-    {"id": "avion", "nom": "Avion", "famille": "deplacement", "sorte": "Véhicule", "hub": None, "boitier": "Boîtier Mobilité",
-     "raison": "L’appareil est suivi par son boîtier; le hangar, lui, reçoit un Hub.",
-     "solutions": [(MOB, "L’appareil, son état et ses vols au même endroit.")],
+    {"id": "flotte", "nom": "Flotte de véhicules", "famille": "vehicules", "public": "entreprise", "hub": None, "boitier": "Boîtier Mobilité",
+     "raison": "Un Boîtier Mobilité par véhicule : position, diagnostic et antivol pour toute la flotte.",
+     "solutions": [(MOB, "Chaque véhicule, son état et ses trajets au même endroit."),
+                   (DIAG, "L’entretien prévu avant la panne.")],
+     "demo": f"/solutions/{MOB}/#essayer"},
+    # ---------------- Aérien : suivi au sol seulement, jamais l'avionique
+    {"id": "avion", "nom": "Avion ou hélicoptère", "famille": "aerien", "hub": None, "boitier": "Boîtier Mobilité",
+     "raison": "Suivi au sol par son boîtier : position, batterie, alertes. Le hangar, lui, reçoit un Hub. JARVIS ne touche jamais à l’avionique.",
+     "solutions": [(MOB, "L’appareil, sa position et son état au sol, au même endroit.")],
      "demo": f"/solutions/{ENV}/#essayer"},
 ]
 
@@ -167,28 +171,11 @@ HUBS_CHOIX = {
     },
 }
 
-# « Vous hésitez? » : trois questions, la carte conseillée et sa raison (lu par assets/demos/offre.js).
-HESITE = [
-    ("lieux", "Combien de lieux?", [("1", "Un seul"), ("3", "Deux ou trois"), ("9", "Plus de trois")]),
-    ("ia", "L’IA doit-elle fonctionner sans Internet?", [("oui", "Oui"), ("non", "Non")]),
-    ("panne", "Le lieu doit-il tourner pendant une panne?", [("oui", "Oui"), ("non", "Non")]),
-]
-HESITE_RAISON = {
-    "base": "Hub Base : un seul petit lieu, l’assistant par Internet vous suffit.",
-    "signature": "Hub Signature : l’IA reste chez vous et relie jusqu’à trois lieux.",
-    "platinum": "Hub Platinum : batterie et Internet de secours, lieux sans limite.",
-}
-
 for _l in LIEUX:
-    _l["public"] = "entreprise" if _l["famille"] == "entreprise" else "particulier" if _l["famille"] == "chez-vous" else "les deux"
+    _l.setdefault("public", "entreprise" if _l["famille"] == "entreprise" else "particulier" if _l["famille"] == "chez-vous" else "les deux")
 
 PAR_ID = {l["id"]: l for l in LIEUX}
 _TITRE = {c["slug"]: c["title"] for c in CAPABILITIES}
-
-
-def par_hub(hub):
-    """Les lieux pour lesquels ce Hub est conseillé (l'offre : « lequel choisir »)."""
-    return [l for l in LIEUX if l["hub"] == hub]
 
 
 def donnees():
@@ -201,39 +188,22 @@ def donnees():
     }, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 
 
-PUBLICS = [("moi", "Pour chez moi"), ("entreprise", "Pour mon entreprise"), ("deux", "Les deux")]
-COURT = {"moi": "Chez moi", "entreprise": "Entreprise", "deux": "Les deux"}  # dans la barre du site
-
-
-def choix_public(cls="pub"):
-    """Le choix de premier niveau : trois gros boutons. Retenu dans le navigateur avec le forfait."""
-    return (f'<div class="{cls}" role="group" aria-label="Pour qui">'
-            + "".join(f'<button type="button" data-public-set="{k}" aria-pressed="false">{COURT[k] if cls == "bar-pub" else n}</button>' for k, n in PUBLICS)
-            + "</div>")
-
-
-def selecteur(titre="Quel est votre lieu?", ident="lieux", resultat=True):
-    """Le sélecteur de lieu : d'abord « Pour chez moi / Pour mon entreprise / Les deux », puis trois familles,
-    gros boutons, plusieurs choix possibles. Les lieux d'entreprise ne s'affichent pas côté particulier.
-    Le choix est gardé dans le navigateur (clé « jarvis-forfait ») et suit le visiteur jusqu'au configurateur."""
+def selecteur(titre="Vos lieux.", sous="", ident="lieux"):
+    """Le sélecteur de lieux de la page L'offre : cinq familles, gros boutons, plusieurs choix possibles.
+    Toutes les familles sont toujours visibles : choisir un lieu d'entreprise fait apparaître, plus bas, ce
+    qui est propre à l'entreprise (assets/js/wow.js règle <html data-public>). Sous les boutons,
+    « Votre écosystème » se dessine (wow.js) : un cerveau par lieu. Le choix est gardé dans le navigateur
+    (clé « jarvis-forfait »)."""
     groupes = []
     for fid, fnom in FAMILLES:
-        boutons, sorte = "", None
-        for l in LIEUX:
-            if l["famille"] != fid:
-                continue
-            if l.get("sorte") and l["sorte"] != sorte:
-                sorte = l["sorte"]
-                boutons += f'<span class="lx-sorte">{"Lieux mobiles" if sorte == "Lieu mobile" else "Véhicules"}</span>'
-            boutons += f'<button type="button" class="lx-b" data-lieu="{l["id"]}" aria-pressed="false">{l["nom"]}</button>'
-        pub = ' data-public="entreprise"' if fid == "entreprise" else ' data-public="particulier"' if fid == "chez-vous" else ""
-        groupes.append(f'<div class="lx-g"{pub}><p>{fnom}</p><div class="lx-bs">{boutons}</div></div>')
-    res = '<div class="lx-res" data-lieux-res hidden aria-live="polite"></div>' if resultat else ""
+        boutons = "".join(f'<button type="button" class="lx-b" data-lieu="{l["id"]}" aria-pressed="false">{l["nom"]}</button>'
+                          for l in LIEUX if l["famille"] == fid)
+        groupes.append(f'<div class="lx-g"><p>{fnom}</p><div class="lx-bs">{boutons}</div></div>')
     return f"""<div class="lx" id="{ident}" data-lieux>
   <h2 class="lx-t">{titre}</h2>
-  {choix_public()}
+  {f'<p class="lx-sous">{sous}</p>' if sous else ''}
   <div class="lx-gs">{"".join(groupes)}</div>
-  {res}
+  <div class="lx-res lx-eco" data-lieux-res hidden aria-live="polite"></div>
   <script type="application/json" data-lieux-data>{donnees()}</script>
 </div>"""
 

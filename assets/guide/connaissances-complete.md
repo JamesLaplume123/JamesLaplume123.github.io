@@ -5,7 +5,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - En phase de lancement : nous prenons les noms des personnes intéressées et nous choisissons quelques premiers projets.
 - Aucune zone desservie n’est publiée et aucun lieu n’est nommé (ni ville, ni région, ni province). Pour savoir si un projet est possible à un endroit donné, la réponse se donne par la page Contact.
 - L’entreprise parle toujours au « nous ». JARVIS, l’assistant, parle au « je » seulement de lui-même.
-- Tout tourne chez le client, dans un Hub. Les données restent sur place; aucun stockage dans le nuage. Un relais chiffré sert seulement à l’accès de partout et à relier plusieurs lieux; il ne garde rien.
+- Tout tourne chez le client, dans un Hub. Les données restent sur place. Un relais chiffré sert à l’accès de partout et à relier plusieurs lieux; il ne garde rien. En option seulement : une sauvegarde chiffrée et une copie des vidéos hors du lieu.
 - JARVIS continue de fonctionner sans Internet (règles, IA locale, caméras, journal). Les mises à jour sont signées, la nuit, avec retour arrière.
 - Le logiciel est en construction : le site montre des démonstrations; le premier JARVIS tourne dans le laboratoire mobile (une ambulance convertie). La démo et la visite sont offertes dès maintenant.
 ## Les pages du site (donner le lien complet quand c’est utile)
@@ -16,8 +16,8 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - https://jarvisprivatesystems.com/solutions/ : Les sept solutions
 - https://jarvisprivatesystems.com/logiciel/ : Le logiciel en démonstration
 - https://jarvisprivatesystems.com/plateforme/ : Le Hub : le boîtier, son IA privée, le noyau
-- https://jarvisprivatesystems.com/offre/ : L’offre : un Hub payé une fois (Base, Signature, Platinum), des solutions par mois, le matériel
-- https://jarvisprivatesystems.com/offre/#composer : Composer mon forfait : le configurateur (lieu, Hub conseillé, solutions, matériel, récapitulatif, soumission)
+- https://jarvisprivatesystems.com/offre/ : L’offre : trois niveaux tout compris (Base, Signature, Platinum), des options, le projet sur mesure
+- https://jarvisprivatesystems.com/offre/#composer : Composer mon JARVIS : pour qui, le lieu, le guide de trois questions, le niveau, les options, le projet, la soumission
 - https://jarvisprivatesystems.com/solutions/maison-intelligente-cle-en-main/ : Maison intelligente clé en main
 - https://jarvisprivatesystems.com/solutions/domotique-ferme-agricole/ : Domotique pour ferme
 - https://jarvisprivatesystems.com/solutions/ia-privee-entreprise/ : IA privée pour entreprise
@@ -63,20 +63,31 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Moto (véhicule) : Boîtier Mobilité. Aucun Hub à bord : le Boîtier Mobilité suffit. Solutions qui comptent : Mobilité (Position et antivol, de partout).
 - Avion (véhicule) : Boîtier Mobilité. L’appareil est suivi par son boîtier; le hangar, lui, reçoit un Hub. Solutions qui comptent : Mobilité (L’appareil, son état et ses vols au même endroit).
 - Un lieu mobile (VR, roulotte, bateau habitable) se traite comme une maison qui roule : Hub et Boîtier VR. Un véhicule (auto, camion, moto, avion) reçoit un Boîtier Mobilité, sans Hub à bord.
-## Les prix
-- Les prix ne sont pas publiés pendant le lancement : chaque projet reçoit une soumission écrite. Ne donner aucun montant, même approximatif.
-
-## L’offre en quatre étapes
-1. Le Hub, payé une fois : Base, Signature ou Platinum selon la taille du lieu. Même logiciel, même app; ce qui change, c’est la puissance, le nombre d’appareils, l’IA et la sécurité.
-2. Les solutions, par mois, annulables en tout temps : comme des apps. Environnements intelligents est inclus avec chaque Hub.
-3. Le matériel du lieu, payé une fois : capteurs, caméras, boîtiers, prêt à brancher. On réutilise ce qui existe déjà (Victron, UniFi, caméras ONVIF, NAS, Starlink).
-4. Plusieurs lieux : un Hub par lieu, une seule app, −30 % sur les solutions dès le deuxième lieu. Installation au choix.
-## Quel Hub choisir (en mots de tous les jours)
+## L’offre : trois niveaux tout compris (même source que la page L’offre)
+- Le client choisit un niveau : Base, Signature ou Platinum. Le niveau dit ce que JARVIS fait et le soutien inclus. Chaque niveau comprend tout le précédent.
+- Base : lumières, chauffage, serrures et énergie; alertes : fuites, pannes, entretien; l’app JARVIS, de partout; soutien par courriel. Solutions incluses : Environnements intelligents, Diagnostic & continuité.
+- Signature : Tout Base, plus : caméras qui comprennent ce qu’elles voient; une IA privée qui reste chez vous; assistant vocal et réceptionniste; soutien par courriel et téléphone. Solutions incluses : Environnements intelligents, Diagnostic & continuité, Sécurité intelligente, IA privée et connaissances.
+- Platinum : Tout Signature, plus : réseau et cybersécurité; plusieurs lieux reliés, sans limite; batterie et Internet de secours; soutien prioritaire, une personne dédiée. Solutions incluses : Environnements intelligents, Diagnostic & continuité, Sécurité intelligente, IA privée et connaissances, Réseau et cybersécurité.
+- Le projet (le matériel du lieu et l’installation) est sur mesure : chaque lieu est différent. On réutilise ce qui existe déjà (Victron, UniFi, caméras ONVIF, NAS, Starlink).
+- Les options s’ajoutent au mois, annulables en tout temps : ce qui n’est pas déjà dans le niveau (par exemple Mobilité pour un véhicule, ou l’Entreprise).
+- La page L’offre se fait en trois étapes : 1) choisir son niveau (un guide de trois questions conseille), 2) ajouter des options, 3) son projet (matériel, installation, lieux), puis « Recevoir ma soumission ».
+- Règle simple : un Hub plus puissant peut toujours faire un niveau plus bas, jamais l’inverse.
+## Monter ou descendre de niveau
+- Monter : si le Hub suffit, on active le niveau à distance, le jour même. S’il faut plus de puissance, on échange le Hub avec un crédit; la configuration est restaurée telle quelle.
+- Un autre lieu : l’ancien Hub part au chalet ou dans le VR, relié au nouveau.
+- Redescendre : le client garde son Hub; on retire des fonctions et il paie moins.
+- Le matériel installé reste toujours. Rien ne se perd.
+## Bâtir son écosystème (plusieurs lieux, une seule app)
+- Un écosystème JARVIS, c’est tous les lieux d’une personne ou d’une entreprise reliés : maison, chalet, VR, bateau, garage, bureau, ferme, et les véhicules.
+- Méthode à proposer, une question à la fois : 1) quels sont vos lieux; 2) lequel est le principal (il reçoit le plus gros Hub, qui prête son IA aux autres); 3) pour chaque autre lieu, un Hub plus petit suffit souvent; 4) les véhicules reçoivent un Boîtier Mobilité, sans Hub; 5) une seule app et un seul compte pour tout, une soumission pour l’ensemble.
+- Les lieux se parlent par un lien privé et chiffré. Si Internet tombe, chaque lieu continue seul.
+## Le nuage : seulement ce qui est utile
+- Tout tourne chez le client. Le nuage ne sert qu’à trois choses, en option : la sauvegarde chiffrée (illisible pour nous), l’accès de partout, et une copie des vidéos hors du lieu (au cas où le Hub serait volé ou détruit).
+## Quel Hub pour quel niveau (en mots de tous les jours)
 - Hub Base — Un petit lieu à surveiller (Chalet, condo, petit VR). Savoir que tout va bien, et agir à distance. Vous pouvez : être prévenu d’une fuite, du gel ou d’une porte ouverte; régler le chauffage et les lumières de partout; voir jusqu’à deux caméras. À savoir : L’assistant passe par Internet. Idéal comme deuxième lieu, relié à votre maison.
 - Hub Signature — La maison où vous vivez (Maison, VR complet, petite entreprise). Tout le lieu, et une IA qui reste chez vous. Vous pouvez : tout gérer dans une seule application; parler à JARVIS, même sans Internet; relier jusqu’à trois lieux : maison, chalet, VR. À savoir : Jusqu’à six caméras analysées.
 - Hub Platinum — Un lieu qui ne doit jamais s’arrêter (Domaine, ferme, entreprise). Plusieurs bâtiments, beaucoup de caméras, aucune coupure. Vous pouvez : continuer pendant une panne de courant ou d’Internet; suivre tous vos bâtiments et vos lieux, sans limite; recevoir des rapports et automatiser le travail. À savoir : Pensé pour les grands lieux : trop pour une maison ordinaire.
-- Pour aider quelqu’un qui hésite, poser trois questions : combien de lieux; l’IA doit-elle fonctionner sans Internet; le lieu doit-il tourner pendant une panne. Platinum si panne ou plus de trois lieux; Signature si IA sans Internet ou deux à trois lieux; sinon Base.
-- Le Hub s’achète une fois. Les solutions se prennent au mois, et s’annulent quand le client le veut.
+- Pour aider quelqu’un qui hésite, poser les trois questions de la page L’offre : combien de caméras; l’intelligence doit-elle rester chez vous, même sans Internet; une coupure serait-elle grave. Platinum si une coupure serait grave ou 7 caméras et plus; Signature si l’IA doit rester chez soi ou 3 à 6 caméras; sinon Base.
 ## Les trois Hubs
 ### Hub Base. Pour : Chalet, condo, petit VR.
 - Pourquoi : Pour veiller sur un lieu simple : fuite, gel, porte, batterie. L’IA passe par Internet.
@@ -110,7 +121,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Garantie : 1 an | 2 ans | 3 ans + remplacement express
 - Soutien : Courriel | Courriel et téléphone | Prioritaire, personne dédiée
 - Dans chaque Hub : Environnements intelligents, l’app JARVIS, les comptes et droits, les mises à jour signées, les sauvegardes chiffrées.
-## Les solutions (par mois)
+## Les solutions (incluses selon le niveau, ou en option au mois)
 - Environnements intelligents : incluse avec chaque Hub. Inclus avec chaque Hub : c’est la base de JARVIS. Comprend : Lumières, chauffage, stores, foyer, serrures; Scènes : Matin, Soir, Nuit, Absent; Énergie pièce par pièce; Fonctionne sans Internet.
 - Diagnostic & continuité. Un dégât d’eau coûte en moyenne. Ici, vous êtes prévenu à la première goutte. Comprend : Veille 24/7 : fuite, gel, batterie, panne; Alertes de partout, avec la cause probable; Dossier prêt pour le technicien; Rapport mensuel de santé du lieu.
 - Sécurité intelligente. Vos caméras comprennent ce qu’elles voient. Une alerte utile, pas cent notifications. Comprend : Enregistrement local, rien dans le nuage; Reconnaît personne, véhicule, animal, colis; Alertes regroupées en une phrase; Mode urgence et accès temporaires.

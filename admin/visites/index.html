@@ -26,6 +26,7 @@
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/wow.css?v=20261118d">
 <link rel="stylesheet" href="/assets/demos/visites.css?v=20261118d">
+<link rel="stylesheet" href="/assets/demos/conversations.css?v=20261118d">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -148,21 +149,34 @@
   </div>
 </section>
 
+<section class="cv" data-cv-root aria-labelledby="cv-titre">
+  <h2 id="cv-titre" class="cv-titre">Conversations <span>avec JARVIS.</span></h2>
+  <p class="cv-etat" data-cv="etat" role="status" aria-live="polite">Ouvrez le journal ci-dessus : les conversations suivent.</p>
+  <div class="cv-outils">
+    <input type="search" data-cv="cherche" placeholder="Chercher un mot, une ville ou une adresse IP" aria-label="Chercher dans les conversations">
+    <button type="button" class="pill ghost" data-cv="maj">Actualiser</button>
+  </div>
+  <div class="cv-chiffres" data-cv="chiffres" hidden></div>
+  <div class="cv-liste" data-cv="liste"></div>
+  <button type="button" class="pill ghost cv-plus" data-cv="plus" hidden>Charger plus</button>
+</section>
+
 </main>
 <footer class="foot">
   <p class="foot-brand"><b>JARVIS <span>Private Systems</span></b><span>Technologies de sécurité et intelligence privée</span></p>
   <div class="foot-cols"><div><h2>Solutions</h2><nav aria-label="Solutions"><a href="/solutions/environnements-intelligents/">Environnements intelligents</a><a href="/solutions/ia-privee-connaissances/">IA privée et connaissances</a><a href="/solutions/securite-intelligente/">Sécurité intelligente</a><a href="/solutions/automatisation-operations/">Automatisation d’entreprise</a><a href="/solutions/reseau-resilience/">Réseau et cybersécurité</a><a href="/solutions/diagnostic-care/">Diagnostic & continuité</a><a href="/solutions/mobilite/">Mobilité</a></nav></div><div><h2>Produit</h2><nav aria-label="Produit"><a href="/logiciel/">Le logiciel</a><a href="/plateforme/">Le Hub</a><a href="/offre/">L’offre</a></nav></div><div><h2>Entreprise</h2><nav aria-label="Entreprise"><a href="/a-propos/">À propos</a><a href="/vision-roadmap/">Vision</a><a href="/laboratoire-mobile/">Laboratoire mobile</a><a href="/confiance/">Confiance</a></nav></div><div><h2>Aide</h2><nav aria-label="Aide"><a href="/questions/">Questions</a><a href="/contact/">Contact</a><a href="/confidentialite/">Confidentialité</a><a href="/mentions-legales/">Mentions légales</a><a href="/plan-du-site/">Plan du site</a></nav></div></div>
-  <div class="foot-modes" role="group" aria-label="Mode d’affichage">
-    <span>Mode</span>
-    <button type="button" data-mode-set="base" aria-pressed="false">Base</button>
-    <button type="button" class="is-on" data-mode-set="signature" aria-pressed="true">Signature</button>
-    <button type="button" data-mode-set="platinum" aria-pressed="false">Platinum</button>
+  <div class="foot-modes" role="group" aria-label="Thème d’affichage">
+    <span>Thème</span>
+    <button type="button" data-mode-set="base" aria-pressed="false">Graphite</button>
+    <button type="button" class="is-on" data-mode-set="signature" aria-pressed="true">Or</button>
+    <button type="button" data-mode-set="platinum" aria-pressed="false">Titane</button>
   </div>
   <p class="foot-line"><span>© 2026 JARVIS Private Systems</span><span class="foot-count" hidden>Visites du site <b data-live="visits-foot">—</b></span></p>
 </footer>
 <script type="application/json" data-forfait-ref>{"lieux":{"maison":{"n":"Maison","h":"signature","b":null,"p":"particulier","img":"/media/forfait/v-lieu-maison.webp"},"condo":{"n":"Condo","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-condo.webp"},"chalet":{"n":"Chalet","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-chalet.webp"},"domaine":{"n":"Domaine","h":"platinum","b":null,"p":"particulier","img":"/media/forfait/v-lieu-domaine.webp"},"bureau":{"n":"Bureau ou commerce","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-bureau.webp"},"atelier":{"n":"Atelier, entrepôt ou usine","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-atelier.webp"},"ferme":{"n":"Ferme","h":"platinum","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-ferme.webp"},"garage":{"n":"Garage ou hangar","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-garage.webp"},"flotte":{"n":"Flotte de véhicules","h":null,"b":"Boîtier Mobilité","p":"entreprise","img":"/media/forfait/v-lieu-flotte.webp"},"vr":{"n":"VR","h":"signature","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-vr.webp"},"roulotte":{"n":"Roulotte","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-roulotte.webp"},"bateau":{"n":"Bateau habitable","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-bateau.webp"},"auto":{"n":"Auto ou camion","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-auto.webp"},"moto":{"n":"Moto","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-moto.webp"},"avion":{"n":"Avion","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-avion.webp"}},"sols":{"environnements-intelligents":{"n":"Environnements intelligents","img":"/media/forfait/v-sol-environnements.webp"},"ia-privee-connaissances":{"n":"IA privée et connaissances","img":"/media/forfait/v-sol-ia.webp"},"securite-intelligente":{"n":"Sécurité intelligente","img":"/media/forfait/v-sol-securite.webp"},"automatisation-operations":{"n":"Automatisation d’entreprise","img":"/media/forfait/v-sol-automatisation.webp"},"reseau-resilience":{"n":"Réseau et cybersécurité","img":"/media/forfait/v-sol-reseau.webp"},"diagnostic-care":{"n":"Diagnostic & continuité","img":"/media/forfait/v-sol-diagnostic.webp"},"mobilite":{"n":"Mobilité","img":"/media/forfait/v-sol-mobilite.webp"}},"hubs":{"base":{"n":"Hub Base","img":"/media/forfait/v-hub-base.webp"},"signature":{"n":"Hub Signature","img":"/media/forfait/v-hub-signature.webp"},"platinum":{"n":"Hub Platinum","img":"/media/forfait/v-hub-platinum.webp"}}}</script>
 <script src="/assets/js/wow.js?v=20261118d" defer></script>
 <script src="/assets/demos/visites.js?v=20261118d" defer></script>
+<script src="/assets/demos/conversations.js?v=20261118d" defer></script>
 <script src="/assets/js/guide.js?v=20261118d" defer></script>
 </body>
 </html>

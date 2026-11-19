@@ -7,6 +7,15 @@
   "use strict";
   var doc = document.documentElement;
   var URL_GUIDE = (doc.getAttribute("data-guide") || "").replace(/\/$/, "");
+  var URL_API = (doc.getAttribute("data-api") || "").replace(/\/$/, "");
+  /* Une conversation = un onglet : un identifiant au hasard, oublié quand l'onglet se ferme. */
+  var CONV = "";
+  try { CONV = sessionStorage.getItem("jv-conv") || ""; if (!CONV) { CONV = Math.random().toString(36).slice(2, 10) + "-" + Date.now().toString(36); sessionStorage.setItem("jv-conv", CONV); } } catch (e) {}
+  function journal(q, r) {
+    if (!URL_API || !q) return;
+    var corps = JSON.stringify({ s: CONV, q: q, r: r, page: location.pathname, lang: EN ? "en" : "fr" });
+    try { fetch(URL_API + "/chat/log", { method: "POST", headers: { "Content-Type": "application/json" }, body: corps, keepalive: true }).catch(function () {}); } catch (e) {}
+  }
   var PONT = "https://jameslaplume.ca/pont-guide.html", PONT_ORIGINE = "https://jameslaplume.ca", pontP = null;
   function pontPret() {
     if (pontP) return pontP;
@@ -33,7 +42,7 @@
     hello: (soir ? "Good evening." : "Good day.") + " I'm JARVIS. Tell me about your home, your cottage or your business, and what you'd like me to take care of.",
     teaser: (soir ? "Good evening." : "Good day.") + " I'm JARVIS. Anything I can look after for you?",
     ph: "Talk to JARVIS…", send: "Send", think: "Analysing",
-    note: "JARVIS is an artificial intelligence and can be wrong. Please don't share sensitive information.",
+    note: "JARVIS is an artificial intelligence and can be wrong. Conversations are kept to improve it; please don't share sensitive information.",
     err: "I can't reach my node right now. The team is here:", contact: "/en/contact/",
     close: "Close", reset: "New conversation", openPage: "Open the page",
     chips: ["What is the Hub?", "How much does it cost?", "What do I need for my RV?", "Security for my business"]
@@ -43,7 +52,7 @@
     hello: (soir ? "Bonsoir." : "Bonjour.") + " Je suis JARVIS. Parlez-moi de votre maison, de votre chalet ou de votre entreprise, et de ce que vous aimeriez me confier.",
     teaser: (soir ? "Bonsoir." : "Bonjour.") + " Je suis JARVIS. Je peux veiller sur quelque chose pour vous?",
     ph: "Parlez à JARVIS…", send: "Envoyer", think: "Analyse",
-    note: "JARVIS est une intelligence artificielle : il peut se tromper. Ne partagez pas d'information sensible.",
+    note: "JARVIS est une intelligence artificielle : il peut se tromper. Les conversations sont conservées pour l’améliorer; ne partagez pas d’information sensible.",
     err: "Je n'arrive pas à joindre mon nœud en ce moment. L'équipe, elle, est joignable :", contact: "/contact/",
     close: "Fermer", reset: "Nouvelle conversation", openPage: "Ouvrir la page",
     chips: ["C'est quoi le Hub?", "Combien ça coûte?", "Qu'est-ce qu'il me faut pour mon VR?", "Une réceptionniste pour mon entreprise"]
@@ -471,12 +480,15 @@
       }
       gestes.forEach(geste);
       msgs.push({ role: "assistant", content: txt.trim(), gestes: gestes }); save();
+      journal(q, txt.trim());
     }).catch(function () {
       if (txt.trim()) {
         if (live) live.classList.remove("jv-cursor");
         msgs.push({ role: "assistant", content: txt.trim(), gestes: gestes }); save();
+        journal(q, txt.trim());
         return;
       }
+      journal(q, "(aucune réponse : JARVIS n’a pas pu répondre)");
       attente.remove();
       bulle("assistant", T.err + " " + location.origin + T.contact);
       msgs.pop(); save();

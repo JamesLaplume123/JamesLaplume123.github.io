@@ -10,6 +10,9 @@ const RETENTION_JOURS = 730;
 //   POST /visits/hit   ajoute une visite (une par session, décidé par le navigateur) et l'inscrit au journal
 //   POST /visits/view  inscrit au journal une page vue de plus dans la même session (sans toucher au compteur)
 //   GET  /visits/log   journal des visites, par tranches (réservé à James, jeton LEADS_TOKEN requis)
+//   POST /chat/log     copie d'un échange avec JARVIS (envoyée par la bulle du site)
+//   GET  /chats        conversations avec JARVIS, les plus récentes d'abord (jeton LEADS_TOKEN requis,
+//                      page /admin/visites/)
 //   GET  /leads        liste les demandes gardées (réservé à JARVIS, jeton requis)
 //   GET  /live         batteries de l'ambulance (BouLance) en direct, lues dans Home Assistant
 //   GET  /history      énergie stockée des dernières 24 h (Home Assistant)
@@ -405,6 +408,63 @@ async function visitLog(request, env, h, ctx) {
   return json(body, 200, h);
 }
 
+
+// ---------- Conversations avec JARVIS (la bulle du site) ----------
+// Demande de James (18 novembre 2026) : voir ce que les visiteurs demandent à JARVIS. La bulle envoie
+// une copie de chaque échange terminé (POST /chat/log). Gardé 24 mois comme le journal, lu seulement
+// avec le jeton (GET /chats), dans la page privée /admin/visites/ (section Conversations). Contient
+// l'adresse IP, comme le journal, pour relier une conversation à un visiteur. Annoncé sous la bulle
+// et dans /confidentialite/ (Loi 25).
+//   chat:<horodatage inversé>:<8 car.>   un échange (question, réponse, conversation, page)
+const CHAT_MAX = { q: 2000, r: 8000, s: 40, page: 200 };
+const CHAT_MAX_PAR_JOUR = 300;    // filet du quota KV (1 écriture par échange)
+const chatJour = { d: "", n: 0 };  // compteur en mémoire de l'instance (approximatif, sans écriture)
+
+async function chatLog(request, env, h, ctx) {
+  const data = await readBody(request);
+  const ip = request.headers.get("CF-Connecting-IP") || "";
+  const ua = request.headers.get("User-Agent") || "";
+  const now = Date.now();
+  if (!fromSite(request, env) || isRobot(ua) || tooMany("chat:" + ip, now)) return json({ ok: true }, 200, h);
+  const jour = dayOf(now);
+  if (chatJour.d !== jour) { chatJour.d = jour; chatJour.n = 0; }
+  if (++chatJour.n > CHAT_MAX_PAR_JOUR) return json({ ok: true }, 200, h);
+  const q = clean(data.q, CHAT_MAX.q), r = clean(data.r, CHAT_MAX.r);
+  if (!q) return json({ ok: true }, 200, h);
+  const cf = request.cf || {};
+  const echange = {
+    t: new Date(now).toISOString(),
+    s: clean(data.s, CHAT_MAX.s).replace(/[^a-z0-9-]/gi, ""),   // conversation (onglet), au hasard
+    q, r,
+    page: cleanPath(data.page),
+    lang: data.lang === "en" ? "en" : "fr",
+    pays: clean(cf.country, 2).toUpperCase(),
+    region: clean(cf.region, 80),
+    ville: clean(cf.city, 80),
+    fournisseur: clean(cf.asOrganization, 100),
+    ip: clean(ip, 45),
+    ...device(ua),
+  };
+  const key = "chat:" + String(KEY_MAX - now).padStart(13, "0") + ":" + crypto.randomUUID().slice(0, 8);
+  const jobs = [];
+  defer(ctx, jobs)(env.SITE_KV.put(key, JSON.stringify(echange), { expirationTtl: VISIT_TTL }).catch(() => {}));
+  await Promise.all(jobs);
+  return json({ ok: true }, 200, h);
+}
+
+async function chats(request, env, h) {
+  if (!authorized(request, env)) return json({ ok: false }, 401, h);
+  const url = new URL(request.url);
+  const limit = Math.min(500, Math.max(1, parseInt(url.searchParams.get("limit") || "200", 10) || 200));
+  const list = await env.SITE_KV.list({ prefix: "chat:", limit, cursor: url.searchParams.get("cursor") || undefined });
+  const out = [];
+  for (const k of list.keys) {
+    const v = await env.SITE_KV.get(k.name);
+    if (v) { try { out.push(JSON.parse(v)); } catch { /* entrée abîmée : ignorée */ } }
+  }
+  return json({ ok: true, echanges: out, cursor: list.list_complete ? null : list.cursor }, 200, h);
+}
+
 async function leads(request, env, h) {
   if (!authorized(request, env)) return json({ ok: false }, 401, h);
   const list = await env.SITE_KV.list({ prefix: "lead:", limit: 1000 });
@@ -516,6 +576,8 @@ export default {
       if (url.pathname === "/visits/view" && request.method === "POST") return await view(request, env, h, ctx);
       if (url.pathname === "/visits/log" && request.method === "GET") return await visitLog(request, env, h, ctx);
       if (url.pathname === "/leads" && request.method === "GET") return await leads(request, env, h);
+      if (url.pathname === "/chat/log" && request.method === "POST") return await chatLog(request, env, h, ctx);
+      if (url.pathname === "/chats" && request.method === "GET") return await chats(request, env, h);
       if (url.pathname === "/live" && request.method === "GET") return await live(request, env, h);
       if (url.pathname === "/history" && request.method === "GET") return await history(request, env, h);
       return json({ ok: true, service: "jameslaplume.ca" }, 200, h);

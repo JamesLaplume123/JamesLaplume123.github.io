@@ -243,9 +243,9 @@
 }
 [data-demo="app"] .ap-brand small { font: 600 12px/1 var(--a-font); letter-spacing: .2em; text-transform: uppercase; color: var(--a-muted); }
 [data-demo="app"] .ap-modename { font: 700 12px/1 var(--a-font); font-style: normal; letter-spacing: .32em; text-transform: uppercase; color: var(--a-accent); margin-top: 10px; }
-[data-demo="app"] .ap-modename::after { content: "Signature"; }
-:root[data-mode="platinum"] [data-demo="app"] .ap-modename::after { content: "Platinum"; }
-:root[data-mode="base"] [data-demo="app"] .ap-modename::after { content: "Base"; }
+[data-demo="app"] .ap-modename::after { content: "Or"; }
+:root[data-mode="platinum"] [data-demo="app"] .ap-modename::after { content: "Titane"; }
+:root[data-mode="base"] [data-demo="app"] .ap-modename::after { content: "Graphite"; }
 [data-demo="app"] .ap-nav { position: relative; display: grid; gap: 4px; }
 [data-demo="app"] .ap-nav [role="tab"], [data-demo="app"] .ap-nav .ap-jump {
   position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 14px;

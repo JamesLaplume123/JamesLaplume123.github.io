@@ -1,0 +1,30 @@
+/* Section « Conversations avec JARVIS » de la page des visites : un fil sobre, la question en or. */
+.cv { max-width: 72rem; margin: 0 auto; padding: 3rem clamp(1.2rem, 4vw, 3rem) 6rem; display: grid; gap: 1.2rem; }
+.cv-titre { margin: 0; font: 650 clamp(1.8rem, 3vw, 2.6rem)/1.05 var(--sans); letter-spacing: -.03em; color: #fff; }
+.cv-titre span { color: var(--gold-soft); }
+.cv-ip { font-family: var(--mono); font-size: .74rem !important; color: #6f6b64 !important; }
+.cv-outils { display: flex; gap: .6rem; flex-wrap: wrap; }
+.cv input { flex: 1; min-width: 14rem; padding: .8rem 1rem; border-radius: 12px; border: 1px solid #ffffff22; background: #0b0b0d; color: #fff; font: 400 .95rem var(--sans); }
+.cv input:focus { outline: none; border-color: var(--gold-soft); }
+.cv-outils { display: none; }
+.cv.is-ouvert .cv-outils { display: flex; }
+.cv-etat { margin: 0; font-size: .88rem; color: #a9a49b; }
+.cv-etat[data-ton="mal"] { color: #f0a08f; }
+.cv-chiffres { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; }
+.cv-k { padding: 1rem 1.1rem; border-radius: 16px; box-shadow: inset 0 0 0 1px #ffffff14; }
+.cv-k b { display: block; font: 650 1.8rem/1 var(--sans); color: #fff; }
+.cv-k span { font-size: .82rem; color: #8f8a81; }
+.cv-liste { display: grid; gap: .7rem; }
+.cv-c { border-radius: 16px; box-shadow: inset 0 0 0 1px #ffffff17; background: #08080a; overflow: hidden; }
+.cv-c[open] { box-shadow: inset 0 0 0 1px var(--gold-soft); }
+.cv-c summary { cursor: pointer; list-style: none; padding: 1rem 1.2rem; display: grid; gap: .35rem; }
+.cv-c summary::-webkit-details-marker { display: none; }
+.cv-c summary b { color: #fff; font-weight: 600; }
+.cv-c summary span { font-size: .8rem; color: #8f8a81; }
+.cv-m { padding: .9rem 1.2rem 1rem; border-top: 1px solid #ffffff10; display: grid; gap: .55rem; }
+.cv-q { margin: 0; justify-self: end; max-width: 85%; padding: .6rem .9rem; border-radius: 14px 14px 4px 14px; background: #2a2114; color: #f6e8cc; white-space: pre-wrap; }
+.cv-r { margin: 0; max-width: 92%; padding: .6rem .9rem; border-radius: 14px 14px 14px 4px; background: #141417; color: #e2ded6; white-space: pre-wrap; font-size: .94rem; line-height: 1.5; }
+.cv-m small { color: #6f6b64; font-size: .74rem; }
+.cv-vide { color: #8f8a81; }
+.cv-plus { justify-self: center; }
+@media (max-width: 700px) { .cv-chiffres { grid-template-columns: 1fr 1fr; } }

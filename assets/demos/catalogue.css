@@ -362,3 +362,113 @@
 }
 .ct[data-sansprix] .ct-bar { justify-content: flex-end; }
 @media (max-width: 760px) { .ct[data-sansprix] .ct-bar { justify-content: center; } }
+
+/* =====================================================================================
+   Niveaux tout compris (18 novembre 2026) : guide de trois questions, niveaux avec ce qui
+   est inclus, options marquées « Inclus », « Votre lieu grandit? ».
+   ===================================================================================== */
+.ct-guide { max-width: 76rem; margin: clamp(2.5rem, 5vw, 4rem) auto 0; padding: 0 clamp(1.4rem, 4.6vw, 4.2rem); }
+.ct-guide h2 { margin: 0 0 1.6rem; font: 650 clamp(1.6rem, 2.6vw, 2.2rem)/1.05 var(--sans); letter-spacing: -.03em; color: #fff; }
+.ct-guide h2 span { color: #8f8a81; }
+.ct-gq { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap; padding: 1.1rem 0; border-top: 1px solid #ffffff12; }
+.ct-gq p { margin: 0; font-size: 1.05rem; color: #eae6de; }
+.ct-gq small { display: block; margin-top: .25rem; color: #8f8a81; font-size: .85rem; }
+.ct-gq > div { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: #ffffff0b; box-shadow: inset 0 0 0 1px #ffffff14; }
+.ct-gq button { border: 0; cursor: pointer; padding: .62rem 1.15rem; border-radius: 999px; background: transparent; color: #b9b4ab; font: 500 .92rem/1 var(--sans); transition: background .3s, color .3s; }
+.ct-gq button:hover { color: #fff; }
+.ct-gq button[aria-pressed="true"] { background: #ffffff1f; color: #fff; box-shadow: inset 0 0 0 1px var(--gold-soft); }
+.ct-gres {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap; margin-top: 1rem;
+  padding: 1.3rem 1.5rem; border-radius: 20px; background: #0d0c0a; box-shadow: inset 0 0 0 1.5px var(--gold-soft);
+  animation: ctGres .5s var(--ease);
+}
+@keyframes ctGres { from { opacity: 0; transform: translateY(6px); } }
+.ct-gres p { margin: 0; display: flex; flex-direction: column; gap: .35rem; }
+.ct-gres small { font: 600 .66rem/1 var(--mono); letter-spacing: .24em; text-transform: uppercase; color: var(--gold-soft); }
+.ct-gres b { font: 650 1.7rem/1 var(--sans); letter-spacing: -.03em; color: #fff; }
+.ct-gres span { color: #b9b4ab; }
+
+/* Ce que contient chaque niveau */
+.ct-niv { grid-column: 1 / -1; list-style: none; margin: .9rem 0 0; padding: 0; display: grid; gap: .45rem; }
+.ct-niv li { position: relative; padding-left: 1.3rem; color: #c9c4ba; font-size: .95rem; }
+.ct-niv li::before { content: ""; position: absolute; left: .15rem; top: .55em; width: .42rem; height: .42rem; border-radius: 50%; background: var(--gold-soft); }
+.ct-niv .ct-niv-plus { padding-left: 0; color: #8f8a81; font-size: .85rem; }
+.ct-niv .ct-niv-plus::before { display: none; }
+.ct-reco { display: none; }
+.ct-hub.is-reco .ct-reco {
+  display: inline-block; grid-column: 1 / -1; justify-self: start; margin-top: 1rem; padding: .35rem .7rem; border-radius: 999px;
+  font: 600 .64rem/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: #1c1408; background: var(--mode-action);
+}
+.ct-hub.is-reco { box-shadow: inset 0 0 0 1.5px var(--gold-soft); }
+
+/* Options : ce qui est déjà dans le niveau */
+.ct-sol.is-niveau { opacity: .72; }
+.ct-sol.is-niveau .ct-check { opacity: 0; }
+.ct-sol.is-niveau::before {
+  content: "Inclus"; position: absolute; top: 1rem; right: 1rem; z-index: 2; padding: .3rem .6rem; border-radius: 999px;
+  font: 600 .62rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft); background: #ffffff10;
+}
+.ct-sol { position: relative; }
+.ct-complet { display: none !important; }
+
+/* Votre lieu grandit? */
+.ct-grandit { margin-top: 2.4rem; padding: clamp(1.4rem, 3vw, 2rem); border-radius: 22px; background: #0a0a0a; box-shadow: inset 0 0 0 1px #ffffff12; }
+.ct-grandit h3 { margin: 0 0 1.3rem; font: 650 clamp(1.4rem, 2.2vw, 1.8rem)/1.1 var(--sans); letter-spacing: -.025em; color: #fff; }
+.ct-grandit h3 span { color: var(--gold-soft); }
+.ct-grandit ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1.6rem; }
+.ct-grandit li { color: #a9a49b; font-size: .93rem; line-height: 1.45; }
+.ct-grandit b { display: block; margin-bottom: .25rem; color: #fff; font-weight: 600; }
+.ct-grandit > p { margin: 1.3rem 0 0; color: #8f8a81; font-size: .9rem; }
+@media (max-width: 760px) { .ct-grandit ul { grid-template-columns: 1fr; } .ct-gq { flex-direction: column; align-items: flex-start; } }
+.ct[data-sansprix] .ct-prix { display: none; }
+
+/* =====================================================================================
+   Façon Tesla (18 novembre 2026) : fond noir pur, le produit énorme à gauche, un panneau
+   étroit et calme à droite. Peu de mots, des rangées fines, la sélection en filet doré.
+   ===================================================================================== */
+body:has(#ct)::before { display: none; }
+body:has(#ct) { background: #000; }
+.ct .of-num { display: none; }
+.ct-lieux-nav { display: none; }
+.ct-main .sect { padding-top: clamp(3rem, 6vw, 4.5rem); padding-bottom: 0; background: none; border: 0; }
+.ct-main .sect.alt { background: none; }
+.ct-main .sect-head h2 { font: 650 clamp(1.7rem, 2.4vw, 2.2rem)/1.08 var(--sans); letter-spacing: -.03em; }
+.ct-main .sect-head h2 em { font-style: normal; color: #8f8a81; }
+.ct-main .sect-head > p { color: #8f8a81; font-size: .95rem; }
+
+@media (min-width: 1100px) {
+  .ct-wrap { grid-template-columns: minmax(0, 1.7fr) minmax(24rem, 30rem); max-width: none; gap: 0 clamp(2rem, 4vw, 4rem); padding-left: clamp(1rem, 2vw, 2rem); }
+  .ct-vis { top: calc(var(--bar-h) + 10px); padding-top: 0; height: calc(100vh - var(--bar-h) - 90px); display: flex; align-items: center; }
+  .ct-vis-in { width: 100%; aspect-ratio: auto; height: 100%; }
+  .ct-vis-i { inset: 0 0 5rem; height: calc(100% - 5rem); border-radius: 0; object-position: 50% 60%;
+    -webkit-mask-image: radial-gradient(ellipse 70% 72% at 50% 55%, #000 58%, transparent 100%);
+    mask-image: radial-gradient(ellipse 70% 72% at 50% 55%, #000 58%, transparent 100%); }
+  .ct-vis-t b { font-size: 2.2rem; }
+
+  /* Niveaux : des rangées; le contenu du niveau s'ouvre seulement sur celui qui est choisi */
+  .ct-hub { padding: 1.15rem 1.3rem; border-radius: 14px; background: transparent; box-shadow: inset 0 0 0 1px #ffffff26; }
+  .ct-hub h3 { font-size: 1.15rem; }
+  .ct-hub .ct-pour { color: #8f8a81; font-size: .88rem; margin-top: .3rem; }
+  .ct-hub .ct-niv { display: none; }
+  .ct-hub:has(input:checked) { box-shadow: inset 0 0 0 2px var(--gold-soft); background: #ffffff06; }
+  .ct-hub:has(input:checked) .ct-niv { display: grid; }
+  .ct-hub .ct-tag { margin-right: 0; }
+  .ct-hub .ct-check { display: none; }
+  .ct-hub.is-reco { box-shadow: inset 0 0 0 1px #ffffff26; }
+  .ct-hub.is-reco:has(input:checked) { box-shadow: inset 0 0 0 2px var(--gold-soft); }
+  .ct-hub.is-reco .ct-reco { margin-top: .7rem; }
+}
+
+/* Options : rangées fines, sans cartes lourdes */
+.ct-sol, .ct-kit, .ct-install .card, .ct-ent, .ct-auto { border-radius: 14px; background: transparent; box-shadow: inset 0 0 0 1px #ffffff1f; }
+.ct-sol:has(input:checked):not(.is-niveau), .ct-kit.is-on { box-shadow: inset 0 0 0 2px var(--gold-soft); }
+.ct-sol.is-niveau { opacity: .55; box-shadow: inset 0 0 0 1px #ffffff14; }
+.ct-sol .ct-why { font-size: .9rem; }
+.ct-guide { max-width: 64rem; }
+.ct-grandit { background: transparent; box-shadow: inset 0 0 0 1px #ffffff1a; }
+.ct-sol.is-niveau, .ct-sol.is-niveau:has(input:checked) { opacity: .55; box-shadow: inset 0 0 0 1px #ffffff14 !important; background: transparent !important; }
+.ct-sol.is-niveau.is-conseil::after, .ct-sol.is-niveau .ct-conseil { display: none; }
+@media (min-width: 1100px) {
+  .ct-vis-i { border-radius: 28px; -webkit-mask-image: none; mask-image: none; object-position: 50% 62%; box-shadow: 0 40px 80px -40px #000; }
+}
+@media (min-width: 1100px) { .ct-vis { height: calc(100vh - var(--bar-h) - 120px); } }

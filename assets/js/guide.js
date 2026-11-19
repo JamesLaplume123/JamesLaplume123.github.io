@@ -11,9 +11,11 @@
   /* Une conversation = un onglet : un identifiant au hasard, oublié quand l'onglet se ferme. */
   var CONV = "";
   try { CONV = sessionStorage.getItem("jv-conv") || ""; if (!CONV) { CONV = Math.random().toString(36).slice(2, 10) + "-" + Date.now().toString(36); sessionStorage.setItem("jv-conv", CONV); } } catch (e) {}
-  function journal(q, r) {
+  /* Copie de l'échange : envoyée dès que la question part (r vide : en attente), puis renvoyée avec
+     la réponse sous le même identifiant (i, t0) : le service remplace l'entrée, sans doublon. */
+  function journal(q, r, ech) {
     if (!URL_API || !q) return;
-    var corps = JSON.stringify({ s: CONV, q: q, r: r, page: location.pathname, lang: EN ? "en" : "fr" });
+    var corps = JSON.stringify({ s: CONV, i: ech && ech.i, t0: ech && ech.t0, q: q, r: r, page: location.pathname, lang: EN ? "en" : "fr" });
     try { fetch(URL_API + "/chat/log", { method: "POST", headers: { "Content-Type": "application/json" }, body: corps, keepalive: true }).catch(function () {}); } catch (e) {}
   }
   var PONT = "https://jameslaplume.ca/pont-guide.html", PONT_ORIGINE = "https://jameslaplume.ca", pontP = null;
@@ -387,6 +389,8 @@
     if (!q || occupe) return;
     occupe = true; send.disabled = true; orbeEtat("pense");
     msgs.push({ role: "user", content: q }); save();
+    var ech = { i: (Math.random().toString(36) + "0000").slice(2, 6) + Date.now().toString(36).slice(-4), t0: Date.now() };
+    journal(q, "", ech);
     var c = log.querySelector(".jv-chips"); if (c) c.remove();
     bulle("user", q);
 
@@ -480,15 +484,15 @@
       }
       gestes.forEach(geste);
       msgs.push({ role: "assistant", content: txt.trim(), gestes: gestes }); save();
-      journal(q, txt.trim());
+      journal(q, txt.trim(), ech);
     }).catch(function () {
       if (txt.trim()) {
         if (live) live.classList.remove("jv-cursor");
         msgs.push({ role: "assistant", content: txt.trim(), gestes: gestes }); save();
-        journal(q, txt.trim());
+        journal(q, txt.trim(), ech);
         return;
       }
-      journal(q, "(aucune réponse : JARVIS n’a pas pu répondre)");
+      journal(q, "(aucune réponse : JARVIS n’a pas pu répondre)", ech);
       attente.remove();
       bulle("assistant", T.err + " " + location.origin + T.contact);
       msgs.pop(); save();

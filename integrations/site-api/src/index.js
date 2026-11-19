@@ -431,9 +431,14 @@ async function chatLog(request, env, h, ctx) {
   if (++chatJour.n > CHAT_MAX_PAR_JOUR) return json({ ok: true }, 200, h);
   const q = clean(data.q, CHAT_MAX.q), r = clean(data.r, CHAT_MAX.r);
   if (!q) return json({ ok: true }, 200, h);
+  // La bulle envoie la question dès qu'elle part (r vide : en attente), puis la même entrée avec la
+  // réponse : même identifiant (i) et même heure de départ (t0), donc la même clé, réécrite.
+  const t0 = Number(data.t0);
+  const depart = Number.isFinite(t0) && Math.abs(now - t0) < 3 * 3600000 ? Math.floor(t0) : now;
+  const id = /^[a-z0-9]{8}$/i.test(String(data.i || "")) ? String(data.i) : crypto.randomUUID().slice(0, 8);
   const cf = request.cf || {};
   const echange = {
-    t: new Date(now).toISOString(),
+    t: new Date(depart).toISOString(),
     s: clean(data.s, CHAT_MAX.s).replace(/[^a-z0-9-]/gi, ""),   // conversation (onglet), au hasard
     q, r,
     page: cleanPath(data.page),
@@ -445,7 +450,7 @@ async function chatLog(request, env, h, ctx) {
     ip: clean(ip, 45),
     ...device(ua),
   };
-  const key = "chat:" + String(KEY_MAX - now).padStart(13, "0") + ":" + crypto.randomUUID().slice(0, 8);
+  const key = "chat:" + String(KEY_MAX - depart).padStart(13, "0") + ":" + id;
   const jobs = [];
   defer(ctx, jobs)(env.SITE_KV.put(key, JSON.stringify(echange), { expirationTtl: VISIT_TTL }).catch(() => {}));
   await Promise.all(jobs);

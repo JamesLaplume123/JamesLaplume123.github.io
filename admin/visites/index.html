@@ -26,7 +26,6 @@
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/wow.css?v=20261118e">
 <link rel="stylesheet" href="/assets/demos/visites.css?v=20261118e">
-<link rel="stylesheet" href="/assets/demos/conversations.css?v=20261118e">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -88,6 +87,68 @@
     <div class="av-card av-kpi"><span>Depuis le début</span><b data-av="k-all">—</b><small data-av="k-all-p">pages vues —</small></div>
   </div>
 
+  <nav class="av-nav" aria-label="Vues">
+    <div class="av-tabs" role="tablist">
+      <button type="button" role="tab" class="av-tab is-on" data-tab="visiteurs" aria-selected="true">Visiteurs <b data-av="n-visiteurs">—</b></button>
+      <button type="button" role="tab" class="av-tab" data-tab="conversations" aria-selected="false">Conversations <b data-av="n-conversations">—</b></button>
+      <button type="button" role="tab" class="av-tab" data-tab="journal" aria-selected="false">Journal <b data-av="n-journal">—</b></button>
+      <button type="button" role="tab" class="av-tab" data-tab="carte" aria-selected="false">Carte</button>
+    </div>
+    <input type="search" class="av-search" data-av="q" placeholder="Chercher une adresse IP, une ville, un mot…" aria-label="Chercher dans les visiteurs, les conversations et le journal">
+    <label class="av-check"><input type="checkbox" data-av="f-bots" checked><span>Masquer les robots</span></label>
+  </nav>
+
+  <div class="av-card av-log av-pane" data-pane="visiteurs">
+    <div class="av-log-head">
+      <h2>Visiteurs</h2>
+      <label class="av-check"><input type="checkbox" data-av="f-parle"><span>Seulement ceux qui ont parlé à JARVIS</span></label>
+      <p class="av-count" data-av="v-count">—</p>
+    </div>
+    <div class="av-table" role="table" aria-label="Visiteurs, du plus récent au plus ancien">
+      <div class="av-row av-vrow av-th" role="row">
+        <span role="columnheader">Visiteur</span><span role="columnheader">Adresse IP</span>
+        <span role="columnheader">Appareil</span><span role="columnheader">Visites</span>
+        <span role="columnheader">Pages</span><span role="columnheader">JARVIS</span>
+        <span role="columnheader">Dernière visite</span>
+      </div>
+      <div data-av="v-rows" role="rowgroup"></div>
+    </div>
+    <p class="av-empty" data-av="v-empty">Aucun visiteur à afficher.</p>
+  </div>
+
+  <div class="av-card av-log av-pane" data-pane="conversations" hidden>
+    <div class="av-log-head">
+      <h2>Conversations avec JARVIS</h2>
+      <p class="av-count" data-av="c-count">—</p>
+    </div>
+    <p class="av-hint av-cstate" data-av="c-state"></p>
+    <div class="cv-liste" data-av="c-rows"></div>
+    <div class="av-more"><button type="button" class="pill ghost" data-av="c-more" hidden>Charger plus</button></div>
+  </div>
+
+  <div class="av-card av-log av-pane" data-pane="journal" hidden>
+    <div class="av-log-head">
+      <h2>Journal</h2>
+      <div class="av-filters">
+        <label><span>Pays</span><select data-av="f-pays"><option value="">Tous les pays</option></select></label>
+        <label><span>Page</span><select data-av="f-page"><option value="">Toutes les pages</option></select></label>
+      </div>
+      <p class="av-count" data-av="count">0 visite</p>
+    </div>
+    <div class="av-table" role="table" aria-label="Visites, les plus récentes d’abord">
+      <div class="av-row av-th" role="row">
+        <span role="columnheader">Heure (Toronto)</span><span role="columnheader">Lieu</span>
+        <span role="columnheader">Fournisseur</span><span role="columnheader">Adresse IP</span>
+        <span role="columnheader">Page</span><span role="columnheader">Appareil</span>
+        <span role="columnheader">Provenance</span>
+      </div>
+      <div data-av="rows" role="rowgroup"></div>
+    </div>
+    <p class="av-empty" data-av="empty">Aucune visite à afficher.</p>
+    <div class="av-more"><button type="button" class="pill ghost" data-av="more" hidden>Charger plus</button></div>
+  </div>
+
+  <div class="av-pane" data-pane="carte" hidden>
   <div class="av-maps" data-proj="{&quot;world&quot;: {&quot;lat0&quot;: 78, &quot;lon0&quot;: -170, &quot;step&quot;: 2.0, &quot;u&quot;: 5, &quot;w&quot;: 900, &quot;h&quot;: 335}, &quot;qc&quot;: {&quot;lat0&quot;: 45.63, &quot;lon0&quot;: -72.957, &quot;kx&quot;: 75.9201, &quot;ky&quot;: 111.13, &quot;box&quot;: [-352.5, -457.9, 698.5, 577.9]}}">
       <figure class="av-card av-map">
         <figcaption><span>Monde</span><b data-av="world-n">—</b></figcaption>
@@ -108,31 +169,9 @@
         </svg>
       </figure>
     </div>
-
-  <div class="av-card av-log">
-    <div class="av-log-head">
-      <h2>Journal</h2>
-      <div class="av-filters">
-        <label><span>Pays</span><select data-av="f-pays"><option value="">Tous les pays</option></select></label>
-        <label><span>Page</span><select data-av="f-page"><option value="">Toutes les pages</option></select></label>
-        <label class="av-check"><input type="checkbox" data-av="f-bots" checked><span>Masquer les robots</span></label>
-      </div>
-      <p class="av-count" data-av="count">0 visite</p>
-    </div>
-    <div class="av-table" role="table" aria-label="Visites, les plus récentes d’abord">
-      <div class="av-row av-th" role="row">
-        <span role="columnheader">Heure (Toronto)</span><span role="columnheader">Lieu</span>
-        <span role="columnheader">Fournisseur</span><span role="columnheader">Adresse IP</span>
-        <span role="columnheader">Page</span><span role="columnheader">Appareil</span>
-        <span role="columnheader">Provenance</span>
-      </div>
-      <div data-av="rows" role="rowgroup"></div>
-    </div>
-    <p class="av-empty" data-av="empty">Aucune visite à afficher.</p>
-    <div class="av-more"><button type="button" class="pill ghost" data-av="more" hidden>Charger plus</button></div>
   </div>
 
-  <div class="av-card av-log av-archive" data-av="archive" hidden>
+  <div class="av-card av-log av-archive av-pane-extra" data-av="archive" hidden>
     <div class="av-log-head">
       <h2>Avant le 15 novembre 2026</h2>
       <p class="av-count" data-av="a-count">—</p>
@@ -147,18 +186,12 @@
     </div>
     <p class="av-note" data-av="a-note"></p>
   </div>
-</section>
 
-<section class="cv" data-cv-root aria-labelledby="cv-titre">
-  <h2 id="cv-titre" class="cv-titre">Conversations <span>avec JARVIS.</span></h2>
-  <p class="cv-etat" data-cv="etat" role="status" aria-live="polite">Ouvrez le journal ci-dessus : les conversations suivent.</p>
-  <div class="cv-outils">
-    <input type="search" data-cv="cherche" placeholder="Chercher un mot, une ville ou une adresse IP" aria-label="Chercher dans les conversations">
-    <button type="button" class="pill ghost" data-cv="maj">Actualiser</button>
-  </div>
-  <div class="cv-chiffres" data-cv="chiffres" hidden></div>
-  <div class="cv-liste" data-cv="liste"></div>
-  <button type="button" class="pill ghost cv-plus" data-cv="plus" hidden>Charger plus</button>
+  <div class="av-voile" data-av="voile" hidden></div>
+  <aside class="av-fiche" data-av="fiche" aria-label="Fiche du visiteur" hidden>
+    <button type="button" class="av-fermer" data-av="fermer" aria-label="Fermer la fiche">×</button>
+    <div data-av="fiche-corps"></div>
+  </aside>
 </section>
 
 </main>
@@ -176,7 +209,6 @@
 <script type="application/json" data-forfait-ref>{"lieux":{"maison":{"n":"Maison","h":"signature","b":null,"p":"particulier","img":"/media/forfait/v-lieu-maison.webp"},"condo":{"n":"Condo","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-condo.webp"},"chalet":{"n":"Chalet","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-chalet.webp"},"domaine":{"n":"Domaine","h":"platinum","b":null,"p":"particulier","img":"/media/forfait/v-lieu-domaine.webp"},"bureau":{"n":"Bureau ou commerce","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-bureau.webp"},"atelier":{"n":"Atelier, entrepôt ou usine","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-atelier.webp"},"ferme":{"n":"Ferme","h":"platinum","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-ferme.webp"},"garage":{"n":"Garage ou hangar","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-garage.webp"},"flotte":{"n":"Flotte de véhicules","h":null,"b":"Boîtier Mobilité","p":"entreprise","img":"/media/forfait/v-lieu-flotte.webp"},"vr":{"n":"VR","h":"signature","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-vr.webp"},"roulotte":{"n":"Roulotte","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-roulotte.webp"},"bateau":{"n":"Bateau habitable","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-bateau.webp"},"auto":{"n":"Auto ou camion","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-auto.webp"},"moto":{"n":"Moto","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-moto.webp"},"avion":{"n":"Avion","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-avion.webp"}},"sols":{"environnements-intelligents":{"n":"Environnements intelligents","img":"/media/forfait/v-sol-environnements.webp"},"ia-privee-connaissances":{"n":"IA privée et connaissances","img":"/media/forfait/v-sol-ia.webp"},"securite-intelligente":{"n":"Sécurité intelligente","img":"/media/forfait/v-sol-securite.webp"},"automatisation-operations":{"n":"Automatisation d’entreprise","img":"/media/forfait/v-sol-automatisation.webp"},"reseau-resilience":{"n":"Réseau et cybersécurité","img":"/media/forfait/v-sol-reseau.webp"},"diagnostic-care":{"n":"Diagnostic & continuité","img":"/media/forfait/v-sol-diagnostic.webp"},"mobilite":{"n":"Mobilité","img":"/media/forfait/v-sol-mobilite.webp"}},"hubs":{"base":{"n":"Hub Base","img":"/media/forfait/v-hub-base.webp"},"signature":{"n":"Hub Signature","img":"/media/forfait/v-hub-signature.webp"},"platinum":{"n":"Hub Platinum","img":"/media/forfait/v-hub-platinum.webp"}}}</script>
 <script src="/assets/js/wow.js?v=20261118e" defer></script>
 <script src="/assets/demos/visites.js?v=20261118e" defer></script>
-<script src="/assets/demos/conversations.js?v=20261118e" defer></script>
 <script src="/assets/js/guide.js?v=20261118e" defer></script>
 </body>
 </html>

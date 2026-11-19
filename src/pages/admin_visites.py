@@ -2,7 +2,9 @@
 # Hors menu, hors sitemap, robots noindex/nofollow, /admin/ refusé dans robots.txt.
 # Le jeton LEADS_TOKEN est collé par James et gardé seulement dans sessionStorage (onglet ouvert);
 # il n'est envoyé qu'au service du site (GET /visits/log, GET /chats). Rien de secret n'est écrit ici.
-# En bas : les conversations des visiteurs avec JARVIS (assets/demos/conversations.js), même jeton.
+# Trois vues : Visiteurs (une ligne par adresse IP), Conversations avec JARVIS (GET /chats, même jeton)
+# et Journal (chaque page vue). Un clic sur un visiteur ou une adresse ouvre sa fiche : son parcours
+# et ses questions à JARVIS dans un seul fil.
 # Les chiffres viennent des compteurs par jour du service; le journal se charge par tranches
 # (« Charger plus »); le relevé d'avant la mise en service vient d'une clé d'archive du service,
 # jamais du dépôt (il contient des adresses IP).
@@ -69,7 +71,7 @@ PAGE = {
     "v2": True,
     "noindex": True,
     "robots": "noindex,nofollow",
-    "assets": ["visites", "conversations"],
+    "assets": ["visites"],
     "title": "Visites du site | JARVIS Private Systems",
     "description": "Page privée : journal des visites du site.",
     "content": f"""
@@ -108,15 +110,51 @@ PAGE = {
     <div class="av-card av-kpi"><span>Depuis le début</span><b data-av="k-all">—</b><small data-av="k-all-p">pages vues —</small></div>
   </div>
 
-  {_maps()}
+  <nav class="av-nav" aria-label="Vues">
+    <div class="av-tabs" role="tablist">
+      <button type="button" role="tab" class="av-tab is-on" data-tab="visiteurs" aria-selected="true">Visiteurs <b data-av="n-visiteurs">—</b></button>
+      <button type="button" role="tab" class="av-tab" data-tab="conversations" aria-selected="false">Conversations <b data-av="n-conversations">—</b></button>
+      <button type="button" role="tab" class="av-tab" data-tab="journal" aria-selected="false">Journal <b data-av="n-journal">—</b></button>
+      <button type="button" role="tab" class="av-tab" data-tab="carte" aria-selected="false">Carte</button>
+    </div>
+    <input type="search" class="av-search" data-av="q" placeholder="Chercher une adresse IP, une ville, un mot…" aria-label="Chercher dans les visiteurs, les conversations et le journal">
+    <label class="av-check"><input type="checkbox" data-av="f-bots" checked><span>Masquer les robots</span></label>
+  </nav>
 
-  <div class="av-card av-log">
+  <div class="av-card av-log av-pane" data-pane="visiteurs">
+    <div class="av-log-head">
+      <h2>Visiteurs</h2>
+      <label class="av-check"><input type="checkbox" data-av="f-parle"><span>Seulement ceux qui ont parlé à JARVIS</span></label>
+      <p class="av-count" data-av="v-count">—</p>
+    </div>
+    <div class="av-table" role="table" aria-label="Visiteurs, du plus récent au plus ancien">
+      <div class="av-row av-vrow av-th" role="row">
+        <span role="columnheader">Visiteur</span><span role="columnheader">Adresse IP</span>
+        <span role="columnheader">Appareil</span><span role="columnheader">Visites</span>
+        <span role="columnheader">Pages</span><span role="columnheader">JARVIS</span>
+        <span role="columnheader">Dernière visite</span>
+      </div>
+      <div data-av="v-rows" role="rowgroup"></div>
+    </div>
+    <p class="av-empty" data-av="v-empty">Aucun visiteur à afficher.</p>
+  </div>
+
+  <div class="av-card av-log av-pane" data-pane="conversations" hidden>
+    <div class="av-log-head">
+      <h2>Conversations avec JARVIS</h2>
+      <p class="av-count" data-av="c-count">—</p>
+    </div>
+    <p class="av-hint av-cstate" data-av="c-state"></p>
+    <div class="cv-liste" data-av="c-rows"></div>
+    <div class="av-more"><button type="button" class="pill ghost" data-av="c-more" hidden>Charger plus</button></div>
+  </div>
+
+  <div class="av-card av-log av-pane" data-pane="journal" hidden>
     <div class="av-log-head">
       <h2>Journal</h2>
       <div class="av-filters">
         <label><span>Pays</span><select data-av="f-pays"><option value="">Tous les pays</option></select></label>
         <label><span>Page</span><select data-av="f-page"><option value="">Toutes les pages</option></select></label>
-        <label class="av-check"><input type="checkbox" data-av="f-bots" checked><span>Masquer les robots</span></label>
       </div>
       <p class="av-count" data-av="count">0 visite</p>
     </div>
@@ -133,7 +171,11 @@ PAGE = {
     <div class="av-more"><button type="button" class="pill ghost" data-av="more" hidden>Charger plus</button></div>
   </div>
 
-  <div class="av-card av-log av-archive" data-av="archive" hidden>
+  <div class="av-pane" data-pane="carte" hidden>
+  {_maps()}
+  </div>
+
+  <div class="av-card av-log av-archive av-pane-extra" data-av="archive" hidden>
     <div class="av-log-head">
       <h2>Avant le 15 novembre 2026</h2>
       <p class="av-count" data-av="a-count">—</p>
@@ -148,18 +190,12 @@ PAGE = {
     </div>
     <p class="av-note" data-av="a-note"></p>
   </div>
-</section>
 
-<section class="cv" data-cv-root aria-labelledby="cv-titre">
-  <h2 id="cv-titre" class="cv-titre">Conversations <span>avec JARVIS.</span></h2>
-  <p class="cv-etat" data-cv="etat" role="status" aria-live="polite">Ouvrez le journal ci-dessus : les conversations suivent.</p>
-  <div class="cv-outils">
-    <input type="search" data-cv="cherche" placeholder="Chercher un mot, une ville ou une adresse IP" aria-label="Chercher dans les conversations">
-    <button type="button" class="pill ghost" data-cv="maj">Actualiser</button>
-  </div>
-  <div class="cv-chiffres" data-cv="chiffres" hidden></div>
-  <div class="cv-liste" data-cv="liste"></div>
-  <button type="button" class="pill ghost cv-plus" data-cv="plus" hidden>Charger plus</button>
+  <div class="av-voile" data-av="voile" hidden></div>
+  <aside class="av-fiche" data-av="fiche" aria-label="Fiche du visiteur" hidden>
+    <button type="button" class="av-fermer" data-av="fermer" aria-label="Fermer la fiche">×</button>
+    <div data-av="fiche-corps"></div>
+  </aside>
 </section>
 """,
 }

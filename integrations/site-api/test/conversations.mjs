@@ -60,4 +60,20 @@ const long = (await (await chats()).json()).echanges.find((x) => x.s === "long")
 assert.equal(long.q.length, 2000);
 assert.equal(long.r.length, 8000);
 
+// 5. Question gardée dès l'envoi (réponse vide), puis la même entrée complétée avec la réponse.
+const t0 = Date.now() - 5000;
+await envoi({ s: "attente", i: "ab12cd34", t0, q: "allo", r: "" });
+const avant = (await (await chats()).json()).echanges.filter((x) => x.s === "attente");
+assert.equal(avant.length, 1);
+assert.equal(avant[0].r, "");
+await envoi({ s: "attente", i: "ab12cd34", t0, q: "allo", r: "Bonjour." });
+const apres = (await (await chats()).json()).echanges.filter((x) => x.s === "attente");
+assert.equal(apres.length, 1);                          // remplacée, pas en double
+assert.equal(apres[0].r, "Bonjour.");
+assert.equal(Date.parse(apres[0].t), t0);
+// Une heure de départ farfelue n'est pas crue : l'heure du service la remplace.
+await envoi({ s: "vieux", i: "zz99zz99", t0: 1, q: "x", r: "y" });
+const vieux = (await (await chats()).json()).echanges.find((x) => x.s === "vieux");
+assert.ok(Date.now() - Date.parse(vieux.t) < 60000);
+
 console.log("Conversations : tout est correct.");

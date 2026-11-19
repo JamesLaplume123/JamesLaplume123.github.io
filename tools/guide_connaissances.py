@@ -32,7 +32,7 @@ def fiche(complet=True):
     a("- En phase de lancement : nous prenons les noms des personnes intéressées et nous choisissons quelques premiers projets.")
     a("- Aucune zone desservie n’est publiée et aucun lieu n’est nommé (ni ville, ni région, ni province). Pour savoir si un projet est possible à un endroit donné, la réponse se donne par la page Contact.")
     a("- L’entreprise parle toujours au « nous ». JARVIS, l’assistant, parle au « je » seulement de lui-même.")
-    a("- Tout tourne chez le client, dans un Hub. Les données restent sur place; aucun stockage dans le nuage. Un relais chiffré sert seulement à l’accès de partout et à relier plusieurs lieux; il ne garde rien.")
+    a("- Tout tourne chez le client, dans un Hub. Les données restent sur place. Un relais chiffré sert à l’accès de partout et à relier plusieurs lieux; il ne garde rien. En option seulement : une sauvegarde chiffrée et une copie des vidéos hors du lieu.")
     a("- JARVIS continue de fonctionner sans Internet (règles, IA locale, caméras, journal). Les mises à jour sont signées, la nuit, avec retour arrière.")
     a("- Le logiciel est en construction : le site montre des démonstrations; le premier JARVIS tourne dans le laboratoire mobile (une ambulance convertie). La démo et la visite sont offertes dès maintenant.")
     a("")
@@ -40,8 +40,8 @@ def fiche(complet=True):
     pages = [
         ("/", "Accueil"), ("/solutions/", "Les sept solutions"), ("/logiciel/", "Le logiciel en démonstration"),
         ("/plateforme/", "Le Hub : le boîtier, son IA privée, le noyau"),
-        ("/offre/", "L’offre : un Hub payé une fois (Base, Signature, Platinum), des solutions par mois, le matériel"),
-        ("/offre/#composer", "Composer mon forfait : le configurateur (lieu, Hub conseillé, solutions, matériel, récapitulatif, soumission)"),
+        ("/offre/", "L’offre : trois niveaux tout compris (Base, Signature, Platinum), des options, le projet sur mesure"),
+        ("/offre/#composer", "Composer mon JARVIS : pour qui, le lieu, le guide de trois questions, le niveau, les options, le projet, la soumission"),
         ("/solutions/maison-intelligente-cle-en-main/", "Maison intelligente clé en main"),
         ("/solutions/domotique-ferme-agricole/", "Domotique pour ferme"), ("/solutions/ia-privee-entreprise/", "IA privée pour entreprise"),
         ("/a-propos/", "À propos de James"), ("/vision-roadmap/", "Vision et feuille de route"), ("/laboratoire-mobile/", "Laboratoire mobile (ambulance)"),
@@ -77,18 +77,35 @@ def fiche(complet=True):
             a(f"- {l['nom']}" + (f" ({l['sorte'].lower()})" if l.get("sorte") else "") + f" : {quoi}. {l['raison']} Solutions qui comptent : {sols}.")
     a("- Un lieu mobile (VR, roulotte, bateau habitable) se traite comme une maison qui roule : Hub et Boîtier VR. Un véhicule (auto, camion, moto, avion) reçoit un Boîtier Mobilité, sans Hub à bord.")
     a("")
-    a("## L’offre en quatre étapes")
-    a("1. Le Hub, payé une fois : Base, Signature ou Platinum selon la taille du lieu. Même logiciel, même app; ce qui change, c’est la puissance, le nombre d’appareils, l’IA et la sécurité.")
-    a("2. Les solutions, par mois, annulables en tout temps : comme des apps. Environnements intelligents est inclus avec chaque Hub.")
-    a("3. Le matériel du lieu, payé une fois : capteurs, caméras, boîtiers, prêt à brancher. On réutilise ce qui existe déjà (Victron, UniFi, caméras ONVIF, NAS, Starlink).")
-    a("4. Plusieurs lieux : un Hub par lieu, une seule app, −30 % sur les solutions dès le deuxième lieu. Installation au choix.")
+    a("## L’offre : trois niveaux tout compris (même source que la page L’offre)")
+    a("- Le client choisit un niveau : Base, Signature ou Platinum. Le niveau dit ce que JARVIS fait et le soutien inclus. Chaque niveau comprend tout le précédent.")
+    for k, nom in (("base", "Base"), ("signature", "Signature"), ("platinum", "Platinum")):
+        n = C.NIVEAUX[k]
+        a(f"- {nom} : " + (n["plus"] + " " if n["plus"] else "") + "; ".join(x[0].lower() + x[1:] for x in n["inclus"]) + ". Solutions incluses : " + ", ".join({s["id"]: s["nom"] for s in C.SOLUTIONS}[x] for x in n["sols"]) + ".")
+    a("- Le projet (le matériel du lieu et l’installation) est sur mesure : chaque lieu est différent. On réutilise ce qui existe déjà (Victron, UniFi, caméras ONVIF, NAS, Starlink).")
+    a("- Les options s’ajoutent au mois, annulables en tout temps : ce qui n’est pas déjà dans le niveau (par exemple Mobilité pour un véhicule, ou l’Entreprise).")
+    a("- La page L’offre se fait en trois étapes : 1) choisir son niveau (un guide de trois questions conseille), 2) ajouter des options, 3) son projet (matériel, installation, lieux), puis « Recevoir ma soumission ».")
+    a("- Règle simple : un Hub plus puissant peut toujours faire un niveau plus bas, jamais l’inverse.")
     a("")
-    a("## Quel Hub choisir (en mots de tous les jours)")
+    a("## Monter ou descendre de niveau")
+    a("- Monter : si le Hub suffit, on active le niveau à distance, le jour même. S’il faut plus de puissance, on échange le Hub avec un crédit; la configuration est restaurée telle quelle.")
+    a("- Un autre lieu : l’ancien Hub part au chalet ou dans le VR, relié au nouveau.")
+    a("- Redescendre : le client garde son Hub; on retire des fonctions et il paie moins.")
+    a("- Le matériel installé reste toujours. Rien ne se perd.")
+    a("")
+    a("## Bâtir son écosystème (plusieurs lieux, une seule app)")
+    a("- Un écosystème JARVIS, c’est tous les lieux d’une personne ou d’une entreprise reliés : maison, chalet, VR, bateau, garage, bureau, ferme, et les véhicules.")
+    a("- Méthode à proposer, une question à la fois : 1) quels sont vos lieux; 2) lequel est le principal (il reçoit le plus gros Hub, qui prête son IA aux autres); 3) pour chaque autre lieu, un Hub plus petit suffit souvent; 4) les véhicules reçoivent un Boîtier Mobilité, sans Hub; 5) une seule app et un seul compte pour tout, une soumission pour l’ensemble.")
+    a("- Les lieux se parlent par un lien privé et chiffré. Si Internet tombe, chaque lieu continue seul.")
+    a("")
+    a("## Le nuage : seulement ce qui est utile")
+    a("- Tout tourne chez le client. Le nuage ne sert qu’à trois choses, en option : la sauvegarde chiffrée (illisible pour nous), l’accès de partout, et une copie des vidéos hors du lieu (au cas où le Hub serait volé ou détruit).")
+    a("")
+    a("## Quel Hub pour quel niveau (en mots de tous les jours)")
     for h in C.HUBS:
         c = lieux.HUBS_CHOIX[h["id"]]
         a(f"- {h['nom']} — {c['situation']} ({c['pour']}). {c['promesse']} Vous pouvez : " + "; ".join(x[0].lower() + x[1:] for x in c["peut"]) + f". À savoir : {c['savoir']}")
-    a("- Pour aider quelqu’un qui hésite, poser trois questions : combien de lieux; l’IA doit-elle fonctionner sans Internet; le lieu doit-il tourner pendant une panne. Platinum si panne ou plus de trois lieux; Signature si IA sans Internet ou deux à trois lieux; sinon Base.")
-    a("- Le Hub s’achète une fois. Les solutions se prennent au mois, et s’annulent quand le client le veut.")
+    a("- Pour aider quelqu’un qui hésite, poser les trois questions de la page L’offre : combien de caméras; l’intelligence doit-elle rester chez vous, même sans Internet; une coupure serait-elle grave. Platinum si une coupure serait grave ou 7 caméras et plus; Signature si l’IA doit rester chez soi ou 3 à 6 caméras; sinon Base.")
     a("")
     a("## Les trois Hubs")
     for h in C.HUBS:
@@ -106,7 +123,7 @@ def fiche(complet=True):
         a(f"- {lab} : " + " | ".join("non" if x == "—" else x for x in v))
     a("- Dans chaque Hub : Environnements intelligents, l’app JARVIS, les comptes et droits, les mises à jour signées, les sauvegardes chiffrées.")
     a("")
-    a("## Les solutions (par mois)")
+    a("## Les solutions (incluses selon le niveau, ou en option au mois)")
     for s in C.SOLUTIONS:
         prix = "incluse avec chaque Hub" if s["prix"] == 0 else f"{s['prix']} $ par mois" + (f" {s['unite']}" if s.get("unite") else "")
         a(f"- {s['nom']} : {prix}. {s['pourquoi']}" + (" Comprend : " + "; ".join(s["pts"]) + "." if complet else ""))

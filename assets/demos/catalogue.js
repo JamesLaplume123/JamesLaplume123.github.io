@@ -393,4 +393,34 @@
   })();
   pret = true;
   appliqueNiveau(); conseil();
+
+  /* ---------- Arrivée par un plan tout composé ----------
+     JARVIS (la bulle) propose un lien : /offre/?lieux=maison,chalet,auto&niveau=signature&ens=tout#composer
+       lieux  : identifiants de src/lieux.py, séparés par des virgules (les inconnus sont ignorés);
+       niveau : base, signature ou platinum (absent : le niveau conseillé pour ces lieux);
+       ens    : « tout », ou la liste des lieux dont on ajoute l'ensemble de départ.
+     Le plan remplace le forfait en cours; l'adresse est nettoyée pour qu'un rechargement ne le rejoue pas. */
+  (function () {
+    var q = new URLSearchParams(location.search), f = forfait();
+    if (!f || !q.has("lieux")) return;
+    var ids = [];
+    q.get("lieux").split(",").forEach(function (id) { if (LIEUX[id] && ids.indexOf(id) < 0) ids.push(id); });
+    if (!ids.length) return;
+    vider();
+    var o = f.lire(), n = q.get("niveau");
+    var ent = ids.some(function (id) { return LIEUX[id].public === "entreprise"; }), autre = ids.some(function (id) { return LIEUX[id].public !== "entreprise"; });
+    o.lieux = ids;
+    if (ent) o.public = autre ? "deux" : "entreprise";
+    o.manuel = RANG[n] !== undefined;
+    o.hub = o.manuel ? n : f.hubDe(o);
+    f.ecrire(o); poseNiveau();
+    var mob = $('.ct-sol[data-sol="mob"]'), nVeh = 0;   /* Mobilité suit les véhicules */
+    ids.forEach(function (id) { if (VEHICULES[LIEUX[id].famille]) nVeh += (OFFRE.ensembles[id] || { mat: {} }).mat.mobb || 1; });
+    if (mob) { setQty(mob, nVeh); mob.querySelector('input[name="sol"]').checked = nVeh > 0; }
+    appliqueNiveau();
+    var e = q.get("ens") || "";
+    (e === "tout" ? ids : e.split(",")).forEach(function (id) { if (ids.indexOf(id) >= 0) ajouteEnsemble(id); });
+    appliqueNiveau(); conseil();
+    try { history.replaceState(null, "", location.pathname + location.hash); } catch (x) {}
+  })();
 })();

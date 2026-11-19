@@ -159,6 +159,13 @@ def fiche(complet=True):
             a(f"- {cat} : " + "; ".join(f"{n} {p(pr)}" for _, n, pr, _, _ in items) + ".")
     a("- Les caméras s’enregistrent dans le Hub, jamais dans le nuage. Le Boîtier VR va dans un VR, une roulotte ou un bateau; le Boîtier Mobilité dans une voiture ou un camion. Le Hub Base n’a pas d’IA locale : les caméras y sont analysées par Internet.")
     a("")
+    a("## Ouvrir un plan tout composé (un seul lien)")
+    a(f"- Adresse : {D}/offre/?lieux=<lieux>&niveau=<niveau>&ens=tout#composer. La page s’ouvre avec l’écosystème dessiné, le niveau choisi et l’ensemble de départ de chaque lieu ajouté. Le visiteur ajuste, puis demande sa soumission.")
+    a("- lieux : identifiants séparés par des virgules, parmi : " + ", ".join(f"{l['id']} ({l['nom']})" for l in lieux.LIEUX) + ".")
+    a("- niveau : base, signature ou platinum. Sans niveau, la page prend le niveau conseillé pour ces lieux.")
+    a(f"- Exemple : maison, chalet et une auto, niveau Signature : {D}/offre/?lieux=maison,chalet,auto&niveau=signature&ens=tout#composer")
+    a("- Un lieu ne se met qu’une fois dans le lien; le nombre de véhicules ou de pièces s’ajuste sur la page.")
+    a("")
     a("## Les ensembles de départ (un par lieu, ajustables pièce par pièce)")
     for l in lieux.LIEUX:
         e = C.ENSEMBLES[l["id"]]

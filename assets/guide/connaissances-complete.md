@@ -198,6 +198,12 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Starlink Mini. Internet par satellite, partout. Prix du fabricant plus l’intégration. Pourquoi : Le VR connecté au fond du bois.
 - Téléphone IP. Pour la réceptionniste IA et les transferts. Pourquoi : La réceptionniste vous passe l’appel sur un vrai téléphone.
 - Les caméras s’enregistrent dans le Hub, jamais dans le nuage. Le Boîtier VR va dans un VR, une roulotte ou un bateau; le Boîtier Mobilité dans une voiture ou un camion. Le Hub Base n’a pas d’IA locale : les caméras y sont analysées par Internet.
+## Ouvrir un plan tout composé (un seul lien)
+- Adresse : https://jarvisprivatesystems.com/offre/?lieux=<lieux>&niveau=<niveau>&ens=tout#composer. La page s’ouvre avec l’écosystème dessiné, le niveau choisi et l’ensemble de départ de chaque lieu ajouté. Le visiteur ajuste, puis demande sa soumission.
+- lieux : identifiants séparés par des virgules, parmi : maison (Maison), condo (Condo), chalet (Chalet), domaine (Domaine), bureau (Bureau ou commerce), atelier (Atelier, entrepôt ou usine), ferme (Ferme), garage (Garage ou hangar), vr (VR), roulotte (Roulotte), bateau (Bateau ou yacht), auto (Auto ou camion), moto (Moto), flotte (Flotte de véhicules), avion (Avion ou hélicoptère).
+- niveau : base, signature ou platinum. Sans niveau, la page prend le niveau conseillé pour ces lieux.
+- Exemple : maison, chalet et une auto, niveau Signature : https://jarvisprivatesystems.com/offre/?lieux=maison,chalet,auto&niveau=signature&ens=tout#composer
+- Un lieu ne se met qu’une fois dans le lien; le nombre de véhicules ou de pièces s’ajuste sur la page.
 ## Les ensembles de départ (un par lieu, ajustables pièce par pièce)
 - Maison : 3 × Fuite d’eau, 1 × Vanne d’eau automatique, 3 × Porte et fenêtre, 2 × Présence (radar), 1 × Sonnette vidéo, 1 × Thermostat intelligent. L’eau coupée toute seule, la sonnette qui reconnaît, le chauffage par pièce.
 - Condo : 2 × Fuite d’eau, 1 × Porte et fenêtre, 1 × Présence (radar), 1 × Thermostat intelligent. L’essentiel d’un condo : l’eau, la porte, le chauffage.

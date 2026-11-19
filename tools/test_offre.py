@@ -70,6 +70,13 @@ async def main():
         # 10. tout retirer
         await pg.evaluate("window.JarvisCatalogue.vider()"); await pg.wait_for_timeout(200)
         verifie("tout retirer : forfait vide", await pg.evaluate(f"[{F}.lieux.length,{F}.sols.length,{F}.autres.length,{F}.hub]")==[0,0,0,""], str(await pg.evaluate(f"{F}")))
+        # 11. plan tout composé (lien donné par JARVIS)
+        await pg.goto('http://localhost:4173/offre/?lieux=maison,chalet,auto,inconnu&niveau=platinum&ens=tout#composer'); await pg.wait_for_timeout(900)
+        plan=await pg.evaluate(f"[{F}.lieux, {F}.hub, {F}.manuel, Object.keys({F}.etat.e).sort(), +document.querySelector('.ct-sol[data-sol=mob] output').value, location.search, {F}.autres.some(a=>a.id==='mobb')]")
+        verifie("plan : lieux, niveau, ensembles, Mobilité, adresse nettoyée", plan==[["maison","chalet","auto"],"platinum",True,["auto","chalet","maison"],1,"",True], str(plan))
+        await pg.goto('http://localhost:4173/offre/?lieux=ferme&ens=tout'); await pg.wait_for_timeout(900)
+        plan=await pg.evaluate(f"[{F}.hub, {F}.manuel, document.documentElement.dataset.public, document.querySelector('input[name=socle]').checked]")
+        verifie("plan sans niveau : niveau conseillé (ferme -> platinum), entreprise", plan==["platinum",False,"entreprise",True], str(plan))
         verifie("aucune erreur JavaScript", not errs, str(errs))
         await b.close()
     print("RÉSULTAT :", "tout passe" if ok else "à corriger")

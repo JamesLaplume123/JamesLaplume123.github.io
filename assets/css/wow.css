@@ -1402,7 +1402,9 @@ html.fo-lock { overflow: hidden; }
   .fo-v { width: 56px; height: 56px; }
 }
 @media (prefers-reduced-motion: reduce) { .fo-fond, .fo-panneau { transition: none; } }
-.fo-pied { position: sticky; bottom: 0; z-index: 2; background: linear-gradient(#0b0b0d00, #0b0b0d 18px); }
+/* Le pied porte lui-même la marge du bas : rien ne dépasse sous « Continuer à composer ». */
+.fo-pied { position: sticky; bottom: -1.6rem; z-index: 2; margin-bottom: -1.6rem; padding-bottom: 1.6rem; background: linear-gradient(#0b0b0d00, #0b0b0d 18px); }
+@media (max-width: 560px) { .fo-pied { bottom: -1.2rem; margin-bottom: -1.2rem; padding-bottom: 1.2rem; } }
 .ct-cart .fo-pied { background: linear-gradient(#0c0c0e00, #0c0c0e 18px); }
 @media (max-height: 760px) { .fo-pied .fo-note { display: none; } .fo-pied .fo-res { padding: .7rem 0; margin-bottom: .8rem; } }
 

@@ -1,8 +1,8 @@
 # Accueil — une vitrine, pas un formulaire (décision de James, 18 novembre 2026 : « comme Apple,
 # très prestigieux, que les gens veulent acheter »). Peu de mots, beaucoup d'espace, un bouton doré.
 #   1. héros vivant : un film de six lieux; la maison réagit au toucher (accueil.js, shader WebGL);
-#   2. le produit : le Hub, en grand, presque seul;
-#   3. la gamme : un grand Hub qui change (Base, Signature, Platinum), trois chiffres clés;
+#   2. le produit : l'appareil, en grand, presque seul;
+#   3. la gamme : un grand appareil qui change (Base, Signature, Platinum), trois chiffres clés;
 #   4. ce qu'il fait : les solutions en bande de photos, une ligne chacune;
 #   5. tester : l'aperçu vivant de JARVIS App (démo complète sur /logiciel/);
 #   6. l'exemple réel (le laboratoire mobile);

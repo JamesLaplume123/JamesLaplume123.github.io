@@ -2,7 +2,7 @@
 # (assets/demos/vie.css et vie.js).
 #
 # Treize sources, chacune avec sa propre permission révocable, alimentent le
-# modèle personnel d'Alex sur le Hub JARVIS (flux animés). JARVIS en tire des
+# modèle personnel d'Alex sur son JARVIS (flux animés). JARVIS en tire des
 # habitudes avec leurs preuves; pour l'habitude choisie, deux avenirs sont
 # projetés (« Si vous continuez » / « Si vous changez ») sur 30, 90 ou 365 jours,
 # toujours étiquetés comme estimation avec leur base. Une automatisation attend
@@ -88,7 +88,7 @@ SOURCES = [
     ("repas", "Repas", "Photo ou saisie", "Heure et type de repas", "Midi sauté", "meal", 4),
     ("lieux", "Localisation", "Téléphone", "Lieux fréquents, jamais le trajet exact", "Bureau · Maison", "pin", 18),
     ("meteo", "Météo", "Prévisions locales", "Pluie, température, lever du jour", "Sec demain 6 h", "cloud", 24),
-    ("maison", "Maison", "Hub JARVIS", "Heures de lumière, thermostat", "Chambre allumée 0 h 31", "home", 64),
+    ("maison", "Maison", "Appareil JARVIS", "Heures de lumière, thermostat", "Chambre allumée 0 h 31", "home", 64),
     ("voiture", "Voiture", "Véhicule connecté", "Trajets et heures d’arrivée", "Retour 18 h 52", "car", 6),
     ("humeur", "Humeur", "Saisie volontaire", "Une note de 1 à 5, si vous voulez", "2 sur 5 · fatiguée", "mood", 2),
     ("objectifs", "Objectifs", "Choisis par vous", "Ce que vous voulez atteindre", "3 objectifs actifs", "target", 1),
@@ -471,7 +471,7 @@ def _core():
             <p><b data-pi="count">13</b><span>sources sur 13</span></p>
             <p><b data-pi="signals">{fr(f"{total * 7:,}".replace(",", " "))}</b><span>signaux cette semaine</span></p>
           </div>
-          <p class="pi-core-hub">{icon("lock")}<span>Calculé sur le <b>Hub JARVIS</b>, chez Alex</span></p>
+          <p class="pi-core-hub">{icon("lock")}<span>Calculé sur <b>son JARVIS</b>, chez Alex</span></p>
         </div>
       </div>"""
 
@@ -734,7 +734,7 @@ def html():
     {_coach_html()}
   </div>
   <div class="pi-foot">
-    <p class="pi-priv">{icon("lock")}<span><b>Tout est calculé localement sur le JARVIS Hub, chez vous.</b>
+    <p class="pi-priv">{icon("lock")}<span><b>Tout est calculé localement sur votre JARVIS, chez vous.</b>
       Aucune donnée ne part dans un nuage; chaque source se retire en un geste et ce qui en venait est effacé.</span></p>
     <ul class="pi-rules">
       <li>{icon("spark")}Chaque déduction montre sa preuve</li>

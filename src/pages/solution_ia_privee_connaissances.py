@@ -25,11 +25,11 @@ CLAIR = {
         "Une question en mots simples, une réponse en quelques secondes.",
         "Chaque réponse montre sa source : le document et le passage exact.",
         "Pas de source fiable? JARVIS le dit clairement, sans rien inventer.",
-        "En mode local, tout se passe sur votre Hub : vos documents restent chez vous.",
+        "En mode local, tout se passe sur votre JARVIS : vos documents restent chez vous.",
     ],
     "obtenez": [
         ("Des réponses vérifiables", "Un clic sur le numéro de la source affiche le passage qui justifie la réponse."),
-        ("Vos documents restent chez vous", "Traitement local sur le Hub, ou externe seulement si vous l’autorisez, et toujours affiché."),
+        ("Vos documents restent chez vous", "Traitement local sur votre JARVIS, ou externe seulement si vous l’autorisez, et toujours affiché."),
         ("Des actions avec permission", "JARVIS peut préparer une liste de tâches ou un message. Rien ne part sans votre « Approuver »."),
     ],
 }
@@ -65,7 +65,7 @@ PAGE = {
       preuve.</em></h2>
     </div>
     <p data-rev>Choisissez une question : JARVIS répond en citant le passage exact, puis propose
-    une action qui attend votre « Approuver ». Rien ne quitte le Hub.</p>
+    une action qui attend votre « Approuver ». Rien ne quitte votre JARVIS.</p>
   </div>
   """ + coquille.html("ia-privee-connaissances", DEMO) + """
 </section>

@@ -1,6 +1,6 @@
 /* ==========================================================================
-   Démo « Hub + extensions » — page JARVIS (/plateforme/).
-   Trois blocs [data-demo="hub"] : cœur (le boîtier, un Hub par lieu), IA, ensemble (l'offre vit sur /offre/). Données d'exemple.
+   Démo « L'appareil + extensions » — page /plateforme/.
+   Trois blocs [data-demo="hub"] : cœur (le boîtier, un JARVIS par lieu), IA, ensemble (l'offre vit sur /offre/). Données d'exemple.
    Sans JavaScript, chaque bloc reste complet; le mouvement vit sous html.fx.
    ========================================================================== */
 [data-demo="hub"] {
@@ -35,7 +35,7 @@
 [data-demo="hub"] .hb-x b { font-weight: 600; }
 
 /* ==========================================================================
-   1. Le Hub, cœur de JARVIS : le bel objet, ses fils de lumière, un Hub par lieu
+   1. L'appareil, cœur de JARVIS : le bel objet, ses fils de lumière, un JARVIS par lieu
    ========================================================================== */
 @font-face {
   font-family: "Jarvis Manrope";
@@ -136,7 +136,7 @@
 .hb-coeur-facts span { display: inline-flex; align-items: center; gap: .5rem; font: 500 .7rem/1.2 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--gold-soft); }
 .hb-coeur-facts .hb-i { width: 15px; height: 15px; }
 
-/* ---------- Un Hub par lieu, une seule application ---------- */
+/* ---------- Un JARVIS par lieu, une seule application ---------- */
 .hb-lieux-head { text-align: center; max-width: 44rem; margin: 2.6rem auto 0; }
 .hb-lieux-head h3 { margin: .9rem 0 0; font-weight: 650; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: -.03em; line-height: 1.1; }
 .hb-lieux-head > p:last-child { margin: 1rem auto 0; color: #c4c4cc; font-size: 1rem; line-height: 1.65; }
@@ -154,14 +154,15 @@
 .hb-lx-tx { position: absolute; z-index: 1; left: .85rem; right: .85rem; bottom: .7rem; display: grid; gap: .15rem; }
 .hb-lx-tx b { font-size: .95rem; font-weight: 620; letter-spacing: -.01em; line-height: 1.2; }
 .hb-lx-tx small { font-size: .76rem; color: #d2d2d8; }
+.hb-lx-hubs { position: absolute; z-index: 1; top: .65rem; left: .65rem; right: .65rem; display: flex; flex-wrap: wrap; gap: .3rem; }
+.hb-lx-t.is-g .hb-lx-hubs { justify-content: flex-end; }
 .hb-lx-hub {
-  position: absolute; z-index: 1; top: .65rem; display: inline-flex; align-items: center; gap: .45rem; padding: .34rem .6rem .34rem .5rem;
+  display: inline-flex; align-items: center; gap: .45rem; padding: .34rem .6rem .34rem .5rem;
   border-radius: 999px; background: #000000c2; border: 1px solid color-mix(in srgb, var(--gold-soft) 38%, transparent);
   font: 600 .58rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--gold-soft); white-space: nowrap;
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
 }
-.hb-lx-t.is-g .hb-lx-hub { right: .65rem; }
-.hb-lx-t.is-d .hb-lx-hub { left: .65rem; }
+.hb-lx-hub.is-plus { padding-left: .6rem; color: #e9e9ee; border-color: #ffffff30; }   /* le boîtier, « Lieu principal » */
 .hb-lx-hub i { width: 7px; height: 7px; border-radius: 50%; background: #fff3d6; box-shadow: 0 0 8px 2px color-mix(in srgb, var(--mode-glow) 70%, transparent); }
 .fx .hb-lieux.is-run .hb-lx-hub i { animation: hbLed 4.2s ease-in-out infinite; }
 .hb-lx-t::before {
@@ -203,17 +204,20 @@
 .hb-reps b { font-size: 1.5rem; font-weight: 650; letter-spacing: -.025em; line-height: 1.15; }
 .hb-reps span { font-size: .88rem; line-height: 1.55; color: #b4b4bc; }
 
-/* Les deux formats du Hub */
-.hb-fms { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }
-.hb-fm { margin: 0; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; gap: 1.1rem; padding: .8rem; border-radius: 16px; background: var(--hb-card); border: 1px solid var(--hb-line); }
-.hb-fm img, .hb-fm-wait { width: 100%; aspect-ratio: 4 / 3; border-radius: 11px; object-fit: cover; object-position: 34% 52%; }
-.hb-fm-wait { display: grid; place-content: center; justify-items: center; gap: .35rem; background: radial-gradient(80% 70% at 50% 40%, #161616, #050505); border: 1px solid #ffffff12; color: var(--gold-soft); }
-.hb-fm-wait .hb-i { width: 26px; height: 26px; opacity: .8; }
-.hb-fm-wait b { font: 600 .66rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; }
-.hb-fm-wait small { font: 500 .62rem/1 var(--mono); color: #8e8e96; }
-.hb-fm figcaption { display: grid; gap: .35rem; }
-.hb-fm figcaption b { font-size: 1.02rem; font-weight: 620; }
-.hb-fm figcaption span { font-size: .86rem; line-height: 1.5; color: #b4b4bc; }
+/* Les trois tailles : JARVIS Mini, JARVIS, JARVIS Pro (photos de media/hubs/) */
+.hb-fms-head { display: flex; align-items: end; justify-content: space-between; gap: 1.2rem; margin: 2.4rem 0 1.1rem; }
+.hb-fms-head h3 { margin: 0; font-weight: 650; font-size: clamp(1.5rem, 2.4vw, 2.1rem); letter-spacing: -.03em; line-height: 1.1; }
+.hb-fms-head h3 em { font-style: normal; color: var(--gold-soft); }
+.hb-fms-head a { flex: none; color: var(--gold-soft); font-size: .92rem; text-decoration: none; }
+.hb-fms-head a:hover { color: #fff; }
+.hb-fms-head a i { font-style: normal; }
+.hb-fms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+.hb-fm { margin: 0; display: grid; align-content: start; gap: .9rem; padding: .8rem .8rem 1.1rem; border-radius: 16px; background: var(--hb-card); border: 1px solid var(--hb-line); }
+.hb-fm img { width: 100%; aspect-ratio: 4 / 3; border-radius: 11px; object-fit: cover; object-position: 50% 58%; }
+.hb-fm figcaption { display: grid; gap: .3rem; padding: 0 .35rem; }
+.hb-fm figcaption small { font: 600 .64rem/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--gold-soft); }
+.hb-fm figcaption b { font-size: 1.2rem; font-weight: 640; letter-spacing: -.02em; }
+.hb-fm figcaption span { font-size: .88rem; line-height: 1.5; color: #b4b4bc; }
 
 /* Pour les curieux */
 .hb-curieux { border-radius: 16px; background: var(--hb-card); border: 1px solid var(--hb-line); }
@@ -453,7 +457,7 @@
 /* ---------- Réactif ---------- */
 @media (max-width: 1100px) {
   .hb-ia { grid-template-columns: 1fr; }
-  /* La scène du Hub : la photo, puis les cartes en grille (les fils restent sur la photo plus large) */
+  /* La scène du boîtier : la photo, puis les cartes en grille (les fils restent sur la photo plus large) */
   .hb-fils { display: none; }
   .hb-vies { position: static; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin-top: .8rem; }
   .hb-vie { position: relative; left: auto; top: auto; width: auto; }
@@ -475,7 +479,7 @@
   .hb-lx-body { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "g d" "tel tel"; gap: .8rem; }
   .hb-lx-col.is-g { grid-area: g; } .hb-lx-col.is-d { grid-area: d; } .hb-lx-tel { grid-area: tel; margin-top: 1.4rem; }
   .hb-lx-fils { display: none; }
-  .hb-lx-t.is-g .hb-lx-hub { right: auto; left: .65rem; }
+  .hb-lx-t.is-g .hb-lx-hubs { justify-content: flex-start; }
   .hb-vies { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hb-cu-b { grid-template-columns: 1fr; }
   .hb-rule { grid-template-columns: 1fr 1fr; row-gap: 1.4rem; }
@@ -508,11 +512,12 @@
   .hb-lx-tx { left: .55rem; right: .5rem; bottom: .5rem; }
   .hb-lx-tx b { font-size: .82rem; }
   .hb-lx-tx small { font-size: .68rem; }
-  .hb-lx-hub { top: .45rem; padding: .28rem .45rem .28rem .4rem; font-size: .5rem; letter-spacing: .08em; }
-  .hb-lx-t.is-g .hb-lx-hub, .hb-lx-t.is-d .hb-lx-hub { left: .45rem; }
+  .hb-lx-hubs { top: .45rem; left: .45rem; right: .45rem; gap: .25rem; }
+  .hb-lx-hub { padding: .28rem .45rem .28rem .4rem; font-size: .5rem; letter-spacing: .08em; }
+  .hb-lx-hub.is-plus { padding-left: .45rem; }
   .hb-lx-tel { width: min(15rem, 82%); }
   .hb-reps { grid-template-columns: 1fr; }
-  .hb-fm { grid-template-columns: 1fr; }
+  .hb-fms-head { display: grid; justify-content: start; }
   .hb-hosted { grid-template-columns: 1fr; }
   .hb-roles { grid-template-columns: 1fr; }
   .hb-traits { grid-template-columns: 1fr; }

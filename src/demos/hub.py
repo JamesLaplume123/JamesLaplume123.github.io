@@ -1,16 +1,17 @@
-# Démo « Hub + extensions » de la page JARVIS (/plateforme/).
+# Démo « L'appareil + extensions » de la page /plateforme/.
 # Quatre blocs, chacun autonome :
-#   coeur()    Le Hub, cœur de JARVIS : le boîtier en photo, sa lumière et ce qu'il fait marcher; un Hub
-#              par lieu, une seule app; en petit, ce qu'il héberge et les extensions branchées.
+#   coeur()    L'appareil, cœur de JARVIS : le boîtier en photo, sa lumière et ce qu'il fait marcher; un
+#              JARVIS par lieu, une seule app; les trois tailles; en petit, ce qu'il héberge et les extensions branchées.
 #   ia()       L'IA au cœur : une conversation qui comprend, vérifie, propose, demande, explique.
 #   ensemble() Comment les extensions travaillent ensemble : rôles, règle du bus, trois chaînes de bout en bout.
-# Données de l'offre (HUB_INCLUS, SERVICES) : source unique.
+# Les noms des appareils et les règles de l'offre viennent de src/lieux.py (source unique).
 # Sans JavaScript, chaque bloc montre un état complet et lisible; assets/demos/hub.js anime le reste.
 # Toutes les situations sont des données d'exemple.
 
 import json
-import os
 from html import escape
+
+import lieux
 
 
 
@@ -84,7 +85,7 @@ EXT = [
      ["Recherche dans vos documents, manuels, contrats et notes",
       "Chaque réponse montre le passage qui la justifie",
       "Classement automatique des rapports et des factures",
-      "Traitement sur le Hub; externe seulement si vous l’autorisez"]),
+      "Traitement sur votre JARVIS; externe seulement si vous l’autorisez"]),
     ("secu", "securite-intelligente", "Sécurité", "Sécurité intelligente", "#ff9f7f",
      "Protéger et consigner.",
      "Accès, arrivées, alarmes, images utiles",
@@ -135,12 +136,12 @@ def _chip_ext(k, extra=""):
 
 
 # ---------------------------------------------------------------------------
-# 1. Le Hub, cœur de JARVIS
+# 1. L'appareil, cœur de JARVIS
 # ---------------------------------------------------------------------------
-# Le Hub montré comme un bel objet : la vraie photo du boîtier, une lumière or qui respire, et des fils
-# de lumière doux vers les choses de la vie, avec des phrases humaines. Puis « Un Hub par lieu, une seule
-# app » (photos des lieux du site, chacun avec son petit Hub, reliés au téléphone), quatre réponses
-# courtes, les deux formats du Hub, et, en petit, ce qu'il y a dedans pour les curieux.
+# L'appareil montré comme un bel objet : la vraie photo du boîtier, une lumière or qui respire, et des fils
+# de lumière doux vers les choses de la vie, avec des phrases humaines. Puis « Un JARVIS par lieu, une seule
+# app » (photos des lieux du site, chacun avec son appareil, reliés au téléphone), quatre réponses
+# courtes, les trois tailles, et, en petit, ce qu'il y a dedans pour les curieux.
 
 # Photo du boîtier : les positions (en % de l'image 16:9) de la lumière avant et du boîtier servent aux
 # fils de lumière et au halo. Changer de photo demande de revoir HUB_LED et HUB_HALO.
@@ -173,7 +174,7 @@ def _insec(t):
 
 
 def _fil(left, top, cote):
-    """Courbe douce (viewBox 1600 × 900) de la lumière du Hub vers l'attache d'une carte."""
+    """Courbe douce (viewBox 1600 × 900) de la lumière du boîtier vers l'attache d'une carte."""
     x0, y0 = HUB_LED[0] * 16, HUB_LED[1] * 9
     if cote == "gauche":
         x1, y1 = (left + 1.2) * 16, (top + VIE_H) * 9
@@ -204,83 +205,80 @@ def _scene():
   <div class="hb-scene hb-frame" data-rev style="--led-x:{HUB_LED[0]}%;--led-y:{HUB_LED[1]}%;--halo-x:{HUB_HALO[0]}%;--halo-y:{HUB_HALO[1]}%">
     <div class="hb-sc-photo">
       <img src="{HUB_PHOTO}" width="1600" height="1200" loading="lazy" decoding="async"
-           alt="Le boîtier JARVIS Hub, posé sur un meuble dans un salon, sa petite lumière avant allumée">
+           alt="Le boîtier JARVIS, posé sur un meuble dans un salon, sa petite lumière avant allumée">
       <span class="hb-sc-veil" aria-hidden="true"></span>
       <span class="hb-sc-halo" aria-hidden="true"></span>
       <span class="hb-sc-led" aria-hidden="true"></span>
       <svg class="hb-fils" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">{fils}</svg>
-      <p class="hb-sc-cap"><small>JARVIS Hub</small><b>En marche, en silence.</b><span>Installé et entretenu par nous.</span></p>
+      <p class="hb-sc-cap"><small>JARVIS</small><b>En marche, en silence.</b><span>Installé et entretenu par nous.</span></p>
     </div>
-    <ul class="hb-vies" aria-label="Ce que le Hub fait marcher (données d’exemple)">{cartes}</ul>
+    <ul class="hb-vies" aria-label="Ce que JARVIS fait marcher (données d’exemple)">{cartes}</ul>
     <div class="hb-sc-bar">
       <span class="hb-live"><i></i>Données d’exemple</span>
-      <p class="hb-offline" aria-live="polite" hidden>{icon("check")}<span><b>Internet est coupé.</b> Rien ne change chez vous : le Hub continue tout seul.</span></p>
+      <p class="hb-offline" aria-live="polite" hidden>{icon("check")}<span><b>Internet est coupé.</b> Rien ne change chez vous : votre JARVIS continue tout seul.</span></p>
       <button type="button" class="hb-net-btn" aria-pressed="false" hidden>{icon("cloud")}<span>Couper Internet</span></button>
     </div>
   </div>"""
 
 
-# Un Hub par lieu, une seule app : clé, photo, lieu, sorte de Hub, état (données d'exemple).
+# Un JARVIS par lieu, une seule app : clé, lieu de l'offre (src/lieux.py), photo, nom, état (données
+# d'exemple). L'appareil de chaque lieu n'est pas écrit ici : il vient des règles de l'offre.
 LIEUX = [
-    ("maison", "/media/vitrine/plateforme/penthouse-nuit.webp", "La maison", "Hub principal", "Tout est calme · 21 °C"),
-    ("chalet", "/media/vitrine/plateforme/chalet-hiver.webp", "Le chalet", "Hub", "Chauffé pour vendredi"),
-    ("garage", "/media/env/garage.webp", "Le garage de collection", "Hub", "Fermé, sous surveillance"),
-    ("ferme", "/media/env/ferme.webp", "La ferme", "Hub", "Étables ventilées"),
-    ("yacht", "/media/env/bateau.webp", "Le yacht", "Hub", "À quai, amarres surveillées"),
-    ("vr", "/media/env/boulance.webp", "Le VR", "Hub compact · mobile", "En route vers le chalet"),
+    ("maison", "maison", "/media/vitrine/plateforme/penthouse-nuit.webp", "La maison", "Tout est calme · 21 °C"),
+    ("chalet", "chalet", "/media/vitrine/plateforme/chalet-hiver.webp", "Le chalet", "Chauffé pour vendredi"),
+    ("garage", "garage", "/media/env/garage.webp", "Le garage de collection", "Fermé, sous surveillance"),
+    ("ferme", "ferme", "/media/env/ferme.webp", "La ferme", "Étables ventilées"),
+    ("yacht", "bateau", "/media/env/bateau.webp", "Le yacht", "À quai, amarres surveillées"),
+    ("vr", "vr", "/media/env/boulance.webp", "Le VR", "En route vers le chalet"),
 ]
 
+
+def _appareils():
+    """Les étiquettes de chaque lieu d'exemple, selon les règles de l'offre : l'appareil, puis son boîtier
+    (lieu mobile) et « Lieu principal » s'il porte le niveau. {clé: ["JARVIS Mini", "Boîtier VR"]}."""
+    _, principal, app = lieux.cerveaux([l[1] for l in LIEUX])
+    return {k: [lieux.HUB_NOM[app[lid]]] + [x for x in (lieux.PAR_ID[lid].get("boitier"), "Lieu principal" if lid == principal else None) if x]
+            for k, lid, *_ in LIEUX}
+
+
 REPONSES = [
-    ("Faut-il un ordinateur?", "Non.", "Le Hub est un petit boîtier silencieux, sans écran. Rien à gérer, aucune mise à jour à faire."),
-    ("Et si Internet coupe?", "Tout continue.", "Chaque Hub fait marcher son lieu tout seul : portes, chauffage, lumières et règles restent en marche."),
-    ("Combien de Hubs?", "Un par lieu.", "La maison a le Hub principal. Le chalet, le garage ou la ferme ont le leur; le VR, un Hub compact."),
+    ("Faut-il un ordinateur?", "Non.", "Votre JARVIS est un petit boîtier silencieux, sans écran. Rien à gérer, aucune mise à jour à faire."),
+    ("Et si Internet coupe?", "Tout continue.", "Chaque JARVIS fait marcher son lieu tout seul : portes, chauffage, lumières et règles restent en marche."),
+    ("Combien d’appareils?", "Un par lieu.", "Le lieu principal porte votre niveau. Les autres reçoivent un JARVIS à leur taille; un véhicule, un simple boîtier."),
     ("Qui s’en occupe?", "Nous.", "On l’installe, on l’entretient et on le met à jour pour vous. Vous gardez seulement l’application."),
 ]
 
-# Les deux formats du Hub : photo du site, ou media/vitrine/plateforme/<nom>.webp quand James la fournit
-# (sinon un panneau noir « Photo à venir », jamais un dessin).
-_RACINE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-FORMATS = [
-    ("hub-principal", HUB_PHOTO, "Hub principal", "Pour la maison, un domaine ou une entreprise. Il garde le système complet."),
-    ("hub-compact", None, "Hub compact · mobile", "Pour le VR, un véhicule ou un bateau. Le même cœur, en plus petit."),
-]
-
-
-def _photo_format(nom, repli):
-    fichier = f"/media/vitrine/plateforme/{nom}.webp"
-    if os.path.exists(os.path.join(_RACINE, fichier.lstrip("/"))):
-        return fichier
-    return repli
-
 
 def _lieux():
-    def tuile(i, k, img, nom, sorte, etat):
+    appareil = _appareils()
+
+    def tuile(i, k, _lid, img, nom, etat):
         cote = "g" if i < 3 else "d"
         return (f'<li class="hb-lx-t is-{cote}" data-lieu="{k}">'
                 f'<img src="{img}" alt="" loading="lazy" decoding="async">'
-                f'<span class="hb-lx-hub"><i></i>{escape(sorte)}</span>'
+                f'<span class="hb-lx-hubs"><span class="hb-lx-hub"><i></i>{escape(appareil[k][0])}</span>'
+                + "".join(f'<span class="hb-lx-hub is-plus">{escape(x)}</span>' for x in appareil[k][1:]) + '</span>'
                 f'<span class="hb-lx-tx"><b>{escape(nom)}</b><small>{escape(etat)}</small></span></li>')
     gauche = "".join(tuile(i, *l) for i, l in enumerate(LIEUX[:3]))
     droite = "".join(tuile(i + 3, *l) for i, l in enumerate(LIEUX[3:]))
     rangs = "".join(
         f'<li data-rang="{k}"><img src="{img}" alt="" loading="lazy" decoding="async">'
         f'<span><b>{escape(nom)}</b><small>{escape(etat)}</small></span><i></i></li>'
-        for k, img, nom, _, etat in LIEUX)
+        for k, _, img, nom, etat in LIEUX)
     reponses = "".join(
         f'<li data-rev><small>{escape(q)}</small><b>{escape(r)}</b><span>{escape(d)}</span></li>'
         for q, r, d in REPONSES)
-    formats = []
-    for nom, repli, titre, texte in FORMATS:
-        src = _photo_format(nom, repli)
-        vis = (f'<img src="{src}" alt="{escape(titre)}" loading="lazy" decoding="async">' if src else
-               f'<span class="hb-fm-wait">{icon("hub")}<b>Photo à venir</b><small>{nom}.webp</small></span>')
-        formats.append(f'<figure class="hb-fm{"" if src else " is-wait"}">{vis}'
-                       f'<figcaption><b>{escape(titre)}</b><span>{escape(texte)}</span></figcaption></figure>')
+    # Les trois tailles : le nom et « pour qui » viennent de l'offre (src/lieux.py), la photo de media/hubs/.
+    tailles = "".join(
+        f'<figure class="hb-fm"><img src="/media/hubs/hub-{i}.webp" alt="{escape(lieux.HUB_NOM[i])}" loading="lazy" decoding="async">'
+        f'<figcaption><small>Niveau {i.capitalize()}</small><b>{escape(lieux.HUB_NOM[i])}</b>'
+        f'<span>{escape(lieux.HUBS_CHOIX[i]["situation"])}.</span></figcaption></figure>'
+        for i in ("base", "signature", "platinum"))
     return f"""
   <div class="hb-lieux-head" data-rev>
     <p class="eyebrow">Plusieurs lieux?</p>
-    <h3>Un Hub par lieu.<br><em>Une seule application.</em></h3>
-    <p>Chaque lieu a son petit Hub, qui le fait marcher tout seul, même sans Internet. Vos Hubs se parlent
+    <h3>Un JARVIS par lieu.<br><em>Une seule application.</em></h3>
+    <p>Chaque lieu a son JARVIS, à sa taille, qui le fait marcher tout seul, même sans Internet. Vos lieux se parlent
     par un lien privé et chiffré. Vous, vous ouvrez une seule application, avec tous vos lieux dedans.</p>
   </div>
   <div class="hb-lieux hb-frame" data-rev>
@@ -297,19 +295,23 @@ def _lieux():
       <ul class="hb-lx-col is-d">{droite}</ul>
     </div>
     <p class="hb-lx-note"><span class="hb-live"><i></i>Données d’exemple</span>
-    <span>Bureau, hangar ou entrepôt : même principe, un Hub par lieu.</span></p>
+    <span>Bureau, hangar ou entrepôt : même principe, un JARVIS par lieu. Un véhicule reçoit un simple boîtier.</span></p>
   </div>
   <ul class="hb-reps">{reponses}</ul>
-  <div class="hb-fms" data-rev>{"".join(formats)}</div>"""
+  <div class="hb-fms-head" data-rev>
+    <h3>Trois tailles.<br><em>Un seul JARVIS.</em></h3>
+    <a href="/offre/#hub">Comparer les trois niveaux <i aria-hidden="true">→</i></a>
+  </div>
+  <div class="hb-fms" data-rev>{tailles}</div>"""
 
 
-# Pour les curieux : ce que le Hub héberge (en petit, plus bas).
+# Pour les curieux : ce que l'appareil héberge (en petit, plus bas).
 HOSTED = [
     ("regles", "Règles", "Vos règles écrites une fois : seuils, horaires, qui approuve quoi."),
     ("comptes", "Comptes et droits", "Chaque personne et chaque extension n’a que les droits accordés."),
     ("journal", "Journal", "Chaque événement, décision et action, gardé sur place."),
     ("bus", "Bus d’événements", "Le fil où les extensions publient et s’écoutent."),
-    ("iacore", "IA locale", "L’assistant de JARVIS, qui fonctionne sur le Hub."),
+    ("iacore", "IA locale", "L’assistant, qui fonctionne sur votre JARVIS."),
     ("sauve", "Sauvegardes", "Chiffrées, vérifiées, prêtes à restaurer."),
 ]
 
@@ -322,9 +324,9 @@ def coeur():
     return f"""
 <div class="hb-coeur" data-demo="hub" data-hb="coeur">
   <div class="hb-coeur-head">
-    <p class="eyebrow" data-rev>Le Hub · cœur de JARVIS</p>
+    <p class="eyebrow" data-rev>L’appareil · cœur de JARVIS</p>
     <h2 data-rev>Un petit boîtier, en silence.<br><em>Et toute la maison suit.</em></h2>
-    <p class="hb-lead" data-rev>Le Hub est installé chez vous et entretenu par nous. Pas d’écran, rien à gérer :
+    <p class="hb-lead" data-rev>Votre JARVIS est installé chez vous et entretenu par nous. Pas d’écran, rien à gérer :
     il fait marcher les portes, le chauffage, les lumières et les caméras, même quand Internet tombe.
     Vous, vous gardez seulement l’application.</p>
   </div>
@@ -337,7 +339,7 @@ def coeur():
   </div>
   {_lieux()}
   <details class="hb-curieux" data-rev>
-    <summary><span>Pour les curieux</span><b>Ce qu’il y a dans le Hub</b><i aria-hidden="true"></i></summary>
+    <summary><span>Pour les curieux</span><b>Ce qu’il y a dans votre JARVIS</b><i aria-hidden="true"></i></summary>
     <div class="hb-cu-b">
       <ul class="hb-hosted">{hosted}</ul>
       <div class="hb-cu-side">
@@ -345,7 +347,7 @@ def coeur():
         <div class="hb-legend">{legend}</div>
         <p><b>Les appareils</b>Zigbee, Z-Wave, Matter, MQTT, Wi-Fi et réseau filaire : des marques différentes, un seul système.</p>
         <p><b>Les mises à jour</b>Signées, appliquées par nous, avec retour en arrière possible.</p>
-        <p><b>Entre vos Hubs</b>Un réseau privé chiffré; rien n’est ouvert sur Internet.</p>
+        <p><b>Entre vos lieux</b>Un réseau privé chiffré; rien n’est ouvert sur Internet.</p>
       </div>
     </div>
   </details>
@@ -363,7 +365,7 @@ TRAITS = [
     ("confirme", "Demande votre confirmation", "Rien d’important ne se fait sans votre « Confirmer »."),
     ("explique", "Explique ses décisions", "Touchez « Pourquoi? » : elle montre ses raisons et ses sources."),
     ("apprend", "Apprend vos habitudes", "Vos réglages préférés deviennent ses propositions, jamais des ordres."),
-    ("local", "Ne sort jamais vos données", "Elle fonctionne sur le Hub. Rien ne part sans votre permission."),
+    ("local", "Ne sort jamais vos données", "Elle fonctionne sur votre JARVIS. Rien ne part sans votre permission."),
 ]
 
 IA_SCENES = [
@@ -461,7 +463,7 @@ def ia():
   </div>
   <div class="hb-console hb-frame" data-rev>
     <div class="hb-con-top">
-      <span class="hb-con-id">{icon("iacore")}<span><b>IA de JARVIS</b><small>Sur le Hub · en français</small></span></span>
+      <span class="hb-con-id">{icon("iacore")}<span><b>IA de JARVIS</b><small>Sur votre JARVIS · en français</small></span></span>
       <span class="hb-con-zero"><i></i><b data-zero>0 octet</b> envoyé à l’extérieur</span>
     </div>
     <div class="hb-con-tabs" role="tablist" aria-label="Exemples de demandes" hidden>{tabs}</div>
@@ -470,7 +472,7 @@ def ia():
   </div>
   <div class="hb-two" data-rev>
     <article class="hb-two-c is-core">
-      <small>Incluse dans chaque Hub</small>
+      <small>Incluse à tous les niveaux</small>
       <h3>{icon("iacore")}L’IA de JARVIS</h3>
       <p>L’assistant qui fait tourner l’ensemble : il comprend vos demandes, interroge les extensions et prépare les actions que vous confirmez.</p>
     </article>
@@ -559,7 +561,7 @@ CHAINS = [
              "p": "La cellule est surveillée toutes les 10 secondes pendant la recharge. Diagnostic prépare le dossier pour le "
                   "garage : courbes, test de charge et pièce à commander.",
              "ev": "Dossier prêt · cellule à remplacer", "to": ["ia"],
-             "perm": "Le dossier reste sur le Hub jusqu’à votre envoi",
+             "perm": "Le dossier reste sur votre JARVIS jusqu’à votre envoi",
              "m": {"l": "Recharge", "v": "62 %", "s": "cellule 3 surveillée", "f": 0.62, "st": "ok"}},
         ],
     },
@@ -625,7 +627,7 @@ def _chain_detail(c, i):
             f'<h4>{escape(s["h"])}</h4><p class="hb-d-p">{escape(s["p"])}</p>'
             f'<div class="hb-d-m is-{m["st"]}"><span><small>{escape(m["l"])}</small><b>{escape(m["v"])}</b><em>{escape(m["s"])}</em></span>'
             f'<i><u style="--f:{m["f"]}"></u></i></div>'
-            f'<dl class="hb-d-flow"><div><dt>{icon("bus")}Publie sur le Hub</dt><dd>« {escape(s["ev"])} »</dd></div>'
+            f'<dl class="hb-d-flow"><div><dt>{icon("bus")}Publie sur votre JARVIS</dt><dd>« {escape(s["ev"])} »</dd></div>'
             f'<div><dt>{icon("comptes")}Droit vérifié</dt><dd>{escape(s["perm"])}</dd></div>'
             f'<div><dt>{icon("plus")}Reçu par</dt><dd class="hb-d-subs">{subs}</dd></div></dl></div>')
 
@@ -640,7 +642,7 @@ def ensemble():
         f'<small><em>Publie</em> {EXT_BY[k][6]}</small><small><em>Écoute</em> {EXT_BY[k][7]}</small></div></li>'
         for k in ROLES_ORDER) + (
         f'<li class="is-hub" style="--x:var(--gold-soft)"><span class="hb-ro-ic">{icon("hub")}</span>'
-        '<div><b>Le Hub</b><p>Faire respecter les droits et garder la trace.</p>'
+        '<div><b>Votre JARVIS</b><p>Faire respecter les droits et garder la trace.</p>'
         '<small><em>Relaie</em> seulement les événements autorisés</small>'
         '<small><em>Consigne</em> chaque passage au journal</small></div></li>')
     tabs = "".join(
@@ -662,9 +664,9 @@ def ensemble():
 
   <div class="hb-rule" data-rev>
     <div class="hb-rule-s"><i>1</i><b>Chaque extension possède son domaine.</b><span>Elle seule lit ses capteurs et commande ses équipements.</span></div>
-    <div class="hb-rule-s"><i>2</i><b>Elle publie ses événements sur le Hub.</b><span>« Mesure hors seuil », « test échoué », « accès accordé »…</span></div>
+    <div class="hb-rule-s"><i>2</i><b>Elle publie ses événements sur votre JARVIS.</b><span>« Mesure hors seuil », « test échoué », « accès accordé »…</span></div>
     <div class="hb-rule-s"><i>3</i><b>Les autres s’abonnent.</b><span>Chacune réagit dans son propre domaine, jamais dans celui d’une autre.</span></div>
-    <div class="hb-rule-s is-hub"><i>{icon("hub")}</i><b>Le Hub applique les droits et consigne tout.</b><span>Un événement non autorisé ne passe pas. Chaque passage est au journal.</span></div>
+    <div class="hb-rule-s is-hub"><i>{icon("hub")}</i><b>Votre JARVIS applique les droits et consigne tout.</b><span>Un événement non autorisé ne passe pas. Chaque passage est au journal.</span></div>
   </div>
 
   <div class="hb-chain hb-frame" data-rev>
@@ -677,11 +679,11 @@ def ensemble():
       </div>
     </div>
     <p class="hb-ch-lieu"><span>Données d’exemple</span><b>{escape(c0["lieu"])}</b></p>
-    <div class="hb-ch-bus"><span>{icon("bus")}Bus d’événements du Hub</span><i class="hb-ch-pulse"></i></div>
+    <div class="hb-ch-bus"><span>{icon("bus")}Bus d’événements de votre JARVIS</span><i class="hb-ch-pulse"></i></div>
     <ol class="hb-ch-rail" style="--n:{len(c0["steps"])}">{_chain_rail(c0)}</ol>
     <div class="hb-ch-main">
       <div class="hb-ch-detail" aria-live="polite">{_chain_detail(c0, 0)}</div>
-      <aside class="hb-ch-log"><p>{icon("journal")}Journal du Hub</p><ol></ol></aside>
+      <aside class="hb-ch-log"><p>{icon("journal")}Journal de votre JARVIS</p><ol></ol></aside>
     </div>
   </div>
 
@@ -694,37 +696,3 @@ def ensemble():
   </div>
   <script type="application/json" class="hb-data">{_js(data)}</script>
 </div>"""
-
-
-# ---------------------------------------------------------------------------
-# 4. L'offre : ce que comprend le Hub et les services (affichés sur /offre/)
-# ---------------------------------------------------------------------------
-HUB_INCLUS = [
-    ("hub", "Le boîtier JARVIS Hub", "Un par lieu, livré prêt à brancher ou installé par nous. Tous vos lieux dans la même application."),
-    ("regles", "JARVIS Core", "Règles, comptes et droits, journal et bus d’événements."),
-    ("iacore", "L’IA de JARVIS", "L’assistant local, en français, sur le Hub."),
-    ("comptes", "JARVIS App pour chaque compte", "Ordinateur, tablette et téléphone, selon les droits de chacun."),
-    ("sauve", "Sauvegardes et mises à jour", "Sauvegardes chiffrées et mises à jour signées, avec retour en arrière."),
-    ("lock", "L’essentiel sans Internet", "Les règles, l’IA, le journal et les extensions restent en marche sur place."),
-]
-
-SERVICES = [
-    ("install", "Installation", [
-        "Visite du lieu et inventaire de ce qui existe déjà",
-        "Plan écrit : Hub, extensions, droits et règles",
-        "Installation, câblage et configuration sur place",
-        "Formation des personnes qui utiliseront JARVIS",
-    ]),
-    ("tool", "Entretien", [
-        "Vérification de l’état du Hub et des sauvegardes",
-        "Application des mises à jour signées",
-        "Réglage des règles quand vos besoins changent",
-        "Remplacement d’un équipement qui fait défaut",
-    ]),
-    ("soutien", "Soutien", [
-        "Une personne qui connaît votre installation",
-        "Aide à distance seulement avec votre permission",
-        "Déplacement sur place quand c’est nécessaire",
-        "Chaque intervention consignée au journal",
-    ]),
-]

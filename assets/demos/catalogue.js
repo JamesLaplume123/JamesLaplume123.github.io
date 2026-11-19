@@ -22,7 +22,7 @@
   try { LIEUX = JSON.parse(document.querySelector("[data-lieux-data]").textContent); } catch (e) {}
   var RANG = { base: 0, signature: 1, platinum: 2 }, PAR_RANG = ["base", "signature", "platinum"];
   var BOITIER_VR = { base: "vrb", signature: "vrs", platinum: "vrp" };   /* le Boîtier VR suit le niveau */
-  var VEHICULES = { vehicules: 1, aerien: 1 };                           /* familles sans Hub à bord */
+  var VEHICULES = { vehicules: 1, aerien: 1 };                           /* familles sans appareil à bord */
   function forfait() { return window.JarvisForfait; }
 
   function qtyOf(el) { var o = el && el.querySelector("output"); return o ? (+o.value || 0) : 0; }

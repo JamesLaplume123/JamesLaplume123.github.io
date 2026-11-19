@@ -1,5 +1,5 @@
-/* Démo « Hub + extensions » (page JARVIS). Données d'exemple.
-   Trois blocs [data-demo="hub"] : cœur (le boîtier et ses fils de lumière; un Hub par lieu), IA (une conversation qui
+/* Démo « L'appareil + extensions » (page /plateforme/). Données d'exemple.
+   Trois blocs [data-demo="hub"] : cœur (le boîtier et ses fils de lumière; un JARVIS par lieu), IA (une conversation qui
    comprend, vérifie, propose, demande, explique), ensemble (trois chaînes de bout en bout);
    (l'offre vit sur /offre/). Le mouvement vit seulement sous html.fx et s'arrête hors écran.
    Sans JavaScript, le HTML montre déjà un état complet (voir src/demos/hub.py). */
@@ -34,8 +34,8 @@
   }
 
   /* ======================================================================
-     1. Le Hub, cœur de JARVIS : la lumière part du boîtier vers les choses
-        de la vie; puis un Hub par lieu, relié à une seule application.
+     1. L'appareil, cœur de JARVIS : la lumière part du boîtier vers les choses
+        de la vie; puis un JARVIS par lieu, relié à une seule application.
      ====================================================================== */
   (function () {
     var root = $('[data-hb="coeur"]');
@@ -80,7 +80,7 @@
       })();
     }
 
-    /* Un Hub par lieu : fils entre chaque petit Hub et sa ligne dans l'application */
+    /* Un JARVIS par lieu : fils entre chaque appareil et sa ligne dans l'application */
     var box = $(".hb-lieux", root);
     if (!box || !window.SVGElement) return;
     var body = $(".hb-lx-body", box), svg = $(".hb-lx-fils", box), tel = $(".hb-lx-tel", box);

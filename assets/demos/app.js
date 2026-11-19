@@ -571,7 +571,7 @@
             html = '<div class="ap-bubx is-photo"><img src="/media/ambiances/heure-doree.webp" alt="" decoding="async" style="object-position:50% 60%"></div>';
           } else {
             html = '<div class="ap-bubx is-pos"><span class="ap-pos-map"><svg viewBox="-16 -11 32 22" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#' +
-              root.getAttribute("data-geo") + '"/></svg><i class="ap-pos-pin"></i></span><span class="ap-pos-t"><b>Hub · Résidence</b><small>Emplacement de référence, pas votre position</small></span></div>';
+              root.getAttribute("data-geo") + '"/></svg><i class="ap-pos-pin"></i></span><span class="ap-pos-t"><b>JARVIS · Résidence</b><small>Emplacement de référence, pas votre position</small></span></div>';
           }
           var row = add(cur, "out", html);
           if (row) deliver(cur, row);
@@ -734,7 +734,7 @@
           return;
         }
         b.setAttribute("aria-pressed", on ? "true" : "false");
-        if (t === "screen" && on) toastMsg("Simulation : le partage d’écran passerait par votre Hub.");
+        if (t === "screen" && on) toastMsg("Simulation : le partage d’écran passerait par votre JARVIS.");
         if (t === "mute") ov.classList.toggle("is-muted", on);
       });
       ov.addEventListener("keydown", function (e) { if (e.key === "Escape") { e.stopPropagation(); end(); } });
@@ -885,7 +885,7 @@
         action.classList.remove("is-ready");
         verify.disabled = approve.disabled = true;
         state.className = "ap-state is-sent"; state.lastChild.textContent = "Envoyé";
-        fine.textContent = "Envoi au Hub…";
+        fine.textContent = "Envoi à votre JARVIS…";
         later(function () {
           state.className = "ap-state is-ok"; state.lastChild.textContent = "Confirmé";
           approve.textContent = "Approuvé";

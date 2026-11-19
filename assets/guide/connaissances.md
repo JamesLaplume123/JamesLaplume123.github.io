@@ -9,13 +9,13 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - JARVIS continue de fonctionner sans Internet (règles, IA locale, caméras, journal). Les mises à jour sont signées, la nuit, avec retour arrière.
 - Le logiciel est en construction : le site montre des démonstrations; le premier JARVIS tourne dans le laboratoire mobile (une ambulance convertie). La démo et la visite sont offertes dès maintenant.
 ## Les pages du site (donner le lien complet quand c’est utile)
-- Menu du site : Solutions (les sept, puis Maison, Ferme, Entreprise) · Le logiciel · L’offre · À propos (Laboratoire mobile, Vision, Le Hub, Confiance, Questions, Contact) · bouton doré « Composer mon forfait ».
-- Parcours conseillé : voir (accueil, solutions) → tester (le logiciel, la démonstration de chaque solution) → comprendre (l’offre, le Hub, les questions) → composer son forfait (le configurateur), puis « Recevoir ma soumission ».
+- Menu du site : Solutions (les sept, puis Maison, Ferme, Entreprise) · Le logiciel · L’offre · À propos (Laboratoire mobile, Vision, L’appareil, Confiance, Questions, Contact) · bouton doré « Composer mon forfait ».
+- Parcours conseillé : voir (accueil, solutions) → tester (le logiciel, la démonstration de chaque solution) → comprendre (l’offre, l’appareil, les questions) → composer son forfait (le configurateur), puis « Recevoir ma soumission ».
 - Le forfait se bâtit en chemin : « Ajouter à mon forfait » sur chaque page de solution; le compteur de la barre mène au configurateur, où tout est déjà coché.
 - https://jarvisprivatesystems.com/ : Accueil
 - https://jarvisprivatesystems.com/solutions/ : Les sept solutions
 - https://jarvisprivatesystems.com/logiciel/ : Le logiciel en démonstration
-- https://jarvisprivatesystems.com/plateforme/ : Le Hub (l’appareil JARVIS) : son IA privée, le noyau
+- https://jarvisprivatesystems.com/plateforme/ : L’appareil JARVIS : son IA privée, le noyau
 - https://jarvisprivatesystems.com/offre/ : L’offre : trois niveaux tout compris (Base, Signature, Platinum), des options, le projet sur mesure
 - https://jarvisprivatesystems.com/offre/#composer : Composer mon JARVIS : pour qui, le lieu, le guide de trois questions, le niveau, les options, le projet, la soumission
 - https://jarvisprivatesystems.com/solutions/maison-intelligente-cle-en-main/ : Maison intelligente clé en main
@@ -93,7 +93,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - JARVIS Pro — Un lieu qui ne doit jamais s’arrêter (Domaine, ferme, entreprise). Plusieurs bâtiments, beaucoup de caméras, aucune coupure. Vous pouvez : continuer pendant une panne de courant ou d’Internet; suivre tous vos bâtiments et vos lieux, sans limite; recevoir des rapports et automatiser le travail. À savoir : Pensé pour les grands lieux : trop pour une maison ordinaire.
 - Pour aider quelqu’un qui hésite, poser les trois questions de la page L’offre : combien de caméras; l’intelligence doit-elle rester chez vous, même sans Internet; une coupure serait-elle grave. Platinum si une coupure serait grave ou 7 caméras et plus; Signature si l’IA doit rester chez soi ou 3 à 6 caméras; sinon Base.
 ## Les trois appareils : JARVIS Mini, JARVIS, JARVIS Pro
-- Anciens noms : Hub Base, Hub Signature, Hub Platinum. Sur quelques pages du site, l’appareil s’appelle encore « le Hub » : c’est la même chose.
+- Anciens noms : Hub Base, Hub Signature, Hub Platinum. Si un visiteur dit « le Hub », il parle de l’appareil JARVIS : réponds avec les nouveaux noms.
 ### JARVIS Mini. Pour : Chalet, condo, petit VR.
 - Pour veiller sur un lieu simple : fuite, gel, porte, batterie. L’IA passe par Internet. A : Jusqu’à 30 appareils; 2 caméras analysées, 7 jours d’enregistrement; IA par Internet seulement; Wi-Fi, Bluetooth, Zigbee; Garantie 1 an, soutien par courriel. Manque : Pas d’IA dans l’appareil; Pas d’assistant vocal ni de réceptionniste; Pas d’automatisations d’entreprise; Pas de batterie de secours.
 ### JARVIS. Pour : Maison, VR complet, PME.

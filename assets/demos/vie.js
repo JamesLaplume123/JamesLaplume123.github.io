@@ -1,5 +1,5 @@
 /* Démo « Personal Intelligence » : treize sources alimentent le modèle d'Alex
-   sur le Hub JARVIS; chaque permission se retire séparément. Les habitudes
+   sur son JARVIS; chaque permission se retire séparément. Les habitudes
    détectées mènent à deux avenirs projetés (estimations étiquetées), à une
    automatisation à approuver ou refuser (conséquence honnête dans les deux cas)
    et au coach de vie (conseils, principes de livres, citations du domaine

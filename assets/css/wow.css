@@ -880,7 +880,7 @@ html:not(.fx) .progress { display: none; }
 .odo .dg > span > span { display: block; height: 1em; }
 
 
-/* ---------- Le Hub : apparition en volet ---------- */
+/* ---------- L'appareil : apparition en volet ---------- */
 .hub { max-width: 80rem; margin: 0 auto; padding: 6rem 1.4rem; display: grid; grid-template-columns: 1.25fr 1fr; gap: 4rem; align-items: center; }
 .hub-media { position: relative; margin: 0; border-radius: 20px; overflow: hidden; border: 1px solid var(--mode-line); box-shadow: 0 40px 100px #000c; }
 .hub-media img { width: 100%; height: auto; }

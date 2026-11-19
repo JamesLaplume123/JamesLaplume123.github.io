@@ -474,7 +474,7 @@
   })();
 
   /* ---------- Mon forfait : il se bâtit en chemin, et s'ouvre partout ----------
-     Une seule clé (« jarvis-forfait ») : les lieux choisis, le Hub, les solutions, et, écrits par le
+     Une seule clé (« jarvis-forfait ») : les lieux choisis, le niveau, les solutions, et, écrits par le
      configurateur (/offre/, assets/demos/catalogue.js), le matériel et les services (« autres ») et
      l'état du formulaire (« etat »). Rien ne quitte le navigateur.
      Le forfait se voit dans un tiroir (bouton de la barre) et dans la colonne de /offre/ : même rendu,
@@ -494,13 +494,14 @@
   var LIEUX = null, boiteL = $("[data-lieux-data]");
   if (boiteL) { try { LIEUX = JSON.parse(boiteL.textContent); } catch (e) { LIEUX = null; } }
   function echap(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  function hubDe(o) {   /* le Hub le plus exigeant parmi les lieux choisis */
+  function hubDe(o) {   /* l'appareil le plus exigeant parmi les lieux choisis */
     var h = "";
     o.lieux.forEach(function (x) { var r = REF.lieux[x] && REF.lieux[x].h; if (r && (RANG[r] || 0) > (RANG[h] || 0)) h = r; });
     return h;
   }
   /* Les règles de l'offre (docs/OFFRE.md) : un seul niveau pour tous les lieux; le lieu principal (celui
-     qui demande le plus gros Hub) porte le niveau; aucun autre Hub ne dépasse le niveau. */
+     qui demande le plus gros appareil) porte le niveau; aucun autre appareil ne dépasse le niveau.
+     Même règle, côté construction : cerveaux() dans src/lieux.py. */
   function cerveaux(o) {
     var N = o.hub || hubDe(o), prin = "", hub = {};
     o.lieux.forEach(function (id) { var r = REF.lieux[id]; if (r && r.h && (!prin || (RANG[r.h] || 0) > (RANG[REF.lieux[prin].h] || 0))) prin = id; });
@@ -738,7 +739,7 @@
   majF();
 
   /* ---------- Les cadres de démonstration tiennent dans la fenêtre ----------
-     Scènes fixes (Hub) : réduites d'un seul tenant si elles sont plus hautes que la fenêtre moins la barre. */
+     Scènes fixes (page L'appareil) : réduites d'un seul tenant si elles sont plus hautes que la fenêtre moins la barre. */
   var cadres = $$(".hb-frame");
   function tient() {
     if (window.innerWidth <= 900) { cadres.forEach(function (c) { c.style.zoom = ""; }); return; }

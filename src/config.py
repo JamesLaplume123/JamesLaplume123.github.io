@@ -46,7 +46,7 @@ SITE = {
 }
 
 # Navigation principale : la structure d'un vrai site commercial (refonte « structure », novembre 2026).
-# Solutions (les sept, puis par type de lieu) · Le logiciel · Le Hub · L'offre · À propos (et ses pages).
+# Solutions (les sept, puis par type de lieu) · Le logiciel · L'appareil · L'offre · À propos (et ses pages).
 # (adresse, libellé français, libellé anglais)
 LIEUX_NAV = [
     ("/solutions/maison-intelligente-cle-en-main/", "Maison", "Home"),
@@ -57,7 +57,7 @@ APROPOS_NAV = [
     ("/a-propos/", "À propos", "About"),
     ("/laboratoire-mobile/", "Laboratoire mobile · l’exemple réel", "Mobile lab · the real example"),
     ("/vision-roadmap/", "Vision", "Vision"),
-    ("/plateforme/", "Le Hub", "The Hub"),
+    ("/plateforme/", "L’appareil", "The device"),
     ("/confiance/", "Confiance", "Trust"),
     ("/questions/", "Questions", "Questions"),
     ("/contact/", "Contact", "Contact"),
@@ -88,7 +88,7 @@ BESOINS_PAGES = [
 # Pied de page en quatre colonnes : Solutions (les sept, ajoutées par partials.py), Produit, Entreprise, Aide.
 FOOTER_COLUMNS = [
     ("Produit", [
-        ("/logiciel/", "Le logiciel"), ("/plateforme/", "Le Hub"), ("/offre/", "L’offre"),
+        ("/logiciel/", "Le logiciel"), ("/plateforme/", "L’appareil"), ("/offre/", "L’offre"),
     ]),
     ("Entreprise", [
         ("/a-propos/", "À propos"), ("/vision-roadmap/", "Vision"), ("/laboratoire-mobile/", "Laboratoire mobile"),
@@ -132,7 +132,7 @@ CAPABILITIES = [
         "line": "Vos documents restent à leur place. L’IA vous aide à les comprendre et montre toujours d’où vient sa réponse.",
         "points": [
             ("Des réponses vérifiables", "Un clic sur la source affiche le passage qui justifie la réponse."),
-            ("Vos documents restent chez vous", "Traitement local sur le Hub, ou externe seulement si vous l’autorisez."),
+            ("Vos documents restent chez vous", "Traitement local sur votre JARVIS, ou externe seulement si vous l’autorisez."),
             ("Des actions avec permission", "Rien ne part sans votre « Approuver »."),
         ],
     },
@@ -306,8 +306,8 @@ SEO = {
         "L’appareil et l’équipement de chaque lieu sont proposés. Soumission écrite.",
     ),
     "/plateforme/": (
-        "Le Hub JARVIS et son IA privée : sous le capot",
-        "Le Hub installé chez vous, son IA locale en français, le noyau en Rust, les comptes "
+        "L’appareil JARVIS et son IA privée : sous le capot",
+        "L’appareil JARVIS installé chez vous, son IA locale en français, le noyau en Rust, les comptes "
         "sur invitation et les extensions qui travaillent ensemble.",
     ),
     "/laboratoire-mobile/": (

@@ -1498,7 +1498,7 @@
   K.actions = function (c, e) {
     var r = rt(e), st = r.vals.diag;
     return '<div class="ev-acts"><button type="button" class="ev-btn is-primary" data-a="diag"' + (st === "run" ? " disabled" : "") + ">" + ic("refresh") + (st === "run" ? "Actualisation…" : "Actualiser les diagnostics") + "</button>" +
-      '<button type="button" class="ev-btn" data-a="toast" data-v="Les journaux du Hub s’ouvrent dans l’Administration, réservée à l’administrateur de votre système.">' + ic("doc") + "Consulter les journaux</button>" +
+      '<button type="button" class="ev-btn" data-a="toast" data-v="Les journaux de votre JARVIS s’ouvrent dans l’Administration, réservée à l’administrateur de votre système.">' + ic("doc") + "Consulter les journaux</button>" +
       '<button type="button" class="ev-btn" data-a="diag2">' + ic("link") + "Tester les connexions</button>" +
       (st && st !== "run" ? '<span class="ev-sent">' + ic("check") + "Diagnostics actualisés " + hm(st) + " · exemple</span>" : "") + "</div>";
   };
@@ -2370,7 +2370,7 @@
         setTimeout(function () { r.vals.diag = NOW(); if (S.env === e.key) rerender(ci6); toast("Diagnostics actualisés · données d’exemple."); }, reduce() ? 200 : 1600);
         break;
       }
-      case "diag2": toast("Test des connexions : passerelle, DNS et services du Hub répondent (exemple)."); break;
+      case "diag2": toast("Test des connexions : passerelle, DNS et services de votre JARVIS répondent (exemple)."); break;
       case "pflt": r.vals.pflt = v; rerender(+b.closest("[data-c]").getAttribute("data-c")); break;
       case "padd": {
         var pa = r.vals.padd || (r.vals.padd = {});

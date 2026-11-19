@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Vignettes du forfait (tiroir « Mon forfait ») : petites images carrées, légères.
 
-Pour chaque lieu, chaque solution et chaque Hub, prend la photo dédiée si elle existe
+Pour chaque lieu, chaque solution et chaque appareil, prend la photo dédiée si elle existe
 (media/forfait/lieu-<id>.webp, media/forfait/sol-<clé>.webp, media/hubs/hub-<id>.webp),
 sinon la photo de repli, et écrit media/forfait/v-<nom>.webp (240 px). À relancer quand une
 photo change : python3 tools/vignettes.py

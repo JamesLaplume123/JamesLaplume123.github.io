@@ -28,7 +28,7 @@ def fr(s):
 
 
 # ---------------------------------------------------------------------------
-# Icônes (traits, 24 × 24) : celles du Hub, plus quelques-unes propres à la vision
+# Icônes (traits, 24 × 24) : celles de la page L'appareil, plus quelques-unes propres à la vision
 # ---------------------------------------------------------------------------
 ICONS = dict(_HUB_ICONS)
 ICONS.update({
@@ -59,7 +59,7 @@ def icon(name, cls="vn-i"):
 
 
 # « hub » s'ajoute aux sept extensions pour les filtres et les jalons
-SOL = {"hub": ("hub", "", "Hub", "JARVIS Hub et logiciel", "#e9c98c")}
+SOL = {"hub": ("hub", "", "Appareil", "L’appareil JARVIS et son logiciel", "#e9c98c")}
 SOL.update({e[0]: e for e in EXT})
 SOL_ORDER = ["hub"] + [e[0] for e in EXT]
 
@@ -98,7 +98,7 @@ LIBERTES = [
      "Les petites tâches, les vérifications et les oublis passent à JARVIS. Les heures rendues "
      "reviennent à la famille, au travail qui compte, au repos."),
     ("Libre de ses données", "lock",
-     "Tout vit sur le Hub, chez vous. Aucune donnée vendue, aucun profil publicitaire, aucune "
+     "Tout vit sur votre JARVIS, chez vous. Aucune donnée vendue, aucun profil publicitaire, aucune "
      "dépendance à un nuage que vous n’avez pas choisi."),
     ("Libre de ses choix", "hand",
      "JARVIS observe, explique et propose. La décision vous revient toujours : rien de sensible ne "
@@ -106,7 +106,7 @@ LIBERTES = [
 ]
 
 PILIERS = [
-    ("Privé", "Installé chez vous, sur votre Hub."),
+    ("Privé", "Installé chez vous, sur votre JARVIS."),
     ("Relié", "Sept extensions qui se parlent."),
     ("Humain", "Vous décidez, JARVIS exécute."),
     ("Prouvé", "Chaque étape vérifiée à l’écran."),
@@ -150,8 +150,8 @@ HORIZONS = [
         "h": "Un logiciel solide, prouvé sur un vrai véhicule.",
         "p": "Le noyau, les comptes et les interfaces se construisent une étape à la fois, avec des "
              "vérifications automatiques à chaque changement. Le laboratoire mobile sert de terrain réel.",
-        "photo": ("horizon-maintenant", "Le Hub JARVIS sur l’établi du laboratoire mobile",
-                  "Gros plan sur un petit boîtier Hub noir et doré posé sur un établi propre à l’intérieur d’une ambulance convertie, câbles bien rangés, écran du tableau allumé en arrière-plan, éclairage chaud",
+        "photo": ("horizon-maintenant", "L’appareil JARVIS sur l’établi du laboratoire mobile",
+                  "Gros plan sur un petit boîtier JARVIS noir et doré posé sur un établi propre à l’intérieur d’une ambulance convertie, câbles bien rangés, écran du tableau allumé en arrière-plan, éclairage chaud",
                   2, "16:10", "/media/ambulance/ambulance-garage-lab-v1.webp"),
         "j": [
             ("hub", "Étape 1 en cours : premier démarrage, compte propriétaire, invitations, rôles, journal et coffre des secrets."),
@@ -167,7 +167,7 @@ HORIZONS = [
     {
         "k": "12mois", "t": "12 mois", "s": "Le premier JARVIS en service",
         "h": "Le logiciel complet, installé, audité, prêt pour les premiers clients.",
-        "p": "Les quatorze étapes du logiciel terminées, la mise en service sur le Hub du laboratoire "
+        "p": "Les quatorze étapes du logiciel terminées, la mise en service sur le JARVIS du laboratoire "
              "mobile, quatorze jours d’essai en parallèle, puis une revue de sécurité externe avant toute vente.",
         "photo": ("horizon-12-mois", "Une résidence équipée de JARVIS, au crépuscule",
                   "Maison moderne au crépuscule, grandes fenêtres éclairées de lumière chaude, neige légère, un écran mural JARVIS visible dans l’entrée, ambiance accueillante et haut de gamme",
@@ -179,7 +179,7 @@ HORIZONS = [
             ("secu", "Test d’intrusion externe et obligations de la Loi 25 complétées avant la vente."),
             ("auto", "Extension Entreprise définie avec James, d’après les entrevues."),
             ("res", "Accès à distance par un relais qui ne garde rien."),
-            ("diag", "Erreurs, diagnostic et maintenance du Hub visibles en mots simples."),
+            ("diag", "Erreurs, diagnostic et maintenance de l’appareil visibles en mots simples."),
             ("mob", "Le tableau du laboratoire mobile : énergie, eau, confort et voyage."),
         ],
     },
@@ -192,7 +192,7 @@ HORIZONS = [
                   "Atelier ou bureau de PME moderne, équipe au travail, grand écran mural sombre affichant un tableau de bord noir et or, lumière naturelle, ambiance calme et professionnelle",
                   3, "16:10", "/media/solutions/jarvis-enterprise-operations-v1.webp"),
         "j": [
-            ("hub", "Plusieurs Hubs reliés : maison, chalet, entreprise et véhicule sous un même compte."),
+            ("hub", "Plusieurs lieux reliés : maison, chalet, entreprise et véhicule sous un même compte."),
             ("env", "Ambiances apprises avec vous, énergie optimisée selon le tarif et la météo."),
             ("ia", "Mémoire documentaire de la famille ou de l’entreprise, toujours sur place."),
             ("secu", "Security Pro : permis requis et assurance obtenus avant toute mission, sous mandat écrit."),
@@ -206,12 +206,12 @@ HORIZONS = [
         "k": "10ans", "t": "10 ans", "s": "Le système privé de référence",
         "h": "Un seul JARVIS pour une vie entière, de la maison au yacht.",
         "p": "Des résidences de prestige, des collections automobiles, des yachts et des jets coordonnés "
-             "par un même système privé. Un Hub conçu sur mesure, une IA locale qui tourne entièrement chez vous.",
+             "par un même système privé. Un appareil conçu sur mesure, une IA locale qui tourne entièrement chez vous.",
         "photo": ("horizon-10-ans", "Résidence de prestige, yacht et jet coordonnés par JARVIS",
                   "Vue aérienne au coucher du soleil d’une résidence de prestige au bord de l’eau, un yacht à son quai privé et, au loin, un jet d’affaires sur une piste; tons dorés, ambiance cinématographique, aucune marque visible",
                   1, "16:10", None),
         "j": [
-            ("hub", "Hub JARVIS conçu sur mesure : matériel maison, silencieux, réparable, garanti."),
+            ("hub", "Appareil JARVIS conçu sur mesure : matériel maison, silencieux, réparable, garanti."),
             ("env", "Résidences de prestige, chalets et ateliers : chaque lieu avec ses propres règles."),
             ("ia", "IA locale entraînée pour le français d’ici, sans aucun appel au nuage."),
             ("secu", "Security Pro, seulement sous permis : protection de résidences et de collections."),
@@ -290,7 +290,7 @@ def firme():
 # 4. Partenariats
 # ---------------------------------------------------------------------------
 PARTENAIRES = [
-    ("Installateurs et électriciens", "tool", "Poser le Hub, les capteurs et le câblage selon les règles de l’art."),
+    ("Installateurs et électriciens", "tool", "Poser l’appareil JARVIS, les capteurs et le câblage selon les règles de l’art."),
     ("Intégrateurs audio-vidéo", "eye", "Salles de cinéma, éclairage architectural et résidences de prestige."),
     ("Concessionnaires et ateliers", "car", "Entretien prévu des voitures de collection et des véhicules électriques."),
     ("Marinas et aviation d’affaires", "anchor", "Préparer le bateau et le vol à partir d’un seul message."),
@@ -315,7 +315,7 @@ def partenaires():
 # ---------------------------------------------------------------------------
 PRINCIPES = [
     ("01", "nosell", "Aucune donnée vendue", "Jamais. Ni vendue, ni louée, ni échangée, ni utilisée pour de la publicité."),
-    ("02", "home", "Chez vous d’abord", "Tout vit sur le Hub. Le nuage ne sert qu’à ce que vous choisissez : relais d’accès, copie chiffrée."),
+    ("02", "home", "Chez vous d’abord", "Tout vit sur votre JARVIS. Le nuage ne sert qu’à ce que vous choisissez : relais d’accès, copie chiffrée."),
     ("03", "scale", "Loi 25, dès la conception", "Consentement clair, finalité précise, conservation limitée, export et suppression à la demande."),
     ("04", "hand", "Vous avez le dernier mot", "Déverrouiller, ouvrir, payer, partager : rien de sensible sans votre confirmation."),
     ("05", "journal", "Tout est tracé", "Un journal clair de chaque accès et de chaque action, consultable en tout temps."),

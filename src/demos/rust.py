@@ -29,8 +29,8 @@ ROWS = [
 EXTRA = [
     ("Aucun code « unsafe »", "Le noyau n’utilise jamais les portes de sortie du langage. Un outil le vérifie à chaque changement."),
     ("Bibliothèques en liste fermée", "Chaque pièce n’a droit qu’à sa liste, auditée automatiquement contre les failles connues."),
-    ("Mises à jour signées", "Le Hub n’installe que des paquets signés, avec retour en arrière possible."),
-    ("Secrets jamais exposés", "Chiffrés sur le Hub, effacés de la mémoire après usage. L’IA ne voit que des références."),
+    ("Mises à jour signées", "Votre JARVIS n’installe que des paquets signés, avec retour en arrière possible."),
+    ("Secrets jamais exposés", "Chiffrés sur votre JARVIS, effacés de la mémoire après usage. L’IA ne voit que des références."),
 ]
 
 _MARK = {"ok": "✓", "mid": "~", "no": "✕"}

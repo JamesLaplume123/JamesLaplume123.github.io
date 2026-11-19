@@ -261,7 +261,7 @@
   .ac-sol, .ac-sol img, .ac-gl { transition: none; }
 }
 
-/* ---------- Votre lieu, votre Hub : le lieu choisi allume le Hub conseillé ---------- */
+/* ---------- Votre lieu, votre appareil : le lieu choisi allume l'appareil conseillé ---------- */
 .ac-choisir .lx, .ac-choisir .of-choix, .ac-suite, .ac-composer > * { max-width: 84rem; margin-inline: auto; }
 .ac-choisir .lx-t { margin: 0 0 1.5rem; text-wrap: balance; font: 650 clamp(1.9rem, 3.4vw, 2.9rem)/1.1 var(--sans); letter-spacing: -.035em; color: #fff; }
 .ac-choisir .pub { margin-bottom: 14px; }
@@ -318,7 +318,7 @@
   mask-image: radial-gradient(ellipse 60% 70% at 50% 58%, #000 48%, transparent 100%);
 }
 
-/* La gamme : un grand Hub qui change selon le niveau choisi */
+/* La gamme : un grand appareil qui change selon le niveau choisi */
 .ac-gam { padding: clamp(5rem, 9vw, 8rem) var(--ac-pad) 0; text-align: center; overflow: hidden; }
 .ac-gam h2 { margin: 0; font: 650 clamp(2.4rem, 5vw, 4.4rem)/.98 var(--sans); letter-spacing: -.048em; color: #fff; }
 .ac-gam h2 span {

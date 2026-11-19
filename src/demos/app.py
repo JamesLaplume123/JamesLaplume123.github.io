@@ -170,7 +170,7 @@ SCREENS = [
     ("partage", "espace", 8500, "Vous choisissez ce que vous partagez.",
      "Avec qui, pour combien de temps, et sous votre contrôle. Un accès retiré disparaît partout."),
     ("messages", "espace", 9500, "Vos conversations, chez vous.",
-     "Textes, documents, photos et messages vocaux. Un appel ou une visio part d’un seul geste, et tout passe par votre Hub."),
+     "Textes, documents, photos et messages vocaux. Un appel ou une visio part d’un seul geste, et tout passe par votre JARVIS."),
     ("appels", "espace", 8500, "JARVIS répond quand vous ne pouvez pas.",
      "Appels et visioconférences, en personnel comme en professionnel. Un numéro inconnu est filtré d’abord par JARVIS, et vous gardez le dernier mot."),
     ("carte", "carte", 17500, "Tous vos lieux, d’un coup d’œil.",
@@ -797,14 +797,14 @@ def v_messages():
   <aside class="ap-card ap-ms-list" data-r>
     <label class="ap-ms-q">{icon("search")}<input type="search" placeholder="Rechercher une conversation" aria-label="Rechercher une conversation" data-conv-q></label>
     <ul class="ap-cvl">{rows}</ul>
-    <p class="ap-fine">{icon("lock")}<span>Chiffré de bout en bout · conservé sur votre Hub</span></p>
+    <p class="ap-fine">{icon("lock")}<span>Chiffré de bout en bout · conservé sur votre JARVIS</span></p>
   </aside>
   <section class="ap-card ap-ms-conv" data-r aria-label="Conversation">
     {threads}
     <div class="ap-attach" data-attach hidden>
       <button type="button" data-attach-k="doc">{icon("doc")}<span><b>Document</b><small>PDF, notes, plans</small></span></button>
       <button type="button" data-attach-k="photo">{icon("image")}<span><b>Photo</b><small>De votre galerie</small></span></button>
-      <button type="button" data-attach-k="pos">{icon("pin")}<span><b>Position</b><small>Le Hub, jamais la vôtre sans accord</small></span></button>
+      <button type="button" data-attach-k="pos">{icon("pin")}<span><b>Position</b><small>Celle de votre JARVIS, jamais la vôtre sans accord</small></span></button>
     </div>
     <form class="ap-ms-form" data-compose autocomplete="off">
       <button type="button" class="ap-ms-clip" data-attach-t aria-label="Joindre un fichier" aria-expanded="false">{icon("clip")}</button>
@@ -892,7 +892,7 @@ def v_appels():
 </article>"""
     priv = f"""<div class="ap-card ap-priv" data-r>
   <span class="ap-ring">{icon("lock")}</span>
-  <p>Vos appels restent chez vous : la téléphonie passe par votre JARVIS Hub.</p>
+  <p>Vos appels restent chez vous : la téléphonie passe par votre JARVIS.</p>
 </div>"""
     return f"""{_head('Mon espace <span>/</span> <b>Mes appels</b>', 'Mes <em>appels</em>',
                       "Appels et visioconférences, répondus avec vous — ou pour vous.", _pp())}
@@ -1057,15 +1057,15 @@ def v_carte():
 
 SHARES = [
     ("CL", "gold", "Camille", "Amie", "doc", "« Notes de réunion »", "Lecture seule", "Encore 6 jours", 80,
-     ["Téléphone de Camille", "Documents", "Hub"]),
+     ["Téléphone de Camille", "Documents", "JARVIS"]),
     ("MA", "teal", "Marc", "Frère", "camera", "Caméra de l’entrée", "Événements seulement", "Jusqu’à dimanche", 45,
-     ["Téléphone de Marc", "Caméra", "Hub"]),
+     ["Téléphone de Marc", "Caméra", "JARVIS"]),
     ("SO", "violet", "Sophie", "Gardienne", "key", "Serrure de l’entrée", "Code temporaire", "Ce soir, 18 h – 23 h", 20,
-     ["Téléphone de Sophie", "Serrure", "Hub"]),
+     ["Téléphone de Sophie", "Serrure", "JARVIS"]),
     ("ÉA", "stone", "Équipe Atelier", "4 personnes", "folder", "Dossier « Soumissions »", "Lecture et commentaires",
-     "Encore 30 jours", 92, ["Comptes de l’équipe", "Documents", "Hub"]),
-    ("SJ", "gold", "Soutien JARVIS", "Technicien", "shield", "Journal du Hub", "Diagnostic, lecture seule", "Encore 2 h", 30,
-     ["Session de soutien", "Journal", "Hub"]),
+     "Encore 30 jours", 92, ["Comptes de l’équipe", "Documents", "JARVIS"]),
+    ("SJ", "gold", "Soutien JARVIS", "Technicien", "shield", "Journal de l’appareil", "Diagnostic, lecture seule", "Encore 2 h", 30,
+     ["Session de soutien", "Journal", "JARVIS"]),
 ]
 
 
@@ -1143,7 +1143,7 @@ def _cmd():
     g_screens = "".join(_cmd_item(ic, TITLE[k], sub, f'data-go="{k}"', "Écran") for k, ic, sub in screens)
     g_people = (
         _cmd_item("chat", "Camille", "Ouvrir la conversation", 'data-go="messages" data-conv="camille"', "Message", "amie souper")
-        + _cmd_item("call", "Appeler Camille", "Appel audio par votre Hub", 'data-call-start="camille" data-call-kind="audio"', "Appel")
+        + _cmd_item("call", "Appeler Camille", "Appel audio par votre JARVIS", 'data-call-start="camille" data-call-kind="audio"', "Appel")
         + _cmd_item("camera", "Visio avec Camille", "Caméra et micro vérifiés", 'data-call-start="camille" data-call-kind="video"', "Visio")
         + _cmd_item("users", "Équipe Atelier", "Conversation de l’équipe", 'data-go="messages" data-conv="equipe" data-pp-set="pro"', "Message", "travail soumission")
         + _cmd_item("camera", "Visio avec l’équipe", "Revue de chantier", 'data-call-start="equipe" data-call-kind="video"', "Visio", "atelier")
@@ -1179,21 +1179,21 @@ def _me_menu():
         for m, lab in (("signature", "Or"), ("platinum", "Titane"), ("base", "Graphite"))
     )
     return f"""<div class="ap-pop ap-menu" data-pop-panel="me" hidden role="dialog" aria-label="Profil d’Alex">
-  <div class="ap-me-h">{face(AV_ALEX)}<span><b>Alex</b><small>Compte personnel · Hub de la résidence</small></span></div>
+  <div class="ap-me-h">{face(AV_ALEX)}<span><b>Alex</b><small>Compte personnel · JARVIS de la résidence</small></span></div>
   <button type="button" class="ap-mi" data-toast="Mon profil : nom, photo et clés d’accès. Votre biométrie reste sur votre appareil.">{icon("user")}<span><b>Mon profil</b><small>Nom, photo, clés d’accès</small></span></button>
   <p class="ap-mk">Espace affiché</p>
   {_pp()}
   <p class="ap-mk">Mode d’affichage du site</p>
   <div class="ap-modes">{modes}</div>
   <button type="button" class="ap-mi" data-go="espace">{icon("bell")}<span><b>Notifications</b><small>2 non lues</small></span><i class="ap-dot is-red" aria-hidden="true"></i></button>
-  <button type="button" class="ap-mi is-lock" data-toast="{fr(ADMIN_NOTE)}">{icon("sliders")}<span><b>Administration</b><small>Réservée à l’administrateur du Hub</small></span>{icon("lock", "ap-mi-lock")}</button>
+  <button type="button" class="ap-mi is-lock" data-toast="{fr(ADMIN_NOTE)}">{icon("sliders")}<span><b>Administration</b><small>Réservée à l’administrateur du système</small></span>{icon("lock", "ap-mi-lock")}</button>
   <button type="button" class="ap-mi" data-toast="Simulation : vous resteriez connecté sur cet appareil jusqu’à votre retour.">{icon("logout")}<span><b>Se déconnecter</b><small>Cet appareil seulement</small></span></button>
 </div>"""
 
 
 def _callov():
     return f"""<div class="ap-callov" data-callov hidden role="dialog" aria-label="Appel en cours">
-  <div class="ap-co-top"><span class="ap-co-sec">{icon("lock")}Chiffré · par votre Hub</span>
+  <div class="ap-co-top"><span class="ap-co-sec">{icon("lock")}Chiffré · par votre JARVIS</span>
     <b data-co="title">Camille</b><span class="ap-co-time" data-co="time">Appel…</span></div>
   <div class="ap-co-audio">
     <span class="ap-co-face"><i></i><i></i><span data-co="av"></span></span>

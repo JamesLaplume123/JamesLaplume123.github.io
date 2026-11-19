@@ -39,7 +39,7 @@ def fiche(complet=True):
     a("## Les pages du site (donner le lien complet quand c’est utile)")
     pages = [
         ("/", "Accueil"), ("/solutions/", "Les sept solutions"), ("/logiciel/", "Le logiciel en démonstration"),
-        ("/plateforme/", "Le Hub (l’appareil JARVIS) : son IA privée, le noyau"),
+        ("/plateforme/", "L’appareil JARVIS : son IA privée, le noyau"),
         ("/offre/", "L’offre : trois niveaux tout compris (Base, Signature, Platinum), des options, le projet sur mesure"),
         ("/offre/#composer", "Composer mon JARVIS : pour qui, le lieu, le guide de trois questions, le niveau, les options, le projet, la soumission"),
         ("/solutions/maison-intelligente-cle-en-main/", "Maison intelligente clé en main"),
@@ -49,8 +49,8 @@ def fiche(complet=True):
         ("/contact/", "Contact : démo, visite, soumission"), ("/confidentialite/", "Confidentialité (Loi 25)"),
         ("/mentions-legales/", "Mentions légales"), ("/plan-du-site/", "Plan du site : toutes les pages"),
     ]
-    a("- Menu du site : Solutions (les sept, puis Maison, Ferme, Entreprise) · Le logiciel · L’offre · À propos (Laboratoire mobile, Vision, Le Hub, Confiance, Questions, Contact) · bouton doré « Composer mon forfait ».")
-    a("- Parcours conseillé : voir (accueil, solutions) → tester (le logiciel, la démonstration de chaque solution) → comprendre (l’offre, le Hub, les questions) → composer son forfait (le configurateur), puis « Recevoir ma soumission ».")
+    a("- Menu du site : Solutions (les sept, puis Maison, Ferme, Entreprise) · Le logiciel · L’offre · À propos (Laboratoire mobile, Vision, L’appareil, Confiance, Questions, Contact) · bouton doré « Composer mon forfait ».")
+    a("- Parcours conseillé : voir (accueil, solutions) → tester (le logiciel, la démonstration de chaque solution) → comprendre (l’offre, l’appareil, les questions) → composer son forfait (le configurateur), puis « Recevoir ma soumission ».")
     a("- Le forfait se bâtit en chemin : « Ajouter à mon forfait » sur chaque page de solution; le compteur de la barre mène au configurateur, où tout est déjà coché.")
     for u, t in pages:
         a(f"- {D}{u} : {t}")
@@ -117,7 +117,7 @@ def fiche(complet=True):
     a("- Pour aider quelqu’un qui hésite, poser les trois questions de la page L’offre : combien de caméras; l’intelligence doit-elle rester chez vous, même sans Internet; une coupure serait-elle grave. Platinum si une coupure serait grave ou 7 caméras et plus; Signature si l’IA doit rester chez soi ou 3 à 6 caméras; sinon Base.")
     a("")
     a("## Les trois appareils : JARVIS Mini, JARVIS, JARVIS Pro")
-    a("- Anciens noms : Hub Base, Hub Signature, Hub Platinum. Sur quelques pages du site, l’appareil s’appelle encore « le Hub » : c’est la même chose.")
+    a("- Anciens noms : Hub Base, Hub Signature, Hub Platinum. Si un visiteur dit « le Hub », il parle de l’appareil JARVIS : réponds avec les nouveaux noms.")
     for h in C.HUBS:
         a(f"### {h['nom']} : {p(h['prix'])}, une fois. Pour : {h['pour']}.")
         if not complet:

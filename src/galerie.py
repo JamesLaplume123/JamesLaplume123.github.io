@@ -367,7 +367,7 @@ def confiance_visuels():
                         "alt": "Armoire technique noire verrouillée dans une salle sobre, voyants ambrés, porte vitrée fumée"},
         "Chez vous · sous clé",
         "Vos données dorment<br><em>chez vous.</em>",
-        "Le Hub vit dans votre armoire, pas dans le nuage d’un fournisseur. Vous gardez la clé.") + mosaique(
+        "Votre JARVIS vit dans votre armoire, pas dans le nuage d’un fournisseur. Vous gardez la clé.") + mosaique(
         "/confiance/", "preuves", "Des limites visibles",
         "Voir, approuver,<br><em>pouvoir revenir en arrière.</em>",
         "Trois gestes concrets qui rendent la confiance vérifiable.",

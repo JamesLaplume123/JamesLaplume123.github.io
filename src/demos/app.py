@@ -1157,8 +1157,8 @@ def _cmd():
         for c in CAPABILITIES
     )
     g_set = (
-        "".join(_cmd_item("palette", f"Mode {m}", "Mode d’affichage du site", f'data-mode-pick="{m.lower()}"', "Réglage", "apparence thème")
-                for m in ("Signature", "Platinum", "Base"))
+        "".join(_cmd_item("palette", f"Thème {n}", "Apparence du site et de l’app", f'data-mode-pick="{m}"', "Réglage", "apparence thème mode")
+                for m, n in (("signature", "Or"), ("platinum", "Titane"), ("base", "Graphite")))
         + _cmd_item("brief", "Espace professionnel", "Clients, équipe, appels d’affaires", 'data-pp-set="pro"', "Réglage", "travail pro")
         + _cmd_item("user", "Espace personnel", "Famille, amis, maison", 'data-pp-set="perso"', "Réglage", "perso")
     )
@@ -1176,7 +1176,7 @@ def _me_menu():
     modes = "".join(
         f'<button type="button" class="ap-mode" data-mode-pick="{m}" aria-pressed="false"><img src="/media/modes/{m}.webp" alt="" loading="lazy" decoding="async">'
         f'<span>{lab}</span></button>'
-        for m, lab in (("signature", "Signature"), ("platinum", "Platinum"), ("base", "Base"))
+        for m, lab in (("signature", "Or"), ("platinum", "Titane"), ("base", "Graphite"))
     )
     return f"""<div class="ap-pop ap-menu" data-pop-panel="me" hidden role="dialog" aria-label="Profil d’Alex">
   <div class="ap-me-h">{face(AV_ALEX)}<span><b>Alex</b><small>Compte personnel · Hub de la résidence</small></span></div>

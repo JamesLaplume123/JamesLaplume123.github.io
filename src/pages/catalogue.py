@@ -275,9 +275,26 @@ def _kit_totaux(k):
     return once_plein, once, mois
 
 
+# Les trois niveaux, tout compris (décision de James, 18 novembre 2026) : le niveau, c'est ce que JARVIS
+# sait faire et le soutien, pareil dans chaque maison; le matériel et l'installation sont sur mesure.
+# Chaque niveau inclut les solutions de la colonne SOLS (cochées d'office par catalogue.js); les autres
+# restent des options. Un Hub plus puissant peut toujours faire un niveau plus bas, jamais l'inverse.
+NIVEAUX = {
+    "base": {"sols": ["env", "diag"], "plus": "",
+             "inclus": ["Lumières, chauffage, serrures et énergie", "Alertes : fuites, pannes, entretien",
+                        "L’app JARVIS, de partout", "Soutien par courriel"]},
+    "signature": {"sols": ["env", "diag", "secu", "ia"], "plus": "Tout Base, plus :",
+                  "inclus": ["Caméras qui comprennent ce qu’elles voient", "Une IA privée qui reste chez vous",
+                             "Assistant vocal et réceptionniste", "Soutien par courriel et téléphone"]},
+    "platinum": {"sols": ["env", "diag", "secu", "ia", "res"], "plus": "Tout Signature, plus :",
+                 "inclus": ["Réseau et cybersécurité", "Plusieurs lieux reliés, sans limite",
+                            "Batterie et Internet de secours", "Soutien prioritaire, une personne dédiée"]},
+}
+
+
 def _hubs():
-    """Les trois Hubs, à la manière d'une page d'achat : photo, nom, pour qui, la promesse (src/lieux.py,
-    HUBS_CHOIX). Le détail (capacités, limites) est dans le comparatif replié, dessous."""
+    """Les trois niveaux tout compris : photo, nom, pour qui, ce qui est inclus (NIVEAUX). Le détail
+    technique des Hubs est dans le comparatif replié, dessous."""
     out = []
     for h in HUBS:
         c = lieux.HUBS_CHOIX[h["id"]]
@@ -287,10 +304,11 @@ def _hubs():
       <span class="ct-check" aria-hidden="true"></span>
       {tag}
       <figure class="ct-hub-ph"><img src="/media/hubs/hub-{h['id']}.webp" alt="Hub JARVIS {escape(h['nom'])}" loading="lazy" decoding="async"></figure>
-      <h3>{escape(h['nom'])}</h3>
+      <h3>{escape(h['nom'].replace("Hub ", ""))}</h3>
       <p class="ct-prix">{_p(h['prix'])}<small>une fois</small></p>
       <p class="ct-pour">{c['situation']} · {c['pour']}</p>
-      <p class="ct-why">{c['promesse']}</p>
+      <ul class="ct-niv">{f'<li class="ct-niv-plus">{NIVEAUX[h["id"]]["plus"]}</li>' if NIVEAUX[h["id"]]["plus"] else ''}{"".join(f"<li>{x}</li>" for x in NIVEAUX[h["id"]]["inclus"])}</ul>
+      <span class="ct-reco" aria-hidden="true">Conseillé pour vous</span>
     </label>""")
     return "".join(out)
 
@@ -479,6 +497,20 @@ PAGE = {
 <section class="ct-lieu-etape" aria-label="Votre lieu">
   {lieux.selecteur("Commencez par votre lieu.", ident="lieu")}
 </section>
+<script type="application/json" data-niveaux>{json.dumps({k: v["sols"] for k, v in NIVEAUX.items()})}</script>
+<section class="ct-guide" data-guide aria-labelledby="guide-t">
+  <h2 id="guide-t">Trois questions, <span>et on vous conseille.</span></h2>
+  <div class="ct-gq" data-gq="cam"><p>Combien de caméras environ?</p>
+    <div><button type="button" data-v="0">Aucune à 2</button><button type="button" data-v="1">3 à 6</button><button type="button" data-v="2">7 et plus</button></div></div>
+  <div class="ct-gq" data-gq="ia"><p>L’intelligence doit-elle rester chez vous, même sans Internet?</p>
+    <div><button type="button" data-v="1">Oui</button><button type="button" data-v="0">Peu importe</button></div></div>
+  <div class="ct-gq" data-gq="coupure"><p>Une coupure serait-elle grave? <small>Animaux, entreprise, objets de valeur</small></p>
+    <div><button type="button" data-v="2">Oui</button><button type="button" data-v="0">Non</button></div></div>
+  <div class="ct-gres" data-guide-res hidden>
+    <p><small>Conseillé pour vous</small><b data-guide-nom></b><span data-guide-why></span></p>
+    <a class="pill" href="#hub" data-guide-go>Voir ce niveau</a>
+  </div>
+</section>
 <nav class="ct-lieux-nav" aria-label="Partir d’un kit" data-rev>
   <p>Ou partez d’un kit :</p>
   {"".join(f'<button type="button" data-kit-go="{i + 1}"{" data-public=" + chr(34) + "entreprise" + chr(34) if k.get("ent") else ""}>{escape(k["nom"].replace("Kit ", ""))}</button>' for i, k in enumerate(KITS))}
@@ -494,19 +526,28 @@ PAGE = {
 </div>
 <div class="ct-main">
 
-<section class="sect" id="hub" data-toc="1 · Le Hub" aria-labelledby="hub-t">
-  <div class="sect-head"><div data-rev><p class="of-num"><i>1</i><span>Étape 1 sur 4</span></p>
-    <h2 id="hub-t">Choisissez votre Hub.<br><em>Selon la taille de votre lieu.</em></h2></div>
-    <p data-rev>Même logiciel, même app. Ce qui change : la puissance, l’IA et la sécurité. Payé une fois.</p></div>
+<section class="sect" id="hub" data-toc="1 · Le niveau" aria-labelledby="hub-t">
+  <div class="sect-head"><div data-rev><p class="of-num"><i>1</i><span>Étape 1 sur 3</span></p>
+    <h2 id="hub-t">Choisissez votre niveau.<br><em>Tout compris.</em></h2></div>
+    <p data-rev>Le Hub, les solutions et le soutien, déjà assortis. Le matériel de votre lieu se chiffre à part, sur mesure.</p></div>
   <div class="ct-hubs">{_hubs()}</div>
   <details class="ct-details" data-rev><summary>Comparer les trois Hubs en détail</summary><img class="ct-trio" src="/media/hubs/hub-trio.webp" alt="Les trois Hubs JARVIS côte à côte" loading="lazy" decoding="async">{_compare()}</details>
-  <div class="ct-inclus-hub" data-rev><b>Dans chaque Hub :</b> la solution Environnements intelligents, l’app JARVIS, les comptes et droits, les mises à jour signées, les sauvegardes chiffrées.</div>
+  <div class="ct-grandit" data-rev>
+    <h3>Votre lieu grandit? <span>JARVIS aussi.</span></h3>
+    <ul>
+      <li><b>Monter de niveau</b>Si votre Hub suffit, on l’active à distance, le jour même.</li>
+      <li><b>Plus de puissance</b>On échange votre Hub, avec un crédit. Votre maison est restaurée telle quelle.</li>
+      <li><b>Un autre lieu</b>Votre ancien Hub part au chalet ou dans le VR, relié au nouveau.</li>
+      <li><b>Redescendre</b>Vous gardez votre Hub; on retire des fonctions et vous payez moins.</li>
+    </ul>
+    <p>Tout le matériel installé reste. Rien ne se perd.</p>
+  </div>
 </section>
 
-<section class="sect alt" id="solutions" data-toc="2 · Vos solutions" aria-labelledby="sol-t">
-  <div class="sect-head"><div data-rev><p class="of-num"><i>2</i><span>Étape 2 sur 4</span></p>
-    <h2 id="sol-t">Choisissez vos solutions.<br><em>Comme des apps.</em></h2></div>
-    <p data-rev>Par mois, annulables en tout temps.</p></div>
+<section class="sect alt" id="solutions" data-toc="2 · Les options" aria-labelledby="sol-t">
+  <div class="sect-head"><div data-rev><p class="of-num"><i>2</i><span>Étape 2 sur 3</span></p>
+    <h2 id="sol-t">Ajoutez des options.<br><em>Si vous en avez besoin.</em></h2></div>
+    <p data-rev>Ce qui est déjà dans votre niveau est marqué « Inclus ». Le reste s’ajoute au mois, annulable en tout temps.</p></div>
   <div class="ct-sols">{_solutions()}</div>
   <label class="ct-complet" data-rev>
     <input type="checkbox" name="complet" value="complet" data-prix="{COMPLET['prix']}"><span class="ct-check" aria-hidden="true"></span>
@@ -520,19 +561,19 @@ PAGE = {
   </div>
 </section>
 
-<section class="sect" id="materiel" data-toc="3 · Le matériel" aria-labelledby="mat-t">
-  <div class="sect-head"><div data-rev><p class="of-num"><i>3</i><span>Étape 3 sur 4</span></p>
-    <h2 id="mat-t">Ajoutez le matériel<br><em>de votre lieu.</em></h2></div>
-    <p data-rev>Payé une fois. Ce que vous avez déjà est réutilisé.</p></div>
+<section class="sect" id="materiel" data-toc="3 · Votre projet" aria-labelledby="mat-t">
+  <div class="sect-head"><div data-rev><p class="of-num"><i>3</i><span>Étape 3 sur 3</span></p>
+    <h2 id="mat-t">Votre projet.<br><em>Sur mesure.</em></h2></div>
+    <p data-rev>Chaque lieu est différent : le matériel et l’installation sont chiffrés pour le vôtre. Partez d’un kit ou dites-nous ce que vous avez; ce qui existe déjà est réutilisé.</p></div>
   <div class="ct-kits-h" data-rev><h3 class="ct-sub">Pressé? <em>Partez d’un kit (−8 %), puis ajustez pièce par pièce.</em></h3></div>
   <div class="ct-kits">{_kits()}</div>
   <details class="ct-details ct-piece" data-rev><summary>Ajouter des appareils à la pièce</summary>
   <div class="ct-mats">{_materiel()}</div></details>
 </section>
 
-<section class="sect alt" id="lieux" data-toc="4 · Lieux et services" aria-labelledby="lieux-t">
-  <div class="sect-head"><div data-rev><p class="of-num"><i>4</i><span>Étape 4 sur 4</span></p>
-    <h2 id="lieux-t">Lieux, installation<br><em>et services.</em></h2></div>
+<section class="sect alt" id="lieux" aria-labelledby="lieux-t">
+  <div class="sect-head"><div data-rev>
+    <h2 id="lieux-t">Installation<br><em>et lieux.</em></h2></div>
     <p data-rev>Un Hub par lieu. Les lieux se parlent par un lien privé et chiffré. Les petits lieux empruntent l’IA de votre plus gros Hub. Les solutions sont à 30 % de rabais dès le deuxième lieu.</p></div>
   <div class="ct-lieux" data-rev>
     <label>Ce lieu est mon <select name="rang"><option value="1">premier lieu JARVIS</option><option value="2">deuxième lieu ou plus (−30 % sur les solutions)</option></select></label>

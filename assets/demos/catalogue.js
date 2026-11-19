@@ -324,4 +324,71 @@
     document.addEventListener("click", function () { setTimeout(montre, 60); });
     montre();
   }
+
+  /* Niveaux tout compris : les solutions du niveau choisi sont cochées d'office (« Inclus ») et ne se
+     décochent pas; les autres restent des options. */
+  var NIV = {};
+  try { NIV = JSON.parse(document.querySelector("[data-niveaux]").textContent); } catch (e) {}
+  var RANG = { base: 0, signature: 1, platinum: 2 }, PAR_RANG = ["base", "signature", "platinum"];
+  function appliqueNiveau() {
+    var c = document.querySelector('input[name="hub"]:checked');
+    var inclus = c && NIV[c.value] ? NIV[c.value] : [];
+    var cp = document.querySelector('input[name="complet"]'); if (cp && cp.checked) cp.checked = false;
+    $$(".ct-sol[data-sol]").forEach(function (box) {
+      var id = box.getAttribute("data-sol"), cb = box.querySelector('input[name="sol"]');
+      var dedans = inclus.indexOf(id) >= 0;
+      box.classList.toggle("is-niveau", dedans);
+      if (cb && dedans && !cb.checked) cb.checked = true;
+      if (cb && !dedans && box.dataset.niveauAvant === "1") cb.checked = false;   /* inclus avant, plus maintenant */
+      box.dataset.niveauAvant = dedans ? "1" : "";
+    });
+    compute();
+  }
+  form.addEventListener("click", function (e) {
+    var box = e.target.closest && e.target.closest(".ct-sol.is-niveau");
+    if (box && e.target.matches('input[name="sol"]')) e.preventDefault();   /* « Inclus » : pas d'option à retirer */
+  });
+  document.addEventListener("change", function (e) { if (e.target && e.target.name === "hub") appliqueNiveau(); });
+  document.addEventListener("jarvis:forfait", function () { setTimeout(appliqueNiveau, 0); });
+
+  /* Le guide : le lieu + trois réponses donnent le niveau conseillé, avec la raison. */
+  var guide = document.querySelector("[data-guide]");
+  if (guide) {
+    var rep = {};
+    var res = guide.querySelector("[data-guide-res]");
+    var conseil = function () {
+      var F = window.JarvisForfait, o = F ? F.lire() : {};
+      var r = -1, why = "";
+      if (o.lieux && o.lieux.length && RANG[o.hub] !== undefined) { r = RANG[o.hub]; why = "La bonne taille pour votre lieu."; }
+      if (rep.cam !== undefined && rep.cam > r) { r = rep.cam; why = rep.cam === 2 ? "Plus de six caméras à analyser." : "Jusqu’à six caméras analysées par l’IA."; }
+      if (rep.ia === 1 && r < 1) { r = 1; why = "L’IA reste chez vous, même sans Internet."; }
+      if (rep.coupure === 2 && r < 2) { r = 2; why = "Une coupure serait grave : batterie et Internet de secours."; }
+      if (r < 0 && Object.keys(rep).length) { r = 0; why = "L’essentiel, pour un petit lieu."; }
+      $$(".ct-hub").forEach(function (h) { h.classList.toggle("is-reco", r >= 0 && h.getAttribute("data-hub") === PAR_RANG[r]); });
+      if (r < 0) { res.hidden = true; return; }
+      var id = PAR_RANG[r];
+      res.hidden = false;
+      res.querySelector("[data-guide-nom]").textContent = "JARVIS " + id.charAt(0).toUpperCase() + id.slice(1);
+      res.querySelector("[data-guide-why]").textContent = why;
+      res.dataset.id = id;
+    };
+    guide.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-v]");
+      if (b) {
+        var q = b.closest("[data-gq]");
+        q.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        rep[q.getAttribute("data-gq")] = +b.getAttribute("data-v");
+        conseil();
+        return;
+      }
+      var go = e.target.closest("[data-guide-go]");
+      if (go && res.dataset.id) {
+        var radio = document.querySelector('input[name="hub"][value="' + res.dataset.id + '"]');
+        if (radio) { radio.checked = true; radio.dispatchEvent(new Event("change", { bubbles: true })); }
+      }
+    });
+    document.addEventListener("jarvis:forfait", function () { setTimeout(conseil, 0); });
+    conseil();
+  }
+  appliqueNiveau();
 })();

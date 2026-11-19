@@ -302,8 +302,8 @@ SEO = {
     ),
     "/offre/": (
         "L’offre JARVIS : vos lieux, votre niveau, votre projet",
-        "Composez votre JARVIS en trois étapes : vos lieux, votre niveau, votre projet. JARVIS propose "
-        "l’appareil de chaque lieu et son équipement; vous recevez une soumission écrite.",
+        "Composez votre JARVIS en trois étapes : vos lieux, votre niveau, votre projet. "
+        "L’appareil et l’équipement de chaque lieu sont proposés. Soumission écrite.",
     ),
     "/plateforme/": (
         "Le Hub JARVIS et son IA privée : sous le capot",

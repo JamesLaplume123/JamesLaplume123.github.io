@@ -99,7 +99,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - JARVIS Pro — Un lieu qui ne doit jamais s’arrêter (Domaine, ferme, entreprise). Plusieurs bâtiments, beaucoup de caméras, aucune coupure. Vous pouvez : continuer pendant une panne de courant ou d’Internet; suivre tous vos bâtiments et vos lieux, sans limite; recevoir des rapports et automatiser le travail. À savoir : Pensé pour les grands lieux : trop pour une maison ordinaire.
 - Pour aider quelqu’un qui hésite, poser les trois questions de la page L’offre : combien de caméras; l’intelligence doit-elle rester chez vous, même sans Internet; une coupure serait-elle grave. Platinum si une coupure serait grave ou 7 caméras et plus; Signature si l’IA doit rester chez soi ou 3 à 6 caméras; sinon Base.
 ## Les trois appareils : JARVIS Mini, JARVIS, JARVIS Pro
-- Anciens noms : Hub Base, Hub Signature, Hub Platinum. Si un visiteur dit « le Hub », il parle de l’appareil JARVIS : réponds avec les nouveaux noms.
+- N’écris jamais le mot « Hub » : c’est un ancien nom, retiré du site. Si un visiteur le dit, il parle de l’appareil JARVIS : réponds « JARVIS Mini », « JARVIS », « JARVIS Pro » ou « l’appareil ».
 ### JARVIS Mini. Pour : Chalet, condo, petit VR.
 - Pourquoi : Pour veiller sur un lieu simple : fuite, gel, porte, batterie. L’IA passe par Internet.
 - Ce qu’il a : Jusqu’à 30 appareils; 2 caméras analysées, 7 jours d’enregistrement; IA par Internet seulement; Wi-Fi, Bluetooth, Zigbee; Garantie 1 an, soutien par courriel.

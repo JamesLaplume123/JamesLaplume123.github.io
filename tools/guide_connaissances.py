@@ -117,7 +117,7 @@ def fiche(complet=True):
     a("- Pour aider quelqu’un qui hésite, poser les trois questions de la page L’offre : combien de caméras; l’intelligence doit-elle rester chez vous, même sans Internet; une coupure serait-elle grave. Platinum si une coupure serait grave ou 7 caméras et plus; Signature si l’IA doit rester chez soi ou 3 à 6 caméras; sinon Base.")
     a("")
     a("## Les trois appareils : JARVIS Mini, JARVIS, JARVIS Pro")
-    a("- Anciens noms : Hub Base, Hub Signature, Hub Platinum. Si un visiteur dit « le Hub », il parle de l’appareil JARVIS : réponds avec les nouveaux noms.")
+    a("- N’écris jamais le mot « Hub » : c’est un ancien nom, retiré du site. Si un visiteur le dit, il parle de l’appareil JARVIS : réponds « JARVIS Mini », « JARVIS », « JARVIS Pro » ou « l’appareil ».")
     for h in C.HUBS:
         a(f"### {h['nom']} : {p(h['prix'])}, une fois. Pour : {h['pour']}.")
         if not complet:

@@ -166,6 +166,11 @@ def fiche(complet=True):
     a("- niveau : base, signature ou platinum. Sans niveau, la page prend le niveau conseillé pour ces lieux.")
     a(f"- Exemple : maison, chalet et une auto, niveau Signature : {D}/offre/?lieux=maison,chalet,auto&niveau=signature&ens=tout#composer")
     a("- Un lieu ne se met qu’une fois dans le lien; le nombre de véhicules ou de pièces s’ajuste sur la page.")
+    a(f"- Liste sur mesure : un paramètre par lieu, « pièce:quantité » séparés par des virgules, remplace l’ensemble de départ de ce lieu. Exemple, deux caméras et deux capteurs de fuite à la maison, trois capteurs de gel au chalet : {D}/offre/?lieux=maison,chalet&niveau=signature&ens=tout&maison=camext:2,fuite:2,vanne:1&chalet=temp:3,fuite:2,porte:2#composer")
+    a("- Les codes de pièces, pour composer cette liste :")
+    for cat, items in C.MATERIEL:
+        a(f"  - {cat} : " + "; ".join(f"{i} = {n}" for i, n, _, _, _ in items) + ".")
+    a("- Un code qui n’est pas dans cette liste est ignoré par la page. Les quantités sont des nombres entiers. Le Boîtier VR s’écrit vr* : la page met celui du niveau choisi.")
     a("")
     a("## Les ensembles de départ (un par lieu, ajustables pièce par pièce)")
     for l in lieux.LIEUX:

@@ -205,6 +205,13 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - niveau : base, signature ou platinum. Sans niveau, la page prend le niveau conseillé pour ces lieux.
 - Exemple : maison, chalet et une auto, niveau Signature : https://jarvisprivatesystems.com/offre/?lieux=maison,chalet,auto&niveau=signature&ens=tout#composer
 - Un lieu ne se met qu’une fois dans le lien; le nombre de véhicules ou de pièces s’ajuste sur la page.
+- Liste sur mesure : un paramètre par lieu, « pièce:quantité » séparés par des virgules, remplace l’ensemble de départ de ce lieu. Exemple, deux caméras et deux capteurs de fuite à la maison, trois capteurs de gel au chalet : https://jarvisprivatesystems.com/offre/?lieux=maison,chalet&niveau=signature&ens=tout&maison=camext:2,fuite:2,vanne:1&chalet=temp:3,fuite:2,porte:2#composer
+- Les codes de pièces, pour composer cette liste :
+  - Boîtiers JARVIS : vrb = Boîtier VR Base; vrs = Boîtier VR Signature; vrp = Boîtier VR Platinum; mobb = Boîtier Mobilité; ecr10 = Écran JARVIS 10 po; ecr7 = Écran JARVIS 7 po; sec = Boîtier Secours.
+  - Capteurs : fuite = Fuite d’eau; vanne = Vanne d’eau automatique; temp = Température et humidité; porte = Porte et fenêtre; radar = Présence (radar); fumee = Fumée et CO; propane = Propane; reserv = Niveau de réservoir; pneus = Pression des pneus (4); energie = Compteur d’énergie; univ = Capteur universel.
+  - Caméras et accès : camext = Caméra extérieure; camint = Caméra intérieure; cam360 = Caméra 360° (dôme); sonnette = Sonnette vidéo; plaques = Lecteur de plaques; serrure = Serrure intelligente; clavier = Clavier et lecteur de badges; inter = Interphone vidéo; sirene = Sirène et stroboscope; urgence = Bouton d’urgence.
+  - Confort et réseau : thermo = Thermostat intelligent; inter2 = Interrupteur ou gradateur; prise = Prise intelligente; ampoule = Ampoule couleur; del = Bande DEL (2 m); store = Moteur de store; relais = Relais foyer ou garage; poe = Switch PoE 8 ports; r4g = Routeur 4G/5G; starlink = Starlink Mini; telip = Téléphone IP.
+- Un code qui n’est pas dans cette liste est ignoré par la page. Les quantités sont des nombres entiers. Le Boîtier VR s’écrit vr* : la page met celui du niveau choisi.
 ## Les ensembles de départ (un par lieu, ajustables pièce par pièce)
 - Maison : 3 × Fuite d’eau, 1 × Vanne d’eau automatique, 3 × Porte et fenêtre, 2 × Présence (radar), 1 × Sonnette vidéo, 1 × Thermostat intelligent. L’eau coupée toute seule, la sonnette qui reconnaît, le chauffage par pièce.
 - Condo : 2 × Fuite d’eau, 1 × Porte et fenêtre, 1 × Présence (radar), 1 × Thermostat intelligent. L’essentiel d’un condo : l’eau, la porte, le chauffage.

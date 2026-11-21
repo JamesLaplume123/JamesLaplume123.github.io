@@ -69,7 +69,7 @@ async def main():
         verifie("rechargement : état identique", avant==apres, avant+"\n"+apres)
         # 9. guide
         await pg.evaluate("document.querySelector('[data-gq=coupure] button[data-v=\"2\"]').click()")
-        verifie("guide : coupure grave -> Platinum conseillé", await pg.evaluate("document.querySelector('.ct-hub.is-reco').dataset.hub")=="platinum")
+        verifie("guide : coupure grave -> Platinum conseillé", await pg.evaluate("document.querySelector('.ct-nvc.is-reco').dataset.hub")=="platinum")
         # 10. tout retirer
         await pg.evaluate("window.JarvisCatalogue.vider()"); await pg.wait_for_timeout(200)
         verifie("tout retirer : forfait vide", await pg.evaluate(f"[{F}.lieux.length,{F}.sols.length,{F}.autres.length,{F}.hub]")==[0,0,0,""], str(await pg.evaluate(f"{F}")))
@@ -119,6 +119,26 @@ async def main():
         attendu = [[lieux.HUB_NOM[js["hub"][i]]] + ([lieux.PAR_ID[i]["boitier"]] if lieux.PAR_ID[i].get("boitier") else []) + (["Lieu principal"] if i == js["principal"] else []) for i in ids]
         verifie("page L'appareil : chaque lieu d'exemple porte l'appareil que donne la règle", vus == attendu, f"{vus} | {attendu}")
         verifie("page L'appareil : aucune erreur JavaScript", not errs, str(errs))
+        # 15. les trois niveaux côte à côte : chaque colonne nomme son appareil, et ce qu'elle dit « incluse »
+        #     est exactement ce que le niveau coche à l'étape 3 (une seule source : NIVEAUX).
+        await pg.goto('http://localhost:4173/offre/'); await pg.wait_for_timeout(700)
+        cols = await pg.evaluate("[...document.querySelectorAll('.ct-nvc')].map(c => [c.dataset.hub, c.querySelector('strong').textContent, c.querySelector('em').textContent, c.querySelectorAll('.ct-nv-c.is-oui').length, c.querySelectorAll('.ct-nv-c').length])")
+        verifie("niveaux : trois colonnes, chacune avec son appareil", [c[:3] for c in cols] == [["base", "Base", "JARVIS Mini"], ["signature", "Signature", "JARVIS"], ["platinum", "Platinum", "JARVIS Pro"]], str(cols))
+        verifie("niveaux : même nombre de lignes dans chaque colonne", len({c[4] for c in cols}) == 1 and cols[0][4] >= 10, str(cols))
+        for hub, _, _, incluses, _ in cols:
+            await pg.evaluate(f"document.querySelector('input[name=hub][value={hub}]').click()"); await pg.wait_for_timeout(200)
+            coche = await pg.evaluate("document.querySelectorAll('.ct-sol.is-niveau').length")
+            verifie(f"niveau {hub} : la colonne annonce {incluses} extensions incluses, l'étape 3 en coche autant", incluses == coche, f"{incluses} contre {coche}")
+        ctx = await b.new_context(**p.devices["iPhone 13"]); pm = await ctx.new_page()
+        await pm.goto('http://localhost:4173/offre/'); await pm.wait_for_timeout(900)
+        col = pm.locator('.ct-nvc[data-hub="platinum"] .ct-nv-c').nth(6)
+        await col.scroll_into_view_if_needed(); await col.tap(); await pm.wait_for_timeout(300)
+        verifie("téléphone : toucher n'importe où dans une colonne choisit ce niveau", await pm.evaluate(f"{F}.hub") == "platinum")
+        large = await pm.evaluate("[document.documentElement.scrollWidth, window.innerWidth, [...document.querySelectorAll('.ct-nvc')].every(c => { const r = c.getBoundingClientRect(); return r.left >= 0 && r.right <= window.innerWidth; })]")
+        verifie("téléphone : les trois colonnes tiennent dans l'écran", large[0] <= large[1] and large[2], str(large))
+        hauts = await pm.evaluate("[...document.querySelectorAll('.ct-nvc')].map(c => [...c.querySelectorAll('.ct-nv-c')].map(x => Math.round(x.getBoundingClientRect().top)))")
+        verifie("téléphone : les lignes s'alignent d'une colonne à l'autre", hauts[0] == hauts[1] == hauts[2], str(hauts))
+        await ctx.close()
         await b.close()
     print("RÉSULTAT :", "tout passe" if ok else "à corriger")
 asyncio.run(main())

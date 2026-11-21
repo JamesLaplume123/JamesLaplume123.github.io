@@ -2,7 +2,8 @@
 # Hors menu, hors sitemap, robots noindex/nofollow, /admin/ refusé dans robots.txt.
 # Le jeton LEADS_TOKEN est collé par James et gardé seulement dans sessionStorage (onglet ouvert);
 # il n'est envoyé qu'au service du site (GET /visits/log, GET /chats). Rien de secret n'est écrit ici.
-# Trois vues : Visiteurs (une ligne par adresse IP), Conversations avec JARVIS (GET /chats, même jeton)
+# Quatre vues : Visiteurs (une ligne par adresse IP), Conversations avec JARVIS (GET /chats),
+# Demandes reçues par le formulaire de contact (GET /leads, même jeton)
 # et Journal (chaque page vue). Un clic sur un visiteur ou une adresse ouvre sa fiche : son parcours
 # et ses questions à JARVIS dans un seul fil.
 # Les chiffres viennent des compteurs par jour du service; le journal se charge par tranches
@@ -114,6 +115,7 @@ PAGE = {
     <div class="av-tabs" role="tablist">
       <button type="button" role="tab" class="av-tab is-on" data-tab="visiteurs" aria-selected="true">Visiteurs <b data-av="n-visiteurs">—</b></button>
       <button type="button" role="tab" class="av-tab" data-tab="conversations" aria-selected="false">Conversations <b data-av="n-conversations">—</b></button>
+      <button type="button" role="tab" class="av-tab" data-tab="demandes" aria-selected="false">Demandes <b data-av="n-demandes">—</b></button>
       <button type="button" role="tab" class="av-tab" data-tab="journal" aria-selected="false">Journal <b data-av="n-journal">—</b></button>
       <button type="button" role="tab" class="av-tab" data-tab="carte" aria-selected="false">Carte</button>
     </div>
@@ -147,6 +149,16 @@ PAGE = {
     <p class="av-hint av-cstate" data-av="c-state"></p>
     <div class="cv-liste" data-av="c-rows"></div>
     <div class="av-more"><button type="button" class="pill ghost" data-av="c-more" hidden>Charger plus</button></div>
+  </div>
+
+  <div class="av-card av-log av-pane" data-pane="demandes" hidden>
+    <div class="av-log-head">
+      <h2>Demandes reçues</h2>
+      <p class="av-count" data-av="d-count">—</p>
+    </div>
+    <p class="av-hint av-cstate" data-av="d-state"></p>
+    <div class="cv-liste" data-av="d-rows"></div>
+    <div class="av-more"><button type="button" class="pill ghost" data-av="d-more" hidden>Charger plus</button></div>
   </div>
 
   <div class="av-card av-log av-pane" data-pane="journal" hidden>

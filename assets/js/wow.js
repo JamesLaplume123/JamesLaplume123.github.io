@@ -314,19 +314,29 @@
       var stored = false;
       var attempt = function (i) {
         if (i >= endpoints.length) return stored ? Promise.resolve({ stored: true }) : Promise.reject(new Error("aucun service"));
-        return post(endpoints[i], o).catch(function (err) {
+        return post(endpoints[i], o).then(function (j) {
+          j = j || {}; j.envoye = true; return j;
+        }).catch(function (err) {
           if (err && err.stored) stored = true;
           if (i + 1 < endpoints.length) return attempt(i + 1);
           if (stored) return { stored: true };
           throw err;
         });
       };
-      attempt(0).then(function () {
+      attempt(0).then(function (res) {
         form.classList.remove("is-sending");
         var first = (o.nom || "").split(" ")[0];
-        form.innerHTML = '<div class="form-done" role="status"><div class="check" aria-hidden="true">✓</div>' +
-          "<h3>Merci" + (first ? ", " + first.replace(/[<>&"]/g, "") : "") + ".</h3>" +
-          "<p>Votre message est transmis à James. Il vous répondra personnellement.</p></div>";
+        var nom = first ? ", " + first.replace(/[<>&"]/g, "") : "";
+        /* Enregistré mais pas envoyé : on ne promet pas une réponse qui pourrait ne jamais venir. */
+        var seulementGarde = res && res.stored === true && res.envoye !== true;
+        form.innerHTML = seulementGarde
+          ? '<div class="form-done is-part" role="status"><div class="check" aria-hidden="true">✓</div>' +
+            "<h3>Message enregistré" + nom + ".</h3>" +
+            "<p>Votre demande est inscrite et James la verra. Si c’est pressant, " +
+            '<a href="' + mailtoFor(o).replace(/"/g, "&quot;") + '">envoyez-la aussi par courriel</a> — elle est déjà rédigée.</p></div>'
+          : '<div class="form-done" role="status"><div class="check" aria-hidden="true">✓</div>' +
+            "<h3>Merci" + nom + ".</h3>" +
+            "<p>Votre message est transmis à James. Il vous répondra personnellement.</p></div>";
       }).catch(function (err) {
         form.classList.remove("is-sending");
         btn.disabled = false;

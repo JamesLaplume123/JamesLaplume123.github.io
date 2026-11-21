@@ -22,6 +22,8 @@
   var LIMIT = 200;
   var chats = [];        // échanges avec JARVIS (GET /chats), les plus récents d'abord
   var cCursor = null, cBusy = false, cState = "";
+  var leads = [];        // demandes reçues par le formulaire (GET /leads), les plus récentes d'abord
+  var dCursor = null, dBusy = false, dState = "";
   var tab = "visiteurs";
   /* Robots : ceux que le service a reconnus, et les centres de données (pas des gens chez eux). */
   var HOSTS = /anthropic|amazon|aws|google cloud|google llc|microsoft|azure|digitalocean|ovh|hetzner|linode|akamai|gthost|datacamp|m247|leaseweb|vultr|contabo|oracle|alibaba|tencent|scaleway|cloudflare/i;
@@ -136,6 +138,73 @@
       .then(function () { cBusy = false; render(); });
   }
 
+  /* ---------- Demandes reçues par le formulaire (GET /leads, même jeton) ---------- */
+  function loadLeads(more) {
+    var t = token();
+    if (!API || !t || dBusy || (more && !dCursor)) return;
+    dBusy = true;
+    fetch(API + "/leads?limit=200" + (more ? "&cursor=" + encodeURIComponent(dCursor) : ""), { headers: { Authorization: "Bearer " + t }, cache: "no-store" })
+      .then(function (r) {
+        if (r.status === 404) throw new Error("Le service ne connaît pas encore les demandes.");
+        if (r.status === 401) throw new Error("Jeton refusé par le service.");
+        if (!r.ok) throw new Error("Le service ne répond pas (" + r.status + ").");
+        return r.json();
+      })
+      .then(function (d) {
+        /* Le service peut répondre { demandes: [] }, { leads: [] } ou directement un tableau. */
+        var arr = (d && (d.demandes || d.leads || d.items || d.rows)) || (Array.isArray(d) ? d : null);
+        if (!Array.isArray(arr)) throw new Error("Le service ne connaît pas encore les demandes.");
+        leads = more ? leads.concat(arr) : arr;
+        leads.sort(function (a, b) { return (a.t || a.date || "") < (b.t || b.date || "") ? 1 : -1; });
+        dCursor = typeof d.cursor === "string" && d.cursor ? d.cursor : null;
+        dState = "";
+      })
+      .catch(function (e) { dState = e.message || "Les demandes ne se chargent pas."; })
+      .then(function () { dBusy = false; render(); });
+  }
+
+  function renderDemandes() {
+    var q = cherche();
+    var vus = leads.filter(function (x) {
+      return trouve(q, [x.nom, x.email, x.message, x.sujet, x.organisation, x.region, x.profil, x.page]);
+    });
+    var box = $("d-rows"); box.textContent = "";
+    $("n-demandes").textContent = fmt(leads.length);
+    $("d-count").textContent = plural(vus.length, "demande", "demandes");
+    $("d-state").textContent = dState || (token()
+      ? (leads.length ? "" : "Aucune demande pour l’instant. Chaque message envoyé par le formulaire de contact apparaîtra ici, même si le courriel ne part pas.")
+      : "Collez le jeton en haut pour voir les demandes.");
+    $("d-state").hidden = !$("d-state").textContent;
+    $("d-more").hidden = !dCursor;
+    vus.forEach(function (x) {
+      var d = el("details", "cv-c");
+      var s2 = el("summary");
+      var tete = el("div", "cv-tete");
+      tete.appendChild(el("b", "", (x.nom || "Sans nom") + (x.sujet ? " — " + x.sujet : "")));
+      tete.appendChild(el("span", "cv-quand", x.t || x.date ? ilYa(x.t || x.date) : ""));
+      s2.appendChild(tete);
+      var meta = el("div", "cv-meta");
+      if (x.email) {
+        var a = el("a", "", x.email);
+        a.href = "mailto:" + x.email + "?subject=" + encodeURIComponent("Votre demande — JARVIS Private Systems");
+        meta.appendChild(a);
+      }
+      if (x.organisation) meta.appendChild(el("span", "", x.organisation));
+      if (x.region) meta.appendChild(el("span", "", x.region));
+      if (x.profil) meta.appendChild(el("span", "", x.profil));
+      if (x.page) meta.appendChild(el("span", "", x.page));
+      s2.appendChild(meta);
+      d.appendChild(s2);
+      var m = el("div", "cv-m");
+      var p = el("p", "", x.message || "(aucun message)");
+      p.style.whiteSpace = "pre-wrap";
+      m.appendChild(p);
+      if (x.t || x.date) m.appendChild(el("small", "", timeFmt.format(new Date(x.t || x.date))));
+      d.appendChild(m);
+      box.appendChild(d);
+    });
+  }
+
   $("form").addEventListener("submit", function (ev) {
     ev.preventDefault();
     var input = root.querySelector("#av-jeton");
@@ -143,9 +212,9 @@
     input.value = "";
     if (!t) { status("Le champ est vide : collez le jeton.", "warn"); return; }
     set(session, KEY, t);
-    load(false); loadChats(false);
+    load(false); loadChats(false); loadLeads(false);
   });
-  $("refresh").addEventListener("click", function () { load(false); loadChats(false); });
+  $("refresh").addEventListener("click", function () { load(false); loadChats(false); loadLeads(false); });
   $("forget").addEventListener("click", function () {
     set(session, KEY, null);
     root.classList.remove("is-ouvert");
@@ -159,6 +228,7 @@
   $("q").addEventListener("input", render);
   $("more").addEventListener("click", function () { load(true); });
   $("c-more").addEventListener("click", function () { loadChats(true); });
+  $("d-more").addEventListener("click", function () { loadLeads(true); });
   Array.prototype.forEach.call(root.querySelectorAll(".av-tab"), function (b) {
     b.addEventListener("click", function () { montre(b.getAttribute("data-tab")); });
   });
@@ -356,6 +426,7 @@
     var vs = visiteurs();
     renderVisiteurs(vs);
     renderConversations();
+    renderDemandes();
     if (ficheIp) remplisFiche(ficheIp);
   }
 
@@ -586,4 +657,5 @@
   render();
   load(false);
   loadChats(false);
+  loadLeads(false);
 })();

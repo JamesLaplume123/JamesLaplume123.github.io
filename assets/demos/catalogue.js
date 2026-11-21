@@ -42,7 +42,7 @@
     var q = {};
     $$(".ct-item[data-id]").forEach(function (it) { var v = qtyOf(it); if (v) q[it.dataset.id] = v; });
     QTES.forEach(function (p) { var v = qtyOf($(p[1])); if (v) q[p[0]] = v; });
-    return { c: c, q: q, e: ens };
+    return { c: c, q: q, e: ens, l: listes };
   }
   function poseEtat(e) {
     if (!e || !e.c) return;
@@ -54,6 +54,7 @@
     $$(".ct-item[data-id]").forEach(function (it) { setQty(it, (e.q || {})[it.dataset.id] || 0); });
     QTES.forEach(function (p) { setQty($(p[1]), (e.q || {})[p[0]] || 0); });
     ens = e.e && typeof e.e === "object" ? e.e : {};
+    listes = e.l && typeof e.l === "object" ? e.l : {};
   }
   function garde(autres, suffixe) {
     var f = forfait(); if (!f || !pret) return;
@@ -236,18 +237,19 @@
   }
 
   /* ---------- Étape 3 : l'ensemble de départ de chaque lieu ---------- */
+  var listes = {};   /* listes composées par JARVIS : lieu → { pièce: quantité }, « vr* » non résolu */
   function resolu(lieu) {   /* les pièces de l'ensemble; « vr* » devient le Boîtier VR du niveau */
-    var e = OFFRE.ensembles[lieu], out = {};
-    if (!e) return out;
+    var mat = listes[lieu] || (OFFRE.ensembles[lieu] || {}).mat, out = {};
+    if (!mat) return out;
     var n = niveau() || (LIEUX[lieu] && LIEUX[lieu].hub) || "base";
-    Object.keys(e.mat).forEach(function (id) { out[id === "vr*" ? BOITIER_VR[n] : id] = e.mat[id]; });
+    Object.keys(mat).forEach(function (id) { out[id === "vr*" ? BOITIER_VR[n] : id] = mat[id]; });
     return out;
   }
   function bouge(pieces, signe) {
     Object.keys(pieces).forEach(function (id) { var it = piece(id); if (it) setQty(it, qtyOf(it) + signe * pieces[id]); });
   }
   function ajouteEnsemble(lieu) {
-    if (ens[lieu] || !OFFRE.ensembles[lieu]) return;
+    if (ens[lieu] || (!OFFRE.ensembles[lieu] && !listes[lieu])) return;
     var p = resolu(lieu), e = OFFRE.ensembles[lieu].ent;
     bouge(p, 1); ens[lieu] = p;
     if (!e) return;
@@ -403,7 +405,10 @@
      JARVIS (la bulle) propose un lien : /offre/?lieux=maison,chalet,auto&niveau=signature&ens=tout#composer
        lieux  : identifiants de src/lieux.py, séparés par des virgules (les inconnus sont ignorés);
        niveau : base, signature ou platinum (absent : le niveau conseillé pour ces lieux);
-       ens    : « tout », ou la liste des lieux dont on ajoute l'ensemble de départ.
+       ens    : « tout », ou la liste des lieux dont on ajoute l'ensemble de départ;
+       <lieu> : la liste sur mesure de ce lieu, « pièce:quantité » séparés par des virgules
+                (ex. &maison=fuite:2,camext:2,vanne:1). Elle remplace l'ensemble de départ de ce
+                lieu, et se retire ou se réajuste comme lui. Pièces inconnues ignorées, quantité ≤ 99.
      Le plan remplace le forfait en cours; l'adresse est nettoyée pour qu'un rechargement ne le rejoue pas. */
   (function () {
     var q = new URLSearchParams(location.search), f = forfait();
@@ -423,8 +428,19 @@
     ids.forEach(function (id) { if (VEHICULES[LIEUX[id].famille]) nVeh += (OFFRE.ensembles[id] || { mat: {} }).mat.mobb || 1; });
     if (mob) { setQty(mob, nVeh); mob.querySelector('input[name="sol"]').checked = nVeh > 0; }
     appliqueNiveau();
+    ids.forEach(function (id) {           /* la liste composée par JARVIS, si elle est là */
+      var brut = q.get(id); if (!brut) return;
+      var p = {};
+      brut.split(",").forEach(function (bout) {
+        var m = /^([a-z0-9*_-]{1,16}):(\d{1,2})$/i.exec(bout.trim());
+        if (m && +m[2] > 0 && (m[1] === "vr*" || piece(m[1]))) p[m[1]] = Math.min(99, +m[2]);
+      });
+      if (Object.keys(p).length) listes[id] = p;
+    });
     var e = q.get("ens") || "";
-    (e === "tout" ? ids : e.split(",")).forEach(function (id) { if (ids.indexOf(id) >= 0) ajouteEnsemble(id); });
+    var aAjouter = e === "tout" ? ids : e.split(",");
+    ids.forEach(function (id) { if (listes[id] && aAjouter.indexOf(id) < 0) aAjouter.push(id); });
+    aAjouter.forEach(function (id) { if (ids.indexOf(id) >= 0) ajouteEnsemble(id); });
     appliqueNiveau(); conseil();
     try { history.replaceState(null, "", location.pathname + location.hash); } catch (x) {}
   })();

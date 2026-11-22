@@ -53,7 +53,10 @@ proposé par JARVIS, puis ajusté.
 ## La page `/offre/` : trois étapes
 
 1. **Vos lieux.** On choisit; « Votre écosystème » se dessine, un cerveau par lieu.
-2. **Votre niveau.** Trois niveaux, trois repères chacun (caméras, appareils, où vit l'IA). Repliés :
+2. **Votre niveau.** Les trois niveaux côte à côte, même sur un téléphone. Chaque colonne est un choix
+   et porte le nom de son appareil (Base : JARVIS Mini; Signature : JARVIS; Platinum : JARVIS Pro). Les
+   lignes s'alignent d'une colonne à l'autre, dans cet ordre : les cinq extensions (« incluse » ou « en
+   option »), où vit l'IA, caméras, appareils, lieux reliés, secours, soutien, garantie. Repliés :
    « Vous hésitez? », la fiche technique, changer de niveau plus tard.
 3. **Votre projet.** Les extensions, l'ensemble de départ de chaque lieu, les données, l'installation,
    puis « Recevoir ma soumission ».
@@ -72,6 +75,9 @@ proposé par JARVIS, puis ajusté.
 - `tools/test_offre.py` joue le parcours dans un vrai navigateur : niveau conseillé, Boîtier VR qui
   suit le niveau, aucun appareil au-dessus du niveau, ensembles ajoutés et retirés, entreprise, flotte,
   nuage, soumission, rechargement.
+- Le même essai vérifie les niveaux côte à côte : chaque colonne nomme son appareil, ce qu'elle dit
+  « incluse » est ce que le niveau coche à l'étape 3, et sur un téléphone les trois colonnes tiennent
+  dans l'écran, alignées.
 - `tools/verifier_seo.py` refuse la publication si l'ancien nom « Hub » revient dans ce qu'un visiteur
   peut lire, sur n'importe quelle page (retiré de tout le site le 19 novembre 2026).
 - La page `/plateforme/` ne nomme aucun appareil à la main : ses lieux d'exemple passent par

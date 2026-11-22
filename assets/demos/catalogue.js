@@ -313,7 +313,7 @@
     if (rep.ia === 1 && r < 1) { r = 1; why = "L’IA reste chez vous, même sans Internet."; }
     if (rep.coupure === 2 && r < 2) { r = 2; why = "Une coupure serait grave : batterie et Internet de secours."; }
     if (r < 0 && Object.keys(rep).length) { r = 0; why = "L’essentiel, pour un petit lieu."; }
-    $$(".ct-hub").forEach(function (h) { h.classList.toggle("is-reco", r >= 0 && h.getAttribute("data-hub") === PAR_RANG[r]); });
+    $$(".ct-nvc").forEach(function (h) { h.classList.toggle("is-reco", r >= 0 && h.getAttribute("data-hub") === PAR_RANG[r]); });
     res.hidden = r < 0;
     if (r < 0) return;
     res.dataset.id = PAR_RANG[r];

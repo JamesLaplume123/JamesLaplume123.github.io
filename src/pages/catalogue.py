@@ -14,20 +14,20 @@ import json
 
 HUBS = [
     {"id": "base", "nom": "JARVIS Mini", "prix": 590, "pour": "Chalet, condo, petit VR",
-     "tag": "", "cam": 2, "app": 30, "autos": 0,
+     "cam": 2, "app": 30, "autos": 0,
      "pourquoi": "Pour veiller sur un lieu simple : fuite, gel, porte, batterie. L’IA passe par Internet.",
      "pts": ["Jusqu’à 30 appareils", "2 caméras analysées, 7 jours d’enregistrement", "IA par Internet seulement",
              "Wi-Fi, Bluetooth, Zigbee", "Garantie 1 an, soutien par courriel"],
      "manque": ["Pas d’IA dans l’appareil", "Pas d’assistant vocal ni de réceptionniste", "Pas d’automatisations d’entreprise", "Pas de batterie de secours"]},
     {"id": "signature", "nom": "JARVIS", "prix": 1290, "pour": "Maison, VR complet, PME",
-     "tag": "Pour la plupart des maisons", "cam": 6, "app": 100, "autos": 10,
+     "cam": 6, "app": 100, "autos": 10,
      "pourquoi": "L’IA tourne chez vous, sans Internet : assistant vocal, caméras analysées sur place, réceptionniste.",
      "pts": ["Jusqu’à 100 appareils", "6 caméras analysées, 30 jours d’enregistrement", "IA locale, chez vous",
              "Assistant vocal « Jarvis » et réceptionniste IA", "Z-Wave et Matter, 3 lieux reliés",
              "Garantie 2 ans, soutien téléphone"],
      "manque": ["Pas de base de données ni de rapports", "Pas de batterie de secours", "Automatisations limitées à 10"]},
     {"id": "platinum", "nom": "JARVIS Pro", "prix": 3490, "pour": "Domaine, entreprise, ferme",
-     "tag": "Rien ne manque", "cam": 16, "app": 10 ** 6, "autos": 10 ** 6,
+     "cam": 16, "app": 10 ** 6, "autos": 10 ** 6,
      "pourquoi": "Pour un lieu qui ne doit jamais s’arrêter : carte IA dédiée, batterie, Internet de secours, rapports.",
      "pts": ["Appareils illimités", "16 caméras et plus, 90 jours d’enregistrement", "IA forte, 100 % locale, carte IA dédiée",
              "Base de données, rapports, automatisations illimitées", "Batterie interne 2 h, Internet de secours intégré",
@@ -282,14 +282,17 @@ def _p(n):
 # Les appareils (HUBS) s'appellent JARVIS Mini, JARVIS et JARVIS Pro; les niveaux gardent Base, Signature, Platinum.
 NIVEAUX = {
     "base": {"sols": ["env", "diag"], "plus": "", "ia_court": "Par Internet",
+             "lieux": ("Chacun seul", "vos lieux ne sont pas reliés"), "secours": "Aucun",
              "ia": "L’IA passe par Internet, avec votre accord.",
              "inclus": ["Lumières, chauffage, serrures et énergie", "Alertes : fuites, pannes, entretien",
                         "L’app JARVIS, de partout", "Soutien par courriel"]},
     "signature": {"sols": ["env", "diag", "secu", "ia"], "plus": "Tout Base, plus :", "ia_court": "Chez vous",
+                  "lieux": ("Jusqu’à 3", "lieux reliés entre eux"), "secours": "Prêt pour la 4G",
                   "ia": "L’IA tourne chez vous, dans votre JARVIS, même sans Internet.",
                   "inclus": ["Caméras qui comprennent ce qu’elles voient", "Une IA privée qui reste chez vous",
                              "Assistant vocal et réceptionniste", "Soutien par courriel et téléphone"]},
     "platinum": {"sols": ["env", "diag", "secu", "ia", "res"], "plus": "Tout Signature, plus :", "ia_court": "Chez vous, renforcée",
+                 "lieux": ("Sans limite", "lieux reliés entre eux"), "secours": "Batterie 2 h et Internet de secours",
                  "ia": "IA renforcée, 100 % chez vous : elle continue pendant une panne.",
                  "inclus": ["Réseau et cybersécurité", "Plusieurs lieux reliés, sans limite",
                             "Batterie et Internet de secours", "Soutien prioritaire, une personne dédiée"]},
@@ -298,39 +301,51 @@ NIVEAU_NOM = {"base": "Base", "signature": "Signature", "platinum": "Platinum"}
 EXT_COURT = {"env": "Environnements", "diag": "Diagnostic", "secu": "Sécurité", "ia": "IA privée", "res": "Réseau", "mob": "Mobilité"}
 
 
-def _stats(h):
-    """Les trois repères d'un niveau, tirés des faits de l'appareil (HUBS) : caméras, appareils, où vit l'IA."""
-    cam = f"{h['cam']}+" if h["id"] == "platinum" else str(h["cam"])
-    app = "Illimité" if h["app"] >= 10 ** 6 else str(h["app"])
-    trio = [(cam, "caméras analysées"), (app, "appareils reliés"), (NIVEAUX[h["id"]]["ia_court"], "où vit l’IA")]
-    return '<dl class="ct-stats">' + "".join(f"<div><dd>{escape(v)}</dd><dt>{escape(k)}</dt></div>" for v, k in trio) + "</dl>"
+def _cases(h):
+    """Ce qui distingue un niveau, dans l'ordre où on le lit : (valeur, légende, classe). Chaque case se lit
+    seule. Rien n'est réécrit ici : les extensions, l'IA, les lieux et le secours viennent de NIVEAUX; les
+    caméras et les appareils, de HUBS; le soutien et la garantie, de la fiche technique (COMPARE)."""
+    n, rang = NIVEAUX[h["id"]], [x["id"] for x in HUBS].index(h["id"])
+    fiche = {lab: vals for lab, *vals in COMPARE}
+    garantie, _, extra = fiche["Garantie"][rang].partition(" + ")
+    cases = [(EXT_COURT[x], "incluse" if x in n["sols"] else "en option", "is-oui" if x in n["sols"] else "is-non")
+             for x in ("env", "diag", "secu", "ia", "res")]
+    cases += [
+        (n["ia_court"], "où vit l’IA", "is-g"),
+        (f"{h['cam']}+" if h["id"] == "platinum" else str(h["cam"]), "caméras analysées", ""),
+        ("Illimité" if h["app"] >= 10 ** 6 else str(h["app"]), "appareils reliés", ""),
+        (n["lieux"][0], n["lieux"][1], ""),
+        (n["secours"], "secours en cas de panne", ""),
+        (fiche["Soutien"][rang], "soutien", "is-g"),
+        (garantie, "de garantie" + (f", {extra}" if extra else ""), ""),
+    ]
+    return cases
 
 
-def _hubs():
-    """Les trois niveaux : nom, pour qui, trois repères (caméras, appareils, IA), puis, sur le niveau choisi,
-    les extensions incluses et ce qu'il apporte. La fiche technique des appareils est repliée dessous."""
-    out = []
+def _niveaux():
+    """Les trois niveaux côte à côte : chaque colonne est un choix (bouton radio) et porte le nom de son
+    appareil; les cases de même rang s'alignent d'une colonne à l'autre (sous-grille, catalogue.css)."""
+    cols = []
     for h in HUBS:
-        c, n = lieux.HUBS_CHOIX[h["id"]], NIVEAUX[h["id"]]
-        tag = f'<span class="ct-tag">{escape(h["tag"])}</span>' if h["tag"] else ""
-        ext = " · ".join(EXT_COURT[x] for x in n["sols"])
-        out.append(f"""<label class="ct-hub" data-rev data-hub="{h['id']}">
-      <input type="radio" name="hub" value="{h['id']}" data-prix="{h['prix']}" data-cam="{h['cam']}" data-app="{h['app']}" data-autos="{h['autos']}">
-      <span class="ct-check" aria-hidden="true"></span>
-      {tag}
-      <figure class="ct-hub-ph"><img src="/media/hubs/hub-{h['id']}.webp" alt="{escape(h['nom'])}" loading="lazy" decoding="async"></figure>
-      <h3>{NIVEAU_NOM[h['id']]}</h3>
-      <p class="ct-prix">{_p(h['prix'])}<small>une fois</small></p>
-      <p class="ct-pour">{c['situation']} · {c['pour']}</p>
-      {_stats(h)}
-      <div class="ct-niv">
-        <p class="ct-niv-ext"><b>{len(n["sols"])} extensions incluses</b>{ext}</p>
-        <ul>{f'<li class="ct-niv-plus">{n["plus"]}</li>' if n["plus"] else ''}{"".join(f"<li>{x}</li>" for x in n["inclus"])}</ul>
-        <p class="ct-niv-ia">Au lieu principal : un {escape(h['nom'])}. {n["ia"]}</p>
-      </div>
-      <span class="ct-reco" aria-hidden="true">Conseillé pour vous</span>
+        c, nom = lieux.HUBS_CHOIX[h["id"]], NIVEAU_NOM[h["id"]]
+        cases = "".join(f'<span class="ct-nv-c {k}"><b>{escape(v)}</b><small>{escape(l)}</small></span>' for v, l, k in _cases(h))
+        cols.append(f"""<label class="ct-nvc" data-hub="{h['id']}">
+      <input type="radio" name="hub" value="{h['id']}" aria-label="Niveau {nom}, avec {escape(h['nom'])}" data-prix="{h['prix']}" data-cam="{h['cam']}" data-app="{h['app']}" data-autos="{h['autos']}">
+      <span class="ct-nv-t">
+        <span class="ct-reco" aria-hidden="true">Conseillé</span>
+        <img src="/media/hubs/hub-{h['id']}.webp" alt="" loading="lazy" decoding="async">
+        <strong>{nom}</strong>
+        <em>{escape(h['nom'])}</em>
+        <span class="ct-prix">{_p(h['prix'])}<small>une fois</small></span>
+        <span class="ct-nv-p">{escape(c['pour'])}</span>
+        <span class="ct-nv-b" aria-hidden="true"><span>Choisir</span><span>Choisi</span></span>
+      </span>
+      {cases}
     </label>""")
-    return "".join(out)
+    rangs = 1 + len(_cases(HUBS[0]))
+    return (f'<div class="ct-nv" style="--rangs: {rangs}" data-rev>{"".join(cols)}</div>'
+            '<p class="ct-nv-note" data-rev>Les cinq premières lignes sont les extensions : ce que JARVIS sait faire. '
+            'Une extension « en option » s’ajoute au mois, à l’étape 3. Mobilité s’ajoute dès que vous avez un véhicule.</p>')
 
 
 def _compare():
@@ -501,8 +516,8 @@ PAGE = {
 <section class="sect" id="hub" data-toc="2 · Votre niveau" aria-labelledby="hub-t">
   <div class="sect-head"><div data-rev><p class="ct-etape">Étape 2 sur 3</p>
     <h2 id="hub-t">Votre niveau.<br><em>Un seul, pour tous vos lieux.</em></h2></div>
-    <p data-rev>Le niveau dit ce que JARVIS fait, où vit son intelligence et le soutien que vous recevez. L’appareil de chaque lieu suit, tout seul.</p></div>
-  <div class="ct-hubs">{_hubs()}</div>
+    <p data-rev>Chaque niveau vient avec son appareil : JARVIS Mini, JARVIS ou JARVIS Pro. Plus le niveau monte, plus JARVIS en fait, et plus il le fait chez vous.</p></div>
+  {_niveaux()}
   <details class="ct-details ct-guide" data-guide data-rev>
     <summary>Vous hésitez? <em>· trois questions, et JARVIS conseille</em></summary>
     <div class="ct-details-in">

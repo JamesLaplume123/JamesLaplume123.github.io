@@ -344,6 +344,9 @@ body:has(#ct) { background: #000; }
 
 /* Options : rangées fines, sans cartes lourdes */
 .ct-sol, .ct-install .card, .ct-ent, .ct-auto { border-radius: 14px; background: transparent; box-shadow: inset 0 0 0 1px #ffffff1f; }
+/* Une automatisation est une carte : le contenu respire à l'intérieur du cadre, et les cartes ne se touchent pas */
+.ct-auto { padding: .75rem .9rem; border-top: 0; }
+.ct-auto + .ct-auto { margin-top: 6px; }
 .ct-sol:has(input:checked):not(.is-niveau) { box-shadow: inset 0 0 0 2px var(--gold-soft); }
 
 .ct-sol .ct-why { font-size: .9rem; }

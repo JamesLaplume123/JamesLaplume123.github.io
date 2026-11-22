@@ -132,12 +132,12 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Au-delà : minute d’appel · texto · ligne supplémentaire = une réceptionniste de plus.
 - Prix des automatisations (un déclencheur, une action) (reliée à un outil du client) (veille 24/7 avec escalade). Niveau Signature : jusqu’à 10 automatisations; niveau Platinum : illimité.
 ### Bibliothèque d’automatisations
-- Réception : Prendre et confirmer un rendez-vous; Texter le rappel la veille; Transférer un appel urgent au bon employé; Répondre aux questions fréquentes; Prendre les messages et vous les résumer.
+- Réception : Prendre et confirmer un rendez-vous; Texter le rappel la veille; Transférer un appel urgent au bon employé; Répondre aux questions fréquentes; Prendre les messages et vous les résumer; Trier le courriel entrant.
 - Ventes : Envoyer une soumission à partir d’un gabarit; Relancer une soumission sans réponse après 3 jours; Créer la fiche client; Prévenir le vendeur quand un client rappelle.
 - Facturation : Relancer une facture impayée (7, 14, 30 jours); Envoyer le reçu après paiement; Comptes à recevoir chaque lundi.
-- Opérations : Créer un bon de travail à partir d’une demande; Assigner au technicien disponible; Escalader à la personne de garde; Alerte si un équipement critique tombe.
-- Direction : Rapport du matin : appels, ventes, alertes; Résumé de la semaine le vendredi; Approbation par texto : « OK » ou « Non ».
-- Employés et accès : Accueillir un nouvel employé; Alerte : session ouverte sans passage à la porte; Revue des accès chaque mois.
+- Opérations : Créer un bon de travail à partir d’une demande; Assigner au technicien disponible; Commander quand le stock baisse; Escalader à la personne de garde; Alerte si un équipement critique tombe.
+- Direction : Rapport du matin : appels, ventes, alertes; Résumé de la semaine le vendredi; Tenir les registres à jour; Approbation par texto : « OK » ou « Non ».
+- Employés et accès : Accueillir un nouvel employé; Alerte : session ouverte sans passage à la porte; Revue des accès chaque mois; Publier les horaires et rappeler les quarts.
 - Ferme et commerce : Alerte de température : frigo, réservoir à lait, étable; Journal automatique des livraisons; Commande de moulée quand le silo est bas; Alerte si une porte reste ouverte; Veille d’une pompe ou d’un abreuvoir.
 ## Le matériel (payé une fois, prêt à brancher)
 - Boîtiers JARVIS : Boîtier VR Base; Boîtier VR Signature; Boîtier VR Platinum; Boîtier Mobilité; Écran JARVIS 10 po; Écran JARVIS 7 po; Boîtier Secours.

@@ -362,6 +362,10 @@ SOLUTIONS_FAQ = {
          "rendez-vous et transfère les urgences selon vos règles. Vos employés gardent les décisions."),
         ("Pour quelles entreprises est-ce fait?",
          "Les PME, les commerces, les ateliers, les bureaux de professionnels et les fermes qui perdent du temps à recopier les mêmes informations d’un outil à l’autre."),
+        ("JARVIS se branche-t-il sur notre Microsoft 365 ou notre Active Directory?",
+         "Oui, c’est compris dans le Socle Entreprise. Vos employés entrent dans JARVIS avec leur compte "
+         "de travail, et un compte désactivé perd d’un coup ses portes, ses caméras et ses documents. "
+         "JARVIS ne remplace pas votre annuaire et ne gère pas vos postes de travail."),
     ],
     "reseau-resilience": [
         ("Pourquoi mon Wi-Fi est-il lent ou instable à certains endroits?",

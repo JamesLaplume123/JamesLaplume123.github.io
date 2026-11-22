@@ -74,6 +74,20 @@ Elle paraît seulement à qui choisit un lieu d'entreprise (`data-public`). Rien
   Directory) vient avec le Socle Entreprise, donc dès Signature. JARVIS s'y branche; il ne le remplace pas
   et ne gère pas les postes. Trois automatisations s'appuient dessus (« Employés et accès »).
 - Aucun chiffre sans source dans les phrases de vente des automatisations.
+- **Trois étages** : le niveau (Signature ou Platinum), le Socle Entreprise (comptes, annuaire, journal,
+  outils), puis ce que JARVIS fait (réceptionniste, automatisations, entretien).
+- **Une seule bibliothèque** : `AUTOMATISATIONS` dans `src/pages/catalogue.py`. La page Solution
+  (`/solutions/automatisation-operations/`) la lit; elle n'a plus sa propre liste. Ce qui est annoncé là se
+  compose ici, et l'inverse. Le mot « socle » n'a qu'un sens : le Socle Entreprise.
+- **L'annuaire est dit aux mêmes endroits** : L'offre, la page Solution (compatibilité, limites), les
+  questions, la feuille de route (étape 21) et la fiche de l'IA. Où vit chaque niveau de lien :
+
+  | Niveau de lien | Où il vit dans l'offre |
+  | --- | --- |
+  | Lire (inventaire) | Extension Réseau (pas encore annoncé sur le site) |
+  | Se connecter | Socle Entreprise, dès Signature |
+  | Surveiller | Automatisation « Alerte : session ouverte sans passage à la porte » |
+  | Agir | Automatisation « Accueillir un nouvel employé » |
 
 ## Changer de niveau
 

@@ -84,7 +84,7 @@ ITEMS = [
     ("secu", "avenir", "Étape 20", "Revue de sécurité externe",
      "Test d’intrusion, Loi 25, guide et support : rien ne se vend avant."),
     ("auto", "avenir", "Étape 21", "Extension Entreprise",
-     "Réception, bons de travail et approbations, d’après des entrevues avec des entreprises."),
+     "Réception, bons de travail, approbations et lien avec l’annuaire de l’entreprise, d’après des entrevues avec des entreprises."),
     ("res", "avenir", "Après la vente", "Plusieurs lieux reliés",
      "Maison, chalet, entreprise et véhicule coordonnés, chacun avec ses propres règles."),
     ("secu", "avenir", "Vision", "Security Pro, sous permis",

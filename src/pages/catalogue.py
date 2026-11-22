@@ -117,6 +117,7 @@ AUTOMATISATIONS = [
         ("a_urgent", "Transférer un appel urgent au bon employé", 19, "Le client en panne tombe sur quelqu’un, pas sur une boîte vocale."),
         ("a_faq", "Répondre aux questions fréquentes", 9, "Heures, prix, adresse : réglé sans vous déranger."),
         ("a_msg", "Prendre les messages et vous les résumer", 9, "Un texto clair au lieu de dix boîtes vocales."),
+        ("a_courriel", "Trier le courriel entrant", 19, "Chaque message est classé, résumé et envoyé à la bonne personne."),
     ]),
     ("Ventes", [
         ("a_soum", "Envoyer une soumission à partir d’un gabarit", 19, "La soumission part dans l’heure, pendant que le client est chaud."),
@@ -132,18 +133,21 @@ AUTOMATISATIONS = [
     ("Opérations", [
         ("a_bon", "Créer un bon de travail à partir d’une demande", 19, "La demande devient une tâche assignée, avec adresse et photos."),
         ("a_assign", "Assigner au technicien disponible", 19, "Le bon tombe sur la bonne personne, au bon moment."),
+        ("a_stock", "Commander quand le stock baisse", 19, "Le seuil est surveillé; le bon de commande arrive prêt à approuver."),
         ("a_garde", "Escalader à la personne de garde", 29, "Si personne ne répond en 10 minutes, JARVIS monte d’un niveau."),
         ("a_equip", "Alerte si un équipement critique tombe", 29, "Compresseur, frigo, serveur : vous le savez avant les clients."),
     ]),
     ("Direction", [
         ("a_matin", "Rapport du matin : appels, ventes, alertes", 9, "Une page, à 7 h, et vous savez où en est l’entreprise."),
         ("a_semaine", "Résumé de la semaine le vendredi", 9, "Ce qui a marché, ce qui traîne, ce qui coûte."),
+        ("a_registres", "Tenir les registres à jour", 19, "Les documents exigés, prêts le jour d’une vérification."),
         ("a_ok", "Approbation par texto : « OK » ou « Non »", 19, "Approuvez une dépense ou un congé depuis le chantier."),
     ]),
     ("Employés et accès", [
         ("a_arrivee", "Accueillir un nouvel employé", 19, "Dès qu’il paraît dans votre annuaire, il reçoit sa porte, ses accès et son mot de bienvenue."),
         ("a_session", "Alerte : session ouverte sans passage à la porte", 29, "Un compte qui travaille alors que la personne n’est pas entrée : vous le savez tout de suite."),
         ("a_acces", "Revue des accès chaque mois", 9, "Qui ouvre quoi, en une page. Vous retirez ce qui ne sert plus."),
+        ("a_quarts", "Publier les horaires et rappeler les quarts", 9, "Chacun reçoit son horaire, puis un rappel avant son quart."),
     ]),
     ("Ferme et commerce", [
         ("a_frigo", "Alerte de température : frigo, réservoir à lait, étable", 29, "Une chambre froide qui lâche la nuit, c’est des milliers de dollars."),

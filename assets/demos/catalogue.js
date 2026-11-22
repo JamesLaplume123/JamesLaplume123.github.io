@@ -168,6 +168,7 @@
     if (hubId === "base" && once.some(function (l) { return l.id === "vrs" || l.id === "vrp"; })) tips.push({ t: "Le Boîtier VR Signature ou Platinum prend tout son sens avec le niveau Signature (IA chez vous, 4G).", up: "signature" });
 
     affiche(totOnce, totMonth, tips);
+    dessineProfils();
 
     /* Ce qui part dans le forfait : équipement (quantité réglable), services, entreprise, nuage. */
     var autres = [];
@@ -275,6 +276,38 @@
     });
   }
   var boiteEns = $("[data-ensembles]"), videEns = boiteEns ? boiteEns.innerHTML : "";
+  /* ---------- Les trois exemples d'entreprise : des raccourcis qui cochent ce qui existe à la carte ---------- */
+  function profilPose(p) {   /* tout ce que l'exemple coche est-il déjà là? */
+    var t = $('input[name="toutes"]'), tout = !!(t && t.checked);
+    return !!$('input[name="socle"]:checked') && qtyOf($(".ct-ent-recep")) >= (p.recep || 0) &&
+      (p.toutes ? tout : (p.autos || []).every(function (a) { return tout || !!$('input[name="auto"][value="' + a + '"]:checked'); })) &&
+      (!p.veille || !!$('input[name="veille"][value="' + p.veille + '"]:checked'));
+  }
+  function ajouteProfil(p) {
+    $('input[name="socle"]').checked = true;
+    if (p.recep) setQty($(".ct-ent-recep"), Math.max(qtyOf($(".ct-ent-recep")), p.recep));
+    if (p.toutes) $('input[name="toutes"]').checked = true;
+    (p.autos || []).forEach(function (a) { var el = $('input[name="auto"][value="' + a + '"]'); if (el) el.checked = true; });
+    if (p.veille) $$('input[name="veille"]').forEach(function (v) { v.checked = v.value === p.veille; });
+  }
+  function retireProfil(p) {
+    if (p.recep) setQty($(".ct-ent-recep"), Math.max(0, qtyOf($(".ct-ent-recep")) - p.recep));
+    if (p.toutes) { $('input[name="toutes"]').checked = false; $$('input[name="auto"]').forEach(function (a) { a.checked = false; }); }
+    (p.autos || []).forEach(function (a) { var el = $('input[name="auto"][value="' + a + '"]'); if (el) el.checked = false; });
+    if (p.veille) { var v = $('input[name="veille"][value="' + p.veille + '"]'); if (v) v.checked = false; }
+    var reste = $$('input[name="auto"]:checked').length || qtyOf($(".ct-ent-recep")) || qtyOf($(".ct-ent-mesure")) || $$('input[name="veille"]:checked').length;
+    if (!reste) { $('input[name="socle"]').checked = false; $('input[name="toutes"]').checked = false; }
+  }
+  function dessineProfils() {   /* un seul exemple paraît « ajouté » : le plus complet de ceux qui sont posés */
+    var poses = (OFFRE.profils || []).filter(profilPose), actif = poses.length ? poses[poses.length - 1].id : "";
+    $$("[data-profil]").forEach(function (b) {
+      var on = b.dataset.profil === actif;
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.textContent = on ? "Ajouté · retirer" : "Partir de cet exemple";
+      b.closest(".ct-en").classList.toggle("is-on", on);
+    });
+  }
+
   function dessineEnsembles() {
     if (!boiteEns) return;
     var f = forfait(), o = f ? f.lire() : { lieux: [] };
@@ -346,6 +379,12 @@
     }
     var up = t.closest("[data-up]");
     if (up) { choisit(up.dataset.up); return; }
+    var pf = t.closest("[data-profil]");
+    if (pf) {
+      var p = (OFFRE.profils || []).filter(function (x) { return x.id === pf.dataset.profil; })[0];
+      if (p) { if (pf.getAttribute("aria-pressed") === "true") retireProfil(p); else ajouteProfil(p); compute(); dessineEnsembles(); }
+      return;
+    }
     var en = t.closest("[data-ens]");
     if (en) { var lieu = en.dataset.ens; if (ens[lieu]) retireEnsemble(lieu); else ajouteEnsemble(lieu); compute(); dessineEnsembles(); return; }
     var q = t.closest("[data-gq] button[data-v]");

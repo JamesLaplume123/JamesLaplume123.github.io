@@ -88,8 +88,14 @@ SOLUTIONS = [
 
 # Entreprise à la carte : socle, réceptionniste par ligne, automatisations une par une.
 ENT_SOCLE = {"id": "socle", "nom": "Socle Entreprise", "prix": 29,
-             "d": "Comptes employés, journal de tout ce que JARVIS fait, rapport hebdomadaire, connexions à vos outils (courriel, texto, calendrier, comptabilité). 300 textos par mois compris.",
+             "d": "Comptes employés, connexion à l’annuaire de votre entreprise (Microsoft 365, Active Directory), journal de tout ce que JARVIS fait, rapport hebdomadaire, connexions à vos outils (courriel, texto, calendrier, comptabilité). 300 textos par mois compris.",
              "pourquoi": "Obligatoire pour toute automatisation : c’est ce qui relie JARVIS à votre entreprise."}
+# L'annuaire de l'entreprise (décision de James, 22 novembre 2026) : la connexion vient avec le Socle, donc
+# dès le niveau Signature. JARVIS s'y branche, il ne le remplace pas (analyse : « JARVIS et le réseau d'une
+# entreprise »). Les automatisations « Employés et accès » s'appuient dessus.
+ENT_ANNUAIRE = ("Compris dans le Socle",
+                "JARVIS se relie à l’annuaire de votre entreprise. Vos employés entrent avec leur compte de travail, "
+                "et un compte désactivé perd d’un coup ses portes, ses caméras et ses documents.")
 ENT_RECEP = {"id": "recep", "nom": "Réceptionniste IA", "prix": 59, "unite": "par ligne",
              "d": "Répond 24/7 à votre nom, prend les messages et les rendez-vous, transfère les urgences. 300 minutes par ligne comprises, 0,15 $ la minute ensuite.",
              "pourquoi": "Un appel manqué est souvent un client perdu. Elle ne manque jamais un appel."}
@@ -107,14 +113,14 @@ ENT_USAGE = "Au-delà : minute d’appel 0,15 $ · texto 0,05 $ · ligne supplé
 AUTOMATISATIONS = [
     ("Réception", [
         ("a_rdv", "Prendre et confirmer un rendez-vous", 19, "Pris dans votre calendrier, confirmé par texto. Fini les doubles réservations."),
-        ("a_rappel", "Texter le rappel la veille", 9, "Un rendez-vous manqué, c’est une heure perdue. Le rappel les réduit de moitié."),
+        ("a_rappel", "Texter le rappel la veille", 9, "Un rendez-vous manqué, c’est une heure perdue. Le rappel en évite une bonne part."),
         ("a_urgent", "Transférer un appel urgent au bon employé", 19, "Le client en panne tombe sur quelqu’un, pas sur une boîte vocale."),
         ("a_faq", "Répondre aux questions fréquentes", 9, "Heures, prix, adresse : réglé sans vous déranger."),
         ("a_msg", "Prendre les messages et vous les résumer", 9, "Un texto clair au lieu de dix boîtes vocales."),
     ]),
     ("Ventes", [
         ("a_soum", "Envoyer une soumission à partir d’un gabarit", 19, "La soumission part dans l’heure, pendant que le client est chaud."),
-        ("a_relance", "Relancer une soumission sans réponse après 3 jours", 9, "Une relance polie ferme une vente sur cinq."),
+        ("a_relance", "Relancer une soumission sans réponse après 3 jours", 9, "Une relance polie rattrape des ventes qui s’oubliaient."),
         ("a_fiche", "Créer la fiche client", 19, "Chaque appel devient un client dans votre outil, sans retaper."),
         ("a_rappelv", "Prévenir le vendeur quand un client rappelle", 9, "Le vendeur rappelle avec le dossier déjà ouvert."),
     ]),
@@ -134,6 +140,11 @@ AUTOMATISATIONS = [
         ("a_semaine", "Résumé de la semaine le vendredi", 9, "Ce qui a marché, ce qui traîne, ce qui coûte."),
         ("a_ok", "Approbation par texto : « OK » ou « Non »", 19, "Approuvez une dépense ou un congé depuis le chantier."),
     ]),
+    ("Employés et accès", [
+        ("a_arrivee", "Accueillir un nouvel employé", 19, "Dès qu’il paraît dans votre annuaire, il reçoit sa porte, ses accès et son mot de bienvenue."),
+        ("a_session", "Alerte : session ouverte sans passage à la porte", 29, "Un compte qui travaille alors que la personne n’est pas entrée : vous le savez tout de suite."),
+        ("a_acces", "Revue des accès chaque mois", 9, "Qui ouvre quoi, en une page. Vous retirez ce qui ne sert plus."),
+    ]),
     ("Ferme et commerce", [
         ("a_frigo", "Alerte de température : frigo, réservoir à lait, étable", 29, "Une chambre froide qui lâche la nuit, c’est des milliers de dollars."),
         ("a_livr", "Journal automatique des livraisons", 9, "Qui est venu, quand, combien de temps : écrit tout seul."),
@@ -143,6 +154,26 @@ AUTOMATISATIONS = [
     ]),
 ]
 AUTOS_BY_ID = {a[0]: a for _, items in AUTOMATISATIONS for a in items}
+AUTO_CAT = {a[0]: cat for cat, items in AUTOMATISATIONS for a in items}
+
+# Trois exemples pour qu'une entreprise se reconnaisse (22 novembre 2026). Ce sont des raccourcis : ils
+# cochent ce qui existe déjà à la carte (Socle, réceptionniste, automatisations, entretien), rien de plus.
+# « niveau » = le niveau conseillé, affiché sur la carte; il ne change pas le niveau choisi par le client.
+PROFILS = [
+    {"id": "depart", "nom": "Pour démarrer", "taille": "1 à 5 personnes", "niveau": "signature",
+     "phrase": "Ne plus manquer un appel ni un rendez-vous.",
+     "recep": 1, "autos": ["a_rdv", "a_rappel", "a_faq"]},
+    {"id": "pme", "nom": "Petite entreprise", "taille": "5 à 25 personnes", "niveau": "signature",
+     "phrase": "La réception, les ventes et la facturation avancent sans vous.",
+     "recep": 2, "autos": ["a_rdv", "a_rappel", "a_faq", "a_urgent", "a_relance", "a_impayee", "a_matin"], "veille": "veille_pme"},
+    {"id": "grande", "nom": "Grande exploitation", "taille": "25 personnes et plus, ou plusieurs sites", "niveau": "platinum",
+     "phrase": "Toute la bibliothèque, une personne dédiée, une réponse en 4 heures.",
+     "recep": 3, "toutes": True, "veille": "veille_pro"},
+]
+for _pf in PROFILS:
+    assert all(a in AUTOS_BY_ID for a in _pf.get("autos", [])), f"profil {_pf['id']} : automatisation inconnue"
+    assert _pf.get("veille") in (None, *(v[0] for v in ENT_VEILLE)), f"profil {_pf['id']} : entretien inconnu"
+    assert len(_pf.get("autos", [])) <= next(h["autos"] for h in HUBS if h["id"] == _pf["niveau"]), f"profil {_pf['id']} : trop d'automatisations pour son niveau"
 
 # Matériel : (catégorie, [(id, nom, prix, description, pourquoi, compte_camera)])
 MATERIEL = [
@@ -302,7 +333,7 @@ EXT_COURT = {"env": "Environnements", "diag": "Diagnostic", "secu": "Sécurité"
 
 
 def _cases(h):
-    """Ce qui distingue un niveau, dans l'ordre où on le lit : (valeur, légende, classe). Chaque case se lit
+    """Ce qui distingue un niveau, dans l'ordre où on le lit : (valeur, légende, classe, public). Chaque case se lit
     seule. Rien n'est réécrit ici : les extensions, l'IA, les lieux et le secours viennent de NIVEAUX; les
     caméras et les appareils, de HUBS; le soutien et la garantie, de la fiche technique (COMPARE)."""
     n, rang = NIVEAUX[h["id"]], [x["id"] for x in HUBS].index(h["id"])
@@ -319,7 +350,16 @@ def _cases(h):
         (fiche["Soutien"][rang], "soutien", "is-g"),
         (garantie, "de garantie" + (f", {extra}" if extra else ""), ""),
     ]
-    return cases
+    return [(v, l, k, "") for v, l, k in cases[:8]] + [_case_entreprise(h)] + [(v, l, k, "") for v, l, k in cases[8:]]
+
+
+def _case_entreprise(h):
+    """La ligne Entreprise du tableau des niveaux : ce que le niveau permet (HUBS, « autos »). Montrée
+    seulement à qui a un lieu d'entreprise (data-public)."""
+    n = h["autos"]
+    if not n:
+        return ("Non offerte", "l’offre entreprise", "is-non", "entreprise")
+    return ("Sans limite" if n >= 10 ** 6 else f"Jusqu’à {n}", "automatisations d’entreprise", "", "entreprise")
 
 
 def _niveaux():
@@ -328,7 +368,8 @@ def _niveaux():
     cols = []
     for h in HUBS:
         c, nom = lieux.HUBS_CHOIX[h["id"]], NIVEAU_NOM[h["id"]]
-        cases = "".join(f'<span class="ct-nv-c {k}"><b>{escape(v)}</b><small>{escape(l)}</small></span>' for v, l, k in _cases(h))
+        cases = "".join(f'<span class="ct-nv-c {k}"' + (f' data-public="{p}"' if p else "") + f'><b>{escape(v)}</b><small>{escape(l)}</small></span>'
+                        for v, l, k, p in _cases(h))
         cols.append(f"""<label class="ct-nvc" data-hub="{h['id']}">
       <input type="radio" name="hub" value="{h['id']}" aria-label="Niveau {nom}, avec {escape(h['nom'])}" data-prix="{h['prix']}" data-cam="{h['cam']}" data-app="{h['app']}" data-autos="{h['autos']}">
       <span class="ct-nv-t">
@@ -429,6 +470,28 @@ def _entreprise():
     <div class="ct-ents ct-ents-veille">{veille}</div>"""
 
 
+def _profils():
+    """Les trois exemples d'entreprise, en cartes : ce que chacun coche, tiré de PROFILS."""
+    veille = {v[0]: v[1] for v in ENT_VEILLE}
+    cartes = []
+    for p in PROFILS:
+        lis = [f"<li>{escape(ENT_SOCLE['nom'])}</li>",
+               f"<li><b>{p['recep']}×</b> {escape(ENT_RECEP['nom'])}</li>"]
+        if p.get("toutes"):
+            lis.append(f"<li>{escape(ENT_TOUTES['nom'])}</li>")
+        else:
+            cats = list(dict.fromkeys(AUTO_CAT[a].lower() for a in p["autos"]))
+            lis.append(f"<li><b>{len(p['autos'])}×</b> automatisations : {escape(', '.join(cats))}</li>")
+        if p.get("veille"):
+            lis.append(f"<li>{escape(veille[p['veille']])}</li>")
+        lis.append(f"<li>Niveau {NIVEAU_NOM[p['niveau']]} conseillé</li>")
+        cartes.append(f"""<article class="ct-en ct-pf">
+      <div class="ct-en-t"><small>{escape(p['taille'])}</small><h4>{escape(p['nom'])}</h4><p>{escape(p['phrase'])}</p><ul>{"".join(lis)}</ul></div>
+      <button type="button" class="ct-en-b" data-profil="{p['id']}" aria-pressed="false">Partir de cet exemple</button>
+    </article>""")
+    return "".join(cartes)
+
+
 def _img_mat(i):
     """Vignette d'un article, si sa photo existe (media/forfait/mat-<id>.webp)."""
     chemin = f"/media/forfait/mat-{i}.webp"
@@ -472,8 +535,10 @@ def _inclus():
 
 
 def _donnees_offre():
-    """Ce que catalogue.js lit : les extensions de chaque niveau et l'ensemble de départ de chaque lieu."""
-    return json.dumps({"niveaux": {k: v["sols"] for k, v in NIVEAUX.items()}, "ensembles": ENSEMBLES},
+    """Ce que catalogue.js lit : les extensions de chaque niveau, l'ensemble de départ de chaque lieu et les
+    trois exemples d'entreprise (ce que chacun coche)."""
+    profils = [{k: p[k] for k in ("id", "recep", "autos", "toutes", "veille") if k in p} for p in PROFILS]
+    return json.dumps({"niveaux": {k: v["sols"] for k, v in NIVEAUX.items()}, "ensembles": ENSEMBLES, "profils": profils},
                       ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 
 
@@ -556,9 +621,13 @@ PAGE = {
   <p class="ct-intro" data-rev>Celles de votre niveau sont déjà là. Les autres s’ajoutent au mois, annulables en tout temps.</p>
   <div class="ct-sols">{_solutions()}</div>
   <div data-public="entreprise">
-  <details class="ct-details" id="entreprise" data-rev><summary>Entreprise <em>· réceptionniste IA et automatisations, à la carte</em></summary>
+  <h3 class="ct-sub" id="entreprise" data-rev>Votre entreprise <em>JARVIS répond au téléphone et fait les tâches répétitives</em></h3>
+  <p class="ct-intro" data-rev>Partez de l’exemple le plus proche de vous, puis ajustez. Tout est au mois, annulable en tout temps. Demande le niveau Signature ou Platinum.</p>
+  <div class="ct-ens ct-profils" data-rev>{_profils()}</div>
+  <p class="ct-annuaire" data-rev><b>{escape(ENT_ANNUAIRE[0])}</b>{escape(ENT_ANNUAIRE[1])}</p>
+  <details class="ct-details" data-entreprise-carte data-rev><summary>Ajuster à la carte <em>· réceptionniste, automatisations, entretien</em></summary>
     <div class="ct-details-in">
-    <p class="ct-intro">Tout est à l’unité et payable par mois. Vous commencez avec le Socle et une automatisation; vous en ajoutez quand vous en voyez le gain. Demande le niveau Signature ou Platinum.</p>
+    <p class="ct-intro">Tout est à l’unité. Vous commencez avec le Socle et une automatisation; vous en ajoutez quand vous en voyez le gain.</p>
     {_entreprise()}
     </div>
   </details>

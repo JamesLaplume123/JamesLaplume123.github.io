@@ -141,7 +141,15 @@ def fiche(complet=True):
     a("")
     a("## Pour une entreprise (à la carte, par mois; demande le niveau Signature ou Platinum)")
     a(f"- {C.ENT_SOCLE['nom']} : {C.ENT_SOCLE['prix']} $ par mois, obligatoire pour toute automatisation. {C.ENT_SOCLE['d']}")
+    a(f"- Annuaire de l’entreprise ({C.ENT_ANNUAIRE[0].lower()}) : {C.ENT_ANNUAIRE[1]} JARVIS s’y branche : il ne remplace pas Active Directory et ne gère pas les postes de travail (mises à jour, antivirus).")
     a(f"- {C.ENT_RECEP['nom']} : {C.ENT_RECEP['prix']} $ par mois {C.ENT_RECEP['unite']}. {C.ENT_RECEP['d']}")
+    a("### Trois exemples pour commencer (des raccourcis : ils cochent ce qui existe à la carte)")
+    for pf in C.PROFILS:
+        quoi = [C.ENT_SOCLE["nom"], f"{pf['recep']} ligne{'s' if pf['recep'] > 1 else ''} de {C.ENT_RECEP['nom']}"]
+        quoi.append(C.ENT_TOUTES["nom"].lower() if pf.get("toutes") else f"{len(pf['autos'])} automatisations (" + ", ".join(C.AUTOS_BY_ID[x][1] for x in pf["autos"]) + ")")
+        if pf.get("veille"):
+            quoi.append(next(v[1] for v in C.ENT_VEILLE if v[0] == pf["veille"]))
+        a(f"- {pf['nom']} ({pf['taille']}) : {'; '.join(quoi)}. Niveau {C.NIVEAU_NOM[pf['niveau']]} conseillé.")
     a(f"- {C.ENT_TOUTES['nom']} : {C.ENT_TOUTES['prix']} $ par mois. {C.ENT_TOUTES['pourquoi']}")
     a(f"- {C.ENT_MESURE['nom']} : {C.ENT_MESURE['prix']} $ une fois puis {C.ENT_MESURE['mois']} $ par mois. {C.ENT_MESURE['d']}")
     a(f"- {C.ENT_USAGE}")

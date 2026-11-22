@@ -306,29 +306,31 @@
       delete o._honey;
       delete o._next;
       o.page = location.pathname;
+      /* Sujet parlant et réponse directe au visiteur : un courriel qui ressemble à une vraie
+         demande passe les filtres, et James répond d'un clic sans recopier l'adresse. */
+      var qui = (o.nom || "").trim().replace(/\s+/g, " ").slice(0, 60);
+      o._subject = "JARVIS — " + (o.sujet || "Demande") + (qui ? " · " + qui : "");
+      if (o.email) o._replyto = o.email;
       var endpoints = [form.getAttribute("data-endpoint"), form.getAttribute("data-fallback")].filter(Boolean);
       form.classList.add("is-sending");
       btn.disabled = true;
       if (label) label.textContent = "Envoi en cours…";
       status.className = "form-status";
-      var stored = false;
-      var attempt = function (i) {
-        if (i >= endpoints.length) return stored ? Promise.resolve({ stored: true }) : Promise.reject(new Error("aucun service"));
-        return post(endpoints[i], o).then(function (j) {
-          j = j || {}; j.envoye = true; return j;
-        }).catch(function (err) {
+      var stored = false, envoye = false;
+      var tous = endpoints.map(function (url) {
+        return post(url, o).then(function () { envoye = true; }, function (err) {
           if (err && err.stored) stored = true;
-          if (i + 1 < endpoints.length) return attempt(i + 1);
-          if (stored) return { stored: true };
-          throw err;
         });
-      };
-      attempt(0).then(function (res) {
+      });
+      Promise.all(tous).then(function () {
+        if (!envoye && !stored) throw new Error("aucun service");
+        return { envoye: envoye, stored: stored };
+      }).then(function (res) {
         form.classList.remove("is-sending");
         var first = (o.nom || "").split(" ")[0];
         var nom = first ? ", " + first.replace(/[<>&"]/g, "") : "";
         /* Enregistré mais pas envoyé : on ne promet pas une réponse qui pourrait ne jamais venir. */
-        var seulementGarde = res && res.stored === true && res.envoye !== true;
+        var seulementGarde = res && res.envoye !== true;
         form.innerHTML = seulementGarde
           ? '<div class="form-done is-part" role="status"><div class="check" aria-hidden="true">✓</div>' +
             "<h3>Message enregistré" + nom + ".</h3>" +

@@ -344,6 +344,9 @@ body:has(#ct) { background: #000; }
 
 /* Options : rangées fines, sans cartes lourdes */
 .ct-sol, .ct-install .card, .ct-ent, .ct-auto { border-radius: 14px; background: transparent; box-shadow: inset 0 0 0 1px #ffffff1f; }
+/* Une automatisation est une carte : le contenu respire à l'intérieur du cadre, et les cartes ne se touchent pas */
+.ct-auto { padding: .75rem .9rem; border-top: 0; }
+.ct-auto + .ct-auto { margin-top: 6px; }
 .ct-sol:has(input:checked):not(.is-niveau) { box-shadow: inset 0 0 0 2px var(--gold-soft); }
 
 .ct-sol .ct-why { font-size: .9rem; }
@@ -464,6 +467,12 @@ body:has(#ct) #jv-root:not(.is-open) { display: none; }
 .ct-en li b { margin-right: .15rem; color: var(--gold-soft); font-weight: 600; }
 .ct-en-b { grid-column: 1 / -1; justify-self: start; border: 0; cursor: pointer; padding: .62rem 1.15rem; border-radius: 999px; font: 600 .86rem/1 var(--sans); color: #120d04; background: var(--gold-soft); transition: background .2s, color .2s; }
 .ct-en-b[aria-pressed="true"] { background: transparent; color: var(--gold-soft); box-shadow: inset 0 0 0 1px var(--gold-soft); }
+/* Les trois exemples d'entreprise : la même carte, sans photo, avec la taille de l'entreprise en tête */
+.ct-en.ct-pf { grid-template-columns: minmax(0, 1fr); }
+.ct-pf small { display: block; margin-bottom: .35rem; font: 600 .62rem/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--gold-soft); }
+.ct-annuaire { margin: .9rem 0 0; padding: 1rem 1.15rem; border-radius: 14px; box-shadow: inset 0 0 0 1px #ffffff1f; color: #b9b4ab; font-size: .9rem; line-height: 1.5; }
+.ct-annuaire b { display: block; margin-bottom: .3rem; font: 600 .62rem/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--gold-soft); }
+.ct-annuaire + .ct-details { margin-top: .9rem; }
 .ct-piece { margin-top: .6rem; }
 .ct-main .ct-sub { margin: 3rem 0 .9rem; }
 .ct-main .ct-sub em { display: block; margin-top: .3rem; font-size: .92rem; color: #8f8a81; }

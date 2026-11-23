@@ -61,6 +61,34 @@ proposé par JARVIS, puis ajusté.
 3. **Votre projet.** Les extensions, l'ensemble de départ de chaque lieu, les données, l'installation,
    puis « Recevoir ma soumission ».
 
+### L'entreprise (22 novembre 2026)
+
+Elle paraît seulement à qui choisit un lieu d'entreprise (`data-public`). Rien n'en paraît « pour chez moi ».
+
+- **Tableau des niveaux** : une ligne de plus. Base : non offerte. Signature : jusqu'à 10 automatisations.
+  Platinum : sans limite (`autos` dans `HUBS`).
+- **Bloc « Votre entreprise »**, visible, à l'étape 3 : trois exemples pour se reconnaître (`PROFILS` :
+  pour démarrer, petite entreprise, grande exploitation). Un exemple coche ce qui existe à la carte, rien
+  de plus; on peut le retirer. La carte complète est repliée dessous (« Ajuster à la carte »).
+- **Annuaire de l'entreprise** (décision de James) : la connexion à l'annuaire (Microsoft 365, Active
+  Directory) vient avec le Socle Entreprise, donc dès Signature. JARVIS s'y branche; il ne le remplace pas
+  et ne gère pas les postes. Trois automatisations s'appuient dessus (« Employés et accès »).
+- Aucun chiffre sans source dans les phrases de vente des automatisations.
+- **Trois étages** : le niveau (Signature ou Platinum), le Socle Entreprise (comptes, annuaire, journal,
+  outils), puis ce que JARVIS fait (réceptionniste, automatisations, entretien).
+- **Une seule bibliothèque** : `AUTOMATISATIONS` dans `src/pages/catalogue.py`. La page Solution
+  (`/solutions/automatisation-operations/`) la lit; elle n'a plus sa propre liste. Ce qui est annoncé là se
+  compose ici, et l'inverse. Le mot « socle » n'a qu'un sens : le Socle Entreprise.
+- **L'annuaire est dit aux mêmes endroits** : L'offre, la page Solution (compatibilité, limites), les
+  questions, la feuille de route (étape 21) et la fiche de l'IA. Où vit chaque niveau de lien :
+
+  | Niveau de lien | Où il vit dans l'offre |
+  | --- | --- |
+  | Lire (inventaire) | Extension Réseau (pas encore annoncé sur le site) |
+  | Se connecter | Socle Entreprise, dès Signature |
+  | Surveiller | Automatisation « Alerte : session ouverte sans passage à la porte » |
+  | Agir | Automatisation « Accueillir un nouvel employé » |
+
 ## Changer de niveau
 
 - Monter : si l'appareil suffit, activation à distance. Sinon, échange de l'appareil avec un crédit.
@@ -75,6 +103,8 @@ proposé par JARVIS, puis ajusté.
 - `tools/test_offre.py` joue le parcours dans un vrai navigateur : niveau conseillé, Boîtier VR qui
   suit le niveau, aucun appareil au-dessus du niveau, ensembles ajoutés et retirés, entreprise, flotte,
   nuage, soumission, rechargement.
+- Le même essai vérifie l'entreprise : rien n'en paraît « pour chez moi », la ligne du tableau paraît
+  avec un lieu d'entreprise, et chaque exemple coche exactement ce qu'il annonce, puis se retire.
 - Le même essai vérifie les niveaux côte à côte : chaque colonne nomme son appareil, ce qu'elle dit
   « incluse » est ce que le niveau coche à l'étape 3, et sur un téléphone les trois colonnes tiennent
   dans l'écran, alignées.

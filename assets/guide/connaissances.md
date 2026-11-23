@@ -120,18 +120,24 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - Mobilité par véhicule. Position, diagnostic et antivol de chaque véhicule. Les données cellulaires sont comprises.
 - Chaque solution payante inclut l’accès de partout et les alertes sur le téléphone. Sans solution payante, JARVIS fonctionne quand même chez le client, sur place.
 ## Pour une entreprise (à la carte, par mois; demande le niveau Signature ou Platinum)
-- Socle Entreprise, obligatoire pour toute automatisation. Comptes employés, journal de tout ce que JARVIS fait, rapport hebdomadaire, connexions à vos outils (courriel, texto, calendrier, comptabilité). 300 textos par mois compris.
+- Socle Entreprise, obligatoire pour toute automatisation. Comptes employés, connexion à l’annuaire de votre entreprise (Microsoft 365, Active Directory), journal de tout ce que JARVIS fait, rapport hebdomadaire, connexions à vos outils (courriel, texto, calendrier, comptabilité). 300 textos par mois compris.
+- Annuaire de l’entreprise (compris dans le socle) : JARVIS se relie à l’annuaire de votre entreprise. Vos employés entrent avec leur compte de travail, et un compte désactivé perd d’un coup ses portes, ses caméras et ses documents. JARVIS s’y branche : il ne remplace pas Active Directory et ne gère pas les postes de travail (mises à jour, antivirus).
 - Réceptionniste IA par ligne. Répond 24/7 à votre nom, prend les messages et les rendez-vous, transfère les urgences. 300 minutes par ligne comprises.
+### Trois exemples pour commencer (des raccourcis : ils cochent ce qui existe à la carte)
+- Pour démarrer (1 à 5 personnes) : Socle Entreprise; 1 ligne de Réceptionniste IA; 3 automatisations (Prendre et confirmer un rendez-vous, Texter le rappel la veille, Répondre aux questions fréquentes). Niveau Signature conseillé.
+- Petite entreprise (5 à 25 personnes) : Socle Entreprise; 2 lignes de Réceptionniste IA; 7 automatisations (Prendre et confirmer un rendez-vous, Texter le rappel la veille, Répondre aux questions fréquentes, Transférer un appel urgent au bon employé, Relancer une soumission sans réponse après 3 jours, Relancer une facture impayée (7, 14, 30 jours), Rapport du matin : appels, ventes, alertes); Entretien et veille PME. Niveau Signature conseillé.
+- Grande exploitation (25 personnes et plus, ou plusieurs sites) : Socle Entreprise; 3 lignes de Réceptionniste IA; toutes les automatisations; Entretien et veille Pro. Niveau Platinum conseillé.
 - Toutes les automatisations. Toute la bibliothèque, activée au besoin. JARVIS Pro recommandé.
 - Automatisation sur mesure. Vous décrivez le besoin, nous la construisons et la testons.,.
 - Au-delà : minute d’appel · texto · ligne supplémentaire = une réceptionniste de plus.
 - Prix des automatisations (un déclencheur, une action) (reliée à un outil du client) (veille 24/7 avec escalade). Niveau Signature : jusqu’à 10 automatisations; niveau Platinum : illimité.
 ### Bibliothèque d’automatisations
-- Réception : Prendre et confirmer un rendez-vous; Texter le rappel la veille; Transférer un appel urgent au bon employé; Répondre aux questions fréquentes; Prendre les messages et vous les résumer.
+- Réception : Prendre et confirmer un rendez-vous; Texter le rappel la veille; Transférer un appel urgent au bon employé; Répondre aux questions fréquentes; Prendre les messages et vous les résumer; Trier le courriel entrant.
 - Ventes : Envoyer une soumission à partir d’un gabarit; Relancer une soumission sans réponse après 3 jours; Créer la fiche client; Prévenir le vendeur quand un client rappelle.
 - Facturation : Relancer une facture impayée (7, 14, 30 jours); Envoyer le reçu après paiement; Comptes à recevoir chaque lundi.
-- Opérations : Créer un bon de travail à partir d’une demande; Assigner au technicien disponible; Escalader à la personne de garde; Alerte si un équipement critique tombe.
-- Direction : Rapport du matin : appels, ventes, alertes; Résumé de la semaine le vendredi; Approbation par texto : « OK » ou « Non ».
+- Opérations : Créer un bon de travail à partir d’une demande; Assigner au technicien disponible; Commander quand le stock baisse; Escalader à la personne de garde; Alerte si un équipement critique tombe.
+- Direction : Rapport du matin : appels, ventes, alertes; Résumé de la semaine le vendredi; Tenir les registres à jour; Approbation par texto : « OK » ou « Non ».
+- Employés et accès : Accueillir un nouvel employé; Alerte : session ouverte sans passage à la porte; Revue des accès chaque mois; Publier les horaires et rappeler les quarts.
 - Ferme et commerce : Alerte de température : frigo, réservoir à lait, étable; Journal automatique des livraisons; Commande de moulée quand le silo est bas; Alerte si une porte reste ouverte; Veille d’une pompe ou d’un abreuvoir.
 ## Le matériel (payé une fois, prêt à brancher)
 - Boîtiers JARVIS : Boîtier VR Base; Boîtier VR Signature; Boîtier VR Platinum; Boîtier Mobilité; Écran JARVIS 10 po; Écran JARVIS 7 po; Boîtier Secours.

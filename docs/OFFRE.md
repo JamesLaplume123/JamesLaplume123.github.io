@@ -89,6 +89,13 @@ Elle paraît seulement à qui choisit un lieu d'entreprise (`data-public`). Rien
   | Surveiller | Automatisation « Alerte : session ouverte sans passage à la porte » |
   | Agir | Automatisation « Accueillir un nouvel employé » |
 
+- **La porte « Entreprise »** (23 novembre 2026) : `/solutions/entreprise/` (`ENTREPRISE` dans
+  `src/pages/besoins.py`), au même format que les pages Maison et Ferme. Avant, cette porte menait à l'IA
+  privée seulement. Six cartes (appels, travail, gens, savoir, lieux, protection); chacune nomme la pièce de
+  l'offre qui la porte, et le nombre d'automatisations est compté dans `AUTOMATISATIONS`. Le détail reste où
+  il est (démonstration, secteurs et bibliothèque sur la page Solution; les trois exemples ici) : rien n'y
+  est réécrit. Avant d'ajouter une page ou un bloc pour l'entreprise, on regarde d'abord ce qui existe.
+
 ## Changer de niveau
 
 - Monter : si l'appareil suffit, activation à distance. Sinon, échange de l'appareil avec un crédit.

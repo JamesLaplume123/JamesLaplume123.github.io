@@ -5,6 +5,7 @@
 # Blocs communs : src/pro.py. Styles : assets/demos/pro.css.
 
 import pro
+from pages import catalogue as offre
 
 
 def page(d):
@@ -127,6 +128,9 @@ FERME = {
 # déjà dans l'offre (Réceptionniste IA, bibliothèque d'automatisations, Socle Entreprise, extensions).
 # Le détail reste où il est : la démonstration, les secteurs et la bibliothèque sur la page Automatisation
 # d'entreprise, les trois exemples pour commencer sur la page L'offre.
+# Chaque carte nomme la pièce de l'offre qui la porte, avec les mots de l'offre (pages/catalogue.py) :
+# on doit voir d'un coup d'œil ce que JARVIS offre à une entreprise.
+N_AUTOS = sum(len(items) for _, items in offre.AUTOMATISATIONS)
 ENTREPRISE = {
     "slug": "entreprise",
     "public": "entreprise",
@@ -141,12 +145,12 @@ ENTREPRISE = {
     "h1": "Toute votre entreprise, <em>dans un seul système.</em>",
     "lead": "JARVIS répond au téléphone, fait les suivis, surveille vos lieux et votre réseau, et vous fait rapport.",
     "comprend": [
-        ("Les appels", "Une réception jour et nuit : messages, rendez-vous, rappels, urgences transférées."),
-        ("Le travail", "Soumissions, factures, stock et rapports avancent seuls, sans rien recopier."),
-        ("Les gens", "Chaque employé a son compte et ses accès. Un départ coupe tout d’un coup."),
-        ("Le savoir", "Une IA privée qui connaît vos documents et vos procédures, et montre sa source."),
-        ("Les lieux", "Bâtiments, équipements, énergie et véhicules, dans une seule application."),
-        ("La protection", "Caméras, accès, alarme et réseau, surveillés ensemble."),
+        ("Les appels", f"La {offre.ENT_RECEP['nom']} répond jour et nuit : messages, rendez-vous, rappels, urgences transférées."),
+        ("Le travail", f"{N_AUTOS} automatisations prêtes à activer : soumissions, factures, stock, rapports. Rien à recopier."),
+        ("Les gens", f"Le {offre.ENT_SOCLE['nom']} : un compte par employé, relié à votre annuaire. Un départ coupe tout d’un coup."),
+        ("Le savoir", "L’IA privée connaît vos documents et vos procédures, et montre toujours sa source."),
+        ("Les lieux", "Environnements, Diagnostic et Mobilité : bâtiments, équipements, énergie et véhicules, dans une seule application."),
+        ("La protection", "Sécurité et Réseau : caméras, accès, alarme et réseau, surveillés ensemble."),
     ],
     "suite": [
         ("/solutions/automatisation-operations/#essayer", "Essayer la réceptionniste"),

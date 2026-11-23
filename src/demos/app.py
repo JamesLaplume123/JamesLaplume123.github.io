@@ -176,7 +176,7 @@ SCREENS = [
     ("carte", "carte", 17500, "Tous vos lieux, d’un coup d’œil.",
      "BouLance en voyage, la résidence, le chalet, le bureau, le garage de collection, la ferme et le hangar : chaque environnement en direct, à sa vraie place."),
     ("outils", "outils", 7000, "Toutes vos extensions, au même endroit.",
-     "Domotique, IA, caméras, entreprise, réseau, diagnostic, mobilité : chacune s’ouvre d’un seul clic, directement dans JARVIS."),
+     "Environnements, IA privée, sécurité, entreprise, réseau, diagnostic, mobilité : chacune s’ouvre d’un seul clic, directement dans JARVIS."),
 ]
 
 

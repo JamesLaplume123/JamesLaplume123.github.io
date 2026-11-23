@@ -333,7 +333,11 @@ NIVEAUX = {
                             "Batterie et Internet de secours", "Soutien prioritaire, une personne dédiée"]},
 }
 NIVEAU_NOM = {"base": "Base", "signature": "Signature", "platinum": "Platinum"}
-EXT_COURT = {"env": "Environnements", "diag": "Diagnostic", "secu": "Sécurité", "ia": "IA privée", "res": "Réseau", "mob": "Mobilité"}
+# Le nom court de chaque extension : un seul, partout (offre, démonstration, menus). Il vient de
+# config.CAPABILITIES (« label »); aucune page ne le réécrit (décision du 23 novembre 2026).
+from config import CAPABILITIES as _CAPS
+_COURT = {c["slug"]: c["label"] for c in _CAPS}
+EXT_COURT = {x["id"]: _COURT[x["slug"]] for x in SOLUTIONS if x["id"] != "auto"}
 
 
 def _cases(h):

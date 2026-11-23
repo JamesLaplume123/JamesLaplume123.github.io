@@ -244,9 +244,10 @@ def document(page):
         # Juste après la première section (la bande d'ouverture) : il colle ensuite sous la barre.
         cut = content.index("</section>") + len("</section>")
         content = content[:cut] + "\n" + nav + content[cut:]
-    # Avis de lancement : une seule fois, sur l'accueil (dans le héros) et sur À propos.
+    # Avis de lancement : sur l'accueil (dans le héros), sur À propos, et sur L'offre, là où l'on compose
+    # son forfait : qui compose doit savoir où en est l'entreprise (23 novembre 2026).
     u = page["url"]
-    if u == "/a-propos/":
+    if u in ("/a-propos/", "/offre/"):
         avis = (f'\n<aside class="lancement" aria-label="État de l’entreprise"><p><i class="dot" aria-hidden="true"></i>'
                 f'<span>{SITE["lancement"]}</span> <a href="/contact/">Rester informé <i aria-hidden="true">→</i></a></p></aside>')
         cut = content.index("</section>") + len("</section>")

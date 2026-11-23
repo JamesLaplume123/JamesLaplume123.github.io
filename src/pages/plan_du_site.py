@@ -13,7 +13,7 @@ GROUPES = [
     ]),
     ("Solutions", [("/solutions/", "Les sept solutions")]
      + [(f"/solutions/{c['slug']}/", c["title"]) for c in CAPABILITIES]),
-    ("Par type de lieu", [(u, n) for u, n, _ in LIEUX_NAV]),
+    ("Par type de lieu", [(u, n) for u, n, _ in LIEUX_NAV] + [("/solutions/ia-privee-entreprise/", "IA privée pour entreprise")]),
     ("Entreprise", [
         ("/a-propos/", "À propos"),
         ("/vision-roadmap/", "Vision"),

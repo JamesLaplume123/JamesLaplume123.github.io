@@ -43,7 +43,7 @@ def fiche(complet=True):
         ("/offre/", "L’offre : trois niveaux tout compris (Base, Signature, Platinum), des options, le projet sur mesure"),
         ("/offre/#composer", "Composer mon JARVIS : pour qui, le lieu, le guide de trois questions, le niveau, les options, le projet, la soumission"),
         ("/solutions/maison-intelligente-cle-en-main/", "Maison intelligente clé en main"),
-        ("/solutions/domotique-ferme-agricole/", "Domotique pour ferme"), ("/solutions/ia-privee-entreprise/", "IA privée pour entreprise"),
+        ("/solutions/domotique-ferme-agricole/", "Domotique pour ferme"), ("/solutions/entreprise/", "Pour une entreprise : tout ce que JARVIS y fait, en une page (appels, travail, gens, savoir, lieux, protection)"), ("/solutions/ia-privee-entreprise/", "IA privée pour entreprise"),
         ("/a-propos/", "À propos de James"), ("/vision-roadmap/", "Vision et feuille de route"), ("/laboratoire-mobile/", "Laboratoire mobile (ambulance)"),
         ("/confiance/", "Confiance"), ("/recherche/", "Recherche : la méthode"), ("/questions/", "Questions fréquentes"),
         ("/contact/", "Contact : démo, visite, soumission"), ("/confidentialite/", "Confidentialité (Loi 25)"),

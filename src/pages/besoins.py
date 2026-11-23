@@ -10,6 +10,9 @@ import pro
 def page(d):
     url = f"/solutions/{d['slug']}/"
     cartes = "".join(f'<article class="card" data-rev><h3>{t}</h3><p>{p}</p></article>' for t, p in d["comprend"])
+    # Sous les cartes : la suite (un lien, ou plusieurs pour la page Entreprise), puis l'offre.
+    suites = d["suite"] if isinstance(d["suite"], list) else [d["suite"], ("/offre/", "Voir l’offre")]
+    liens = "\n  ".join(f'<a href="{u}">{t} <i aria-hidden="true">→</i></a>' for u, t in suites)
     return {
         "url": url,
         "v2": True,
@@ -37,8 +40,7 @@ def page(d):
 
 <section class="sect" aria-label="Ce que ça comprend">
   <div class="cards">{cartes}</div>
-  <p class="pro-suite" data-rev><a href="{d['suite'][0]}">{d['suite'][1]} <i aria-hidden="true">→</i></a>
-  <a href="/offre/">Voir l’offre <i aria-hidden="true">→</i></a></p>
+  <p class="pro-suite" data-rev>{liens}</p>
 </section>
 
 {pro.faq_section(d['faq'], d['nom'], "Questions fréquentes")}
@@ -120,6 +122,56 @@ FERME = {
 }
 
 
+# Toute l'entreprise (23 novembre 2026). La porte « Entreprise » menait à l'IA privée seulement, alors que
+# Maison et Ferme couvrent tout le lieu. Six cartes, dans l'ordre où un propriétaire y pense; chacune est
+# déjà dans l'offre (Réceptionniste IA, bibliothèque d'automatisations, Socle Entreprise, extensions).
+# Le détail reste où il est : la démonstration, les secteurs et la bibliothèque sur la page Automatisation
+# d'entreprise, les trois exemples pour commencer sur la page L'offre.
+ENTREPRISE = {
+    "slug": "entreprise",
+    "public": "entreprise",
+    "nom": "JARVIS pour l’entreprise",
+    "genre": "Système privé de gestion et de sécurité pour entreprise",
+    "title": "JARVIS pour votre entreprise : un seul système privé",
+    "description": (
+        "JARVIS répond au téléphone, fait les suivis, relie vos outils et protège vos lieux et votre "
+        "réseau. Toute l’entreprise dans un seul système privé, installé chez vous."
+    ),
+    "image": "/media/accueil/film-entreprise.webp",
+    "h1": "Toute votre entreprise, <em>dans un seul système.</em>",
+    "lead": "JARVIS répond au téléphone, fait les suivis, surveille vos lieux et votre réseau, et vous fait rapport.",
+    "comprend": [
+        ("Les appels", "Une réception jour et nuit : messages, rendez-vous, rappels, urgences transférées."),
+        ("Le travail", "Soumissions, factures, stock et rapports avancent seuls, sans rien recopier."),
+        ("Les gens", "Chaque employé a son compte et ses accès. Un départ coupe tout d’un coup."),
+        ("Le savoir", "Une IA privée qui connaît vos documents et vos procédures, et montre sa source."),
+        ("Les lieux", "Bâtiments, équipements, énergie et véhicules, dans une seule application."),
+        ("La protection", "Caméras, accès, alarme et réseau, surveillés ensemble."),
+    ],
+    "suite": [
+        ("/solutions/automatisation-operations/#essayer", "Essayer la réceptionniste"),
+        ("/solutions/automatisation-operations/#votre-secteur", "Trouver mon secteur"),
+        ("/solutions/ia-privee-entreprise/", "L’IA privée pour entreprise"),
+        ("/offre/#composer", "Composer pour mon entreprise"),
+    ],
+    "faq": [
+        ("Par où commencer?",
+         "Par le problème qui vous coûte le plus cher : les appels manqués, les suivis oubliés ou la "
+         "sécurité. La page L’offre propose trois exemples selon la taille de l’entreprise; le reste "
+         "s’ajoute au mois, quand vous en voyez le gain."),
+        ("Jusqu’où JARVIS agit-il seul?",
+         "C’est vous qui le décidez, domaine par domaine : il voit, il avertit, il propose, il agit avec "
+         "votre accord, ou il agit selon vos règles et vous rend compte. Rien de sensible ne part sans "
+         "l’accord d’une personne."),
+        ("Dois-je changer mes logiciels ou mon annuaire?",
+         "En général, non. JARVIS se relie aux outils que vous utilisez déjà (courriel, agenda, "
+         "téléphonie, comptabilité) et à l’annuaire de votre entreprise (Microsoft 365, Active "
+         "Directory). Il ne les remplace pas et ne gère pas vos postes de travail."),
+    ],
+    "cta": "Votre entreprise,<br><span>sans rien laisser tomber.</span>",
+}
+
+
 IA = {
     "slug": "ia-privee-entreprise",
     "public": "entreprise",
@@ -155,4 +207,4 @@ IA = {
 }
 
 
-PAGES = [page(MAISON), page(FERME), page(IA)]
+PAGES = [page(MAISON), page(FERME), page(ENTREPRISE), page(IA)]

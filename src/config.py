@@ -51,7 +51,7 @@ SITE = {
 LIEUX_NAV = [
     ("/solutions/maison-intelligente-cle-en-main/", "Maison", "Home"),
     ("/solutions/domotique-ferme-agricole/", "Ferme", "Farm"),
-    ("/solutions/ia-privee-entreprise/", "Entreprise", "Business"),
+    ("/solutions/entreprise/", "Entreprise", "Business"),
 ]
 APROPOS_NAV = [
     ("/a-propos/", "À propos", "About"),
@@ -82,6 +82,7 @@ CTA_V2 = {"url": "/contact/", "label": "Parlons de votre projet"}
 BESOINS_PAGES = [
     ("maison-intelligente-cle-en-main", "Maison intelligente clé en main"),
     ("domotique-ferme-agricole", "Domotique pour ferme"),
+    ("entreprise", "Entreprise"),
     ("ia-privee-entreprise", "IA privée pour entreprise"),
 ]
 

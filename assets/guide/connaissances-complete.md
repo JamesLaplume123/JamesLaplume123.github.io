@@ -20,6 +20,7 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - https://jarvisprivatesystems.com/offre/#composer : Composer mon JARVIS : pour qui, le lieu, le guide de trois questions, le niveau, les options, le projet, la soumission
 - https://jarvisprivatesystems.com/solutions/maison-intelligente-cle-en-main/ : Maison intelligente clé en main
 - https://jarvisprivatesystems.com/solutions/domotique-ferme-agricole/ : Domotique pour ferme
+- https://jarvisprivatesystems.com/solutions/entreprise/ : Pour une entreprise : tout ce que JARVIS y fait, en une page (appels, travail, gens, savoir, lieux, protection)
 - https://jarvisprivatesystems.com/solutions/ia-privee-entreprise/ : IA privée pour entreprise
 - https://jarvisprivatesystems.com/a-propos/ : À propos de James
 - https://jarvisprivatesystems.com/vision-roadmap/ : Vision et feuille de route

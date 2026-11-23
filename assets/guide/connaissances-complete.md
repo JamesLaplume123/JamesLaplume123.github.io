@@ -32,12 +32,12 @@ Mise à jour automatique à partir du catalogue du site. Tous les prix sont en d
 - https://jarvisprivatesystems.com/confidentialite/ : Confidentialité (Loi 25)
 - https://jarvisprivatesystems.com/mentions-legales/ : Mentions légales
 - https://jarvisprivatesystems.com/plan-du-site/ : Plan du site : toutes les pages
-- https://jarvisprivatesystems.com/solutions/environnements-intelligents/ : Environnements intelligents (Domotique)
-- https://jarvisprivatesystems.com/solutions/ia-privee-connaissances/ : IA privée et connaissances (IA locale)
+- https://jarvisprivatesystems.com/solutions/environnements-intelligents/ : Environnements intelligents (Environnements)
+- https://jarvisprivatesystems.com/solutions/ia-privee-connaissances/ : IA privée et connaissances (IA privée)
 - https://jarvisprivatesystems.com/solutions/securite-intelligente/ : Sécurité intelligente (Sécurité)
 - https://jarvisprivatesystems.com/solutions/automatisation-operations/ : Automatisation d’entreprise (Entreprise)
 - https://jarvisprivatesystems.com/solutions/reseau-resilience/ : Réseau et cybersécurité (Réseau)
-- https://jarvisprivatesystems.com/solutions/diagnostic-care/ : Diagnostic & continuité (Continuité)
+- https://jarvisprivatesystems.com/solutions/diagnostic-care/ : Diagnostic & continuité (Diagnostic)
 - https://jarvisprivatesystems.com/solutions/mobilite/ : Mobilité (Mobilité)
 ## Pour chez moi, pour mon entreprise, ou les deux
 - Le site demande d’abord pour qui : « Pour chez moi », « Pour mon entreprise » ou « Les deux ». Côté « Pour chez moi », il ne montre pas ce qui est propre à l’entreprise.

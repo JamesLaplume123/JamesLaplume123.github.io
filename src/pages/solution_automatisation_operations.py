@@ -2,7 +2,7 @@
 # La vedette : la réception téléphonique IA (JARVIS répond sur la ligne IP et
 # suit la procédure de l'équipe). Suivent « Votre secteur » (explorateur des
 # vrais problèmes de chaque secteur, avec l'automatisation qui les règle), la
-# bibliothèque d'automatisations prêtes à activer et la bande « La différence »
+# bibliothèque d'automatisations (une seule, celle de l'offre) et la bande « La différence »
 # face aux Environnements intelligents et à la Sécurité.
 #
 # Une seule bibliothèque (22 novembre 2026) : cette page lit celle de l'offre
@@ -59,10 +59,10 @@ def _catalogue():
     )
     return f"""<div class="au-sect au-cat" data-rev id="bibliotheque">
     <div class="au-cat-head">
-      <p class="eyebrow">La bibliothèque · prête à activer</p>
+      <p class="eyebrow">La bibliothèque · {n} automatisations</p>
       <h3>Ce que JARVIS prend en charge partout</h3>
       <p>Peu importe le métier, ces {n} automatisations servent dans chaque entreprise. Vous les activez une à la
-      fois, au mois. JARVIS et ses extensions, c’est l’équivalent d’une équipe d’une dizaine de personnes déjà en
+      fois, au mois. JARVIS et ses extensions, c’est l’équivalent d’une équipe d’une dizaine de personnes toujours en
       poste — réceptionniste, archiviste, commis, technicien.</p>
     </div>
     <ul class="au-cat-grid">{vedette}{familles}</ul>

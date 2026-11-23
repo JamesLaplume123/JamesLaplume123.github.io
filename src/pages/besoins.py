@@ -146,7 +146,7 @@ ENTREPRISE = {
     "lead": "JARVIS répond au téléphone, fait les suivis, surveille vos lieux et votre réseau, et vous fait rapport.",
     "comprend": [
         ("Les appels", f"La {offre.ENT_RECEP['nom']} répond jour et nuit : messages, rendez-vous, rappels, urgences transférées."),
-        ("Le travail", f"{N_AUTOS} automatisations prêtes à activer : soumissions, factures, stock, rapports. Rien à recopier."),
+        ("Le travail", f"Une bibliothèque de {N_AUTOS} automatisations : soumissions, factures, stock, rapports. Rien à recopier."),
         ("Les gens", f"Le {offre.ENT_SOCLE['nom']} : un compte par employé, relié à votre annuaire. Un départ coupe tout d’un coup."),
         ("Le savoir", "L’IA privée connaît vos documents et vos procédures, et montre toujours sa source."),
         ("Les lieux", "Environnements, Diagnostic et Mobilité : bâtiments, équipements, énergie et véhicules, dans une seule application."),

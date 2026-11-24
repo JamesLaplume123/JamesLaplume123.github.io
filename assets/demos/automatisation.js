@@ -785,20 +785,86 @@
   });
 
   /* ---------- Recherche par métier ---------- */
-  function filter() {
-    var q = norm(input.value), words = q.split(/\s+/).filter(Boolean), shown = [];
-    cards.forEach(function (c) {
-      var k = c.getAttribute("data-k"), ok = words.every(function (w) { return k.indexOf(w) !== -1; });
-      c.parentNode.hidden = !ok;
-      if (ok) shown.push(c);
-    });
-    sugs.forEach(function (s) { s.classList.toggle("is-on", norm(s.getAttribute("data-sug")) === q && !!q); });
-    if (!q) { countEl.textContent = baseCount; empty.hidden = true; return; }
-    countEl.textContent = shown.length ? shown.length + (shown.length > 1 ? " secteurs trouvés" : " secteur trouvé") : "Aucun secteur trouvé";
-    empty.hidden = shown.length > 0;
-    if (shown.length && !shown.some(function (c) { return c.getAttribute("data-sec") === cur; })) {
-      select(shown[0].getAttribute("data-sec"), { hash: true });
+  /* ---------- Recherche : comprend le métier tapé, même s'il n'est pas écrit pareil ----------
+     Chaque mot est comparé aux mots du secteur : même mot (pompier = pompiers = pompière), début de mot
+     (pharma → pharmacie), ou faute de frappe (veterinère → vétérinaire). Les secteurs sont classés du plus
+     proche au moins proche, et le plus proche s'ouvre. Rien ne correspond : on le dit, et JARVIS (l'IA du
+     site) peut analyser le métier et dire ce qui est possible sur mesure. */
+  var VIDES = " a au aux avec chez d dans de des du en est et j je l la le les ma mes mon nous ou pour sa ses son suis sur travaille travail un une vos votre metier entreprise compagnie ";
+  function stem(w) { w = w.replace(/(s|x)$/, ""); if (w.length > 5) w = w.replace(/e$/, ""); return w; }
+  function lev(a, b) {
+    if (Math.abs(a.length - b.length) > 2) return 9;
+    var p = [], c, i, j;
+    for (j = 0; j <= b.length; j++) p[j] = j;
+    for (i = 1; i <= a.length; i++) {
+      c = [i];
+      for (j = 1; j <= b.length; j++) c[j] = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      p = c;
     }
+    return p[b.length];
+  }
+  var ordre = cards.map(function (c) { return c.parentNode; }), liste = ordre.length ? ordre[0].parentNode : null;
+  var MOTS = cards.map(function (c) {
+    var vus = {};
+    c.getAttribute("data-k").split(/[^a-z0-9]+/).forEach(function (t) { if (t.length > 1) vus[stem(t)] = 1; });
+    return Object.keys(vus);
+  });
+  /* Les mots du nom du secteur comptent un peu plus : « pourvoirie » mène aux Pourvoiries avant l'Hôtellerie. */
+  var NOMS = cards.map(function (c) { return norm(c.querySelector(".se-cap b").textContent).split(/[^a-z0-9]+/).map(stem); });
+  function score(i, mots, q) {
+    var total = 0, k = cards[i].getAttribute("data-k");
+    mots.forEach(function (w) { if (NOMS[i].indexOf(stem(w)) !== -1) total += 1; });
+    if (q.length > 3 && k.indexOf(q) !== -1) total += 3;
+    mots.forEach(function (w) {
+      var best = 0, sw = stem(w);
+      MOTS[i].forEach(function (t) {
+        var v = 0;
+        if (t === sw) v = 3;
+        else if (sw.length >= 4 && t.length >= 4 && (t.indexOf(sw) === 0 || sw.indexOf(t) === 0)) v = 2;
+        else if (sw.length >= 5 && lev(sw, t) <= (sw.length >= 8 ? 2 : 1)) v = 1.5;
+        if (v > best) best = v;
+      });
+      total += best;
+    });
+    return total;
+  }
+  function filter() {
+    var q = norm(input.value), mots = q.split(/[^a-z0-9]+/).filter(function (w) { return w.length > 1 && VIDES.indexOf(" " + w + " ") === -1; });
+    sugs.forEach(function (s) { s.classList.toggle("is-on", norm(s.getAttribute("data-sug")) === q && !!q); });
+    if (!q || !mots.length) {
+      ordre.forEach(function (li) { li.hidden = false; if (liste) liste.appendChild(li); });
+      countEl.textContent = baseCount; empty.hidden = true; return;
+    }
+    var res = cards.map(function (c, i) { return { c: c, s: score(i, mots, q), i: i }; });
+    var max = Math.max.apply(null, res.map(function (r) { return r.s; }));
+    /* Un secteur est retenu s'il est assez proche du meilleur : on ne montre pas tout ce qui frôle un mot. */
+    var seuil = Math.max(1.5, max * .5);
+    res.sort(function (a, b) { return b.s - a.s || a.i - b.i; });
+    var shown = [];
+    res.forEach(function (r) {
+      var ok = max > 0 && r.s >= seuil;
+      r.c.parentNode.hidden = !ok;
+      if (liste) liste.appendChild(r.c.parentNode);
+      if (ok) shown.push(r.c);
+    });
+    if (shown.length) {
+      var nom = shown[0].querySelector(".se-cap b").textContent;
+      countEl.textContent = "Le plus proche : " + nom + (shown.length > 1 ? " · " + (shown.length - 1) + " autre" + (shown.length > 2 ? "s" : "") : "");
+    } else countEl.textContent = "Pas encore dans la liste";
+    empty.hidden = shown.length > 0;
+    var metier = empty.querySelector("[data-se-metier]");
+    if (metier) metier.textContent = input.value.trim();
+    var bt = empty.querySelector("[data-se-ask]");
+    if (bt) bt.hidden = !(window.JARVIS && window.JARVIS.ouvrir); /* l'IA du site n'est pas chargée : le lien de contact suffit */
+    if (shown.length && shown[0].getAttribute("data-sec") !== cur) select(shown[0].getAttribute("data-sec"), { hash: true });
+  }
+  /* Métier absent de la liste : JARVIS (l'IA du site) l'analyse et dit ce qui est possible sur mesure. */
+  var ask = empty && empty.querySelector("[data-se-ask]");
+  if (ask) {
+    ask.addEventListener("click", function () {
+      if (window.JARVIS && window.JARVIS.ouvrir)
+        window.JARVIS.ouvrir("Mon métier : " + input.value.trim() + ". Qu’est-ce que JARVIS peut faire pour mon entreprise?");
+    });
   }
   if (input) {
     input.addEventListener("input", filter);

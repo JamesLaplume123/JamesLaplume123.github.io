@@ -157,6 +157,15 @@ def fiche(complet=True):
     a("### Bibliothèque d’automatisations")
     for cat, items in C.AUTOMATISATIONS:
         a(f"- {cat} : " + "; ".join(f"{n} ({pr} $/mois)" + (f" — {w}" if complet else "") for _, n, pr, w in items) + ".")
+    # Les secteurs de la page Automatisation d'entreprise : l'IA y envoie la personne qui nomme son métier.
+    from demos import automatisation as AU
+    a("### Secteurs (page Automatisation d’entreprise, section « Votre secteur »)")
+    a("- " + "; ".join(f"{nom} ({AU.fr2(sub)})" for _s, nom, sub, *_ in AU.SECTEURS) + ".")
+    a("- Si la personne nomme son métier : trouve le secteur le plus proche, dis-lui lequel et ce que JARVIS y règle, "
+      "et donne le lien /solutions/automatisation-operations/#secteur-<clé>. Les clés : " + ", ".join(s[0] for s in AU.SECTEURS) + ".")
+    a("- Si aucun secteur ne correspond : dis que c’est possible sur mesure dès qu’il y a des appels, des papiers ou des "
+      "vérifications qui se répètent; demande ce qui revient le plus souvent dans sa journée, puis propose /contact/. "
+      "Ne promets jamais un résultat précis ni une date.")
     a("")
     a("## Le matériel (payé une fois, prêt à brancher)")
     for cat, items in C.MATERIEL:

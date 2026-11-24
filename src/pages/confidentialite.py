@@ -62,7 +62,7 @@ PAGE = {
       hébergé par Amazon Web Services : ces deux tiers voient alors votre adresse IP, comme tout
       serveur. Rien ne leur est envoyé d’autre, et rien tant qu’aucune carte n’est ouverte. Pour ne pas vous compter deux fois, votre navigateur retient « déjà
       compté » jusqu’à la fermeture de l’onglet; cette marque n’est jamais transmise. Votre choix
-      de thème (Graphite, Or ou Titane) est gardé dans votre navigateur et n’est jamais
+      de thème (Base, Signature ou Platinum) est gardé dans votre navigateur et n’est jamais
       transmis.</p></div>
     </div>
     <div class="row" data-rev>

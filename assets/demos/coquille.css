@@ -65,9 +65,9 @@
 }
 .xs-brand small { font: 600 12px/1 var(--x-font); letter-spacing: .2em; text-transform: uppercase; color: var(--x-muted); }
 .xs-mode { margin-top: 10px; font: 700 12px/1 var(--x-font); font-style: normal; letter-spacing: .32em; text-transform: uppercase; color: var(--gold-soft); }
-.xs-mode::after { content: "Or"; }
-:root[data-mode="platinum"] .xs-mode::after { content: "Titane"; }
-:root[data-mode="base"] .xs-mode::after { content: "Graphite"; }
+.xs-mode::after { content: "Signature"; }
+:root[data-mode="platinum"] .xs-mode::after { content: "Platinum"; }
+:root[data-mode="base"] .xs-mode::after { content: "Base"; }
 .xs-nav { display: grid; gap: 4px; }
 .xs-nav-i {
   position: relative; display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 14px; border-radius: 12px;

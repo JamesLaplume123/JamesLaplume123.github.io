@@ -129,16 +129,6 @@ body.lg-full-open { overflow: hidden; }
 /* En plein écran, la bulle « Parler à JARVIS » ne couvre rien */
 body.lg-full-open #jv-root { display: none !important; }
 
-/* Plein écran : l'écran de l'app a une hauteur fixe (calculée), chaque vue défile à l'intérieur. */
-.lg-stage.is-full [data-demo="app"] .ap-screen { min-height: 0; aspect-ratio: auto; }
-.lg-stage.is-full [data-demo="app"] .ap-main { min-height: 0; overflow: hidden; }
-/* Le contenu défile dans l'écran comme dans une vraie app : il s'efface en douceur en haut et en bas
-   (jamais coupé net), sans barre de défilement visible. */
-.lg-stage.is-full [data-demo="app"] .ap-view {
-  overflow-y: auto; scrollbar-width: none; scroll-behavior: smooth; overscroll-behavior: contain;
-  padding-bottom: 4.5rem;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14px, #000 calc(100% - 90px), transparent);
-  mask-image: linear-gradient(180deg, transparent 0, #000 14px, #000 calc(100% - 90px), transparent);
-}
-.lg-stage.is-full [data-demo="app"] .ap-view::-webkit-scrollbar { display: none; }
-.lg-stage.is-full [data-demo="app"] .ap-view > * { flex: none; }
+/* Plein écran : l'app entière, mise à l'échelle de la fenêtre et centrée. Rien ne défile : chaque vue
+   tient dans l'écran 16:10 (app.css, « L'écran tient sans défiler »). */
+.lg-stage.is-full .lg-host { height: 100%; display: grid; place-items: center; }

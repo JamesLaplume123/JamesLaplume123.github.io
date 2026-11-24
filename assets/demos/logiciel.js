@@ -49,31 +49,11 @@
     var plein = stage.classList.contains("is-full"), tel = stage.classList.contains("is-phone");
     var w = host.clientWidth;
     if (!tel && w < 700) return;
-    /* Règle du site : le cadre tient en entier dans la fenêtre. En plein écran, il prend la fenêtre (moins le
-       bouton « Quitter »); sinon la fenêtre moins la barre du site. L'app est dessinée à 1240 px (400 px en
-       aperçu téléphone), puis réduite. */
+    /* Règle du site : le cadre tient en entier dans la fenêtre, sans défiler. En plein écran, il prend la
+       fenêtre (moins le bouton « Quitter ») et peut grossir; sinon la fenêtre moins la barre du site.
+       L'app est dessinée à 1240 px (400 px en aperçu téléphone), puis mise à l'échelle. */
     var large = tel ? 400 : DESIGN;
     app.style.width = large + "px";
-    var ecran = app.querySelector(".ap-screen");
-    if (ecran) ecran.style.height = "";
-    /* Plein écran : l'app remplit la largeur de la fenêtre; l'écran prend la hauteur qui reste et son contenu
-       défile à l'intérieur. Tout devient plus gros, rien ne déborde. */
-    if (plein && !tel && ecran) {
-      var zp = Math.min(1.8, w / large), cible = (window.innerHeight - 56) / zp;
-      ecran.style.height = "600px";
-      var cadre = app.offsetHeight - ecran.offsetHeight;   /* barre du haut, légendes : tout sauf l'écran */
-      ecran.style.height = Math.max(420, Math.floor(cible - Math.max(cadre, 0))) + "px";
-      /* L'app se remet en page après coup (barre du haut, légendes) : on corrige l'écart une fois posée. */
-      [120, 450].forEach(function (t) {
-        setTimeout(function () {
-          if (!stage.classList.contains("is-full")) return;
-          var ecart = app.offsetHeight - cible;
-          if (Math.abs(ecart) > 2) ecran.style.height = Math.max(420, Math.floor(ecran.offsetHeight - ecart)) + "px";
-        }, t);
-      });
-      app.style.zoom = zp.toFixed(4);
-      return;
-    }
     var h = app.offsetHeight;
     var dispo = window.innerHeight - (plein ? 56 : 96);
     /* En plein écran, l'app grossit jusqu'à remplir la fenêtre (plus de plafond à 100 %). */

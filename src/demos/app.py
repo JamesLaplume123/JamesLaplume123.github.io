@@ -486,30 +486,21 @@ def v_accueil():
         <button type="button" class="ap-btn ap-reco-go" data-go="journee">Voir{icon("right")}</button></div>
     </article>
   </div>
-</div>
-<div class="ap-home-b">
-  <article class="ap-card ap-minimap" data-r>
-    {_card_h("map", "Mes lieux", '<button type="button" class="ap-link" data-go="carte">Ouvrir' + icon("right") + '</button>')}
-    <button type="button" class="ap-map ap-map-mini" data-map data-go="carte" data-cam="{cam[0]:.1f},{cam[1]:.1f},{cam[2]:.1f},{cam[3]:.1f}" data-box="{",".join(str(v) for v in BOX)}" aria-label="Ouvrir la carte de vos lieux">
-      {map_svg(_GEO["uid"], cam)}
-      <span class="ap-ov">{map_overlays(big=False)}</span>
-      <span class="ap-attr">© OpenStreetMap</span>
-    </button>
-  </article>
-  <article class="ap-card ap-favs" data-r>
-    {_card_h("star", "Mes favoris")}
-    <ul class="ap-rows">
-      <li><button type="button" data-go="journee">{icon("calendar")}<span><b>Mon agenda</b><small>Vos prochains événements</small></span>{icon("right", "ap-chev")}</button></li>
-      <li><button type="button" data-go="partage">{icon("share")}<span><b>Mes partages</b><small>Qui voit quoi, et jusqu’à quand</small></span>{icon("right", "ap-chev")}</button></li>
-      <li><button type="button" data-go="carte" data-env-go="boulance">{icon("rv")}<span><b>BouLance</b><small>En voyage · batteries en direct</small></span>{icon("right", "ap-chev")}</button></li>
-    </ul>
-  </article>
-  <article class="ap-card ap-msgs" data-r>
-    {_card_h("chat", "Mes messages", '<button type="button" class="ap-link" data-go="messages">Ouvrir' + icon("right") + '</button>')}
-    <ul class="ap-rows">{msgs}</ul>
-  </article>
+  <div class="ap-col ap-col-3">
+    <article class="ap-card ap-msgs" data-r>
+      {_card_h("chat", "Mes messages", '<button type="button" class="ap-link" data-go="messages">Ouvrir' + icon("right") + '</button>')}
+      <ul class="ap-rows">{msgs}</ul>
+    </article>
+    <article class="ap-card ap-minimap" data-r>
+      {_card_h("map", "Mes lieux", '<button type="button" class="ap-link" data-go="carte">Ouvrir' + icon("right") + '</button>')}
+      <button type="button" class="ap-map ap-map-mini" data-map data-go="carte" data-cam="{cam[0]:.1f},{cam[1]:.1f},{cam[2]:.1f},{cam[3]:.1f}" data-box="{",".join(str(v) for v in BOX)}" aria-label="Ouvrir la carte de vos lieux">
+        {map_svg(_GEO["uid"], cam)}
+        <span class="ap-ov">{map_overlays(big=False)}</span>
+        <span class="ap-attr">© OpenStreetMap</span>
+      </button>
+    </article>
+  </div>
 </div>"""
-
 
 
 def v_assistant():
@@ -1158,7 +1149,7 @@ def _cmd():
     )
     g_set = (
         "".join(_cmd_item("palette", f"Thème {n}", "Apparence du site et de l’app", f'data-mode-pick="{m}"', "Réglage", "apparence thème mode")
-                for m, n in (("signature", "Or"), ("platinum", "Titane"), ("base", "Graphite")))
+                for m, n in (("base", "Base"), ("signature", "Signature"), ("platinum", "Platinum")))
         + _cmd_item("brief", "Espace professionnel", "Clients, équipe, appels d’affaires", 'data-pp-set="pro"', "Réglage", "travail pro")
         + _cmd_item("user", "Espace personnel", "Famille, amis, maison", 'data-pp-set="perso"', "Réglage", "perso")
     )
@@ -1176,7 +1167,7 @@ def _me_menu():
     modes = "".join(
         f'<button type="button" class="ap-mode" data-mode-pick="{m}" aria-pressed="false"><img src="/media/modes/{m}.webp" alt="" loading="lazy" decoding="async">'
         f'<span>{lab}</span></button>'
-        for m, lab in (("signature", "Or"), ("platinum", "Titane"), ("base", "Graphite"))
+        for m, lab in (("base", "Base"), ("signature", "Signature"), ("platinum", "Platinum"))
     )
     return f"""<div class="ap-pop ap-menu" data-pop-panel="me" hidden role="dialog" aria-label="Profil d’Alex">
   <div class="ap-me-h">{face(AV_ALEX)}<span><b>Alex</b><small>Compte personnel · JARVIS de la résidence</small></span></div>

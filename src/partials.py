@@ -216,9 +216,9 @@ def footer_v2(page):
   <div class="foot-cols">{cols}</div>
   <div class="foot-modes" role="group" aria-label="Thème d’affichage">
     <span>Thème</span>
-    <button type="button" data-mode-set="base" aria-pressed="false">Graphite</button>
-    <button type="button" class="is-on" data-mode-set="signature" aria-pressed="true">Or</button>
-    <button type="button" data-mode-set="platinum" aria-pressed="false">Titane</button>
+    <button type="button" data-mode-set="base" aria-pressed="false">Base</button>
+    <button type="button" class="is-on" data-mode-set="signature" aria-pressed="true">Signature</button>
+    <button type="button" data-mode-set="platinum" aria-pressed="false">Platinum</button>
   </div>
   <p class="foot-line"><span>{SITE['copyright']}</span><span class="foot-count" hidden>Visites du site <b data-live="visits-foot">—</b></span></p>
 </footer>"""

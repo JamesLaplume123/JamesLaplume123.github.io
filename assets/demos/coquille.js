@@ -51,7 +51,20 @@
      Hauteur disponible : la fenêtre moins la barre du site (et le menu de sections s'il y en a un). Le cadre est
      presque jamais réduit (94 % au plus petit, pour rester lisible); ce qui dépasse défile à l'intérieur. */
   var coques = Array.prototype.slice.call(document.querySelectorAll("[data-xs]"));
+  /* Ouverte dans la démonstration du logiciel (?dans=app) : seule l'extension s'affiche, à la taille de la
+     fenêtre de l'app (coquille.css, « Dans l'app »). Un lien vers une autre page s'ouvre en dehors de l'app. */
+  var dansApp = /(?:^|[?&])dans=app(?:&|$)/.test(location.search) && window.top !== window.self;
+  if (dansApp) {
+    document.documentElement.classList.add("dans-app");
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a || a.getAttribute("href").charAt(0) === "#" || a.target) return;
+      e.preventDefault();
+      window.top.location.href = a.href;
+    });
+  }
   function tient() {
+    if (document.documentElement.classList.contains("dans-app")) return; /* la fenêtre de l'app fait la taille */
     var toc = document.querySelector(".toc");
     /* Sous la barre du site et la barre des sections, avec de l'air en haut et en bas. */
     var dispo = window.innerHeight - 66 - (toc ? toc.offsetHeight : 0) - 52;

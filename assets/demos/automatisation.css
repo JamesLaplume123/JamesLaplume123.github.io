@@ -719,7 +719,10 @@ html.fx [data-demo="automatisation"] .au-telend.on { animation: auUp .6s var(--e
 }
 .se-card.is-on .se-cnt { color: var(--mode-on-action); background: var(--mode-action); border-color: transparent; }
 .se-empty { margin: 1rem 0 0; padding: 1rem 1.2rem; border-radius: 14px; border: 1px dashed color-mix(in srgb, var(--mode-glow) 40%, transparent); background: var(--mode-panel); color: #c8c8ce; font-size: .92rem; line-height: 1.6; }
-.se-empty a { color: var(--gold-soft); }
+.se-empty p { margin: 0; }
+.se-empty b { color: #fff; font-weight: 600; }
+.se-empty-a { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .9rem !important; }
+.se-empty-a [hidden] { display: none; }
 
 /* ---------- Vue d'un secteur ---------- */
 .se-stage { margin-top: 1.6rem; scroll-margin-top: 90px; }

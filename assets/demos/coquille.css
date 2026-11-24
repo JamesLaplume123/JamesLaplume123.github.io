@@ -188,3 +188,20 @@
   .xs-side::-webkit-scrollbar { display: none; }
   html:has(.toc) .xs { scroll-margin-top: 124px; }
 }
+
+/* ---------- Dans l'app (24 novembre 2026) ----------
+   La démonstration du logiciel (/logiciel/) ouvre une extension dans sa propre fenêtre, sans quitter
+   l'app ni le plein écran : la page de solution est chargée avec ?dans=app (coquille.js), et seule
+   l'extension reste, sans la barre latérale ni la barre du haut (l'app a déjà les siennes). */
+html.dans-app, html.dans-app body { background: #080706; overflow: hidden; height: 100%; }
+html.dans-app :has(.xs) > :not(:has(.xs)):not(.xs) { display: none !important; }
+html.dans-app :has(.xs) { margin: 0 !important; padding: 0 !important; max-width: none !important; min-height: 0 !important;
+  border: 0 !important; background: none !important; box-shadow: none !important; opacity: 1 !important; transform: none !important; }
+html.dans-app .xs { width: 100%; }
+html.dans-app .xs-device { padding: 0; border-radius: 0; background: none; box-shadow: none; }
+html.dans-app .xs-device::before, html.dans-app .xs-side, html.dans-app .xs-top, html.dans-app .xs-crumb { display: none; }
+html.dans-app .xs-screen { grid-template-columns: minmax(0, 1fr); border-radius: 0; height: 100vh; }
+html.dans-app .xs-banner { top: 0; left: 0; width: 100%; }
+html.dans-app .xs-head { min-height: 0; padding: 18px 24px 16px; }
+html.dans-app .xs-main { height: 100vh; max-height: none !important; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #ffffff2e transparent; }
+html.dans-app .xs-main > * { flex: none; } /* la colonne défile : le titre garde sa hauteur au lieu de rétrécir */

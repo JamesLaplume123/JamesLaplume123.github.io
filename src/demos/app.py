@@ -1302,6 +1302,14 @@ def _device(only=None):
               <button type="button" class="ap-me" data-pop-open="me" aria-haspopup="dialog" aria-label="Profil d’Alex">{face(AV_ALEX)}<b>Alex</b>{icon("down")}</button>
             </header>
             <div class="ap-views">{views}</div>
+            <section class="ap-xv" data-xv hidden aria-label="Extension">
+              <header class="ap-xv-h">
+                <button type="button" class="ap-link ap-xv-back" data-xv-back>{icon("left")}Mes outils</button>
+                <span class="ap-xv-t" data-xv-t></span>
+                <a class="ap-link ap-xv-full" data-xv-full href="#">Voir la page complète{icon("right")}</a>
+              </header>
+              <iframe class="ap-xv-f" data-xv-f title="Extension JARVIS" tabindex="0"></iframe>
+            </section>
           </div>
           <div class="ap-scrim" data-scrim hidden></div>
           {fr(_cmd())}{fr(_me_menu())}{fr(_callov())}

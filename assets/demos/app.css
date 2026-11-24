@@ -1826,3 +1826,18 @@
 @container ap (max-width: 679px) {
   [data-demo="app"] .ap-col-3 { display: none; } /* téléphone : comme l'ancienne rangée du bas */
 }
+
+/* ---------- Une extension s'ouvre dans l'app (24 novembre 2026) ----------
+   Toucher une extension ne quitte plus la démonstration ni le plein écran : sa page s'ouvre ici, sous la
+   barre du haut, au format de l'app (coquille.css, « Dans l'app »). « Mes outils » ramène où l'on était. */
+[data-demo="app"] .ap-main { position: relative; }
+[data-demo="app"] .ap-xv { position: absolute; inset: 66px 0 0; z-index: 4; display: flex; flex-direction: column; background: var(--a-ground); }
+[data-demo="app"] .ap-xv[hidden] { display: none; }
+[data-demo="app"] .ap-xv-h { display: flex; align-items: center; gap: 14px; padding: 10px 22px; border-bottom: 1px solid var(--a-line); }
+[data-demo="app"] .ap-xv-t { font: 600 14px/1 var(--a-font); color: var(--a-muted); }
+[data-demo="app"] .ap-xv-full { margin-left: auto; }
+[data-demo="app"] .ap-xv-f { flex: 1 1 auto; width: 100%; min-height: 0; border: 0; background: #080706; }
+@container ap (max-width: 679px) {
+  [data-demo="app"] .ap-xv { inset: 0 0 64px; }
+  [data-demo="app"] .ap-xv-full { display: none; }
+}

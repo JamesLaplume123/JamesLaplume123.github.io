@@ -1462,3 +1462,38 @@
     } else { visible = true; firstShow(); }
   });
 })();
+/* Une extension s'ouvre dans l'app, sans quitter la démonstration ni le plein écran (24 novembre 2026).
+   Les liens d'extension (/solutions/<page>/#jarvis) chargent la page de l'extension dans une fenêtre de
+   l'app, avec ?dans=app : seule l'extension s'y affiche (coquille.js). « Mes outils », un autre écran ou
+   la visite automatique la referment. « Voir la page complète » ouvre la page de solution, hors de l'app. */
+(function () {
+  "use strict";
+  document.querySelectorAll('[data-demo="app"]').forEach(function (root) {
+    var xv = root.querySelector("[data-xv]");
+    if (!xv) return;
+    var cadre = xv.querySelector("[data-xv-f]"), titre = xv.querySelector("[data-xv-t]"), plein = xv.querySelector("[data-xv-full]");
+    function ferme() { if (xv.hidden) return; xv.hidden = true; cadre.removeAttribute("src"); }
+    function ouvre(a) {
+      var u = new URL(a.getAttribute("href"), location.href);
+      plein.href = u.pathname + "#jarvis";
+      titre.textContent = (a.getAttribute("aria-label") || a.textContent || "").replace(/^Ouvrir l’extension\s*/, "").split(":")[0].trim();
+      cadre.src = u.pathname + "?dans=app";
+      xv.hidden = false;
+    }
+    root.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="/solutions/"][href$="#jarvis"]');
+      if (a && root.contains(a)) {
+        /* Ctrl, Cmd ou clic du milieu : l'utilisateur veut un nouvel onglet, on le laisse faire. */
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return;
+        e.preventDefault(); ouvre(a); return;
+      }
+      if (e.target.closest && e.target.closest("[data-xv-back], [data-go], .ap-nav [role=tab], .ap-nav .ap-jump")) ferme();
+    });
+    plein.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
+      location.href = plein.getAttribute("href");
+    });
+    root.addEventListener("ap:screen", ferme);
+  });
+})();

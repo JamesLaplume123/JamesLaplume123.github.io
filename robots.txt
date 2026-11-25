@@ -2,5 +2,6 @@ User-Agent: *
 Allow: /
 Disallow: /labo-cartes/
 Disallow: /admin/
+Disallow: /roxanne/
 
 Sitemap: https://jarvisprivatesystems.com/sitemap.xml

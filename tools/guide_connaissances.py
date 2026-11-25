@@ -171,8 +171,17 @@ def fiche(complet=True):
     for cat, items in C.MATERIEL:
         if complet:
             a(f"### {cat}")
-            for _, n, pr, d, w in items:
-                a(f"- {n} : {p(pr)}. {d} Pourquoi : {w}")
+            for code, n, pr, d, w in items:
+                f = C.FICHE.get(code) or {}
+                bout = f"- {n} : {p(pr)}. {d} Pourquoi : {w}"
+                if f.get("q"):
+                    bout += f" À demander avant de l\u2019ajouter : « {f['q']} »"
+                if f.get("faut"):
+                    bout += f" Il faut : {f['faut']}."
+                amis = [C.MAT_BY_ID[c][1] for c in f.get("avec", []) if c in C.MAT_BY_ID]
+                if amis:
+                    bout += " Va avec : " + ", ".join(amis) + "."
+                a(bout)
         else:
             a(f"- {cat} : " + "; ".join(f"{n} {p(pr)}" for _, n, pr, _, _ in items) + ".")
     a("- Les caméras s’enregistrent dans le JARVIS, jamais dans le nuage. Le Boîtier VR va dans un VR, une roulotte ou un bateau; le Boîtier Mobilité dans une voiture ou un camion. Le JARVIS Mini n’a pas d’IA locale : les caméras y sont analysées par Internet.")

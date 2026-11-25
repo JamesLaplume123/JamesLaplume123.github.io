@@ -230,6 +230,57 @@ MATERIEL = [
     ]),
 ]
 MAT_BY_ID = {m[0]: m for _, items in MATERIEL for m in items}
+
+# Fiche de vente, une entree par piece de materiel. Elle ne sert pas a afficher le site :
+# elle sert au Guide, pour batir la liste d'achat du client en posant les bonnes questions.
+#   q    : la question a poser pour savoir si le client en a besoin. Une seule, concrete.
+#   faut : ce qu'il faut pour que ca marche. Vide quand il n'y a rien de particulier.
+#          On n'ecrit ici que ce qui est deja vrai ailleurs sur le site : jamais une supposition.
+#   avec : les codes des pieces qui vont avec celle-la.
+CAM_NIVEAU = "le nombre de caméras analysées suit le niveau : 2 au Base, 6 au Signature, 16 et plus au Platinum"
+POE = "un câble réseau jusqu’à l’appareil et un switch PoE"
+FICHE = {
+    "vrb":      {"q": "Vous avez combien de batteries et de réservoirs à bord?", "faut": "du 12 V à bord; le boîtier suit le niveau choisi", "avec": ["reserv", "temp"]},
+    "vrs":      {"q": "Vous aimeriez partir le chauffage du VR avant d’arriver?", "faut": "du 12 V à bord; le boîtier suit le niveau choisi", "avec": ["reserv", "temp", "porte"]},
+    "vrp":      {"q": "Il y a un bus RV-C ou NMEA 2000 dans le véhicule ou le bateau?", "faut": "du 12 V à bord; le boîtier suit le niveau choisi", "avec": ["camint", "reserv"]},
+    "mobb":     {"q": "Combien de véhicules vous avez sur la route?", "faut": "un port OBD-II dans le véhicule", "avec": ["pneus"]},
+    "ecr10":    {"q": "Vous êtes plusieurs dans le lieu, ou c’est juste vous avec votre téléphone?", "faut": "l’assistant vocal demande le niveau Signature ou Platinum", "avec": ["inter"]},
+    "ecr7":     {"q": "Il y a une chambre, un VR ou un bureau où vous voudriez un écran?", "faut": "", "avec": []},
+    "sec":      {"q": "Vous perdez le courant souvent?", "faut": "", "avec": ["r4g"]},
+    "fuite":    {"q": "Où est-ce que l’eau pourrait couler chez vous : évier, chauffe-eau, sous-sol?", "faut": "", "avec": ["vanne"]},
+    "vanne":    {"q": "Votre entrée d’eau principale est accessible?", "faut": "", "avec": ["fuite"]},
+    "temp":     {"q": "Il y a un endroit qui gèle, ou qui prend l’humidité?", "faut": "", "avec": ["fuite"]},
+    "porte":    {"q": "Quelles portes ou fenêtres vous aimeriez savoir ouvertes?", "faut": "", "avec": ["serrure"]},
+    "radar":    {"q": "Dans quelle pièce les lumières s’éteignent quand vous ne bougez plus?", "faut": "", "avec": ["inter2", "ampoule"]},
+    "fumee":    {"q": "Vos détecteurs de fumée sonnent dans le vide quand vous n’êtes pas là?", "faut": "relié à JARVIS", "avec": ["sirene"]},
+    "propane":  {"q": "Vous chauffez ou vous cuisinez au propane?", "faut": "", "avec": ["temp"]},
+    "reserv":   {"q": "Combien de réservoirs à suivre : eau potable, grise, noire, carburant?", "faut": "", "avec": ["vrb"]},
+    "pneus":    {"q": "Vous roulez chargé, ou sur de longues distances?", "faut": "", "avec": ["mobb"]},
+    "energie":  {"q": "Votre facture d’Hydro vous surprend?", "faut": "", "avec": ["thermo"]},
+    "univ":     {"q": "Il y a une pompe, un silo ou une machine qui doit absolument tourner?", "faut": "", "avec": ["temp"]},
+    "camext":   {"q": "Combien de côtés ou d’entrées vous voulez voir dehors?", "faut": POE + "; " + CAM_NIVEAU, "avec": ["poe"]},
+    "camint":   {"q": "Il y a un endroit en dedans que vous voulez voir quand vous n’y êtes pas?", "faut": POE + "; " + CAM_NIVEAU, "avec": ["poe"]},
+    "cam360":   {"q": "Vous avez une cour ou un stationnement à couvrir d’un seul coup?", "faut": POE + "; " + CAM_NIVEAU, "avec": ["poe"]},
+    "sonnette": {"q": "Vous recevez des colis quand il n’y a personne à la maison?", "faut": CAM_NIVEAU, "avec": ["inter"]},
+    "plaques":  {"q": "Vous avez une barrière ou une entrée de cour?", "faut": POE, "avec": ["poe", "camext"]},
+    "serrure":  {"q": "Vous prêtez ou vous louez le lieu à quelqu’un?", "faut": "", "avec": ["porte", "clavier"]},
+    "clavier":  {"q": "Combien de personnes doivent pouvoir entrer sans vous?", "faut": "", "avec": ["serrure"]},
+    "inter":    {"q": "Vous aimeriez parler au visiteur et lui ouvrir de n’importe où?", "faut": POE, "avec": ["sonnette", "poe"]},
+    "sirene":   {"q": "Vous voulez faire fuir, ou seulement être averti?", "faut": "", "avec": ["urgence"]},
+    "urgence":  {"q": "Il y a quelqu’un chez vous qui pourrait avoir besoin d’aide d’un seul geste?", "faut": "", "avec": ["sirene"]},
+    "thermo":   {"q": "Vous chauffez des pièces que personne n’occupe?", "faut": "", "avec": ["radar", "energie"]},
+    "inter2":   {"q": "Quelles lumières déjà en place vous voulez rendre intelligentes?", "faut": "un électricien", "avec": ["ampoule"]},
+    "prise":    {"q": "Il y a un appareil à partir à heure fixe : lampe, pompe, chauffe-moteur?", "faut": "", "avec": []},
+    "ampoule":  {"q": "Vous voulez des ambiances, ou juste allumer et éteindre?", "faut": "", "avec": ["inter2"]},
+    "del":      {"q": "Un escalier ou un comptoir à éclairer doucement?", "faut": "", "avec": []},
+    "store":    {"q": "Le soleil tape dans une pièce en particulier?", "faut": "", "avec": []},
+    "relais":   {"q": "Vous avez un foyer ou une porte de garage à commander?", "faut": "", "avec": []},
+    "poe":      {"q": "Ça vous ferait combien de caméras et de téléphones en tout?", "faut": "", "avec": ["camext"]},
+    "r4g":      {"q": "Est-ce qu’il y a Internet sur place?", "faut": "", "avec": ["sec"]},
+    "starlink": {"q": "C’est loin de tout, sans cellulaire?", "faut": "le prix du fabricant s’ajoute à l’intégration", "avec": ["r4g"]},
+    "telip":    {"q": "Vous voulez que la réceptionniste vous passe l’appel sur un vrai téléphone?", "faut": "la réceptionniste IA demande le niveau Signature ou Platinum", "avec": []},
+}
+MANQUE_FICHE = [c for c in MAT_BY_ID if c not in FICHE]
 CAMERAS = {"camext", "camint", "cam360", "sonnette", "plaques", "inter"}
 
 # Services professionnels (une fois) : sécurité privée, audits, formation. Sur place ou à distance.

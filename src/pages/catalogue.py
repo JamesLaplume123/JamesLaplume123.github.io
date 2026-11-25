@@ -302,7 +302,7 @@ CLES = {
     "pneus": ["pression des pneus", "capteur de pression", "pneus"],
     "energie": ["compteur d’énergie", "mesure de consommation", "consommation électrique"],
     "univ": ["capteur universel"],
-    "camext": ["caméra extérieure", "caméra d’entrée", "caméra de cour"],
+    "camext": ["caméra extérieure", "caméra d’entrée", "caméra de cour", "caméra"],
     "camint": ["caméra intérieure"],
     "cam360": ["caméra 360", "caméra dôme", "dôme"],
     "sonnette": ["sonnette vidéo", "sonnette"],

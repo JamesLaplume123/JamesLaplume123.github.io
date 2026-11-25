@@ -17,7 +17,7 @@ reserv	Niveau de réservoir		vrb	niveau de réservoir|capteur de réservoir|rés
 pneus	Pression des pneus (4)		mobb	pression des pneus|capteur de pression|pneus
 energie	Compteur d’énergie		thermo	compteur d’énergie|mesure de consommation|consommation électrique
 univ	Capteur universel		temp	capteur universel
-camext	Caméra extérieure	un câble réseau jusqu’à l’appareil et un switch PoE; le nombre de caméras analysées suit le niveau : 2 au Base, 6 au Signature, 16 et plus au Platinum	poe	caméra extérieure|caméra d’entrée|caméra de cour
+camext	Caméra extérieure	un câble réseau jusqu’à l’appareil et un switch PoE; le nombre de caméras analysées suit le niveau : 2 au Base, 6 au Signature, 16 et plus au Platinum	poe	caméra extérieure|caméra d’entrée|caméra de cour|caméra
 camint	Caméra intérieure	un câble réseau jusqu’à l’appareil et un switch PoE; le nombre de caméras analysées suit le niveau : 2 au Base, 6 au Signature, 16 et plus au Platinum	poe	caméra intérieure
 cam360	Caméra 360° (dôme)	un câble réseau jusqu’à l’appareil et un switch PoE; le nombre de caméras analysées suit le niveau : 2 au Base, 6 au Signature, 16 et plus au Platinum	poe	caméra 360|caméra dôme|dôme
 sonnette	Sonnette vidéo	le nombre de caméras analysées suit le niveau : 2 au Base, 6 au Signature, 16 et plus au Platinum	inter	sonnette vidéo|sonnette

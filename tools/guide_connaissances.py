@@ -268,6 +268,21 @@ def ecrire():
         f.write(fiche(complet=False))
     with open(os.path.join(dossier, "connaissances-complete.md"), "w", encoding="utf-8") as f:
         f.write(fiche(complet=True))
+    # Table machine des pieces, pour le portier du Guide : elle lui permet de reconnaitre
+    # une piece nommee dans sa propre reponse, d'en mettre le code dans le lien du forfait
+    # et de rappeler ce qu'il lui faut. Une ligne par piece, separee par des tabulations :
+    # code, nom, ce qu'il faut, les codes qui vont avec, les mots qui la designent.
+    lignes = ["code\tnom\tfaut\tavec\tcles"]
+    for _, items in C.MATERIEL:
+        for code, nom, _pr, _d, _w in items:
+            f_ = C.FICHE.get(code) or {}
+            lignes.append("\t".join([
+                code, nom, (f_.get("faut") or "").replace("\t", " "),
+                ",".join(f_.get("avec") or []),
+                "|".join(C.CLES.get(code) or []),
+            ]))
+    with open(os.path.join(dossier, "pieces.tsv"), "w", encoding="utf-8") as f:
+        f.write("\n".join(lignes) + "\n")
     return chemin
 
 

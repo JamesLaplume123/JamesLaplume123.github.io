@@ -280,6 +280,51 @@ FICHE = {
     "starlink": {"q": "C’est loin de tout, sans cellulaire?", "faut": "le prix du fabricant s’ajoute à l’intégration", "avec": ["r4g"]},
     "telip":    {"q": "Vous voulez que la réceptionniste vous passe l’appel sur un vrai téléphone?", "faut": "la réceptionniste IA demande le niveau Signature ou Platinum", "avec": []},
 }
+# Les mots par lesquels le Guide reconnait une piece dans sa propre reponse, pour mettre
+# son code dans le lien du forfait. La plus longue cle gagne : « porte de garage » avant
+# « capteur de porte ». Une piece sans cle n'est jamais devinee.
+CLES = {
+    "vrb": ["boîtier vr base"], "vrs": ["boîtier vr signature"], "vrp": ["boîtier vr platinum"],
+    "mobb": ["boîtier mobilité", "boîtier obd"],
+    "ecr10": ["écran jarvis 10", "écran 10 po", "écran de 10"],
+    "ecr7": ["écran jarvis 7", "écran 7 po", "écran de 7"],
+    "sec": ["boîtier secours", "boîtier de secours"],
+    "fuite": ["capteur de fuite", "détecteur de fuite", "fuite d’eau", "sonde de fuite"],
+    "vanne": ["vanne d’eau", "vanne automatique", "vanne motorisée", "vanne"],
+    "temp": ["capteur de température", "température et humidité", "capteur de gel",
+             "sonde de température", "humidité", "moisissure"],
+    "porte": ["capteur de porte", "capteur d’ouverture", "contact de porte",
+              "porte et fenêtre", "capteur de fenêtre"],
+    "radar": ["capteur de présence", "présence par radar", "radar de présence", "radar"],
+    "fumee": ["détecteur de fumée", "fumée et co", "monoxyde"],
+    "propane": ["capteur de propane", "niveau de propane", "propane"],
+    "reserv": ["niveau de réservoir", "capteur de réservoir", "réservoir"],
+    "pneus": ["pression des pneus", "capteur de pression", "pneus"],
+    "energie": ["compteur d’énergie", "mesure de consommation", "consommation électrique"],
+    "univ": ["capteur universel"],
+    "camext": ["caméra extérieure", "caméra d’entrée", "caméra de cour"],
+    "camint": ["caméra intérieure"],
+    "cam360": ["caméra 360", "caméra dôme", "dôme"],
+    "sonnette": ["sonnette vidéo", "sonnette"],
+    "plaques": ["lecteur de plaques", "lecture de plaques", "plaques"],
+    "serrure": ["serrure intelligente", "serrure"],
+    "clavier": ["lecteur de badges", "clavier et lecteur", "clavier"],
+    "inter": ["interphone vidéo", "interphone"],
+    "sirene": ["sirène", "stroboscope"],
+    "urgence": ["bouton d’urgence", "bouton d’appel"],
+    "thermo": ["thermostat"],
+    "inter2": ["interrupteur", "gradateur"],
+    "prise": ["prise intelligente"],
+    "ampoule": ["ampoule couleur", "ampoule"],
+    "del": ["bande del", "ruban del", "bande de del"],
+    "store": ["moteur de store", "store"],
+    "relais": ["relais foyer", "relais de garage", "porte de garage", "relais"],
+    "poe": ["switch poe", "commutateur poe", "poe"],
+    "r4g": ["routeur 4g", "routeur 5g", "internet de secours", "lien 4g"],
+    "starlink": ["starlink"],
+    "telip": ["téléphone ip", "poste téléphonique"],
+}
+MANQUE_CLES = [c for c in MAT_BY_ID if c not in CLES]
 MANQUE_FICHE = [c for c in MAT_BY_ID if c not in FICHE]
 CAMERAS = {"camext", "camint", "cam360", "sonnette", "plaques", "inter"}
 

@@ -1,0 +1,40 @@
+code	nom	faut	avec	cles
+vrb	Boîtier VR Base	du 12 V à bord; le boîtier suit le niveau choisi	reserv,temp	boîtier vr base
+vrs	Boîtier VR Signature	du 12 V à bord; le boîtier suit le niveau choisi	reserv,temp,porte	boîtier vr signature
+vrp	Boîtier VR Platinum	du 12 V à bord; le boîtier suit le niveau choisi	camint,reserv	boîtier vr platinum
+mobb	Boîtier Mobilité	un port OBD-II dans le véhicule	pneus	boîtier mobilité|boîtier obd
+ecr10	Écran JARVIS 10 po	l’assistant vocal demande le niveau Signature ou Platinum	inter	écran jarvis 10|écran 10 po|écran de 10
+ecr7	Écran JARVIS 7 po			écran jarvis 7|écran 7 po|écran de 7
+sec	Boîtier Secours		r4g	boîtier secours|boîtier de secours
+fuite	Fuite d’eau		vanne	capteur de fuite|détecteur de fuite|fuite d’eau|sonde de fuite
+vanne	Vanne d’eau automatique		fuite	vanne d’eau|vanne automatique|vanne motorisée|vanne
+temp	Température et humidité		fuite	capteur de température|température et humidité|capteur de gel|sonde de température|humidité|moisissure
+porte	Porte et fenêtre		serrure	capteur de porte|capteur d’ouverture|contact de porte|porte et fenêtre|capteur de fenêtre
+radar	Présence (radar)		inter2,ampoule	capteur de présence|présence par radar|radar de présence|radar
+fumee	Fumée et CO	relié à JARVIS	sirene	détecteur de fumée|fumée et co|monoxyde
+propane	Propane		temp	capteur de propane|niveau de propane|propane
+reserv	Niveau de réservoir		vrb	niveau de réservoir|capteur de réservoir|réservoir
+pneus	Pression des pneus (4)		mobb	pression des pneus|capteur de pression|pneus
+energie	Compteur d’énergie		thermo	compteur d’énergie|mesure de consommation|consommation électrique
+univ	Capteur universel		temp	capteur universel
+camext	Caméra extérieure	un câble réseau jusqu’à l’appareil et un switch PoE; le nombre de caméras analysées suit le niveau : 2 au Base, 6 au Signature, 16 et plus au Platinum	poe	caméra extérieure|caméra d’entrée|caméra de cour
+camint	Caméra intérieure	un câble réseau jusqu’à l’appareil et un switch PoE; le nombre de caméras analysées suit le niveau : 2 au Base, 6 au Signature, 16 et plus au Platinum	poe	caméra intérieure
+cam360	Caméra 360° (dôme)	un câble réseau jusqu’à l’appareil et un switch PoE; le nombre de caméras analysées suit le niveau : 2 au Base, 6 au Signature, 16 et plus au Platinum	poe	caméra 360|caméra dôme|dôme
+sonnette	Sonnette vidéo	le nombre de caméras analysées suit le niveau : 2 au Base, 6 au Signature, 16 et plus au Platinum	inter	sonnette vidéo|sonnette
+plaques	Lecteur de plaques	un câble réseau jusqu’à l’appareil et un switch PoE	poe,camext	lecteur de plaques|lecture de plaques|plaques
+serrure	Serrure intelligente		porte,clavier	serrure intelligente|serrure
+clavier	Clavier et lecteur de badges		serrure	lecteur de badges|clavier et lecteur|clavier
+inter	Interphone vidéo	un câble réseau jusqu’à l’appareil et un switch PoE	sonnette,poe	interphone vidéo|interphone
+sirene	Sirène et stroboscope		urgence	sirène|stroboscope
+urgence	Bouton d’urgence		sirene	bouton d’urgence|bouton d’appel
+thermo	Thermostat intelligent		radar,energie	thermostat
+inter2	Interrupteur ou gradateur	un électricien	ampoule	interrupteur|gradateur
+prise	Prise intelligente			prise intelligente
+ampoule	Ampoule couleur		inter2	ampoule couleur|ampoule
+del	Bande DEL (2 m)			bande del|ruban del|bande de del
+store	Moteur de store			moteur de store|store
+relais	Relais foyer ou garage			relais foyer|relais de garage|porte de garage|relais
+poe	Switch PoE 8 ports		camext	switch poe|commutateur poe|poe
+r4g	Routeur 4G/5G		sec	routeur 4g|routeur 5g|internet de secours|lien 4g
+starlink	Starlink Mini	le prix du fabricant s’ajoute à l’intégration	r4g	starlink
+telip	Téléphone IP	la réceptionniste IA demande le niveau Signature ou Platinum		téléphone ip|poste téléphonique

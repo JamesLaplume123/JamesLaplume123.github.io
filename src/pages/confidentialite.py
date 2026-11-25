@@ -39,7 +39,7 @@ PAGE = {
       approximatives, fuseau horaire); votre fournisseur Internet; la page consultée et, s’il
       y a lieu, le nom du site d’où vous arrivez (le domaine seulement); le type d’appareil,
       le système et le navigateur; l’heure de la visite.</p>
-      <p>Si vous parlez à JARVIS (la bulle du site) : vos questions et ses réponses, la page où
+      <p>Si vous parlez à JARVIS (la bulle du site ou le guide de voyage de la page Mobilité) : vos questions et ses réponses, la page où
       vous étiez, l’heure, votre adresse IP et la localisation approximative qu’on en tire, et le
       type d’appareil.
       Elles servent à améliorer JARVIS et l’offre, sont lues seulement par le responsable,
@@ -83,8 +83,10 @@ PAGE = {
       soumissions 30 jours selon sa documentation. La météo et le radar proviennent
       d’Environnement et Changement climatique Canada; les fonds de carte, d’OpenFreeMap
       (© OpenMapTiles, © contributeurs OpenStreetMap); le relief, du jeu public « Terrain Tiles »
-      hébergé par Amazon Web Services. Le site est hébergé par GitHub Pages.
-      Le Guide JARVIS (la bulle de discussion) envoie vos questions, par Cloudflare, à une IA
+      hébergé par Amazon Web Services. Pour tracer une route proposée par le guide de voyage, le site
+      demande l’itinéraire au routeur OSRM de FOSSGIS (routing.openstreetmap.de), en n’envoyant que
+      les coordonnées du départ et des lieux. Le site est hébergé par GitHub Pages.
+      Le Guide JARVIS (la bulle de discussion et le guide de voyage de la page Mobilité) envoie vos questions, par Cloudflare, à une IA
       qui tourne sur le matériel de JARVIS Private Systems au Québec : aucune grande entreprise
       d’IA ne les reçoit. Les questions et réponses sont gardées dans un journal pour améliorer
       le Guide, sans votre adresse IP; n’y écrivez donc aucune information personnelle.

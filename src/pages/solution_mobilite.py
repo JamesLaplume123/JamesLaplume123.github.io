@@ -26,7 +26,9 @@ CLAIR = {
               "Seulement des arrêts ouverts à votre heure d’arrivée",
               "Eau, propane, carburant et entretien prévus avant d’en manquer",
               "Chaque voyage revit sur la carte, photos à leur place"],
-    "obtenez": [("Un copilote de route", "Repas, eau, propane, Webasto, mécanique, soleil et sites historiques : "
+    "obtenez": [("Un guide avant de partir", "Dites où vous rêvez d’aller : JARVIS propose la destination, la saison "
+                 "et l’itinéraire, et la route se dessine sur le globe."),
+                ("Un copilote de route", "Repas, eau, propane, Webasto, mécanique, soleil et sites historiques : "
                  "proposés selon la distance et l’ouverture, avec le détour exact."),
                 ("Un journal automatique", "Photos et points géolocalisés en roulant. Touchez un voyage passé : "
                  "le tracé, les photos et les statistiques reviennent."),
@@ -38,7 +40,7 @@ PAGE = {
     "url": "/solutions/mobilite/",
     "v2": True,
     "title": "Copilote de voyage, VR et voiture connectés | JARVIS Mobilité",
-    "description": "Un copilote de route qui propose repas, eau, propane, entretien et sites à voir selon la "
+    "description": "Un guide de voyage qui propose destinations et itinéraires, un copilote de route qui propose repas, eau, propane, entretien et sites à voir selon la "
                    "distance, les heures d’ouverture et le soleil, un journal de voyage sur la carte et un garage "
                    "connecté pour VR, voitures familiales, voitures de collection et vélos électriques.",
     "og_image": HERO,
@@ -93,7 +95,7 @@ PAGE = {
     <article class="card" data-rev>
       <small>Mobilité</small>
       <h3>La route, le voyage, le véhicule.</h3>
-      <p>Copilote de route, modes de voyage, journal sur la carte, état mécanique et commandes du véhicule,
+      <p>Guide de voyage, copilote de route, modes de voyage, journal sur la carte, état mécanique et commandes du véhicule,
       du VR à la voiture de collection.</p>
     </article>
     <article class="card" data-rev>

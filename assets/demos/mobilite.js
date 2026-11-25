@@ -29,6 +29,7 @@
       $$(".mb-tab").forEach(function (o) { var on = o === b; o.classList.toggle("is-on", on); o.setAttribute("aria-pressed", on ? "true" : "false"); });
       $$(".mb-pane").forEach(function (p) { p.hidden = p.getAttribute("data-pane") !== tab; });
       if (tab === "journal") renderJournal();
+      if (tab === "guide") ouvreGuide();
       sync();
     });
   });
@@ -661,6 +662,256 @@
     VC.pris = true; VC.lentes = 0;
     if (vueBtn.getAttribute("aria-pressed") === "true") vueEnsemble(2200); else suivre(2600);
   });
+
+  /* ================================================================
+     GUIDE DE VOYAGE (avant de partir)
+     Parle à la vraie IA JARVIS : mode « voyage » du portier (data-guide sur <html>). Les lieux
+     arrivent en gestes { type: "lieu", nom, lat, lng } : le globe s'y envole et trace la route
+     depuis Montréal. Sans IA joignable, les quatre idées gardent leur réponse d'exemple.
+     Les échanges vont au même journal que la bulle du site (page /solutions/mobilite/guide/).
+     ================================================================ */
+  var G = { pret: false, ia: false, carte: null, occ: false, msgs: [], marques: [], traces: [], n: 0, attente: null, tourne: true };
+  var gdL = $("[data-gd-l]"), gdS = $("[data-gd-s]"), gdF = $("[data-gd-f]"), gdIn = $("[data-gd-in]"), gdMap = $('[data-mb-map="gd"]');
+  var URL_GUIDE = (document.documentElement.getAttribute("data-guide") || "").replace(/\/$/, "");
+  var URL_API = (document.documentElement.getAttribute("data-api") || "").replace(/\/$/, "");
+  var CONV = "";
+  try { CONV = sessionStorage.getItem("jv-conv") || ""; if (!CONV) { CONV = Math.random().toString(36).slice(2, 10) + "-" + Date.now().toString(36); sessionStorage.setItem("jv-conv", CONV); } } catch (e) {}
+  function gdJournal(q, rep, ech) {
+    if (!URL_API || !q) return;
+    try {
+      fetch(URL_API + "/chat/log", { method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true,
+        body: JSON.stringify({ s: CONV, i: ech.i, t0: ech.t0, q: q, r: rep, page: "/solutions/mobilite/guide/", lang: "fr" }) }).catch(function () {});
+    } catch (e) {}
+  }
+  function gdPropre(t) { return String(t || "").replace(/\n?LIEUX:[^\n]*/g, "").replace(/\[\[[^\]]*\]\]/g, "").replace(/[*#]/g, ""); }
+  function gdBulle(qui, txt) {
+    var d = document.createElement("div"); d.className = "mb-gd-m " + qui;
+    if (txt) d.textContent = txt;
+    gdL.appendChild(d); gdL.scrollTop = 1e6; return d;
+  }
+  function gdMorceau(b, t) {
+    var sp = document.createElement("span"); sp.textContent = gdPropre(t).replace(/(^|\n)- /g, "$1• ");
+    b.appendChild(sp); gdL.scrollTop = 1e6;
+  }
+  function gdTape(b, txt, fin) {
+    var mots = txt.match(/\S+\s*/g) || [], k = 0;
+    (function un() { if (k >= mots.length) { if (fin) fin(); return; } gdMorceau(b, mots[k++]); setTimeout(un, reduce ? 0 : 26); })();
+  }
+  function gdChoix(liste) {
+    gdS.innerHTML = "";
+    liste.forEach(function (c, k) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "mb-gd-c" + (c.va ? " is-va" : "");
+      b.style.setProperty("--d", (k * .07) + "s"); b.textContent = c.t;
+      if (c.va) b.insertAdjacentHTML("beforeend", ico("fleche"));
+      b.addEventListener("click", c.f); gdS.appendChild(b);
+    });
+    gdL.scrollTop = 1e6;
+  }
+  function gdIdees(sauf) {
+    return D.guide.idees.filter(function (x) { return x !== sauf; }).map(function (x) { return { t: x.q, f: function () { gdDemande(x.q, x); } }; });
+  }
+  function gdEtat() {
+    gdIn.disabled = !G.ia; gdF.classList.toggle("is-off", !G.ia);
+    gdIn.placeholder = G.ia ? "Où partir, quand, combien de jours…" : "Choisissez une idée ci-dessus";
+  }
+  function ouvreGuide() {
+    if (G.pret) return;
+    G.pret = true;
+    var b = gdBulle("lui", "");
+    gdTape(b, "Bonjour! Je suis le guide de voyage JARVIS. Dites-moi où vous rêvez d’aller, ou choisissez une idée : "
+      + "je vous propose la destination, la saison et l’itinéraire. Sur la route, le copilote prend le relais.",
+      function () { if (!G.occ) gdChoix(gdIdees()); });
+    gdEtat();
+    if (URL_GUIDE) {
+      fetch(URL_GUIDE + "/health").then(function (r) { return r.json(); })
+        .then(function (d) { G.ia = !!(d && d.ok && (d.modes || []).indexOf("voyage") >= 0); gdEtat(); }, function () {});
+    }
+    gdGlobe();
+  }
+  gdF.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var t = gdIn.value.trim(); if (!t || !G.ia) return;
+    gdIn.value = ""; gdDemande(t, null);
+  });
+  function gdDemande(q, idee) {
+    if (G.occ) return;
+    G.occ = true; gdChoix([]); gdBulle("moi", q);
+    var b = gdBulle("lui", ""), att = document.createElement("span");
+    att.className = "mb-gd-pense"; att.textContent = "JARVIS prépare votre route…"; b.appendChild(att);
+    gdMap.classList.add("is-pense"); $("[data-gd-titre]").textContent = "Recherche en cours…";
+    function fin(txt, lieux) {
+      gdMap.classList.remove("is-pense");
+      G.msgs.push({ role: "user", content: q }, { role: "assistant", content: txt });
+      G.occ = false;
+      if (lieux && lieux.length) gdLieux(lieux, txt === (idee && idee.r) ? idee.routes : null, txt === (idee && idee.r) && !!idee.itineraire);
+      else $("[data-gd-titre]").textContent = "Où partez-vous?";
+      gdChoix([{ t: "Voir le copilote en route", va: true, f: function () { var t = $('.mb-tab[data-tab="copilote"]'); if (t) t.click(); } }].concat(gdIdees(idee).slice(0, 2)));
+    }
+    function exemple() {
+      setTimeout(function () { att.remove(); gdTape(b, idee.r, function () { fin(idee.r, idee.lieux); }); }, reduce ? 0 : 650);
+    }
+    if (!G.ia) {
+      if (idee) return exemple();
+      att.remove(); gdTape(b, "Le guide n’est pas joignable pour l’instant. Essayez une des idées ci-dessous.", function () { fin("", []); });
+      return;
+    }
+    var ech = { i: (Math.random().toString(36) + "0000").slice(2, 6) + Date.now().toString(36).slice(-4), t0: Date.now() };
+    gdJournal(q, "", ech);
+    var txt = "", lieux = [], vu = false;
+    function traite(bloc) {
+      if (bloc.indexOf("data: ") !== 0) return;
+      try {
+        var j = JSON.parse(bloc.slice(6));
+        if (j.d) { if (!vu) { vu = true; att.remove(); } txt += j.d; gdMorceau(b, j.d); }
+        if (j.g && j.g.type === "lieu" && isFinite(j.g.lat) && isFinite(j.g.lng)) lieux.push({ nom: String(j.g.nom || "").slice(0, 60), lat: +j.g.lat, lng: +j.g.lng });
+      } catch (e) {}
+    }
+    function termine() {
+      var propre = gdPropre(txt).trim();
+      gdJournal(q, propre || "(aucune réponse : JARVIS n’a pas pu répondre)", ech);
+      if (!propre) { b.textContent = ""; if (idee) { G.ia = false; gdEtat(); return exemple(); } att.remove(); return gdTape(b, "Je n’arrive pas à répondre pour l’instant. Réessayez dans un moment.", function () { fin("", []); }); }
+      if (!vu) { att.remove(); return gdTape(b, propre, function () { fin(propre, lieux); }); }
+      b.textContent = propre.replace(/(^|\n)- /g, "$1• "); fin(propre, lieux);
+    }
+    fetch(URL_GUIDE + "/chat", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode: "voyage", stream: true, lang: "fr", messages: G.msgs.concat([{ role: "user", content: q }]).slice(-10) }) })
+      .then(function (r) {
+        if ((r.headers.get("Content-Type") || "").indexOf("text/event-stream") < 0 || !r.body) {
+          return r.json().then(function (d) { txt = (d && d.reply) || ""; (d && d.gestes || []).forEach(function (g) { traite("data: " + JSON.stringify({ g: g })); }); termine(); });
+        }
+        var lec = r.body.getReader(), dec = new TextDecoder(), tampon = "";
+        return (function lis() {
+          return lec.read().then(function (o) {
+            if (o.done) { if (tampon) traite(tampon); return termine(); }
+            tampon += dec.decode(o.value, { stream: true });
+            var blocs = tampon.split("\n\n"); tampon = blocs.pop(); blocs.forEach(traite);
+            return lis();
+          });
+        })();
+      })
+      .catch(termine);
+  }
+
+  /* ---------- Le globe du guide (même vraie carte que le copilote, en globe) ---------- */
+  function gdGlobe() {
+    function go() {
+      var jc = window.JarvisCarte; if (!jc) return;
+      var h = document.createElement("div"); h.className = "mb-ml"; h.setAttribute("aria-hidden", "true");
+      gdMap.insertBefore(h, gdMap.firstChild);
+      jc.ouvre(h, { center: [-70, 44], zoom: 1.9, globe: true, cooperatif: true }).then(function (c) {
+        G.carte = c; gdMap.classList.add("has-ml");
+        c.on("mousedown", function () { G.tourne = false; }); c.on("touchstart", function () { G.tourne = false; });
+        var t0 = 0;
+        (function tour(t) {
+          if (!G.carte) return;
+          if (G.tourne && tab === "guide" && !c.isMoving() && !reduce) { var dt = t0 ? Math.min(64, t - t0) : 16, ce = c.getCenter(); c.setCenter([ce.lng + dt * .004, ce.lat]); }
+          t0 = t; requestAnimationFrame(tour);
+        })(0);
+        if (G.attente) { var a = G.attente; G.attente = null; gdDessine(a[0], a[1], a[2]); }
+      }, function () { h.remove(); });
+    }
+    if (window.JarvisCarte) return go();
+    var sc = document.createElement("script"); sc.src = "/assets/demos/carte.js"; sc.onload = go; document.head.appendChild(sc);
+  }
+  /* Routes réelles : les exemples arrivent avec leur route calculée d'avance (src/demos/mobilite_guide.json);
+     pour une réponse de l'IA, la route est demandée au routeur OSRM de FOSSGIS (données OpenStreetMap),
+     avec seulement les coordonnées des lieux. Sans réponse du routeur : une courbe pointillée, signalée. */
+  var OSRM = "https://routing.openstreetmap.de/routed-car/route/v1/driving/";
+  function gdRoute(a, b) {
+    return fetch(OSRM + a.lng + "," + a.lat + ";" + b.lng + "," + b.lat + "?overview=full&geometries=geojson")
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || d.code !== "Ok") throw new Error("route");
+        var c = d.routes[0].geometry.coordinates, pas = Math.max(1, Math.ceil(c.length / 400)), pts = [];
+        for (var i = 0; i < c.length; i += pas) pts.push([c[i][1], c[i][0]]);
+        pts.push([c[c.length - 1][1], c[c.length - 1][0]]);
+        var w = d.waypoints[1].location;
+        return { pts: pts, km: Math.round(d.routes[0].distance / 1000), arrets: [[a.lat, a.lng], [w[1], w[0]]] };
+      })
+      .catch(function () { return { pts: gdArc(a, b), km: gdKm(a, b), arrets: [[a.lat, a.lng], [b.lat, b.lng]], volOiseau: true }; });
+  }
+  function gdArc(a, b) {
+    var R = Math.PI / 180, f1 = a.lat * R, l1 = a.lng * R, f2 = b.lat * R, l2 = b.lng * R;
+    var d = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin((f2 - f1) / 2), 2) + Math.cos(f1) * Math.cos(f2) * Math.pow(Math.sin((l2 - l1) / 2), 2)));
+    if (d < 1e-6) return [[a.lat, a.lng], [b.lat, b.lng]];
+    var pts = [];
+    for (var k = 0; k <= 48; k++) {
+      var f = k / 48, A = Math.sin((1 - f) * d) / Math.sin(d), B = Math.sin(f * d) / Math.sin(d);
+      var x = A * Math.cos(f1) * Math.cos(l1) + B * Math.cos(f2) * Math.cos(l2), y = A * Math.cos(f1) * Math.sin(l1) + B * Math.cos(f2) * Math.sin(l2), z = A * Math.sin(f1) + B * Math.sin(f2);
+      pts.push([Math.atan2(z, Math.sqrt(x * x + y * y)) / R, Math.atan2(y, x) / R]);
+    }
+    return pts;
+  }
+  function gdKm(a, b) { var R = Math.PI / 180, x = (b.lng - a.lng) * R * Math.cos((a.lat + b.lat) / 2 * R), y = (b.lat - a.lat) * R; return Math.round(Math.sqrt(x * x + y * y) * 6371); }
+  function gdNb(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, NB); }
+  /* lieux : [{nom, lat, lng}]; routes : celles de l'idée d'exemple (ou rien : on les demande au routeur) */
+  function gdLieux(lieux, routes, itineraire) {
+    var dep = D.guide.depart;
+    $("[data-gd-titre]").textContent = lieux.map(function (l) { return l.nom; }).join(" · ");
+    $("[data-gd-sous]").textContent = "Calcul de la route…";
+    if (routes && routes.length) return gdDessine(lieux, routes, itineraire);
+    Promise.all(lieux.map(function (l) { return gdRoute(dep, l); })).then(function (rs) { gdDessine(lieux, rs, false); });
+  }
+  function gdDessine(lieux, routes, itineraire) {
+    var dep = D.guide.depart, c = G.carte;
+    var total = routes.reduce(function (t, r) { return t + r.km; }, 0), oiseau = routes.some(function (r) { return r.volOiseau; });
+    $("[data-gd-sous]").textContent = itineraire
+      ? "Itinéraire depuis " + dep.nom + " · " + gdNb(total) + NB + "km de route"
+      : "Départ : " + dep.nom + (oiseau ? " · distances à vol d’oiseau" : " · routes réelles");
+    // Légende : distance de chaque étape (itinéraire) ou de chaque destination (choix)
+    var leg = $("[data-gd-legende]"); leg.innerHTML = "";
+    lieux.forEach(function (l, k) {
+      var km = itineraire ? (routes[0].jambes || [])[k] : (routes[k] || {}).km;
+      var li = document.createElement("li"); li.style.setProperty("--d", (k * .12 + .2) + "s");
+      li.innerHTML = "<i>" + (k + 1) + "</i>"; li.appendChild(document.createTextNode(l.nom));
+      if (km) { var sm = document.createElement("small"); sm.textContent = (itineraire && k ? "+" : "") + gdNb(km) + NB + "km"; li.appendChild(sm); }
+      leg.appendChild(li);
+    });
+    if (!c) { G.attente = [lieux, routes, itineraire]; return; }
+    G.tourne = false;
+    G.marques.forEach(function (m) { m.remove(); }); G.marques = [];
+    G.traces.forEach(function (t) { t.visible(false); }); G.traces = [];
+    // Où les repères se posent : là où la route arrive vraiment
+    var arrets = itineraire ? (routes[0].arrets || []).slice(1) : routes.map(function (r) { return (r.arrets || [])[1]; });
+    var w = 180, e = -180, s = 90, n = -90;
+    routes.forEach(function (r) { r.pts.forEach(function (p) { w = Math.min(w, p[1]); e = Math.max(e, p[1]); s = Math.min(s, p[0]); n = Math.max(n, p[0]); }); });
+    var large = gdMap.clientWidth > 640;
+    var nbMarques = 0;
+    function marque(pos, nom, depart) {
+      // Une étiquette sur deux passe sous le point, pour que deux lieux voisins ne se chevauchent pas.
+      var bas = !depart && (nbMarques++ % 2 === 1);
+      var el = document.createElement("div"); el.className = "mb-gd-pin" + (depart ? " is-dep" : "") + (bas ? " is-bas" : "");
+      el.innerHTML = "<b></b><i></i>"; el.querySelector("b").textContent = depart ? "Départ · " + nom : nom;
+      G.marques.push(new window.maplibregl.Marker({ element: el, anchor: bas ? "top" : "bottom" }).setLngLat([pos[1], pos[0]]).addTo(c));
+    }
+    // Itinéraire : chaque étape s'allume quand la route l'atteint
+    var cumul = [], somme = 0, vus = {};
+    if (itineraire) (routes[0].jambes || []).forEach(function (j) { somme += j; cumul.push(somme / (routes[0].km || 1)); });
+    c.once("moveend", function () {
+      marque([dep.lat, dep.lng], dep.nom, true);
+      var attente = 0;
+      routes.forEach(function (r, k) {
+        var tr = window.JarvisCarte.trajet(c, "gd" + (G.n++), r.pts.map(function (p) { return [p[1], p[0]]; }));
+        G.traces.push(tr); tr.avance(0);
+        var duree = reduce ? 1 : Math.min(4200, 1200 + r.km * 2.6), t0 = null, debut = attente;
+        attente += itineraire ? duree : 420;
+        setTimeout(function () {
+          (function pas(t) {
+            if (t0 === null) t0 = t;
+            var f = Math.min(1, (t - t0) / duree), g = f < 1 ? 1 - Math.pow(1 - f, 2.2) : 1; tr.avance(g);
+            if (itineraire) arrets.forEach(function (a, i) { if (!vus[i] && a && g >= (cumul[i] || 1) - .002) { vus[i] = 1; marque(a, lieux[i].nom); } });
+            if (f < 1) requestAnimationFrame(pas);
+            else {
+              tr.tete(false);
+              if (!itineraire) { if (arrets[k]) marque(arrets[k], lieux[k].nom); }
+              else arrets.forEach(function (a, i) { if (!vus[i] && a) { vus[i] = 1; marque(a, lieux[i].nom); } });
+            }
+          })(performance.now());
+        }, debut);
+      });
+    });
+    c.fitBounds([[w, s], [e, n]], { padding: { top: large ? 130 : 96, bottom: large ? 150 : 110, left: large ? 130 : 70, right: large ? 90 : 50 }, pitch: 32, bearing: -6, duration: reduce ? 0 : 2800, maxZoom: 9, essential: true });
+  }
 
   /* ---------------- Démarrage ---------------- */
   quiet = true; passages(-1, S.km); quiet = false;

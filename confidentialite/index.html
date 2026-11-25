@@ -20,11 +20,11 @@
 <meta name="geo.region" content="CA-QC">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="/favicon.svg?v=20261124a">
+<link rel="icon" href="/favicon.svg?v=20261124b">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script>try{var m=new URLSearchParams(location.search).get("mode")||localStorage.getItem("jarvis-mode");if(m==="base"||m==="signature"||m==="platinum")document.documentElement.dataset.mode=m}catch(e){}try{var f=JSON.parse(localStorage.getItem("jarvis-forfait")||"{}")||{};document.documentElement.dataset.public=(f.public==="entreprise"||f.public==="deux")?f.public:"moi"}catch(e){document.documentElement.dataset.public="moi"}</script>
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/wow.css?v=20261124a">
+<link rel="stylesheet" href="/assets/css/wow.css?v=20261124b">
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -97,7 +97,7 @@
       approximatives, fuseau horaire); votre fournisseur Internet; la page consultée et, s’il
       y a lieu, le nom du site d’où vous arrivez (le domaine seulement); le type d’appareil,
       le système et le navigateur; l’heure de la visite.</p>
-      <p>Si vous parlez à JARVIS (la bulle du site) : vos questions et ses réponses, la page où
+      <p>Si vous parlez à JARVIS (la bulle du site ou le guide de voyage de la page Mobilité) : vos questions et ses réponses, la page où
       vous étiez, l’heure, votre adresse IP et la localisation approximative qu’on en tire, et le
       type d’appareil.
       Elles servent à améliorer JARVIS et l’offre, sont lues seulement par le responsable,
@@ -141,8 +141,10 @@
       soumissions 30 jours selon sa documentation. La météo et le radar proviennent
       d’Environnement et Changement climatique Canada; les fonds de carte, d’OpenFreeMap
       (© OpenMapTiles, © contributeurs OpenStreetMap); le relief, du jeu public « Terrain Tiles »
-      hébergé par Amazon Web Services. Le site est hébergé par GitHub Pages.
-      Le Guide JARVIS (la bulle de discussion) envoie vos questions, par Cloudflare, à une IA
+      hébergé par Amazon Web Services. Pour tracer une route proposée par le guide de voyage, le site
+      demande l’itinéraire au routeur OSRM de FOSSGIS (routing.openstreetmap.de), en n’envoyant que
+      les coordonnées du départ et des lieux. Le site est hébergé par GitHub Pages.
+      Le Guide JARVIS (la bulle de discussion et le guide de voyage de la page Mobilité) envoie vos questions, par Cloudflare, à une IA
       qui tourne sur le matériel de JARVIS Private Systems au Québec : aucune grande entreprise
       d’IA ne les reçoit. Les questions et réponses sont gardées dans un journal pour améliorer
       le Guide, sans votre adresse IP; n’y écrivez donc aucune information personnelle.
@@ -196,7 +198,7 @@
   <p class="foot-line"><span>© 2026 JARVIS Private Systems</span><span class="foot-count" hidden>Visites du site <b data-live="visits-foot">—</b></span></p>
 </footer>
 <script type="application/json" data-forfait-ref>{"lieux":{"maison":{"n":"Maison","h":"signature","b":null,"p":"particulier","img":"/media/forfait/v-lieu-maison.webp"},"condo":{"n":"Condo","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-condo.webp"},"chalet":{"n":"Chalet","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-chalet.webp"},"domaine":{"n":"Domaine","h":"platinum","b":null,"p":"particulier","img":"/media/forfait/v-lieu-domaine.webp"},"bureau":{"n":"Bureau ou commerce","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-bureau.webp"},"atelier":{"n":"Atelier, entrepôt ou usine","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-atelier.webp"},"ferme":{"n":"Ferme","h":"platinum","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-ferme.webp"},"garage":{"n":"Garage ou hangar","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-garage.webp"},"vr":{"n":"VR","h":"signature","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-vr.webp"},"roulotte":{"n":"Roulotte","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-roulotte.webp"},"bateau":{"n":"Bateau ou yacht","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-bateau.webp"},"auto":{"n":"Auto ou camion","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-auto.webp"},"moto":{"n":"Moto","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-moto.webp"},"flotte":{"n":"Flotte de véhicules","h":null,"b":"Boîtier Mobilité","p":"entreprise","img":"/media/forfait/v-lieu-flotte.webp"},"avion":{"n":"Avion ou hélicoptère","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-avion.webp"}},"sols":{"environnements-intelligents":{"n":"Environnements intelligents","img":"/media/forfait/v-sol-environnements.webp"},"ia-privee-connaissances":{"n":"IA privée et connaissances","img":"/media/forfait/v-sol-ia.webp"},"securite-intelligente":{"n":"Sécurité intelligente","img":"/media/forfait/v-sol-securite.webp"},"automatisation-operations":{"n":"Automatisation d’entreprise","img":"/media/forfait/v-sol-automatisation.webp"},"reseau-resilience":{"n":"Réseau et cybersécurité","img":"/media/forfait/v-sol-reseau.webp"},"diagnostic-care":{"n":"Diagnostic & continuité","img":"/media/forfait/v-sol-diagnostic.webp"},"mobilite":{"n":"Mobilité","img":"/media/forfait/v-sol-mobilite.webp"}},"hubs":{"base":{"n":"JARVIS Mini","img":"/media/forfait/v-hub-base.webp"},"signature":{"n":"JARVIS","img":"/media/forfait/v-hub-signature.webp"},"platinum":{"n":"JARVIS Pro","img":"/media/forfait/v-hub-platinum.webp"}}}</script>
-<script src="/assets/js/wow.js?v=20261124a" defer></script>
-<script src="/assets/js/guide.js?v=20261124a" defer></script>
+<script src="/assets/js/wow.js?v=20261124b" defer></script>
+<script src="/assets/js/guide.js?v=20261124b" defer></script>
 </body>
 </html>

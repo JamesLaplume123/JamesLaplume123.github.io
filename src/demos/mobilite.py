@@ -78,6 +78,7 @@ ICO = {
     "zone": '<circle cx="12" cy="12" r="8.5" stroke-dasharray="2.4 2.4"/><path d="M12 15.5s-3-2.9-3-5.1a3 3 0 0 1 6 0c0 2.2-3 5.1-3 5.1Z"/>',
     "obd": '<rect x="3.5" y="7" width="17" height="10" rx="2.5"/><path d="M7 10.5h.01M10 10.5h.01M13 10.5h.01M16 10.5h.01M8.5 13.5h.01M11.5 13.5h.01M14.5 13.5h.01"/>',
     "son": '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4Z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
+    "boussole": '<circle cx="12" cy="12" r="8.5"/><path d="m15.6 8.4-2.2 5-5 2.2 2.2-5Z"/>',
     "fleche": '<path d="M5 12h14M13 6l6 6-6 6"/>',
     "etoile": '<path d="m12 4 2.4 5 5.4.6-4 3.7 1.1 5.4L12 16l-4.9 2.7 1.1-5.4-4-3.7 5.4-.6Z"/>',
 }
@@ -986,6 +987,52 @@ def _vehicules():
 </div>"""
 
 
+# ---------------------------------------------------------------- Guide de voyage (avant de partir)
+# Le guide parle à la vraie IA JARVIS (mode « voyage » du portier). Ces quatre idées servent de
+# réponses d'exemple quand l'IA n'est pas joignable, et de suggestions au départ.
+GUIDE = {
+    "depart": {"nom": "Montréal", "lat": 45.5017, "lng": -73.5673},
+    "idees": [
+        {"q": "Une fin de semaine en VR à moins de 4 h de Montréal?",
+         "r": "Deux beaux choix pour une fin de semaine :\n- Charlevoix, à environ 4 h : le fleuve vu d’en haut, "
+              "Baie-Saint-Paul et ses galeries.\n- Le parc national du Mont-Tremblant, à environ 2 h : des lacs, "
+              "du canot et le camping au bord de l’eau.\nEn été, réservez le camping d’avance.",
+         "lieux": [{"nom": "Baie-Saint-Paul", "lat": 47.441, "lng": -70.498},
+                   {"nom": "Parc national du Mont-Tremblant", "lat": 46.30, "lng": -74.47}]},
+        {"q": "Où voir les couleurs d’automne, et quand?",
+         "r": "De la fin septembre à la mi-octobre, selon la région :\n- La vallée de la Jacques-Cartier, à "
+              "environ 3 h : une vallée glaciaire entourée de forêt.\n- Les Cantons-de-l’Est, à environ 1 h 30 : "
+              "routes de campagne, vergers et mont Sutton.\nLe nord change de couleur en premier; le sud suit une à "
+              "deux semaines plus tard.",
+         "lieux": [{"nom": "Vallée de la Jacques-Cartier", "lat": 47.25, "lng": -71.36},
+                   {"nom": "Sutton", "lat": 45.105, "lng": -72.616}]},
+        {"q": "Une semaine en Gaspésie en juillet?",
+         "r": "Une semaine permet le tour complet :\n- Le parc national de la Gaspésie : le mont Albert et ses "
+              "sentiers en altitude.\n- Le parc national Forillon : la mer, les phoques et le bout de la "
+              "péninsule.\n- Percé et son rocher, à environ 10 h de Montréal par la côte.\nJuillet est la haute "
+              "saison : réservez tôt.",
+         "itineraire": True,
+         "lieux": [{"nom": "Parc national de la Gaspésie", "lat": 48.93, "lng": -66.18},
+                   {"nom": "Forillon", "lat": 48.85, "lng": -64.30},
+                   {"nom": "Percé", "lat": 48.524, "lng": -64.213}]},
+        {"q": "La mer en voiture électrique, depuis Montréal?",
+         "r": "La côte du Maine est une belle première sortie électrique :\n- Portland, à environ 5 h : le port, "
+              "les phares et une ville facile à pied.\n- Ogunquit, un peu plus au sud : les plages et le sentier en "
+              "bord de mer.\nPrévoyez une recharge rapide à mi-chemin, et votre passeport.",
+         "itineraire": True,
+         "lieux": [{"nom": "Portland", "lat": 43.659, "lng": -70.257},
+                   {"nom": "Ogunquit", "lat": 43.249, "lng": -70.599}]},
+    ],
+}
+
+# Routes réelles des idées (tools/guide_routes.py, calculées une fois sur le réseau routier OpenStreetMap).
+_rg = os.path.join(os.path.dirname(__file__), "mobilite_guide.json")
+if os.path.exists(_rg):
+    with open(_rg, encoding="utf-8") as _f:
+        _ROUTES = json.load(_f)
+    for _k, _idee in enumerate(GUIDE["idees"]):
+        _idee["routes"] = _ROUTES.get(str(_k), [])
+
 DATA = {
     "W": W, "H": H, "len": round(ROUTE_LEN, 1), "vbco": VB_CO, "vbjo": VB_JO,
     "geo": {k: [LL(v[0], v[1] + v[3]), LL(v[0] + v[2], v[1])] for k, v in (("co", VB_CO), ("jo", VB_JO))},
@@ -997,17 +1044,50 @@ DATA = {
     "pois": [{k: p[k] for k in ("id", "cat", "nom", "km", "off", "stop", "h", "why", "x", "y", "src", "val")} for p in POIS],
     "modes": {k: {"nom": lab, "desc": desc, "w": w} for k, lab, desc, _ic, w in MODES},
     "cats": CAT_LABEL,
-    "icons": {k: ICO[k] for k in list(CAT_LABEL) + ["photo", "check", "x", "pin", "etoile"]},
+    "icons": {k: ICO[k] for k in list(CAT_LABEL) + ["photo", "check", "x", "pin", "etoile", "boussole", "fleche"]},
+    "guide": GUIDE,
     "trips": TRIPS_JS,
     "auto": AUTO_JS,
 }
 
 
+def _guide():
+    ph = photo("belvedere-fleuve", photo("hero"))
+    return f"""
+<div class="mb-pane" data-pane="guide" role="tabpanel" aria-label="Guide de voyage" hidden>
+  <div class="mb-gd">
+    <div class="mb-map mb-gd-map" data-mb-map="gd">
+      <img class="mb-gd-ph" src="{ph}" alt="" aria-hidden="true" loading="lazy" decoding="async">
+      <div class="mb-hud mb-hud-t mb-gd-hud">
+        <span class="mb-live is-rec"><i></i>Avant de partir</span>
+        <b data-gd-titre>Où partez-vous?</b>
+        <small data-gd-sous>Départ : Montréal · demandez une idée</small>
+      </div>
+      <ol class="mb-gd-legende" data-gd-legende aria-label="Lieux proposés"></ol>
+      <p class="mb-gd-attr">{ATTRIBUTION} · <a href="https://routing.openstreetmap.de/about.html" target="_blank" rel="noopener">itinéraires OSRM · FOSSGIS</a></p>
+    </div>
+    <aside class="mb-feed mb-gd-chat" aria-label="Guide de voyage JARVIS">
+      <header class="mb-feed-h">
+        <span class="mb-orb" aria-hidden="true"></span>
+        <span><b>Guide de voyage JARVIS</b><small>Destinations, saisons et itinéraires, avant de partir</small></span>
+      </header>
+      <div class="mb-gd-l" data-gd-l aria-live="polite"></div>
+      <div class="mb-gd-s" data-gd-s></div>
+      <form class="mb-gd-f" data-gd-f><input data-gd-in autocomplete="off" maxlength="400" aria-label="Votre question au guide"
+        placeholder="Où partir, quand, combien de jours…"><button type="submit" aria-label="Envoyer">{ico("fleche")}</button></form>
+      <p class="mb-feed-f">JARVIS est une intelligence artificielle : il peut se tromper. Les conversations sont conservées pour l’améliorer; n’y écrivez aucune information personnelle.</p>
+    </aside>
+  </div>
+</div>"""
+
+
 def html():
-    tabs = [("copilote", "Copilote<i> de route</i>", "route"), ("journal", "Journal<i> de voyage</i>", "journal"), ("vehicules", "Véhicules", "garage")]
+    # Dans l'ordre du voyage : le guide avant de partir, le copilote en route, le journal au retour.
+    tabs = [("guide", "Guide<i> de voyage</i>", "boussole"), ("copilote", "Copilote<i> de route</i>", "route"),
+            ("journal", "Journal<i> de voyage</i>", "journal"), ("vehicules", "Véhicules", "garage")]
     tabbar = "".join(
-        f'<button type="button" class="mb-tab{" is-on" if i == 0 else ""}" data-tab="{k}" aria-pressed="{"true" if i == 0 else "false"}">{ico(ic)}<span>{lab}</span></button>'
-        for i, (k, lab, ic) in enumerate(tabs))
+        f'<button type="button" class="mb-tab{" is-on" if k == "copilote" else ""}" data-tab="{k}" aria-pressed="{"true" if k == "copilote" else "false"}">{ico(ic)}<span>{lab}</span></button>'
+        for k, lab, ic in tabs)
     return f"""
 <div class="demo-shell" data-demo="mobilite" data-rev>
   <div class="demo-top">
@@ -1018,6 +1098,7 @@ def html():
   </div>
   <div class="demo-body">
     {defs_svg()}
+    {_guide()}
     {_copilote()}
     {_journal()}
     {_vehicules()}

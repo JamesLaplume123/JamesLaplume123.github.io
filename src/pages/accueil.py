@@ -1,6 +1,8 @@
 # Accueil — une vitrine, pas un formulaire (décision de James, 18 novembre 2026 : « comme Apple,
 # très prestigieux, que les gens veulent acheter »). Peu de mots, beaucoup d'espace, un bouton doré.
 #   1. héros vivant : un film de six lieux; la maison réagit au toucher (accueil.js, shader WebGL);
+#   1b. les trois divisions, tout de suite sous le héros (src/divisions.py, refonte « trois divisions ») :
+#       on comprend ce qu'est JARVIS, puis ses trois grandes offres, avant le détail;
 #   2. le produit : l'appareil, en grand, presque seul;
 #   3. la gamme : un grand appareil qui change (Base, Signature, Platinum), trois chiffres clés;
 #   4. ce qu'il fait : les solutions en bande de photos, une ligne chacune;
@@ -14,6 +16,7 @@ import json
 
 from config import SITE, CAPABILITIES
 from demos import app
+import divisions
 import pro
 import lieux
 
@@ -106,6 +109,17 @@ def _heros():
   </div>
   <p class="ac-demo" data-ac-demo aria-hidden="true">Démonstration : touchez un point de la maison</p>
   <script type="application/json" data-ac-data>{json.dumps(HEROS, ensure_ascii=False, separators=(",", ":"))}</script>
+</section>"""
+
+
+# --- 1b. Les trois divisions : Privé, Entreprise, Cyber -----------------------------------------
+def _divisions():
+    return f"""<section class="ac-sect ac-div" id="divisions" aria-labelledby="ac-div-titre">
+  <div class="ac-tete">
+    <div><h2 id="ac-div-titre">Trois divisions.<br>Une seule IA.</h2><p>Choisissez ce que vous voulez protéger.</p></div>
+    <a class="ac-lien-f" href="/solutions/">Toutes les solutions <i aria-hidden="true">›</i></a>
+  </div>
+  <div class="dv3">{divisions.tuiles()}</div>
 </section>"""
 
 
@@ -263,11 +277,11 @@ PAGE = {
     "v2": True,
     "title": "JARVIS Private Systems | Technologies de sécurité et intelligence privée",
     "schema": [pro.ld_entreprise(), pro.ld_site()],
-    "assets": ["app", "accueil"],
+    "assets": ["app", "accueil", "divisions"],
     "lancement_integre": True,  # l'avis de lancement est dans le héros, pas sous la première section
     "description": (
         "JARVIS, un système privé qui gère et protège les maisons, les fermes, les entreprises "
         "et les véhicules. Domotique, réseau, caméras reliées et IA privée, chez vous."
     ),
-    "content": "\n".join([_heros(), _produit(), _gamme(), _solutions(), _logiciel(), _reel(), _fin()]) + "\n",
+    "content": "\n".join([_heros(), _divisions(), _produit(), _gamme(), _solutions(), _logiciel(), _reel(), _fin()]) + "\n",
 }

@@ -35,7 +35,7 @@ SITE = {
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
-    "asset_version": "20261124b",
+    "asset_version": "20261127a",
     # Adresse du service du site (formulaire → Resend → JARVIS, compteur). Vide tant
     # que le Worker Cloudflare n'est pas déployé : le formulaire passe alors par FormSubmit.
     "api": "https://jarvis-site-api.laplumejames.workers.dev",
@@ -57,6 +57,7 @@ APROPOS_NAV = [
     ("/a-propos/", "À propos", "About"),
     ("/laboratoire-mobile/", "Laboratoire mobile · l’exemple réel", "Mobile lab · the real example"),
     ("/vision-roadmap/", "Vision", "Vision"),
+    ("/pourquoi-jarvis/", "Pourquoi JARVIS", "Why JARVIS"),
     ("/plateforme/", "L’appareil", "The device"),
     ("/confiance/", "Confiance", "Trust"),
     ("/questions/", "Questions", "Questions"),
@@ -90,6 +91,7 @@ BESOINS_PAGES = [
 FOOTER_COLUMNS = [
     ("Produit", [
         ("/logiciel/", "Le logiciel"), ("/plateforme/", "L’appareil"), ("/offre/", "L’offre"),
+        ("/pourquoi-jarvis/", "Pourquoi JARVIS"),
     ]),
     ("Entreprise", [
         ("/a-propos/", "À propos"), ("/vision-roadmap/", "Vision"), ("/laboratoire-mobile/", "Laboratoire mobile"),
@@ -257,9 +259,19 @@ SEO = {
         "et les véhicules. Domotique, réseau, caméras reliées et IA privée, chez vous.",
     ),
     "/solutions/": (
-        "Sept solutions, un seul système privé | JARVIS",
-        "Domotique, sécurité intelligente, IA privée, automatisation, réseau, diagnostic et "
-        "mobilité : sept pièces d’un système privé qui gère et protège vos lieux.",
+        "Trois divisions, une seule IA : les solutions JARVIS",
+        "JARVIS Privé pour vos lieux et vos véhicules, JARVIS Entreprise pour vos opérations, "
+        "JARVIS Cyber pour vérifier vos systèmes. Une seule IA, chez vous.",
+    ),
+    "/solutions/cyber/": (
+        "JARVIS Cyber : vos failles trouvées avant un pirate",
+        "Vérification de vos systèmes, test d’intrusion réseau sur mandat écrit, revue de votre "
+        "exposition en ligne, Loi 25 et formation, pour maisons et entreprises.",
+    ),
+    "/pourquoi-jarvis/": (
+        "Pourquoi JARVIS plutôt que Google Home, Alexa ou Apple",
+        "Installé pour vous, local même sans Internet, vos images chez vous, votre réseau surveillé : "
+        "la comparaison point par point, avec ses sources.",
     ),
     "/solutions/environnements-intelligents/": (
         "Domotique résidentielle sur un seul écran | JARVIS",

@@ -75,13 +75,35 @@ def ext_icon(slug):
     return f'<svg class="mm-i" viewBox="0 0 24 24" aria-hidden="true">{ICONS[EXT_ICON[slug]]}</svg>'
 
 
-def ext_links(cls):
-    """Les sept extensions : icône, nom et une ligne. Sert au menu déroulant et au menu mobile."""
+def ext_links(cls, slugs=None):
+    """Les extensions : icône, nom et une ligne. Sert au menu déroulant et au menu mobile.
+    slugs : seulement celles-là, dans cet ordre (une division); sinon les sept."""
+    caps = {c["slug"]: c for c in CAPABILITIES}
+    choix = [caps[x] for x in slugs] if slugs else CAPABILITIES
     return "".join(
         f'<a class="{cls}" href="/solutions/{c["slug"]}/">{ext_icon(c["slug"])}'
         f'<span><b>{c["title"]}</b><small>{c["menu"]}</small></span></a>'
-        for c in CAPABILITIES
+        for c in choix
     )
+
+
+# Le menu Solutions suit les trois divisions (refonte « trois divisions », src/divisions.py).
+MENU_PRIVE = ["reseau-resilience", "securite-intelligente", "diagnostic-care",
+              "environnements-intelligents", "mobilite", "ia-privee-connaissances"]
+MENU_ENTREPRISE = ["automatisation-operations"]
+
+
+def cyber_link(cls):
+    """La troisième division, JARVIS Cyber : une seule entrée, vers sa page."""
+    return (f'<a class="{cls}" href="/solutions/cyber/"><svg class="mm-i" viewBox="0 0 24 24" aria-hidden="true">'
+            f'{ICONS["key"]}</svg><span><b>JARVIS Cyber</b><small>Vos failles trouvées avant un pirate.</small></span></a>')
+
+
+def menu_divisions(cls, en):
+    """Les trois divisions, chacune avec ses solutions : Privé, puis Entreprise et Cyber côte à côte."""
+    return (f'<p class="mega-k">JARVIS Privé</p><div class="mega-grid">{ext_links(cls, MENU_PRIVE)}</div>'
+            f'<div class="mega-grid mega-div"><div><p class="mega-k">JARVIS Entreprise</p>{ext_links(cls, MENU_ENTREPRISE)}</div>'
+            f'<div><p class="mega-k">JARVIS Cyber</p>{cyber_link(cls)}</div></div>')
 
 
 def lieux_liens(cls, en):
@@ -91,9 +113,9 @@ def lieux_liens(cls, en):
 
 
 def mega_menu(en):
-    """Les sept solutions, une phrase chacune, puis les trois types de lieu."""
+    """Les trois divisions et leurs solutions, une phrase chacune, puis les trois types de lieu."""
     return f"""<div class="mega" data-mega-panel>
-      <div class="mega-grid">{ext_links("mega-a")}</div>
+      {menu_divisions("mega-a", en)}
       {lieux_liens("mega-more", en)}
     </div>"""
 
@@ -132,7 +154,7 @@ def header_v2(page):
 
     def sheet_sub(item):
         if item.get("menu"):
-            return f'<div class="sheet-exts">{ext_links("sheet-x")}{lieux_liens("sheet-more", en)}</div>'
+            return f'<div class="sheet-exts">{menu_divisions("sheet-x", en)}{lieux_liens("sheet-more", en)}</div>'
         if item.get("sub"):
             liens = "".join(f'<a class="sheet-l" href="{u}">{e if en else n}</a>' for u, n, e in item["sub"][1:])
             return f'<div class="sheet-exts">{liens}</div>'
@@ -209,7 +231,8 @@ def footer_v2(page):
         return f'<div><h2>{titre}</h2><nav aria-label="{titre}">' + "".join(f'<a href="{u}">{n}</a>' for u, n in liens) + "</nav></div>"
 
     cols = ('<div><h2>Solutions</h2><nav aria-label="Solutions">' + "".join(
-        f'<a href="/solutions/{c["slug"]}/">{c["title"]}</a>' for c in CAPABILITIES) + "</nav></div>")
+        f'<a href="/solutions/{c["slug"]}/">{c["title"]}</a>' for c in CAPABILITIES)
+        + '<a href="/solutions/cyber/">JARVIS Cyber</a></nav></div>')
     cols += "".join(col(t, liens) for t, liens in FOOTER_COLUMNS)
     return f"""<footer class="foot">
   <p class="foot-brand"><b>JARVIS <span>Private Systems</span></b><span>{SITE['signature']}</span></p>

@@ -207,6 +207,9 @@ body.menu-open .bar-menu span:last-child { transform: translateY(-3.2px) rotate(
 @media (hover: hover) { .bar-dd:hover .mega { visibility: visible; opacity: 1; transform: none; transition: opacity .2s, transform .25s var(--ease); } }
 .mega-k { margin: 0 0 .7rem .4rem; font: 500 .62rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft); }
 .mega-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .2rem; }
+.mega-div { margin-top: .9rem; }  /* Entreprise et Cyber, côte à côte (trois divisions) */
+.sheet-exts .mega-grid { grid-template-columns: 1fr; gap: .15rem; }
+.sheet-exts .mega-k { margin: .8rem 0 .2rem; }
 /* Petits sous-menus (Le logiciel, À propos) : une colonne */
 .mega.mega-s { width: min(23rem, calc(100vw - 2rem)); translate: -30% 0; padding: .9rem .9rem .8rem; }
 .mega-s .mega-grid { grid-template-columns: 1fr; }

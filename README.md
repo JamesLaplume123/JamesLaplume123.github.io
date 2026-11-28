@@ -56,9 +56,10 @@ Pour invalider le cache navigateur après un changement de CSS/JS, incrémenter
 
 ## Règles éditoriales
 
-- L'architecture des pages suit `docs/SITE_INFORMATION_ARCHITECTURE.md` ;
-  le vocabulaire produit suit `docs/JARVIS_SITE_SOURCE_OF_TRUTH.md` ;
-  le système visuel suit `docs/JARVIS_UI_SYSTEM.md`.
+- Tout le site suit `docs/SITE.md` (la loi du site : plan, style, façon de vendre) et la liste
+  fermée des pages `docs/plan_du_site.json`. La méthode de travail est dans `CLAUDE.md`.
+- Avant chaque publication : `scripts/check.sh` doit passer, et `scripts/captures.py` photographie
+  tout le site.
 - Ne jamais publier de secret, jeton, adresse IP privée, identifiant matériel
   ou configuration exploitable : le dépôt est public.
 - Ne jamais inventer de client, certification, résultat commercial ou capacité

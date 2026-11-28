@@ -1,0 +1,26 @@
+name: Vérifications
+
+# Chaque demande de fusion vers main passe scripts/check.sh (CI=true : les fichiers bâtis commis
+# doivent correspondre à la source). Le parcours du configurateur (Playwright) est lancé en local.
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Vérifications du site
+        env:
+          CI: "true"
+        run: bash scripts/check.sh

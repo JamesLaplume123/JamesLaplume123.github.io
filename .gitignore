@@ -1,6 +1,6 @@
 .vite/
 .assetsignore
 _headers
-.claude/
+.claude/settings.local.json
 tmp/
 __pycache__/

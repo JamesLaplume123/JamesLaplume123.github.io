@@ -1,0 +1,12 @@
+#!/bin/sh
+# Verrou d'envoi du site JARVIS (repris du logiciel JARVIS). Git le lance avant chaque « git push »,
+# quelle que soit l'écriture de la commande. Toute mise à jour de main (création, avance, retour en
+# arrière, suppression) est refusée ; un code non nul annule tout l'envoi.
+refus=0
+while read -r ref_locale sha_local ref_distante sha_distant; do
+  if [ "$ref_distante" = "refs/heads/main" ]; then
+    echo "Refusé par le verrou d'envoi : « $ref_locale » vers main sur « $1 ». main ne change que par une demande de fusion acceptée par James." >&2
+    refus=1
+  fi
+done
+exit "$refus"

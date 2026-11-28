@@ -8,17 +8,16 @@ DATA = {
     "title": "Sécurité intelligente",
     "description": "Un logiciel qui réunit vos caméras, serrures et capteurs en événements clairs, traités et gardés chez vous : mur vidéo, accès, véhicules, zones, incidents et conformité à la Loi 25.",
     "image": "/media/solutions/securite-intelligente.webp",
-    "h1": "Sécurité <em>intelligente.</em>",
-    "lead": "Un logiciel installé chez vous, qui réunit vos caméras, vos serrures, vos capteurs et vos preuves dans la même application que le reste du lieu. Vous gardez le contrôle, et les images restent sur place.",
     "for": "Résidences, entreprises, entrepôts, campus et organisations réparties sur plusieurs sites",
     "clair": {
         "titre": "Une alarme sonne. <em>JARVIS, lui, comprend.</em>",
         "quoi": "JARVIS regarde toutes vos caméras, vos portes et vos capteurs en même temps, puis vous dit en une phrase ce qui s’est vraiment passé.",
-        "imaginez": (
-            "23 h, une auto inconnue passe deux fois devant chez vous. JARVIS lit la plaque, voit que "
-            "personne ne la connaît, allume les lumières de la cour comme vous l’avez réglé et vous "
-            "envoie un seul message, vidéo à l’appui."
-        ),
+        "moments": [
+            ("23 h 02", "Une auto inconnue passe devant chez vous."),
+            ("23 h 06", "Elle repasse. JARVIS lit la plaque : personne ne la connaît."),
+            ("23 h 06", "Les lumières de la cour s’allument, comme vous l’avez réglé."),
+        ],
+        "message": "Une auto inconnue est passée deux fois. Plaque lue, lumières allumées. Vidéo jointe.",
         "duel": ("Plus qu’une caméra. <em>Plus qu’une alarme.</em>", "Caméras, serrure et alarme ordinaires", [
             ("« Mouvement détecté », trente fois par jour, pour un chat ou une branche.",
              "Un seul message par événement : qui, quoi, où, et si c’est normal."),

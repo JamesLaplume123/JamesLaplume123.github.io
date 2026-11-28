@@ -6,7 +6,7 @@
 import json
 
 from demos import coquille, env
-from pages._solution import clair_section, avec_bande
+from pages._solution import clair_section, fiche_section, avec_bande
 import galerie
 
 MOMENTS = {
@@ -58,10 +58,12 @@ MOMENTS_JSON = json.dumps(MOMENTS, ensure_ascii=False)
 CLAIR = {
     "titre": "Votre maison s’ajuste seule. <em>Votre facture baisse.</em>",
     "quoi": "JARVIS réunit les lumières, le chauffage, les stores, les portes et l’énergie dans une seule application, et les fait travailler ensemble.",
-    "imaginez": (
-        "vous partez travailler. JARVIS baisse le chauffage des pièces vides, éteint ce qui est resté "
-        "allumé et remonte tout avant votre retour. Vous ne touchez à rien."
-    ),
+    "moments": [
+        ("7 h 40", "Vous partez travailler."),
+        ("7 h 41", "Le chauffage des pièces vides baisse. Ce qui est resté allumé s’éteint."),
+        ("16 h 30", "Tout remonte avant votre retour. Vous n’avez touché à rien."),
+    ],
+    "message": "Mode Absent : trois lumières éteintes, chauffage réduit. Tout sera prêt pour 17 h.",
     "duel": ("Plus qu’un thermostat intelligent.", "Des objets connectés, chacun sa marque", [
         ("Une application par marque, et cinq pour faire le tour de la maison.",
          "Toute la maison sur un seul écran, pièce par pièce."),
@@ -95,6 +97,8 @@ CLAIR = {
         "Stores motorisés", "Relais pour foyer et garage"],
         "Les travaux d’électricité sont faits par un maître électricien."),
 }
+
+POUR = "Maisons familiales · résidences de prestige · fermes · entreprises · yachts · hangars"
 
 PAGE = {
     "url": "/solutions/environnements-intelligents/",
@@ -210,6 +214,7 @@ PAGE = {
 
 {galerie.terrain("environnements-intelligents")}
 
+{fiche_section(CLAIR, "environnements-intelligents", POUR)}
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>
     <div>
@@ -236,10 +241,5 @@ PAGE = {
 """,
 }
 
-PAGE["content"] = avec_bande(
-    PAGE["content"], "environnements-intelligents",
-    "Domotique résidentielle. <em>Toute la maison sur un seul écran.</em>",
-    "Lumières, chauffage, énergie et appareils de marques différentes, réunis et simples à contrôler.",
-    "/media/solutions/environnements-intelligents.webp",
-    "Maisons familiales · résidences de prestige · fermes · entreprises · yachts · hangars",
-)
+PAGE["content"] = avec_bande(PAGE["content"], "environnements-intelligents", "Environnements intelligents", CLAIR, "/media/solutions/environnements-intelligents.webp")
+

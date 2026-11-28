@@ -8,8 +8,6 @@ DATA = {
     "title": "Réseau et cybersécurité",
     "description": "Comprendre l’infrastructure, surveiller les dépendances et conserver des accès privés fiables.",
     "image": "/media/solutions/reseau-resilience.webp",
-    "h1": "Un réseau et un Wi-Fi fiables. <em>La fondation de tout le reste.</em>",
-    "lead": "Maison, ferme ou entreprise : un Wi-Fi qui couvre partout, des zones séparées et une vue claire du réseau et de ses risques, avant que chaque problème devienne une urgence.",
     "for": "Maisons connectées, PME et petits multi-sites qui dépendent de leur réseau",
     "demo_title": "Tout votre réseau, <em>dans une seule console.</em>",
     "demo_copy": (
@@ -39,10 +37,12 @@ DATA = {
 DATA["clair"] = {
     "titre": "Votre réseau, gardé <em>comme celui d’une entreprise.</em>",
     "quoi": "JARVIS connaît chaque appareil branché chez vous, sépare ce qui doit l’être et met à l’écart ce qui n’a rien à faire là. Il vous explique tout en mots simples.",
-    "imaginez": (
-        "2 h du matin, un appareil inconnu se branche sur votre Wi-Fi. JARVIS le met en quarantaine, "
-        "loin de vos ordinateurs, et vous demande au réveil si vous le connaissez."
-    ),
+    "moments": [
+        ("2 h 14", "Un appareil inconnu se branche sur votre Wi-Fi."),
+        ("2 h 14", "JARVIS le met en quarantaine, loin de vos ordinateurs."),
+        ("7 h 00", "À votre réveil, il vous demande si vous le connaissez."),
+    ],
+    "message": "Un appareil inconnu s’est branché à 2 h 14. Il est isolé. Le connaissez-vous?",
     "duel": ("Plus qu’un routeur.", "Un routeur ordinaire", [
         ("Il donne Internet à tout ce qui a le mot de passe.",
          "Chaque appareil est reconnu, nommé et rangé dans sa zone."),

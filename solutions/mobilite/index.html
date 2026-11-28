@@ -18,11 +18,11 @@
 <meta name="geo.region" content="CA-QC">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="/favicon.svg?v=20261128b">
+<link rel="icon" href="/favicon.svg?v=20261128c">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script>try{var m=new URLSearchParams(location.search).get("mode")||localStorage.getItem("jarvis-mode");if(m==="base"||m==="signature"||m==="platinum")document.documentElement.dataset.mode=m}catch(e){}try{var f=JSON.parse(localStorage.getItem("jarvis-forfait")||"{}")||{};document.documentElement.dataset.public=(f.public==="entreprise"||f.public==="deux")?f.public:"moi"}catch(e){document.documentElement.dataset.public="moi"}</script>
 <link rel="preload" href="/assets/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/wow.css?v=20261128b">
+<link rel="stylesheet" href="/assets/css/wow.css?v=20261128c">
 <script type="application/ld+json">
 [
  {
@@ -93,9 +93,9 @@
  }
 ]
 </script>
-<link rel="stylesheet" href="/assets/demos/coquille.css?v=20261128b">
-<link rel="stylesheet" href="/assets/demos/mobilite.css?v=20261128b">
-<link rel="stylesheet" href="/assets/demos/galerie.css?v=20261128b">
+<link rel="stylesheet" href="/assets/demos/coquille.css?v=20261128c">
+<link rel="stylesheet" href="/assets/demos/mobilite.css?v=20261128c">
+<link rel="stylesheet" href="/assets/demos/galerie.css?v=20261128c">
 </head>
 <body class="">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -122,47 +122,53 @@
 </nav>
 <main id="contenu">
 
-<section class="band top">
+<section class="band top ap-hero">
   <div class="bg"><img decoding="async" src="/media/mobilite/hero.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
     <nav class="fil" aria-label="Fil d’Ariane" data-rev><a href="/">Accueil</a><i aria-hidden="true">›</i><a href="/solutions/">Solutions</a><i aria-hidden="true">›</i><span aria-current="page">Mobilité</span></nav>
-    <h1 data-rev>Tous vos véhicules. <em>Partez l’esprit libre.</em></h1>
-    <p class="lead" data-rev>Auto, camion, moto, véhicule électrique, VR, bateau ou avion : JARVIS veille sur chacun, à la maison comme sur la route.</p>
+    <h1 data-rev><span class="ap-nom">Mobilité</span>Tout ce qui roule, flotte ou vole. <em>Sous votre œil.</em></h1>
+    <p class="lead" data-rev>Auto, camion, moto, véhicule électrique, VR, bateau ou avion : JARVIS veille sur chacun, vous prévient du vol et de la panne, et vous guide sur la route.</p>
     <div class="acts" data-rev>
       <button type="button" class="pill" data-forfait-add="mobilite" aria-pressed="false"><span data-forfait-off>Ajouter à mon forfait</span><span data-forfait-on hidden>Dans mon forfait ✓</span></button>
-      <a class="pill ghost" href="#essayer">Essayer la démonstration</a>
+      <a class="ap-lien" href="#essayer">Voir la démonstration ›</a>
     </div>
-    <p class="for-line" data-rev><span>Division</span> <a href="/solutions/#prive">JARVIS Privé</a> et <a href="/solutions/entreprise/">JARVIS Entreprise</a></p>
-    <p class="for-line" data-rev><span>Pour</span> Autos, camions, motos, véhicules électriques, VR, bateaux et avions · flottes d’entreprise</p>
-    <p class="for-line" data-rev><span>Prix</span> Prix sur soumission, confirmé par écrit avant tout achat.</p>
   </div>
 </section>
-<nav class="toc" aria-label="Sections de la page" data-toc-nav><div class="toc-in"><a href="#en-clair">En clair</a><a href="#jarvis">Essayer</a><a href="#lieu-ou-route">Lieu ou route</a><a href="#modes-voyage">Six façons de voyager</a><a href="#garage">Vos véhicules</a><a href="#terrain">Sur le terrain</a><a href="#deploiement">Déploiement</a></div><a class="toc-cta" href="/contact/">Parlons de votre projet</a></nav>
+<nav class="toc" aria-label="Sections de la page" data-toc-nav><div class="toc-in"><a href="#en-clair">Aperçu</a><a href="#jarvis">Essayer</a><a href="#lieu-ou-route">Lieu ou route</a><a href="#modes-voyage">Six façons de voyager</a><a href="#garage">Vos véhicules</a><a href="#terrain">Sur le terrain</a><a href="#en-detail">En détail</a><a href="#deploiement">Déploiement</a></div><a class="toc-cta" href="/contact/">Parlons de votre projet</a></nav>
 
 
 
-<section class="clair" id="en-clair" data-toc="En clair" aria-labelledby="clair-titre">
-  <div class="clair-head" data-rev>
-    <p class="eyebrow">En clair</p>
-    <h2 id="clair-titre">Tout ce qui roule, flotte ou vole. <em>Sous votre œil.</em></h2>
-    <p class="clair-sub">Auto, camion, moto, véhicule électrique, VR, bateau ou avion : JARVIS veille sur chacun, vous prévient du vol et de la panne, et vous guide sur la route.</p>
-    <p class="clair-ex"><b>Imaginez :</b> 6 h, −25 °C. JARVIS vous propose de préchauffer l’auto et vous avertit qu’un pneu perd de la pression, avant que vous sortiez.</p>
-    <p class="clair-chiffre"><b>7 742</b><span>véhicules volés au Québec en 2025. Environ la moitié n’est jamais retrouvée.<small>Source : <a href="https://www.protegez-vous.ca/nouvelles/automobile/vol-auto-statistiques" rel="noopener">Équité Association, Protégez-Vous</a></small></span></p>
+<section class="ap ap-moment" id="en-clair" data-toc="Aperçu" aria-labelledby="moment-titre">
+  <div class="ap-moment-ph" aria-hidden="true"><img decoding="async" src="/media/vitrine/solutions/mobilite/apres-route.webp" alt="Route ouverte au coucher du soleil vue depuis l&#x27;habitacle, tableau de bord sobre" loading="lazy" style="object-position:50% 50%"></div>
+  <div class="ap-moment-in">
+    <h2 class="ap-h" id="moment-titre" data-rev>Imaginez.</h2>
+    <ol class="ap-temps"><li data-rev><time>6 h 00</time><span>Il fait −25 °C dehors.</span></li><li data-rev><time>6 h 00</time><span>JARVIS remarque qu’un pneu perd de la pression.</span></li><li data-rev><time>6 h 05</time><span>Il vous propose de préchauffer l’auto, avant que vous sortiez.</span></li></ol>
+    <div class="ap-notif" data-rev>
+      <p class="ap-notif-t"><b>JARVIS</b><small>maintenant</small></p>
+      <p>Pneu avant gauche : 26 psi, en baisse. Je préchauffe l’auto pour 6 h 30?</p>
+    </div>
   </div>
-  <div class="clair-bloc" data-rev>
-    <p class="eyebrow">La différence</p>
-    <h3 class="clair-t">Plus qu’un traceur GPS.</h3>
-    <a class="clair-lien" href="/pourquoi-jarvis/">Pourquoi JARVIS plutôt que Google, Amazon ou Apple ›</a>
-  </div>
-  <div class="vs duel" style="--r:8" data-rev>
-    <div class="vs-col vs-before"><figure class="gl-fig vs-ph" data-rev><img decoding="async" src="/media/vitrine/solutions/mobilite/avant-carte-papier.webp" alt="Carte routière dépliée et téléphone sur le tableau de bord, conducteur perdu sous la pluie" loading="lazy" style="object-position:50% 50%"><figcaption><b>Chercher au lieu de profiter</b></figcaption></figure><p class="vs-k">Un traceur ou l’application du constructeur</p><ul><li>Une application par véhicule, quand il y en a une.</li><li>Il montre où est le véhicule, une fois qu’il a été volé.</li><li>Un voyant s’allume, sans dire si c’est grave.</li><li>L’entretien, on y pense une fois en retard.</li><li>Le VR ou le bateau entreposé, personne ne le voit de l’hiver.</li><li>En route, trois applications pour manger, dormir et faire le plein.</li></ul></div>
-    <div class="vs-arrow" aria-hidden="true"><span></span></div>
-    <div class="vs-col vs-after"><figure class="gl-fig vs-ph" data-rev><img decoding="async" src="/media/vitrine/solutions/mobilite/apres-route.webp" alt="Route ouverte au coucher du soleil vue depuis l&#x27;habitacle, tableau de bord sobre" loading="lazy" style="object-position:50% 50%"><figcaption><b>La route prévue, l’esprit libre</b></figcaption></figure><p class="vs-k">Avec JARVIS</p><ul><li>Tous vos véhicules dans la même application que la maison.</li><li>Une alerte dès qu’il bouge sans vous, avec sa position en direct.</li><li>Le code d’erreur expliqué en mots simples : quoi faire, et quand.</li><li>Batterie, pneus et entretien à venir, rappelés avant l’échéance.</li><li>Batteries, eau, propane et froid suivis à distance, même entreposé.</li><li>Un copilote propose le bon arrêt, ouvert à votre heure d’arrivée.</li></ul></div>
-  </div>
-  <p class="eyebrow clair-k" data-rev>Ce que JARVIS fait</p>
-  <div class="cards"><article class="card" data-rev><small>01</small><h3>Tous vos véhicules</h3><p>Auto, camion, moto, véhicule électrique, VR, bateau, et même avion. Une seule application pour tout.</p></article><article class="card" data-rev><small>02</small><h3>Vol et position</h3><p>Une alerte s’il bouge sans vous, sa position en direct et l’historique de ses trajets.</p></article><article class="card" data-rev><small>03</small><h3>La santé du véhicule</h3><p>Codes d’erreur expliqués, batterie, pneus et entretien à venir, avant que ça vous arrête.</p></article><article class="card" data-rev><small>04</small><h3>Le véhicule électrique</h3><p>Recharge au meilleur moment, préchauffage d’un toucher et autonomie estimée selon la météo.</p></article><article class="card" data-rev><small>05</small><h3>Le copilote de route</h3><p>Repas, recharge, propane et sites à voir, selon la distance et les heures d’ouverture. Chaque voyage reste sur la carte, photos comprises.</p></article><article class="card" data-rev><small>06</small><h3>VR et bateau, vus de partout</h3><p>Batteries, eau, propane et froid surveillés, même entreposés. À bord, le VR devient un lieu JARVIS, comme la maison.</p></article></div>
-  <div class="clair-eq" data-rev><p class="eyebrow">L’équipement</p><span class="chip">Connexion du constructeur, quand le véhicule l’offre</span><span class="chip">Boîtier Mobilité sur la prise de diagnostic</span><span class="chip">Boîtier VR pour VR, roulotte et bateau</span></div>
 </section>
+
+<section class="ap ap-chiffre" aria-label="Le problème, en un chiffre">
+  <p class="ap-n" data-rev>7 742<sup><a href="#notes" aria-label="Note 1">1</a></sup></p>
+  <p class="ap-nt" data-rev>véhicules volés au Québec en 2025. Environ la moitié n’est jamais retrouvée.</p>
+</section>
+
+<section class="ap ap-duel" aria-labelledby="duel-titre">
+  <h2 class="ap-h" id="duel-titre" data-rev>Plus qu’un traceur GPS.</h2>
+  <div class="ap-tab" role="table" data-rev>
+    <div class="ap-tr ap-th" role="row"><span role="columnheader">Un traceur ou l’application du constructeur</span><span role="columnheader">Avec JARVIS</span></div>
+    <div class="ap-tr" role="row"><span role="cell">Une application par véhicule, quand il y en a une.</span><span role="cell">Tous vos véhicules dans la même application que la maison.</span></div><div class="ap-tr" role="row"><span role="cell">Il montre où est le véhicule, une fois qu’il a été volé.</span><span role="cell">Une alerte dès qu’il bouge sans vous, avec sa position en direct.</span></div><div class="ap-tr" role="row"><span role="cell">Un voyant s’allume, sans dire si c’est grave.</span><span role="cell">Le code d’erreur expliqué en mots simples : quoi faire, et quand.</span></div><div class="ap-tr" role="row"><span role="cell">L’entretien, on y pense une fois en retard.</span><span role="cell">Batterie, pneus et entretien à venir, rappelés avant l’échéance.</span></div><div class="ap-tr" role="row"><span role="cell">Le VR ou le bateau entreposé, personne ne le voit de l’hiver.</span><span role="cell">Batteries, eau, propane et froid suivis à distance, même entreposé.</span></div><div class="ap-tr" role="row"><span role="cell">En route, trois applications pour manger, dormir et faire le plein.</span><span role="cell">Un copilote propose le bon arrêt, ouvert à votre heure d’arrivée.</span></div>
+  </div>
+  <p class="ap-suite" data-rev><a class="ap-lien" href="/pourquoi-jarvis/">Pourquoi JARVIS plutôt que Google, Amazon ou Apple ›</a></p>
+</section>
+
+<section class="ap ap-fait" aria-labelledby="fait-titre">
+  <h2 class="ap-h" id="fait-titre" data-rev>Ce que JARVIS fait.</h2>
+  <div class="ap-bento"><article class="ap-tuile" data-rev><h3>Tous vos véhicules</h3><p>Auto, camion, moto, véhicule électrique, VR, bateau, et même avion. Une seule application pour tout.</p></article><article class="ap-tuile" data-rev><h3>Vol et position</h3><p>Une alerte s’il bouge sans vous, sa position en direct et l’historique de ses trajets.</p></article><article class="ap-tuile" data-rev><h3>La santé du véhicule</h3><p>Codes d’erreur expliqués, batterie, pneus et entretien à venir, avant que ça vous arrête.</p></article><article class="ap-tuile" data-rev><h3>Le véhicule électrique</h3><p>Recharge au meilleur moment, préchauffage d’un toucher et autonomie estimée selon la météo.</p></article><article class="ap-tuile" data-rev><h3>Le copilote de route</h3><p>Repas, recharge, propane et sites à voir, selon la distance et les heures d’ouverture. Chaque voyage reste sur la carte, photos comprises.</p></article><article class="ap-tuile" data-rev><h3>VR et bateau, vus de partout</h3><p>Batteries, eau, propane et froid surveillés, même entreposés. À bord, le VR devient un lieu JARVIS, comme la maison.</p></article></div>
+</section>
+
 
 <section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
@@ -722,6 +728,18 @@
   
 </section>
 
+
+<section class="ap ap-fiche" id="en-detail" data-toc="En détail" aria-labelledby="fiche-titre">
+  <h2 class="ap-h" id="fiche-titre" data-rev>En détail.</h2>
+  <dl class="ap-dl" data-rev>
+    <div><dt>Division</dt><dd><a href="/solutions/#prive">JARVIS Privé</a> et <a href="/solutions/entreprise/">JARVIS Entreprise</a></dd></div>
+    <div><dt>Pour</dt><dd>Autos, camions, motos, véhicules électriques, VR, bateaux et avions · flottes d’entreprise</dd></div>
+    <div><dt>L’équipement</dt><dd>Connexion du constructeur, quand le véhicule l’offre · Boîtier Mobilité sur la prise de diagnostic · Boîtier VR pour VR, roulotte et bateau</dd></div>
+    <div><dt>Prix</dt><dd>Prix sur soumission, confirmé par écrit avant tout achat.</dd></div>
+  </dl>
+  <ol class="ap-notes" id="notes"><li>Source du chiffre : <a href="https://www.protegez-vous.ca/nouvelles/automobile/vol-auto-statistiques" rel="noopener">Équité Association, Protégez-Vous</a>.</li></ol>
+</section>
+
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>
     <div>
@@ -780,10 +798,10 @@
   <p class="foot-line"><span>© 2026 JARVIS Private Systems</span><span class="foot-count" hidden>Visites du site <b data-live="visits-foot">—</b></span></p>
 </footer>
 <script type="application/json" data-forfait-ref>{"lieux":{"maison":{"n":"Maison","h":"signature","b":null,"p":"particulier","img":"/media/forfait/v-lieu-maison.webp"},"condo":{"n":"Condo","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-condo.webp"},"chalet":{"n":"Chalet","h":"base","b":null,"p":"particulier","img":"/media/forfait/v-lieu-chalet.webp"},"domaine":{"n":"Domaine","h":"platinum","b":null,"p":"particulier","img":"/media/forfait/v-lieu-domaine.webp"},"bureau":{"n":"Bureau ou commerce","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-bureau.webp"},"atelier":{"n":"Atelier, entrepôt ou usine","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-atelier.webp"},"ferme":{"n":"Ferme","h":"platinum","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-ferme.webp"},"garage":{"n":"Garage ou hangar","h":"signature","b":null,"p":"entreprise","img":"/media/forfait/v-lieu-garage.webp"},"vr":{"n":"VR","h":"signature","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-vr.webp"},"roulotte":{"n":"Roulotte","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-roulotte.webp"},"bateau":{"n":"Bateau ou yacht","h":"base","b":"Boîtier VR","p":"les deux","img":"/media/forfait/v-lieu-bateau.webp"},"auto":{"n":"Auto ou camion","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-auto.webp"},"moto":{"n":"Moto","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-moto.webp"},"flotte":{"n":"Flotte de véhicules","h":null,"b":"Boîtier Mobilité","p":"entreprise","img":"/media/forfait/v-lieu-flotte.webp"},"avion":{"n":"Avion ou hélicoptère","h":null,"b":"Boîtier Mobilité","p":"les deux","img":"/media/forfait/v-lieu-avion.webp"}},"sols":{"environnements-intelligents":{"n":"Environnements intelligents","img":"/media/forfait/v-sol-environnements.webp"},"ia-privee-connaissances":{"n":"IA privée et connaissances","img":"/media/forfait/v-sol-ia.webp"},"securite-intelligente":{"n":"Sécurité intelligente","img":"/media/forfait/v-sol-securite.webp"},"automatisation-operations":{"n":"Automatisation d’entreprise","img":"/media/forfait/v-sol-automatisation.webp"},"reseau-resilience":{"n":"Réseau et cybersécurité","img":"/media/forfait/v-sol-reseau.webp"},"diagnostic-care":{"n":"Diagnostic & continuité","img":"/media/forfait/v-sol-diagnostic.webp"},"mobilite":{"n":"Mobilité","img":"/media/forfait/v-sol-mobilite.webp"}},"hubs":{"base":{"n":"JARVIS Mini","img":"/media/forfait/v-hub-base.webp"},"signature":{"n":"JARVIS","img":"/media/forfait/v-hub-signature.webp"},"platinum":{"n":"JARVIS Pro","img":"/media/forfait/v-hub-platinum.webp"}}}</script>
-<script src="/assets/js/wow.js?v=20261128b" defer></script>
-<script src="/assets/demos/coquille.js?v=20261128b" defer></script>
-<script src="/assets/demos/mobilite.js?v=20261128b" defer></script>
-<script src="/assets/demos/galerie.js?v=20261128b" defer></script>
-<script src="/assets/js/guide.js?v=20261128b" defer></script>
+<script src="/assets/js/wow.js?v=20261128c" defer></script>
+<script src="/assets/demos/coquille.js?v=20261128c" defer></script>
+<script src="/assets/demos/mobilite.js?v=20261128c" defer></script>
+<script src="/assets/demos/galerie.js?v=20261128c" defer></script>
+<script src="/assets/js/guide.js?v=20261128c" defer></script>
 </body>
 </html>

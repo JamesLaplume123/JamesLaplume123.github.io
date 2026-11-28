@@ -5,7 +5,7 @@
 
 from demos import coquille
 from demos.ia import HTML as DEMO
-from pages._solution import clair_section, avec_bande
+from pages._solution import clair_section, fiche_section, avec_bande
 import galerie
 
 # « En clair », bâti comme l'offre (voir pages/_solution.py, clair_section). Solution de JARVIS Privé :
@@ -13,10 +13,12 @@ import galerie
 CLAIR = {
     "titre": "Posez une question à vos documents. <em>La source est montrée.</em>",
     "quoi": "Garanties, contrats, factures, manuels et notes : JARVIS les lit chez vous et vous répond en mots simples, avec la page exacte d’où vient la réponse.",
-    "imaginez": (
-        "le lave-vaisselle fuit. Vous demandez : « Est-il encore garanti? » JARVIS retrouve la facture "
-        "et la garantie, répond « Oui, jusqu’au 14 mars » et vous montre la ligne qui le prouve."
-    ),
+    "moments": [
+        ("Samedi", "Le lave-vaisselle fuit."),
+        ("Samedi", "Vous demandez : « Est-il encore garanti? »"),
+        ("Samedi", "JARVIS retrouve la facture et la garantie, et vous montre la ligne."),
+    ],
+    "message": "Oui, il est garanti jusqu’au 14 mars. Source : garantie du fabricant, page 2.",
     "duel": ("Plus qu’un assistant IA en ligne.", "Un assistant IA en ligne", [
         ("Vos documents partent sur les serveurs d’une compagnie.",
          "En mode local, tout reste dans votre JARVIS, chez vous."),
@@ -47,6 +49,8 @@ CLAIR = {
         "Votre appareil JARVIS : l’IA tourne dedans",
         "Vos dossiers, courriels et numérisations, reliés avec votre accord"], ""),
 }
+
+POUR = "Particuliers et familles"
 
 PAGE = {
     "url": "/solutions/ia-privee-connaissances/",
@@ -150,6 +154,7 @@ PAGE = {
 
 """ + galerie.terrain("ia-privee-connaissances") + """
 
+""" + fiche_section(CLAIR, "ia-privee-connaissances", POUR) + """
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>
     <div>
@@ -178,10 +183,5 @@ PAGE = {
 """,
 }
 
-PAGE["content"] = avec_bande(
-    PAGE["content"], "ia-privee-connaissances",
-    "IA privée et <em>connaissances.</em>",
-    "Vos documents restent chez vous; l’IA y répond et montre toujours d’où vient sa réponse.",
-    "/media/solutions/ia-privee-connaissances.webp",
-    "Particuliers · PME · équipes",
-)
+PAGE["content"] = avec_bande(PAGE["content"], "ia-privee-connaissances", "IA privée et connaissances", CLAIR, "/media/solutions/ia-privee-connaissances.webp")
+

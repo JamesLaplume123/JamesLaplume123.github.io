@@ -8,8 +8,6 @@ DATA = {
     "title": "Diagnostic & continuité",
     "description": "Passer d’un symptôme à des preuves, des vérifications et une remise en service documentée.",
     "image": "/media/solutions/diagnostic-care.webp",
-    "h1": "Diagnostic & <em>continuité.</em>",
-    "lead": "Comprendre plus vite ce qui a changé, quoi vérifier et comment transmettre un dossier utile à la bonne personne.",
     "for": "Tous les environnements équipés, du bâtiment au véhicule",
     "demo_title": "Du symptôme à la remise en service, <em>avec des preuves.</em>",
     "demo_copy": (
@@ -40,10 +38,12 @@ DATA = {
 DATA["clair"] = {
     "titre": "Ce qui va briser, <em>JARVIS le voit venir.</em>",
     "quoi": "JARVIS surveille l’eau, le chauffage, l’électricité et vos appareils. Quand quelque chose change, il trouve la vraie cause et prépare la réparation.",
-    "imaginez": (
-        "votre congélateur se réchauffe lentement depuis trois jours. JARVIS le remarque, vous avertit "
-        "avant que la nourriture se perde et prépare le dossier du réparateur, avec la pièce probable."
-    ),
+    "moments": [
+        ("Lundi", "Votre congélateur se réchauffe d’un demi-degré."),
+        ("Mercredi", "La dérive continue. JARVIS reconnaît le début d’une panne."),
+        ("Mercredi, 18 h", "Vous êtes averti, avant que la nourriture se perde."),
+    ],
+    "message": "Le congélateur se réchauffe depuis trois jours. Cause probable : le ventilateur. Le dossier du réparateur est prêt.",
     "duel": ("Plus qu’un détecteur de fuite.", "Des détecteurs ordinaires", [
         ("Il sonne quand l’eau est déjà sur le plancher.",
          "La fuite est vue, et l’eau coupée en quelques secondes."),

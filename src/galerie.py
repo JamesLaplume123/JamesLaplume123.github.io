@@ -9,7 +9,7 @@
 #   mosaique()   : grande image vedette + cartes 4:3, clients ordinaires et de prestige;
 #   panorama()   : image cinéma 21:9 pleine largeur, texte en superposition;
 #   avant_apres(): deux images 3:2 côte à côte, « Avant » puis « Après » (laboratoire mobile);
-#   avant_apres_photos(): la même paire, en tête des colonnes « En clair » des pages de solution.
+#   moment_photo(): la photo « avec JARVIS », en fond du moment « Imaginez » des pages de solution.
 
 import os
 from html import escape
@@ -306,14 +306,13 @@ def terrain(slug, alt=False):
                     d["cartes"], toc="Sur le terrain", alt=alt)
 
 
-def avant_apres_photos(slug):
-    """Les deux photos « aujourd'hui » et « avec JARVIS », posées en tête des colonnes du bloc En clair."""
+def moment_photo(slug):
+    """La photo « avec JARVIS » de la solution, en fond du moment « Imaginez » (pages de solution)."""
     d = SOLUTIONS.get(slug)
-    if not d:
-        return "", ""
-    page = f"/solutions/{slug}/"
-    return (_figure(dict(d["avant"], k=""), page, "paire", "vs-ph"),
-            _figure(dict(d["apres"], k=""), page, "paire", "vs-ph"))
+    if not d or not d.get("apres"):
+        return ""
+    a = d["apres"]
+    return _visuel(a["f"], f"/solutions/{slug}/", a["alt"], "paire", a.get("pos", "50% 50%"))[0]
 
 
 # ---------------------------------------------------------------------------------------------

@@ -6,7 +6,7 @@
 # voyage ne rentrent pas dans le gabarit commun. Démo : src/demos/mobilite.py.
 
 from demos import coquille, mobilite
-from pages._solution import clair_section, avec_bande
+from pages._solution import clair_section, fiche_section, avec_bande
 import galerie
 
 HERO = mobilite.photo("hero", "/media/vr/exterieur.webp")
@@ -16,10 +16,12 @@ HERO = mobilite.photo("hero", "/media/vr/exterieur.webp")
 CLAIR = {
     "titre": "Tout ce qui roule, flotte ou vole. <em>Sous votre œil.</em>",
     "quoi": "Auto, camion, moto, véhicule électrique, VR, bateau ou avion : JARVIS veille sur chacun, vous prévient du vol et de la panne, et vous guide sur la route.",
-    "imaginez": (
-        "6 h, −25 °C. JARVIS vous propose de préchauffer l’auto et vous avertit qu’un pneu perd de la "
-        "pression, avant que vous sortiez."
-    ),
+    "moments": [
+        ("6 h 00", "Il fait −25 °C dehors."),
+        ("6 h 00", "JARVIS remarque qu’un pneu perd de la pression."),
+        ("6 h 05", "Il vous propose de préchauffer l’auto, avant que vous sortiez."),
+    ],
+    "message": "Pneu avant gauche : 26 psi, en baisse. Je préchauffe l’auto pour 6 h 30?",
     "duel": ("Plus qu’un traceur GPS.", "Un traceur ou l’application du constructeur", [
         ("Une application par véhicule, quand il y en a une.",
          "Tous vos véhicules dans la même application que la maison."),
@@ -52,6 +54,8 @@ CLAIR = {
         "Connexion du constructeur, quand le véhicule l’offre", "Boîtier Mobilité sur la prise de diagnostic",
         "Boîtier VR pour VR, roulotte et bateau"], ""),
 }
+
+POUR = "Autos, camions, motos, véhicules électriques, VR, bateaux et avions · flottes d’entreprise"
 
 PAGE = {
     "url": "/solutions/mobilite/",
@@ -173,6 +177,7 @@ PAGE = {
 
 {galerie.terrain("mobilite")}
 
+{fiche_section(CLAIR, "mobilite", POUR)}
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>
     <div>
@@ -202,10 +207,5 @@ PAGE = {
 """,
 }
 
-PAGE["content"] = avec_bande(
-    PAGE["content"], "mobilite",
-    "Tous vos véhicules. <em>Partez l’esprit libre.</em>",
-    "Auto, camion, moto, véhicule électrique, VR, bateau ou avion : JARVIS veille sur chacun, à la maison comme sur la route.",
-    HERO,
-    "Autos, camions, motos, véhicules électriques, VR, bateaux et avions · flottes d’entreprise",
-)
+PAGE["content"] = avec_bande(PAGE["content"], "mobilite", "Mobilité", CLAIR, HERO)
+

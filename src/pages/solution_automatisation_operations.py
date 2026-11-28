@@ -97,12 +97,6 @@ DATA = {
         "JARVIS automatise les processus de l’entreprise, étape par étape, avec validation humaine."
     ),
     "image": "/media/solutions/jarvis-enterprise-operations-v1.webp",
-    "h1": "Votre réception ne manque <em>plus un appel.</em>",
-    "lead": (
-        "JARVIS répond au téléphone comme une réceptionniste, suit la procédure de votre équipe et "
-        "vous demande votre accord pour les gestes sensibles. Derrière, il fait circuler demandes, "
-        "documents et approbations."
-    ),
     "for": "PME, commerces, entreprises de services et équipes terrain",
     "demo_title": "Le téléphone sonne. <em>JARVIS répond.</em>",
     "demo_copy": (
@@ -116,12 +110,12 @@ DATA = {
     "clair": {
         "titre": "Plus un appel manqué. <em>Plus rien à recopier.</em>",
         "quoi": "JARVIS répond au téléphone, trie les demandes et fait circuler le travail entre vos logiciels. Vous gardez la décision.",
-        "imaginez": (
-            "une cliente appelle pour déplacer son rendez-vous. JARVIS répond avant la deuxième sonnerie, "
-            "retrouve son dossier et confirme un nouveau créneau. Elle demande un remboursement de 45 $ : "
-            "la procédure exige un humain, alors JARVIS vous demande votre accord. Elle attend trente "
-            "secondes, pas deux jours."
-        ),
+        "moments": [
+            ("10 h 12", "Une cliente appelle pour déplacer son rendez-vous."),
+            ("10 h 12", "JARVIS répond avant la deuxième sonnerie et confirme un nouveau créneau."),
+            ("10 h 13", "Elle demande un remboursement de 45 $. La procédure exige un humain."),
+        ],
+        "message": "Une cliente demande un remboursement de 45 $. Approuver?",
         "pourquoi": False,
         "duel": ("Plus qu’une boîte vocale.", "Une boîte vocale et des outils séparés", [
             ("Le téléphone sonne occupé : l’appel tombe dans la boîte vocale, souvent sans rappel.",

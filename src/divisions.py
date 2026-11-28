@@ -9,15 +9,15 @@ DIVISIONS = [
     {"id": "prive", "num": "01", "etat": "Maintenant", "nom": "JARVIS Privé",
      "pour": "Votre maison, votre chalet et vos véhicules",
      "ligne": "Protégés et gérés tout seuls, par une IA qui travaille chez vous.",
-     "url": "/solutions/#prive", "img": "/media/accueil/lieu-maison.webp"},
+     "url": "/solutions/#prive", "img": "/media/vitrine/accueil/residence-prestige-soir.webp", "pos": "30% 55%"},
     {"id": "entreprise", "num": "02", "etat": "Ensuite", "nom": "JARVIS Entreprise",
      "pour": "Travailleurs autonomes, PME, fermes et commerces",
      "ligne": "Les appels, les tâches et l’information se gèrent seuls.",
-     "url": "/solutions/#entreprise", "img": "/media/accueil/sol-automatisation.webp"},
+     "url": "/solutions/#entreprise", "img": "/media/accueil/sol-automatisation.webp", "pos": "50% 50%"},
     {"id": "cyber", "num": "03", "etat": "Maintenant", "nom": "JARVIS Cyber",
      "pour": "Toute maison ou entreprise, cliente ou non",
      "ligne": "Nous vérifions vos systèmes comme un pirate le ferait, puis nous corrigeons avec vous.",
-     "url": "/solutions/cyber/", "img": "/media/accueil/sol-reseau.webp"},
+     "url": "/solutions/cyber/", "img": "/media/vision/securite-centre.webp", "pos": "50% 45%"},
 ]
 
 # La gamme de chaque division : (étiquette, nom, promesse, adresse, photo, cadrage)
@@ -63,7 +63,7 @@ CYBER = [
 def tuiles():
     """Les trois divisions, en grandes photos."""
     return "".join(f"""<a class="dv3-t" href="{d['url']}" data-rev>
-      <img src="{d['img']}" alt="" loading="lazy">
+      <img src="{d['img']}" alt="" loading="lazy" style="object-position:{d['pos']}">
       <span class="dv3-in"><em>{d['num']} · {d['etat']}</em><b>{d['nom']}</b><small>{d['pour']}</small><span>{d['ligne']}</span><i>Découvrir ›</i></span>
     </a>""" for d in DIVISIONS)
 

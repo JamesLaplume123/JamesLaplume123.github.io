@@ -27,11 +27,11 @@ PAGE = {
         "Vérification de vos systèmes, test d’intrusion réseau sur mandat écrit, revue de votre "
         "exposition en ligne, Loi 25 et formation, pour maisons et entreprises."
     ),
-    "og_image": "/media/accueil/sol-reseau.webp",
+    "og_image": "/media/vision/securite-centre.webp",
     "assets": ["divisions"],
     "content": f"""
 <section class="band top">
-  <div class="bg"><img src="/media/accueil/sol-reseau.webp" alt="" fetchpriority="high"></div>
+  <div class="bg"><img src="/media/vision/securite-centre.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
     {pro.fil("/solutions/cyber/")}
     <h1 data-rev>JARVIS <em>Cyber.</em></h1>

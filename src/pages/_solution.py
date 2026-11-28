@@ -4,6 +4,8 @@
 # sur le terrain (photos) → « En clair » (avant / avec JARVIS, ce que vous obtenez) → déploiement
 # responsable → questions (ajoutées par partials.document) → prochain pas.
 # Les pages sur mesure (Environnements, IA privée, Mobilité) reprennent la même bande par bande().
+# Refonte « trois divisions » (novembre 2026) : la bande dit à quelle division appartient la solution,
+# et « En clair » ouvre sur un chiffre réel et sourcé qui montre que le problème existe.
 
 from config import CAPABILITIES
 from pages import catalogue as CAT
@@ -15,6 +17,49 @@ import galerie
 import pro
 
 _CAP = {c["slug"]: c for c in CAPABILITIES}
+
+# La division de chaque solution (src/divisions.py) : les cinq solutions des lieux servent les deux.
+_PRIVE = '<a href="/solutions/#prive">JARVIS Privé</a>'
+_ENTREPRISE = '<a href="/solutions/entreprise/">JARVIS Entreprise</a>'
+DIVISION = {
+    "reseau-resilience": f"{_PRIVE} et {_ENTREPRISE}",
+    "securite-intelligente": f"{_PRIVE} et {_ENTREPRISE}",
+    "diagnostic-care": f"{_PRIVE} et {_ENTREPRISE}",
+    "environnements-intelligents": f"{_PRIVE} et {_ENTREPRISE}",
+    "mobilite": f"{_PRIVE} et {_ENTREPRISE}",
+    "ia-privee-connaissances": _PRIVE,
+    "automatisation-operations": _ENTREPRISE,
+}
+
+# Le problème, en un chiffre réel (vérifiés le 27 novembre 2026) : (chiffre, ce qu'il dit, source, lien).
+CHIFFRES = {
+    "securite-intelligente": ("6 139", "entrées par effraction à Montréal en 2025, en hausse de 6 % sur 2024.",
+                              "données du SPVM, Narcity",
+                              "https://www.narcity.com/fr/montreal/montreal-introductions-effraction-janvier-2026"),
+    "reseau-resilience": ("29", "attaques par jour contre une maison connectée, en moyenne, en 2025.",
+                          "Bitdefender et NETGEAR",
+                          "https://www.bitdefender.com/en-gb/news/new-bitdefender-and-netgear-report-reveals-rising-threats-across-the-connected-home-landscape"),
+    "diagnostic-care": ("47 %", "des réclamations d’assurance habitation au Québec sont liées à des dégâts d’eau.",
+                        "Bureau d’assurance du Canada",
+                        "https://www.protegez-vous.ca/partenaires/bureau-dassurance-du-canada/degats-d-eau-mieux-connaitre-les-couvertures-d-assurance-grace-a-une-maison-interactive"),
+    "environnements-intelligents": ("55 %", "de l’électricité d’une maison au Québec sert au chauffage.",
+                                    "Hydro-Québec, Transition énergétique Québec",
+                                    "https://transitionenergetique.gouv.qc.ca/fileadmin/medias/pdf/residentiel/Brochure-soyons-ecoenergetiques-habitation.pdf"),
+    "mobilite": ("7 742", "véhicules volés au Québec en 2025. Environ la moitié n’est jamais retrouvée.",
+                 "Équité Association, Protégez-Vous",
+                 "https://www.protegez-vous.ca/nouvelles/automobile/vol-auto-statistiques"),
+    "automatisation-operations": ("37 %", "des appels aux salons et aux spas restent sans réponse.",
+                                  "Zenoti", "https://www.zenoti.com/fr/thecheckin/how-track-salon-call-conversion-rate"),
+}
+
+
+def chiffre(slug):
+    """Le chiffre réel du problème, en tête de « En clair »."""
+    if slug not in CHIFFRES:
+        return ""
+    n, texte, source, url = CHIFFRES[slug]
+    return (f'<p class="clair-chiffre"><b>{n}</b><span>{texte}'
+            f'<small>Source : <a href="{url}" rel="noopener">{source}</a></small></span></p>')
 
 
 # Image d'aperçu, utilisée tant qu'une solution n'a pas sa démo interactive (DATA["demo_html"]).
@@ -56,6 +101,7 @@ def bande(slug, h1, lead, image, pour):
       {forfait_bouton(slug)}
       <a class="pill ghost" href="#essayer">Essayer la démonstration</a>
     </div>
+    <p class="for-line" data-rev><span>Division</span> {DIVISION[slug]}</p>
     <p class="for-line" data-rev><span>Pour</span> {pour}</p>
     <p class="for-line" data-rev><span>Prix</span> {prix_ligne(slug)}</p>
   </div>
@@ -93,6 +139,7 @@ def clair_section(c, slug=""):
   <div class="clair-head" data-rev>
     <p class="eyebrow">En clair</p>
     <h2 id="clair-titre">{c['quoi']}</h2>
+    {chiffre(slug)}
     <p class="clair-ex"><b>Exemple concret.</b> {c['exemple']}</p>
   </div>
   <div class="vs" data-rev>

@@ -8,8 +8,6 @@ DATA = {
     "title": "Réseau et cybersécurité",
     "description": "Comprendre l’infrastructure, surveiller les dépendances et conserver des accès privés fiables.",
     "image": "/media/solutions/reseau-resilience.webp",
-    "h1": "Un réseau et un Wi-Fi fiables. <em>La fondation de tout le reste.</em>",
-    "lead": "Maison, ferme ou entreprise : un Wi-Fi qui couvre partout, des zones séparées et une vue claire du réseau et de ses risques, avant que chaque problème devienne une urgence.",
     "for": "Maisons connectées, PME et petits multi-sites qui dépendent de leur réseau",
     "demo_title": "Tout votre réseau, <em>dans une seule console.</em>",
     "demo_copy": (
@@ -37,34 +35,31 @@ DATA = {
 }
 
 DATA["clair"] = {
-    "quoi": "JARVIS dessine votre réseau comme une carte vivante et vous dit, en mots simples, <em>pourquoi quelque chose ne marche pas.</em>",
-    "exemple": (
-        "La caméra du garage cesse d’enregistrer. Au lieu de tout redémarrer au hasard, JARVIS "
-        "remonte le câble jusqu’au commutateur, trouve le port coupé et propose de le relancer. "
-        "Vous approuvez; il confirme que l’image est revenue."
-    ),
-    "avant": [
-        "Quand quelque chose ne marche plus, on redémarre tout et on espère.",
-        "Personne ne sait vraiment quels appareils sont branchés au réseau.",
-        "Une ampoule connectée peut voir les mêmes ordinateurs que vous.",
-        "Une panne Internet arrête aussi les caméras et les lumières.",
-        "On ne sait pas si les sauvegardes marchent ni si un équipement a une faille connue.",
+    "titre": "Votre réseau, gardé <em>comme celui d’une entreprise.</em>",
+    "quoi": "Chaque appareil connu. Chaque intrus mis à l’écart. Tout expliqué simplement.",
+    "moments": [
+        ("2 h 14", "Un inconnu se branche au Wi-Fi."),
+        ("2 h 14", "JARVIS l’isole de vos ordinateurs."),
+        ("7 h 00", "Il vous demande si vous le connaissez."),
     ],
-    "apres": [
-        "La carte montre l’appareil touché et le chemin jusqu’à la cause.",
-        "Chaque appareil est connu, rangé dans sa zone et suivi.",
-        "Des murs séparent la famille, les objets, les caméras et les invités.",
-        "Le lien de secours prend le relais et la maison continue en local.",
-        "Les sauvegardes sont testées chaque mois et chaque faille a sa date de correction.",
+    "message": "Un appareil inconnu est isolé. Le connaissez-vous?",
+    "duel": ("Plus qu’un routeur.", "Un routeur ordinaire", [
+        ("Le mot de passe suffit.", "Chaque appareil est reconnu."),
+        ("Tout le monde voit tout.", "Des zones séparées."),
+        ("Une attaque passe inaperçue.", "Elle est bloquée, puis expliquée."),
+        ("Internet tombe, tout arrête.", "Le secours prend le relais."),
+    ]),
+    "capacites": [
+        ("Il connaît chaque appareil", "Un nouveau venu doit être accepté."),
+        ("Il bloque les intrus", "Et vous explique pourquoi."),
+        ("Des zones séparées", "Les objets, loin de vos ordinateurs."),
+        ("Du Wi-Fi partout", "Dans chaque pièce, avec un secours."),
+        ("Accès à distance privé", "Sans rien ouvrir sur Internet."),
+        ("Parents et rapport", "Heures d’écran et bilan chaque semaine."),
     ],
-    "obtenez": [
-        ("Une console complète, lisible par tous",
-         "Carte du réseau, appareils, Wi-Fi par pièce, trafic, menaces et score de la semaine, avec ce qui circule en direct."),
-        ("Des diagnostics en mots simples",
-         "La vraie cause, le chemin pour la trouver et une seule action proposée, que vous approuvez."),
-        ("Une maison qui tient bon",
-         "Zones séparées, lien de secours et fonctions essentielles qui marchent même sans Internet."),
-    ],
+    "equipement": ("L’équipement", [
+        "Wi-Fi maillé", "Commutateur (switch)", "Pare-feu", "Sauvegarde chiffrée",
+        "Routeur 4G ou 5G de secours, selon le lieu"], ""),
 }
 
 PAGE = solution_page(DATA)

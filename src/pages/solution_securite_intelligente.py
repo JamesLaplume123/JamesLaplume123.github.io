@@ -8,37 +8,34 @@ DATA = {
     "title": "Sécurité intelligente",
     "description": "Un logiciel qui réunit vos caméras, serrures et capteurs en événements clairs, traités et gardés chez vous : mur vidéo, accès, véhicules, zones, incidents et conformité à la Loi 25.",
     "image": "/media/solutions/securite-intelligente.webp",
-    "h1": "Sécurité <em>intelligente.</em>",
-    "lead": "Un logiciel installé chez vous, qui réunit vos caméras, vos serrures, vos capteurs et vos preuves dans la même application que le reste du lieu. Vous gardez le contrôle, et les images restent sur place.",
     "for": "Résidences, entreprises, entrepôts, campus et organisations réparties sur plusieurs sites",
     "clair": {
-        "quoi": "JARVIS regarde toutes vos caméras et vos capteurs en même temps, puis vous dit en une phrase <em>ce qui s’est vraiment passé.</em>",
-        "exemple": (
-            "Un livreur dépose un colis. Au lieu de six notifications (mouvement, personne, sonnette, "
-            "colis…), vous en recevez une seule : « 21 h 42 — Livraison : un colis a été déposé à "
-            "l’entrée. Rien d’anormal. » La nuit, si quelqu’un rôde, JARVIS vous propose d’allumer "
-            "les lumières et attend votre accord."
-        ),
-        "avant": [
-            "Des dizaines de notifications par jour, souvent pour un chat ou une branche.",
-            "Chaque caméra a son application et raconte sa propre version.",
-            "Pour comprendre, il faut ouvrir les vidéos une par une.",
-            "La nuit, impossible de savoir si c’est grave ou non.",
+        "titre": "Une alarme sonne. <em>JARVIS, lui, comprend.</em>",
+        "quoi": "Vos caméras, portes et capteurs, lus ensemble. Un seul message clair.",
+        "moments": [
+            ("23 h 02", "Une auto inconnue passe."),
+            ("23 h 06", "Elle repasse. Plaque inconnue."),
+            ("23 h 06", "La cour s’illumine."),
         ],
-        "apres": [
-            "Les alertes d’une même situation deviennent un seul événement.",
-            "Une phrase claire explique ce qui s’est passé, images à l’appui.",
-            "Le normal reste discret; l’inhabituel ressort tout de suite.",
-            "JARVIS propose une action (lumières, interphone) et attend votre accord.",
+        "message": "Une auto inconnue est passée deux fois. Vidéo jointe.",
+        "duel": ("Plus qu’une caméra. <em>Plus qu’une alarme.</em>", "Caméras, serrure et alarme ordinaires", [
+            ("Trente alertes par jour.", "Un message, quand ça compte."),
+            ("Une application par appareil.", "Tout dans un seul fil."),
+            ("Une auto filmée, sans plus.", "La plaque lue, l’auto suivie."),
+            ("Les images dans le nuage.", "Les images chez vous."),
+        ]),
+        "capacites": [
+            ("Un événement, pas vingt alertes", "L’inhabituel ressort. Le reste se tait."),
+            ("Il reconnaît les vôtres", "Avec leur accord. Les inconnus restent sans nom."),
+            ("Plaques et véhicules", "Lues, puis suivies de caméra en caméra."),
+            ("Les accès sous contrôle", "Codes temporaires, badges, visiteurs QR."),
+            ("Dehors et dans le réseau", "Un intrus, une seule réponse."),
+            ("Un dossier en un clic", "Prêt pour la police ou l’assurance."),
         ],
-        "obtenez": [
-            ("Un seul fil", "Caméras, sonnette, portes, détecteurs et alarme réunis dans une même chronologie."),
-            ("Des preuves classées", "Les images utiles sont gardées avec l’événement, sur place, aussi longtemps que vous le décidez."),
-            ("Le dernier mot", "Allumer, parler, prévenir : JARVIS propose, vous approuvez. Rien ne se déverrouille tout seul."),
-            ("Les accès et les véhicules", "Badges, horaires, talonnage, visiteurs avec code QR, lecture de plaques et suivi d’un véhicule d’une caméra à l’autre."),
-            ("Un dossier prêt à remettre", "Chronologie, extraits, plan et empreinte vérifiable, exportés en un clic avec les personnes non concernées masquées."),
-            ("La Loi 25 intégrée", "Identification seulement des personnes inscrites avec leur consentement, masquage des visages hors incident, chaque consultation journalisée."),
-        ],
+        "equipement": ("L’équipement", [
+            "Caméras 4K à vision de nuit", "Sonnette vidéo", "Serrures connectées", "Capteurs de porte et de fenêtre",
+            "Sirène", "Lecture de plaques", "Badges et codes QR"],
+            "Quand la loi l’exige, la pose est faite par un installateur qui détient le permis requis. JARVIS relie ensuite le tout."),
     },
     "demo_title": "Neuf modules. <em>Une seule plateforme de sécurité.</em>",
     "demo_copy": (

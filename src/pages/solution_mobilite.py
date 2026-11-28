@@ -6,40 +6,47 @@
 # voyage ne rentrent pas dans le gabarit commun. Démo : src/demos/mobilite.py.
 
 from demos import coquille, mobilite
-from pages._solution import clair_section, avec_bande
+from pages._solution import clair_section, fiche_section, avec_bande
 import galerie
 
 HERO = mobilite.photo("hero", "/media/vr/exterieur.webp")
 
+# « En clair », bâti comme l'offre (voir pages/_solution.py, clair_section). Mobilité = tous les
+# véhicules (auto, camion, moto, VÉ, VR, bateau, avion), pas seulement le VR.
 CLAIR = {
-    "quoi": "JARVIS devient votre copilote : il regarde la route, l’heure, le soleil et l’état du véhicule, "
-            "puis vous propose <em>le bon arrêt au bon moment.</em>",
-    "exemple": "Vous roulez vers le fleuve avec 22 % d’eau propre. JARVIS affiche : « Eau propre 22 % : "
-               "remplissage gratuit à 12 km, détour de 2 minutes. » Plus loin : « Coucher de soleil à 16 h 42 : "
-               "arrivez au belvédère avant 16 h 20. » Vous touchez « Accepter », l’arrêt s’ajoute à l’itinéraire. "
-               "La photo prise là-bas se place toute seule sur la carte du voyage.",
-    "avant": ["Trois applications de cartes, une pour la météo, une autre pour le camping",
-              "On découvre que le restaurant est fermé en arrivant",
-              "Le propane manque au pire endroit, loin de tout",
-              "Les photos du voyage dorment dans le téléphone, sans lieu ni histoire"],
-    "apres": ["Un seul copilote qui tient compte de tout, en même temps",
-              "Seulement des arrêts ouverts à votre heure d’arrivée",
-              "Eau, propane, carburant et entretien prévus avant d’en manquer",
-              "Chaque voyage revit sur la carte, photos à leur place"],
-    "obtenez": [("Un guide avant de partir", "Dites où vous rêvez d’aller : JARVIS propose la destination, la saison "
-                 "et l’itinéraire, et la route se dessine sur le globe."),
-                ("Un copilote de route", "Repas, eau, propane, Webasto, mécanique, soleil et sites historiques : "
-                 "proposés selon la distance et l’ouverture, avec le détour exact."),
-                ("Un journal automatique", "Photos et points géolocalisés en roulant. Touchez un voyage passé : "
-                 "le tracé, les photos et les statistiques reviennent."),
-                ("Un garage connecté", "Du VR et de la voiture familiale à la collection (Huracán, 296 GTB, G63, "
-                 "Escalade) : ce que le véhicule offre, et un boîtier JARVIS de base pour les autres.")],
+    "titre": "Tout ce qui roule, flotte ou vole. <em>Sous votre œil.</em>",
+    "quoi": "Auto, camion, moto, VR, bateau ou avion. Vol, panne et route, sous votre œil.",
+    "moments": [
+        ("6 h 00", "−25 °C dehors."),
+        ("6 h 00", "Un pneu perd de la pression."),
+        ("6 h 05", "JARVIS propose de préchauffer l’auto."),
+    ],
+    "message": "Pneu avant gauche en baisse. Je préchauffe l’auto pour 6 h 30?",
+    "duel": ("Plus qu’un traceur GPS.", "Un traceur ou l’application du constructeur", [
+        ("Une application par véhicule.", "Tous vos véhicules, une application."),
+        ("Où il est, une fois volé.", "Une alerte dès qu’il bouge sans vous."),
+        ("Un voyant, sans explication.", "Le problème, en mots simples."),
+        ("Le VR oublié tout l’hiver.", "Suivi à distance, même entreposé."),
+    ]),
+    "capacites": [
+        ("Tous vos véhicules", "Auto, camion, moto, VR, bateau, avion."),
+        ("Vol et position", "Alerte et position en direct."),
+        ("La santé du véhicule", "Codes, batterie, pneus, entretien."),
+        ("Le véhicule électrique", "Recharge au meilleur moment."),
+        ("Le copilote de route", "Le bon arrêt, ouvert à votre arrivée."),
+        ("VR et bateau", "Batteries, eau et propane, de partout."),
+    ],
+    "equipement": ("L’équipement", [
+        "Connexion du constructeur, quand le véhicule l’offre", "Boîtier Mobilité sur la prise de diagnostic",
+        "Boîtier VR pour VR, roulotte et bateau"], ""),
 }
+
+POUR = "Autos, camions, motos, véhicules électriques, VR, bateaux et avions · flottes d’entreprise"
 
 PAGE = {
     "url": "/solutions/mobilite/",
     "v2": True,
-    "title": "Copilote de voyage, VR et voiture connectés | JARVIS Mobilité",
+    "title": "Mobilité : tous vos véhicules sous votre œil | JARVIS",
     "description": "Un guide de voyage qui propose destinations et itinéraires, un copilote de route qui propose repas, eau, propane, entretien et sites à voir selon la "
                    "distance, les heures d’ouverture et le soleil, un journal de voyage sur la carte et un garage "
                    "connecté pour VR, voitures familiales, voitures de collection et vélos électriques.",
@@ -61,6 +68,8 @@ PAGE = {
     <p class="for-line" data-rev><span>Prix</span> 15 $ par mois par véhicule, données cellulaires comprises · <a href="/offre/#solutions" style="color:var(--gold-soft)">Ajouter au panier</a></p>
   </div>
 </section>
+
+{clair_section(CLAIR, "mobilite")}
 
 <section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
@@ -106,8 +115,6 @@ PAGE = {
     </article>
   </div>
 </section>
-
-{clair_section(CLAIR, "mobilite")}
 
 <section class="sect" id="modes-voyage" data-toc="Six façons de voyager">
   <div class="sect-head">
@@ -156,6 +163,7 @@ PAGE = {
 
 {galerie.terrain("mobilite")}
 
+{fiche_section(CLAIR, "mobilite", POUR)}
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>
     <div>
@@ -185,10 +193,5 @@ PAGE = {
 """,
 }
 
-PAGE["content"] = avec_bande(
-    PAGE["content"], "mobilite",
-    "VR et véhicules connectés. <em>Partez l’esprit libre.</em>",
-    "Vous roulez; JARVIS regarde la route, le véhicule et l’heure, et vous propose le bon arrêt au bon moment.",
-    HERO,
-    "VR · voitures familiales · voitures de collection · vélos électriques",
-)
+PAGE["content"] = avec_bande(PAGE["content"], "mobilite", "Mobilité", CLAIR, HERO)
+

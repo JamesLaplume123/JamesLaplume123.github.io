@@ -5,34 +5,40 @@
 
 from demos import coquille
 from demos.ia import HTML as DEMO
-from pages._solution import clair_section, avec_bande
+from pages._solution import clair_section, fiche_section, avec_bande
 import galerie
 
+# « En clair », bâti comme l'offre (voir pages/_solution.py, clair_section). Solution de JARVIS Privé :
+# l'exemple est celui d'une famille; la version entreprise est « Savoir de l'entreprise ».
 CLAIR = {
-    "quoi": "Posez une question à vos propres documents. <em>La réponse arrive avec sa preuve.</em>",
-    "exemple": (
-        "Un employé demande : « Comment ferme-t-on l’atelier le vendredi? ». JARVIS cherche dans "
-        "vos procédures, vos courriels et vos registres, répond en quatre étapes et montre la page "
-        "exacte d’où vient chacune. Si l’information n’existe nulle part, il le dit au lieu d’inventer."
-    ),
-    "avant": [
-        "L’information existe, mais elle est éparpillée entre dossiers, courriels et classeurs.",
-        "On dérange la personne qui « sait » à chaque question.",
-        "Une IA publique peut inventer une réponse avec beaucoup d’assurance.",
-        "Envoyer vos documents à un service externe pose un risque pour la confidentialité.",
+    "titre": "Posez une question à vos documents. <em>La source est montrée.</em>",
+    "quoi": "Vos garanties, contrats et manuels répondent. Avec la page qui le prouve.",
+    "moments": [
+        ("Samedi", "Le lave-vaisselle fuit."),
+        ("Samedi", "« Est-il encore garanti? »"),
+        ("Samedi", "JARVIS montre la ligne qui le prouve."),
     ],
-    "apres": [
-        "Une question en mots simples, une réponse en quelques secondes.",
-        "Chaque réponse montre sa source : le document et le passage exact.",
-        "Pas de source fiable? JARVIS le dit clairement, sans rien inventer.",
-        "En mode local, tout se passe sur votre JARVIS : vos documents restent chez vous.",
+    "message": "Oui, garanti jusqu’au 14 mars. Source : garantie, page 2.",
+    "duel": ("Plus qu’un assistant IA en ligne.", "Un assistant IA en ligne", [
+        ("Vos documents partent en ligne.", "Ils restent chez vous."),
+        ("Une réponse sans preuve.", "La source, à chaque réponse."),
+        ("Il invente parfois.", "Il dit quand il ne sait pas."),
+        ("Il ne connaît pas vos papiers.", "Vos papiers, déjà classés."),
+    ]),
+    "capacites": [
+        ("Vos papiers répondent", "Garanties, contrats, factures, manuels."),
+        ("Des réponses vérifiables", "Le passage exact, d’un toucher."),
+        ("Aucune invention", "Pas de source? Il le dit."),
+        ("Chez vous", "L’IA tourne dans votre JARVIS."),
+        ("Chacun son espace", "Vos papiers restent les vôtres."),
+        ("Rien sans vous", "Chaque action attend votre accord."),
     ],
-    "obtenez": [
-        ("Des réponses vérifiables", "Un clic sur le numéro de la source affiche le passage qui justifie la réponse."),
-        ("Vos documents restent chez vous", "Traitement local sur votre JARVIS, ou externe seulement si vous l’autorisez, et toujours affiché."),
-        ("Des actions avec permission", "JARVIS peut préparer une liste de tâches ou un message. Rien ne part sans votre « Approuver »."),
-    ],
+    "equipement": ("Ce qu’il faut", [
+        "Votre appareil JARVIS : l’IA tourne dedans",
+        "Vos dossiers, courriels et numérisations, reliés avec votre accord"], ""),
 }
+
+POUR = "Particuliers et familles"
 
 PAGE = {
     "url": "/solutions/ia-privee-connaissances/",
@@ -57,6 +63,8 @@ PAGE = {
   </div>
 </section>
 
+""" + clair_section(CLAIR, "ia-privee-connaissances") + """
+
 <section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
     <div data-rev>
@@ -69,8 +77,6 @@ PAGE = {
   </div>
   """ + coquille.html("ia-privee-connaissances", DEMO) + """
 </section>
-
-""" + clair_section(CLAIR, "ia-privee-connaissances") + """
 
 <section class="sect alt" id="controle" data-toc="Le contrôle">
   <div class="sect-head">
@@ -136,6 +142,7 @@ PAGE = {
 
 """ + galerie.terrain("ia-privee-connaissances") + """
 
+""" + fiche_section(CLAIR, "ia-privee-connaissances", POUR) + """
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>
     <div>
@@ -164,10 +171,5 @@ PAGE = {
 """,
 }
 
-PAGE["content"] = avec_bande(
-    PAGE["content"], "ia-privee-connaissances",
-    "IA privée et <em>connaissances.</em>",
-    "Vos documents restent chez vous; l’IA y répond et montre toujours d’où vient sa réponse.",
-    "/media/solutions/ia-privee-connaissances.webp",
-    "Particuliers · PME · équipes",
-)
+PAGE["content"] = avec_bande(PAGE["content"], "ia-privee-connaissances", "IA privée et connaissances", CLAIR, "/media/solutions/ia-privee-connaissances.webp")
+

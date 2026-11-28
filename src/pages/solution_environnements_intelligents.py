@@ -6,7 +6,7 @@
 import json
 
 from demos import coquille, env
-from pages._solution import clair_section, avec_bande
+from pages._solution import clair_section, fiche_section, avec_bande
 import galerie
 
 MOMENTS = {
@@ -54,29 +54,37 @@ MOMENTS = {
 
 MOMENTS_JSON = json.dumps(MOMENTS, ensure_ascii=False)
 
-# « En clair » : la solution expliquée simplement (avant / avec JARVIS).
-CLAIR = {'quoi': 'JARVIS réunit les lumières, le chauffage, les portes et l’énergie de votre maison '
-         '<em>dans une seule application simple.</em>',
- 'exemple': 'Le soir, vous touchez « Soirée » : le salon passe à 60 %, la terrasse et la piscine '
-            's’allument, le foyer démarre et le chauffage des chambres baisse. Une seule touche au '
-            'lieu de cinq applications.',
- 'avant': ['Une application par marque d’appareil',
-           'Des automatisations que personne ne comprend',
-           'Rien ne marche quand Internet tombe',
-           'Aucune idée de ce qui consomme'],
- 'apres': ['Toute la maison sur un seul écran',
-           'Des ambiances claires, que vous approuvez',
-           'Tout fonctionne en local, même sans Internet',
-           'La consommation affichée pièce par pièce'],
- 'obtenez': [('Un écran pour tout',
-              'Lumières, chauffage, stores, verrous et énergie, pièce par pièce, sur téléphone, '
-              'tablette ou ordinateur.'),
-             ('Des ambiances en une touche',
-              'Matin, Soirée, Cinéma, Nuit, Absent : chaque ambiance est réglée avec vous et reste '
-              'modifiable.'),
-             ('Le contrôle reste humain',
-              'Les actions sensibles, comme déverrouiller ou ouvrir le garage, demandent toujours '
-              'votre confirmation.')]}
+# « En clair », bâti comme l'offre (voir pages/_solution.py, clair_section).
+CLAIR = {
+    "titre": "Votre maison s’ajuste seule. <em>Votre facture baisse.</em>",
+    "quoi": "Lumières, chauffage, stores et énergie, dans une seule application.",
+    "moments": [
+        ("7 h 40", "Vous partez travailler."),
+        ("7 h 41", "Les pièces vides baissent. Tout s’éteint."),
+        ("16 h 30", "Tout remonte avant votre retour."),
+    ],
+    "message": "Mode Absent. Tout sera prêt pour 17 h.",
+    "duel": ("Plus qu’un thermostat intelligent.", "Des objets connectés, chacun sa marque", [
+        ("Une application par marque.", "Toute la maison, un seul écran."),
+        ("Un horaire fixe.", "Le chauffage suit qui est là."),
+        ("Internet tombe, tout arrête.", "Tout marche en local."),
+        ("Une facture mystère.", "Ce qui coûte cher, affiché."),
+    ]),
+    "capacites": [
+        ("Un écran pour tout", "Pièce par pièce, sur tous vos écrans."),
+        ("Des ambiances", "Matin, Soirée, Cinéma, Nuit, Absent."),
+        ("Pièce par pièce", "Les pièces vides ne chauffent plus."),
+        ("L’énergie sous contrôle", "Hors des heures de pointe."),
+        ("Toutes les marques", "Zigbee, Z-Wave et Matter, ensemble."),
+        ("Le contrôle reste humain", "Les portes attendent votre accord."),
+    ],
+    "equipement": ("L’équipement", [
+        "Thermostats par pièce", "Interrupteurs et gradateurs", "Prises intelligentes", "Compteur d’énergie",
+        "Stores motorisés", "Relais pour foyer et garage"],
+        "Les travaux d’électricité sont faits par un maître électricien."),
+}
+
+POUR = "Maisons familiales · résidences de prestige · fermes · entreprises · yachts · hangars"
 
 PAGE = {
     "url": "/solutions/environnements-intelligents/",
@@ -101,6 +109,8 @@ PAGE = {
     <p class="for-line" data-rev><span>Pour</span> Maisons familiales · résidences de prestige · fermes · entreprises · yachts · hangars</p>
   </div>
 </section>
+
+{clair_section(CLAIR, "environnements-intelligents")}
 
 <section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
@@ -149,8 +159,6 @@ PAGE = {
   </div>
 </section>
 
-{clair_section(CLAIR, "environnements-intelligents")}
-
 <section class="sect alt" id="journee" data-toc="Une journée">
   <div class="sect-head">
     <div data-rev>
@@ -192,6 +200,7 @@ PAGE = {
 
 {galerie.terrain("environnements-intelligents")}
 
+{fiche_section(CLAIR, "environnements-intelligents", POUR)}
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>
     <div>
@@ -218,10 +227,5 @@ PAGE = {
 """,
 }
 
-PAGE["content"] = avec_bande(
-    PAGE["content"], "environnements-intelligents",
-    "Domotique résidentielle. <em>Toute la maison sur un seul écran.</em>",
-    "Lumières, chauffage, énergie et appareils de marques différentes, réunis et simples à contrôler.",
-    "/media/solutions/environnements-intelligents.webp",
-    "Maisons familiales · résidences de prestige · fermes · entreprises · yachts · hangars",
-)
+PAGE["content"] = avec_bande(PAGE["content"], "environnements-intelligents", "Environnements intelligents", CLAIR, "/media/solutions/environnements-intelligents.webp")
+

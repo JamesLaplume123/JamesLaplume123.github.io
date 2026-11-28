@@ -54,29 +54,47 @@ MOMENTS = {
 
 MOMENTS_JSON = json.dumps(MOMENTS, ensure_ascii=False)
 
-# « En clair » : la solution expliquée simplement (avant / avec JARVIS).
-CLAIR = {'quoi': 'JARVIS réunit les lumières, le chauffage, les portes et l’énergie de votre maison '
-         '<em>dans une seule application simple.</em>',
- 'exemple': 'Le soir, vous touchez « Soirée » : le salon passe à 60 %, la terrasse et la piscine '
-            's’allument, le foyer démarre et le chauffage des chambres baisse. Une seule touche au '
-            'lieu de cinq applications.',
- 'avant': ['Une application par marque d’appareil',
-           'Des automatisations que personne ne comprend',
-           'Rien ne marche quand Internet tombe',
-           'Aucune idée de ce qui consomme'],
- 'apres': ['Toute la maison sur un seul écran',
-           'Des ambiances claires, que vous approuvez',
-           'Tout fonctionne en local, même sans Internet',
-           'La consommation affichée pièce par pièce'],
- 'obtenez': [('Un écran pour tout',
-              'Lumières, chauffage, stores, verrous et énergie, pièce par pièce, sur téléphone, '
-              'tablette ou ordinateur.'),
-             ('Des ambiances en une touche',
-              'Matin, Soirée, Cinéma, Nuit, Absent : chaque ambiance est réglée avec vous et reste '
-              'modifiable.'),
-             ('Le contrôle reste humain',
-              'Les actions sensibles, comme déverrouiller ou ouvrir le garage, demandent toujours '
-              'votre confirmation.')]}
+# « En clair », bâti comme l'offre (voir pages/_solution.py, clair_section).
+CLAIR = {
+    "titre": "Votre maison s’ajuste seule. <em>Votre facture baisse.</em>",
+    "quoi": "JARVIS réunit les lumières, le chauffage, les stores, les portes et l’énergie dans une seule application, et les fait travailler ensemble.",
+    "imaginez": (
+        "vous partez travailler. JARVIS baisse le chauffage des pièces vides, éteint ce qui est resté "
+        "allumé et remonte tout avant votre retour. Vous ne touchez à rien."
+    ),
+    "duel": ("Plus qu’un thermostat intelligent.", "Des objets connectés, chacun sa marque", [
+        ("Une application par marque, et cinq pour faire le tour de la maison.",
+         "Toute la maison sur un seul écran, pièce par pièce."),
+        ("Le thermostat suit un horaire, que vous soyez là ou non.",
+         "Le chauffage suit qui est là : les pièces vides ne chauffent plus pour rien."),
+        ("Des routines que personne ne comprend, et qui brisent sans prévenir.",
+         "Des ambiances claires, réglées avec vous, que vous changez d’un toucher."),
+        ("Internet tombe : les lumières et le thermostat ne répondent plus.",
+         "Tout fonctionne en local, même sans Internet."),
+        ("Aucune idée de ce qui fait monter la facture.",
+         "La consommation affichée appareil par appareil, avec ce qui coûte cher."),
+        ("Le véhicule électrique se recharge dès qu’il est branché.",
+         "La recharge attend le meilleur moment, selon votre tarif d’électricité."),
+    ]),
+    "capacites": [
+        ("Un écran pour tout",
+         "Lumières, chauffage, stores, verrous et énergie, pièce par pièce, sur téléphone, tablette ou ordinateur."),
+        ("Des ambiances en une touche",
+         "Matin, Soirée, Cinéma, Nuit, Absent : chaque ambiance est réglée avec vous et reste modifiable."),
+        ("Le chauffage pièce par pièce",
+         "Chaque pièce a sa température. Les pièces vides baissent seules, et tout remonte avant votre retour."),
+        ("L’énergie sous contrôle",
+         "JARVIS montre ce qui coûte cher, évite les heures de pointe et recharge le véhicule électrique au bon moment."),
+        ("Toutes les marques",
+         "Zigbee, Z-Wave et Matter : vos appareils actuels travaillent ensemble, sans tout remplacer."),
+        ("Le contrôle reste humain",
+         "Déverrouiller une porte ou ouvrir le garage demande toujours votre accord."),
+    ],
+    "equipement": ("L’équipement", [
+        "Thermostats par pièce", "Interrupteurs et gradateurs", "Prises intelligentes", "Compteur d’énergie",
+        "Stores motorisés", "Relais pour foyer et garage"],
+        "Les travaux d’électricité sont faits par un maître électricien."),
+}
 
 PAGE = {
     "url": "/solutions/environnements-intelligents/",
@@ -101,6 +119,8 @@ PAGE = {
     <p class="for-line" data-rev><span>Pour</span> Maisons familiales · résidences de prestige · fermes · entreprises · yachts · hangars</p>
   </div>
 </section>
+
+{clair_section(CLAIR, "environnements-intelligents")}
 
 <section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
@@ -148,8 +168,6 @@ PAGE = {
     </article>
   </div>
 </section>
-
-{clair_section(CLAIR, "environnements-intelligents")}
 
 <section class="sect alt" id="journee" data-toc="Une journée">
   <div class="sect-head">

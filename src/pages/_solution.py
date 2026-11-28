@@ -1,8 +1,9 @@
 # Gabarit commun des pages de solution.
 # Chaque module fournit un dict DATA ; solution_page() le transforme en page :
-# bande (fil d'Ariane, une phrase, « Ajouter à mon forfait ») → démonstration interactive (le cœur) →
-# sur le terrain (photos) → « En clair » (avant / avec JARVIS, ce que vous obtenez) → déploiement
-# responsable → questions (ajoutées par partials.document) → prochain pas.
+# bande (fil d'Ariane, une phrase, « Ajouter à mon forfait ») → « En clair », bâti comme l'offre (la
+# promesse, « Imaginez », le chiffre, la différence avec un produit ordinaire, ce que JARVIS fait,
+# l'équipement) → démonstration interactive → sur le terrain (photos) → déploiement responsable →
+# questions (ajoutées par partials.document) → prochain pas. On comprend d'abord, on essaie ensuite.
 # Les pages sur mesure (Environnements, IA privée, Mobilité) reprennent la même bande par bande().
 # Refonte « trois divisions » (novembre 2026) : la bande dit à quelle division appartient la solution,
 # et « En clair » ouvre sur un chiffre réel et sourcé qui montre que le problème existe.
@@ -50,6 +51,9 @@ CHIFFRES = {
                  "https://www.protegez-vous.ca/nouvelles/automobile/vol-auto-statistiques"),
     "automatisation-operations": ("37 %", "des appels aux salons et aux spas restent sans réponse.",
                                   "Zenoti", "https://www.zenoti.com/fr/thecheckin/how-track-salon-call-conversion-rate"),
+    "ia-privee-connaissances": ("83 %", "des Canadiens sont préoccupés par leur vie privée quand ils utilisent des outils d’IA.",
+                                "Commissariat à la protection de la vie privée du Canada, sondage 2024-2025",
+                                "https://www.priv.gc.ca/fr/pour-les-institutions-federales/bulletins-sur-la-lprp/pab_20250605/"),
 }
 
 
@@ -124,31 +128,46 @@ def fin(titre):
 
 
 def clair_section(c, slug=""):
-    """Bloc « En clair » : la solution expliquée simplement, avant / avec JARVIS (avec leurs photos)."""
+    """Bloc « En clair », bâti comme l'offre : la promesse, « Imaginez », le chiffre réel, la différence avec
+    un produit ordinaire (rangée par rangée, photos en tête), les six choses que JARVIS fait, l'équipement."""
     if not c:
         return ""
     ph_avant, ph_apres = galerie.avant_apres_photos(slug)
-    avant = "".join(f"<li>{x}</li>" for x in c["avant"])
-    apres = "".join(f"<li>{x}</li>" for x in c["apres"])
-    obtenez = "".join(
+    titre_duel, ordinaire, lignes = c["duel"]
+    avant = "".join(f"<li>{o}</li>" for o, _ in lignes)
+    apres = "".join(f"<li>{j}</li>" for _, j in lignes)
+    rangees = len(lignes) + 2  # la photo, l'étiquette, puis une rangée par différence
+    lien = ('<a class="clair-lien" href="/pourquoi-jarvis/">Pourquoi JARVIS plutôt que Google, Amazon ou Apple ›</a>'
+            if c.get("pourquoi", True) else "")
+    capacites = "".join(
         f"""<article class="card" data-rev><small>{i + 1:02d}</small><h3>{t}</h3><p>{p}</p></article>"""
-        for i, (t, p) in enumerate(c["obtenez"])
+        for i, (t, p) in enumerate(c["capacites"])
     )
+    eq_titre, eq, eq_note = c["equipement"]
+    puces = "".join(f'<span class="chip">{x}</span>' for x in eq)
+    note = f"<small>{eq_note}</small>" if eq_note else ""
     return f"""
 <section class="clair" id="en-clair" data-toc="En clair" aria-labelledby="clair-titre">
   <div class="clair-head" data-rev>
     <p class="eyebrow">En clair</p>
-    <h2 id="clair-titre">{c['quoi']}</h2>
+    <h2 id="clair-titre">{c['titre']}</h2>
+    <p class="clair-sub">{c['quoi']}</p>
+    <p class="clair-ex"><b>Imaginez :</b> {c['imaginez']}</p>
     {chiffre(slug)}
-    <p class="clair-ex"><b>Exemple concret.</b> {c['exemple']}</p>
   </div>
-  <div class="vs" data-rev>
-    <div class="vs-col vs-before">{ph_avant}<p class="vs-k">Aujourd’hui, sans JARVIS</p><ul>{avant}</ul></div>
+  <div class="clair-bloc" data-rev>
+    <p class="eyebrow">La différence</p>
+    <h3 class="clair-t">{titre_duel}</h3>
+    {lien}
+  </div>
+  <div class="vs duel" style="--r:{rangees}" data-rev>
+    <div class="vs-col vs-before">{ph_avant}<p class="vs-k">{ordinaire}</p><ul>{avant}</ul></div>
     <div class="vs-arrow" aria-hidden="true"><span></span></div>
     <div class="vs-col vs-after">{ph_apres}<p class="vs-k">Avec JARVIS</p><ul>{apres}</ul></div>
   </div>
-  <p class="eyebrow clair-k" data-rev>Ce que vous obtenez</p>
-  <div class="cards">{obtenez}</div>
+  <p class="eyebrow clair-k" data-rev>Ce que JARVIS fait</p>
+  <div class="cards">{capacites}</div>
+  <div class="clair-eq" data-rev><p class="eyebrow">{eq_titre}</p>{puces}{note}</div>
 </section>"""
 
 
@@ -162,6 +181,7 @@ def solution_page(d):
         "og_image": d["image"],
         "assets": ["coquille", *d.get("assets", []), "galerie"],
         "content": bande(d["slug"], d["h1"], d["lead"], d["image"], d["for"]) + f"""
+{clair_section(d.get('clair'), d['slug'])}
 <section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
     <div data-rev>
@@ -174,7 +194,6 @@ def solution_page(d):
   {d.get('extra', '')}
 </section>
 {galerie.terrain(d['slug']) if d['slug'] in galerie.SOLUTIONS else ''}
-{clair_section(d.get('clair'), d['slug'])}
 
 <section class="sect sol-trust" id="deploiement" data-toc="Déploiement">
   <div class="trust" data-rev>

@@ -1064,9 +1064,29 @@ html:not(.fx) .progress { display: none; }
 .fx .vs.in .vs-arrow span { animation: vsPulse 2.4s 1s ease-in-out infinite; }
 @keyframes vsPulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mode-glow) 40%, transparent); } 60% { box-shadow: 0 0 0 14px transparent; } }
 .clair-k { max-width: 76rem; margin: 3.2rem auto 1.3rem; }
+/* « En clair » bâti comme l'offre : la promesse, « Imaginez », la différence rangée par rangée, l'équipement. */
+.clair-sub { margin: 1.1rem 0 0; max-width: 46rem; color: #f0f0f3; font-size: clamp(1.05rem, 1.45vw, 1.24rem); line-height: 1.55; }
+.clair-bloc { max-width: 76rem; margin: 3.8rem auto 1.6rem; }
+.clair-t { margin: .9rem 0 0; font-weight: 650; font-size: clamp(1.5rem, 2.6vw, 2.1rem); letter-spacing: -.03em; line-height: 1.15; }
+.clair-lien { display: inline-block; margin-top: .9rem; color: var(--gold-soft); font-size: .95rem; text-decoration: none; }
+.clair-lien:hover { text-decoration: underline; }
+.duel { row-gap: 0; }
+.duel .vs-col { display: grid; grid-template-rows: subgrid; grid-row: span var(--r); }
+.duel .vs-arrow { grid-row: span var(--r); align-self: center; }
+.duel ul { display: contents; }
+.duel li { padding: .85rem 0 .85rem 2rem; border-top: 1px solid #ffffff14; }
+.duel li::before { top: .9rem; }
+.duel .vs-k { margin-bottom: .4rem; }
+.fx .vs.in li:nth-child(5) { animation-delay: .6s; } .fx .vs.in li:nth-child(6) { animation-delay: .75s; }
+.clair-eq { max-width: 76rem; margin: 2.6rem auto 0; display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.clair-eq .eyebrow { width: 100%; margin-bottom: .5rem; }
+.clair-eq .chip { text-transform: none; letter-spacing: .02em; font-size: .8rem; }
+.clair-eq small { width: 100%; margin-top: .5rem; color: #86868e; font-size: .82rem; line-height: 1.5; }
+.card p a { color: var(--gold-soft); }
 @media (max-width: 880px) {
   .vs { grid-template-columns: 1fr; }
   .vs-arrow span { transform: rotate(90deg); }
+  .duel .vs-arrow { grid-row: auto; }
   .clair { padding: 4.5rem 1.2rem 3.5rem; }
 }
 

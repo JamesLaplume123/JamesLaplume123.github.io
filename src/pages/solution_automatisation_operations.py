@@ -114,31 +114,44 @@ DATA = {
     "assets": ["automatisation"],
     "extra": SECTEURS_HTML + _catalogue() + _diff(),
     "clair": {
-        "quoi": "JARVIS répond, trie et fait circuler le travail. <em>Vous gardez la décision.</em>",
-        "exemple": (
-            "Une cliente appelle pour déplacer son rendez-vous. JARVIS répond avant la deuxième "
-            "sonnerie, retrouve son dossier, propose deux créneaux et confirme le nouveau. Elle "
-            "demande un remboursement de 45 $ : la procédure exige un humain, alors JARVIS vous "
-            "notifie et attend votre accord — la cliente patiente trente secondes, pas deux jours. "
-            "Tout est consigné : transcription, décision, heure."
+        "titre": "Plus un appel manqué. <em>Plus rien à recopier.</em>",
+        "quoi": "JARVIS répond au téléphone, trie les demandes et fait circuler le travail entre vos logiciels. Vous gardez la décision.",
+        "imaginez": (
+            "une cliente appelle pour déplacer son rendez-vous. JARVIS répond avant la deuxième sonnerie, "
+            "retrouve son dossier et confirme un nouveau créneau. Elle demande un remboursement de 45 $ : "
+            "la procédure exige un humain, alors JARVIS vous demande votre accord. Elle attend trente "
+            "secondes, pas deux jours."
         ),
-        "avant": [
-            "Le téléphone sonne occupé : l’appel tombe dans la boîte vocale et personne ne rappelle.",
-            "Le même renseignement est retapé dans trois logiciels.",
-            "Les demandes dorment dans une boîte de courriel en attendant quelqu’un.",
-            "Personne ne sait vraiment qui a approuvé quoi, ni quand.",
+        "pourquoi": False,
+        "duel": ("Plus qu’une boîte vocale.", "Une boîte vocale et des outils séparés", [
+            ("Le téléphone sonne occupé : l’appel tombe dans la boîte vocale, souvent sans rappel.",
+             "Chaque appel est pris, jour et nuit, selon la procédure de votre équipe."),
+            ("Le même renseignement est retapé dans trois logiciels.",
+             "Les informations passent d’un outil à l’autre, sans copier-coller."),
+            ("Les demandes dorment dans une boîte de courriel.",
+             "Chaque demande est triée et envoyée à la bonne personne."),
+            ("Personne ne sait qui a approuvé quoi, ni quand.",
+             "Chaque étape laisse une trace : la source, la règle, la décision et l’heure."),
+            ("Le matin, il faut fouiller pour savoir où on en est.",
+             "Le rapport du matin : appels, ventes, retards et alertes, sur une page."),
+        ]),
+        "capacites": [
+            ("Une réception toujours en ligne",
+             "Chaque appel est pris, suivi et consigné. Un humain reste joignable en tout temps."),
+            ("Vos règles, appliquées",
+             "Seuils, approbations et exceptions : écrits une fois, respectés à chaque fois."),
+            ("Rien à recopier",
+             "Soumissions, factures, stock et suivis passent d’un logiciel à l’autre, tout seuls."),
+            ("Le bon geste, à la bonne personne",
+             "Ce qui exige un humain vous arrive avec tout le dossier, prêt à approuver."),
+            ("Le rapport du matin",
+             "Appels, ventes, retards et alertes : votre entreprise résumée chaque matin."),
+            ("Une trace complète",
+             "Un journal clair de chaque appel et de chaque étape, consultable en tout temps."),
         ],
-        "apres": [
-            "JARVIS répond à chaque appel et suit la procédure écrite avec votre équipe.",
-            "Les informations passent d’un outil à l’autre, sans copier-coller.",
-            "Vos règles décident de ce qui exige une approbation humaine.",
-            "Chaque étape laisse une trace : source, règle, décision et heure.",
-        ],
-        "obtenez": [
-            ("Une réception toujours en ligne", "Chaque appel est pris, suivi et consigné — et un humain reste joignable à tout moment."),
-            ("Vos règles, appliquées", "Seuils, approbations, exceptions : écrits une fois, respectés à chaque fois."),
-            ("Une trace complète", "Un journal clair de chaque appel et de chaque étape, consultable en tout temps."),
-        ],
+        "equipement": ("Ce qu’on relie", [
+            "Votre ligne téléphonique", "Courriel et calendrier", "CRM et comptabilité",
+            "Vos logiciels métier", "Un appareil JARVIS sur place, ou une infrastructure privée"], ""),
     },
     "compat": ["Téléphonie IP", "Courriel", "CRM", "Calendrier", "Comptabilité", "RH", "Documents", "Annuaire d’entreprise", "API métier"],
     "deploy_title": "Vos processus, vos règles, votre rythme.",

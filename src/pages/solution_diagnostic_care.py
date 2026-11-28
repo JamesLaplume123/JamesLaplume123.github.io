@@ -38,32 +38,44 @@ DATA = {
 }
 
 DATA["clair"] = {
-    "quoi": "Quand quelque chose ne marche plus, JARVIS mène l’enquête <em>et vous montre les preuves.</em>",
-    "exemple": (
-        "La chambre froide d’une épicerie n’atteint plus 3 °C. JARVIS relit 24 heures de mesures, "
-        "écarte la porte, le courant et le thermostat, trouve le ventilateur arrêté et prépare le "
-        "dossier du frigoriste. Après l’intervention, il confirme sur la courbe que tout est revenu."
+    "titre": "Ce qui va briser, <em>JARVIS le voit venir.</em>",
+    "quoi": "JARVIS surveille l’eau, le chauffage, l’électricité et vos appareils. Quand quelque chose change, il trouve la vraie cause et prépare la réparation.",
+    "imaginez": (
+        "votre congélateur se réchauffe lentement depuis trois jours. JARVIS le remarque, vous avertit "
+        "avant que la nourriture se perde et prépare le dossier du réparateur, avec la pièce probable."
     ),
-    "avant": [
-        "Une alarme sonne, sans dire pourquoi.",
-        "Le technicien arrive à l’aveugle et refait l’enquête.",
-        "On remplace des pièces au hasard, à vos frais.",
-        "Personne ne vérifie que la réparation tient vraiment.",
-    ],
-    "apres": [
-        "Le symptôme arrive avec ses mesures et son historique.",
-        "Les causes sont vérifiées une à une, la plus simple d’abord.",
-        "Le dossier technicien est prêt : preuves, cause probable, pièces.",
-        "La remise en service est vérifiée sur les mesures, avec l’heure.",
-    ],
-    "obtenez": [
-        ("Des réponses, pas des alarmes",
-         "Ce qui a changé, depuis quand et ce que ça veut dire, en mots simples."),
-        ("Un dossier prêt à transmettre",
-         "Le bon technicien reçoit les preuves et la bonne pièce à apporter. Rien ne part sans votre accord."),
-        ("Une réparation prouvée",
+    "duel": ("Plus qu’un détecteur de fuite.", "Des détecteurs ordinaires", [
+        ("Il sonne quand l’eau est déjà sur le plancher.",
+         "La fuite est vue, et l’eau coupée en quelques secondes."),
+        ("Une alarme sonne, sans dire pourquoi.",
+         "Ce qui a changé, depuis quand et pourquoi, en mots simples."),
+        ("Le congélateur lâche, et vous le découvrez trois jours plus tard.",
+         "Une dérive lente est remarquée des jours avant la panne."),
+        ("Au chalet, le gel fait éclater un tuyau sans que personne le sache.",
+         "Chauffage, température et gel suivis à distance, avec une alerte avant le danger."),
+        ("Le technicien arrive à l’aveugle et refait l’enquête.",
+         "Il reçoit le dossier : les mesures, la cause probable et la pièce à apporter."),
+        ("Personne ne vérifie que la réparation tient.",
          "JARVIS suit les mesures après l’intervention et confirme le retour à la normale."),
+    ]),
+    "capacites": [
+        ("L’eau",
+         "Des détecteurs sous l’évier, le chauffe-eau et la laveuse. Une fuite est vue et l’eau coupée en quelques secondes."),
+        ("Le chauffage et le gel",
+         "Fournaise, thermopompe et tuyaux surveillés jour et nuit, au chalet comme à la maison."),
+        ("L’électricité",
+         "Pannes, surtensions, génératrice et batteries de secours : vous savez ce qui tient, et pour combien de temps."),
+        ("Vos appareils",
+         "Frigo, congélateur, pompe de puits ou de puisard : l’anomalie est vue avant la panne."),
+        ("La vraie cause",
+         "JARVIS relit les mesures, écarte les fausses pistes une à une et vous dit ce qui a changé, depuis quand et pourquoi."),
+        ("La réparation prouvée",
+         "Le bon technicien reçoit le dossier. Après son passage, JARVIS confirme sur les mesures que tout est revenu."),
     ],
+    "equipement": ("L’équipement", [
+        "Détecteurs de fuite", "Vanne d’eau automatique", "Capteurs de température et de gel",
+        "Détecteurs de fumée et de CO reliés", "Mesure d’énergie", "Boîtier de secours"],
+        "Les travaux de plomberie et d’électricité sont faits par des entrepreneurs qualifiés."),
 }
 
 PAGE = solution_page(DATA)

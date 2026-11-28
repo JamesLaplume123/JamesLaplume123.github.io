@@ -35,7 +35,7 @@ SITE = {
     "og_image": "/media/product/user/accueil-og.jpg",
     "theme_color": "#000000",
     # Incrémenter pour invalider le cache navigateur de wow.css / wow.js.
-    "asset_version": "20261128a",
+    "asset_version": "20261128b",
     # Adresse du service du site (formulaire → Resend → JARVIS, compteur). Vide tant
     # que le Worker Cloudflare n'est pas déployé : le formulaire passe alors par FormSubmit.
     "api": "https://jarvis-site-api.laplumejames.workers.dev",
@@ -304,9 +304,9 @@ SEO = {
         "réparer plus vite et remettre en service proprement.",
     ),
     "/solutions/mobilite/": (
-        "VR et véhicules connectés, copilote de route | JARVIS",
-        "Batteries, eau, chauffage et itinéraire du VR sur un seul écran, avec un copilote de "
-        "route. Voitures, véhicules électriques et vélos électriques aussi.",
+        "Mobilité : tous vos véhicules sous votre œil | JARVIS",
+        "Auto, camion, moto, véhicule électrique, VR, bateau ou avion : vol, panne, entretien et "
+        "copilote de route, dans la même application que la maison.",
     ),
     "/logiciel/": (
         "Le logiciel JARVIS en démonstration, écran par écran",

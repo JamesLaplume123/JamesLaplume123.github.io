@@ -37,34 +37,43 @@ DATA = {
 }
 
 DATA["clair"] = {
-    "quoi": "JARVIS dessine votre réseau comme une carte vivante et vous dit, en mots simples, <em>pourquoi quelque chose ne marche pas.</em>",
-    "exemple": (
-        "La caméra du garage cesse d’enregistrer. Au lieu de tout redémarrer au hasard, JARVIS "
-        "remonte le câble jusqu’au commutateur, trouve le port coupé et propose de le relancer. "
-        "Vous approuvez; il confirme que l’image est revenue."
+    "titre": "Votre réseau, gardé <em>comme celui d’une entreprise.</em>",
+    "quoi": "JARVIS connaît chaque appareil branché chez vous, sépare ce qui doit l’être et met à l’écart ce qui n’a rien à faire là. Il vous explique tout en mots simples.",
+    "imaginez": (
+        "2 h du matin, un appareil inconnu se branche sur votre Wi-Fi. JARVIS le met en quarantaine, "
+        "loin de vos ordinateurs, et vous demande au réveil si vous le connaissez."
     ),
-    "avant": [
-        "Quand quelque chose ne marche plus, on redémarre tout et on espère.",
-        "Personne ne sait vraiment quels appareils sont branchés au réseau.",
-        "Une ampoule connectée peut voir les mêmes ordinateurs que vous.",
-        "Une panne Internet arrête aussi les caméras et les lumières.",
-        "On ne sait pas si les sauvegardes marchent ni si un équipement a une faille connue.",
+    "duel": ("Plus qu’un routeur.", "Un routeur ordinaire", [
+        ("Il donne Internet à tout ce qui a le mot de passe.",
+         "Chaque appareil est reconnu, nommé et rangé dans sa zone."),
+        ("Une ampoule connectée voit les mêmes ordinateurs que vous.",
+         "Des zones séparées : la famille, les objets, les caméras et les invités ne se voient pas."),
+        ("Une attaque passe sans que personne le sache.",
+         "Une menace est repérée, mise à l’écart, et vous êtes averti en mots simples."),
+        ("Le Wi-Fi faiblit au sous-sol et dans la cour.",
+         "Un Wi-Fi solide dans chaque pièce, mesuré pièce par pièce."),
+        ("Internet tombe : tout arrête.",
+         "Le lien de secours prend le relais, et la maison continue en local."),
+        ("Quand quelque chose ne marche plus, on redémarre tout et on espère.",
+         "La carte du réseau montre l’appareil touché et la vraie cause."),
+    ]),
+    "capacites": [
+        ("Il connaît chaque appareil",
+         "Téléphone, télé, caméra ou ampoule : tout ce qui se branche est reconnu. Un nouveau venu doit être accepté."),
+        ("Il bloque les intrus",
+         "Un appareil suspect ou un trafic anormal est mis à l’écart, et vous recevez une explication claire, pas un code d’erreur."),
+        ("Des zones séparées",
+         "Les caméras et les objets connectés n’ont pas accès à vos ordinateurs. Les invités ont leur propre Wi-Fi."),
+        ("Du Wi-Fi solide partout",
+         "Dans chaque pièce, avec Internet de secours au besoin. Vos sauvegardes sont testées chaque mois."),
+        ("Un accès à distance privé",
+         "Votre maison ou votre commerce, de partout, par un tunnel privé, sans rien ouvrir sur Internet."),
+        ("Contrôle parental et rapport",
+         "Les heures d’écran réglées pour chaque enfant, et votre sécurité résumée chaque semaine."),
     ],
-    "apres": [
-        "La carte montre l’appareil touché et le chemin jusqu’à la cause.",
-        "Chaque appareil est connu, rangé dans sa zone et suivi.",
-        "Des murs séparent la famille, les objets, les caméras et les invités.",
-        "Le lien de secours prend le relais et la maison continue en local.",
-        "Les sauvegardes sont testées chaque mois et chaque faille a sa date de correction.",
-    ],
-    "obtenez": [
-        ("Une console complète, lisible par tous",
-         "Carte du réseau, appareils, Wi-Fi par pièce, trafic, menaces et score de la semaine, avec ce qui circule en direct."),
-        ("Des diagnostics en mots simples",
-         "La vraie cause, le chemin pour la trouver et une seule action proposée, que vous approuvez."),
-        ("Une maison qui tient bon",
-         "Zones séparées, lien de secours et fonctions essentielles qui marchent même sans Internet."),
-    ],
+    "equipement": ("L’équipement", [
+        "Wi-Fi maillé", "Commutateur (switch)", "Pare-feu", "Sauvegarde chiffrée",
+        "Routeur 4G ou 5G de secours, selon le lieu"], ""),
 }
 
 PAGE = solution_page(DATA)

@@ -12,33 +12,45 @@ DATA = {
     "lead": "Un logiciel installé chez vous, qui réunit vos caméras, vos serrures, vos capteurs et vos preuves dans la même application que le reste du lieu. Vous gardez le contrôle, et les images restent sur place.",
     "for": "Résidences, entreprises, entrepôts, campus et organisations réparties sur plusieurs sites",
     "clair": {
-        "quoi": "JARVIS regarde toutes vos caméras et vos capteurs en même temps, puis vous dit en une phrase <em>ce qui s’est vraiment passé.</em>",
-        "exemple": (
-            "Un livreur dépose un colis. Au lieu de six notifications (mouvement, personne, sonnette, "
-            "colis…), vous en recevez une seule : « 21 h 42 — Livraison : un colis a été déposé à "
-            "l’entrée. Rien d’anormal. » La nuit, si quelqu’un rôde, JARVIS vous propose d’allumer "
-            "les lumières et attend votre accord."
+        "titre": "Une alarme sonne. <em>JARVIS, lui, comprend.</em>",
+        "quoi": "JARVIS regarde toutes vos caméras, vos portes et vos capteurs en même temps, puis vous dit en une phrase ce qui s’est vraiment passé.",
+        "imaginez": (
+            "23 h, une auto inconnue passe deux fois devant chez vous. JARVIS lit la plaque, voit que "
+            "personne ne la connaît, allume les lumières de la cour comme vous l’avez réglé et vous "
+            "envoie un seul message, vidéo à l’appui."
         ),
-        "avant": [
-            "Des dizaines de notifications par jour, souvent pour un chat ou une branche.",
-            "Chaque caméra a son application et raconte sa propre version.",
-            "Pour comprendre, il faut ouvrir les vidéos une par une.",
-            "La nuit, impossible de savoir si c’est grave ou non.",
+        "duel": ("Plus qu’une caméra. <em>Plus qu’une alarme.</em>", "Caméras, serrure et alarme ordinaires", [
+            ("« Mouvement détecté », trente fois par jour, pour un chat ou une branche.",
+             "Un seul message par événement : qui, quoi, où, et si c’est normal."),
+            ("Chaque appareil a son application et raconte sa propre version.",
+             "Caméras, sonnette, portes et alarme réunies dans un seul fil."),
+            ("La caméra filme une auto, sans savoir qu’elle est déjà passée.",
+             "JARVIS lit la plaque, reconnaît une auto qui revient et la suit d’une caméra à l’autre."),
+            ("La serrure s’ouvre avec un code, peu importe qui le tape ou à quelle heure.",
+             "Codes temporaires, horaires et visiteurs : chaque entrée est connue et notée."),
+            ("Les images partent souvent dans le nuage d’une compagnie.",
+             "Les images restent chez vous, dans votre JARVIS."),
+            ("Après un vol, vous fouillez des heures de vidéo.",
+             "Le dossier est prêt en un clic : chronologie, extraits et preuve d’intégrité."),
+        ]),
+        "capacites": [
+            ("Un événement, pas vingt alertes",
+             "Caméras, sonnette, portes et alarme sont lues ensemble. Le livreur et le chat restent discrets; l’inhabituel ressort tout de suite."),
+            ("Il reconnaît les vôtres",
+             "Famille, employés et habitués sont inscrits avec leur consentement. Un inconnu est signalé sans nom, et les visages sont masqués hors incident."),
+            ("Plaques et véhicules",
+             "JARVIS lit les plaques, reconnaît une auto qui revient et la suit d’une caméra à l’autre."),
+            ("Les accès sous contrôle",
+             "Serrures, badges, horaires et codes temporaires. Un visiteur reçoit un code QR valide le temps de sa visite. Rien ne se déverrouille tout seul."),
+            ("Dehors et dans le réseau, le même réflexe",
+             "Reliée à <a href=\"/solutions/reseau-resilience/\">Réseau et cybersécurité</a> : un intrus dans la cour ou un appareil inconnu sur le Wi-Fi déclenche la même réponse."),
+            ("Un dossier prêt en un clic",
+             "Chronologie, extraits, plan et empreinte vérifiable pour la police ou l’assurance, avec les personnes non concernées masquées."),
         ],
-        "apres": [
-            "Les alertes d’une même situation deviennent un seul événement.",
-            "Une phrase claire explique ce qui s’est passé, images à l’appui.",
-            "Le normal reste discret; l’inhabituel ressort tout de suite.",
-            "JARVIS propose une action (lumières, interphone) et attend votre accord.",
-        ],
-        "obtenez": [
-            ("Un seul fil", "Caméras, sonnette, portes, détecteurs et alarme réunis dans une même chronologie."),
-            ("Des preuves classées", "Les images utiles sont gardées avec l’événement, sur place, aussi longtemps que vous le décidez."),
-            ("Le dernier mot", "Allumer, parler, prévenir : JARVIS propose, vous approuvez. Rien ne se déverrouille tout seul."),
-            ("Les accès et les véhicules", "Badges, horaires, talonnage, visiteurs avec code QR, lecture de plaques et suivi d’un véhicule d’une caméra à l’autre."),
-            ("Un dossier prêt à remettre", "Chronologie, extraits, plan et empreinte vérifiable, exportés en un clic avec les personnes non concernées masquées."),
-            ("La Loi 25 intégrée", "Identification seulement des personnes inscrites avec leur consentement, masquage des visages hors incident, chaque consultation journalisée."),
-        ],
+        "equipement": ("L’équipement", [
+            "Caméras 4K à vision de nuit", "Sonnette vidéo", "Serrures connectées", "Capteurs de porte et de fenêtre",
+            "Sirène", "Lecture de plaques", "Badges et codes QR"],
+            "Quand la loi l’exige, la pose est faite par un installateur qui détient le permis requis. JARVIS relie ensuite le tout."),
     },
     "demo_title": "Neuf modules. <em>Une seule plateforme de sécurité.</em>",
     "demo_copy": (

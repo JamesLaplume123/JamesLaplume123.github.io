@@ -8,30 +8,44 @@ from demos.ia import HTML as DEMO
 from pages._solution import clair_section, avec_bande
 import galerie
 
+# « En clair », bâti comme l'offre (voir pages/_solution.py, clair_section). Solution de JARVIS Privé :
+# l'exemple est celui d'une famille; la version entreprise est « Savoir de l'entreprise ».
 CLAIR = {
-    "quoi": "Posez une question à vos propres documents. <em>La réponse arrive avec sa preuve.</em>",
-    "exemple": (
-        "Un employé demande : « Comment ferme-t-on l’atelier le vendredi? ». JARVIS cherche dans "
-        "vos procédures, vos courriels et vos registres, répond en quatre étapes et montre la page "
-        "exacte d’où vient chacune. Si l’information n’existe nulle part, il le dit au lieu d’inventer."
+    "titre": "Posez une question à vos documents. <em>La source est montrée.</em>",
+    "quoi": "Garanties, contrats, factures, manuels et notes : JARVIS les lit chez vous et vous répond en mots simples, avec la page exacte d’où vient la réponse.",
+    "imaginez": (
+        "le lave-vaisselle fuit. Vous demandez : « Est-il encore garanti? » JARVIS retrouve la facture "
+        "et la garantie, répond « Oui, jusqu’au 14 mars » et vous montre la ligne qui le prouve."
     ),
-    "avant": [
-        "L’information existe, mais elle est éparpillée entre dossiers, courriels et classeurs.",
-        "On dérange la personne qui « sait » à chaque question.",
-        "Une IA publique peut inventer une réponse avec beaucoup d’assurance.",
-        "Envoyer vos documents à un service externe pose un risque pour la confidentialité.",
+    "duel": ("Plus qu’un assistant IA en ligne.", "Un assistant IA en ligne", [
+        ("Vos documents partent sur les serveurs d’une compagnie.",
+         "En mode local, tout reste dans votre JARVIS, chez vous."),
+        ("Il ne connaît pas vos papiers, à moins de tout lui envoyer.",
+         "Vos garanties, contrats et manuels sont déjà lus et classés."),
+        ("Une réponse sans preuve : il faut le croire sur parole.",
+         "Chaque réponse montre sa source : le document et le passage exact."),
+        ("Quand il ne sait pas, il lui arrive d’inventer.",
+         "Pas de source fiable? JARVIS le dit, sans rien inventer."),
+        ("Ce que vous lui confiez peut servir à entraîner ses modèles.",
+         "Vos documents ne servent qu’à vous répondre."),
+    ]),
+    "capacites": [
+        ("Vos papiers répondent",
+         "Garanties, contrats, assurances, factures et manuels : posez la question, la réponse vient avec la page."),
+        ("Des réponses vérifiables",
+         "Un toucher sur la source affiche le passage exact qui justifie la réponse."),
+        ("Il dit quand il ne sait pas",
+         "Pas de source fiable? JARVIS le dit clairement, au lieu d’inventer."),
+        ("Vos documents restent chez vous",
+         "Traitement local dans votre JARVIS. Un service externe sert seulement si vous l’autorisez, et c’est toujours affiché."),
+        ("Chacun voit ce qui le regarde",
+         "Chaque membre de la famille a son espace. Vos papiers à vous restent les vôtres."),
+        ("Des actions avec permission",
+         "JARVIS peut préparer un rappel, une liste ou un message. Rien ne part sans votre « Approuver »."),
     ],
-    "apres": [
-        "Une question en mots simples, une réponse en quelques secondes.",
-        "Chaque réponse montre sa source : le document et le passage exact.",
-        "Pas de source fiable? JARVIS le dit clairement, sans rien inventer.",
-        "En mode local, tout se passe sur votre JARVIS : vos documents restent chez vous.",
-    ],
-    "obtenez": [
-        ("Des réponses vérifiables", "Un clic sur le numéro de la source affiche le passage qui justifie la réponse."),
-        ("Vos documents restent chez vous", "Traitement local sur votre JARVIS, ou externe seulement si vous l’autorisez, et toujours affiché."),
-        ("Des actions avec permission", "JARVIS peut préparer une liste de tâches ou un message. Rien ne part sans votre « Approuver »."),
-    ],
+    "equipement": ("Ce qu’il faut", [
+        "Votre appareil JARVIS : l’IA tourne dedans",
+        "Vos dossiers, courriels et numérisations, reliés avec votre accord"], ""),
 }
 
 PAGE = {
@@ -57,6 +71,8 @@ PAGE = {
   </div>
 </section>
 
+""" + clair_section(CLAIR, "ia-privee-connaissances") + """
+
 <section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
     <div data-rev>
@@ -69,8 +85,6 @@ PAGE = {
   </div>
   """ + coquille.html("ia-privee-connaissances", DEMO) + """
 </section>
-
-""" + clair_section(CLAIR, "ia-privee-connaissances") + """
 
 <section class="sect alt" id="controle" data-toc="Le contrôle">
   <div class="sect-head">

@@ -11,35 +11,52 @@ import galerie
 
 HERO = mobilite.photo("hero", "/media/vr/exterieur.webp")
 
+# « En clair », bâti comme l'offre (voir pages/_solution.py, clair_section). Mobilité = tous les
+# véhicules (auto, camion, moto, VÉ, VR, bateau, avion), pas seulement le VR.
 CLAIR = {
-    "quoi": "JARVIS devient votre copilote : il regarde la route, l’heure, le soleil et l’état du véhicule, "
-            "puis vous propose <em>le bon arrêt au bon moment.</em>",
-    "exemple": "Vous roulez vers le fleuve avec 22 % d’eau propre. JARVIS affiche : « Eau propre 22 % : "
-               "remplissage gratuit à 12 km, détour de 2 minutes. » Plus loin : « Coucher de soleil à 16 h 42 : "
-               "arrivez au belvédère avant 16 h 20. » Vous touchez « Accepter », l’arrêt s’ajoute à l’itinéraire. "
-               "La photo prise là-bas se place toute seule sur la carte du voyage.",
-    "avant": ["Trois applications de cartes, une pour la météo, une autre pour le camping",
-              "On découvre que le restaurant est fermé en arrivant",
-              "Le propane manque au pire endroit, loin de tout",
-              "Les photos du voyage dorment dans le téléphone, sans lieu ni histoire"],
-    "apres": ["Un seul copilote qui tient compte de tout, en même temps",
-              "Seulement des arrêts ouverts à votre heure d’arrivée",
-              "Eau, propane, carburant et entretien prévus avant d’en manquer",
-              "Chaque voyage revit sur la carte, photos à leur place"],
-    "obtenez": [("Un guide avant de partir", "Dites où vous rêvez d’aller : JARVIS propose la destination, la saison "
-                 "et l’itinéraire, et la route se dessine sur le globe."),
-                ("Un copilote de route", "Repas, eau, propane, Webasto, mécanique, soleil et sites historiques : "
-                 "proposés selon la distance et l’ouverture, avec le détour exact."),
-                ("Un journal automatique", "Photos et points géolocalisés en roulant. Touchez un voyage passé : "
-                 "le tracé, les photos et les statistiques reviennent."),
-                ("Un garage connecté", "Du VR et de la voiture familiale à la collection (Huracán, 296 GTB, G63, "
-                 "Escalade) : ce que le véhicule offre, et un boîtier JARVIS de base pour les autres.")],
+    "titre": "Tout ce qui roule, flotte ou vole. <em>Sous votre œil.</em>",
+    "quoi": "Auto, camion, moto, véhicule électrique, VR, bateau ou avion : JARVIS veille sur chacun, vous prévient du vol et de la panne, et vous guide sur la route.",
+    "imaginez": (
+        "6 h, −25 °C. JARVIS vous propose de préchauffer l’auto et vous avertit qu’un pneu perd de la "
+        "pression, avant que vous sortiez."
+    ),
+    "duel": ("Plus qu’un traceur GPS.", "Un traceur ou l’application du constructeur", [
+        ("Une application par véhicule, quand il y en a une.",
+         "Tous vos véhicules dans la même application que la maison."),
+        ("Il montre où est le véhicule, une fois qu’il a été volé.",
+         "Une alerte dès qu’il bouge sans vous, avec sa position en direct."),
+        ("Un voyant s’allume, sans dire si c’est grave.",
+         "Le code d’erreur expliqué en mots simples : quoi faire, et quand."),
+        ("L’entretien, on y pense une fois en retard.",
+         "Batterie, pneus et entretien à venir, rappelés avant l’échéance."),
+        ("Le VR ou le bateau entreposé, personne ne le voit de l’hiver.",
+         "Batteries, eau, propane et froid suivis à distance, même entreposé."),
+        ("En route, trois applications pour manger, dormir et faire le plein.",
+         "Un copilote propose le bon arrêt, ouvert à votre heure d’arrivée."),
+    ]),
+    "capacites": [
+        ("Tous vos véhicules",
+         "Auto, camion, moto, véhicule électrique, VR, bateau, et même avion. Une seule application pour tout."),
+        ("Vol et position",
+         "Une alerte s’il bouge sans vous, sa position en direct et l’historique de ses trajets."),
+        ("La santé du véhicule",
+         "Codes d’erreur expliqués, batterie, pneus et entretien à venir, avant que ça vous arrête."),
+        ("Le véhicule électrique",
+         "Recharge au meilleur moment, préchauffage d’un toucher et autonomie estimée selon la météo."),
+        ("Le copilote de route",
+         "Repas, recharge, propane et sites à voir, selon la distance et les heures d’ouverture. Chaque voyage reste sur la carte, photos comprises."),
+        ("VR et bateau, vus de partout",
+         "Batteries, eau, propane et froid surveillés, même entreposés. À bord, le VR devient un lieu JARVIS, comme la maison."),
+    ],
+    "equipement": ("L’équipement", [
+        "Connexion du constructeur, quand le véhicule l’offre", "Boîtier Mobilité sur la prise de diagnostic",
+        "Boîtier VR pour VR, roulotte et bateau"], ""),
 }
 
 PAGE = {
     "url": "/solutions/mobilite/",
     "v2": True,
-    "title": "Copilote de voyage, VR et voiture connectés | JARVIS Mobilité",
+    "title": "Mobilité : tous vos véhicules sous votre œil | JARVIS",
     "description": "Un guide de voyage qui propose destinations et itinéraires, un copilote de route qui propose repas, eau, propane, entretien et sites à voir selon la "
                    "distance, les heures d’ouverture et le soleil, un journal de voyage sur la carte et un garage "
                    "connecté pour VR, voitures familiales, voitures de collection et vélos électriques.",
@@ -61,6 +78,8 @@ PAGE = {
     <p class="for-line" data-rev><span>Prix</span> 15 $ par mois par véhicule, données cellulaires comprises · <a href="/offre/#solutions" style="color:var(--gold-soft)">Ajouter au panier</a></p>
   </div>
 </section>
+
+{clair_section(CLAIR, "mobilite")}
 
 <section class="sect sol-demo" id="essayer" data-toc="Essayer">
   <div class="sect-head">
@@ -106,8 +125,6 @@ PAGE = {
     </article>
   </div>
 </section>
-
-{clair_section(CLAIR, "mobilite")}
 
 <section class="sect" id="modes-voyage" data-toc="Six façons de voyager">
   <div class="sect-head">
@@ -187,8 +204,8 @@ PAGE = {
 
 PAGE["content"] = avec_bande(
     PAGE["content"], "mobilite",
-    "VR et véhicules connectés. <em>Partez l’esprit libre.</em>",
-    "Vous roulez; JARVIS regarde la route, le véhicule et l’heure, et vous propose le bon arrêt au bon moment.",
+    "Tous vos véhicules. <em>Partez l’esprit libre.</em>",
+    "Auto, camion, moto, véhicule électrique, VR, bateau ou avion : JARVIS veille sur chacun, à la maison comme sur la route.",
     HERO,
-    "VR · voitures familiales · voitures de collection · vélos électriques",
+    "Autos, camions, motos, véhicules électriques, VR, bateaux et avions · flottes d’entreprise",
 )

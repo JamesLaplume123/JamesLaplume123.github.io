@@ -1,0 +1,43 @@
+{
+  "_lisez_moi": "Liste fermée des pages du site (docs/SITE.md, section 2). Fichier de règles : il change seulement avec l'accord de James. statut : a_creer (pas encore bâtie), a_refaire (existe, pas encore au style de la loi), fait (conforme : le budget de texte s'applique). scripts/verifier_site.py refuse toute page bâtie qui n'est pas ici.",
+  "pages": [
+    {"url": "/", "nom": "Accueil", "gabarit": "accueil", "parent": null, "statut": "a_refaire"},
+
+    {"url": "/solutions/", "nom": "Les trois divisions", "gabarit": "apercu", "parent": "/", "statut": "a_refaire"},
+    {"url": "/solutions/prive/", "nom": "JARVIS Privé", "gabarit": "division", "parent": "/solutions/", "statut": "a_creer"},
+    {"url": "/solutions/entreprise/", "nom": "JARVIS Entreprise", "gabarit": "division", "parent": "/solutions/", "statut": "a_refaire"},
+    {"url": "/solutions/cyber/", "nom": "JARVIS Cyber", "gabarit": "division", "parent": "/solutions/", "statut": "a_refaire"},
+
+    {"url": "/solutions/reseau-resilience/", "nom": "Réseau et cybersécurité", "gabarit": "solution", "parent": "/solutions/prive/", "divisions": ["prive", "entreprise"], "statut": "a_refaire"},
+    {"url": "/solutions/securite-intelligente/", "nom": "Sécurité intelligente", "gabarit": "solution", "parent": "/solutions/prive/", "divisions": ["prive", "entreprise"], "statut": "a_refaire"},
+    {"url": "/solutions/diagnostic-care/", "nom": "Diagnostic et continuité", "gabarit": "solution", "parent": "/solutions/prive/", "divisions": ["prive", "entreprise"], "statut": "a_refaire"},
+    {"url": "/solutions/environnements-intelligents/", "nom": "Environnements intelligents", "gabarit": "solution", "parent": "/solutions/prive/", "divisions": ["prive", "entreprise"], "statut": "a_refaire"},
+    {"url": "/solutions/mobilite/", "nom": "Mobilité", "gabarit": "solution", "parent": "/solutions/prive/", "divisions": ["prive", "entreprise"], "statut": "a_refaire"},
+    {"url": "/solutions/ia-privee-connaissances/", "nom": "IA privée et connaissances", "gabarit": "solution", "parent": "/solutions/prive/", "divisions": ["prive"], "statut": "a_refaire"},
+    {"url": "/solutions/automatisation-operations/", "nom": "Réceptionniste IA et automatisations", "gabarit": "solution", "parent": "/solutions/entreprise/", "divisions": ["entreprise"], "statut": "a_refaire"},
+    {"url": "/solutions/ia-privee-entreprise/", "nom": "Savoir de l'entreprise", "gabarit": "solution", "parent": "/solutions/entreprise/", "divisions": ["entreprise"], "statut": "a_refaire"},
+
+    {"url": "/solutions/maison-intelligente-cle-en-main/", "nom": "Exemple : maison clé en main", "gabarit": "exemple", "parent": "/solutions/prive/", "statut": "a_refaire"},
+    {"url": "/solutions/domotique-ferme-agricole/", "nom": "Exemple : la ferme", "gabarit": "exemple", "parent": "/solutions/entreprise/", "statut": "a_refaire"},
+
+    {"url": "/plateforme/", "nom": "L'appareil", "gabarit": "page", "parent": "/", "statut": "a_refaire"},
+    {"url": "/logiciel/", "nom": "Le logiciel", "gabarit": "page", "parent": "/plateforme/", "statut": "a_refaire"},
+    {"url": "/offre/", "nom": "Composer mon forfait", "gabarit": "configurateur", "parent": "/", "statut": "a_refaire"},
+
+    {"url": "/a-propos/", "nom": "À propos", "gabarit": "page", "parent": "/", "statut": "a_refaire"},
+    {"url": "/pourquoi-jarvis/", "nom": "Pourquoi JARVIS", "gabarit": "page", "parent": "/a-propos/", "statut": "a_refaire"},
+    {"url": "/vision-roadmap/", "nom": "Vision", "gabarit": "page", "parent": "/a-propos/", "statut": "a_refaire"},
+    {"url": "/confiance/", "nom": "Confiance", "gabarit": "page", "parent": "/a-propos/", "statut": "a_refaire"},
+    {"url": "/laboratoire-mobile/", "nom": "Laboratoire mobile", "gabarit": "page", "parent": "/a-propos/", "statut": "a_refaire"},
+    {"url": "/recherche/", "nom": "Recherche", "gabarit": "page", "parent": "/a-propos/", "statut": "a_refaire"},
+    {"url": "/questions/", "nom": "Questions", "gabarit": "page", "parent": "/a-propos/", "statut": "a_refaire"},
+    {"url": "/contact/", "nom": "Contact", "gabarit": "page", "parent": "/a-propos/", "statut": "a_refaire"}
+  ],
+  "utilitaires": ["/confidentialite/", "/mentions-legales/", "/plan-du-site/", "/merci/", "/404.html"],
+  "prives": ["/admin/visites/", "/labo-cartes/", "/sudo-bonne-fete/"],
+  "redirections": [
+    "/about/", "/ambulance-lab/", "/catalogue/", "/concept-home/", "/jarvis-builder/", "/jarvis-twin/",
+    "/services/", "/trading-lab/", "/ui-system-preview/",
+    "/about.html", "/contact.html", "/lab.html", "/learn.html", "/mobile-lab.html", "/projects.html", "/solutions.html"
+  ]
+}

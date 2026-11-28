@@ -1082,7 +1082,7 @@ html:not(.fx) .progress { display: none; }
 
 /* Ce que JARVIS fait : six tuiles sobres */
 .ap-bento { max-width: 76rem; margin: 3.6rem auto 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; text-align: left; }
-.ap-tuile { padding: 2.4rem 2.1rem 2.6rem; border-radius: 28px; background: #161617; min-height: 14rem; }
+.ap-tuile { padding: 2.4rem 2.1rem 2.6rem; border-radius: 28px; background: #161617; min-height: 11rem; }
 .ap-tuile h3 { margin: 0 0 .7rem; font-weight: 700; font-size: clamp(1.4rem, 1.9vw, 1.75rem); line-height: 1.15; letter-spacing: -.03em; color: #f5f5f7; }
 .ap-tuile p { margin: 0; color: #a1a1a6; font-size: 1.02rem; line-height: 1.5; }
 .ap-tuile p a { color: var(--gold-soft); }

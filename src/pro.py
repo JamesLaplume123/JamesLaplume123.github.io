@@ -42,6 +42,8 @@ NOMS = {
     "/mentions-legales/": "Mentions légales",
     "/questions/": "Questions",
     "/plan-du-site/": "Plan du site",
+    "/solutions/cyber/": "JARVIS Cyber",
+    "/pourquoi-jarvis/": "Pourquoi JARVIS",
 }
 NOMS.update({f"/solutions/{c['slug']}/": c["title"] for c in CAPABILITIES})
 NOMS.update({f"/solutions/{k}/": n for k, n in BESOINS_PAGES})
@@ -49,7 +51,7 @@ NOMS.update({f"/solutions/{k}/": n for k, n in BESOINS_PAGES})
 # Page mère de chaque page intérieure (fil d'Ariane) : les solutions sous Solutions, les pages de l'entreprise sous À propos.
 MERES = {"/vision-roadmap/": "/a-propos/", "/laboratoire-mobile/": "/a-propos/",
          "/plateforme/": "/a-propos/", "/confiance/": "/a-propos/", "/questions/": "/a-propos/",
-         "/recherche/": "/a-propos/"}
+         "/recherche/": "/a-propos/", "/pourquoi-jarvis/": "/a-propos/"}
 
 
 def _texte(html):

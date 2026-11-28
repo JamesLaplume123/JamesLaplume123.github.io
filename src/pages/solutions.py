@@ -1,48 +1,84 @@
-# Solutions — les sept solutions, une ligne chacune (refonte « essentiel », novembre 2026).
-# Chaque carte mène à la page de la solution, où se trouve sa démonstration.
+# Solutions — les trois divisions de JARVIS, du général au détail (refonte « trois divisions », novembre 2026).
+# Trois grandes tuiles (Privé, Entreprise, Cyber), puis la gamme de chaque division, une carte par
+# solution avec sa promesse. Chaque carte mène à la page de la solution, où se trouve sa démonstration.
+# Les sept solutions gardent leur adresse; les pages « par type de lieu » restent en bas.
+# Données : src/divisions.py · Styles : assets/demos/divisions.css.
 
 from config import CAPABILITIES
-import lieux
+import divisions
 
-CARTES = "".join(
-    f'<a class="card" href="/solutions/{c["slug"]}/" data-sol="{c["slug"]}" data-rev><small>{c["num"]}</small>'
-    f'<h3>{c["title"]}</h3><p>{c["menu"]}</p>'
-    + ('<span class="card-ent">Pour l’entreprise</span>' if lieux.SOLUTIONS_PUBLIC.get(c["slug"]) == "entreprise" else "")
-    + "</a>"
-    for c in CAPABILITIES
+SERVICES = "".join(
+    f'<div class="svc-c" data-rev><em>{k}</em><b>{n}</b><span>{l}</span></div>' for k, n, l in divisions.CYBER
 )
 
 PAGE = {
     "url": "/solutions/",
     "v2": True,
     "title": "Solutions | JARVIS Private Systems",
+    "assets": ["divisions"],
     "schema": [{
-        "@context": "https://schema.org", "@type": "ItemList", "name": "Les sept solutions JARVIS",
+        "@context": "https://schema.org", "@type": "ItemList", "name": "Les solutions JARVIS",
         "itemListElement": [
             {"@type": "ListItem", "position": i + 1, "name": c["title"],
              "url": f"https://jarvisprivatesystems.com/solutions/{c['slug']}/"}
             for i, c in enumerate(CAPABILITIES)
-        ],
+        ] + [{"@type": "ListItem", "position": len(CAPABILITIES) + 1, "name": "JARVIS Cyber",
+              "url": "https://jarvisprivatesystems.com/solutions/cyber/"}],
     }],
     "description": (
-        "Sept familles de solutions pour les environnements intelligents, l’IA privée, "
-        "la sécurité, les opérations, le réseau, le diagnostic et la mobilité."
+        "Trois divisions, une seule IA : JARVIS Privé pour vos lieux et vos véhicules, JARVIS "
+        "Entreprise pour vos opérations, JARVIS Cyber pour vérifier vos systèmes."
     ),
     "og_image": "/media/solutions/environnements-intelligents.webp",
     "content": f"""
 <section class="band top">
   <div class="bg"><img src="/media/solutions/environnements-intelligents.webp" alt="" fetchpriority="high"></div>
   <div class="band-inner">
-    <h1 data-rev>Sept solutions.<br><em>Un seul système.</em></h1>
-    <p class="lead" data-rev>Commencez par un besoin; le reste s’ajoute sans tout reconstruire.</p>
+    <h1 data-rev>Trois divisions.<br><em>Une seule IA.</em></h1>
+    <p class="lead" data-rev>Choisissez ce que vous voulez protéger. Chaque solution s’ajoute sans tout reconstruire.</p>
     <div class="acts" data-rev>
-      <a class="pill" href="/contact/">Parlons de votre projet</a>
+      <a class="pill" href="#prive">Commencer par JARVIS Privé</a>
+      <a class="pill ghost" href="/pourquoi-jarvis/">Pourquoi JARVIS</a>
     </div>
   </div>
 </section>
 
-<section class="sect" id="sept" aria-label="Les sept solutions">
-  <div class="cards" data-sols>{CARTES}</div>
+<section class="sect" id="divisions" aria-label="Les trois divisions">
+  <div class="dv3">{divisions.tuiles()}</div>
+</section>
+
+<section class="sect" id="prive" aria-labelledby="prive-titre">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">01 · JARVIS Privé</p>
+      <h2 id="prive-titre">Votre maison. Votre chalet. <em>Vos véhicules.</em></h2>
+    </div>
+    <div class="side" data-rev><p>Protégés et gérés tout seuls, par une IA qui travaille chez vous.</p></div>
+  </div>
+  <div class="gam">{divisions.gamme(divisions.PRIVE)}</div>
+</section>
+
+<section class="sect alt" id="entreprise" aria-labelledby="entreprise-titre">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">02 · JARVIS Entreprise</p>
+      <h2 id="entreprise-titre">Votre entreprise <em>roule toute seule.</em></h2>
+    </div>
+    <div class="side" data-rev><p>Pour les travailleurs autonomes, les PME, les fermes et les commerces. Vos bâtiments sont protégés par JARVIS Privé.</p></div>
+  </div>
+  <div class="gam">{divisions.gamme(divisions.ENTREPRISE)}</div>
+</section>
+
+<section class="sect" id="cyber" aria-labelledby="cyber-titre">
+  <div class="sect-head">
+    <div data-rev>
+      <p class="eyebrow">03 · JARVIS Cyber</p>
+      <h2 id="cyber-titre">Vos failles trouvées <em>avant un pirate.</em></h2>
+    </div>
+    <div class="side" data-rev><p>Nous vérifions vos propres systèmes, sur mandat écrit, puis nous corrigeons avec vous. Client de JARVIS ou non.</p></div>
+  </div>
+  <div class="svc">{SERVICES}</div>
+  <div class="dv-suite" data-rev><a class="pill" href="/solutions/cyber/">Découvrir JARVIS Cyber</a></div>
 </section>
 
 <section class="sect alt" id="par-besoin" aria-labelledby="pb-titre">

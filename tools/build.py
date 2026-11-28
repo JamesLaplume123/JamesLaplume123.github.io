@@ -33,6 +33,7 @@ PAGE_MODULES = [
     "solution_reseau_resilience",
     "solution_diagnostic_care",
     "solution_mobilite",
+    "entreprise",  # /solutions/entreprise/ : la division JARVIS Entreprise
     "cyber",  # /solutions/cyber/ : la division JARVIS Cyber
     "besoins",  # pages par besoin : maison clé en main, ferme, IA pour entreprise
     "questions",

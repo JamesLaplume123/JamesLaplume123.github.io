@@ -123,57 +123,7 @@ FERME = {
 }
 
 
-# Toute l'entreprise (23 novembre 2026). La porte « Entreprise » menait à l'IA privée seulement, alors que
-# Maison et Ferme couvrent tout le lieu. Six cartes, dans l'ordre où un propriétaire y pense; chacune est
-# déjà dans l'offre (Réceptionniste IA, bibliothèque d'automatisations, Socle Entreprise, extensions).
-# Le détail reste où il est : la démonstration, les secteurs et la bibliothèque sur la page Automatisation
-# d'entreprise, les trois exemples pour commencer sur la page L'offre.
-# Chaque carte nomme la pièce de l'offre qui la porte, avec les mots de l'offre (pages/catalogue.py) :
-# on doit voir d'un coup d'œil ce que JARVIS offre à une entreprise.
-N_AUTOS = sum(len(items) for _, items in offre.AUTOMATISATIONS)
-ENTREPRISE = {
-    "slug": "entreprise",
-    "public": "entreprise",
-    "nom": "JARVIS pour l’entreprise",
-    "genre": "Système privé de gestion et de sécurité pour entreprise",
-    "title": "JARVIS pour votre entreprise : un seul système privé",
-    "description": (
-        "JARVIS répond au téléphone, fait les suivis, relie vos outils et protège vos lieux et votre "
-        "réseau. Toute l’entreprise dans un seul système privé, installé chez vous."
-    ),
-    "image": "/media/accueil/film-entreprise.webp",
-    "h1": "Toute votre entreprise, <em>dans un seul système.</em>",
-    "lead": "JARVIS répond au téléphone, fait les suivis, surveille vos lieux et votre réseau, et vous fait rapport.",
-    "comprend": [
-        ("Les appels", f"La {offre.ENT_RECEP['nom']} répond jour et nuit : messages, rendez-vous, rappels, urgences transférées."),
-        ("Le travail", f"Une bibliothèque de {N_AUTOS} automatisations : soumissions, factures, stock, rapports. Rien à recopier."),
-        ("Les gens", f"Le {offre.ENT_SOCLE['nom']} : un compte par employé, relié à votre annuaire. Un départ coupe tout d’un coup."),
-        ("Le savoir", "L’IA privée connaît vos documents et vos procédures, et montre toujours sa source."),
-        ("Les lieux", "Environnements, Diagnostic et Mobilité : bâtiments, équipements, énergie et véhicules, dans une seule application."),
-        ("La protection", "Sécurité et Réseau : caméras, accès, alarme et réseau, surveillés ensemble."),
-    ],
-    "suite": [
-        ("/solutions/automatisation-operations/#essayer", "Essayer la réceptionniste"),
-        ("/solutions/automatisation-operations/#votre-secteur", "Trouver mon secteur"),
-        ("/solutions/ia-privee-entreprise/", "L’IA privée pour entreprise"),
-        ("/offre/#composer", "Composer pour mon entreprise"),
-    ],
-    "faq": [
-        ("Par où commencer?",
-         "Par le problème qui vous coûte le plus cher : les appels manqués, les suivis oubliés ou la "
-         "sécurité. La page L’offre propose trois exemples selon la taille de l’entreprise; le reste "
-         "s’ajoute au mois, quand vous en voyez le gain."),
-        ("Jusqu’où JARVIS agit-il seul?",
-         "C’est vous qui le décidez, domaine par domaine : il voit, il avertit, il propose, il agit avec "
-         "votre accord, ou il agit selon vos règles et vous rend compte. Rien de sensible ne part sans "
-         "l’accord d’une personne."),
-        ("Dois-je changer mes logiciels ou mon annuaire?",
-         "En général, non. JARVIS se relie aux outils que vous utilisez déjà (courriel, agenda, "
-         "téléphonie, comptabilité) et à l’annuaire de votre entreprise (Microsoft 365, Active "
-         "Directory). Il ne les remplace pas et ne gère pas vos postes de travail."),
-    ],
-    "cta": "Votre entreprise,<br><span>sans rien laisser tomber.</span>",
-}
+# « Toute votre entreprise » est devenue la page de la division JARVIS Entreprise : pages/entreprise.py.
 
 
 IA = {
@@ -211,4 +161,4 @@ IA = {
 }
 
 
-PAGES = [page(MAISON), page(FERME), page(ENTREPRISE), page(IA)]
+PAGES = [page(MAISON), page(FERME), page(IA)]

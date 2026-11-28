@@ -18,6 +18,8 @@
 
 /* ---------- La gamme d'une division ---------- */
 .gam { max-width: 84rem; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(17.5rem, 100%), 1fr)); gap: 14px; }
+.gam-3 { grid-template-columns: repeat(auto-fill, minmax(min(22rem, 100%), 1fr)); }
+@media (min-width: 1100px) { .gam-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } .gam-5 .gam-b b { font-size: 1.05rem; } }
 .gam-c { display: flex; flex-direction: column; overflow: hidden; border-radius: 20px; background: #0d0d0f; border: 1px solid var(--edge); color: #fff; text-decoration: none; transition: border-color .4s, transform .5s var(--ease); }
 .gam-c:hover, .gam-c:focus-visible { border-color: color-mix(in srgb, var(--gold) 60%, transparent); transform: translateY(-3px); }
 .gam-c img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
@@ -28,15 +30,27 @@
 .gam-b > span { flex: 1; font-size: .93rem; line-height: 1.5; color: #b9b9c2; }
 .gam-b i { font-style: normal; font-size: .88rem; color: var(--gold-soft); }
 
-/* ---------- Une rangée de services (JARVIS Cyber) ---------- */
-.svc { max-width: 84rem; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(17.5rem, 100%), 1fr)); gap: 14px; }
-.svc-c { display: flex; flex-direction: column; gap: .55rem; padding: 1.4rem 1.4rem 1.5rem; border-radius: 20px; background: #0d0d0f; border: 1px solid var(--edge); }
-.svc-c em { font: 600 .64rem/1 var(--mono); font-style: normal; letter-spacing: .15em; text-transform: uppercase; color: var(--gold-soft); }
-.svc-c b { font: 650 1.12rem/1.3 var(--sans); letter-spacing: -.015em; color: #fff; }
-.svc-c span { font-size: .93rem; line-height: 1.5; color: #b9b9c2; }
+/* ---------- Divisions : sous-titres, chiffres, bloc photo et étapes ---------- */
+.gam-fixe:hover, .gam-fixe:focus-visible { transform: none; border-color: var(--edge); }
+.dv-sous { max-width: 84rem; margin: 2.2rem auto 1rem; font: 600 .7rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft); }
+.dv-sous:first-of-type { margin-top: 0; }
+.dv-chiffres { max-width: 84rem; margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.dv-ch { display: flex; flex-direction: column; gap: .8rem; padding: 2.2rem 2rem; border-radius: 22px; background: #0d0d0f; border: 1px solid var(--edge); }
+.dv-ch b { font: 650 clamp(3.2rem, 6.4vw, 5.6rem)/1 var(--sans); letter-spacing: -.045em; color: var(--gold-soft); }
+.dv-ch span { max-width: 28rem; font-size: 1.12rem; line-height: 1.45; color: #fff; }
+.dv-ch small { font-size: .8rem; color: #86868e; }
+.dv-ch small a { color: inherit; }
+.dv-feat { max-width: 84rem; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+.dv-feat-ph { overflow: hidden; border-radius: 24px; aspect-ratio: 4 / 5; border: 1px solid var(--edge); }
+.dv-feat-ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.dv-etapes { list-style: none; margin: 1.6rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 1.3rem; }
+.dv-etapes li { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: 1rem; align-items: start; }
+.dv-etapes li > span { width: 2.6rem; height: 2.6rem; border-radius: 50%; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--gold) 60%, transparent); font: 600 .78rem/1 var(--mono); color: var(--gold-soft); }
+.dv-etapes b { display: block; margin-bottom: .25rem; font: 650 1.1rem/1.3 var(--sans); color: #fff; }
+.dv-etapes p { margin: 0; font-size: .95rem; line-height: 1.5; color: #b9b9c2; }
+.dv-note { margin-top: 1.6rem; }
+.dv-note a { color: var(--gold-soft); }
 .dv-suite { max-width: 84rem; margin: 2rem auto 0; display: flex; flex-wrap: wrap; gap: .8rem 1.6rem; align-items: center; }
-.dv-lien { color: var(--gold-soft); text-decoration: none; font-size: .98rem; }
-.dv-lien:hover { color: #fff; }
 
 /* ---------- Pourquoi JARVIS : la comparaison ---------- */
 .cmp-w { max-width: 84rem; margin: 0 auto; overflow-x: auto; border-radius: 20px; background: #0d0d0f; border: 1px solid var(--edge); }
@@ -65,6 +79,7 @@
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 @media (max-width: 900px) {
-  .dv3, .faits { grid-template-columns: minmax(0, 1fr); }
+  .dv3, .faits, .dv-chiffres, .dv-feat { grid-template-columns: minmax(0, 1fr); }
+  .dv-feat-ph { aspect-ratio: 16 / 10; }
   .dv3-t { min-height: 22rem; }
 }

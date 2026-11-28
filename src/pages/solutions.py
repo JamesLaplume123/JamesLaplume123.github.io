@@ -7,10 +7,6 @@
 from config import CAPABILITIES
 import divisions
 
-SERVICES = "".join(
-    f'<div class="svc-c" data-rev><em>{k}</em><b>{n}</b><span>{l}</span></div>' for k, n, l in divisions.CYBER
-)
-
 PAGE = {
     "url": "/solutions/",
     "v2": True,
@@ -64,9 +60,13 @@ PAGE = {
       <p class="eyebrow">02 · JARVIS Entreprise</p>
       <h2 id="entreprise-titre">Votre entreprise <em>roule toute seule.</em></h2>
     </div>
-    <div class="side" data-rev><p>Pour les travailleurs autonomes, les PME, les fermes et les commerces. Vos bâtiments sont protégés par JARVIS Privé.</p></div>
+    <div class="side" data-rev><p>Pour les travailleurs autonomes, les PME, les fermes et les commerces : votre travail, puis vos bâtiments.</p></div>
   </div>
-  <div class="gam">{divisions.gamme(divisions.ENTREPRISE)}</div>
+  <p class="dv-sous" data-rev>Votre travail</p>
+  <div class="gam gam-5">{divisions.gamme(divisions.ENTREPRISE_TRAVAIL)}</div>
+  <p class="dv-sous" data-rev>Vos bâtiments</p>
+  <div class="gam gam-5">{divisions.gamme(divisions.ENTREPRISE_BATIMENTS)}</div>
+  <div class="dv-suite" data-rev><a class="pill" href="/solutions/entreprise/">Découvrir JARVIS Entreprise</a></div>
 </section>
 
 <section class="sect" id="cyber" aria-labelledby="cyber-titre">
@@ -77,7 +77,7 @@ PAGE = {
     </div>
     <div class="side" data-rev><p>Nous vérifions vos propres systèmes, sur mandat écrit, puis nous corrigeons avec vous. Client de JARVIS ou non.</p></div>
   </div>
-  <div class="svc">{SERVICES}</div>
+  <div class="gam gam-3">{divisions.gamme(divisions.CYBER)}</div>
   <div class="dv-suite" data-rev><a class="pill" href="/solutions/cyber/">Découvrir JARVIS Cyber</a></div>
 </section>
 

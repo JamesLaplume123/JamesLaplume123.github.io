@@ -4,13 +4,12 @@
 # avec lui. Security Pro (OSINT poussé, enquêtes) reste une vision sous permis : /vision-roadmap/.
 # Jamais présenté comme une agence de gardiennage, d'enquête ou de sécurité privée (src/pro.py).
 # Aucun prix ici : les prix vivent dans le configurateur (SITE["prix_publics"]).
+# Chiffres vérifiés le 27 novembre 2026 : Statistique Canada (Le Quotidien, 21 octobre 2026),
+# Bitdefender et NETGEAR (rapport sur la maison connectée, 29 octobre 2025).
+# Données : src/divisions.py · Styles : assets/demos/divisions.css.
 
 import divisions
 import pro
-
-SERVICES = "".join(
-    f'<div class="svc-c" data-rev><em>{k}</em><b>{n}</b><span>{l}</span></div>' for k, n, l in divisions.CYBER
-)
 
 ETAPES = [
     ("01", "Le mandat écrit", "Ce qu’on vérifie, quand et comment, signé avant de commencer."),
@@ -18,6 +17,9 @@ ETAPES = [
     ("03", "La correction, avec vous", "Les failles classées par gravité, et un plan clair pour les fermer."),
     ("04", "La nouvelle vérification", "On reteste pour prouver que c’est réglé."),
 ]
+ETAPES_HTML = "".join(
+    f'<li><span aria-hidden="true">{n}</span><div><b>{t}</b><p>{d}</p></div></li>' for n, t, d in ETAPES
+)
 
 PAGE = {
     "url": "/solutions/cyber/",
@@ -48,11 +50,13 @@ PAGE = {
   <div class="sect-head">
     <div data-rev>
       <p class="eyebrow">Pourquoi maintenant</p>
-      <h2 id="cy-pq">Une entreprise sur six <em>a été touchée en 2025.</em></h2>
+      <h2 id="cy-pq">Les attaques visent <em>tout le monde.</em></h2>
     </div>
-    <div class="side" data-rev>
-      <p>Au Canada, environ une entreprise sur six (16 %) a subi un incident de cybersécurité en 2025. Source : Statistique Canada.</p>
-    </div>
+    <div class="side" data-rev><p>Les grandes entreprises, mais aussi les PME et les maisons connectées.</p></div>
+  </div>
+  <div class="dv-chiffres">
+    <div class="dv-ch" data-rev><b>1 sur 6</b><span>entreprises canadiennes a subi un incident de cybersécurité en 2025.</span><small>Source : <a href="https://www150.statcan.gc.ca/n1/daily-quotidien/261021/dq261021b-fra.htm" rel="noopener">Statistique Canada</a></small></div>
+    <div class="dv-ch" data-rev><b>29</b><span>attaques par jour contre une maison connectée, en moyenne, en 2025.</span><small>Source : <a href="https://www.bitdefender.com/en-gb/news/new-bitdefender-and-netgear-report-reveals-rising-threats-across-the-connected-home-landscape" rel="noopener">Bitdefender et NETGEAR</a></small></div>
   </div>
 </section>
 
@@ -64,20 +68,18 @@ PAGE = {
     </div>
     <div class="side" data-rev><p>Chaque service se fait une fois, sur soumission confirmée.</p></div>
   </div>
-  <div class="svc">{SERVICES}</div>
+  <div class="gam gam-3">{divisions.cartes(divisions.CYBER)}</div>
 </section>
 
 <section class="sect" id="deroulement" aria-labelledby="cy-der">
-  <div class="sect-head">
+  <div class="dv-feat">
+    <div class="dv-feat-ph" data-rev><img src="/media/vitrine/confiance/approbation-main.webp" alt="" loading="lazy" style="object-position:35% 50%"></div>
     <div data-rev>
       <p class="eyebrow">Comment ça se passe</p>
       <h2 id="cy-der">Quatre étapes, <em>toujours dans cet ordre.</em></h2>
+      <ol class="dv-etapes">{ETAPES_HTML}</ol>
+      <p class="form-note dv-note">Nous vérifions et protégeons vos systèmes; nous ne sommes pas une agence de gardiennage ni d’enquête. Security Pro, la version plus poussée, reste une vision : elle demandera un permis avant toute mission réelle. <a href="/vision-roadmap/">Voir la vision</a></p>
     </div>
-  </div>
-  <div class="svc">{"".join(f'<div class="svc-c" data-rev><em>{n}</em><b>{t}</b><span>{d}</span></div>' for n, t, d in ETAPES)}</div>
-  <div class="dv-suite" data-rev>
-    <p class="form-note" style="margin:0">Nous vérifions et protégeons vos systèmes; nous ne sommes pas une agence de gardiennage ni d’enquête. Security Pro, la version plus poussée, reste une vision : elle demandera un permis avant toute mission réelle.</p>
-    <a class="dv-lien" href="/vision-roadmap/">Voir la vision ›</a>
   </div>
 </section>
 
